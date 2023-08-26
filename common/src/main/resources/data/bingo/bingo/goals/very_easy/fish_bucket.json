@@ -1,0 +1,58 @@
+{
+  "criteria": {
+    "cod_bucket": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "item": [
+          {
+            "items": ["minecraft:cod_bucket"]
+          }
+        ]
+      }
+    },
+    "pufferfish_bucket": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "item": [
+          {
+            "items": ["minecraft:pufferfish_bucket"]
+          }
+        ]
+      }
+    },
+    "salmon_bucket": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "item": [
+          {
+            "items": ["minecraft:salmon_bucket"]
+          }
+        ]
+      }
+    },
+    "tropical_fish_bucket": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "item": [
+          {
+            "items": ["minecraft:tropical_fish_bucket"]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "cod_bucket",
+      "tropical_fish_bucket",
+      "pufferfish_bucket",
+      "salmon_bucket"
+    ]
+  ],
+  "tags": ["bingo:item", "bingo:ocean", "bingo:overworld"],
+  "name": {"translate": "bingo.goal.fish_bucket"},
+  "tooltip": {"translate": "bingo.goal.fish_bucket.tooltip"},
+  "infrequency": 4,
+  "antisynergy": "fish_bucket",
+  "reactant": "use_buckets"
+}
