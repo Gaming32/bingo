@@ -3,5 +3,6 @@
   "bingo.and": "%s & %s",
   "bingo.goal.fish_bucket": "Bucket of Fish",
   "bingo.goal.fish_bucket.tooltip": "Can by any of the types of fish (anything that satisfies Tactical Fishing)",
-  "bingo.goal.levels": "%s Levels"
+  "bingo.goal.levels": "%s Levels",
+  "bingo.goal.leaves": "%s Leaves"
 }

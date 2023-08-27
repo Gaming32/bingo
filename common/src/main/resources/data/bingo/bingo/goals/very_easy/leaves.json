@@ -1,0 +1,41 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "min": 32,
+        "max": 64
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "tag": "minecraft:leaves"
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:item", "bingo:overworld"],
+  "name": {
+    "translate": "bingo.goal.leaves",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      }
+    ]
+  },
+  "infrequency": 2,
+  "antisynergy": "note_blocks"
+}
