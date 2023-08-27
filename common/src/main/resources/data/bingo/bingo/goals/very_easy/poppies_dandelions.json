@@ -22,8 +22,10 @@
         "items": [
           {
             "count": {
-              "bingo_type": "sub",
-              "id": "poppy_count"
+              "min": {
+                "bingo_type": "sub",
+                "id": "poppy_count"
+              }
             },
             "items": ["minecraft:poppy"]
           }
@@ -36,8 +38,10 @@
         "items": [
           {
             "count": {
-              "bingo_type": "sub",
-              "id": "dandelion_count"
+              "min": {
+                "bingo_type": "sub",
+                "id": "dandelion_count"
+              }
             },
             "items": ["minecraft:dandelion"]
           }
