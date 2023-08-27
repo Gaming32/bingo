@@ -25,6 +25,7 @@ public class Bingo {
                 )
             );
         });
+
         LOGGER.info("I got the diagonal!");
     }
 }

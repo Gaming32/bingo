@@ -1,0 +1,36 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "min": 5,
+        "max": 7
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "bingo:experience_changed",
+      "conditions": {
+        "levels": {
+          "min": {
+            "bingo_type": "sub",
+            "id": "count"
+          }
+        }
+      }
+    }
+  },
+  "tags": ["bingo:stat"],
+  "name": {
+    "translate": "bingo.goal.levels",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      }
+    ]
+  },
+  "infrequency": 2,
+  "antisynergy": "levels"
+}

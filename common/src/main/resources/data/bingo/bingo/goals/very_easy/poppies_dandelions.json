@@ -1,0 +1,74 @@
+{
+  "bingo_subs": {
+    "poppy_count": {
+      "type": "random",
+      "range": {
+        "min": 5,
+        "max": 25
+      }
+    },
+    "dandelion_count": {
+      "type": "random",
+      "range": {
+        "min": 5,
+        "max": 25
+      }
+    }
+  },
+  "criteria": {
+    "poppy": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "bingo_type": "sub",
+              "id": "poppy_count"
+            },
+            "items": ["minecraft:poppy"]
+          }
+        ]
+      }
+    },
+    "dandelion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "bingo_type": "sub",
+              "id": "dandelion_count"
+            },
+            "items": ["minecraft:dandelion"]
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:item", "bingo:overworld"],
+  "name": {
+    "translate": "bingo.and",
+    "with": [
+      {
+        "translate": "bingo.count",
+        "with": [
+          {
+            "bingo_type": "sub",
+            "id": "poppy_count"
+          },
+          {"translate": "block.minecraft.poppy"}
+        ]
+      },
+      {
+        "translate": "bingo.count",
+        "with": [
+          {
+            "bingo_type": "sub",
+            "id": "dandelion_count"
+          },
+          {"translate": "block.minecraft.dandelion"}
+        ]
+      }
+    ]
+  }
+}
