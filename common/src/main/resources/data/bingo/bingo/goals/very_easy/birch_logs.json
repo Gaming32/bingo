@@ -38,5 +38,6 @@
     ]
   },
   "infrequency": 25,
-  "antisynergy": "birch_logs"
+  "antisynergy": "birch_logs",
+  "difficulty": 0
 }

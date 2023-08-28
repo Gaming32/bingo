@@ -38,5 +38,6 @@
     ]
   },
   "infrequency": 25,
-  "antisynergy": "oak_planks"
+  "antisynergy": "oak_planks",
+  "difficulty": 0
 }

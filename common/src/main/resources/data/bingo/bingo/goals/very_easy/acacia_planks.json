@@ -38,5 +38,6 @@
     ]
   },
   "infrequency": 25,
-  "antisynergy": "acacia_planks"
+  "antisynergy": "acacia_planks",
+  "difficulty": 0
 }

@@ -38,5 +38,6 @@
     ]
   },
   "infrequency": 25,
-  "antisynergy": "spruce_logs"
+  "antisynergy": "spruce_logs",
+  "difficulty": 0
 }

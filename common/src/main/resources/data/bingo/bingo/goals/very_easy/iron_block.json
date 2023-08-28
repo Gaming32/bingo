@@ -14,5 +14,6 @@
   "tags": ["bingo:item"],
   "name": {"translate": "block.minecraft.iron_blocks"},
   "infrequency": 2,
-  "antisynergy": "iron_blocks"
+  "antisynergy": "iron_blocks",
+  "difficulty": 0
 }

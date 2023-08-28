@@ -38,5 +38,6 @@
     ]
   },
   "infrequency": 25,
-  "antisynergy": "acacia_logs"
+  "antisynergy": "acacia_logs",
+  "difficulty": 0
 }

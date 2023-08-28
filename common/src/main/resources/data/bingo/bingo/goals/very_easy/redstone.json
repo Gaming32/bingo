@@ -14,5 +14,6 @@
   "tags": ["bingo:item", "bingo:overworld"],
   "name": {"translate": "item.minecraft.redstone"},
   "infrequency": 2,
-  "antisynergy": "redstone"
+  "antisynergy": "redstone",
+  "difficulty": 0
 }

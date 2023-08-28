@@ -12,7 +12,11 @@
   "icon": "icon.png",
 
   "environment": "*",
-  "entrypoints": {},
+  "entrypoints": {
+    "main": [
+      "io.github.gaming32.bingo.fabric.BingoFabric"
+    ]
+  },
   "mixins": [
     "bingo.mixins.json",
     "bingo-common.mixins.json"

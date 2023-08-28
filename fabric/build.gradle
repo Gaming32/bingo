@@ -23,6 +23,8 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+
+    include(implementation("org.apache.commons:commons-text:1.10.0"))
 }
 
 processResources {

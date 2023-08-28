@@ -15,5 +15,6 @@
   "name": {"translate": "item.minecraft.milk_bucket"},
   "infrequency": 4,
   "antisynergy": "milk_bucket",
-  "reactant": "use_buckets"
+  "reactant": "use_buckets",
+  "difficulty": 0
 }

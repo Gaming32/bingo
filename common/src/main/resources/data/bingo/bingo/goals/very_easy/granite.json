@@ -37,5 +37,6 @@
       {"translate": "block.minecraft.granite"}
     ]
   },
-  "infrequency": 3
+  "infrequency": 3,
+  "difficulty": 0
 }

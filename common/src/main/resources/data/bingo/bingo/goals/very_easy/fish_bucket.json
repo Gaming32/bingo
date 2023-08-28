@@ -54,5 +54,6 @@
   "tooltip": {"translate": "bingo.goal.fish_bucket.tooltip"},
   "infrequency": 4,
   "antisynergy": "fish_bucket",
-  "reactant": "use_buckets"
+  "reactant": "use_buckets",
+  "difficulty": 0
 }

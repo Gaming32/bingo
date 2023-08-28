@@ -38,5 +38,6 @@
     ]
   },
   "infrequency": 25,
-  "antisynergy": "dark_oak_logs"
+  "antisynergy": "dark_oak_logs",
+  "difficulty": 0
 }

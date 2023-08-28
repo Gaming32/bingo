@@ -36,5 +36,6 @@
       },
       {"translate": "block.minecraft.dirt"}
     ]
-  }
+  },
+  "difficulty": 0
 }

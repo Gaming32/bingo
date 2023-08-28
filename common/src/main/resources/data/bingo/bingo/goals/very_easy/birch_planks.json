@@ -38,5 +38,6 @@
     ]
   },
   "infrequency": 25,
-  "antisynergy": "birch_planks"
+  "antisynergy": "birch_planks",
+  "difficulty": 0
 }

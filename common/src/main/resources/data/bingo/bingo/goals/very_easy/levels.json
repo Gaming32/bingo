@@ -32,5 +32,6 @@
     ]
   },
   "infrequency": 2,
-  "antisynergy": "levels"
+  "antisynergy": "levels",
+  "difficulty": 0
 }

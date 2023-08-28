@@ -15,5 +15,6 @@
   "name": {"translate": "item.minecraft.lava_bucket"},
   "infrequency": 4,
   "antisynergy": "lava_bucket",
-  "reactant": "use_buckets"
+  "reactant": "use_buckets",
+  "difficulty": 0
 }

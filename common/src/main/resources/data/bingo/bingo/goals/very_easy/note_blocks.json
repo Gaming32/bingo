@@ -38,5 +38,6 @@
     ]
   },
   "infrequency": 2,
-  "antisynergy": "note_blocks"
+  "antisynergy": "note_blocks",
+  "difficulty": 0
 }
