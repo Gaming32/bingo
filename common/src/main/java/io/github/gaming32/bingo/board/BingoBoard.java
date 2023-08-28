@@ -46,13 +46,14 @@ public class BingoBoard {
         final int[] difficultyLayout = generateDifficulty(difficulty, rand);
         final int[] indices = Util.shuffle(Util.generateIntArray(SIZE_SQ), rand);
 
+        final Set<ResourceLocation> usedGoals = new HashSet<>();
         final Object2IntMap<ResourceLocation> tagCount = new Object2IntOpenHashMap<>();
         final Set<String> antisynergys = new HashSet<>();
         final Set<String> reactants = new HashSet<>();
         final Set<String> catalysts = new HashSet<>();
 
         for (int i = 0; i < SIZE_SQ; i++) {
-            final List<BingoGoal> possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i]);
+            List<BingoGoal> possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i]);
 
             int failSafe = 0;
             BingoGoal goal;
@@ -60,6 +61,15 @@ public class BingoBoard {
             goalGen:
             while (true) {
                 failSafe++;
+
+                if (failSafe >= 500) {
+                    if (difficultyLayout[i] == 0) {
+                        throw new IllegalArgumentException("Invalid goal list");
+                    }
+
+                    possibleGoals = BingoGoal.getGoalsByDifficulty(--difficultyLayout[i]);
+                    failSafe = 1;
+                }
 
                 final BingoGoal goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
 
@@ -69,7 +79,7 @@ public class BingoBoard {
                     }
                 }
 
-                if (ArrayUtils.contains(generatedSheet, goalCandidate)) {
+                if (!usedGoals.add(goalCandidate.getId())) {
                     continue;
                 }
 
@@ -109,16 +119,6 @@ public class BingoBoard {
                     if (goalCandidate.getReactant().stream().anyMatch(catalysts::contains)) {
                         continue;
                     }
-                }
-
-                if (failSafe >= 500) {
-                    if (difficultyLayout[i] == 0) {
-                        throw new IllegalArgumentException("Invalid goal list");
-                    }
-
-                    difficultyLayout[i]--;
-                    failSafe = 0;
-                    continue;
                 }
 
                 goal = goalCandidate;
@@ -163,22 +163,22 @@ public class BingoBoard {
                 amountOfVeryHard = 0;
                 amountOfHard = 0;
                 amountOfMedium = 0;
-                amountOfEasy = rand.nextInt(15, 20);
+                amountOfEasy = rand.nextIntBetweenInclusive(15, 19);
             }
             case 2 -> {
                 amountOfVeryHard = 0;
                 amountOfHard = 0;
-                amountOfMedium = rand.nextInt(15, 20);
+                amountOfMedium = rand.nextIntBetweenInclusive(15, 19);
                 amountOfEasy = 25 - amountOfMedium;
             }
             case 3 -> {
                 amountOfVeryHard = 0;
-                amountOfHard = rand.nextInt(15, 20);
+                amountOfHard = rand.nextIntBetweenInclusive(15, 19);
                 amountOfMedium = 25 - amountOfHard;
                 amountOfEasy = 25 - amountOfHard - amountOfMedium;
             }
             case 4 -> {
-                amountOfVeryHard = rand.nextInt(15, 20);
+                amountOfVeryHard = rand.nextIntBetweenInclusive(15, 19);
                 amountOfHard = 25 - amountOfVeryHard;
                 amountOfMedium = 25 - amountOfHard - amountOfVeryHard;
                 amountOfEasy = 25 - amountOfHard - amountOfMedium - amountOfVeryHard;
@@ -220,7 +220,7 @@ public class BingoBoard {
     }
 
     public ActiveGoal getGoal(int x, int y) {
-        return goals[x * 5 + y];
+        return goals[y * 5 + x];
     }
 
     @Override
@@ -244,7 +244,7 @@ public class BingoBoard {
 
             for (int line = 0; line < boxHeight - 1; line++) {
                 for (int x = 0; x < SIZE; x++) {
-                    final String box = texts[x][line];
+                    final String box = line < texts[x].length ? texts[x][line] : "";
                     result.append("| ").append(box).append(" ".repeat(boxWidth - box.length() - 2));
                 }
                 result.append("|\n");

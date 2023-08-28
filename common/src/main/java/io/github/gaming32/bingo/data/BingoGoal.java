@@ -56,6 +56,7 @@ public class BingoGoal {
     // TODO: requirements
     private final List<BingoTag> tags;
     private final JsonElement name;
+    // TODO: tooltip
     private final Integer infrequency;
     private final List<String> antisynergy;
     private final List<String> catalyst;
@@ -199,7 +200,7 @@ public class BingoGoal {
         for (final var entry : subs.entrySet()) {
             result.put(entry.getKey(), entry.getValue().substitute(result, rand));
         }
-        return result;
+        return ImmutableMap.copyOf(result);
     }
 
     public Map<String, Criterion> buildCriteria(
@@ -227,8 +228,11 @@ public class BingoGoal {
         Map<String, JsonElement> referable,
         RandomSource rand
     ) {
+        if (referable.isEmpty()) {
+            return value;
+        }
         if (value.isJsonArray()) {
-            JsonArray array = value.getAsJsonArray();
+            final JsonArray array = value.getAsJsonArray();
             final JsonArray result = new JsonArray();
             for (final JsonElement subValue : array) {
                 result.add(performSubstitutions(subValue, referable, rand));
@@ -252,6 +256,11 @@ public class BingoGoal {
             return result;
         }
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return id.toString();
     }
 
     @FunctionalInterface

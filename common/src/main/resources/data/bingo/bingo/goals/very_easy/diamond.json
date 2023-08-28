@@ -5,15 +5,13 @@
       "conditions": {
         "items": [
           {
-            "items": ["minecraft:iron_block"]
+            "items": ["minecraft:diamond"]
           }
         ]
       }
     }
   },
   "tags": ["bingo:item"],
-  "name": {"translate": "block.minecraft.iron_block"},
-  "infrequency": 2,
-  "antisynergy": "iron_blocks",
+  "name": {"translate": "item.minecraft.diamond"},
   "difficulty": 0
 }

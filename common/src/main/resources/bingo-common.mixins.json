@@ -4,6 +4,7 @@
   "package": "io.github.gaming32.bingo.mixin.common",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "MixinCommandSourceStack",
     "MixinServerPlayer"
   ],
   "client": [
