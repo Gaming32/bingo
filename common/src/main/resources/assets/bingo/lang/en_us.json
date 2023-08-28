@@ -2,9 +2,18 @@
   "bingo.count": "%s %s",
   "bingo.and": "%s & %s",
   "bingo.goal.fish_bucket": "Bucket of Fish",
-  "bingo.goal.fish_bucket.tooltip": "Can by any of the types of fish (anything that satisfies Tactical Fishing)",
+  "bingo.goal.fish_bucket.tooltip": "Can by any of the types of fish (anything that satisfies %s)",
   "bingo.goal.levels": "%s Levels",
   "bingo.goal.leaves": "%s Leaves",
   "bingo.goal.stone.tooltip": "NOT Cobblestone.",
-  "bingo.start.failed": "An unexpected error occurred while generating the board. Please try again."
+  "bingo.goal.potted_cactus": "Place a Cactus in a Flower Pot",
+  "bingo.goal.detonate": "Detonate a %s",
+  "bingo.goal.level_10_enchant": "Create an Enchantment requiring level 10+",
+  "bingo.goal.milk_mooshroom": "Milk a Mooshroom",
+  "bingo.goal.shear_mooshroom": "Shear a Mooshroom",
+  "bingo.goal.all_chestplates": "Every type of Chestplate",
+  "bingo.goal.all_chestplates.tooltip": "Leather, Gold, Chainmail, Iron, Diamond, and, yes, even Netherite.",
+  "bingo.goal.any_head": "Any mob head OTHER than a Wither Skeleton's",
+  "bingo.goal.any_head.tooltip": "Dragon, Skeleton, Zombie, or a Creeper Head. Wither Skeleton skulls do NOT count.",
+  "bingo.start.failed": "An unexpected error occurred while generating the board. Please try a different seed."
 }

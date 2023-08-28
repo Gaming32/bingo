@@ -44,7 +44,7 @@ public class Bingo {
                     .requires(ctx -> serverBoard == null)
                     .executes(ctx -> {
                         final int difficulty = getArg(
-                            ctx, "difficulty", () -> 0, IntegerArgumentType::getInteger // TODO: Change default to medium (2)
+                            ctx, "difficulty", () -> 3, IntegerArgumentType::getInteger
                         );
                         final long seed = getArg(
                             ctx, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong

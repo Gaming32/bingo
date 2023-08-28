@@ -1,0 +1,18 @@
+{
+  "criteria": {
+    "pot": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:potted_cactus"
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:action", "bingo:rare_biome", "bingo:overworld"],
+  "name": {"translate": "bingo.goal.potted_cactus"},
+  "difficulty": 2
+}

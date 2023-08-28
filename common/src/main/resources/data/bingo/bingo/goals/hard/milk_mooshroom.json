@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "enchant": {
+      "trigger": "minecraft:player_interacted_with_entity",
+      "conditions": {
+        "item": {
+          "items": ["minecraft:bucket"]
+        },
+        "entity": {
+          "type": "minecraft:mooshroom"
+        }
+      }
+    }
+  },
+  "tags": ["bingo:action", "bingo:rare_biome", "bingo:overworld"],
+  "name": {"translate": "bingo.goal.milk_mooshroom"},
+  "infrequency": 2,
+  "difficulty": 3
+}

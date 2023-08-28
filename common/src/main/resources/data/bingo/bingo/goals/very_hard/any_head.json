@@ -1,0 +1,18 @@
+{
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "item": [
+          {
+            "tag": "bingo:allowed_head"
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:item", "bingo:combat", "bingo:overworld"],
+  "name": {"translate": "bingo.goal.any_head"},
+  "tooltip": {"translate": "bingo.goal.any_head.tooltip"},
+  "difficulty": 4
+}

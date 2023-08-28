@@ -9,8 +9,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.LootDataManager;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
 import java.util.Arrays;
@@ -79,7 +77,7 @@ public class BingoBoard {
                     }
                 }
 
-                if (!usedGoals.add(goalCandidate.getId())) {
+                if (usedGoals.contains(goalCandidate.getId())) {
                     continue;
                 }
 
@@ -132,6 +130,7 @@ public class BingoBoard {
             catalysts.addAll(goal.getCatalyst());
             reactants.addAll(goal.getReactant());
 
+            usedGoals.add(goal.getId());
             generatedSheet[indices[i]] = goal;
         }
 

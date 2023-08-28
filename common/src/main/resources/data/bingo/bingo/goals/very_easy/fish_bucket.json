@@ -51,7 +51,12 @@
   ],
   "tags": ["bingo:item", "bingo:ocean", "bingo:overworld"],
   "name": {"translate": "bingo.goal.fish_bucket"},
-  "tooltip": {"translate": "bingo.goal.fish_bucket.tooltip"},
+  "tooltip": {
+    "translate": "bingo.goal.fish_bucket.tooltip",
+    "with": [
+      {"translate": "advancements.husbandry.tactical_fishing.title"}
+    ]
+  },
   "infrequency": 4,
   "antisynergy": "fish_bucket",
   "reactant": "use_buckets",
