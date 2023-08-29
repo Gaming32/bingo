@@ -4,7 +4,7 @@
   "bingo.goal.fish_bucket": "Bucket of Fish",
   "bingo.goal.fish_bucket.tooltip": "Can by any of the types of fish (anything that satisfies %s)",
   "bingo.goal.levels": "%s Levels",
-  "bingo.goal.leaves": "%s Leaves",
+  "bingo.goal.leaves": "%s of the same type of Leaves",
   "bingo.goal.stone.tooltip": "NOT Cobblestone.",
   "bingo.goal.potted_cactus": "Place a Cactus in a Flower Pot",
   "bingo.goal.detonate": "Detonate a %s",
@@ -22,5 +22,9 @@
   "bingo.difficulty.2": "medium",
   "bingo.difficulty.3": "hard",
   "bingo.difficulty.4": "very hard",
-  "bingo.ended": "The bingo game has ended with team %s as the victors!"
+  "bingo.ended": "The bingo game has ended with team %s as the victors!",
+  "bingo.ended.draw": "The bingo game has been ended in a draw!",
+  "bingo.ended.tie": "The bingo game has ended with a tie!",
+  "bingo.goal_obtained": "Your team got the goal %s",
+  "bingo.duplicate_teams": "Cannot start a bingo with the same team twice!"
 }

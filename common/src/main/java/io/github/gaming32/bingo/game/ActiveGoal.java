@@ -10,11 +10,13 @@ import java.util.Map;
 public final class ActiveGoal {
     private final BingoGoal goal;
     private final Component name;
+    private final Component tooltip;
     private final Map<String, Criterion> criteria;
 
-    public ActiveGoal(BingoGoal goal, Component name, Map<String, Criterion> criteria) {
+    public ActiveGoal(BingoGoal goal, Component name, Component tooltip, Map<String, Criterion> criteria) {
         this.goal = goal;
         this.name = name;
+        this.tooltip = tooltip;
         this.criteria = criteria;
     }
 
@@ -26,6 +28,10 @@ public final class ActiveGoal {
         return name;
     }
 
+    public Component getTooltip() {
+        return tooltip;
+    }
+
     public Map<String, Criterion> getCriteria() {
         return criteria;
     }
@@ -35,6 +41,7 @@ public final class ActiveGoal {
         return "ActiveGoal[" +
             "goal=" + goal + ", " +
             "name=" + name + ", " +
+            "tooltip=" + tooltip + ", " +
             "criteria=" + criteria + ']';
     }
 

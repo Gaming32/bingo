@@ -9,6 +9,8 @@ import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -18,6 +20,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -60,7 +63,8 @@ public class BingoGoal {
     private final String[][] requirements;
     private final List<BingoTag> tags;
     private final JsonElement name;
-    // TODO: tooltip
+    @Nullable
+    private final JsonElement tooltip;
     private final Integer infrequency;
     private final List<String> antisynergy;
     private final List<String> catalyst;
@@ -74,6 +78,7 @@ public class BingoGoal {
         String[][] requirements,
         List<BingoTag> tags,
         JsonElement name,
+        @Nullable JsonElement tooltip,
         Integer infrequency,
         List<String> antisynergy,
         List<String> catalyst,
@@ -86,6 +91,7 @@ public class BingoGoal {
         this.requirements = requirements;
         this.tags = tags;
         this.name = name;
+        this.tooltip = tooltip;
         this.infrequency = infrequency;
         this.antisynergy = antisynergy;
         this.catalyst = catalyst;
@@ -181,12 +187,13 @@ public class BingoGoal {
                     final ResourceLocation key = new ResourceLocation(GsonHelper.convertToString(e, "tag"));
                     final BingoTag tag = BingoTag.getTag(key);
                     if (tag == null) {
-                        throw new JsonSyntaxException("Unknown bingo tag: " + tag);
+                        throw new JsonSyntaxException("Unknown bingo tag: " + key);
                     }
                     return tag;
                 })
                 .toList(),
             GsonHelper.getNonNull(json, "name"),
+            json.get("tooltip"),
             json.has("infrequency") ? GsonHelper.getAsInt(json, "infrequency") : null,
             getListString(json, "antisynergy"),
             getListString(json, "catalyst"),
@@ -231,6 +238,11 @@ public class BingoGoal {
         return name;
     }
 
+    @Nullable
+    public JsonElement getTooltip() {
+        return tooltip;
+    }
+
     public Integer getInfrequency() {
         return infrequency;
     }
@@ -253,7 +265,14 @@ public class BingoGoal {
 
     public ActiveGoal build(RandomSource rand, LootDataManager lootData) {
         final Map<String, JsonElement> subs = buildSubs(rand);
-        return new ActiveGoal(this, buildName(subs, rand), buildCriteria(subs, rand, lootData));
+        final Component tooltip = buildTooltip(subs, rand);
+        final MutableComponent name = buildName(subs, rand);
+        if (tooltip != null) {
+            name.withStyle(s -> s
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip))
+            );
+        }
+        return new ActiveGoal(this, name, tooltip, buildCriteria(subs, rand, lootData));
     }
 
     public Map<String, JsonElement> buildSubs(RandomSource rand) {
@@ -262,6 +281,17 @@ public class BingoGoal {
             result.put(entry.getKey(), entry.getValue().substitute(result, rand));
         }
         return ImmutableMap.copyOf(result);
+    }
+
+    public MutableComponent buildName(Map<String, JsonElement> referable, RandomSource rand) {
+        return Component.Serializer.fromJson(performSubstitutions(name, referable, rand));
+    }
+
+    public MutableComponent buildTooltip(Map<String, JsonElement> referable, RandomSource rand) {
+        if (tooltip == null) {
+            return null;
+        }
+        return Component.Serializer.fromJson(performSubstitutions(tooltip, referable, rand));
     }
 
     public Map<String, Criterion> buildCriteria(
@@ -278,10 +308,6 @@ public class BingoGoal {
             ), context));
         }
         return result.build();
-    }
-
-    public Component buildName(Map<String, JsonElement> referable, RandomSource rand) {
-        return Component.Serializer.fromJson(performSubstitutions(name, referable, rand));
     }
 
     public static JsonElement performSubstitutions(

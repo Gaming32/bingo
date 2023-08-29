@@ -295,6 +295,10 @@ public class BingoBoard {
             return ordinal() == 0b11;
         }
 
+        public boolean one() {
+            return Integer.bitCount(ordinal()) == 1;
+        }
+
         public Teams or(Teams other) {
             return values()[ordinal() | other.ordinal()];
         }

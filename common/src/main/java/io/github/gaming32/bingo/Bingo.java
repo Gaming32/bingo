@@ -10,6 +10,8 @@ import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
+import dev.architectury.event.events.common.LifecycleEvent;
+import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.registry.ReloadListenerRegistry;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
@@ -20,9 +22,13 @@ import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.TeamArgument;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
@@ -45,7 +51,7 @@ public class Bingo {
     public static void init() {
         CommandRegistrationEvent.EVENT.register((dispatcher, registry, selection) -> {
             final CommandNode<CommandSourceStack> bingoCommand = dispatcher.register(literal("bingo")
-                .requires(ctx -> ctx.hasPermission(2))
+                .requires(source -> source.hasPermission(2))
                 .then(literal("start")
                     .requires(ctx -> activeGame == null)
                     .then(argument("team1", TeamArgument.team())
@@ -80,6 +86,14 @@ public class Bingo {
             );
         });
 
+        PlayerEvent.PLAYER_JOIN.register(player -> {
+            if (activeGame != null) {
+                activeGame.addPlayer(player);
+            }
+        });
+
+        LifecycleEvent.SERVER_STOPPED.register(instance -> activeGame = null);
+
         BingoTriggers.load();
 
         ReloadListenerRegistry.register(
@@ -106,18 +120,27 @@ public class Bingo {
         );
         final PlayerTeam team1 = TeamArgument.getTeam(context, "team1");
         final PlayerTeam team2 = TeamArgument.getTeam(context, "team2");
+
+        if (team1 == team2) {
+            // Should probably be a CommandSyntaxException?
+            throw new CommandRuntimeException(Component.translatable("bingo.duplicate_teams"));
+        }
+        final MinecraftServer server = context.getSource().getServer();
+        final PlayerList playerList = server.getPlayerList();
+
         final BingoBoard board;
         try {
-            board = BingoBoard.generate(
-                difficulty, RandomSource.create(seed), context.getSource().getServer().getLootData()
-            );
+            board = BingoBoard.generate(difficulty, RandomSource.create(seed), server.getLootData());
         } catch (Exception e) {
             LOGGER.error("Error generating bingo board", e);
             throw new CommandRuntimeException(Component.translatable("bingo.start.failed"));
         }
-        LOGGER.info("Generated board:\n{}", board);
+        LOGGER.info("Generated board (seed {}):\n{}", seed, board);
+
         activeGame = new BingoGame(board, BingoGameMode.STANDARD, team1, team2); // TODO: Implement gamemode choosing
-        context.getSource().getServer().getPlayerList().broadcastSystemMessage(Component.translatable(
+        updateCommandTree(playerList);
+        playerList.getPlayers().forEach(activeGame::addPlayer);
+        playerList.broadcastSystemMessage(Component.translatable(
             "bingo.started", Component.translatable("bingo.difficulty." + difficulty)
         ), false);
         return Command.SINGLE_SUCCESS;
@@ -151,5 +174,18 @@ public class Bingo {
         }
 
         return defaultValue.get();
+    }
+
+    public static void updateCommandTree(PlayerList playerList) {
+        final Commands commands = playerList.getServer().getCommands();
+        final CommandNode<CommandSourceStack> bingoCommand = commands
+            .getDispatcher()
+            .getRoot()
+            .getChild("bingo");
+        for (final ServerPlayer player : playerList.getPlayers()) {
+            if (bingoCommand.canUse(player.createCommandSourceStack())) {
+                commands.sendCommands(player);
+            }
+        }
     }
 }

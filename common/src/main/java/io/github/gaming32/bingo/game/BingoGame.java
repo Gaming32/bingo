@@ -1,9 +1,13 @@
 package io.github.gaming32.bingo.game;
 
+import io.github.gaming32.bingo.Bingo;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -33,15 +37,37 @@ public class BingoGame {
         return gameMode;
     }
 
+    /**
+     * @apiNote {@code player} does <i>not</i> need to be in a team. In fact, they should be added even if they aren't!
+     */
     public void addPlayer(ServerPlayer player) {
         registerListeners(player);
     }
 
     public void endGame(PlayerList playerList, BingoBoard.Teams winner) {
         clearListeners(playerList);
-        playerList.broadcastSystemMessage(Component.translatable(
-            "bingo.ended", winner
-        ), false);
+        final Component message;
+        if (winner.any()) {
+            if (winner.all()) {
+                message = Component.translatable("bingo.ended.tie");
+            } else {
+                final PlayerTeam playerTeam = getTeam(winner);
+                Component teamName = playerTeam.getDisplayName();
+                if (playerTeam.getColor() != ChatFormatting.RESET) {
+                    teamName = teamName.copy().withStyle(playerTeam.getColor());
+                }
+                message = Component.translatable("bingo.ended", teamName);
+            }
+            for (final ServerPlayer player : playerList.getPlayers()) {
+                player.playNotifySound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.MASTER, 1f, 1f);
+            }
+        } else {
+            message = Component.translatable("bingo.ended.draw");
+        }
+        playerList.broadcastSystemMessage(message, false);
+
+        Bingo.activeGame = null;
+        Bingo.updateCommandTree(playerList);
     }
 
     private void registerListeners(ServerPlayer player) {
@@ -55,7 +81,7 @@ public class BingoGame {
             final ServerPlayer player = playerList.getPlayer(playerEntry.getKey());
             if (player == null) continue;
             for (final ActiveGoal goal : playerEntry.getValue().keySet()) {
-                unregisterListeners(player, goal);
+                unregisterListeners(player, goal, true);
             }
         }
     }
@@ -80,11 +106,11 @@ public class BingoGame {
         }
     }
 
-    private void unregisterListeners(ServerPlayer player, ActiveGoal goal) {
+    private void unregisterListeners(ServerPlayer player, ActiveGoal goal, boolean force) {
         final AdvancementProgress progress = getOrStartProgress(player, goal);
         for (final var entry : goal.getCriteria().entrySet()) {
             final CriterionProgress criterionProgress = progress.getCriterion(entry.getKey());
-            if (criterionProgress != null && (criterionProgress.isDone() || progress.isDone())) {
+            if (criterionProgress != null && (force || criterionProgress.isDone() || progress.isDone())) {
                 final CriterionTriggerInstance triggerInstance = entry.getValue().getTrigger();
                 if (triggerInstance != null) {
                     final CriterionTrigger<CriterionTriggerInstance> trigger = CriteriaTriggers.getCriterion(triggerInstance.getCriterion());
@@ -114,7 +140,7 @@ public class BingoGame {
         final AdvancementProgress progress = getOrStartProgress(player, goal);
         final boolean wasDone = progress.isDone();
         if (progress.grantProgress(criterion)) {
-            unregisterListeners(player, goal);
+            unregisterListeners(player, goal, false);
             awarded = true;
         }
         if (!wasDone && progress.isDone()) {
@@ -130,7 +156,21 @@ public class BingoGame {
         final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
         if (gameMode.canGetGoal(this.board, index, team)) {
             board[index] = board[index].or(team);
+            notifyTeam(team, goal, player.server.getPlayerList());
             checkForWin(player.server.getPlayerList());
+        }
+    }
+
+    private void notifyTeam(BingoBoard.Teams team, ActiveGoal goal, PlayerList playerList) {
+        final PlayerTeam playerTeam = getTeam(team);
+        final Component message = Component.translatable(
+            "bingo.goal_obtained", goal.getName().copy().withStyle(ChatFormatting.GREEN)
+        );
+        for (final String member : playerTeam.getPlayers()) {
+            final ServerPlayer player = playerList.getPlayerByName(member);
+            if (player == null) continue;
+            player.playNotifySound(SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.MASTER, 0.5f, 1f);
+            player.sendSystemMessage(message);
         }
     }
 
@@ -143,6 +183,14 @@ public class BingoGame {
             return BingoBoard.Teams.TEAM2;
         }
         return BingoBoard.Teams.NONE;
+    }
+
+    public PlayerTeam getTeam(BingoBoard.Teams team) {
+        if (!team.one()) {
+            throw new IllegalArgumentException("BingoGame.getTeam() called with multiple teams!");
+        }
+        assert team.hasTeam1 != team.hasTeam2;
+        return team.hasTeam1 ? team1 : team2;
     }
 
     public void checkForWin(PlayerList playerList) {
