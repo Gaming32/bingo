@@ -1,6 +1,5 @@
-package io.github.gaming32.bingo.board;
+package io.github.gaming32.bingo.game;
 
-import io.github.gaming32.bingo.ActiveGoal;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.util.Util;
@@ -218,8 +217,24 @@ public class BingoBoard {
         }
     }
 
+    public BoardState getState(int x, int y) {
+        return board[getIndex(x, y)];
+    }
+
     public ActiveGoal getGoal(int x, int y) {
-        return goals[y * 5 + x];
+        return goals[getIndex(x, y)];
+    }
+
+    private int getIndex(int x, int y) {
+        return y * 5 + x;
+    }
+
+    public BoardState[] getBoard() {
+        return board;
+    }
+
+    public ActiveGoal[] getGoals() {
+        return goals;
     }
 
     @Override
@@ -238,7 +253,7 @@ public class BingoBoard {
 
             final String[][] texts = new String[SIZE][];
             for (int x = 0; x < SIZE; x++) {
-                texts[x] = WordUtils.wrap(getGoal(x, y).name().getString(), boxWidth - 3, "\n", true).split("\n");
+                texts[x] = WordUtils.wrap(getGoal(x, y).getName().getString(), boxWidth - 3, "\n", true).split("\n");
             }
 
             for (int line = 0; line < boxHeight - 1; line++) {
@@ -272,8 +287,20 @@ public class BingoBoard {
             this.hasTeam2 = hasTeam2;
         }
 
+        public boolean any() {
+            return ordinal() != 0b00;
+        }
+
+        public boolean all() {
+            return ordinal() == 0b11;
+        }
+
         public BoardState or(BoardState other) {
             return values()[ordinal() | other.ordinal()];
+        }
+
+        public BoardState andNot(BoardState other) {
+            return values()[ordinal() & ~other.ordinal()];
         }
 
         public boolean and(BoardState other) {

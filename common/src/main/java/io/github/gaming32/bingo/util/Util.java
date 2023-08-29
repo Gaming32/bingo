@@ -5,7 +5,7 @@ import net.minecraft.util.RandomSource;
 public class Util {
     public static int[] generateIntArray(int length) {
         final int[] result = new int[length];
-        for (int i = 0; i < length; i++) {
+        for (int i = 1; i < length; i++) {
             result[i] = i;
         }
         return result;

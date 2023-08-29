@@ -10,10 +10,12 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.registry.ReloadListenerRegistry;
-import io.github.gaming32.bingo.board.BingoBoard;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
+import io.github.gaming32.bingo.game.BingoBoard;
+import io.github.gaming32.bingo.game.BingoGame;
+import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
@@ -34,14 +36,15 @@ public class Bingo {
     public static final String MOD_ID = "bingo";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static BingoBoard serverBoard, clientBoard;
+    public static BingoGame activeGame;
+    public static BingoBoard clientBoard;
 
     public static void init() {
         CommandRegistrationEvent.EVENT.register((dispatcher, registry, selection) -> {
             final CommandNode<CommandSourceStack> bingoCommand = dispatcher.register(literal("bingo")
                 .requires(ctx -> ctx.hasPermission(2))
                 .then(literal("start")
-                    .requires(ctx -> serverBoard == null)
+                    .requires(ctx -> activeGame == null)
                     .executes(ctx -> {
                         final int difficulty = getArg(
                             ctx, "difficulty", () -> 3, IntegerArgumentType::getInteger
@@ -59,10 +62,22 @@ public class Bingo {
                             throw new CommandRuntimeException(Component.translatable("bingo.start.failed"));
                         }
                         LOGGER.info("Generated board:\n{}", board);
+                        activeGame = new BingoGame(board, BingoGameMode.STANDARD); // TODO: Implement gamemode choosing
+                        ctx.getSource().getServer().getPlayerList().broadcastSystemMessage(Component.translatable(
+                            "bingo.started", Component.translatable("bingo.difficulty." + difficulty)
+                        ), false);
+                        return Command.SINGLE_SUCCESS;
+                    })
+                )
+                .then(literal("stop")
+                    .requires(ctx -> activeGame != null)
+                    .executes(ctx -> {
+                        activeGame.endGame(ctx.getSource().getServer().getPlayerList(), activeGame.getWinner(true));
                         return Command.SINGLE_SUCCESS;
                     })
                 )
             );
+
             final CommandNode<CommandSourceStack> startCommand = bingoCommand.getChild("start");
             dispatcher.register(literal("bingo")
                 .then(literal("start")

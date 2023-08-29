@@ -3,8 +3,8 @@ package io.github.gaming32.bingo.data;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
-import io.github.gaming32.bingo.ActiveGoal;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -16,9 +16,13 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.storage.loot.LootDataManager;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class BingoGoal {
@@ -53,7 +57,7 @@ public class BingoGoal {
     private final ResourceLocation id;
     private final Map<String, BingoSub> subs;
     private final Map<String, JsonObject> criteria;
-    // TODO: requirements
+    private final String[][] requirements;
     private final List<BingoTag> tags;
     private final JsonElement name;
     // TODO: tooltip
@@ -67,6 +71,7 @@ public class BingoGoal {
         ResourceLocation id,
         Map<String, BingoSub> subs,
         Map<String, JsonObject> criteria,
+        String[][] requirements,
         List<BingoTag> tags,
         JsonElement name,
         Integer infrequency,
@@ -78,6 +83,7 @@ public class BingoGoal {
         this.id = id;
         this.subs = subs;
         this.criteria = criteria;
+        this.requirements = requirements;
         this.tags = tags;
         this.name = name;
         this.infrequency = infrequency;
@@ -96,6 +102,63 @@ public class BingoGoal {
     }
 
     public static BingoGoal deserialize(ResourceLocation id, JsonObject json) {
+        final Map<String, JsonObject> criteria = GsonHelper.getAsJsonObject(json, "criteria")
+            .entrySet()
+            .stream()
+            .collect(ImmutableMap.toImmutableMap(
+                Map.Entry::getKey,
+                e -> GsonHelper.convertToJsonObject(e.getValue(), "criterion")
+            ));
+        if (criteria.isEmpty()) {
+            throw new JsonSyntaxException("Bingo goal criteria cannot be empty");
+        }
+
+        final JsonArray reqArray = GsonHelper.getAsJsonArray(json, "requirements", new JsonArray());
+        String[][] requirements = new String[reqArray.size()][];
+
+        for (int i = 0; i < requirements.length; i++) {
+            final JsonArray innerArray = GsonHelper.convertToJsonArray(reqArray.get(i), "requirements[" + i + "]");
+            requirements[i] = new String[innerArray.size()];
+            for (int j = 0; j < innerArray.size(); j++) {
+                requirements[i][j] = GsonHelper.convertToString(innerArray.get(j), "requirements[" + i + "][" + j + "]");
+            }
+        }
+
+        if (requirements.length == 0) {
+            requirements = new String[criteria.size()][];
+            int i = 0;
+            for (final String criterion : criteria.keySet()) {
+                requirements[i++] = new String[] {criterion};
+            }
+        }
+
+        for (final String[] innerArray : requirements) {
+            if (innerArray.length == 0 && criteria.isEmpty()) {
+                throw new JsonSyntaxException("Requirement entry cannot be empty");
+            }
+            for (final String req : innerArray) {
+                if (!criteria.containsKey(req)) {
+                    throw new JsonSyntaxException("Unknown required criterion '" + req + "'");
+                }
+            }
+        }
+
+        for (final String criterion : criteria.keySet()) {
+            boolean isRequired = false;
+            for (final String[] innerArray : requirements) {
+                if (ArrayUtils.contains(innerArray, criterion)) {
+                    isRequired = true;
+                    break;
+                }
+            }
+            if (!isRequired) {
+                throw new JsonSyntaxException(
+                    "Criterion '" + criterion + "' isn't a requirement for completion. " +
+                        "This isn't supported behavior, all criteria must be required."
+                );
+            }
+        }
+
         return new BingoGoal(
             id,
             GsonHelper.getAsJsonObject(json, "bingo_subs", new JsonObject())
@@ -110,13 +173,7 @@ public class BingoGoal {
                     }
                     return factory.apply(data);
                 })),
-            GsonHelper.getAsJsonObject(json, "criteria")
-                .entrySet()
-                .stream()
-                .collect(ImmutableMap.toImmutableMap(
-                    Map.Entry::getKey,
-                    e -> GsonHelper.convertToJsonObject(e.getValue(), "criterion")
-                )),
+            criteria, requirements,
             GsonHelper.getAsJsonArray(json, "tags", new JsonArray())
                 .asList()
                 .stream()
@@ -160,6 +217,10 @@ public class BingoGoal {
 
     public Map<String, JsonObject> getCriteria() {
         return criteria;
+    }
+
+    public String[][] getRequirements() {
+        return requirements;
     }
 
     public List<BingoTag> getTags() {
