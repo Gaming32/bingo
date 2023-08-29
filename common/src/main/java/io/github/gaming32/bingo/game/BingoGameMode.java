@@ -6,18 +6,18 @@ public interface BingoGameMode {
     BingoGameMode STANDARD = new BingoGameMode() {
         @NotNull
         @Override
-        public BingoBoard.BoardState getWinner(BingoBoard board, boolean tryHarder) {
-            BingoBoard.BoardState result = BingoBoard.BoardState.OFF;
-            if (didWin(board, BingoBoard.BoardState.TEAM1)) {
-                result = result.or(BingoBoard.BoardState.TEAM1);
+        public BingoBoard.Teams getWinner(BingoBoard board, boolean tryHarder) {
+            BingoBoard.Teams result = BingoBoard.Teams.NONE;
+            if (didWin(board, BingoBoard.Teams.TEAM1)) {
+                result = result.or(BingoBoard.Teams.TEAM1);
             }
-            if (didWin(board, BingoBoard.BoardState.TEAM2)) {
-                result = result.or(BingoBoard.BoardState.TEAM2);
+            if (didWin(board, BingoBoard.Teams.TEAM2)) {
+                result = result.or(BingoBoard.Teams.TEAM2);
             }
             return result;
         }
 
-        private boolean didWin(BingoBoard board, BingoBoard.BoardState team) {
+        private boolean didWin(BingoBoard board, BingoBoard.Teams team) {
             columnsCheck:
             for (int column = 0; column < BingoBoard.SIZE; column++) {
                 for (int y = 0; y < BingoBoard.SIZE; y++) {
@@ -56,32 +56,48 @@ public interface BingoGameMode {
             }
             return true;
         }
+
+        @Override
+        public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team) {
+            return !board.getStates()[index].and(team);
+        }
     };
 
-    BingoGameMode LOCKOUT = (board, tryHarder) -> {
-        int count1 = 0;
-        int count2 = 0;
-        for (final BingoBoard.BoardState state : board.getBoard()) {
-            if (state.hasTeam1) {
-                count1++;
-                if (count1 >= BingoBoard.SIZE_SQ / 2 + 1) {
-                    return BingoBoard.BoardState.TEAM1;
+    BingoGameMode LOCKOUT = new BingoGameMode() {
+        @NotNull
+        @Override
+        public BingoBoard.Teams getWinner(BingoBoard board, boolean tryHarder) {
+            int count1 = 0;
+            int count2 = 0;
+            for (final BingoBoard.Teams state : board.getStates()) {
+                if (state.hasTeam1) {
+                    count1++;
+                    if (count1 >= BingoBoard.SIZE_SQ / 2 + 1) {
+                        return BingoBoard.Teams.TEAM1;
+                    }
+                }
+                if (state.hasTeam2) {
+                    count2++;
+                    if (count2 >= BingoBoard.SIZE_SQ / 2 + 1) {
+                        return BingoBoard.Teams.TEAM1;
+                    }
                 }
             }
-            if (state.hasTeam2) {
-                count2++;
-                if (count2 >= BingoBoard.SIZE_SQ / 2 + 1) {
-                    return BingoBoard.BoardState.TEAM1;
-                }
+            if (tryHarder) {
+                return count1 == count2 ? BingoBoard.Teams.BOTH
+                    : count1 > count2 ? BingoBoard.Teams.TEAM1 : BingoBoard.Teams.TEAM2;
             }
+            return BingoBoard.Teams.NONE;
         }
-        if (tryHarder) {
-            return count1 == count2 ? BingoBoard.BoardState.BOTH_TEAMS
-                : count1 > count2 ? BingoBoard.BoardState.TEAM1 : BingoBoard.BoardState.TEAM2;
+
+        @Override
+        public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team) {
+            return !board.getStates()[index].any();
         }
-        return BingoBoard.BoardState.OFF;
     };
 
     @NotNull
-    BingoBoard.BoardState getWinner(BingoBoard board, boolean tryHarder);
+    BingoBoard.Teams getWinner(BingoBoard board, boolean tryHarder);
+
+    boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team);
 }

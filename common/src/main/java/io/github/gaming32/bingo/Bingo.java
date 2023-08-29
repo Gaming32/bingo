@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.logging.LogUtils;
@@ -19,10 +20,12 @@ import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.arguments.TeamArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.RandomSupport;
+import net.minecraft.world.scores.PlayerTeam;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -45,29 +48,11 @@ public class Bingo {
                 .requires(ctx -> ctx.hasPermission(2))
                 .then(literal("start")
                     .requires(ctx -> activeGame == null)
-                    .executes(ctx -> {
-                        final int difficulty = getArg(
-                            ctx, "difficulty", () -> 3, IntegerArgumentType::getInteger
-                        );
-                        final long seed = getArg(
-                            ctx, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong
-                        );
-                        final BingoBoard board;
-                        try {
-                            board = BingoBoard.generate(
-                                difficulty, RandomSource.create(seed), ctx.getSource().getServer().getLootData()
-                            );
-                        } catch (Exception e) {
-                            LOGGER.error("Error generating bingo board", e);
-                            throw new CommandRuntimeException(Component.translatable("bingo.start.failed"));
-                        }
-                        LOGGER.info("Generated board:\n{}", board);
-                        activeGame = new BingoGame(board, BingoGameMode.STANDARD); // TODO: Implement gamemode choosing
-                        ctx.getSource().getServer().getPlayerList().broadcastSystemMessage(Component.translatable(
-                            "bingo.started", Component.translatable("bingo.difficulty." + difficulty)
-                        ), false);
-                        return Command.SINGLE_SUCCESS;
-                    })
+                    .then(argument("team1", TeamArgument.team())
+                        .then(argument("team2", TeamArgument.team())
+                            .executes(Bingo::startGame)
+                        )
+                    )
                 )
                 .then(literal("stop")
                     .requires(ctx -> activeGame != null)
@@ -84,13 +69,11 @@ public class Bingo {
                     .then(literal("--difficulty")
                         .then(argument("difficulty", IntegerArgumentType.integer(0, 4))
                             .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
-                            .executes(startCommand.getCommand())
                         )
                     )
                     .then(literal("--seed")
                         .then(argument("seed", LongArgumentType.longArg())
                             .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
-                            .executes(startCommand.getCommand())
                         )
                     )
                 )
@@ -112,6 +95,32 @@ public class Bingo {
         );
 
         LOGGER.info("I got the diagonal!");
+    }
+
+    private static int startGame(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        final int difficulty = getArg(
+            context, "difficulty", () -> 3, IntegerArgumentType::getInteger // TODO: Default to 2 when that works
+        );
+        final long seed = getArg(
+            context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong
+        );
+        final PlayerTeam team1 = TeamArgument.getTeam(context, "team1");
+        final PlayerTeam team2 = TeamArgument.getTeam(context, "team2");
+        final BingoBoard board;
+        try {
+            board = BingoBoard.generate(
+                difficulty, RandomSource.create(seed), context.getSource().getServer().getLootData()
+            );
+        } catch (Exception e) {
+            LOGGER.error("Error generating bingo board", e);
+            throw new CommandRuntimeException(Component.translatable("bingo.start.failed"));
+        }
+        LOGGER.info("Generated board:\n{}", board);
+        activeGame = new BingoGame(board, BingoGameMode.STANDARD, team1, team2); // TODO: Implement gamemode choosing
+        context.getSource().getServer().getPlayerList().broadcastSystemMessage(Component.translatable(
+            "bingo.started", Component.translatable("bingo.difficulty." + difficulty)
+        ), false);
+        return Command.SINGLE_SUCCESS;
     }
 
     private static <T> T getArg(

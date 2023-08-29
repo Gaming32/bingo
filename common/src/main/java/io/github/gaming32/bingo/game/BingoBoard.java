@@ -21,11 +21,11 @@ public class BingoBoard {
 
     private static final int[] SECONDARY_DIAGONAL = {4, 8, 12, 16, 20};
 
-    private final BoardState[] board = new BoardState[SIZE_SQ];
+    private final Teams[] states = new Teams[SIZE_SQ];
     private final ActiveGoal[] goals = new ActiveGoal[SIZE_SQ];
 
     private BingoBoard() {
-        Arrays.fill(board, BoardState.OFF);
+        Arrays.fill(states, Teams.NONE);
     }
 
     public static BingoBoard generate(int difficulty, RandomSource rand, LootDataManager lootData) {
@@ -217,8 +217,8 @@ public class BingoBoard {
         }
     }
 
-    public BoardState getState(int x, int y) {
-        return board[getIndex(x, y)];
+    public Teams getState(int x, int y) {
+        return states[getIndex(x, y)];
     }
 
     public ActiveGoal getGoal(int x, int y) {
@@ -229,8 +229,8 @@ public class BingoBoard {
         return y * 5 + x;
     }
 
-    public BoardState[] getBoard() {
-        return board;
+    public Teams[] getStates() {
+        return states;
     }
 
     public ActiveGoal[] getGoals() {
@@ -274,15 +274,15 @@ public class BingoBoard {
         return result.toString();
     }
 
-    public enum BoardState {
-        OFF(false, false),
+    public enum Teams {
+        NONE(false, false),
         TEAM1(true, false),
         TEAM2(false, true),
-        BOTH_TEAMS(true, true);
+        BOTH(true, true);
 
         public final boolean hasTeam1, hasTeam2;
 
-        BoardState(boolean hasTeam1, boolean hasTeam2) {
+        Teams(boolean hasTeam1, boolean hasTeam2) {
             this.hasTeam1 = hasTeam1;
             this.hasTeam2 = hasTeam2;
         }
@@ -295,15 +295,15 @@ public class BingoBoard {
             return ordinal() == 0b11;
         }
 
-        public BoardState or(BoardState other) {
+        public Teams or(Teams other) {
             return values()[ordinal() | other.ordinal()];
         }
 
-        public BoardState andNot(BoardState other) {
+        public Teams andNot(Teams other) {
             return values()[ordinal() & ~other.ordinal()];
         }
 
-        public boolean and(BoardState other) {
+        public boolean and(Teams other) {
             return (ordinal() & other.ordinal()) != 0;
         }
     }

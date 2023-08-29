@@ -4,7 +4,9 @@ import net.minecraft.advancements.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,11 +15,14 @@ import java.util.UUID;
 public class BingoGame {
     private final BingoBoard board;
     private final BingoGameMode gameMode;
+    private final PlayerTeam team1, team2;
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> goalProgress = new HashMap<>();
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode) {
+    public BingoGame(BingoBoard board, BingoGameMode gameMode, PlayerTeam team1, PlayerTeam team2) {
         this.board = board;
         this.gameMode = gameMode;
+        this.team1 = team1;
+        this.team2 = team2;
     }
 
     public BingoBoard getBoard() {
@@ -32,7 +37,7 @@ public class BingoGame {
         registerListeners(player);
     }
 
-    public void endGame(PlayerList playerList, BingoBoard.BoardState winner) {
+    public void endGame(PlayerList playerList, BingoBoard.Teams winner) {
         clearListeners(playerList);
         playerList.broadcastSystemMessage(Component.translatable(
             "bingo.ended", winner
@@ -119,26 +124,34 @@ public class BingoGame {
     }
 
     private void updateTeamBoard(ServerPlayer player, ActiveGoal goal) {
-        final BingoBoard.BoardState team = getTeam(player);
-        if (team == null) return;
-        final BingoBoard.BoardState[] board = this.board.getBoard();
+        final BingoBoard.Teams team = getTeam(player);
+        if (!team.any()) return;
+        final BingoBoard.Teams[] board = this.board.getStates();
         final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
-        board[index] = board[index].or(team);
-        checkForWin(player.server.getPlayerList());
+        if (gameMode.canGetGoal(this.board, index, team)) {
+            board[index] = board[index].or(team);
+            checkForWin(player.server.getPlayerList());
+        }
     }
 
-    public BingoBoard.BoardState getTeam(ServerPlayer player) {
-        // TODO: Figure out how we want to handle this
-        throw new UnsupportedOperationException("Not implemented yet");
+    @NotNull
+    public BingoBoard.Teams getTeam(ServerPlayer player) {
+        if (player.isAlliedTo(team1)) {
+            return BingoBoard.Teams.TEAM1;
+        }
+        if (player.isAlliedTo(team2)) {
+            return BingoBoard.Teams.TEAM2;
+        }
+        return BingoBoard.Teams.NONE;
     }
 
     public void checkForWin(PlayerList playerList) {
-        final BingoBoard.BoardState winner = getWinner(false);
+        final BingoBoard.Teams winner = getWinner(false);
         if (!winner.any()) return;
         endGame(playerList, winner);
     }
 
-    public BingoBoard.BoardState getWinner(boolean tryHarder) {
+    public BingoBoard.Teams getWinner(boolean tryHarder) {
         return gameMode.getWinner(board, tryHarder);
     }
 }
