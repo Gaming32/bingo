@@ -1,0 +1,20 @@
+{
+  "criteria": {
+    "obtain": {
+      "trigger": "bingo:experience_changed",
+      "conditions": {
+        "levels": {
+          "min": 50
+        }
+      }
+    }
+  },
+  "tags": ["bingo:stat"],
+  "name": {
+    "translate": "bingo.goal.levels",
+    "with": [50]
+  },
+  "infrequency": 2,
+  "antisynergy": "levels",
+  "difficulty": 1
+}
