@@ -3,7 +3,7 @@
     "cod_bucket": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
             "items": ["minecraft:cod_bucket"]
           }
@@ -13,7 +13,7 @@
     "pufferfish_bucket": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
             "items": ["minecraft:pufferfish_bucket"]
           }
@@ -23,7 +23,7 @@
     "salmon_bucket": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
             "items": ["minecraft:salmon_bucket"]
           }
@@ -33,7 +33,7 @@
     "tropical_fish_bucket": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
             "items": ["minecraft:tropical_fish_bucket"]
           }

@@ -1,9 +1,9 @@
 {
   "criteria": {
     "enchant": {
-      "trigger": "minecraft:enchanted_item",
+      "trigger": "bingo:enchanted_item",
       "conditions": {
-        "levels": {
+        "levels_required": {
           "min": 10
         }
       }

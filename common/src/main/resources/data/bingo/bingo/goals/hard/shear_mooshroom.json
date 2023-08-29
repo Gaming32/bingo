@@ -13,7 +13,7 @@
     }
   },
   "tags": ["bingo:action", "bingo:rare_biome", "bingo:overworld"],
-  "name": {"translate": "bingo.goal.milk_mooshroom"},
+  "name": {"translate": "bingo.goal.shear_mooshroom"},
   "infrequency": 2,
   "difficulty": 3
 }

@@ -3,7 +3,7 @@
     "leather_chestplate": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
             "items": ["minecraft:leather_chestplate"]
           }
@@ -13,7 +13,7 @@
     "golden_chestplate": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
             "items": ["minecraft:golden_chestplate"]
           }
@@ -23,7 +23,7 @@
     "chainmail_chestplate": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
             "items": ["minecraft:chainmail_chestplate"]
           }
@@ -33,7 +33,7 @@
     "iron_chestplate": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
             "items": ["minecraft:iron_chestplate"]
           }
@@ -43,7 +43,7 @@
     "diamond_chestplate": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
             "items": ["minecraft:diamond_chestplate"]
           }
@@ -53,7 +53,7 @@
     "netherite_chestplate": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
             "items": ["minecraft:netherite_chestplate"]
           }
@@ -61,16 +61,6 @@
       }
     }
   },
-  "requirements": [
-    [
-      "leather_chestplate",
-      "golden_chestplate",
-      "chainmail_chestplate",
-      "iron_chestplate",
-      "diamond_chestplate",
-      "netherite_chestplate"
-    ]
-  ],
   "tags": ["bingo:item", "bingo:combat"],
   "name": {"translate": "bingo.goal.all_chestplates"},
   "tooltip": {"translate": "bingo.goal.all_chestplates.tooltip"},

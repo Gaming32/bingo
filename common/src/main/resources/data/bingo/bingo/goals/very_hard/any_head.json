@@ -1,16 +1,76 @@
 {
   "criteria": {
-    "obtain": {
+    "skeleton_skull": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
-        "item": [
+        "items": [
           {
-            "tag": "bingo:allowed_head"
+            "items": ["minecraft:skeleton_skull"]
+          }
+        ]
+      }
+    },
+    "player_head": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:player_head"]
+          }
+        ]
+      }
+    },
+    "zombie_head": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:zombie_head"]
+          }
+        ]
+      }
+    },
+    "creeper_head": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:creeper_head"]
+          }
+        ]
+      }
+    },
+    "dragon_head": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:dragon_head"]
+          }
+        ]
+      }
+    },
+    "piglin_head": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["minecraft:piglin_head"]
           }
         ]
       }
     }
   },
+  "requirements": [
+    [
+      "skeleton_skull",
+      "player_head",
+      "zombie_head",
+      "creeper_head",
+      "dragon_head",
+      "piglin_head"
+    ]
+  ],
   "tags": ["bingo:item", "bingo:combat", "bingo:overworld"],
   "name": {"translate": "bingo.goal.any_head"},
   "tooltip": {"translate": "bingo.goal.any_head.tooltip"},
