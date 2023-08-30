@@ -1,62 +1,15 @@
 {
   "criteria": {
-    "leather_chestplate": {
+    "obtain": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
-          {
-            "items": ["minecraft:leather_chestplate"]
-          }
-        ]
-      }
-    },
-    "golden_chestplate": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": ["minecraft:golden_chestplate"]
-          }
-        ]
-      }
-    },
-    "chainmail_chestplate": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": ["minecraft:chainmail_chestplate"]
-          }
-        ]
-      }
-    },
-    "iron_chestplate": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": ["minecraft:iron_chestplate"]
-          }
-        ]
-      }
-    },
-    "diamond_chestplate": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": ["minecraft:diamond_chestplate"]
-          }
-        ]
-      }
-    },
-    "netherite_chestplate": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": ["minecraft:netherite_chestplate"]
-          }
+          {"items": ["minecraft:leather_chestplate"]},
+          {"items": ["minecraft:golden_chestplate"]},
+          {"items": ["minecraft:chainmail_chestplate"]},
+          {"items": ["minecraft:iron_chestplate"]},
+          {"items": ["minecraft:diamond_chestplate"]},
+          {"items": ["minecraft:netherite_chestplate"]}
         ]
       }
     }

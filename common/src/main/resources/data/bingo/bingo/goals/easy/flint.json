@@ -1,0 +1,48 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "min": 16,
+        "max": 64
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": ["minecraft:flint"]
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:item"],
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {"translate": "item.minecraft.flint"}
+    ]
+  },
+  "icon": {
+    "item": "minecraft:flint",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
+  "difficulty": 1
+}

@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo;
 
+import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
@@ -200,7 +201,9 @@ public class Bingo {
             board = BingoBoard.generate(difficulty, RandomSource.create(seed), server.getLootData());
         } catch (Exception e) {
             LOGGER.error("Error generating bingo board", e);
-            throw new CommandRuntimeException(Component.translatable("bingo.start.failed"));
+            throw new CommandRuntimeException(Component.translatable(
+                e instanceof JsonSyntaxException ? "bingo.start.invalid_goal" : "bingo.start.failed"
+            ));
         }
         LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 

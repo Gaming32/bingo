@@ -1,0 +1,49 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "min": 16,
+        "max": 32
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": ["minecraft:tipped_arrow"]
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:item", "bingo:nether", "bingo:overworld"],
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {"translate": "item.minecraft.tipped_arrow"}
+    ]
+  },
+  "icon": {
+    "item": "minecraft:tipped_arrow",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "nbt": "{Potion:\"minecraft:mundane\"}"
+  },
+  "difficulty": 4
+}

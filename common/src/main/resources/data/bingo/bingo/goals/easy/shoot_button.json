@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "obtain": {
+      "trigger": "bingo:arrow_press",
+      "conditions": {
+        "arrow": {
+          "type": "#minecraft:arrows"
+        },
+        "button_or_plate": {
+          "tag": "minecraft:buttons"
+        }
+      }
+    }
+  },
+  "tags": ["bingo:action"],
+  "name": {"translate": "bingo.goal.shoot_button"},
+  "icon": {"item": "minecraft:oak_button"},
+  "difficulty": 1
+}

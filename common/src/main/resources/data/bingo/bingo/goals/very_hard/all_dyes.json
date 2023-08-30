@@ -1,0 +1,60 @@
+{
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {"items": ["minecraft:black_dye"]},
+          {"items": ["minecraft:blue_dye"]},
+          {"items": ["minecraft:brown_dye"]},
+          {"items": ["minecraft:cyan_dye"]},
+          {"items": ["minecraft:gray_dye"]},
+          {"items": ["minecraft:green_dye"]},
+          {"items": ["minecraft:light_blue_dye"]},
+          {"items": ["minecraft:light_gray_dye"]},
+          {"items": ["minecraft:lime_dye"]},
+          {"items": ["minecraft:magenta_dye"]},
+          {"items": ["minecraft:orange_dye"]},
+          {"items": ["minecraft:pink_dye"]},
+          {"items": ["minecraft:purple_dye"]},
+          {"items": ["minecraft:red_dye"]},
+          {"items": ["minecraft:white_dye"]},
+          {"items": ["minecraft:yellow_dye"]}
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:item", "bingo:color", "bingo:overworld"],
+  "name": {
+    "translate": "bingo.goal.all_dyes"
+  },
+  "tooltip": {
+    "translate": "bingo.sixteen_bang",
+    "with": [
+      {"translate": "color.minecraft.black"},
+      {"translate": "color.minecraft.blue"},
+      {"translate": "color.minecraft.brown"},
+      {"translate": "color.minecraft.cyan"},
+      {"translate": "color.minecraft.gray"},
+      {"translate": "color.minecraft.green"},
+      {"translate": "color.minecraft.light_blue"},
+      {"translate": "color.minecraft.light_gray"},
+      {"translate": "color.minecraft.lime"},
+      {"translate": "color.minecraft.magenta"},
+      {"translate": "color.minecraft.orange"},
+      {"translate": "color.minecraft.pink"},
+      {"translate": "color.minecraft.purple"},
+      {"translate": "color.minecraft.red"},
+      {"translate": "color.minecraft.white"},
+      {"translate": "color.minecraft.yellow"}
+    ]
+  },
+  "icon": {
+    "item": "minecraft:red_dye",
+    "count": 16
+  },
+  "infrequency": 2,
+  "antisynergy": "every_color",
+  "reactant": "use_furnace",
+  "difficulty": 4
+}
