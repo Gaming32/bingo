@@ -1,12 +1,16 @@
 package io.github.gaming32.bingo.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
+import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.ClientGoal;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -20,7 +24,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class BingoClient {
     private static final ResourceLocation BOARD_TEXTURE = new ResourceLocation("bingo:textures/gui/board.png");
-    private static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
+    public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
 
     public static final int BOARD_WIDTH = 104;
     public static final int BOARD_HEIGHT = 114;
@@ -36,7 +40,7 @@ public class BingoClient {
         ClientGuiEvent.RENDER_HUD.register((graphics, tickDelta) -> {
             if (clientBoard == null) return;
             final Minecraft minecraft = Minecraft.getInstance();
-            if (minecraft.options.renderDebug) return;
+            if (minecraft.options.renderDebug || minecraft.screen instanceof BoardScreen) return;
             final float scale = boardScale;
             final float x = boardCorner.getX(graphics, scale);
             final float y = boardCorner.getY(graphics, scale);
@@ -46,6 +50,16 @@ public class BingoClient {
         ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> {
             clientTeam = BingoBoard.Teams.NONE;
             clientBoard = null;
+        });
+
+        final KeyMapping boardKey = new KeyMapping("bingo.key.board", InputConstants.KEY_B, "bingo.key.category");
+        KeyMappingRegistry.register(boardKey);
+        ClientTickEvent.CLIENT_PRE.register(instance -> {
+            while (boardKey.consumeClick()) {
+                if (clientBoard != null) {
+                    instance.setScreen(new BoardScreen());
+                }
+            }
         });
     }
 

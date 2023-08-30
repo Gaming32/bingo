@@ -28,5 +28,7 @@
   "bingo.goal_obtained": "Your team got the goal %s",
   "bingo.duplicate_teams": "Cannot start a bingo with the same team twice!",
   "bingo.board.title": "Bingo Board",
-  "bingo.board.copy": "Copy board to clipboard"
+  "bingo.board.copy": "Copy board to clipboard",
+  "bingo.key.board": "Show Bingo Board",
+  "bingo.key.category": "Bingo"
 }
