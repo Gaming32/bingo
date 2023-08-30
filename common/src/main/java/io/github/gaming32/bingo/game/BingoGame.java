@@ -1,14 +1,12 @@
 package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.network.InitBoardMessage;
-import io.github.gaming32.bingo.network.ResyncStatesMessage;
-import io.github.gaming32.bingo.network.SyncTeamMessage;
-import io.github.gaming32.bingo.network.UpdateStateMessage;
+import io.github.gaming32.bingo.network.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.advancements.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundEvents;
@@ -17,10 +15,7 @@ import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class BingoGame {
     private static final BingoBoard.Teams[] EMPTY_TEAMS = Util.make(
@@ -52,10 +47,29 @@ public class BingoGame {
      * @apiNote {@code player} does <i>not</i> need to be in a team. In fact, they should be added even if they aren't!
      */
     public void addPlayer(ServerPlayer player) {
+        RemoveBoardMessage.INSTANCE.sendTo(player);
+        if (Bingo.needAdvancementsClear.remove(player)) {
+            player.connection.send(new ClientboundUpdateAdvancementsPacket(
+                false,
+                List.of(),
+                VanillaNetworking.generateAdvancementIds(BingoBoard.SIZE_SQ),
+                Map.of()
+            ));
+        }
+
         registerListeners(player);
+
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamMessage(team).sendTo(player);
+
         new InitBoardMessage(board.getGoals(), obfuscateTeam(team, board.getStates())).sendTo(player);
+        player.connection.send(new ClientboundUpdateAdvancementsPacket(
+            false,
+            VanillaNetworking.generateAdvancements(board.getGoals()),
+            Set.of(),
+            VanillaNetworking.generateProgressMap(board.getStates(), team)
+        ));
+        Bingo.needAdvancementsClear.add(player);
     }
 
     public static BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam, BingoBoard.Teams[] states) {
@@ -202,18 +216,31 @@ public class BingoGame {
         final Component message = Component.translatable(
             "bingo.goal_obtained", goal.getName().copy().withStyle(ChatFormatting.GREEN)
         );
-        final UpdateStateMessage stateMessage = new UpdateStateMessage(boardIndex, board.getStates()[boardIndex]);
+        final BingoBoard.Teams boardState = board.getStates()[boardIndex];
+        final UpdateStateMessage stateMessage = !Bingo.showOtherTeam
+            ? new UpdateStateMessage(boardIndex, obfuscateTeam(team, boardState)) : null;
+        final ClientboundUpdateAdvancementsPacket vanillaPacket = new ClientboundUpdateAdvancementsPacket(
+            false,
+            List.of(),
+            Set.of(),
+            Map.of(
+                VanillaNetworking.generateAdvancementId(boardIndex),
+                VanillaNetworking.generateProgress(boardState.and(team))
+            )
+        );
         for (final String member : playerTeam.getPlayers()) {
             final ServerPlayer player = playerList.getPlayerByName(member);
             if (player == null) continue;
             player.playNotifySound(SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.MASTER, 0.5f, 1f);
             if (!Bingo.showOtherTeam) {
+                assert stateMessage != null;
                 stateMessage.sendTo(player);
             }
+            player.connection.send(vanillaPacket);
             player.sendSystemMessage(message);
         }
         if (Bingo.showOtherTeam) {
-            stateMessage.sendTo(playerList.getPlayers());
+            new UpdateStateMessage(boardIndex, boardState).sendTo(playerList.getPlayers());
         }
     }
 

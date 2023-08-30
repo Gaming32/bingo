@@ -2,6 +2,8 @@ package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.data.BingoGoal;
 import net.minecraft.advancements.Criterion;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -52,4 +54,14 @@ public final class ActiveGoal {
             "criteria=" + criteria + ']';
     }
 
+    public ItemStack toSingleStack() {
+        final ItemStack result = icon.copy();
+        result.setHoverName(name);
+        if (tooltip != null) {
+            final ListTag lore = new ListTag();
+            lore.add(StringTag.valueOf(Component.Serializer.toJson(tooltip)));
+            result.getOrCreateTagElement("display").put("Lore", lore);
+        }
+        return result;
+    }
 }

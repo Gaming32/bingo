@@ -64,8 +64,6 @@ public class BingoClient {
         double mouseY = 0;
         int slotIdX = -1;
         int slotIdY = -1;
-        int slotX = 0;
-        int slotY = 0;
         if (mouseHover) {
             mouseX = minecraft.mouseHandler.xpos() * minecraft.getWindow().getGuiScaledWidth() / minecraft.getWindow().getScreenWidth();
             mouseY = minecraft.mouseHandler.ypos() * minecraft.getWindow().getGuiScaledHeight() / minecraft.getWindow().getScreenHeight();
@@ -86,9 +84,9 @@ public class BingoClient {
         for (int sx = 0; sx < BingoBoard.SIZE; sx++) {
             for (int sy = 0; sy < BingoBoard.SIZE; sy++) {
                 final ClientGoal goal = clientBoard.getGoal(sx, sy);
-                slotX = sx * 18 + 8;
-                slotY = sy * 18 + 18;
-                graphics.renderItem(goal.icon(), slotX, slotY);
+                final int slotX = sx * 18 + 8;
+                final int slotY = sy * 18 + 18;
+                graphics.renderFakeItem(goal.icon(), slotX, slotY);
                 graphics.renderItemDecorations(minecraft.font, goal.icon(), slotX, slotY);
                 if (clientTeam.any()) {
                     final BingoBoard.Teams state = clientBoard.getState(sx, sy);
@@ -103,8 +101,8 @@ public class BingoClient {
         if (slotIdX != -1) {
             graphics.pose().pushPose();
             graphics.pose().translate(0f, 0f, 200f);
-            slotX = slotIdX * 18 + 8;
-            slotY = slotIdY * 18 + 18;
+            final int slotX = slotIdX * 18 + 8;
+            final int slotY = slotIdY * 18 + 18;
             graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0x80ffffff);
             graphics.pose().popPose();
         }

@@ -34,11 +34,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -55,6 +65,7 @@ public class Bingo {
     public static boolean showOtherTeam;
 
     public static BingoGame activeGame;
+    public static final Set<ServerPlayer> needAdvancementsClear = new HashSet<>();
 
     public static void init() {
         CommandRegistrationEvent.EVENT.register((dispatcher, registry, selection) -> {
@@ -76,6 +87,32 @@ public class Bingo {
                 )
                 .then(literal("board")
                     .requires(source -> activeGame != null)
+                    .executes(ctx -> {
+                        ctx.getSource().getPlayerOrException().openMenu(new MenuProvider() {
+                            @Override
+                            public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
+                                final var menu = new ChestMenu(MenuType.GENERIC_9x5, syncId, inventory, new SimpleContainer(9 * 5), 5) {
+                                    @Override
+                                    public void clicked(int slotId, int button, ClickType clickType, Player player) {
+                                        sendAllDataToRemote(); // Same as in spectator mode
+                                    }
+                                };
+                                for (int x = 0; x < BingoBoard.SIZE; x++) {
+                                    for (int y = 0; y < BingoBoard.SIZE; y++) {
+                                        menu.getContainer().setItem(2 + y * 9 + x, activeGame.getBoard().getGoal(x, y).toSingleStack());
+                                    }
+                                }
+                                return menu;
+                            }
+
+                            @NotNull
+                            @Override
+                            public Component getDisplayName() {
+                                return Component.translatable("bingo.board.title");
+                            }
+                        });
+                        return Command.SINGLE_SUCCESS;
+                    })
                     .then(literal("copy")
                         .executes(ctx -> {
                             ctx.getSource().sendSuccess(() -> ComponentUtils.wrapInSquareBrackets(
@@ -114,6 +151,8 @@ public class Bingo {
             }
         });
 
+        PlayerEvent.PLAYER_QUIT.register(needAdvancementsClear::remove);
+
         LifecycleEvent.SERVER_STOPPED.register(instance -> activeGame = null);
 
         BingoTriggers.load();
@@ -138,10 +177,6 @@ public class Bingo {
 
         LOGGER.info("I got the diagonal!");
     }
-
-//    private static void clientInit(Minecraft mc) {
-//        BingoClient.init();
-//    }
 
     private static int startGame(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         final int difficulty = getArg(
