@@ -31,6 +31,13 @@
       }
     ]
   },
+  "icon": {
+    "item": "minecraft:experience_bottle",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 2,
   "antisynergy": "levels",
   "difficulty": 2

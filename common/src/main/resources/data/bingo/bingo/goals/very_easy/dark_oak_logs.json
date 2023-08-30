@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.dark_oak_log"}
     ]
   },
+  "icon": {
+    "item": "minecraft:dark_oak_log",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 25,
   "antisynergy": "dark_oak_logs",
   "difficulty": 0

@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.oak_log"}
     ]
   },
+  "icon": {
+    "item": "minecraft:oak_log",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 25,
   "antisynergy": "oak_logs",
   "difficulty": 0

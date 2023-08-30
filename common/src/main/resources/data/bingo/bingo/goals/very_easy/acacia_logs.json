@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.acacia_log"}
     ]
   },
+  "icon": {
+    "item": "minecraft:acacia_log",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 25,
   "antisynergy": "acacia_logs",
   "difficulty": 0

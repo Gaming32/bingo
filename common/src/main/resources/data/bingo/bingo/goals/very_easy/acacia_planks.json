@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.acacia_planks"}
     ]
   },
+  "icon": {
+    "item": "minecraft:acacia_planks",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 25,
   "antisynergy": "acacia_planks",
   "difficulty": 0

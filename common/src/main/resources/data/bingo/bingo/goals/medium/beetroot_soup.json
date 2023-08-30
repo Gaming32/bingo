@@ -13,5 +13,6 @@
   },
   "tags": ["bingo:item", "bingo:overworld"],
   "name": {"translate": "item.minecraft.beetroot_soup"},
+  "icon": {"item": "minecraft:beetroot_soup"},
   "difficulty": 2
 }

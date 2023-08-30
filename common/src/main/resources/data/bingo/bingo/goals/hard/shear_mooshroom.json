@@ -14,6 +14,7 @@
   },
   "tags": ["bingo:action", "bingo:rare_biome", "bingo:overworld"],
   "name": {"translate": "bingo.goal.shear_mooshroom"},
+  "icon": {"item": "minecraft:cow_spawn_egg"},
   "infrequency": 2,
   "difficulty": 3
 }

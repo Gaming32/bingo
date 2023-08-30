@@ -1,13 +1,6 @@
 {
   "bingo_subs": {
-    "poppy_count": {
-      "type": "random",
-      "range": {
-        "min": 5,
-        "max": 25
-      }
-    },
-    "dandelion_count": {
+    "count": {
       "type": "random",
       "range": {
         "min": 5,
@@ -24,7 +17,7 @@
             "count": {
               "min": {
                 "bingo_type": "sub",
-                "id": "poppy_count"
+                "id": "count"
               }
             },
             "items": ["minecraft:poppy"]
@@ -40,7 +33,7 @@
             "count": {
               "min": {
                 "bingo_type": "sub",
-                "id": "dandelion_count"
+                "id": "count"
               }
             },
             "items": ["minecraft:dandelion"]
@@ -58,7 +51,7 @@
         "with": [
           {
             "bingo_type": "sub",
-            "id": "poppy_count"
+            "id": "count"
           },
           {"translate": "block.minecraft.poppy"}
         ]
@@ -68,12 +61,19 @@
         "with": [
           {
             "bingo_type": "sub",
-            "id": "dandelion_count"
+            "id": "count"
           },
           {"translate": "block.minecraft.dandelion"}
         ]
       }
     ]
+  },
+  "icon": {
+    "item": "minecraft:poppy",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
   },
   "difficulty": 0
 }

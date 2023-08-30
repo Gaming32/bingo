@@ -37,5 +37,12 @@
       {"translate": "block.minecraft.cobblestone"}
     ]
   },
+  "icon": {
+    "item": "minecraft:cobblestone",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "difficulty": 0
 }

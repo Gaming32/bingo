@@ -36,5 +36,12 @@
       }
     ]
   },
+  "icon": {
+    "item": "minecraft:oak_leaves",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "difficulty": 0
 }

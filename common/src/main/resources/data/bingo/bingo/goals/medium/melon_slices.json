@@ -37,5 +37,12 @@
       {"translate": "item.minecraft.melon_slice"}
     ]
   },
+  "icon": {
+    "item": "minecraft:melon_slice",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "difficulty": 2
 }

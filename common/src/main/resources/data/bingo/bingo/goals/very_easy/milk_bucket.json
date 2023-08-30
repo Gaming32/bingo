@@ -13,6 +13,7 @@
   },
   "tags": ["bingo:item", "bingo:overworld"],
   "name": {"translate": "item.minecraft.milk_bucket"},
+  "icon": {"item": "minecraft:milk_bucket"},
   "infrequency": 4,
   "antisynergy": "milk_bucket",
   "reactant": "use_buckets",

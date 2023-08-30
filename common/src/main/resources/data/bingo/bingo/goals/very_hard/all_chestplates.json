@@ -64,5 +64,6 @@
   "tags": ["bingo:item", "bingo:combat"],
   "name": {"translate": "bingo.goal.all_chestplates"},
   "tooltip": {"translate": "bingo.goal.all_chestplates.tooltip"},
+  "icon": {"item": "minecraft:netherite_chestplate"},
   "difficulty": 4
 }

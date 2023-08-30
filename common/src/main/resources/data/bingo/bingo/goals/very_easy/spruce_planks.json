@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.spruce_planks"}
     ]
   },
+  "icon": {
+    "item": "minecraft:spruce_planks",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 25,
   "antisynergy": "spruce_planks",
   "difficulty": 0

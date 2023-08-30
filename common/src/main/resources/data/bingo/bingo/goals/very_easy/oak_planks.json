@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.oak_planks"}
     ]
   },
+  "icon": {
+    "item": "minecraft:oak_planks",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 25,
   "antisynergy": "oak_planks",
   "difficulty": 0

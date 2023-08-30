@@ -37,6 +37,13 @@
       {"translate": "item.minecraft.bread"}
     ]
   },
+  "icon": {
+    "item": "minecraft:bread",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 2,
   "antisynergy": "bread",
   "difficulty": 0

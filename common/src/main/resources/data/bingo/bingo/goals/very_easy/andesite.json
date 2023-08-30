@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.andesite"}
     ]
   },
+  "icon": {
+    "item": "minecraft:andesite",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 3,
   "difficulty": 0
 }

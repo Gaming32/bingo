@@ -57,6 +57,7 @@
       {"translate": "advancements.husbandry.tactical_fishing.title"}
     ]
   },
+  "icon": {"item": "minecraft:tropical_fish_bucket"},
   "infrequency": 4,
   "antisynergy": "fish_bucket",
   "reactant": "use_buckets",

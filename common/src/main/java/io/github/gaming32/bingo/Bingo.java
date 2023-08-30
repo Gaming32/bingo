@@ -9,17 +9,22 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.logging.LogUtils;
+import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
+import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
+import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BingoGameMode;
+import io.github.gaming32.bingo.network.BingoNetwork;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
+import net.fabricmc.api.EnvType;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -45,8 +50,9 @@ public class Bingo {
     public static final String MOD_ID = "bingo";
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    public static boolean showOtherTeam;
+
     public static BingoGame activeGame;
-    public static BingoBoard clientBoard;
 
     public static void init() {
         CommandRegistrationEvent.EVENT.register((dispatcher, registry, selection) -> {
@@ -108,8 +114,18 @@ public class Bingo {
             List.of(BingoTag.ReloadListener.ID)
         );
 
+        BingoNetwork.load();
+
+        if (Platform.getEnv() == EnvType.CLIENT) {
+            ClientLifecycleEvent.CLIENT_SETUP.register(mc -> BingoClient.init());
+        }
+
         LOGGER.info("I got the diagonal!");
     }
+
+//    private static void clientInit(Minecraft mc) {
+//        BingoClient.init();
+//    }
 
     private static int startGame(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         final int difficulty = getArg(

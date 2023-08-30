@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.note_block"}
     ]
   },
+  "icon": {
+    "item": "minecraft:note_block",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 2,
   "antisynergy": "note_blocks",
   "difficulty": 0

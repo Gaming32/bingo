@@ -13,5 +13,6 @@
   },
   "tags": ["bingo:item"],
   "name": {"translate": "item.minecraft.diamond"},
+  "icon": {"item": "minecraft:diamond"},
   "difficulty": 0
 }

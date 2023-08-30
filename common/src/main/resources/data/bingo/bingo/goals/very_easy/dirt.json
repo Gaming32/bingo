@@ -37,5 +37,12 @@
       {"translate": "block.minecraft.dirt"}
     ]
   },
+  "icon": {
+    "item": "minecraft:dirt",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "difficulty": 0
 }

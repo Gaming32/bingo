@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.diorite"}
     ]
   },
+  "icon": {
+    "item": "minecraft:diorite",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 3,
   "difficulty": 0
 }

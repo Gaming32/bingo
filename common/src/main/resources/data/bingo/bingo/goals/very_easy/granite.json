@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.granite"}
     ]
   },
+  "icon": {
+    "item": "minecraft:granite",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 3,
   "difficulty": 0
 }

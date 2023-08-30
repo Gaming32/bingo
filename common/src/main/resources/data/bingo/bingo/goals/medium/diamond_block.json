@@ -13,6 +13,7 @@
   },
   "tags": ["bingo:item"],
   "name": {"translate": "block.minecraft.diamond_block"},
+  "icon": {"item": "minecraft:diamond_block"},
   "infrequency": 2,
   "difficulty": 2
 }

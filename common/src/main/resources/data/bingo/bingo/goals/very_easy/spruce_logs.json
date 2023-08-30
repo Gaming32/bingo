@@ -37,6 +37,13 @@
       {"translate": "block.minecraft.spruce_log"}
     ]
   },
+  "icon": {
+    "item": "minecraft:spruce_log",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 25,
   "antisynergy": "spruce_logs",
   "difficulty": 0

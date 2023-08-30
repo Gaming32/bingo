@@ -14,5 +14,6 @@
   },
   "tags": ["bingo:action", "bingo:rare_biome", "bingo:overworld"],
   "name": {"translate": "bingo.goal.potted_cactus"},
+  "icon": {"item": "minecraft:cactus"},
   "difficulty": 2
 }

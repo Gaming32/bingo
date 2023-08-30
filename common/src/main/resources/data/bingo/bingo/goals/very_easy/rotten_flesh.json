@@ -37,6 +37,13 @@
       {"translate": "item.minecraft.rotten_flesh"}
     ]
   },
+  "icon": {
+    "item": "minecraft:rotten_flesh",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "infrequency": 2,
   "difficulty": 0
 }

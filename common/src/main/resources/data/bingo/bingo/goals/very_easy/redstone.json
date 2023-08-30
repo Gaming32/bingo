@@ -13,6 +13,7 @@
   },
   "tags": ["bingo:item", "bingo:overworld"],
   "name": {"translate": "item.minecraft.redstone"},
+  "icon": {"item": "minecraft:redstone"},
   "infrequency": 2,
   "antisynergy": "redstone",
   "difficulty": 0

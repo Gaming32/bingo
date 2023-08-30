@@ -14,6 +14,10 @@
     "translate": "bingo.goal.levels",
     "with": [50]
   },
+  "icon": {
+    "item": "minecraft:experience_bottle",
+    "count": 50
+  },
   "infrequency": 2,
   "antisynergy": "levels",
   "difficulty": 1

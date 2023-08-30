@@ -37,5 +37,12 @@
       {"translate": "item.minecraft.mushroom_stew"}
     ]
   },
+  "icon": {
+    "item": "minecraft:mushroom_stew",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "difficulty": 1
 }

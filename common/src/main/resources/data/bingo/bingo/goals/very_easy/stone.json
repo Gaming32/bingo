@@ -38,6 +38,13 @@
     ]
   },
   "tooltip": {"translate": "bingo.goal.stone.tooltip"},
+  "icon": {
+    "item": "minecraft:stone",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "antisynergy": "stone",
   "infrequency": 2,
   "reactant": "use_furnace",

@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
+import io.github.gaming32.bingo.mixin.common.DisplayInfoAccessor;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -17,6 +18,7 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -65,6 +67,10 @@ public class BingoGoal {
     private final JsonElement name;
     @Nullable
     private final JsonElement tooltip;
+    @Nullable
+    private final JsonObject icon;
+    @Nullable
+    private final JsonElement iconText;
     private final Integer infrequency;
     private final List<String> antisynergy;
     private final List<String> catalyst;
@@ -79,6 +85,8 @@ public class BingoGoal {
         List<BingoTag> tags,
         JsonElement name,
         @Nullable JsonElement tooltip,
+        @Nullable JsonObject icon,
+        @Nullable JsonElement iconText,
         Integer infrequency,
         List<String> antisynergy,
         List<String> catalyst,
@@ -92,6 +100,8 @@ public class BingoGoal {
         this.tags = tags;
         this.name = name;
         this.tooltip = tooltip;
+        this.icon = icon;
+        this.iconText = iconText;
         this.infrequency = infrequency;
         this.antisynergy = antisynergy;
         this.catalyst = catalyst;
@@ -194,6 +204,8 @@ public class BingoGoal {
                 .toList(),
             GsonHelper.getNonNull(json, "name"),
             json.get("tooltip"),
+            GsonHelper.getAsJsonObject(json, "icon", null),
+            json.get("icon_text"),
             json.has("infrequency") ? GsonHelper.getAsInt(json, "infrequency") : null,
             getListString(json, "antisynergy"),
             getListString(json, "catalyst"),
@@ -243,6 +255,11 @@ public class BingoGoal {
         return tooltip;
     }
 
+    @Nullable
+    public JsonObject getIcon() {
+        return icon;
+    }
+
     public Integer getInfrequency() {
         return infrequency;
     }
@@ -272,7 +289,12 @@ public class BingoGoal {
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip))
             );
         }
-        return new ActiveGoal(this, name, tooltip, buildCriteria(subs, rand, lootData));
+        return new ActiveGoal(
+            this, name, tooltip,
+            buildIcon(subs, rand),
+            buildIconText(subs, rand),
+            buildCriteria(subs, rand, lootData)
+        );
     }
 
     public Map<String, JsonElement> buildSubs(RandomSource rand) {
@@ -292,6 +314,27 @@ public class BingoGoal {
             return null;
         }
         return Component.Serializer.fromJson(performSubstitutions(tooltip, referable, rand));
+    }
+
+    public ItemStack buildIcon(Map<String, JsonElement> referable, RandomSource rand) {
+        if (icon == null) {
+            return ItemStack.EMPTY;
+        }
+        final JsonObject iconSubbed = GsonHelper.convertToJsonObject(
+            performSubstitutions(icon, referable, rand), "icon"
+        );
+        final ItemStack icon = DisplayInfoAccessor.invokeGetIcon(iconSubbed);
+        if (iconSubbed.has("count")) {
+            icon.setCount(GsonHelper.getAsInt(iconSubbed, "count"));
+        }
+        return icon;
+    }
+
+    public Component buildIconText(Map<String, JsonElement> referable, RandomSource rand) {
+        if (iconText == null) {
+            return null;
+        }
+        return Component.Serializer.fromJson(performSubstitutions(iconText, referable, rand));
     }
 
     public Map<String, Criterion> buildCriteria(

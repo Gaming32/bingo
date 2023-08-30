@@ -1,7 +1,12 @@
 package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.network.InitBoardMessage;
+import io.github.gaming32.bingo.network.ResyncStatesMessage;
+import io.github.gaming32.bingo.network.SyncTeamMessage;
+import io.github.gaming32.bingo.network.UpdateStateMessage;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.advancements.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,11 +17,17 @@ import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class BingoGame {
+    private static final BingoBoard.Teams[] EMPTY_TEAMS = Util.make(
+        new BingoBoard.Teams[BingoBoard.SIZE_SQ],
+        a -> Arrays.fill(a, BingoBoard.Teams.NONE)
+    );
+
     private final BingoBoard board;
     private final BingoGameMode gameMode;
     private final PlayerTeam team1, team2;
@@ -42,6 +53,30 @@ public class BingoGame {
      */
     public void addPlayer(ServerPlayer player) {
         registerListeners(player);
+        final BingoBoard.Teams team = getTeam(player);
+        new SyncTeamMessage(team).sendTo(player);
+        new InitBoardMessage(board.getGoals(), obfuscateTeam(team, board.getStates())).sendTo(player);
+    }
+
+    public static BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam, BingoBoard.Teams[] states) {
+        if (Bingo.showOtherTeam) {
+            return states;
+        }
+        if (!playerTeam.any()) {
+            return EMPTY_TEAMS;
+        }
+        final BingoBoard.Teams[] result = new BingoBoard.Teams[states.length];
+        for (int i = 0; i < states.length; i++) {
+            result[i] = obfuscateTeam(playerTeam, states[i]);
+        }
+        return result;
+    }
+
+    public static BingoBoard.Teams obfuscateTeam(BingoBoard.Teams playerTeam, BingoBoard.Teams state) {
+        if (Bingo.showOtherTeam) {
+            return state;
+        }
+        return state.and(playerTeam) ? playerTeam : BingoBoard.Teams.NONE;
     }
 
     public void endGame(PlayerList playerList, BingoBoard.Teams winner) {
@@ -67,6 +102,7 @@ public class BingoGame {
         playerList.broadcastSystemMessage(message, false);
 
         Bingo.activeGame = null;
+        new ResyncStatesMessage(board.getStates()).sendTo(playerList.getPlayers());
         Bingo.updateCommandTree(playerList);
     }
 
@@ -156,21 +192,28 @@ public class BingoGame {
         final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
         if (gameMode.canGetGoal(this.board, index, team)) {
             board[index] = board[index].or(team);
-            notifyTeam(team, goal, player.server.getPlayerList());
+            notifyTeam(team, goal, player.server.getPlayerList(), index);
             checkForWin(player.server.getPlayerList());
         }
     }
 
-    private void notifyTeam(BingoBoard.Teams team, ActiveGoal goal, PlayerList playerList) {
+    private void notifyTeam(BingoBoard.Teams team, ActiveGoal goal, PlayerList playerList, int boardIndex) {
         final PlayerTeam playerTeam = getTeam(team);
         final Component message = Component.translatable(
             "bingo.goal_obtained", goal.getName().copy().withStyle(ChatFormatting.GREEN)
         );
+        final UpdateStateMessage stateMessage = new UpdateStateMessage(boardIndex, board.getStates()[boardIndex]);
         for (final String member : playerTeam.getPlayers()) {
             final ServerPlayer player = playerList.getPlayerByName(member);
             if (player == null) continue;
             player.playNotifySound(SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.MASTER, 0.5f, 1f);
+            if (!Bingo.showOtherTeam) {
+                stateMessage.sendTo(player);
+            }
             player.sendSystemMessage(message);
+        }
+        if (Bingo.showOtherTeam) {
+            stateMessage.sendTo(playerList.getPlayers());
         }
     }
 

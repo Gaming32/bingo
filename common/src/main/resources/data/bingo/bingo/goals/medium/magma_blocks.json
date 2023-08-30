@@ -37,5 +37,12 @@
       {"translate": "block.minecraft.magma_block"}
     ]
   },
+  "icon": {
+    "item": "minecraft:magma_block",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
   "difficulty": 2
 }

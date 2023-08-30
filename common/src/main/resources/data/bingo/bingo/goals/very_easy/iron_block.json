@@ -13,6 +13,7 @@
   },
   "tags": ["bingo:item"],
   "name": {"translate": "block.minecraft.iron_block"},
+  "icon": {"item": "minecraft:iron_block"},
   "infrequency": 2,
   "antisynergy": "iron_blocks",
   "difficulty": 0

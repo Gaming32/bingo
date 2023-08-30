@@ -13,6 +13,7 @@
   },
   "tags": ["bingo:item", "bingo:overworld"],
   "name": {"translate": "item.minecraft.water_bucket"},
+  "icon": {"item": "minecraft:water_bucket"},
   "infrequency": 4,
   "antisynergy": "water_bucket",
   "reactant": "use_buckets",

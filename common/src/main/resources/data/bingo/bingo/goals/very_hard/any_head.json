@@ -74,5 +74,6 @@
   "tags": ["bingo:item", "bingo:combat", "bingo:overworld"],
   "name": {"translate": "bingo.goal.any_head"},
   "tooltip": {"translate": "bingo.goal.any_head.tooltip"},
+  "icon": {"item": "minecraft:zombie_head"},
   "difficulty": 4
 }
