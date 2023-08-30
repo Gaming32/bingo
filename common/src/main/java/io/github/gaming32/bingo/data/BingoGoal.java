@@ -69,8 +69,6 @@ public class BingoGoal {
     private final JsonElement tooltip;
     @Nullable
     private final JsonObject icon;
-    @Nullable
-    private final JsonElement iconText;
     private final Integer infrequency;
     private final List<String> antisynergy;
     private final List<String> catalyst;
@@ -86,7 +84,6 @@ public class BingoGoal {
         JsonElement name,
         @Nullable JsonElement tooltip,
         @Nullable JsonObject icon,
-        @Nullable JsonElement iconText,
         Integer infrequency,
         List<String> antisynergy,
         List<String> catalyst,
@@ -101,7 +98,6 @@ public class BingoGoal {
         this.name = name;
         this.tooltip = tooltip;
         this.icon = icon;
-        this.iconText = iconText;
         this.infrequency = infrequency;
         this.antisynergy = antisynergy;
         this.catalyst = catalyst;
@@ -205,7 +201,6 @@ public class BingoGoal {
             GsonHelper.getNonNull(json, "name"),
             json.get("tooltip"),
             GsonHelper.getAsJsonObject(json, "icon", null),
-            json.get("icon_text"),
             json.has("infrequency") ? GsonHelper.getAsInt(json, "infrequency") : null,
             getListString(json, "antisynergy"),
             getListString(json, "catalyst"),
@@ -292,7 +287,6 @@ public class BingoGoal {
         return new ActiveGoal(
             this, name, tooltip,
             buildIcon(subs, rand),
-            buildIconText(subs, rand),
             buildCriteria(subs, rand, lootData)
         );
     }
@@ -328,13 +322,6 @@ public class BingoGoal {
             icon.setCount(GsonHelper.getAsInt(iconSubbed, "count"));
         }
         return icon;
-    }
-
-    public Component buildIconText(Map<String, JsonElement> referable, RandomSource rand) {
-        if (iconText == null) {
-            return null;
-        }
-        return Component.Serializer.fromJson(performSubstitutions(iconText, referable, rand));
     }
 
     public Map<String, Criterion> buildCriteria(

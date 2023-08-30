@@ -13,15 +13,13 @@ public final class ActiveGoal {
     private final Component name;
     private final Component tooltip;
     private final ItemStack icon;
-    private final Component iconText;
     private final Map<String, Criterion> criteria;
 
-    public ActiveGoal(BingoGoal goal, Component name, Component tooltip, ItemStack icon, Component iconText, Map<String, Criterion> criteria) {
+    public ActiveGoal(BingoGoal goal, Component name, Component tooltip, ItemStack icon, Map<String, Criterion> criteria) {
         this.goal = goal;
         this.name = name;
         this.tooltip = tooltip;
         this.icon = icon;
-        this.iconText = iconText;
         this.criteria = criteria;
     }
 
@@ -39,10 +37,6 @@ public final class ActiveGoal {
 
     public ItemStack getIcon() {
         return icon;
-    }
-
-    public Component getIconText() {
-        return iconText;
     }
 
     public Map<String, Criterion> getCriteria() {

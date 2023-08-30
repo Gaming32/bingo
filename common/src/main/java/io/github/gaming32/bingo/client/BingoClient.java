@@ -89,10 +89,7 @@ public class BingoClient {
                 slotX = sx * 18 + 8;
                 slotY = sy * 18 + 18;
                 graphics.renderItem(goal.icon(), slotX, slotY);
-                graphics.renderItemDecorations(
-                    minecraft.font, goal.icon(), slotX, slotY,
-                    goal.iconText() != null ? goal.iconText().getString() : null
-                );
+                graphics.renderItemDecorations(minecraft.font, goal.icon(), slotX, slotY);
                 if (clientTeam.any()) {
                     final BingoBoard.Teams state = clientBoard.getState(sx, sy);
                     if (state.any()) {
