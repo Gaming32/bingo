@@ -25,13 +25,15 @@ import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.network.BingoNetwork;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.fabricmc.api.EnvType;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.TeamArgument;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
@@ -57,9 +59,8 @@ public class Bingo {
     public static void init() {
         CommandRegistrationEvent.EVENT.register((dispatcher, registry, selection) -> {
             final CommandNode<CommandSourceStack> bingoCommand = dispatcher.register(literal("bingo")
-                .requires(source -> source.hasPermission(2))
                 .then(literal("start")
-                    .requires(ctx -> activeGame == null)
+                    .requires(source -> source.hasPermission(2) && activeGame == null)
                     .then(argument("team1", TeamArgument.team())
                         .then(argument("team2", TeamArgument.team())
                             .executes(Bingo::startGame)
@@ -67,11 +68,26 @@ public class Bingo {
                     )
                 )
                 .then(literal("stop")
-                    .requires(ctx -> activeGame != null)
+                    .requires(source -> source.hasPermission(2) && activeGame != null)
                     .executes(ctx -> {
                         activeGame.endGame(ctx.getSource().getServer().getPlayerList(), activeGame.getWinner(true));
                         return Command.SINGLE_SUCCESS;
                     })
+                )
+                .then(literal("board")
+                    .requires(source -> activeGame != null)
+                    .then(literal("copy")
+                        .executes(ctx -> {
+                            ctx.getSource().sendSuccess(() -> ComponentUtils.wrapInSquareBrackets(
+                                Component.translatable("bingo.board.copy")
+                            ).withStyle(s -> s
+                                .withColor(ChatFormatting.GREEN)
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.copy.click")))
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, activeGame.getBoard().toString())) // TODO: I18n?
+                            ), false);
+                            return Command.SINGLE_SUCCESS;
+                        })
+                    )
                 )
             );
 
@@ -193,15 +209,6 @@ public class Bingo {
     }
 
     public static void updateCommandTree(PlayerList playerList) {
-        final Commands commands = playerList.getServer().getCommands();
-        final CommandNode<CommandSourceStack> bingoCommand = commands
-            .getDispatcher()
-            .getRoot()
-            .getChild("bingo");
-        for (final ServerPlayer player : playerList.getPlayers()) {
-            if (bingoCommand.canUse(player.createCommandSourceStack())) {
-                commands.sendCommands(player);
-            }
-        }
+        playerList.getPlayers().forEach(playerList.getServer().getCommands()::sendCommands);
     }
 }

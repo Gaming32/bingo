@@ -27,5 +27,6 @@
   "bingo.ended.tie": "The bingo game has ended with a tie!",
   "bingo.goal_obtained": "Your team got the goal %s",
   "bingo.duplicate_teams": "Cannot start a bingo with the same team twice!",
-  "bingo.board.title": "Bingo Board"
+  "bingo.board.title": "Bingo Board",
+  "bingo.board.copy": "Copy board to clipboard"
 }
