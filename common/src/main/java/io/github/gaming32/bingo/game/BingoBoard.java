@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.LootDataManager;
-import org.apache.commons.text.WordUtils;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -238,6 +238,7 @@ public class BingoBoard {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public String toString() {
         final int boxWidth = 20;
         final int boxHeight = 7;
