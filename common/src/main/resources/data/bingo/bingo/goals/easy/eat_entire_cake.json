@@ -1,0 +1,104 @@
+{
+  "criteria": {
+    "level_0": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:cake",
+            "properties": {
+              "bites": 1
+            }
+          }
+        ]
+      }
+    },
+    "level_1": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:cake",
+            "properties": {
+              "bites": 2
+            }
+          }
+        ]
+      }
+    },
+    "level_2": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:cake",
+            "properties": {
+              "bites": 3
+            }
+          }
+        ]
+      }
+    },
+    "level_3": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:cake",
+            "properties": {
+              "bites": 4
+            }
+          }
+        ]
+      }
+    },
+    "level_4": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:cake",
+            "properties": {
+              "bites": 5
+            }
+          }
+        ]
+      }
+    },
+    "level_5": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:cake",
+            "properties": {
+              "bites": 6
+            }
+          }
+        ]
+      }
+    },
+    "level_6": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "minecraft:air"
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:action", "bingo:overworld"],
+  "name": {"translate": "bingo.goal.eat_entire_cake"},
+  "icon": {"item": "minecraft:cake"},
+  "reactant": "eat_non_meat",
+  "difficulty": 1
+}

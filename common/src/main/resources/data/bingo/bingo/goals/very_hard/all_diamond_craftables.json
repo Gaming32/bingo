@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {"items": ["minecraft:diamond_block"]},
+          {"items": ["minecraft:diamond_axe"]},
+          {"items": ["minecraft:diamond_boots"]},
+          {"items": ["minecraft:diamond_chestplate"]},
+          {"items": ["minecraft:diamond_helmet"]},
+          {"items": ["minecraft:diamond_hoe"]},
+          {"items": ["minecraft:diamond_leggings"]},
+          {"items": ["minecraft:diamond_pickaxe"]},
+          {"items": ["minecraft:diamond_shovel"]},
+          {"items": ["minecraft:diamond_sword"]},
+          {"items": ["minecraft:enchanting_table"]},
+          {"items": ["minecraft:firework_star"]},
+          {"items": ["minecraft:jukebox"]}
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:item"],
+  "name": {"translate": "bingo.goal.all_diamond_craftables"},
+  "tooltip": {"translate": "bingo.goal.all_diamond_craftables.tooltip"},
+  "icon": {"item": "minecraft:diamond_hoe"},
+  "antisynergy": "diamond_items",
+  "difficulty": 4
+}

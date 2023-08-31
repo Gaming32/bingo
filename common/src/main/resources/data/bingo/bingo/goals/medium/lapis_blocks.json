@@ -1,0 +1,48 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "min": 2,
+        "max": 3
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": ["minecraft:lapis_block"]
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:item", "bingo:overworld"],
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {"translate": "block.minecraft.lapis_block"}
+    ]
+  },
+  "icon": {
+    "item": "minecraft:lapis_block",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
+  "difficulty": 2
+}

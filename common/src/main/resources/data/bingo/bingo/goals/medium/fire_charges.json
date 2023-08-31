@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": 6
+            },
+            "items": ["minecraft:fire_charge"]
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:item", "bingo:nether", "bingo:combat"],
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      6,
+      {"translate": "item.minecraft.fire_charge"}
+    ]
+  },
+  "icon": {
+    "item": "minecraft:fire_charge",
+    "count": 6
+  },
+  "difficulty": 2
+}

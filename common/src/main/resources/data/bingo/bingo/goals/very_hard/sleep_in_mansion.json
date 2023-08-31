@@ -1,0 +1,18 @@
+{
+  "criteria": {
+    "sleep": {
+      "trigger": "minecraft:slept_in_bed",
+      "conditions": {
+        "player": {
+          "location": {
+            "structure": "minecraft:mansion"
+          }
+        }
+      }
+    }
+  },
+  "tags": ["bingo:action", "bingo:rare_biome", "bingo:overworld"],
+  "name": {"translate": "bingo.goal.sleep_in_mansion"},
+  "icon": {"item": "minecraft:dark_oak_planks"},
+  "difficulty": 4
+}

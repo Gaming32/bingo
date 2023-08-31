@@ -1,0 +1,48 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "min": 16,
+        "max": 64
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": ["minecraft:coarse_dirt"]
+          }
+        ]
+      }
+    }
+  },
+  "tags": ["bingo:item", "bingo:overworld"],
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {"translate": "block.minecraft.coarse_dirt"}
+    ]
+  },
+  "icon": {
+    "item": "minecraft:coarse_dirt",
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    }
+  },
+  "difficulty": 1
+}

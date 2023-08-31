@@ -1,0 +1,21 @@
+{
+  "criteria": {
+    "nametag": {
+      "trigger": "minecraft:player_interacted_with_entity",
+      "conditions": {
+        "item": {
+          "items": ["minecraft:cookie"]
+        },
+        "entity": {
+          "type": "minecraft:parrot"
+        }
+      }
+    }
+  },
+  "tags": ["bingo:action", "bingo:rare_biome", "bingo:overworld"],
+  "name": {"translate": "bingo.goal.poison_parrot"},
+  "icon": {"item": "minecraft:cookie"},
+  "infrequency": 2,
+  "reactant": "pacifist",
+  "difficulty": 3
+}

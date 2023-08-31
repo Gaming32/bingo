@@ -180,12 +180,8 @@ public class Bingo {
     }
 
     private static int startGame(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        final int difficulty = getArg(
-            context, "difficulty", () -> 3, IntegerArgumentType::getInteger // TODO: Default to 2 when that works
-        );
-        final long seed = getArg(
-            context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong
-        );
+        final int difficulty = getArg(context, "difficulty", () -> 2, IntegerArgumentType::getInteger);
+        final long seed = getArg(context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong);
         final PlayerTeam team1 = TeamArgument.getTeam(context, "team1");
         final PlayerTeam team2 = TeamArgument.getTeam(context, "team2");
 
@@ -203,7 +199,9 @@ public class Bingo {
             LOGGER.error("Error generating bingo board", e);
             throw new CommandRuntimeException(Component.translatable(
                 e instanceof JsonSyntaxException ? "bingo.start.invalid_goal" : "bingo.start.failed"
-            ));
+            ).withStyle(s -> s.withHoverEvent(new HoverEvent(
+                HoverEvent.Action.SHOW_TEXT, Component.literal(e.getMessage())
+            ))));
         }
         LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 

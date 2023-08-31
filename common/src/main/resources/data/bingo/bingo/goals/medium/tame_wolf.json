@@ -1,0 +1,16 @@
+{
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:wolf"
+        }
+      }
+    }
+  },
+  "tags": ["bingo:stat", "bingo:rare_biome", "bingo:overworld"],
+  "name": {"translate": "bingo.goal.tame_wolf"},
+  "icon": {"item": "minecraft:bone"},
+  "difficulty": 2
+}
