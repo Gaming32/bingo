@@ -3,9 +3,11 @@
   "id": "bingo",
   "version": "${version}",
 
-  "name": "bingo",
-  "description": "",
-  "authors": [],
+  "name": "Bingo",
+  "description": "A mod for playing bingo! Works best if on both client and server, but also has compat for Vanilla clients.",
+  "authors": [
+    "Gaming32"
+  ],
   "contact": {},
 
   "license": "MIT",

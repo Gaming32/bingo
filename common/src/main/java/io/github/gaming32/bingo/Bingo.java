@@ -126,6 +126,21 @@ public class Bingo {
                             return Command.SINGLE_SUCCESS;
                         })
                     )
+                    .then(literal("difficulties")
+                        .requires(source -> source.hasPermission(2))
+                        .executes(ctx -> {
+                            final BingoBoard board = activeGame.getBoard();
+                            final StringBuilder line = new StringBuilder(BingoBoard.SIZE);
+                            for (int y = 0; y < BingoBoard.SIZE; y++) {
+                                for (int x = 0; x < BingoBoard.SIZE; x++) {
+                                    line.append(board.getGoal(x, y).getGoal().getDifficulty());
+                                }
+                                ctx.getSource().sendSuccess(() -> Component.literal(line.toString()), false);
+                                line.setLength(0);
+                            }
+                            return Command.SINGLE_SUCCESS;
+                        })
+                    )
                 )
             );
 
