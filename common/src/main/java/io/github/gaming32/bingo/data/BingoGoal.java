@@ -2,7 +2,9 @@ package io.github.gaming32.bingo.data;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
+import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.mixin.common.DisplayInfoAccessor;
@@ -18,16 +20,14 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public class BingoGoal {
@@ -47,6 +47,13 @@ public class BingoGoal {
             final int min = range.getMin() != null ? range.getMin() : Integer.MIN_VALUE;
             final int max = range.getMax() != null ? range.getMax() : Integer.MAX_VALUE;
             return (referable, rand) -> new JsonPrimitive(rand.nextIntBetweenInclusive(min, max));
+        },
+        "number", data -> {
+            final IntProvider provider = IntProvider.CODEC.decode(JsonOps.INSTANCE, data).get().map(
+                Function.identity(),
+                partial -> { throw new JsonSyntaxException(partial.message()); }
+            ).getFirst();
+            return (referable, rand) -> new JsonPrimitive(provider.sample(rand));
         }
     );
 
@@ -74,6 +81,8 @@ public class BingoGoal {
     private final List<String> catalyst;
     private final List<String> reactant;
     private final int difficulty;
+
+    private final Set<ResourceLocation> tagIds;
 
     public BingoGoal(
         ResourceLocation id,
@@ -103,6 +112,8 @@ public class BingoGoal {
         this.catalyst = catalyst;
         this.reactant = reactant;
         this.difficulty = difficulty;
+
+        this.tagIds = tags.stream().map(BingoTag::id).collect(ImmutableSet.toImmutableSet());
     }
 
     public static BingoGoal getGoal(ResourceLocation id) {
@@ -273,6 +284,10 @@ public class BingoGoal {
 
     public int getDifficulty() {
         return difficulty;
+    }
+
+    public Set<ResourceLocation> getTagIds() {
+        return tagIds;
     }
 
     public ActiveGoal build(RandomSource rand, LootDataManager lootData) {

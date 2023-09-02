@@ -104,8 +104,8 @@ public class BingoClient {
                 graphics.renderItemDecorations(minecraft.font, goal.icon(), slotX, slotY);
                 if (clientTeam.any()) {
                     final BingoBoard.Teams state = clientBoard.getState(sx, sy);
-                    if (state.any()) {
-                        final int color = state.all() ? 0xffff55 : state.and(clientTeam) ? 0x55ff55 : 0xff5555;
+                    final int color = state.and(clientTeam) ? 0x55ff55 : goal.isNever() ? 0xff5555 : 0;
+                    if (color != 0) {
                         graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
                     }
                 }

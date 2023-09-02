@@ -1,0 +1,17 @@
+{
+  "criteria": {
+    "pickup": {
+      "trigger": "minecraft:thrown_item_picked_up_by_player",
+      "conditions": {
+        "item": {
+          "items": ["minecraft:crafting_table"]
+        }
+      }
+    }
+  },
+  "tags": ["bingo:never"],
+  "name": {"translate": "bingo.goal.never_pickup_crafting_tables"},
+  "tooltip": {"translate": "bingo.goal.never_pickup_crafting_tables.tooltip"},
+  "icon": {"item": "minecraft:crafting_table"},
+  "difficulty": 0
+}

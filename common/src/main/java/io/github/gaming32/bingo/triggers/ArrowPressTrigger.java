@@ -54,15 +54,9 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
         @Override
         public JsonObject serializeToJson(SerializationContext context) {
             final JsonObject result = super.serializeToJson(context);
-            if (arrow != EntityPredicate.ANY) {
-                result.add("arrow", arrow.serializeToJson());
-            }
-            if (buttonOrPlate != BlockPredicate.ANY) {
-                result.add("button_or_plate", buttonOrPlate.serializeToJson());
-            }
-            if (location != LocationPredicate.ANY) {
-                result.add("location", location.serializeToJson());
-            }
+            result.add("arrow", arrow.serializeToJson());
+            result.add("button_or_plate", buttonOrPlate.serializeToJson());
+            result.add("location", location.serializeToJson());
             return result;
         }
 

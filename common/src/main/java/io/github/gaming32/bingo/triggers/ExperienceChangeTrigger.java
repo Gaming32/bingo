@@ -51,15 +51,9 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
         @Override
         public JsonObject serializeToJson(SerializationContext context) {
             final JsonObject result = super.serializeToJson(context);
-            if (!levels.isAny()) {
-                result.add("levels", levels.serializeToJson());
-            }
-            if (!progress.isAny()) {
-                result.add("progress", progress.serializeToJson());
-            }
-            if (!totalExperience.isAny()) {
-                result.add("total_experience", totalExperience.serializeToJson());
-            }
+            result.add("levels", levels.serializeToJson());
+            result.add("progress", progress.serializeToJson());
+            result.add("total_experience", totalExperience.serializeToJson());
             return result;
         }
 

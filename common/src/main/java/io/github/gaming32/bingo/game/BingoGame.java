@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.network.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -204,17 +205,27 @@ public class BingoGame {
         if (!team.any()) return;
         final BingoBoard.Teams[] board = this.board.getStates();
         final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
-        if (gameMode.canGetGoal(this.board, index, team)) {
-            board[index] = board[index].or(team);
-            notifyTeam(team, goal, player.server.getPlayerList(), index);
-            checkForWin(player.server.getPlayerList());
+        final boolean isNever = goal.getGoal().getTagIds().contains(BingoTag.NEVER);
+        if (gameMode.canGetGoal(this.board, index, team, isNever)) {
+            board[index] = isNever ? board[index].andNot(team) : board[index].or(team);
+            notifyTeam(team, goal, player.server.getPlayerList(), index, isNever);
+            if (!isNever) {
+                checkForWin(player.server.getPlayerList());
+            }
         }
     }
 
-    private void notifyTeam(BingoBoard.Teams team, ActiveGoal goal, PlayerList playerList, int boardIndex) {
+    private void notifyTeam(
+        BingoBoard.Teams team,
+        ActiveGoal goal,
+        PlayerList playerList,
+        int boardIndex,
+        boolean isNever
+    ) {
         final PlayerTeam playerTeam = getTeam(team);
         final Component message = Component.translatable(
-            "bingo.goal_obtained", goal.getName().copy().withStyle(ChatFormatting.GREEN)
+            isNever ? "bingo.goal_lost" : "bingo.goal_obtained",
+            goal.getName().copy().withStyle(isNever ? ChatFormatting.GOLD : ChatFormatting.GREEN)
         );
         final BingoBoard.Teams boardState = board.getStates()[boardIndex];
         final UpdateStateMessage stateMessage = !Bingo.showOtherTeam
@@ -231,7 +242,11 @@ public class BingoGame {
         for (final String member : playerTeam.getPlayers()) {
             final ServerPlayer player = playerList.getPlayerByName(member);
             if (player == null) continue;
-            player.playNotifySound(SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.MASTER, 0.5f, 1f);
+            player.playNotifySound(
+                isNever ? SoundEvents.RESPAWN_ANCHOR_DEPLETE.value() : SoundEvents.NOTE_BLOCK_CHIME.value(),
+                SoundSource.MASTER,
+                isNever ? 1f : 0.5f, 1f
+            );
             if (!Bingo.showOtherTeam) {
                 assert stateMessage != null;
                 stateMessage.sendTo(player);

@@ -10,8 +10,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.logging.LogUtils;
+import dev.architectury.event.CompoundEventResult;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
+import dev.architectury.event.events.common.InteractionEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.platform.Platform;
@@ -64,6 +66,7 @@ public class Bingo {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static boolean showOtherTeam;
+    public static BingoGameMode gameMode = BingoGameMode.STANDARD;
 
     public static BingoGame activeGame;
     public static final Set<ServerPlayer> needAdvancementsClear = new HashSet<>();
@@ -171,6 +174,13 @@ public class Bingo {
 
         LifecycleEvent.SERVER_STOPPED.register(instance -> activeGame = null);
 
+        InteractionEvent.RIGHT_CLICK_ITEM.register((player, hand) -> {
+            if (player instanceof ServerPlayer serverPlayer) {
+                BingoTriggers.USE_ITEM.trigger(serverPlayer, hand);
+            }
+            return CompoundEventResult.pass();
+        });
+
         BingoTriggers.load();
 
         ReloadListenerRegistry.register(
@@ -209,7 +219,7 @@ public class Bingo {
 
         final BingoBoard board;
         try {
-            board = BingoBoard.generate(difficulty, RandomSource.create(seed), server.getLootData());
+            board = BingoBoard.generate(difficulty, RandomSource.create(seed), server.getLootData(), gameMode::isGoalAllowed);
         } catch (Exception e) {
             LOGGER.error("Error generating bingo board", e);
             throw new CommandRuntimeException(Component.translatable(
@@ -220,7 +230,7 @@ public class Bingo {
         }
         LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        activeGame = new BingoGame(board, BingoGameMode.STANDARD, team1, team2); // TODO: Implement gamemode choosing
+        activeGame = new BingoGame(board, gameMode, team1, team2); // TODO: Implement gamemode choosing
         updateCommandTree(playerList);
         playerList.getPlayers().forEach(activeGame::addPlayer);
         playerList.broadcastSystemMessage(Component.translatable(

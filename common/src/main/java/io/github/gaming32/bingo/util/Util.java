@@ -1,6 +1,10 @@
 package io.github.gaming32.bingo.util;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import net.minecraft.util.RandomSource;
+
+import java.util.stream.Collector;
 
 public class Util {
     public static int[] generateIntArray(int length) {
@@ -20,5 +24,12 @@ public class Util {
             a[p] = t;
         }
         return a;
+    }
+
+    public static Collector<JsonElement, ?, JsonArray> toJsonArray() {
+        return Collector.of(JsonArray::new, JsonArray::add, (a, b) -> {
+            a.addAll(b);
+            return a;
+        });
     }
 }

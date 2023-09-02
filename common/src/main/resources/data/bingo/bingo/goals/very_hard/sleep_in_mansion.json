@@ -13,6 +13,6 @@
   },
   "tags": ["bingo:action", "bingo:rare_biome", "bingo:overworld"],
   "name": {"translate": "bingo.goal.sleep_in_mansion"},
-  "icon": {"item": "minecraft:dark_oak_planks"},
+  "icon": {"item": "minecraft:brown_bed"},
   "difficulty": 4
 }

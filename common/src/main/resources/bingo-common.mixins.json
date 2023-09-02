@@ -9,6 +9,7 @@
     "MixinButtonBlock",
     "MixinCommandSourceStack",
     "MixinEnchantmentMenu",
+    "MixinLivingEntity",
     "MixinServerPlayer",
     "MixinServerScoreboard",
     "PlayerAdvancementsAccessor"

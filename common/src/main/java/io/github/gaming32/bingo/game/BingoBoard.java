@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class BingoBoard {
     public static final int SIZE = 5;
@@ -28,16 +29,24 @@ public class BingoBoard {
         Arrays.fill(states, Teams.NONE);
     }
 
-    public static BingoBoard generate(int difficulty, RandomSource rand, LootDataManager lootData) {
+    public static BingoBoard generate(
+        int difficulty,
+        RandomSource rand,
+        LootDataManager lootData,
+        Predicate<BingoGoal> isAllowedGoal
+    ) {
         final BingoBoard board = new BingoBoard();
-        final BingoGoal[] generatedSheet = generateGoals(difficulty, rand);
+        final BingoGoal[] generatedSheet = generateGoals(difficulty, rand, isAllowedGoal);
         for (int i = 0; i < SIZE_SQ; i++) {
             board.goals[i] = generatedSheet[i].build(rand, lootData);
+            if (generatedSheet[i].getTagIds().contains(BingoTag.NEVER)) {
+                board.states[i] = Teams.BOTH;
+            }
         }
         return board;
     }
 
-    public static BingoGoal[] generateGoals(int difficulty, RandomSource rand) {
+    public static BingoGoal[] generateGoals(int difficulty, RandomSource rand, Predicate<BingoGoal> isAllowedGoal) {
         final BingoGoal[] generatedSheet = new BingoGoal[SIZE_SQ];
 
         final int[] difficultyLayout = generateDifficulty(difficulty, rand);
@@ -69,6 +78,10 @@ public class BingoBoard {
                 }
 
                 final BingoGoal goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
+
+                if (!isAllowedGoal.test(goalCandidate)) {
+                    continue;
+                }
 
                 if (goalCandidate.getInfrequency() != null) {
                     if (rand.nextInt(goalCandidate.getInfrequency()) + 1 < goalCandidate.getInfrequency()) {

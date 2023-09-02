@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.Map;
 
 public record BingoTag(ResourceLocation id, IntList difficultyMax, boolean allowedOnSameLine) {
+    public static final ResourceLocation NEVER = new ResourceLocation("bingo:never");
+
     private static Map<ResourceLocation, BingoTag> tags = Collections.emptyMap();
 
     public static BingoTag getTag(ResourceLocation id) {

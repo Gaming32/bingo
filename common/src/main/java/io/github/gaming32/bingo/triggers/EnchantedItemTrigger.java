@@ -49,12 +49,8 @@ public class EnchantedItemTrigger extends SimpleCriterionTrigger<EnchantedItemTr
 //            if (item != ItemPredicate.ANY) {
 //                result.add("item", item.serializeToJson());
 //            }
-            if (!levelsSpent.isAny()) {
-                result.add("levels_spent", levelsSpent.serializeToJson());
-            }
-            if (!requiredLevels.isAny()) {
-                result.add("required_levels", requiredLevels.serializeToJson());
-            }
+            result.add("levels_spent", levelsSpent.serializeToJson());
+            result.add("required_levels", requiredLevels.serializeToJson());
             return result;
         }
 

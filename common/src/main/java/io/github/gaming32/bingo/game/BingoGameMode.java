@@ -1,5 +1,7 @@
 package io.github.gaming32.bingo.game;
 
+import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.data.BingoTag;
 import org.jetbrains.annotations.NotNull;
 
 public interface BingoGameMode {
@@ -58,8 +60,13 @@ public interface BingoGameMode {
         }
 
         @Override
-        public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team) {
-            return !board.getStates()[index].and(team);
+        public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever) {
+            return !board.getStates()[index].and(team) ^ isNever;
+        }
+
+        @Override
+        public boolean isGoalAllowed(BingoGoal goal) {
+            return true;
         }
     };
 
@@ -91,13 +98,20 @@ public interface BingoGameMode {
         }
 
         @Override
-        public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team) {
+        public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever) {
             return !board.getStates()[index].any();
+        }
+
+        @Override
+        public boolean isGoalAllowed(BingoGoal goal) {
+            return !goal.getTagIds().contains(BingoTag.NEVER);
         }
     };
 
     @NotNull
     BingoBoard.Teams getWinner(BingoBoard board, boolean tryHarder);
 
-    boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team);
+    boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever);
+
+    boolean isGoalAllowed(BingoGoal goal);
 }
