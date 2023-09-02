@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
-import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.mixin.common.DisplayInfoAccessor;
@@ -20,7 +19,6 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.ArrayUtils;
@@ -32,28 +30,51 @@ import java.util.function.Function;
 
 public class BingoGoal {
     public static final Map<String, Function<JsonObject, BingoSub>> SUBS = Map.of(
-        "sub", data -> {
+        "sub", data -> new BingoSub() {
             final String key = GsonHelper.getAsString(data, "id");
-            return (referable, rand) -> {
+
+            @Override
+            public JsonElement substitute(Map<String, JsonElement> referable, RandomSource rand) {
                 final JsonElement value = referable.get(key);
                 if (value == null) {
                     throw new IllegalArgumentException("Unresolved reference in bingo goal: " + key);
                 }
                 return value;
-            };
+            }
+
+            @Override
+            public JsonObject serialize() {
+                final JsonObject result = new JsonObject();
+                result.addProperty("id", key);
+                return null;
+            }
+
+            @Override
+            public String getType() {
+                return "sub";
+            }
         },
-        "random", data -> {
+        "random", data -> new BingoSub() {
             final MinMaxBounds.Ints range = MinMaxBounds.Ints.fromJson(data.get("range"));
             final int min = range.getMin() != null ? range.getMin() : Integer.MIN_VALUE;
             final int max = range.getMax() != null ? range.getMax() : Integer.MAX_VALUE;
-            return (referable, rand) -> new JsonPrimitive(rand.nextIntBetweenInclusive(min, max));
-        },
-        "number", data -> {
-            final IntProvider provider = IntProvider.CODEC.decode(JsonOps.INSTANCE, data).get().map(
-                Function.identity(),
-                partial -> { throw new JsonSyntaxException(partial.message()); }
-            ).getFirst();
-            return (referable, rand) -> new JsonPrimitive(provider.sample(rand));
+
+            @Override
+            public JsonElement substitute(Map<String, JsonElement> referable, RandomSource rand) {
+                return new JsonPrimitive(rand.nextIntBetweenInclusive(min, max));
+            }
+
+            @Override
+            public JsonObject serialize() {
+                final JsonObject result = new JsonObject();
+                result.add("range", range.serializeToJson());
+                return result;
+            }
+
+            @Override
+            public String getType() {
+                return "random";
+            }
         }
     );
 
@@ -232,6 +253,91 @@ public class BingoGoal {
         ) : List.of();
     }
 
+    public JsonObject serialize() {
+        final JsonObject result = new JsonObject();
+
+        if (!subs.isEmpty()) {
+            final JsonObject subsObj = new JsonObject();
+            for (final var entry : subs.entrySet()) {
+                final JsonObject subObj = entry.getValue().serialize();
+                final JsonObject realSubObj = new JsonObject();
+                realSubObj.addProperty("type", entry.getValue().getType());
+                realSubObj.asMap().putAll(subObj.asMap());
+                subsObj.add(entry.getKey(), realSubObj);
+            }
+            result.add("bingo_subs", subsObj);
+        }
+
+        final JsonObject criteriaObj = new JsonObject();
+        for (final var entry : criteria.entrySet()) {
+            criteriaObj.add(entry.getKey(), entry.getValue());
+        }
+        result.add("criteria", criteriaObj);
+
+        boolean includeRequirements = false;
+        for (final String[] subArray : requirements) {
+            if (subArray.length != 1) {
+                includeRequirements = true;
+                break;
+            }
+        }
+        if (includeRequirements) {
+            final JsonArray reqArray = new JsonArray(requirements.length);
+            for (final String[] subArray : requirements) {
+                final JsonArray subJsonArray = new JsonArray(subArray.length);
+                for (final String req : subArray) {
+                    subJsonArray.add(req);
+                }
+                reqArray.add(subJsonArray);
+            }
+            result.add("requirements", reqArray);
+        }
+
+        if (!tags.isEmpty()) {
+            final JsonArray array = new JsonArray(tags.size());
+            for (final BingoTag tag : tags) {
+                array.add(tag.id().toString());
+            }
+            result.add("tags", array);
+        }
+
+        result.add("name", name);
+
+        if (tooltip != null) {
+            result.add("tooltip", tooltip);
+        }
+
+        if (icon != null) {
+            result.add("icon", icon);
+        }
+
+        if (infrequency != null) {
+            result.addProperty("infrequency", infrequency);
+        }
+
+        serializeListString(result, "antisynergy", antisynergy);
+        serializeListString(result, "catalyst", catalyst);
+        serializeListString(result, "reactant", reactant);
+
+        result.addProperty("difficulty", difficulty);
+
+        return result;
+    }
+
+    private static void serializeListString(JsonObject json, String key, List<String> list) {
+        if (!list.isEmpty()) {
+            if (list.size() == 1) {
+                json.addProperty("antisynergy", list.get(0));
+            } else {
+                final JsonArray array = new JsonArray(list.size());
+                for (final String value : list) {
+                    array.add(value);
+                }
+                json.add("antisynergy", array);
+            }
+        }
+    }
+
     public ResourceLocation getId() {
         return id;
     }
@@ -395,9 +501,12 @@ public class BingoGoal {
         return id.toString();
     }
 
-    @FunctionalInterface
     public interface BingoSub {
         JsonElement substitute(Map<String, JsonElement> referable, RandomSource rand);
+
+        JsonObject serialize();
+
+        String getType();
     }
 
     public static class ReloadListener extends SimpleJsonResourceReloadListener {
