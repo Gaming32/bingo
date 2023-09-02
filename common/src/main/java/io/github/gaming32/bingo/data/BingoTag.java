@@ -39,6 +39,20 @@ public record BingoTag(ResourceLocation id, IntList difficultyMax, boolean allow
         );
     }
 
+    public JsonObject serialize() {
+        final JsonObject result = new JsonObject();
+
+        final JsonArray difficultyMaxArray = new JsonArray(difficultyMax.size());
+        for (final Integer max : difficultyMax) {
+            difficultyMaxArray.add(new JsonPrimitive(max));
+        }
+        result.add("difficulty_max", difficultyMaxArray);
+
+        result.addProperty("allowed_on_same_line", allowedOnSameLine);
+
+        return result;
+    }
+
     public static class ReloadListener extends SimpleJsonResourceReloadListener {
         public static final ResourceLocation ID = new ResourceLocation("bingo:tags");
         private static final Gson GSON = new GsonBuilder().create();
