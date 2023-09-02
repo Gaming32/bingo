@@ -1,0 +1,30 @@
+{
+  "antisynergy": "fishing",
+  "criteria": {
+    "use": {
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:fishing_rod"
+          ]
+        }
+      },
+      "trigger": "bingo:try_use_item"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:fishing_rod",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "bingo.goal.never_fish"
+  },
+  "tags": [
+    "bingo:never",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.never_fish.tooltip"
+  }
+}

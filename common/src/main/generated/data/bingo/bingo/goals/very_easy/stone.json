@@ -1,0 +1,58 @@
+{
+  "antisynergy": "use_furnace",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 32,
+        "min": 10
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "bingo_type": "sub",
+              "id": "count"
+            },
+            "items": [
+              "minecraft:stone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:stone"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.stone"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.stone.tooltip"
+  }
+}

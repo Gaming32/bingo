@@ -1,0 +1,28 @@
+{
+  "antisynergy": "use_furnace",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:charcoal"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:charcoal"
+  },
+  "name": {
+    "translate": "item.minecraft.charcoal"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

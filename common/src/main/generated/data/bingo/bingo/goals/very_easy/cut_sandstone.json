@@ -1,0 +1,55 @@
+{
+  "antisynergy": "sandstone",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 10,
+        "min": 5
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "bingo_type": "sub",
+              "id": "count"
+            },
+            "items": [
+              "minecraft:cut_sandstone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:cut_sandstone"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.cut_sandstone"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

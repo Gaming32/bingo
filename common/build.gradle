@@ -10,6 +10,8 @@ architectury {
     common("fabric", "forge")
 }
 
+sourceSets.main.resources.srcDirs << file('src/main/generated')
+
 publishing {
     publications {
         mavenCommon(MavenPublication) {

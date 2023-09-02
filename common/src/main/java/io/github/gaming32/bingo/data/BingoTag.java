@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.data;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import io.github.gaming32.bingo.Bingo;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -15,8 +16,6 @@ import java.util.Collections;
 import java.util.Map;
 
 public record BingoTag(ResourceLocation id, IntList difficultyMax, boolean allowedOnSameLine) {
-    public static final ResourceLocation NEVER = new ResourceLocation("bingo:never");
-
     private static Map<ResourceLocation, BingoTag> tags = Collections.emptyMap();
 
     public static BingoTag getTag(ResourceLocation id) {
@@ -48,9 +47,39 @@ public record BingoTag(ResourceLocation id, IntList difficultyMax, boolean allow
         }
         result.add("difficulty_max", difficultyMaxArray);
 
-        result.addProperty("allowed_on_same_line", allowedOnSameLine);
+        if (!allowedOnSameLine) {
+            result.addProperty("allowed_on_same_line", false);
+        }
 
         return result;
+    }
+
+    public static Builder builder(ResourceLocation id) {
+        return new Builder(id);
+    }
+
+    public static final class Builder {
+        private final ResourceLocation id;
+        private IntList difficultyMax = new IntArrayList();
+        private boolean allowedOnSameLine = true;
+
+        private Builder(ResourceLocation id) {
+            this.id = id;
+        }
+
+        public Builder difficultyMax(int veryEasy, int easy, int medium, int hard, int veryHard) {
+            this.difficultyMax = IntList.of(veryEasy, easy, medium, hard, veryHard);
+            return this;
+        }
+
+        public Builder disallowOnSameLine() {
+            this.allowedOnSameLine = false;
+            return this;
+        }
+
+        public BingoTag build() {
+            return new BingoTag(id, difficultyMax, allowedOnSameLine);
+        }
     }
 
     public static class ReloadListener extends SimpleJsonResourceReloadListener {

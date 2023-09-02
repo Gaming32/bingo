@@ -1,0 +1,29 @@
+{
+  "antisynergy": "redstone",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:redstone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:redstone"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "item.minecraft.redstone"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

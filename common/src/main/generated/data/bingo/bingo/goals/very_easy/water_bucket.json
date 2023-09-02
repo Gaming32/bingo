@@ -1,0 +1,29 @@
+{
+  "antisynergy": "use_buckets",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:water_bucket"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:water_bucket"
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "item.minecraft.water_bucket"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

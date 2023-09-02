@@ -17,6 +17,9 @@
   "entrypoints": {
     "main": [
       "io.github.gaming32.bingo.fabric.BingoFabric"
+    ],
+    "fabric-datagen": [
+      "io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric"
     ]
   },
   "mixins": [

@@ -1,0 +1,29 @@
+{
+  "antisynergy": "use_buckets",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:milk_bucket"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:milk_bucket"
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "item.minecraft.milk_bucket"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.network.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -205,7 +205,7 @@ public class BingoGame {
         if (!team.any()) return;
         final BingoBoard.Teams[] board = this.board.getStates();
         final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
-        final boolean isNever = goal.getGoal().getTagIds().contains(BingoTag.NEVER);
+        final boolean isNever = goal.getGoal().getTagIds().contains(BingoTags.NEVER);
         if (gameMode.canGetGoal(this.board, index, team, isNever)) {
             board[index] = isNever ? board[index].andNot(team) : board[index].or(team);
             notifyTeam(team, goal, player.server.getPlayerList(), index, isNever);

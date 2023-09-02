@@ -1,0 +1,55 @@
+{
+  "antisynergy": "snowball",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 16,
+        "min": 8
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "bingo_type": "sub",
+              "id": "count"
+            },
+            "items": [
+              "minecraft:snowball"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:snowball"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "item.minecraft.snowball"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}

@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.data.BingoGoal;
-import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.BingoTags;
 import org.jetbrains.annotations.NotNull;
 
 public interface BingoGameMode {
@@ -104,7 +104,7 @@ public interface BingoGameMode {
 
         @Override
         public boolean isGoalAllowed(BingoGoal goal) {
-            return !goal.getTagIds().contains(BingoTag.NEVER);
+            return !goal.getTagIds().contains(BingoTags.NEVER);
         }
     };
 

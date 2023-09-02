@@ -1,0 +1,27 @@
+{
+  "antisynergy": "coal",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:coal"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:coal"
+  },
+  "name": {
+    "translate": "item.minecraft.coal"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

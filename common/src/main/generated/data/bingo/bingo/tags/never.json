@@ -1,0 +1,10 @@
+{
+  "allowed_on_same_line": false,
+  "difficulty_max": [
+    3,
+    3,
+    3,
+    2,
+    1
+  ]
+}
