@@ -11,10 +11,6 @@
   },
   "tags": ["bingo:action", "bingo:overworld"],
   "name": {"translate": "bingo.goal.level_10_enchant"},
-  "icon": {
-    "item": "minecraft:diamond_sword",
-    "nbt": "{Enchantments:[{}]}",
-    "count": 10
-  },
+  "icon": {"item": "minecraft:enchanting_table", "count": 10},
   "difficulty": 3
 }

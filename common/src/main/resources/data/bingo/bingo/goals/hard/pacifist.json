@@ -1,0 +1,13 @@
+{
+  "criteria": {
+    "kill": {
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "tags": ["bingo:never", "bingo:stat"],
+  "name": {"translate": "bingo.goal.pacifist"},
+  "tooltip": {"translate": "bingo.goal.pacifist.tooltip"},
+  "icon": {"item": "minecraft:diamond_sword"},
+  "catalyst": "pacifist",
+  "difficulty": 3
+}
