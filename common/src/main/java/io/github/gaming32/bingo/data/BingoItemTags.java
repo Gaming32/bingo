@@ -20,6 +20,7 @@ public final class BingoItemTags {
     public static final TagKey<Item> FISHING_JUNK = create("fishing_junk");
     public static final TagKey<Item> FISHING_TREASURE = create("fishing_treasure");
     public static final TagKey<Item> SHIELDS = create("shields");
+    public static final TagKey<Item> DYES = create("dyes");
 
     private static TagKey<Item> create(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(Bingo.MOD_ID, name));
