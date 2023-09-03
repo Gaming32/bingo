@@ -1,0 +1,24 @@
+{
+  "antisynergy": "breed_animals",
+  "criteria": {
+    "breed": {
+      "conditions": {},
+      "trigger": "minecraft:bred_animals"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:wheat_seeds"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.breed_mobs"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:stat"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.breed_mobs.tooltip"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "antisynergy": "crouch_distance",
+  "bingo_subs": {
+    "distance": {
+      "type": "random",
+      "range": {
+        "max": 100,
+        "min": 50
+      }
+    }
+  },
+  "criteria": {
+    "crouch": {
+      "conditions": {
+        "distance": {
+          "horizontal": {
+            "min": {
+              "bingo_type": "sub",
+              "id": "distance"
+            }
+          }
+        }
+      },
+      "trigger": "bingo:crouch"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "distance"
+    },
+    "item": "minecraft:leather_boots",
+    "nbt": "{Damage:0}"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.crouch_distance",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "distance"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:stat"
+  ]
+}
