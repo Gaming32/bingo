@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-03T12:19:12.0266945	Bingo/Bingo goals
+// 1.20.1	2023-09-03T13:18:54.002422	Bingo/Bingo goals
 9016e70d5f5b9386fe210b7f8a26848d7f831257 data/bingo/bingo/goals/easy/acacia_log.json
 bc680508ace49d383bbeec10497b05d997daebf8 data/bingo/bingo/goals/easy/acacia_planks.json
 2acbfce3602f9d4299ba993940363c77cf6d73a9 data/bingo/bingo/goals/easy/acacia_wood.json
@@ -20,6 +20,7 @@ a92701642a677954f53ea1250d23c1b938acf5e6 data/bingo/bingo/goals/easy/carved_pump
 98c2f2e1b6604e5c0840db75553d22a20f653c55 data/bingo/bingo/goals/easy/coal_block.json
 19374fc0b179c8c011f86bfdba4eb40efe4b528e data/bingo/bingo/goals/easy/coarse_dirt.json
 450702f72873feac9c0b0b478c8260b622cf53d7 data/bingo/bingo/goals/easy/cod.json
+2b8f42ab067da552b3cd495852e48a09f8743734 data/bingo/bingo/goals/easy/crouch_distance.json
 4f16b6811fdba2dd0d021a37ff090fe47826beda data/bingo/bingo/goals/easy/cut_sandstone.json
 c99c73ed36801415c55f6b08111f06a1eb8459b8 data/bingo/bingo/goals/easy/cyan_dye.json
 2e1dc4feb9cf156652e005190d3d4aecf4c0c763 data/bingo/bingo/goals/easy/dark_oak_log.json
@@ -144,6 +145,7 @@ d9cfba84821ffdade8d5feae435b1b4496f91fe5 data/bingo/bingo/goals/medium/brown_woo
 5dc36a330020c954b956d38922bfc8a68d50eaa6 data/bingo/bingo/goals/medium/crimson_hyphae.json
 acb342c1cf2a7cbcd2db2aca07949f7cc0718d24 data/bingo/bingo/goals/medium/crimson_planks.json
 6dcec427198c39ffa8e9ce0afd0007532e2c6bee data/bingo/bingo/goals/medium/crimson_stem.json
+777556d6233d288094f05bcf42cb484ec453de9f data/bingo/bingo/goals/medium/crouch_distance.json
 00152ffde7157bf8e78cf958fb4c2455b3b38fba data/bingo/bingo/goals/medium/crying_obsidian.json
 a5e12c14db0edcebf6f73e7e0facd65cdd04d795 data/bingo/bingo/goals/medium/damaged_anvil.json
 96add1f064d9de3e796f3cb96c62f4f00939edef data/bingo/bingo/goals/medium/daylight_detector.json
@@ -217,10 +219,12 @@ c5d42f5405a92cdd77b121a6d5a16e8d27007d45 data/bingo/bingo/goals/very_easy/birch_
 68ddab58272caa66fd3c9726b17d1b2af31ae130 data/bingo/bingo/goals/very_easy/birch_planks.json
 f5422a4d6f66cbf9735a068e9eeb34846057eb6e data/bingo/bingo/goals/very_easy/birch_wood.json
 d7b02104cd407ef717a95e76857c440d9e1a4730 data/bingo/bingo/goals/very_easy/bread.json
+4415c718089a8dd825dbca02476d58f6d52c9fb2 data/bingo/bingo/goals/very_easy/breed_mobs.json
 4bc2b66944f1448565e27f45b41a6d66739b6c59 data/bingo/bingo/goals/very_easy/charcoal.json
 5693399a6ff8d3ab8d3db946648ee033eebbd98f data/bingo/bingo/goals/very_easy/coal.json
 3a04d5bad8bd9988e3a8c446e8df294ad2bdb678 data/bingo/bingo/goals/very_easy/cobblestone.json
 75af7f373f8cfa0c2798d81b9e5912d7638cfe42 data/bingo/bingo/goals/very_easy/cod.json
+4c05f8980684a7920ee20d340d5140d1fb73fb41 data/bingo/bingo/goals/very_easy/crouch_distance.json
 a43001126ae44c17796c64ff6da55e19171242bd data/bingo/bingo/goals/very_easy/cut_sandstone.json
 e7c93f50baecf53dd2973ccf82143c7ecc120151 data/bingo/bingo/goals/very_easy/dark_oak_log.json
 f2523f31dc31b9d4a9fe28f2df6715cc840511e7 data/bingo/bingo/goals/very_easy/dark_oak_planks.json
@@ -253,6 +257,7 @@ fbab027541f869c9b11322c3bde8829db86baa8b data/bingo/bingo/goals/very_easy/oak_pl
 b7c2d33a104446b540a604388e700bc6a706cb5e data/bingo/bingo/goals/very_easy/salmon.json
 65653f1a2b18d30cd29969c2be63fd2b5b6182a9 data/bingo/bingo/goals/very_easy/sand.json
 16c732cb8550b32330873b4166dfdf83f6dcfbbe data/bingo/bingo/goals/very_easy/sandstone.json
+27238d6b86f17c802c992ffb77acf90b617246e2 data/bingo/bingo/goals/very_easy/sleep_in_bed.json
 47b9a2076f864826daf57ddedd4fd94cc15fe064 data/bingo/bingo/goals/very_easy/snowball.json
 b97b6faa2ebc8fea746ee2f1a1245d5dedf9552c data/bingo/bingo/goals/very_easy/spruce_log.json
 63409f74515349e8a44efeaf4cf266b94f006d07 data/bingo/bingo/goals/very_easy/spruce_planks.json

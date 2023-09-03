@@ -5,31 +5,11 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoItemTags;
 import io.github.gaming32.bingo.data.BingoSub;
 import io.github.gaming32.bingo.data.BingoTags;
-import io.github.gaming32.bingo.triggers.ArrowPressTrigger;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
-import io.github.gaming32.bingo.triggers.EquipItemTrigger;
-import io.github.gaming32.bingo.triggers.ExperienceChangeTrigger;
-import io.github.gaming32.bingo.triggers.TryUseItemTrigger;
+import io.github.gaming32.bingo.triggers.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.EntityTypePredicate;
-import net.minecraft.advancements.critereon.FishingRodHookedTrigger;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.KilledTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PickedUpItemTrigger;
-import net.minecraft.advancements.critereon.PlayerInteractTrigger;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.advancements.critereon.RecipeCraftedTrigger;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.advancements.critereon.TameAnimalTrigger;
-import net.minecraft.advancements.critereon.UsingItemTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -44,11 +24,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.raid.Raid;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
@@ -62,11 +38,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -237,7 +209,14 @@ public class BingoGoalProvider implements DataProvider {
             .infrequency(2)
             .difficulty(0)
             .build());
-        // TODO: sleep in a bed
+        goalAdder.accept(BingoGoal.builder(veryEasyId("sleep_in_bed"))
+            .criterion("sleep", PlayerTrigger.TriggerInstance.sleptInBed())
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.sleep_in_bed"))
+            .icon(Items.RED_BED)
+            .reactant("sleep")
+            .difficulty(0)
+            .build());
         goalAdder.accept(obtainItemGoal(veryEasyId("charcoal"), Items.CHARCOAL)
             .reactant("use_furnace")
             .tags(BingoTags.OVERWORLD)
@@ -272,8 +251,21 @@ public class BingoGoalProvider implements DataProvider {
             .difficulty(0)
             .build());
         // TODO: different edible items
-        // TODO: breed a set of mobs
-        // TODO: crouch distance
+        goalAdder.accept(BingoGoal.builder(veryEasyId("breed_mobs"))
+            .criterion("breed", BredAnimalsTrigger.TriggerInstance.bredAnimals())
+            .name(Component.translatable("bingo.goal.breed_mobs"))
+            .tooltip(Component.translatable("bingo.goal.breed_mobs.tooltip"))
+            .antisynergy("breed_animals")
+            .infrequency(2)
+            .tags(BingoTags.ACTION, BingoTags.STAT)
+            .difficulty(0)
+            .icon(Items.WHEAT_SEEDS)
+            .build()
+        );
+        goalAdder.accept(crouchDistanceGoal(veryEasyId("crouch_distance"), 50, 100)
+            .difficulty(0)
+            .build()
+        );
         // TODO: fill all slots of campfire
         // TODO: change sign color
         // TODO: extinguish campfire
@@ -720,7 +712,10 @@ public class BingoGoalProvider implements DataProvider {
             .build());
         // TODO: different edible items
         // TODO: breed 2-4 sets of mobs
-        // TODO crouch distance
+        goalAdder.accept(crouchDistanceGoal(easyId("crouch_distance"), 100, 200)
+            .difficulty(1)
+            .build()
+        );
         // TODO: never use debug
         // TODO: ring bell from 10 blocks away
         // TODO: repair item with grindstone
@@ -1081,7 +1076,10 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: blue shield with white flower charge pattern
         // TODO: tame a cat
         // TODO: breed mobs
-        // TODO: crouch distance
+        goalAdder.accept(crouchDistanceGoal(mediumId("crouch_distance"), 200, 400)
+            .difficulty(2)
+            .build()
+        );
         // TODO: kill n mobs
         goalAdder.accept(obtainItemGoal(mediumId("seagrass"), Items.SEAGRASS, 33, 64)
             .infrequency(2)
@@ -1666,6 +1664,20 @@ public class BingoGoalProvider implements DataProvider {
             .icon(Items.EXPERIENCE_BOTTLE, subber -> subber.sub("count", "count"))
             .infrequency(2)
             .antisynergy("levels");
+    }
+
+    private static BingoGoal.Builder crouchDistanceGoal(ResourceLocation id, int minDistance, int maxDistance) {
+        return BingoGoal.builder(id)
+            .sub("distance", new BingoSub.RandomBingoSub(MinMaxBounds.Ints.between(minDistance, maxDistance)))
+            .criterion("crouch",
+                BingoTriggers.crouch(DistancePredicate.horizontal(MinMaxBounds.Doubles.atLeast(0))),
+                subber -> subber.sub("conditions.distance.horizontal.min", "distance")
+            )
+            .name(Component.translatable("bingo.goal.crouch_distance", 0), subber -> subber.sub("with.0", "distance"))
+            .antisynergy("crouch_distance")
+            .infrequency(2)
+            .tags(BingoTags.ACTION, BingoTags.STAT)
+            .icon(Items.LEATHER_BOOTS, subber -> subber.sub("count", "distance"));
     }
 
     private static ItemStack makeItemWithGlint(ItemLike item) {
