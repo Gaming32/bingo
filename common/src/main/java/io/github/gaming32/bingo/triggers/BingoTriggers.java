@@ -1,9 +1,6 @@
 package io.github.gaming32.bingo.triggers;
 
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.advancements.critereon.DistanceTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 
 import static net.minecraft.advancements.CriteriaTriggers.register;
@@ -16,11 +13,16 @@ public class BingoTriggers {
     public static final EquipItemTrigger EQUIP_ITEM = register(new EquipItemTrigger());
     public static final DistanceTrigger CROUCH = register(new DistanceTrigger(new ResourceLocation("bingo:crouch")));
     public static final ItemBrokenTrigger ITEM_BROKEN = register(new ItemBrokenTrigger());
+    public static final PlayerTrigger BOUNCE_ON_BED = register(new PlayerTrigger(new ResourceLocation("bingo:bounce_on_bed")));
 
     public static void load() {
     }
 
     public static DistanceTrigger.TriggerInstance crouch(DistancePredicate distance) {
         return new DistanceTrigger.TriggerInstance(CROUCH.getId(), ContextAwarePredicate.ANY, LocationPredicate.ANY, distance);
+    }
+
+    public static PlayerTrigger.TriggerInstance bounceOnBed() {
+        return new PlayerTrigger.TriggerInstance(BOUNCE_ON_BED.getId(), ContextAwarePredicate.ANY);
     }
 }

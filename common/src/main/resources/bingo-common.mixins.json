@@ -6,6 +6,7 @@
   "mixins": [
     "DisplayInfoAccessor",
     "MixinBasePressurePlateBlock",
+    "MixinBedBlock",
     "MixinButtonBlock",
     "MixinCommandSourceStack",
     "MixinEnchantmentMenu",

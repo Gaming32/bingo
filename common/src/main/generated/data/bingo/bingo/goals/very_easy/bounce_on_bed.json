@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "bounce": {
+      "conditions": {},
+      "trigger": "bingo:bounce_on_bed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:white_bed"
+  },
+  "name": {
+    "translate": "bingo.goal.bounce_on_bed"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

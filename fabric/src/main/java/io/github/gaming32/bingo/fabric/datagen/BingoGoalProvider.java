@@ -329,7 +329,6 @@ public class BingoGoalProvider implements DataProvider {
             .catalyst("fishing")
             .difficulty(0)
             .build());
-        // TODO: deplete hoe
         goalAdder.accept(BingoGoal.builder(veryEasyId("break_hoe"))
             .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(ItemPredicate.Builder.item().of(ItemTags.HOES)))
             .tags(BingoTags.ACTION, BingoTags.STAT)
@@ -338,7 +337,14 @@ public class BingoGoalProvider implements DataProvider {
             .difficulty(0)
             .build()
         );
-        // TODO: bounce on bed
+        goalAdder.accept(BingoGoal.builder(veryEasyId("bounce_on_bed"))
+            .criterion("bounce", BingoTriggers.bounceOnBed())
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.bounce_on_bed"))
+            .icon(Items.WHITE_BED)
+            .difficulty(0)
+            .build()
+        );
         // TODO: hang painting
         // TODO: fill composter
 
