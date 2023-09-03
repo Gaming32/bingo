@@ -1,0 +1,50 @@
+{
+  "antisynergy": "fire_resistance_potion",
+  "criteria": {
+    "obtain_0": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "minecraft:fire_resistance"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "minecraft:long_fire_resistance"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:potion",
+    "nbt": "{Potion:\"minecraft:fire_resistance\"}"
+  },
+  "infrequency": 12,
+  "name": {
+    "translate": "item.minecraft.potion.effect.fire_resistance"
+  },
+  "requirements": [
+    [
+      "obtain_0",
+      "obtain_1"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "antisynergy": "swiftness_potion",
+  "criteria": {
+    "obtain_0": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "minecraft:swiftness"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "minecraft:long_swiftness"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "minecraft:strong_swiftness"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:potion",
+    "nbt": "{Potion:\"minecraft:swiftness\"}"
+  },
+  "infrequency": 12,
+  "name": {
+    "translate": "item.minecraft.potion.effect.swiftness"
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "obtain_0",
+      "obtain_1",
+      "obtain_2"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:overworld",
+    "bingo:combat"
+  ]
+}

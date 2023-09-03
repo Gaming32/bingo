@@ -1,0 +1,29 @@
+{
+  "antisynergy": "heart_of_the_sea",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:heart_of_the_sea"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:heart_of_the_sea"
+  },
+  "name": {
+    "translate": "item.minecraft.heart_of_the_sea"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:ocean",
+    "bingo:overworld"
+  ]
+}

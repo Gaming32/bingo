@@ -1,0 +1,57 @@
+{
+  "antisynergy": "magma_cream",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 3,
+        "min": 2
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:magma_cream"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:magma_cream"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "item.minecraft.magma_cream"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:combat"
+  ]
+}

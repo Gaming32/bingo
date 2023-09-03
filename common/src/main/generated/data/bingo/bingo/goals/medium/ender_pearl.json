@@ -1,0 +1,57 @@
+{
+  "antisynergy": "ender_pearl",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 6,
+        "min": 4
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:ender_pearl"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:ender_pearl"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "item.minecraft.ender_pearl"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:combat"
+  ]
+}

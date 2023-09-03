@@ -23,7 +23,9 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.PickedUpItemTrigger;
 import net.minecraft.advancements.critereon.PlayerInteractTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.RecipeCraftedTrigger;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.critereon.TameAnimalTrigger;
 import net.minecraft.advancements.critereon.UsingItemTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
@@ -36,9 +38,13 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -48,6 +54,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -90,6 +97,7 @@ public class BingoGoalProvider implements DataProvider {
     private static void addGoals(Consumer<BingoGoal> goalAdder) {
         addVeryEasyGoals(goalAdder);
         addEasyGoals(goalAdder);
+        addMediumGoals(goalAdder);
     }
 
     private static void addVeryEasyGoals(Consumer<BingoGoal> goalAdder) {
@@ -526,9 +534,7 @@ public class BingoGoalProvider implements DataProvider {
             .infrequency(2)
             .difficulty(1)
             .build());
-        goalAdder.accept(obtainItemGoal(easyId("egg"), new ItemStack(Items.EGG, 16), ItemPredicate.Builder.item().of(Items.EGG).withCount(MinMaxBounds.Ints.exactly(16)))
-            .name(Items.EGG.getDescription())
-            .antisynergy("egg")
+        goalAdder.accept(obtainItemGoal(easyId("egg"), Items.EGG, 16, 16)
             .difficulty(1)
             .build());
         // TODO: hang 3 different 4x4 paintings
@@ -719,9 +725,7 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.OVERWORLD)
             .difficulty(1)
             .build());
-        goalAdder.accept(obtainItemGoal(easyId("honeycomb"), new ItemStack(Items.HONEYCOMB, 3), ItemPredicate.Builder.item().of(Items.HONEYCOMB).withCount(MinMaxBounds.Ints.exactly(3)))
-            .antisynergy("honeycomb")
-            .name(Items.HONEYCOMB.getDescription())
+        goalAdder.accept(obtainItemGoal(easyId("honeycomb"), Items.HONEYCOMB, 3, 3)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD)
             .difficulty(1)
@@ -822,8 +826,399 @@ public class BingoGoalProvider implements DataProvider {
             .build();
     }
 
+    private static void addMediumGoals(Consumer<BingoGoal> goalAdder) {
+        // TODO: different edible items
+        goalAdder.accept(obtainItemGoal(mediumId("beetroot_soup"), Items.BEETROOT_SOUP)
+            .tags(BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(BingoGoal.builder(mediumId("potted_cactus"))
+            .criterion("pot", new ItemUsedOnLocationTrigger.TriggerInstance(
+                CriteriaTriggers.ITEM_USED_ON_BLOCK.getId(),
+                ContextAwarePredicate.ANY,
+                ContextAwarePredicate.create(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.POTTED_CACTUS).build())))
+            .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.potted_cactus"))
+            .icon(Items.CACTUS)
+            .difficulty(2)
+            .build());
+        // TODO: detonate TNT minecart
+        goalAdder.accept(obtainItemGoal(mediumId("magma_block"), Items.MAGMA_BLOCK, 10, 30)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("damaged_anvil"), Items.DAMAGED_ANVIL)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("melon_slice"), Items.MELON_SLICE, 16, 64)
+            .tags(BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(BingoGoal.builder(mediumId("never_wear_armor"))
+            .criterion("equip", EquipItemTrigger.builder().newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR).build()).build())
+            .tags(BingoTags.NEVER)
+            .name(Component.translatable("bingo.goal.never_wear_armor"))
+            .icon(Items.DIAMOND_CHESTPLATE)
+            .antisynergy("never_wear_armor")
+            .catalyst("wear_armor")
+            .difficulty(2)
+            .build());
+        // TODO: get a skeleton's bow
+        goalAdder.accept(obtainItemGoal(mediumId("diamond_block"), Items.DIAMOND_BLOCK)
+            .infrequency(2)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("lapis_block"), Items.LAPIS_BLOCK, 2, 3)
+            .tags(BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        // TODO: different saplings
+        goalAdder.accept(BingoGoal.builder(mediumId("tame_wolf"))
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.WOLF).build()))
+            .tags(BingoTags.STAT, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.tame_wolf"))
+            .icon(Items.BONE)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("fire_charge"), Items.FIRE_CHARGE, 6, 6)
+            .tags(BingoTags.NETHER, BingoTags.COMBAT)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("magma_cream"), Items.MAGMA_CREAM, 2, 3)
+            .tags(BingoTags.NETHER, BingoTags.COMBAT)
+            .difficulty(2)
+            .build());
+        // TODO: create iron golem
+        goalAdder.accept(obtainItemGoal(mediumId("ender_eye"), Items.ENDER_EYE)
+            .reactant("pacifist")
+            .tags(BingoTags.NETHER, BingoTags.COMBAT)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("rabbit_stew"), Items.RABBIT_STEW)
+            .tags(BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+
+        goalAdder.accept(potionGoal("fire_resistance_potion", Potions.FIRE_RESISTANCE, Potions.LONG_FIRE_RESISTANCE)
+            .build());
+        goalAdder.accept(potionGoal("healing_potion", Potions.HEALING, Potions.STRONG_HEALING)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT)
+            .build());
+        goalAdder.accept(potionGoal("posion_potion", Potions.POISON, Potions.LONG_POISON, Potions.STRONG_POISON)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT)
+            .build());
+        goalAdder.accept(potionGoal("harming_potion", Potions.HARMING, Potions.STRONG_HARMING)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT)
+            .build());
+        goalAdder.accept(potionGoal("regeneration_potion", Potions.REGENERATION, Potions.LONG_REGENERATION, Potions.STRONG_REGENERATION)
+            .tags(BingoTags.COMBAT)
+            .build());
+        goalAdder.accept(potionGoal("slowness_potion", Potions.SLOWNESS, Potions.LONG_SLOWNESS, Potions.STRONG_SLOWNESS)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT)
+            .build());
+        goalAdder.accept(potionGoal("strength_potion", Potions.STRENGTH, Potions.LONG_STRENGTH, Potions.STRONG_STRENGTH)
+            .tags(BingoTags.COMBAT)
+            .build());
+        goalAdder.accept(potionGoal("swiftness_potion", Potions.SWIFTNESS, Potions.LONG_SWIFTNESS, Potions.STRONG_SWIFTNESS)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT)
+            .build());
+        goalAdder.accept(potionGoal("weakness_potion", Potions.WEAKNESS, Potions.LONG_WEAKNESS)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT)
+            .build());
+        goalAdder.accept(potionGoal("leaping_potion", Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD, BingoTags.COMBAT)
+            .build());
+        goalAdder.accept(potionGoal("slow_falling_potion", Potions.SLOW_FALLING, Potions.LONG_SLOW_FALLING)
+            .tags(BingoTags.COMBAT, BingoTags.OVERWORLD)
+            .build());
+        goalAdder.accept(potionGoal("turtle_master_potion", Potions.TURTLE_MASTER, Potions.LONG_TURTLE_MASTER, Potions.STRONG_TURTLE_MASTER)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD, BingoTags.COMBAT)
+            .build());
+
+        // TODO: finish by jumping from top to bottom of world
+        // TODO: vegetarian
+        // TODO: kill self with arrow
+        // TODO: get a whilst trying to escape death
+        // TODO: finish on top of the world
+        // TODO: kill hostile mob with gravel
+        // TODO: kill hostile mob with sand
+        // TODO: put carpet on llama
+        // TODO: activate a (4-6)x(4-6) nether portal
+        goalAdder.accept(obtainItemGoal(mediumId("obsidian"), Items.OBSIDIAN, 3, 10)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("iron_block"), Items.IRON_BLOCK, 5, 7)
+            .infrequency(2)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("gold_block"), Items.GOLD_BLOCK, 2, 4)
+            .infrequency(2)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("daylight_detector"), Items.DAYLIGHT_DETECTOR)
+            .tags(BingoTags.OVERWORLD, BingoTags.NETHER)
+            .difficulty(2)
+            .build());
+        // TODO: enchanted golden sword
+        // TODO: colors of wool
+        // TODO: colors of terracotta
+        // TODO: colors of glazed terracotta
+        // TODO: colors of concrete
+        // TODO: colors of bed next to each other
+        // TODO: power redstone lamp
+        // TODO: different flowers
+        // TODO: put zombified piglin in water
+        // TODO: place an iron, gold, diamond block on top of each other
+        // TODO: kill hostile mob with anvil
+        goalAdder.accept(obtainLevelsGoal(mediumId("levels"), 16, 26)
+            .infrequency(2)
+            .difficulty(2)
+            .build());
+        // TODO: different seeds
+        // TODO: 4 different armor types
+        // TODO: fill hopper with 320 items
+        goalAdder.accept(obtainItemGoal(mediumId("red_nether_bricks"), Items.RED_NETHER_BRICKS, 16, 32)
+            .reactant("use_furnace")
+            .tags(BingoTags.NETHER)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("spectral_arrow"), Items.SPECTRAL_ARROW, 16, 32)
+            .tags(BingoTags.NETHER)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("rotten_flesh"), Items.ROTTEN_FLESH, 33, 64)
+            .infrequency(2)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("ink_sac"), Items.INK_SAC, 16, 32)
+            .infrequency(2)
+            .tags(BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("slime_ball"), Items.SLIME_BALL, 5, 9)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        // TODO: lead on rabbit
+        goalAdder.accept(obtainItemGoal(mediumId("firework_star"), Items.FIREWORK_STAR)
+            .tags(BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        // TODO: hang mob with lead
+        goalAdder.accept(obtainItemGoal(mediumId("blaze_rod"), Items.BLAZE_ROD)
+            .reactant("pacifist")
+            .tags(BingoTags.NETHER, BingoTags.COMBAT)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("ghast_tear"), Items.GHAST_TEAR)
+            .reactant("pacifist")
+            .tags(BingoTags.NETHER, BingoTags.COMBAT)
+            .difficulty(2)
+            .build());
+        // TODO: never use coal
+        goalAdder.accept(obtainItemGoal(mediumId("glowstone_dust"), Items.GLOWSTONE_DUST, 32, 64)
+            .tags(BingoTags.NETHER)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("item_frame"), Items.ITEM_FRAME, 10, 32)
+            .difficulty(2)
+            .build());
+        // TODO: different diamond items
+        goalAdder.accept(obtainItemGoal(mediumId("prismarine_crystals"), Items.PRISMARINE_CRYSTALS, 2, 4)
+            .infrequency(2)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        // TODO: dig straight down to bedrock from sea level (1x1 hole)
+        // TODO: deplete diamond sword
+        goalAdder.accept(obtainItemGoal(mediumId("saddle"), Items.SADDLE)
+            .difficulty(2)
+            .build());
+        // TODO: give mob hat
+        goalAdder.accept(obtainItemGoal(mediumId("heart_of_the_sea"), Items.HEART_OF_THE_SEA)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("phantom_membrane"), Items.PHANTOM_MEMBRANE)
+            .reactant("pacifist")
+            .tags(BingoTags.COMBAT, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        // TODO: add marker to map
+        // TODO: water, lava, milk, fish bucket
+        // TODO: leash dolphin to fence
+        goalAdder.accept(obtainItemGoal(mediumId("dried_kelp_block"), Items.DRIED_KELP_BLOCK, 21, 32)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("gunpowder"), Items.GUNPOWDER, 6, 15)
+            .infrequency(2)
+            .tags(BingoTags.COMBAT)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("spider_eye"), Items.SPIDER_EYE, 6, 15)
+            .infrequency(2)
+            .tags(BingoTags.COMBAT, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("ender_pearl"), Items.ENDER_PEARL, 4, 6)
+            .infrequency(2)
+            .tags(BingoTags.COMBAT)
+            .difficulty(2)
+            .build());
+        // TODO: never use axe
+        // TODO: enchant an item
+        // TODO: blue shield with white flower charge pattern
+        // TODO: tame a cat
+        // TODO: breed mobs
+        // TODO: crouch distance
+        // TODO: kill n mobs
+        goalAdder.accept(obtainItemGoal(mediumId("seagrass"), Items.SEAGRASS, 33, 64)
+            .infrequency(2)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        // TODO: kill iron golem
+        // TODO: kill mob with end crystal
+        goalAdder.accept(BingoGoal.builder(mediumId("never_craft_sticks"))
+            .criterion("craft", RecipeCraftedTrigger.TriggerInstance.craftedItem(new ResourceLocation("stick")))
+            .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.never_craft_sticks"))
+            .icon(Items.STICK)
+            .difficulty(2)
+            .build());
+        // TODO: light campfire from 10 blocks away
+        // TODO: max scale map
+        // TODO: ignite TNT with lectern
+        // TODO: kill hostile mob with berry bush
+        // TODO: get pillager's crossbow
+        ItemStack ominousBanner = Raid.getLeaderBannerInstance();
+        goalAdder.accept(obtainItemGoal(mediumId("ominous_banner"), ominousBanner, ItemPredicate.Builder.item().of(ominousBanner.getItem()).hasNbt(ominousBanner.getTag()))
+            .antisynergy("ominous_banner")
+            .name(ominousBanner.getHoverName())
+            .reactant("pacifist")
+            .tags(BingoTags.COMBAT, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        // TODO: gain a fox's trust
+        goalAdder.accept(obtainItemGoal(mediumId("honey_block"), Items.HONEY_BLOCK)
+            .setAntisynergy("honey")
+            .infrequency(2)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("honeycomb_block"), Items.HONEYCOMB_BLOCK, 3, 3)
+            .setAntisynergy("honeycomb")
+            .infrequency(2)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        // TODO: repair iron golem
+        // TODO: grow tree with benis attached
+
+        for (String woodType : List.of("warped", "crimson")) {
+            Item stemItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_stem"));
+            goalAdder.accept(obtainItemGoal(mediumId(woodType + "_stem"), stemItem, 16, 32)
+                .infrequency(25)
+                .tags(BingoTags.NETHER)
+                .difficulty(2)
+                .build());
+
+            Item strippedStemItem = BuiltInRegistries.ITEM.get(new ResourceLocation("stripped_" + woodType + "_stem"));
+            goalAdder.accept(obtainItemGoal(mediumId("stripped_" + woodType + "_stem"), strippedStemItem, 16, 32)
+                .infrequency(25)
+                .tags(BingoTags.NETHER)
+                .difficulty(2)
+                .build());
+
+            Item hyphaeItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_hyphae"));
+            goalAdder.accept(obtainItemGoal(mediumId(woodType + "_hyphae"), hyphaeItem, 16, 32)
+                .infrequency(25)
+                .tags(BingoTags.NETHER)
+                .difficulty(2)
+                .build());
+
+            Item strippedHyphaeItem = BuiltInRegistries.ITEM.get(new ResourceLocation("stripped_" + woodType + "_hyphae"));
+            goalAdder.accept(obtainItemGoal(mediumId("stripped_" + woodType + "_hyphae"), strippedHyphaeItem, 16, 32)
+                .infrequency(25)
+                .tags(BingoTags.NETHER)
+                .difficulty(2)
+                .build());
+
+            Item planksItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_planks"));
+            goalAdder.accept(obtainItemGoal(mediumId(woodType + "_planks"), planksItem, 16, 32)
+                .infrequency(25)
+                .tags(BingoTags.NETHER)
+                .difficulty(2)
+                .build());
+        }
+
+        goalAdder.accept(obtainItemGoal(mediumId("quartz_block"), Items.QUARTZ_BLOCK)
+            .tags(BingoTags.NETHER)
+            .difficulty(2)
+            .build());
+        // TODO: try to use respawn anchor in overworld
+        goalAdder.accept(obtainItemGoal(mediumId("warped_fungus_on_a_stick"), Items.WARPED_FUNGUS_ON_A_STICK)
+            .tags(BingoTags.NETHER)
+            .difficulty(2)
+            .build());
+        // TODO: convert hoglin into zoglin
+        // TODO: ride strider
+        // TODO: damage strider with water
+        goalAdder.accept(obtainItemGoal(mediumId("bamboo"), Items.BAMBOO, 6, 15)
+            .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("crying_obsidian"), Items.CRYING_OBSIDIAN)
+            .difficulty(2)
+            .build());
+        // TODO: kill self with ender pearl
+        goalAdder.accept(obtainItemGoal(mediumId("grass_block"), Items.GRASS_BLOCK)
+            .tooltip(Component.translatable("bingo.goal.grass_block.tooltip"))
+            .tags(BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        // TODO: bounce on slime block
+        // TODO: full gold armor
+        goalAdder.accept(obtainItemGoal(mediumId("brown_wool"), Items.BROWN_WOOL)
+            .tags(BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+        // TODO: grow huge nether fungus
+        // TODO: put chest on donkey
+        goalAdder.accept(BingoGoal.builder(mediumId("never_place_torches"))
+            .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(Blocks.TORCH))
+            .tags(BingoTags.NEVER)
+            .name(Component.translatable("bingo.goal.never_place_torches"))
+            .tooltip(Component.translatable("bingo.goal.never_place_torches.tooltip"))
+            .icon(Items.TORCH)
+            .difficulty(2)
+            .build());
+        goalAdder.accept(obtainItemGoal(mediumId("scute"), Items.SCUTE)
+            .setAntisynergy("turtle_shell")
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD)
+            .difficulty(2)
+            .build());
+    }
+
     private static ResourceLocation mediumId(String id) {
         return new ResourceLocation(Bingo.MOD_ID, "medium/" + id);
+    }
+
+    private static BingoGoal.Builder potionGoal(String id, Potion... potions) {
+        ItemStack potionItem = PotionUtils.setPotion(new ItemStack(Items.POTION), potions[0]);
+        BingoGoal.Builder builder = obtainItemGoal(
+                mediumId(id),
+                potionItem,
+                Arrays.stream(potions).map(potion -> ItemPredicate.Builder.item().of(Items.POTION).isPotion(potion)).toArray(ItemPredicate.Builder[]::new))
+            .antisynergy(id)
+            .name(Items.POTION.getName(potionItem))
+            .infrequency(12)
+            .tags(BingoTags.NETHER)
+            .difficulty(2);
+        if (potions[0] != Potions.FIRE_RESISTANCE) {
+            builder.reactant("pacifist");
+        }
+        return builder;
     }
 
     private static ResourceLocation hardId(String id) {
@@ -844,14 +1239,29 @@ public class BingoGoalProvider implements DataProvider {
         return obtainItemGoal(id, new ItemStack(icon), item);
     }
 
-    private static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemStack icon, ItemPredicate.Builder item) {
-        return BingoGoal.builder(id)
-            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(item.build()))
+    private static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemStack icon, ItemPredicate.Builder... items) {
+        BingoGoal.Builder builder = BingoGoal.builder(id);
+        if (items.length == 1) {
+            builder.criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(items[0].build()));
+        } else {
+            List<String> requirements = new ArrayList<>(items.length);
+            for (int i = 0; i < items.length; i++) {
+                builder.criterion("obtain_" + i, InventoryChangeTrigger.TriggerInstance.hasItems(items[i].build()));
+                requirements.add("obtain_" + i);
+            }
+            builder.requirements(requirements);
+        }
+        return builder
             .tags(BingoTags.ITEM)
             .icon(icon);
     }
 
     public static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike item, int minCount, int maxCount) {
+        if (minCount == maxCount) {
+            return obtainItemGoal(id, item, ItemPredicate.Builder.item().of(item), minCount, maxCount)
+                .antisynergy(BuiltInRegistries.ITEM.getKey(item.asItem()).getPath())
+                .name(Component.translatable("bingo.count", minCount, item.asItem().getDescription()));
+        }
         return obtainItemGoal(id, item, ItemPredicate.Builder.item().of(item), minCount, maxCount)
             .antisynergy(BuiltInRegistries.ITEM.getKey(item.asItem()).getPath())
             .name(Component.translatable("bingo.count", 0, item.asItem().getDescription()),
@@ -859,6 +1269,12 @@ public class BingoGoalProvider implements DataProvider {
     }
 
     private static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike icon, ItemPredicate.Builder item, int minCount, int maxCount) {
+        if (minCount == maxCount) {
+            return BingoGoal.builder(id)
+                .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(item.withCount(MinMaxBounds.Ints.exactly(minCount)).build()))
+                .tags(BingoTags.ITEM)
+                .icon(new ItemStack(icon, minCount));
+        }
         return BingoGoal.builder(id)
             .sub("count", new BingoSub.RandomBingoSub(MinMaxBounds.Ints.between(minCount, maxCount)))
             .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(

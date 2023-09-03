@@ -1,0 +1,29 @@
+{
+  "antisynergy": "daylight_detector",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:daylight_detector"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:daylight_detector"
+  },
+  "name": {
+    "translate": "block.minecraft.daylight_detector"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld",
+    "bingo:nether"
+  ]
+}

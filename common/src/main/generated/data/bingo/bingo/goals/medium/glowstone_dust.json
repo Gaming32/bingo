@@ -1,0 +1,56 @@
+{
+  "antisynergy": "glowstone_dust",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 64,
+        "min": 32
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:glowstone_dust"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:glowstone_dust"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "item.minecraft.glowstone_dust"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}

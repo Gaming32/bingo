@@ -1,13 +1,12 @@
 {
-  "antisynergy": "honeycomb",
+  "antisynergy": "honey",
   "criteria": {
     "obtain": {
       "conditions": {
         "items": [
           {
-            "count": 3,
             "items": [
-              "minecraft:honeycomb"
+              "minecraft:honey_block"
             ]
           }
         ]
@@ -15,23 +14,17 @@
       "trigger": "minecraft:inventory_changed"
     }
   },
-  "difficulty": 1,
+  "difficulty": 2,
   "icon": {
-    "count": 3,
-    "item": "minecraft:honeycomb"
+    "item": "minecraft:honey_block"
   },
   "infrequency": 2,
   "name": {
-    "translate": "bingo.count",
-    "with": [
-      "3",
-      {
-        "translate": "item.minecraft.honeycomb"
-      }
-    ]
+    "translate": "block.minecraft.honey_block"
   },
   "tags": [
     "bingo:item",
+    "bingo:action",
     "bingo:overworld"
   ]
 }

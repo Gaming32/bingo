@@ -1,13 +1,12 @@
 {
-  "antisynergy": "egg",
+  "antisynergy": "crying_obsidian",
   "criteria": {
     "obtain": {
       "conditions": {
         "items": [
           {
-            "count": 16,
             "items": [
-              "minecraft:egg"
+              "minecraft:crying_obsidian"
             ]
           }
         ]
@@ -15,19 +14,12 @@
       "trigger": "minecraft:inventory_changed"
     }
   },
-  "difficulty": 1,
+  "difficulty": 2,
   "icon": {
-    "count": 16,
-    "item": "minecraft:egg"
+    "item": "minecraft:crying_obsidian"
   },
   "name": {
-    "translate": "bingo.count",
-    "with": [
-      "16",
-      {
-        "translate": "item.minecraft.egg"
-      }
-    ]
+    "translate": "block.minecraft.crying_obsidian"
   },
   "tags": [
     "bingo:item"

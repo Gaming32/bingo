@@ -1,0 +1,28 @@
+{
+  "antisynergy": "quartz_block",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:quartz_block"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:quartz_block"
+  },
+  "name": {
+    "translate": "block.minecraft.quartz_block"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}

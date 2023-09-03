@@ -1,0 +1,28 @@
+{
+  "antisynergy": "beetroot_soup",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:beetroot_soup"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:beetroot_soup"
+  },
+  "name": {
+    "translate": "item.minecraft.beetroot_soup"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "antisynergy": "phantom_membrane",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:phantom_membrane"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:phantom_membrane"
+  },
+  "name": {
+    "translate": "item.minecraft.phantom_membrane"
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:item",
+    "bingo:combat",
+    "bingo:overworld"
+  ]
+}

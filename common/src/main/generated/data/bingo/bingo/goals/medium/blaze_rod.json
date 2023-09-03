@@ -1,0 +1,30 @@
+{
+  "antisynergy": "blaze_rod",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:blaze_rod"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:blaze_rod"
+  },
+  "name": {
+    "translate": "item.minecraft.blaze_rod"
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:combat"
+  ]
+}

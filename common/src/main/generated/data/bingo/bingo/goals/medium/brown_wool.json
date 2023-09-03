@@ -1,0 +1,28 @@
+{
+  "antisynergy": "brown_wool",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:brown_wool"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:brown_wool"
+  },
+  "name": {
+    "translate": "block.minecraft.brown_wool"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}
