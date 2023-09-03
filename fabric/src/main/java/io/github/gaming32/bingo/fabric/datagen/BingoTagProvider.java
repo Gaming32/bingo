@@ -39,7 +39,7 @@ public class BingoTagProvider implements DataProvider {
             }
         };
 
-        addGoals(tagAdder);
+        addTags(tagAdder);
 
         return CompletableFuture.allOf(generators.toArray(CompletableFuture[]::new));
     }
@@ -50,7 +50,7 @@ public class BingoTagProvider implements DataProvider {
         return "Bingo tags";
     }
 
-    private void addGoals(Consumer<BingoTag> tagAdder) {
+    private void addTags(Consumer<BingoTag> tagAdder) {
         tagAdder.accept(BingoTag.builder(BingoTags.ACTION).difficultyMax(20, 20, 20, 20, 20).build());
         tagAdder.accept(BingoTag.builder(BingoTags.BUILD).difficultyMax(20, 20, 20, 20, 20).build());
         tagAdder.accept(BingoTag.builder(BingoTags.COLOR).difficultyMax(2, 2, 2, 2, 2).build());
