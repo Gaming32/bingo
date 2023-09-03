@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-03T16:27:47.2720987	Bingo/Bingo goals
+// 1.20.1	2023-09-03T16:38:53.8284468	Bingo/Bingo goals
 9016e70d5f5b9386fe210b7f8a26848d7f831257 data/bingo/bingo/goals/easy/acacia_log.json
 bc680508ace49d383bbeec10497b05d997daebf8 data/bingo/bingo/goals/easy/acacia_planks.json
 2acbfce3602f9d4299ba993940363c77cf6d73a9 data/bingo/bingo/goals/easy/acacia_wood.json
@@ -20,6 +20,7 @@ a92701642a677954f53ea1250d23c1b938acf5e6 data/bingo/bingo/goals/easy/carved_pump
 98c2f2e1b6604e5c0840db75553d22a20f653c55 data/bingo/bingo/goals/easy/coal_block.json
 19374fc0b179c8c011f86bfdba4eb40efe4b528e data/bingo/bingo/goals/easy/coarse_dirt.json
 450702f72873feac9c0b0b478c8260b622cf53d7 data/bingo/bingo/goals/easy/cod.json
+e27575d69b7dc131eb0e69e425d59851103325bc data/bingo/bingo/goals/easy/create_snow_golem.json
 2b8f42ab067da552b3cd495852e48a09f8743734 data/bingo/bingo/goals/easy/crouch_distance.json
 4f16b6811fdba2dd0d021a37ff090fe47826beda data/bingo/bingo/goals/easy/cut_sandstone.json
 c99c73ed36801415c55f6b08111f06a1eb8459b8 data/bingo/bingo/goals/easy/cyan_dye.json

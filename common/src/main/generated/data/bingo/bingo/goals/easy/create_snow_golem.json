@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "summon": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:snow_golem"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:summoned_entity"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:carved_pumpkin"
+  },
+  "name": {
+    "translate": "bingo.goal.create_snow_golem"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}

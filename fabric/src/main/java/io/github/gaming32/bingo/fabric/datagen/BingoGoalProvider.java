@@ -527,7 +527,16 @@ public class BingoGoalProvider implements DataProvider {
         goalAdder.accept(obtainLevelsGoal(easyId("levels"), 8, 15)
             .difficulty(1)
             .build());
-        // TODO: create a snow golem
+        goalAdder.accept(BingoGoal.builder(easyId("create_snow_golem"))
+            .criterion("summon", SummonedEntityTrigger.TriggerInstance.summonedEntity(
+                EntityPredicate.Builder.entity().of(EntityType.SNOW_GOLEM)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.create_snow_golem"))
+            .icon(Blocks.CARVED_PUMPKIN)
+            .difficulty(1)
+            .build()
+        );
         goalAdder.accept(obtainItemGoal(easyId("note_block"), Items.NOTE_BLOCK, 5, 15)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD)
