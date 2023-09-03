@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "break": {
+      "conditions": {
+        "item": {
+          "tag": "minecraft:hoes"
+        }
+      },
+      "trigger": "bingo:item_broken"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:stone_hoe",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "bingo.goal.break_hoe"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:stat"
+  ]
+}

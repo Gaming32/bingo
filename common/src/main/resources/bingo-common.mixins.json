@@ -10,6 +10,7 @@
     "MixinCommandSourceStack",
     "MixinEnchantmentMenu",
     "MixinEntity",
+    "MixinItemStack",
     "MixinLivingEntity",
     "MixinPlayer",
     "MixinServerPlayer",

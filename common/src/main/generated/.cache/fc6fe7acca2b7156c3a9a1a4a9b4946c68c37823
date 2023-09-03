@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-03T14:22:19.3592461	Bingo/Bingo goals
+// 1.20.1	2023-09-03T14:41:30.5615713	Bingo/Bingo goals
 9016e70d5f5b9386fe210b7f8a26848d7f831257 data/bingo/bingo/goals/easy/acacia_log.json
 bc680508ace49d383bbeec10497b05d997daebf8 data/bingo/bingo/goals/easy/acacia_planks.json
 2acbfce3602f9d4299ba993940363c77cf6d73a9 data/bingo/bingo/goals/easy/acacia_wood.json
@@ -219,6 +219,7 @@ c5d42f5405a92cdd77b121a6d5a16e8d27007d45 data/bingo/bingo/goals/very_easy/birch_
 68ddab58272caa66fd3c9726b17d1b2af31ae130 data/bingo/bingo/goals/very_easy/birch_planks.json
 f5422a4d6f66cbf9735a068e9eeb34846057eb6e data/bingo/bingo/goals/very_easy/birch_wood.json
 d7b02104cd407ef717a95e76857c440d9e1a4730 data/bingo/bingo/goals/very_easy/bread.json
+3714a18c334bd9f9e4df24a0e8a7f44f6d3d748f data/bingo/bingo/goals/very_easy/break_hoe.json
 4415c718089a8dd825dbca02476d58f6d52c9fb2 data/bingo/bingo/goals/very_easy/breed_mobs.json
 4bc2b66944f1448565e27f45b41a6d66739b6c59 data/bingo/bingo/goals/very_easy/charcoal.json
 5693399a6ff8d3ab8d3db946648ee033eebbd98f data/bingo/bingo/goals/very_easy/coal.json

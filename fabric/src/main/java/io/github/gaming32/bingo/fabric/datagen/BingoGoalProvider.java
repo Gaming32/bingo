@@ -330,6 +330,14 @@ public class BingoGoalProvider implements DataProvider {
             .difficulty(0)
             .build());
         // TODO: deplete hoe
+        goalAdder.accept(BingoGoal.builder(veryEasyId("break_hoe"))
+            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(ItemPredicate.Builder.item().of(ItemTags.HOES)))
+            .tags(BingoTags.ACTION, BingoTags.STAT)
+            .name(Component.translatable("bingo.goal.break_hoe"))
+            .icon(Items.STONE_HOE)
+            .difficulty(0)
+            .build()
+        );
         // TODO: bounce on bed
         // TODO: hang painting
         // TODO: fill composter
