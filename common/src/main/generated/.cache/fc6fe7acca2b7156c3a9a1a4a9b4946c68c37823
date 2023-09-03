@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-03T15:26:40.3389753	Bingo/Bingo goals
+// 1.20.1	2023-09-03T16:27:47.2720987	Bingo/Bingo goals
 9016e70d5f5b9386fe210b7f8a26848d7f831257 data/bingo/bingo/goals/easy/acacia_log.json
 bc680508ace49d383bbeec10497b05d997daebf8 data/bingo/bingo/goals/easy/acacia_planks.json
 2acbfce3602f9d4299ba993940363c77cf6d73a9 data/bingo/bingo/goals/easy/acacia_wood.json
@@ -42,6 +42,7 @@ c6984c436ad73bdbbe48becc03b7122bce0ce368 data/bingo/bingo/goals/easy/fermented_s
 55423cdd8e1fcfb0be088399b486f7139c725653 data/bingo/bingo/goals/easy/gold_nugget.json
 32f0904daae3a25f7d252e2b8e267c8f21b2b0a5 data/bingo/bingo/goals/easy/grass.json
 b40cccaf8dc8dbc1f831bbb1fd7a1cc5599ec994 data/bingo/bingo/goals/easy/green_dye.json
+dec44d660b2c3dc19b84f72788d42991e7d19cfd data/bingo/bingo/goals/easy/grow_tree_in_nether.json
 0514bbe823d0d60f55a8db66b2bdda84fd1e8c3f data/bingo/bingo/goals/easy/gunpowder.json
 876d1a34eb08e1d0ccbe440254f8b097b7bbf366 data/bingo/bingo/goals/easy/hay_block.json
 4382c78aa89d1b33d60b8534952a54e4ee3ce3b3 data/bingo/bingo/goals/easy/honeycomb.json

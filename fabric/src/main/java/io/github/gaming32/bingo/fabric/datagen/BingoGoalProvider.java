@@ -413,7 +413,20 @@ public class BingoGoalProvider implements DataProvider {
 
     private static void addEasyGoals(Consumer<BingoGoal> goalAdder) {
         // TODO: different fish
-        // TODO: grow tree in nether
+        goalAdder.accept(BingoGoal.builder(easyId("grow_tree_in_nether"))
+            .criterion("grow", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+                LocationPredicate.Builder.location()
+                    .setBlock(BlockPredicate.Builder.block().of(BlockTags.OVERWORLD_NATURAL_LOGS).build())
+                    .setDimension(Level.NETHER),
+                ItemPredicate.Builder.item().of(Items.BONE_MEAL)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.grow_tree_in_nether"))
+            .tooltip(Component.translatable("bingo.goal.grow_tree_in_nether.tooltip"))
+            .icon(Items.BONE_MEAL)
+            .difficulty(1)
+            .build()
+        );
         // TODO: colors of terracotta
         goalAdder.accept(obtainItemGoal(easyId("mushroom_stew"), Items.MUSHROOM_STEW, 2, 5)
             .difficulty(1)

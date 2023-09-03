@@ -1,0 +1,43 @@
+{
+  "criteria": {
+    "grow": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "tag": "minecraft:overworld_natural_logs"
+              },
+              "dimension": "minecraft:the_nether"
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:bone_meal"
+              ]
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:bone_meal"
+  },
+  "name": {
+    "translate": "bingo.goal.grow_tree_in_nether"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:nether",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.grow_tree_in_nether.tooltip"
+  }
+}
