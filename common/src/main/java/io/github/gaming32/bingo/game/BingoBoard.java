@@ -3,7 +3,6 @@ package io.github.gaming32.bingo.game;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.util.Util;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -53,7 +52,7 @@ public class BingoBoard {
         final int[] indices = Util.shuffle(Util.generateIntArray(SIZE_SQ), rand);
 
         final Set<ResourceLocation> usedGoals = new HashSet<>();
-        final Object2IntMap<ResourceLocation> tagCount = new Object2IntOpenHashMap<>();
+        final Object2IntOpenHashMap<ResourceLocation> tagCount = new Object2IntOpenHashMap<>();
         final Set<String> antisynergys = new HashSet<>();
         final Set<String> reactants = new HashSet<>();
         final Set<String> catalysts = new HashSet<>();
@@ -136,7 +135,7 @@ public class BingoBoard {
             }
 
             for (final BingoTag tag : goal.getTags()) {
-                tagCount.mergeInt(tag.id(), 1, Integer::sum);
+                tagCount.addTo(tag.id(), 1);
             }
             antisynergys.addAll(goal.getAntisynergy());
             catalysts.addAll(goal.getCatalyst());
