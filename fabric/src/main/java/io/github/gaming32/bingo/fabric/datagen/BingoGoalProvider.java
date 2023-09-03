@@ -268,6 +268,17 @@ public class BingoGoalProvider implements DataProvider {
         );
         // TODO: fill all slots of campfire
         // TODO: change sign color
+        goalAdder.accept(BingoGoal.builder(veryEasyId("dye_sign"))
+            .criterion("dye", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+                LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.ALL_SIGNS).build()),
+                ItemPredicate.Builder.item().of(BingoItemTags.DYES)
+            ))
+            .name(Component.translatable("bingo.goal.dye_sign"))
+            .tags(BingoTags.ACTION)
+            .difficulty(0)
+            .icon(Items.OAK_SIGN)
+            .build()
+        );
         // TODO: extinguish campfire
         goalAdder.accept(BingoGoal.builder(veryEasyId("never_pickup_crafting_tables"))
             .criterion("pickup", PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByPlayer(

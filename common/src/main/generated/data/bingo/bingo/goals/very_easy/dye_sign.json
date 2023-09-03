@@ -1,0 +1,35 @@
+{
+  "criteria": {
+    "dye": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "tag": "minecraft:all_signs"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "tag": "bingo:dyes"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:oak_sign"
+  },
+  "name": {
+    "translate": "bingo.goal.dye_sign"
+  },
+  "tags": [
+    "bingo:action"
+  ]
+}
