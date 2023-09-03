@@ -1,0 +1,37 @@
+{
+  "antisynergy": "fish_bucket",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "bingo:fish_buckets"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:tropical_fish_bucket"
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "bingo.goal.fish_bucket"
+  },
+  "reactant": "use_buckets",
+  "tags": [
+    "bingo:item",
+    "bingo:ocean",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.fish_bucket.tooltip",
+    "with": [
+      {
+        "translate": "advancements.husbandry.tactical_fishing.title"
+      }
+    ]
+  }
+}

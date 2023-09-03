@@ -1,0 +1,28 @@
+{
+  "antisynergy": "apple",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:apple"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:apple"
+  },
+  "name": {
+    "translate": "item.minecraft.apple"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

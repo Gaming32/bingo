@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#forge:armors",
+      "required": false
+    },
+    "#bingo:armor/helmets",
+    "#bingo:armor/chestplates",
+    "#bingo:armor/leggings",
+    "#bingo:armor/boots"
+  ]
+}

@@ -52,13 +52,17 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
         trigger(player, instance -> instance.matches(item, hand));
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final ItemPredicate item;
         @Nullable
         private final InteractionHand hand;
 
-        public TriggerInstance(ContextAwarePredicate predicate, ItemPredicate item, @Nullable InteractionHand hand) {
-            super(ID, predicate);
+        public TriggerInstance(ContextAwarePredicate player, ItemPredicate item, @Nullable InteractionHand hand) {
+            super(ID, player);
             this.item = item;
             this.hand = hand;
         }
@@ -80,6 +84,35 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
                 return false;
             }
             return true;
+        }
+    }
+
+    public static final class Builder {
+        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
+        private ItemPredicate item = ItemPredicate.ANY;
+        @Nullable
+        private InteractionHand hand;
+
+        private Builder() {
+        }
+
+        public Builder player(ContextAwarePredicate player) {
+            this.player = player;
+            return this;
+        }
+
+        public Builder item(ItemPredicate item) {
+            this.item = item;
+            return this;
+        }
+
+        public Builder hand(InteractionHand hand) {
+            this.hand = hand;
+            return this;
+        }
+
+        public TriggerInstance build() {
+            return new TriggerInstance(player, item, hand);
         }
     }
 }

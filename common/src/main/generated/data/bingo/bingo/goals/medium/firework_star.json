@@ -1,0 +1,28 @@
+{
+  "antisynergy": "firework_star",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:firework_star"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:firework_star"
+  },
+  "name": {
+    "translate": "item.minecraft.firework_star"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "antisynergy": "harming_potion",
+  "criteria": {
+    "obtain_0": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "minecraft:harming"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "minecraft:strong_harming"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:potion",
+    "nbt": "{Potion:\"minecraft:harming\"}"
+  },
+  "infrequency": 12,
+  "name": {
+    "translate": "item.minecraft.potion.effect.harming"
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "obtain_0",
+      "obtain_1"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:overworld",
+    "bingo:combat"
+  ]
+}

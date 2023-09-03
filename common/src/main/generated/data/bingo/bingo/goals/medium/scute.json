@@ -1,0 +1,29 @@
+{
+  "antisynergy": "turtle_shell",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:scute"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:scute"
+  },
+  "name": {
+    "translate": "item.minecraft.scute"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:ocean",
+    "bingo:overworld"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "antisynergy": "rabbit_stew",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:rabbit_stew"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:rabbit_stew"
+  },
+  "name": {
+    "translate": "item.minecraft.rabbit_stew"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

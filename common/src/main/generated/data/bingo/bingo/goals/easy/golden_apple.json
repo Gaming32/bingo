@@ -1,0 +1,27 @@
+{
+  "antisynergy": "golden_apple",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:golden_apple"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:golden_apple"
+  },
+  "name": {
+    "translate": "item.minecraft.golden_apple"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "use": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:boat"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:oak_boat"
+  },
+  "name": {
+    "translate": "bingo.goal.never_use_boat"
+  },
+  "tags": [
+    "bingo:never",
+    "bingo:overworld"
+  ]
+}

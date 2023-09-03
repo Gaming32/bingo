@@ -1,0 +1,28 @@
+{
+  "antisynergy": "fermented_spider_eye",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:fermented_spider_eye"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:fermented_spider_eye"
+  },
+  "name": {
+    "translate": "item.minecraft.fermented_spider_eye"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

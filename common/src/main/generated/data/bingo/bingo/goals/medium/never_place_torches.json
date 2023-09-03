@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "place": {
+      "conditions": {
+        "location": [
+          {
+            "block": "minecraft:torch",
+            "condition": "minecraft:block_state_property"
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:torch"
+  },
+  "name": {
+    "translate": "bingo.goal.never_place_torches"
+  },
+  "tags": [
+    "bingo:never"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.never_place_torches.tooltip"
+  }
+}

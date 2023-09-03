@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#forge:shields",
+      "required": false
+    },
+    "minecraft:shield"
+  ]
+}

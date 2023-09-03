@@ -1,0 +1,27 @@
+{
+  "antisynergy": "jukebox",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:jukebox"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:jukebox"
+  },
+  "name": {
+    "translate": "block.minecraft.jukebox"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

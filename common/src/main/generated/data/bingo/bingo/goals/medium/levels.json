@@ -1,0 +1,46 @@
+{
+  "antisynergy": "levels",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 26,
+        "min": 16
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "levels": {
+          "min": {
+            "bingo_type": "sub",
+            "id": "count"
+          }
+        }
+      },
+      "trigger": "bingo:experience_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:experience_bottle"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.levels",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:stat"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "antisynergy": "soul_soil",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 10,
+        "min": 5
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:soul_soil"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:soul_soil"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.soul_soil"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}

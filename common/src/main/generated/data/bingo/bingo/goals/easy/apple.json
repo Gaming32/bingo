@@ -1,0 +1,56 @@
+{
+  "antisynergy": "apple",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 5,
+        "min": 2
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:apple"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:apple"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "item.minecraft.apple"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

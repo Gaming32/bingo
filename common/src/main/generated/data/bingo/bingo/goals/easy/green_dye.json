@@ -1,0 +1,29 @@
+{
+  "antisynergy": "green_dye",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:green_dye"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:green_dye"
+  },
+  "infrequency": 10,
+  "name": {
+    "translate": "item.minecraft.green_dye"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

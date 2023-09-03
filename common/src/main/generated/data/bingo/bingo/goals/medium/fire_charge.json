@@ -1,0 +1,37 @@
+{
+  "antisynergy": "fire_charge",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": 6,
+            "items": [
+              "minecraft:fire_charge"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "count": 6,
+    "item": "minecraft:fire_charge"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      "6",
+      {
+        "translate": "item.minecraft.fire_charge"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:combat"
+  ]
+}

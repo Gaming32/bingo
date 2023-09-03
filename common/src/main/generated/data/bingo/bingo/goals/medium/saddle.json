@@ -1,0 +1,27 @@
+{
+  "antisynergy": "saddle",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:saddle"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:saddle"
+  },
+  "name": {
+    "translate": "item.minecraft.saddle"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

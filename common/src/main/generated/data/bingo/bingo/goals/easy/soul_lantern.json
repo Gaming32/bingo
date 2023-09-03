@@ -1,0 +1,28 @@
+{
+  "antisynergy": "soul_lantern",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:soul_lantern"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:soul_lantern"
+  },
+  "name": {
+    "translate": "block.minecraft.soul_lantern"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}

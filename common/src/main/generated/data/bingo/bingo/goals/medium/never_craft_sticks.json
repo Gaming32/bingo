@@ -1,0 +1,21 @@
+{
+  "criteria": {
+    "craft": {
+      "conditions": {
+        "recipe_id": "minecraft:stick"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:stick"
+  },
+  "name": {
+    "translate": "bingo.goal.never_craft_sticks"
+  },
+  "tags": [
+    "bingo:never",
+    "bingo:overworld"
+  ]
+}

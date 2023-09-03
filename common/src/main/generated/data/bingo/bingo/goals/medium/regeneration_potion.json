@@ -1,0 +1,66 @@
+{
+  "antisynergy": "regeneration_potion",
+  "criteria": {
+    "obtain_0": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "minecraft:regeneration"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "minecraft:long_regeneration"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:potion"
+            ],
+            "potion": "minecraft:strong_regeneration"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:potion",
+    "nbt": "{Potion:\"minecraft:regeneration\"}"
+  },
+  "infrequency": 12,
+  "name": {
+    "translate": "item.minecraft.potion.effect.regeneration"
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "obtain_0",
+      "obtain_1",
+      "obtain_2"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:combat"
+  ]
+}

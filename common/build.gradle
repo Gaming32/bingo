@@ -10,6 +10,18 @@ architectury {
     common("fabric", "forge")
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDirs += ['src/main/generated']
+        }
+    }
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+}
+
 publishing {
     publications {
         mavenCommon(MavenPublication) {

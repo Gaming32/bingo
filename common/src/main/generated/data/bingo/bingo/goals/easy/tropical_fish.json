@@ -1,0 +1,29 @@
+{
+  "antisynergy": "tropical_fish",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:tropical_fish"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:tropical_fish"
+  },
+  "name": {
+    "translate": "item.minecraft.tropical_fish"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld",
+    "bingo:ocean"
+  ]
+}

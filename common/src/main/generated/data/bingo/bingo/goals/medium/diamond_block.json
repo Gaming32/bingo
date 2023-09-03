@@ -1,0 +1,28 @@
+{
+  "antisynergy": "diamond_block",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:diamond_block"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:diamond_block"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "block.minecraft.diamond_block"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "antisynergy": "red_nether_bricks",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 32,
+        "min": 16
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:red_nether_bricks"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:red_nether_bricks"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.red_nether_bricks"
+      }
+    ]
+  },
+  "reactant": "use_furnace",
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}

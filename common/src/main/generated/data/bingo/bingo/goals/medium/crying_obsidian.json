@@ -1,0 +1,27 @@
+{
+  "antisynergy": "crying_obsidian",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:crying_obsidian"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:crying_obsidian"
+  },
+  "name": {
+    "translate": "block.minecraft.crying_obsidian"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

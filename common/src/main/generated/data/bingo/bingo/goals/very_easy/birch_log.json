@@ -1,0 +1,57 @@
+{
+  "antisynergy": "birch_log",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 15,
+        "min": 5
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:birch_log"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:birch_log"
+  },
+  "infrequency": 25,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.birch_log"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

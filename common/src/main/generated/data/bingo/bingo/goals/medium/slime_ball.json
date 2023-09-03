@@ -1,0 +1,57 @@
+{
+  "antisynergy": "slime_ball",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 9,
+        "min": 5
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:slime_ball"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:slime_ball"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "item.minecraft.slime_ball"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}

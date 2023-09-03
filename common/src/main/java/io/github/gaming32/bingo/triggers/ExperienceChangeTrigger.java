@@ -30,18 +30,22 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
         trigger(player, i -> i.matches(player));
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final MinMaxBounds.Ints levels;
         private final MinMaxBounds.Doubles progress;
         private final MinMaxBounds.Ints totalExperience;
 
         public TriggerInstance(
-            ContextAwarePredicate predicate,
+            ContextAwarePredicate player,
             MinMaxBounds.Ints levels,
             MinMaxBounds.Doubles progress,
             MinMaxBounds.Ints totalExperience
         ) {
-            super(ID, predicate);
+            super(ID, player);
             this.levels = levels;
             this.progress = progress;
             this.totalExperience = totalExperience;
@@ -68,6 +72,40 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
                 return false;
             }
             return true;
+        }
+    }
+
+    public static final class Builder {
+        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
+        private MinMaxBounds.Ints levels = MinMaxBounds.Ints.ANY;
+        private MinMaxBounds.Doubles progress = MinMaxBounds.Doubles.ANY;
+        private MinMaxBounds.Ints totalExperience = MinMaxBounds.Ints.ANY;
+
+        private Builder() {
+        }
+
+        private Builder player(ContextAwarePredicate player) {
+            this.player = player;
+            return this;
+        }
+
+        public Builder levels(MinMaxBounds.Ints levels) {
+            this.levels = levels;
+            return this;
+        }
+
+        public Builder progress(MinMaxBounds.Doubles progress) {
+            this.progress = progress;
+            return this;
+        }
+
+        public Builder totalExperience(MinMaxBounds.Ints totalExperience) {
+            this.totalExperience = totalExperience;
+            return this;
+        }
+
+        public TriggerInstance build() {
+            return new TriggerInstance(player, levels, progress, totalExperience);
         }
     }
 }

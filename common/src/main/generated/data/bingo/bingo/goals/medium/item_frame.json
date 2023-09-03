@@ -1,0 +1,55 @@
+{
+  "antisynergy": "item_frame",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 32,
+        "min": 10
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:item_frame"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:item_frame"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "item.minecraft.item_frame"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

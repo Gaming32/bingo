@@ -1,0 +1,28 @@
+{
+  "antisynergy": "golden_carrot",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:golden_carrot"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:golden_carrot"
+  },
+  "name": {
+    "translate": "item.minecraft.golden_carrot"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

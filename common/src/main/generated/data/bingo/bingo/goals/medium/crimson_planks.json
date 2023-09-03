@@ -1,0 +1,57 @@
+{
+  "antisynergy": "crimson_planks",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 32,
+        "min": 16
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:crimson_planks"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:crimson_planks"
+  },
+  "infrequency": 25,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.crimson_planks"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}

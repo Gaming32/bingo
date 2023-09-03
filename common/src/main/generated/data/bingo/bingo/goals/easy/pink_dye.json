@@ -1,0 +1,29 @@
+{
+  "antisynergy": "pink_dye",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:pink_dye"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:pink_dye"
+  },
+  "infrequency": 10,
+  "name": {
+    "translate": "item.minecraft.pink_dye"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

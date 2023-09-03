@@ -1,0 +1,28 @@
+{
+  "antisynergy": "flower_pot",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:flower_pot"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:flower_pot"
+  },
+  "name": {
+    "translate": "block.minecraft.flower_pot"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

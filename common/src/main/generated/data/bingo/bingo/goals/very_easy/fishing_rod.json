@@ -1,0 +1,28 @@
+{
+  "antisynergy": "fishing_rod",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:fishing_rod"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:fishing_rod",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "item.minecraft.fishing_rod"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

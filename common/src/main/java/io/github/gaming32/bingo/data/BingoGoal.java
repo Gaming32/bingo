@@ -8,8 +8,9 @@ import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.mixin.common.DisplayInfoAccessor;
 import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,64 +21,18 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class BingoGoal {
-    public static final Map<String, Function<JsonObject, BingoSub>> SUBS = Map.of(
-        "sub", data -> new BingoSub() {
-            final String key = GsonHelper.getAsString(data, "id");
-
-            @Override
-            public JsonElement substitute(Map<String, JsonElement> referable, RandomSource rand) {
-                final JsonElement value = referable.get(key);
-                if (value == null) {
-                    throw new IllegalArgumentException("Unresolved reference in bingo goal: " + key);
-                }
-                return value;
-            }
-
-            @Override
-            public JsonObject serialize() {
-                final JsonObject result = new JsonObject();
-                result.addProperty("id", key);
-                return null;
-            }
-
-            @Override
-            public String getType() {
-                return "sub";
-            }
-        },
-        "random", data -> new BingoSub() {
-            final MinMaxBounds.Ints range = MinMaxBounds.Ints.fromJson(data.get("range"));
-            final int min = range.getMin() != null ? range.getMin() : Integer.MIN_VALUE;
-            final int max = range.getMax() != null ? range.getMax() : Integer.MAX_VALUE;
-
-            @Override
-            public JsonElement substitute(Map<String, JsonElement> referable, RandomSource rand) {
-                return new JsonPrimitive(rand.nextIntBetweenInclusive(min, max));
-            }
-
-            @Override
-            public JsonObject serialize() {
-                final JsonObject result = new JsonObject();
-                result.add("range", range.serializeToJson());
-                return result;
-            }
-
-            @Override
-            public String getType() {
-                return "random";
-            }
-        }
-    );
-
     private static Map<ResourceLocation, BingoGoal> goals = Collections.emptyMap();
     private static List<? extends List<BingoGoal>> goalsByDifficulty = List.of(
         Collections.emptyList(),
@@ -97,6 +52,7 @@ public class BingoGoal {
     private final JsonElement tooltip;
     @Nullable
     private final JsonObject icon;
+    @Nullable
     private final Integer infrequency;
     private final List<String> antisynergy;
     private final List<String> catalyst;
@@ -114,7 +70,7 @@ public class BingoGoal {
         JsonElement name,
         @Nullable JsonElement tooltip,
         @Nullable JsonObject icon,
-        Integer infrequency,
+        @Nullable Integer infrequency,
         List<String> antisynergy,
         List<String> catalyst,
         List<String> reactant,
@@ -211,7 +167,7 @@ public class BingoGoal {
                 .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> {
                     final JsonObject data = GsonHelper.convertToJsonObject(e.getValue(), "bingo sub");
                     final String type = GsonHelper.getAsString(data, "type");
-                    final Function<JsonObject, BingoSub> factory = SUBS.get(type);
+                    final Function<JsonObject, BingoSub> factory = BingoSub.SUBS.get(type);
                     if (factory == null) {
                         throw new JsonSyntaxException("Bingo sub type not found: " + type);
                     }
@@ -259,11 +215,7 @@ public class BingoGoal {
         if (!subs.isEmpty()) {
             final JsonObject subsObj = new JsonObject();
             for (final var entry : subs.entrySet()) {
-                final JsonObject subObj = entry.getValue().serialize();
-                final JsonObject realSubObj = new JsonObject();
-                realSubObj.addProperty("type", entry.getValue().getType());
-                realSubObj.asMap().putAll(subObj.asMap());
-                subsObj.add(entry.getKey(), realSubObj);
+                subsObj.add(entry.getKey(), entry.getValue().serializeWithType("type"));
             }
             result.add("bingo_subs", subsObj);
         }
@@ -327,13 +279,13 @@ public class BingoGoal {
     private static void serializeListString(JsonObject json, String key, List<String> list) {
         if (!list.isEmpty()) {
             if (list.size() == 1) {
-                json.addProperty("antisynergy", list.get(0));
+                json.addProperty(key, list.get(0));
             } else {
                 final JsonArray array = new JsonArray(list.size());
                 for (final String value : list) {
                     array.add(value);
                 }
-                json.add("antisynergy", array);
+                json.add(key, array);
             }
         }
     }
@@ -372,6 +324,7 @@ public class BingoGoal {
         return icon;
     }
 
+    @Nullable
     public Integer getInfrequency() {
         return infrequency;
     }
@@ -481,7 +434,7 @@ public class BingoGoal {
             final JsonObject obj = value.getAsJsonObject();
             if (obj.has("bingo_type")) {
                 final String type = GsonHelper.getAsString(obj, "bingo_type");
-                final Function<JsonObject, BingoSub> factory = SUBS.get(type);
+                final Function<JsonObject, BingoSub> factory = BingoSub.SUBS.get(type);
                 if (factory == null) {
                     throw new JsonSyntaxException("Bingo sub type not found: " + type);
                 }
@@ -501,12 +454,242 @@ public class BingoGoal {
         return id.toString();
     }
 
-    public interface BingoSub {
-        JsonElement substitute(Map<String, JsonElement> referable, RandomSource rand);
+    public static Builder builder(ResourceLocation id) {
+        return new Builder(id);
+    }
 
-        JsonObject serialize();
+    public static final class Builder {
+        private final ResourceLocation id;
+        private final Map<String, BingoSub> subs = new LinkedHashMap<>();
+        private final Map<String, JsonObject> criteria = new LinkedHashMap<>();
+        private List<List<String>> requirements = new ArrayList<>();
+        private final List<BingoTag> tags = new ArrayList<>();
+        @Nullable
+        private JsonElement name;
+        @Nullable
+        private JsonElement tooltip;
+        @Nullable
+        private JsonObject icon;
+        @Nullable
+        private Integer infrequency;
+        private final List<String> antisynergy = new ArrayList<>();
+        private final List<String> catalyst = new ArrayList<>();
+        private final List<String> reactant = new ArrayList<>();
+        @Nullable
+        private Integer difficulty;
 
-        String getType();
+        private Builder(ResourceLocation id) {
+            this.id = id;
+        }
+
+        public Builder sub(String key, BingoSub sub) {
+            this.subs.put(key, sub);
+            return this;
+        }
+
+        public Builder criterion(String key, CriterionTriggerInstance criterion) {
+            return criterion(key, criterion, subber -> {});
+        }
+
+        public Builder criterion(String key, CriterionTriggerInstance criterion, Consumer<JsonSubber> subber) {
+            return criterion(key, new Criterion(criterion), subber);
+        }
+
+        public Builder criterion(String key, Criterion criterion) {
+            return criterion(key, criterion, subber -> {});
+        }
+
+        public Builder criterion(String key, Criterion criterion, Consumer<JsonSubber> subber) {
+            JsonSubber json = new JsonSubber(criterion.serializeToJson());
+            subber.accept(json);
+            this.criteria.put(key, json.json.getAsJsonObject());
+            this.requirements.add(List.of(key));
+            return this;
+        }
+
+        @SafeVarargs
+        public final Builder requirements(List<String>... requirements) {
+            this.requirements = Arrays.stream(requirements).collect(Collectors.toCollection(ArrayList::new));
+            return this;
+        }
+
+        public Builder tags(ResourceLocation... tags) {
+            for (ResourceLocation tag : tags) {
+                this.tags.add(BingoTag.builder(tag).build());
+            }
+            return this;
+        }
+
+        public Builder name(Component name) {
+            return this.name(name, subber -> {});
+        }
+
+        public Builder name(Component name, Consumer<JsonSubber> subber) {
+            JsonSubber json = new JsonSubber(Component.Serializer.toJsonTree(name));
+            subber.accept(json);
+            this.name = json.json;
+            return this;
+        }
+
+        public Builder tooltip(Component tooltip) {
+            return this.tooltip(tooltip, subber -> {});
+        }
+
+        public Builder tooltip(Component tooltip, Consumer<JsonSubber> subber) {
+            JsonSubber json = new JsonSubber(Component.Serializer.toJsonTree(tooltip));
+            subber.accept(json);
+            this.tooltip = json.json;
+            return this;
+        }
+
+        public Builder icon(ItemLike icon) {
+            return this.icon(icon, subber -> {});
+        }
+
+        public Builder icon(ItemStack icon) {
+            return this.icon(icon, subber -> {});
+        }
+
+        public Builder icon(ItemLike icon, Consumer<JsonSubber> subber) {
+            return this.icon(new ItemStack(icon), subber);
+        }
+
+        public Builder icon(ItemStack icon, Consumer<JsonSubber> subber) {
+            JsonObject json = new JsonObject();
+            json.addProperty("item", BuiltInRegistries.ITEM.getKey(icon.getItem()).toString());
+            json.addProperty("count", icon.getCount());
+            if (icon.hasTag()) {
+                json.addProperty("nbt", icon.getTag().toString());
+            }
+
+            JsonSubber jsonSubber = new JsonSubber(json);
+            subber.accept(jsonSubber);
+            this.icon = jsonSubber.json.getAsJsonObject();
+
+            // remove count: 1
+            JsonElement count = this.icon.get("count");
+            if (count.isJsonPrimitive() && count.getAsJsonPrimitive().getAsInt() == 1) {
+                this.icon.remove("count");
+            }
+
+            return this;
+        }
+
+        public Builder infrequency(int infrequency) {
+            this.infrequency = infrequency;
+            return this;
+        }
+
+        public Builder setAntisynergy(String... antisynergy) {
+            this.antisynergy.clear();
+            return this.antisynergy(antisynergy);
+        }
+
+        public Builder antisynergy(String... antisynergy) {
+            Collections.addAll(this.antisynergy, antisynergy);
+            return this;
+        }
+
+        public Builder catalyst(String... catalyst) {
+            Collections.addAll(this.catalyst, catalyst);
+            return this;
+        }
+
+        public Builder reactant(String... reactant) {
+            Collections.addAll(this.reactant, reactant);
+            return this;
+        }
+
+        public Builder difficulty(int difficulty) {
+            this.difficulty = difficulty;
+            return this;
+        }
+
+        public BingoGoal build() {
+            if (name == null) {
+                throw new IllegalStateException("Bingo goal name has not been set");
+            }
+            if (difficulty == null) {
+                throw new IllegalStateException("Bingo goal difficulty has not been set");
+            }
+
+            return new BingoGoal(
+                id,
+                subs,
+                criteria,
+                requirements.stream().map(clause -> clause.toArray(String[]::new)).toArray(String[][]::new),
+                tags,
+                name,
+                tooltip,
+                icon,
+                infrequency,
+                antisynergy,
+                catalyst,
+                reactant,
+                difficulty
+            );
+        }
+
+        public static final class JsonSubber {
+            private final JsonElement json;
+
+            public JsonSubber(JsonElement json) {
+                this.json = json;
+            }
+
+            public JsonSubber sub(String path, String key) {
+                return sub(path, new BingoSub.SubBingoSub(key));
+            }
+
+            public JsonSubber sub(String path, BingoSub sub) {
+                JsonElement element = json;
+                String[] parts = path.split("\\.");
+                for (int i = 0; i < parts.length - 1; i++) {
+                    String part = parts[i];
+                    if (element.isJsonObject()) {
+                        element = element.getAsJsonObject().get(part);
+                        if (element == null) {
+                            throw new IllegalArgumentException("Could not find member \"" + part + "\" in json object");
+                        }
+                    } else if (element.isJsonArray()) {
+                        int index;
+                        try {
+                            index = Integer.parseInt(part);
+                        } catch (NumberFormatException e) {
+                            throw new IllegalArgumentException("Invalid index \"" + part + "\" into json array");
+                        }
+                        JsonArray array = element.getAsJsonArray();
+                        if (index < 0 || index >= array.size()) {
+                            throw new IllegalArgumentException("Index " + index + " is out of bounds for json array with length " + array.size());
+                        }
+                        element = array.get(index);
+                    } else {
+                        throw new IllegalArgumentException("Could not find member \"" + part + "\" in json element of type " + GsonHelper.getType(element));
+                    }
+                }
+
+                String finalPart = parts[parts.length - 1];
+                if (element.isJsonObject()) {
+                    element.getAsJsonObject().add(finalPart, sub.serializeWithType("bingo_type"));
+                } else if (element.isJsonArray()) {
+                    int index;
+                    try {
+                        index = Integer.parseInt(finalPart);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid index \"" + finalPart + "\" into json array");
+                    }
+                    JsonArray array = element.getAsJsonArray();
+                    if (index < 0 || index >= array.size()) {
+                        throw new IllegalArgumentException("Index " + index + " is out of bounds for json array with length " + array.size());
+                    }
+                    array.set(index, sub.serializeWithType("bingo_type"));
+                } else {
+                    throw new IllegalArgumentException("Could not find member \"" + finalPart + "\" in json element of type " + GsonHelper.getType(element));
+                }
+
+                return this;
+            }
+        }
     }
 
     public static class ReloadListener extends SimpleJsonResourceReloadListener {

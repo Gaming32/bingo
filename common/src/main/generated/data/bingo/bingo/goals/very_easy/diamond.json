@@ -1,0 +1,27 @@
+{
+  "antisynergy": "diamond",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:diamond"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:diamond"
+  },
+  "name": {
+    "translate": "item.minecraft.diamond"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

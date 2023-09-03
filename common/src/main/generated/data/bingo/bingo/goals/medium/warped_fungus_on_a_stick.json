@@ -1,0 +1,29 @@
+{
+  "antisynergy": "warped_fungus_on_a_stick",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:warped_fungus_on_a_stick"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:warped_fungus_on_a_stick",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "item.minecraft.warped_fungus_on_a_stick"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}

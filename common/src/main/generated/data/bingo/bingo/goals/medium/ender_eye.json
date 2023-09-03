@@ -1,0 +1,30 @@
+{
+  "antisynergy": "ender_eye",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:ender_eye"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:ender_eye"
+  },
+  "name": {
+    "translate": "item.minecraft.ender_eye"
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:combat"
+  ]
+}

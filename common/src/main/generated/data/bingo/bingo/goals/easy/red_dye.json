@@ -1,0 +1,29 @@
+{
+  "antisynergy": "red_dye",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:red_dye"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:red_dye"
+  },
+  "infrequency": 10,
+  "name": {
+    "translate": "item.minecraft.red_dye"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

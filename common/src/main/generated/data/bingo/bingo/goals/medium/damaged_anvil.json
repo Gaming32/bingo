@@ -1,0 +1,27 @@
+{
+  "antisynergy": "damaged_anvil",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:damaged_anvil"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:damaged_anvil"
+  },
+  "name": {
+    "translate": "block.minecraft.damaged_anvil"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

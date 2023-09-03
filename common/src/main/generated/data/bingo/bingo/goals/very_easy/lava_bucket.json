@@ -1,0 +1,29 @@
+{
+  "antisynergy": "lava_bucket",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:lava_bucket"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:lava_bucket"
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "item.minecraft.lava_bucket"
+  },
+  "reactant": "use_buckets",
+  "tags": [
+    "bingo:item"
+  ]
+}
