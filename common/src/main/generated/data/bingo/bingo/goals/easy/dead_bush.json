@@ -1,0 +1,29 @@
+{
+  "antisynergy": "dead_bush",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:dead_bush"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:dead_bush"
+  },
+  "name": {
+    "translate": "block.minecraft.dead_bush"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}

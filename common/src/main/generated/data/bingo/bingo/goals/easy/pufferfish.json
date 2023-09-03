@@ -1,0 +1,29 @@
+{
+  "antisynergy": "pufferfish",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:pufferfish"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:pufferfish"
+  },
+  "name": {
+    "translate": "item.minecraft.pufferfish"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld",
+    "bingo:ocean"
+  ]
+}

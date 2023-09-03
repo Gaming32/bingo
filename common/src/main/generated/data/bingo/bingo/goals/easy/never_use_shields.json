@@ -1,0 +1,26 @@
+{
+  "criteria": {
+    "use": {
+      "conditions": {
+        "item": {
+          "tag": "bingo:shields"
+        }
+      },
+      "trigger": "minecraft:using_item"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:shield",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "bingo.goal.never_use_shields"
+  },
+  "tags": [
+    "bingo:never"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.never_use_shields.tooltip"
+  }
+}

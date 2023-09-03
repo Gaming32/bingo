@@ -1,0 +1,57 @@
+{
+  "antisynergy": "sweet_berries",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 6,
+        "min": 2
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:sweet_berries"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:sweet_berries"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "item.minecraft.sweet_berries"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}

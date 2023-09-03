@@ -1,0 +1,29 @@
+{
+  "antisynergy": "lime_dye",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:lime_dye"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:lime_dye"
+  },
+  "infrequency": 10,
+  "name": {
+    "translate": "item.minecraft.lime_dye"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

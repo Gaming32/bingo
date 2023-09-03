@@ -1,0 +1,36 @@
+{
+  "criteria": {
+    "junk": {
+      "conditions": {
+        "item": {
+          "tag": "bingo:fishing_junk"
+        }
+      },
+      "trigger": "minecraft:fishing_rod_hooked"
+    },
+    "treasure": {
+      "conditions": {
+        "item": {
+          "tag": "bingo:fishing_treasure"
+        }
+      },
+      "trigger": "minecraft:fishing_rod_hooked"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:fishing_rod",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "bingo.goal.fish_treasure_junk"
+  },
+  "reactant": "fishing",
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.fish_treasure_junk.tooltip"
+  }
+}

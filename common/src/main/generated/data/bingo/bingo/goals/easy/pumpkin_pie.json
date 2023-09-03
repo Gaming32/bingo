@@ -1,0 +1,28 @@
+{
+  "antisynergy": "pumpkin_pie",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:pumpkin_pie"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:pumpkin_pie"
+  },
+  "name": {
+    "translate": "item.minecraft.pumpkin_pie"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

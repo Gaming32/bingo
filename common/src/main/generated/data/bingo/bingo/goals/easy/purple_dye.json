@@ -1,0 +1,29 @@
+{
+  "antisynergy": "purple_dye",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:purple_dye"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:purple_dye"
+  },
+  "infrequency": 10,
+  "name": {
+    "translate": "item.minecraft.purple_dye"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

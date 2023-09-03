@@ -33,18 +33,22 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
         trigger(player, instance -> instance.matches(player, arrow, pos));
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final EntityPredicate arrow;
         private final BlockPredicate buttonOrPlate;
         private final LocationPredicate location;
 
         public TriggerInstance(
-            ContextAwarePredicate predicate,
+            ContextAwarePredicate player,
             EntityPredicate arrow,
             BlockPredicate buttonOrPlate,
             LocationPredicate location
         ) {
-            super(ID, predicate);
+            super(ID, player);
             this.arrow = arrow;
             this.buttonOrPlate = buttonOrPlate;
             this.location = location;
@@ -71,6 +75,40 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
                 return false;
             }
             return true;
+        }
+    }
+
+    public static final class Builder {
+        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
+        private EntityPredicate arrow = EntityPredicate.ANY;
+        private BlockPredicate buttonOrPlate = BlockPredicate.ANY;
+        private LocationPredicate location = LocationPredicate.ANY;
+
+        private Builder() {
+        }
+
+        public Builder player(ContextAwarePredicate player) {
+            this.player = player;
+            return this;
+        }
+
+        public Builder arrow(EntityPredicate arrow) {
+            this.arrow = arrow;
+            return this;
+        }
+
+        public Builder buttonOrPlate(BlockPredicate buttonOrPlate) {
+            this.buttonOrPlate = buttonOrPlate;
+            return this;
+        }
+
+        public Builder location(LocationPredicate location) {
+            this.location = location;
+            return this;
+        }
+
+        public TriggerInstance build() {
+            return new TriggerInstance(player, arrow, buttonOrPlate, location);
         }
     }
 }

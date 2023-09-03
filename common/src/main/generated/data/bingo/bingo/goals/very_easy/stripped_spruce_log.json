@@ -1,10 +1,10 @@
 {
-  "antisynergy": "axe_use",
+  "antisynergy": "stripped_spruce_log",
   "bingo_subs": {
     "count": {
       "type": "random",
       "range": {
-        "max": 10,
+        "max": 15,
         "min": 5
       }
     }
@@ -15,8 +15,10 @@
         "items": [
           {
             "count": {
-              "bingo_type": "sub",
-              "id": "count"
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
             },
             "items": [
               "minecraft:stripped_spruce_log"
@@ -48,6 +50,7 @@
       }
     ]
   },
+  "reactant": "axe_use",
   "tags": [
     "bingo:item",
     "bingo:overworld"

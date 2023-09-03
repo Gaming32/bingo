@@ -15,8 +15,10 @@
         "items": [
           {
             "count": {
-              "bingo_type": "sub",
-              "id": "count"
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
             },
             "items": [
               "minecraft:andesite"

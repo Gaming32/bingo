@@ -1,5 +1,5 @@
 {
-  "antisynergy": "use_buckets",
+  "antisynergy": "fish_bucket",
   "criteria": {
     "obtain": {
       "conditions": {
@@ -20,6 +20,7 @@
   "name": {
     "translate": "bingo.goal.fish_bucket"
   },
+  "reactant": "use_buckets",
   "tags": [
     "bingo:item",
     "bingo:ocean",

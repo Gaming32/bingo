@@ -1,5 +1,5 @@
 {
-  "antisynergy": "axe_use",
+  "antisynergy": "stripped_birch_wood",
   "bingo_subs": {
     "count": {
       "type": "random",
@@ -15,8 +15,10 @@
         "items": [
           {
             "count": {
-              "bingo_type": "sub",
-              "id": "count"
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
             },
             "items": [
               "minecraft:stripped_birch_wood"
@@ -48,6 +50,7 @@
       }
     ]
   },
+  "reactant": "axe_use",
   "tags": [
     "bingo:item",
     "bingo:overworld"

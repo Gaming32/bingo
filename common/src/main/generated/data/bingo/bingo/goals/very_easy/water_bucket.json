@@ -1,5 +1,5 @@
 {
-  "antisynergy": "use_buckets",
+  "antisynergy": "water_bucket",
   "criteria": {
     "obtain": {
       "conditions": {
@@ -22,6 +22,7 @@
   "name": {
     "translate": "item.minecraft.water_bucket"
   },
+  "reactant": "use_buckets",
   "tags": [
     "bingo:item",
     "bingo:overworld"

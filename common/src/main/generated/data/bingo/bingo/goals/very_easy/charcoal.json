@@ -1,5 +1,5 @@
 {
-  "antisynergy": "use_furnace",
+  "antisynergy": "charcoal",
   "criteria": {
     "obtain": {
       "conditions": {
@@ -21,6 +21,7 @@
   "name": {
     "translate": "item.minecraft.charcoal"
   },
+  "reactant": "use_furnace",
   "tags": [
     "bingo:item",
     "bingo:overworld"

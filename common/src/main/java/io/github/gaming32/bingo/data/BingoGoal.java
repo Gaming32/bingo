@@ -279,13 +279,13 @@ public class BingoGoal {
     private static void serializeListString(JsonObject json, String key, List<String> list) {
         if (!list.isEmpty()) {
             if (list.size() == 1) {
-                json.addProperty("antisynergy", list.get(0));
+                json.addProperty(key, list.get(0));
             } else {
                 final JsonArray array = new JsonArray(list.size());
                 for (final String value : list) {
                     array.add(value);
                 }
-                json.add("antisynergy", array);
+                json.add(key, array);
             }
         }
     }

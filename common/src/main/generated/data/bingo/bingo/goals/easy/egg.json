@@ -1,0 +1,29 @@
+{
+  "antisynergy": "egg",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": 16,
+            "items": [
+              "minecraft:egg"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "count": 16,
+    "item": "minecraft:egg"
+  },
+  "name": {
+    "translate": "item.minecraft.egg"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

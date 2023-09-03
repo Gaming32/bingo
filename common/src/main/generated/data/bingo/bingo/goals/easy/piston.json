@@ -1,0 +1,28 @@
+{
+  "antisynergy": "piston",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:piston"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:piston"
+  },
+  "name": {
+    "translate": "block.minecraft.piston"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "antisynergy": "writable_book",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:writable_book"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:writable_book"
+  },
+  "name": {
+    "translate": "item.minecraft.writable_book"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

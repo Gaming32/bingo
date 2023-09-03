@@ -1,0 +1,29 @@
+{
+  "antisynergy": "honey_bottle",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:honey_bottle"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:honey_bottle"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "item.minecraft.honey_bottle"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}
