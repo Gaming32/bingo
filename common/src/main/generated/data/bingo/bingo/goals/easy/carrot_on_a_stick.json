@@ -1,0 +1,29 @@
+{
+  "antisynergy": "carrot_on_a_stick",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:carrot_on_a_stick"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:carrot_on_a_stick",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "item.minecraft.carrot_on_a_stick"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

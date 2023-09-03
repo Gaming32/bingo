@@ -1,0 +1,28 @@
+{
+  "antisynergy": "emerald",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:emerald"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:emerald"
+  },
+  "name": {
+    "translate": "item.minecraft.emerald"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

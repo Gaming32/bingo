@@ -720,6 +720,8 @@ public class BingoGoalProvider implements DataProvider {
             .difficulty(1)
             .build());
         goalAdder.accept(obtainItemGoal(easyId("honeycomb"), new ItemStack(Items.HONEYCOMB, 3), ItemPredicate.Builder.item().of(Items.HONEYCOMB).withCount(MinMaxBounds.Ints.exactly(3)))
+            .antisynergy("honeycomb")
+            .name(Items.HONEYCOMB.getDescription())
             .infrequency(2)
             .tags(BingoTags.OVERWORLD)
             .difficulty(1)

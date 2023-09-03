@@ -1,0 +1,56 @@
+{
+  "antisynergy": "blackstone",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 6,
+        "min": 2
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:blackstone"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:blackstone"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.blackstone"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}
