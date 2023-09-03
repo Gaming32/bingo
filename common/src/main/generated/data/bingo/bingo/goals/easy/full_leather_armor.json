@@ -1,0 +1,43 @@
+{
+  "criteria": {
+    "armor": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:leather_helmet"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:leather_chestplate"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:leather_leggings"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:leather_boots"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:leather_helmet",
+    "nbt": "{Damage:0}"
+  },
+  "infrequency": 3,
+  "name": {
+    "translate": "bingo.goal.full_leather_armor"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

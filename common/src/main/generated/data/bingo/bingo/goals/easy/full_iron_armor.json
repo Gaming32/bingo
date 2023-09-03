@@ -1,0 +1,43 @@
+{
+  "criteria": {
+    "armor": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:iron_helmet"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:iron_chestplate"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:iron_leggings"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:iron_boots"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:iron_helmet",
+    "nbt": "{Damage:0}"
+  },
+  "infrequency": 3,
+  "name": {
+    "translate": "bingo.goal.full_iron_armor"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

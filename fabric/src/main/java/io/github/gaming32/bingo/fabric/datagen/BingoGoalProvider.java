@@ -562,8 +562,28 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.OVERWORLD)
             .difficulty(1)
             .build());
-        // TODO: full iron armor
-        // TODO: full leather armor
+        goalAdder.accept(BingoGoal.builder(easyId("full_iron_armor"))
+            .criterion("armor", InventoryChangeTrigger.TriggerInstance.hasItems(
+                Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS
+            ))
+            .tags(BingoTags.ITEM)
+            .infrequency(3)
+            .name(Component.translatable("bingo.goal.full_iron_armor"))
+            .icon(Items.IRON_HELMET)
+            .difficulty(1)
+            .build()
+        );
+        goalAdder.accept(BingoGoal.builder(easyId("full_leather_armor"))
+            .criterion("armor", InventoryChangeTrigger.TriggerInstance.hasItems(
+                Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS
+            ))
+            .tags(BingoTags.ITEM)
+            .infrequency(3)
+            .name(Component.translatable("bingo.goal.full_leather_armor"))
+            .icon(Items.LEATHER_HELMET)
+            .difficulty(1)
+            .build()
+        );
         // TODO: fill cauldron with water
         // TODO: complete a map
         goalAdder.accept(obtainItemGoal(easyId("soul_sand"), Items.SOUL_SAND, 5, 10)
@@ -1565,12 +1585,14 @@ public class BingoGoalProvider implements DataProvider {
         goalAdder.accept(obtainItemGoal(
                 veryHardId("any_head"),
                 new ItemStack(Items.ZOMBIE_HEAD),
-                ItemPredicate.Builder.item().of(Items.SKELETON_SKULL),
-                ItemPredicate.Builder.item().of(Items.PLAYER_HEAD),
-                ItemPredicate.Builder.item().of(Items.ZOMBIE_HEAD),
-                ItemPredicate.Builder.item().of(Items.CREEPER_HEAD),
-                ItemPredicate.Builder.item().of(Items.DRAGON_HEAD),
-                ItemPredicate.Builder.item().of(Items.PIGLIN_HEAD))
+                ItemPredicate.Builder.item().of(
+                    Items.SKELETON_SKULL,
+                    Items.PLAYER_HEAD,
+                    Items.ZOMBIE_HEAD,
+                    Items.CREEPER_HEAD,
+                    Items.DRAGON_HEAD,
+                    Items.PIGLIN_HEAD
+                ))
             .tags(BingoTags.COMBAT, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.any_head"))
             .tooltip(Component.translatable("bingo.goal.any_head.tooltip"))

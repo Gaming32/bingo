@@ -19,7 +19,7 @@ public class MixinBedBlock {
         )
     )
     private void bounceUpTrigger(Entity entity, CallbackInfo ci) {
-        if (entity instanceof ServerPlayer player) {
+        if (entity instanceof ServerPlayer player && player.getDeltaMovement().y <= -0.1) {
             BingoTriggers.BOUNCE_ON_BED.trigger(player);
         }
     }

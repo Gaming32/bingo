@@ -1,70 +1,15 @@
 {
   "criteria": {
-    "obtain_0": {
+    "obtain": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:skeleton_skull"
-            ]
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "obtain_1": {
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "minecraft:player_head"
-            ]
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "obtain_2": {
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "minecraft:zombie_head"
-            ]
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "obtain_3": {
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "minecraft:creeper_head"
-            ]
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "obtain_4": {
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "minecraft:dragon_head"
-            ]
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "obtain_5": {
-      "conditions": {
-        "items": [
-          {
-            "items": [
+              "minecraft:skeleton_skull",
+              "minecraft:player_head",
+              "minecraft:zombie_head",
+              "minecraft:creeper_head",
+              "minecraft:dragon_head",
               "minecraft:piglin_head"
             ]
           }
@@ -80,16 +25,6 @@
   "name": {
     "translate": "bingo.goal.any_head"
   },
-  "requirements": [
-    [
-      "obtain_0",
-      "obtain_1",
-      "obtain_2",
-      "obtain_3",
-      "obtain_4",
-      "obtain_5"
-    ]
-  ],
   "tags": [
     "bingo:item",
     "bingo:combat",

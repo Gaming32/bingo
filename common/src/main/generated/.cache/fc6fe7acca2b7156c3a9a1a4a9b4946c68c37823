@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-03T16:38:53.8284468	Bingo/Bingo goals
+// 1.20.1	2023-09-03T17:10:14.6061089	Bingo/Bingo goals
 9016e70d5f5b9386fe210b7f8a26848d7f831257 data/bingo/bingo/goals/easy/acacia_log.json
 bc680508ace49d383bbeec10497b05d997daebf8 data/bingo/bingo/goals/easy/acacia_planks.json
 2acbfce3602f9d4299ba993940363c77cf6d73a9 data/bingo/bingo/goals/easy/acacia_wood.json
@@ -37,6 +37,8 @@ e6df52b1d196ba833cb3ce44b1edae94ca65bf08 data/bingo/bingo/goals/easy/feather.jso
 c6984c436ad73bdbbe48becc03b7122bce0ce368 data/bingo/bingo/goals/easy/fermented_spider_eye.json
 502a4383193117ee5201dbd84539287328ced373 data/bingo/bingo/goals/easy/fish_treasure_junk.json
 176b79bf104ab220bd13126576b5e1b3cc776908 data/bingo/bingo/goals/easy/flint.json
+b5e4f7e85377b16115c45be6e0122617fec6f700 data/bingo/bingo/goals/easy/full_iron_armor.json
+5a17b3da9e9759a953f1fd230dcb8d53ebf435ee data/bingo/bingo/goals/easy/full_leather_armor.json
 9c86a14abd9e8e854b363dc30082c761e23832ad data/bingo/bingo/goals/easy/golden_apple.json
 3f66533d28e9fb08b39c395e647d34a3baf1dc2e data/bingo/bingo/goals/easy/golden_carrot.json
 97892694bac49143341ecd1106e52eb035beb1b6 data/bingo/bingo/goals/easy/gold_block.json
@@ -285,7 +287,7 @@ ffab210778c074d58436853b073e669eff6d07b4 data/bingo/bingo/goals/very_easy/stripp
 69cdc4390d73223f53d27f1ab62a322176d23e8c data/bingo/bingo/goals/very_hard/all_chestplates.json
 d1e1d4cdfc07739b23627bc977b5ad63502eec1d data/bingo/bingo/goals/very_hard/all_diamond_craftables.json
 4c2339d5182ab9ce70ed5b0dc19c74aa4a8c8bea data/bingo/bingo/goals/very_hard/all_dyes.json
-7fb90db28455d8022d3dbd3a8b734955a906611f data/bingo/bingo/goals/very_hard/any_head.json
+f83b2f4f114b60e75793ef98b3a0a3d6a895d249 data/bingo/bingo/goals/very_hard/any_head.json
 d49700b29529a853db63158c00e74c5e98193dfe data/bingo/bingo/goals/very_hard/blue_ice.json
 12b062c63d33cf518e6d5c960167eaa6d88c1694 data/bingo/bingo/goals/very_hard/diamond_block.json
 1e6024f31b4d574720f55c9dedd3275a07415bec data/bingo/bingo/goals/very_hard/levels.json
