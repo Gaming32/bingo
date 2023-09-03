@@ -44,6 +44,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.raid.Raid;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -51,8 +53,10 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
@@ -104,6 +108,7 @@ public class BingoGoalProvider implements DataProvider {
         addEasyGoals(goalAdder);
         addMediumGoals(goalAdder);
         addHardGoals(goalAdder);
+        addVeryHardGoals(goalAdder);
     }
 
     private static void addVeryEasyGoals(Consumer<BingoGoal> goalAdder) {
@@ -1469,6 +1474,127 @@ public class BingoGoalProvider implements DataProvider {
 
     private static ResourceLocation hardId(String id) {
         return new ResourceLocation(Bingo.MOD_ID, "hard/" + id);
+    }
+
+    private static void addVeryHardGoals(Consumer<BingoGoal> goalAdder) {
+        // TODO: different ores
+        // TODO: different potions
+        goalAdder.accept(BingoGoal.builder(veryHardId("all_chestplates"))
+            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
+                Items.LEATHER_CHESTPLATE, Items.GOLDEN_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE,
+                Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE))
+            .tags(BingoTags.ITEM, BingoTags.COMBAT)
+            .name(Component.translatable("bingo.goal.all_chestplates"))
+            .tooltip(Component.translatable("bingo.goal.all_chestplates.tooltip"))
+            .icon(Items.NETHERITE_CHESTPLATE)
+            .difficulty(4)
+            .build());
+        goalAdder.accept(obtainItemGoal(
+                veryHardId("any_head"),
+                new ItemStack(Items.ZOMBIE_HEAD),
+                ItemPredicate.Builder.item().of(Items.SKELETON_SKULL),
+                ItemPredicate.Builder.item().of(Items.PLAYER_HEAD),
+                ItemPredicate.Builder.item().of(Items.ZOMBIE_HEAD),
+                ItemPredicate.Builder.item().of(Items.CREEPER_HEAD),
+                ItemPredicate.Builder.item().of(Items.DRAGON_HEAD),
+                ItemPredicate.Builder.item().of(Items.PIGLIN_HEAD))
+            .tags(BingoTags.COMBAT, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.any_head"))
+            .tooltip(Component.translatable("bingo.goal.any_head.tooltip"))
+            .difficulty(4)
+            .build());
+
+        goalAdder.accept(BingoGoal.builder(veryHardId("all_dyes"))
+            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
+                Arrays.stream(DyeColor.values()).map(DyeItem::byColor).toArray(ItemLike[]::new)))
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.all_dyes"))
+            .tooltip(Component.translatable("bingo.sixteen_bang",
+                Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new)))
+            .icon(new ItemStack(Items.RED_DYE, 16))
+            .antisynergy("every_color")
+            .reactant("use_furnace")
+            .difficulty(4)
+            .build());
+        goalAdder.accept(BingoGoal.builder(veryHardId("levels"))
+            .criterion("obtain", ExperienceChangeTrigger.builder().levels(MinMaxBounds.Ints.atLeast(50)).build())
+            .tags(BingoTags.STAT)
+            .name(Component.translatable("bingo.goal.levels", 50))
+            .icon(new ItemStack(Items.EXPERIENCE_BOTTLE, 50))
+            .infrequency(2)
+            .antisynergy("levels")
+            .difficulty(4)
+            .build());
+        goalAdder.accept(obtainItemGoal(veryHardId("tipped_arrow"), Items.TIPPED_ARROW, 16, 32)
+            .tags(BingoTags.NETHER, BingoTags.OVERWORLD)
+            .difficulty(4)
+            .build());
+        // TODO: place one of each mineral block on top of each other
+        goalAdder.accept(BingoGoal.builder(veryHardId("sleep_in_mansion"))
+            .criterion("sleep", new PlayerTrigger.TriggerInstance(
+                CriteriaTriggers.SLEPT_IN_BED.getId(),
+                EntityPredicate.wrap(EntityPredicate.Builder.entity().located(LocationPredicate.inStructure(BuiltinStructures.WOODLAND_MANSION)).build())))
+            .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.sleep_in_mansion"))
+            .icon(Items.BROWN_BED)
+            .difficulty(4)
+            .build());
+        goalAdder.accept(obtainItemGoal(veryHardId("mycelium"), Items.MYCELIUM, 10, 32)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .difficulty(4)
+            .build());
+        // TODO: 5 types of coral blocks
+        goalAdder.accept(obtainItemGoal(veryHardId("blue_ice"), Items.BLUE_ICE, 32, 64)
+            .tags(BingoTags.OVERWORLD)
+            .difficulty(4)
+            .build());
+        // TODO: fully power conduit
+        goalAdder.accept(BingoGoal.builder(veryHardId("all_diamond_craftables"))
+            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
+                Items.DIAMOND_BLOCK, Items.DIAMOND_AXE, Items.DIAMOND_BOOTS,
+                Items.DIAMOND_CHESTPLATE, Items.DIAMOND_HELMET, Items.DIAMOND_HOE,
+                Items.DIAMOND_LEGGINGS, Items.DIAMOND_PICKAXE, Items.DIAMOND_SHOVEL,
+                Items.DIAMOND_SWORD, Items.ENCHANTING_TABLE, Items.FIREWORK_STAR, Items.JUKEBOX))
+            .name(Component.translatable("bingo.goal.all_diamond_craftables"))
+            .tooltip(Component.translatable("bingo.goal.all_diamond_craftables.tooltip"))
+            .icon(Items.DIAMOND_HOE)
+            .antisynergy("diamond_items")
+            .difficulty(4)
+            .build());
+        goalAdder.accept(BingoGoal.builder(veryHardId("shulker_in_overworld"))
+            .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
+                EntityPredicate.Builder.entity().of(EntityType.SHULKER).located(LocationPredicate.inDimension(Level.OVERWORLD))))
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.END, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.shulker_in_overworld"))
+            .icon(Items.SHULKER_SHELL)
+            .difficulty(4)
+            .build());
+        goalAdder.accept(obtainItemGoal(veryHardId("diamond_block"), Items.DIAMOND_BLOCK, 5, 10)
+            .infrequency(2)
+            .difficulty(4)
+            .build());
+        // TODO: complete full map in end
+        goalAdder.accept(obtainItemGoal(veryHardId("wither_rose"), Items.WITHER_ROSE, 32, 64)
+            .reactant("pacifist")
+            .tags(BingoTags.NETHER, BingoTags.COMBAT)
+            .difficulty(4)
+            .build());
+        // TODO: get slime ball from panda
+        goalAdder.accept(obtainItemGoal(veryHardId("netherite_block"), Items.NETHERITE_BLOCK, 2, 2)
+            .tags(BingoTags.NETHER)
+            .difficulty(4)
+            .build());
+        // TODO: full netherite armor and tools
+        // TODO: convert pig into zombified piglin
+        goalAdder.accept(obtainItemGoal(veryHardId("trident"), Items.TRIDENT)
+            .tags(BingoTags.OCEAN, BingoTags.COMBAT, BingoTags.OVERWORLD)
+            .difficulty(4)
+            .build());
+        // TODO: tame skeleton horse
+        // TODO: all parrots dance
+        // TODO: place every color of bed next to each other
+        // TODO: kill enderman with only endermites
+        // TODO: get regen from a beacon
     }
 
     private static ResourceLocation veryHardId(String id) {

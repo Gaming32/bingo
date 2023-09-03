@@ -1,16 +1,16 @@
 {
+  "antisynergy": "diamond_block",
   "bingo_subs": {
     "count": {
       "type": "random",
       "range": {
-        "min": 16,
-        "max": 32
+        "max": 10,
+        "min": 5
       }
     }
   },
   "criteria": {
     "obtain": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -20,13 +20,24 @@
                 "id": "count"
               }
             },
-            "items": ["minecraft:tipped_arrow"]
+            "items": [
+              "minecraft:diamond_block"
+            ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
-  "tags": ["bingo:item", "bingo:nether", "bingo:overworld"],
+  "difficulty": 4,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:diamond_block"
+  },
+  "infrequency": 2,
   "name": {
     "translate": "bingo.count",
     "with": [
@@ -34,16 +45,12 @@
         "bingo_type": "sub",
         "id": "count"
       },
-      {"translate": "item.minecraft.tipped_arrow"}
+      {
+        "translate": "block.minecraft.diamond_block"
+      }
     ]
   },
-  "icon": {
-    "item": "minecraft:tipped_arrow",
-    "count": {
-      "bingo_type": "sub",
-      "id": "count"
-    },
-    "nbt": "{Potion:\"minecraft:mundane\"}"
-  },
-  "difficulty": 4
+  "tags": [
+    "bingo:item"
+  ]
 }

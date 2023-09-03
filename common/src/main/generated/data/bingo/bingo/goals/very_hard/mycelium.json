@@ -1,16 +1,16 @@
 {
+  "antisynergy": "mycelium",
   "bingo_subs": {
     "count": {
       "type": "random",
       "range": {
-        "min": 32,
-        "max": 64
+        "max": 32,
+        "min": 10
       }
     }
   },
   "criteria": {
     "obtain": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -20,13 +20,23 @@
                 "id": "count"
               }
             },
-            "items": ["minecraft:blue_ice"]
+            "items": [
+              "minecraft:mycelium"
+            ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
-  "tags": ["bingo:item", "bingo:overworld"],
+  "difficulty": 4,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:mycelium"
+  },
   "name": {
     "translate": "bingo.count",
     "with": [
@@ -34,15 +44,14 @@
         "bingo_type": "sub",
         "id": "count"
       },
-      {"translate": "block.minecraft.blue_ice"}
+      {
+        "translate": "block.minecraft.mycelium"
+      }
     ]
   },
-  "icon": {
-    "item": "minecraft:blue_ice",
-    "count": {
-      "bingo_type": "sub",
-      "id": "count"
-    }
-  },
-  "difficulty": 4
+  "tags": [
+    "bingo:item",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
 }

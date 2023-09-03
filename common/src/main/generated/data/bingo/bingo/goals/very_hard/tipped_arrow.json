@@ -1,16 +1,16 @@
 {
+  "antisynergy": "tipped_arrow",
   "bingo_subs": {
     "count": {
       "type": "random",
       "range": {
-        "min": 10,
-        "max": 32
+        "max": 32,
+        "min": 16
       }
     }
   },
   "criteria": {
     "obtain": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -20,13 +20,23 @@
                 "id": "count"
               }
             },
-            "items": ["minecraft:mycelium"]
+            "items": [
+              "minecraft:tipped_arrow"
+            ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
-  "tags": ["bingo:item", "bingo:rare_biome", "bingo:overworld"],
+  "difficulty": 4,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:tipped_arrow"
+  },
   "name": {
     "translate": "bingo.count",
     "with": [
@@ -34,15 +44,14 @@
         "bingo_type": "sub",
         "id": "count"
       },
-      {"translate": "block.minecraft.mycelium"}
+      {
+        "translate": "item.minecraft.tipped_arrow"
+      }
     ]
   },
-  "icon": {
-    "item": "minecraft:mycelium",
-    "count": {
-      "bingo_type": "sub",
-      "id": "count"
-    }
-  },
-  "difficulty": 4
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:overworld"
+  ]
 }

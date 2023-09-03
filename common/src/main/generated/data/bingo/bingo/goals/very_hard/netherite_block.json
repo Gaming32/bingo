@@ -1,0 +1,36 @@
+{
+  "antisynergy": "netherite_block",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": 2,
+            "items": [
+              "minecraft:netherite_block"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "count": 2,
+    "item": "minecraft:netherite_block"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      "2",
+      {
+        "translate": "block.minecraft.netherite_block"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}

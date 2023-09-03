@@ -1,0 +1,56 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:leather_chestplate"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:golden_chestplate"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:chainmail_chestplate"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:iron_chestplate"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:diamond_chestplate"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:netherite_chestplate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:netherite_chestplate",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "bingo.goal.all_chestplates"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:combat"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.all_chestplates.tooltip"
+  }
+}

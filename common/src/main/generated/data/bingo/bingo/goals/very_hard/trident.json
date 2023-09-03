@@ -1,0 +1,31 @@
+{
+  "antisynergy": "trident",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:trident"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:trident",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "item.minecraft.trident"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:ocean",
+    "bingo:combat",
+    "bingo:overworld"
+  ]
+}
