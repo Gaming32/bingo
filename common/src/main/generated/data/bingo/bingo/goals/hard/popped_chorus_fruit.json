@@ -1,16 +1,16 @@
 {
+  "antisynergy": "popped_chorus_fruit",
   "bingo_subs": {
     "count": {
       "type": "random",
       "range": {
-        "min": 2,
-        "max": 4
+        "max": 64,
+        "min": 32
       }
     }
   },
   "criteria": {
     "obtain": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -20,13 +20,23 @@
                 "id": "count"
               }
             },
-            "items": ["minecraft:diamond_block"]
+            "items": [
+              "minecraft:popped_chorus_fruit"
+            ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
-  "tags": ["bingo:item"],
+  "difficulty": 3,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:popped_chorus_fruit"
+  },
   "name": {
     "translate": "bingo.count",
     "with": [
@@ -34,17 +44,13 @@
         "bingo_type": "sub",
         "id": "count"
       },
-      {"translate": "block.minecraft.diamond_block"}
+      {
+        "translate": "item.minecraft.popped_chorus_fruit"
+      }
     ]
   },
-  "icon": {
-    "item": "minecraft:diamond_block",
-    "count": {
-      "bingo_type": "sub",
-      "id": "count"
-    }
-  },
-  "infrequency": 2,
-  "antisynergy": "diamond_block",
-  "difficulty": 3
+  "tags": [
+    "bingo:item",
+    "bingo:end"
+  ]
 }

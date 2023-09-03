@@ -1,0 +1,58 @@
+{
+  "antisynergy": "jungle_wood",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 20,
+        "min": 11
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:jungle_wood"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:jungle_wood"
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.jungle_wood"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "antisynergy": "dragon_breath",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 16,
+        "min": 5
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:dragon_breath"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:dragon_breath"
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "item.minecraft.dragon_breath"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:combat",
+    "bingo:end"
+  ]
+}

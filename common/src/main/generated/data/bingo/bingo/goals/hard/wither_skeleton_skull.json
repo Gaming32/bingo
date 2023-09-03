@@ -1,0 +1,31 @@
+{
+  "antisynergy": "wither_skeleton_skull",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:wither_skeleton_skull"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:wither_skeleton_skull"
+  },
+  "name": {
+    "translate": "block.minecraft.wither_skeleton_skull"
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:combat",
+    "bingo:rare_biome"
+  ]
+}

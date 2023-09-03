@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "enchant": {
+      "conditions": {
+        "required_levels": {
+          "min": 10
+        }
+      },
+      "trigger": "bingo:enchanted_item"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "count": 10,
+    "item": "minecraft:enchanting_table"
+  },
+  "name": {
+    "translate": "bingo.goal.level_10_enchant"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

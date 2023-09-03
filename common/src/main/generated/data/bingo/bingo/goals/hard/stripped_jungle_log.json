@@ -1,0 +1,59 @@
+{
+  "antisynergy": "stripped_jungle_log",
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 20,
+        "min": 11
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:stripped_jungle_log"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:stripped_jungle_log"
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.stripped_jungle_log"
+      }
+    ]
+  },
+  "reactant": "axe_use",
+  "tags": [
+    "bingo:item",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}

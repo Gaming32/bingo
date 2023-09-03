@@ -30,13 +30,17 @@ public class EnchantedItemTrigger extends SimpleCriterionTrigger<EnchantedItemTr
         trigger(player, instance -> instance.matches(/* item, */ levelsSpent, levelsRequired));
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
 //        private final ItemPredicate item;
         private final MinMaxBounds.Ints levelsSpent;
         private final MinMaxBounds.Ints requiredLevels;
 
-        public TriggerInstance(ContextAwarePredicate predicate, /* ItemPredicate item, */ MinMaxBounds.Ints levelsSpent, MinMaxBounds.Ints requiredLevels) {
-            super(ID, predicate);
+        public TriggerInstance(ContextAwarePredicate player, /* ItemPredicate item, */ MinMaxBounds.Ints levelsSpent, MinMaxBounds.Ints requiredLevels) {
+            super(ID, player);
 //            this.item = item;
             this.levelsSpent = levelsSpent;
             this.requiredLevels = requiredLevels;
@@ -65,6 +69,40 @@ public class EnchantedItemTrigger extends SimpleCriterionTrigger<EnchantedItemTr
                 return false;
             }
             return true;
+        }
+    }
+
+    public static final class Builder {
+        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
+//        private ItemPredicate item = ItemPredicate.ANY;
+        private MinMaxBounds.Ints levelsSpent = MinMaxBounds.Ints.ANY;
+        private MinMaxBounds.Ints requiredLevels = MinMaxBounds.Ints.ANY;
+
+        private Builder() {
+        }
+
+        public Builder player(ContextAwarePredicate player) {
+            this.player = player;
+            return this;
+        }
+
+//        public Builder item(ItemPredicate item) {
+//            this.item = item;
+//            return this;
+//        }
+
+        public Builder levelsSpent(MinMaxBounds.Ints levelsSpent) {
+            this.levelsSpent = levelsSpent;
+            return this;
+        }
+
+        public Builder requiredLevels(MinMaxBounds.Ints requiredLevels) {
+            this.requiredLevels = requiredLevels;
+            return this;
+        }
+
+        public TriggerInstance build() {
+            return new TriggerInstance(player, /* item, */ levelsSpent, requiredLevels);
         }
     }
 }

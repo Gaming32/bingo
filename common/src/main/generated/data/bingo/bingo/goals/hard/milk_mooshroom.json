@@ -1,0 +1,36 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:mooshroom"
+            }
+          }
+        ],
+        "item": {
+          "items": [
+            "minecraft:bucket"
+          ]
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:mooshroom_spawn_egg"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.milk_mooshroom"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}

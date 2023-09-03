@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "minecraft:scute"
+              "minecraft:turtle_helmet"
             ]
           }
         ]
@@ -14,12 +14,13 @@
       "trigger": "minecraft:inventory_changed"
     }
   },
-  "difficulty": 2,
+  "difficulty": 3,
   "icon": {
-    "item": "minecraft:scute"
+    "item": "minecraft:turtle_helmet",
+    "nbt": "{Damage:0}"
   },
   "name": {
-    "translate": "item.minecraft.scute"
+    "translate": "item.minecraft.turtle_helmet"
   },
   "tags": [
     "bingo:item",

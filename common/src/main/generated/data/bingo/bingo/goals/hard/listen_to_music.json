@@ -1,0 +1,37 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:jukebox"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "tag": "minecraft:music_discs"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:jukebox"
+  },
+  "name": {
+    "translate": "bingo.goal.listen_to_music"
+  },
+  "tags": [
+    "bingo:item"
+  ]
+}

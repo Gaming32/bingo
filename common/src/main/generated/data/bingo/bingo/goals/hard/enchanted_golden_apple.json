@@ -1,12 +1,12 @@
 {
-  "antisynergy": "turtle_helmet",
+  "antisynergy": "enchanted_golden_apple",
   "criteria": {
     "obtain": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:scute"
+              "minecraft:enchanted_golden_apple"
             ]
           }
         ]
@@ -14,16 +14,14 @@
       "trigger": "minecraft:inventory_changed"
     }
   },
-  "difficulty": 2,
+  "difficulty": 3,
   "icon": {
-    "item": "minecraft:scute"
+    "item": "minecraft:enchanted_golden_apple"
   },
   "name": {
-    "translate": "item.minecraft.scute"
+    "translate": "item.minecraft.enchanted_golden_apple"
   },
   "tags": [
-    "bingo:item",
-    "bingo:ocean",
-    "bingo:overworld"
+    "bingo:item"
   ]
 }

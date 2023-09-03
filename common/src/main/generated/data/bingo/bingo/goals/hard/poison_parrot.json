@@ -1,0 +1,37 @@
+{
+  "criteria": {
+    "poison": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:parrot"
+            }
+          }
+        ],
+        "item": {
+          "items": [
+            "minecraft:cookie"
+          ]
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:cookie"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.poison_parrot"
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:action",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "criteria": {
+    "tame": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:parrot"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:tame_animal"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:parrot_spawn_egg"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.tame_parrot"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}
