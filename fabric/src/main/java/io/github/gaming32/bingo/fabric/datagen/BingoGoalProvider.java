@@ -267,7 +267,6 @@ public class BingoGoalProvider implements DataProvider {
             .build()
         );
         // TODO: fill all slots of campfire
-        // TODO: change sign color
         goalAdder.accept(BingoGoal.builder(veryEasyId("dye_sign"))
             .criterion("dye", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.ALL_SIGNS).build()),
@@ -279,7 +278,17 @@ public class BingoGoalProvider implements DataProvider {
             .icon(Items.OAK_SIGN)
             .build()
         );
-        // TODO: extinguish campfire
+        goalAdder.accept(BingoGoal.builder(veryEasyId("extinguish_campfire"))
+            .criterion("extinguish", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+                LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(Blocks.CAMPFIRE).build()),
+                ItemPredicate.Builder.item().of(ItemTags.SHOVELS)
+            ))
+            .name(Component.translatable("bingo.goal.extinguish_campfire"))
+            .tags(BingoTags.ACTION)
+            .difficulty(0)
+            .icon(Items.CAMPFIRE)
+            .build()
+        );
         goalAdder.accept(BingoGoal.builder(veryEasyId("never_pickup_crafting_tables"))
             .criterion("pickup", PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByPlayer(
                 ContextAwarePredicate.ANY, ItemPredicate.Builder.item().of(Items.CRAFTING_TABLE).build(), ContextAwarePredicate.ANY))

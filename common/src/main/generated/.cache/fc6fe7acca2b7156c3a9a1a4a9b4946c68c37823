@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-03T14:12:45.912894	Bingo/Bingo goals
+// 1.20.1	2023-09-03T14:22:19.3592461	Bingo/Bingo goals
 9016e70d5f5b9386fe210b7f8a26848d7f831257 data/bingo/bingo/goals/easy/acacia_log.json
 bc680508ace49d383bbeec10497b05d997daebf8 data/bingo/bingo/goals/easy/acacia_planks.json
 2acbfce3602f9d4299ba993940363c77cf6d73a9 data/bingo/bingo/goals/easy/acacia_wood.json
@@ -233,6 +233,7 @@ f2523f31dc31b9d4a9fe28f2df6715cc840511e7 data/bingo/bingo/goals/very_easy/dark_o
 9560f0730d01532c469d929892f8526efada72a1 data/bingo/bingo/goals/very_easy/diorite.json
 4ca4c1a448641b99d4b434dc28daa567ee00202b data/bingo/bingo/goals/very_easy/dirt.json
 d7ae1ac8b2ed7eb26c5a7c9c21d99aecce83b514 data/bingo/bingo/goals/very_easy/dye_sign.json
+639ea5f51f2d19a26b22ff18b055b7f975698bb5 data/bingo/bingo/goals/very_easy/extinguish_campfire.json
 3dd1008259a4d57999bd459f0b89aa78abbb6ba5 data/bingo/bingo/goals/very_easy/feather.json
 af85d90a39e75a51b425ec5120b15e60654916e8 data/bingo/bingo/goals/very_easy/fishing_rod.json
 de9fab318309059e9d5e71d14c81150be9ea0809 data/bingo/bingo/goals/very_easy/fish_bucket.json
