@@ -31,8 +31,10 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
+import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
@@ -341,12 +343,29 @@ public class BingoGoalProvider implements DataProvider {
             .criterion("bounce", BingoTriggers.bounceOnBed())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.bounce_on_bed"))
-            .icon(Items.WHITE_BED)
+            .icon(Blocks.WHITE_BED)
             .difficulty(0)
             .build()
         );
-        // TODO: hang painting
-        // TODO: fill composter
+        goalAdder.accept(BingoGoal.builder(veryEasyId("fill_composter"))
+            .criterion("fill", new ItemUsedOnLocationTrigger.TriggerInstance(
+                CriteriaTriggers.ITEM_USED_ON_BLOCK.getId(),
+                ContextAwarePredicate.ANY,
+                ContextAwarePredicate.create(LocationCheck.checkLocation(
+                    LocationPredicate.Builder.location().setBlock(
+                        BlockPredicate.Builder.block().of(Blocks.COMPOSTER).setProperties(
+                            StatePropertiesPredicate.Builder.properties().hasProperty(ComposterBlock.LEVEL, 7).build()
+                        ).build()
+                    )
+                ).build())
+            ))
+            .name(Component.translatable("bingo.goal.fill_composter"))
+            .tooltip(Component.translatable("bingo.goal.fill_composter.tooltip"))
+            .tags(BingoTags.ACTION)
+            .icon(Blocks.COMPOSTER)
+            .difficulty(0)
+            .build()
+        );
 
         for (String woodType : List.of("oak", "spruce", "birch", "dark_oak", "acacia")) {
             Item planksItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_planks"));

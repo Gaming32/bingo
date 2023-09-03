@@ -1,0 +1,37 @@
+{
+  "criteria": {
+    "fill": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:composter"
+                ],
+                "state": {
+                  "level": "7"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:composter"
+  },
+  "name": {
+    "translate": "bingo.goal.fill_composter"
+  },
+  "tags": [
+    "bingo:action"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.fill_composter.tooltip"
+  }
+}
