@@ -847,6 +847,15 @@ public class BingoGoalProvider implements DataProvider {
             .build());
         // TODO: banner pattern
         // TODO: drink sussy stew
+        goalAdder.accept(BingoGoal.builder(easyId("drink_sus_stew"))
+            .criterion("drink", ConsumeItemTrigger.TriggerInstance.usedItem(Items.SUSPICIOUS_STEW))
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+            .reactant("eat_non_meat")
+            .name(Component.translatable("bingo.goal.drink_sus_stew", Items.SUSPICIOUS_STEW.getDescription()))
+            .icon(Items.SUSPICIOUS_STEW)
+            .difficulty(1)
+            .build()
+        );
         // TODO: give fox sword
         goalAdder.accept(obtainItemGoal(easyId("honey_bottle"), Items.HONEY_BOTTLE)
             .infrequency(2)

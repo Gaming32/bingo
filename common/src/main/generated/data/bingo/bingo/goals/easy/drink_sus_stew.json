@@ -1,0 +1,31 @@
+{
+  "criteria": {
+    "drink": {
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:suspicious_stew"
+          ]
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:suspicious_stew"
+  },
+  "name": {
+    "translate": "bingo.goal.drink_sus_stew",
+    "with": [
+      {
+        "translate": "item.minecraft.suspicious_stew"
+      }
+    ]
+  },
+  "reactant": "eat_non_meat",
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}
