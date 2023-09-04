@@ -26,14 +26,13 @@ public class BingoGame {
 
     private final BingoBoard board;
     private final BingoGameMode gameMode;
-    private final PlayerTeam team1, team2;
+    private final PlayerTeam[] teams;
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> goalProgress = new HashMap<>();
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, PlayerTeam team1, PlayerTeam team2) {
+    public BingoGame(BingoBoard board, BingoGameMode gameMode, PlayerTeam... teams) {
         this.board = board;
         this.gameMode = gameMode;
-        this.team1 = team1;
-        this.team2 = team2;
+        this.teams = teams;
     }
 
     public BingoBoard getBoard() {
@@ -98,7 +97,7 @@ public class BingoGame {
         clearListeners(playerList);
         final Component message;
         if (winner.any()) {
-            if (winner.all()) {
+            if (winner.all(teams.length)) {
                 message = Component.translatable("bingo.ended.tie");
             } else {
                 final PlayerTeam playerTeam = getTeam(winner);
@@ -261,11 +260,10 @@ public class BingoGame {
 
     @NotNull
     public BingoBoard.Teams getTeam(ServerPlayer player) {
-        if (player.isAlliedTo(team1)) {
-            return BingoBoard.Teams.TEAM1;
-        }
-        if (player.isAlliedTo(team2)) {
-            return BingoBoard.Teams.TEAM2;
+        for (int i = 0; i < teams.length; i++) {
+            if (player.isAlliedTo(teams[i])) {
+                return BingoBoard.Teams.fromOne(i);
+            }
         }
         return BingoBoard.Teams.NONE;
     }
@@ -274,8 +272,11 @@ public class BingoGame {
         if (!team.one()) {
             throw new IllegalArgumentException("BingoGame.getTeam() called with multiple teams!");
         }
-        assert team.hasTeam1 != team.hasTeam2;
-        return team.hasTeam1 ? team1 : team2;
+        final int index = team.getFirstIndex();
+        if (index >= teams.length) {
+            throw new IllegalArgumentException("BingoGame.getTeam() called with a team it doesn't have");
+        }
+        return teams[index];
     }
 
     public void checkForWin(PlayerList playerList) {
@@ -285,6 +286,6 @@ public class BingoGame {
     }
 
     public BingoBoard.Teams getWinner(boolean tryHarder) {
-        return gameMode.getWinner(board, tryHarder);
+        return gameMode.getWinners(board, teams.length, tryHarder);
     }
 }

@@ -31,6 +31,7 @@ public class BingoBoard {
 
     public static BingoBoard generate(
         int difficulty,
+        int teamCount,
         RandomSource rand,
         LootDataManager lootData,
         Predicate<BingoGoal> isAllowedGoal
@@ -40,7 +41,7 @@ public class BingoBoard {
         for (int i = 0; i < SIZE_SQ; i++) {
             board.goals[i] = generatedSheet[i].build(rand, lootData);
             if (generatedSheet[i].getTagIds().contains(BingoTags.NEVER)) {
-                board.states[i] = Teams.BOTH;
+                board.states[i] = Teams.fromAll(teamCount);
             }
         }
         return board;
@@ -288,41 +289,78 @@ public class BingoBoard {
         return result.toString();
     }
 
-    public enum Teams {
-        NONE(false, false),
-        TEAM1(true, false),
-        TEAM2(false, true),
-        BOTH(true, true);
+    public static final class Teams {
+        public static final Teams NONE = new Teams(0);
+        public static final Teams TEAM1 = new Teams(0b01);
+        public static final Teams TEAM2 = new Teams(0b10);
+        private static final Teams[] CACHE = {NONE, TEAM1, TEAM2, new Teams(0b11)};
 
-        public final boolean hasTeam1, hasTeam2;
+        private final int bits;
 
-        Teams(boolean hasTeam1, boolean hasTeam2) {
-            this.hasTeam1 = hasTeam1;
-            this.hasTeam2 = hasTeam2;
+        private Teams(int bits) {
+            this.bits = bits;
+        }
+
+        public static Teams fromBits(int bits) {
+            if (bits >= 0 && bits < CACHE.length) {
+                return CACHE[bits];
+            }
+            return new Teams(bits);
+        }
+
+        public static Teams fromOne(int index) {
+            return fromBits(1 << index);
+        }
+
+        public static Teams fromAll(int count) {
+            return fromBits((1 << count) - 1);
+        }
+
+        public int toBits() {
+            return bits;
         }
 
         public boolean any() {
-            return ordinal() != 0b00;
+            return bits != 0;
         }
 
-        public boolean all() {
-            return ordinal() == 0b11;
+        public boolean all(int count) {
+            return Integer.bitCount(bits) >= count;
         }
 
         public boolean one() {
-            return Integer.bitCount(ordinal()) == 1;
+            return Integer.bitCount(bits) == 1;
+        }
+
+        public int getFirstIndex() {
+            return Integer.numberOfTrailingZeros(bits);
         }
 
         public Teams or(Teams other) {
-            return values()[ordinal() | other.ordinal()];
+            return fromBits(bits | other.bits);
         }
 
         public Teams andNot(Teams other) {
-            return values()[ordinal() & ~other.ordinal()];
+            return fromBits(bits & ~other.bits);
         }
 
         public boolean and(Teams other) {
-            return (ordinal() & other.ordinal()) != 0;
+            return (bits & other.bits) != 0;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof Teams other && bits == other.bits;
+        }
+
+        @Override
+        public int hashCode() {
+            return bits;
+        }
+
+        @Override
+        public String toString() {
+            return "Teams[" + Integer.toBinaryString(bits) + "]";
         }
     }
 }

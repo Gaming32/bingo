@@ -35,7 +35,8 @@
       "bingo_type": "sub",
       "id": "count"
     },
-    "item": "minecraft:tipped_arrow"
+    "item": "minecraft:tipped_arrow",
+    "nbt": "{Potion:\"minecraft:mundane\"}"
   },
   "name": {
     "translate": "bingo.count",

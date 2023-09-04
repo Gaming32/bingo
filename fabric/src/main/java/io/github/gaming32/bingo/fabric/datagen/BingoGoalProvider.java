@@ -1678,6 +1678,7 @@ public class BingoGoalProvider implements DataProvider {
             .build());
         goalAdder.accept(obtainItemGoal(veryHardId("tipped_arrow"), Items.TIPPED_ARROW, 16, 32)
             .tags(BingoTags.NETHER, BingoTags.OVERWORLD)
+            .icon(PotionUtils.setPotion(new ItemStack(Items.TIPPED_ARROW), Potions.MUNDANE), subber -> subber.sub("count", "count"))
             .difficulty(4)
             .build());
         // TODO: place one of each mineral block on top of each other

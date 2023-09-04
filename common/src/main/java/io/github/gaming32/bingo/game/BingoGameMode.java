@@ -8,13 +8,13 @@ public interface BingoGameMode {
     BingoGameMode STANDARD = new BingoGameMode() {
         @NotNull
         @Override
-        public BingoBoard.Teams getWinner(BingoBoard board, boolean tryHarder) {
+        public BingoBoard.Teams getWinners(BingoBoard board, int teamCount, boolean tryHarder) {
             BingoBoard.Teams result = BingoBoard.Teams.NONE;
-            if (didWin(board, BingoBoard.Teams.TEAM1)) {
-                result = result.or(BingoBoard.Teams.TEAM1);
-            }
-            if (didWin(board, BingoBoard.Teams.TEAM2)) {
-                result = result.or(BingoBoard.Teams.TEAM2);
+            for (int i = 0; i < teamCount; i++) {
+                final BingoBoard.Teams team = BingoBoard.Teams.fromOne(i);
+                if (didWin(board, team)) {
+                    result = result.or(team);
+                }
             }
             return result;
         }
@@ -71,19 +71,22 @@ public interface BingoGameMode {
     };
 
     BingoGameMode LOCKOUT = new BingoGameMode() {
-        @NotNull
         @Override
-        public BingoBoard.Teams getWinner(BingoBoard board, boolean tryHarder) {
+        public BingoBoard.@NotNull Teams getWinners(BingoBoard board, int teamCount, boolean tryHarder) {
+            if (teamCount != 2) {
+                // TODO
+                throw new UnsupportedOperationException("Lockout not supported on teamCount != 2 yet");
+            }
             int count1 = 0;
             int count2 = 0;
             for (final BingoBoard.Teams state : board.getStates()) {
-                if (state.hasTeam1) {
+                if (state.and(BingoBoard.Teams.TEAM1)) {
                     count1++;
                     if (count1 >= BingoBoard.SIZE_SQ / 2 + 1) {
                         return BingoBoard.Teams.TEAM1;
                     }
                 }
-                if (state.hasTeam2) {
+                if (state.and(BingoBoard.Teams.TEAM2)) {
                     count2++;
                     if (count2 >= BingoBoard.SIZE_SQ / 2 + 1) {
                         return BingoBoard.Teams.TEAM1;
@@ -91,7 +94,7 @@ public interface BingoGameMode {
                 }
             }
             if (tryHarder) {
-                return count1 == count2 ? BingoBoard.Teams.BOTH
+                return count1 == count2 ? BingoBoard.Teams.fromAll(2)
                     : count1 > count2 ? BingoBoard.Teams.TEAM1 : BingoBoard.Teams.TEAM2;
             }
             return BingoBoard.Teams.NONE;
@@ -109,7 +112,7 @@ public interface BingoGameMode {
     };
 
     @NotNull
-    BingoBoard.Teams getWinner(BingoBoard board, boolean tryHarder);
+    BingoBoard.Teams getWinners(BingoBoard board, int teamCount, boolean tryHarder);
 
     boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever);
 

@@ -18,7 +18,8 @@
     "MixinPlayer",
     "MixinServerPlayer",
     "MixinServerScoreboard",
-    "PlayerAdvancementsAccessor"
+    "PlayerAdvancementsAccessor",
+    "brigadier.MixinCommandContext"
   ],
   "client": [
     "client.MixinGui"

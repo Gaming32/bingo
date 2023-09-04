@@ -19,7 +19,7 @@ public class UpdateStateMessage extends BaseS2CMessage {
 
     public UpdateStateMessage(FriendlyByteBuf buf) {
         index = buf.readVarInt();
-        newState = buf.readEnum(BingoBoard.Teams.class);
+        newState = BingoBoard.Teams.fromBits(buf.readVarInt());
     }
 
     @Override
@@ -30,7 +30,7 @@ public class UpdateStateMessage extends BaseS2CMessage {
     @Override
     public void write(FriendlyByteBuf buf) {
         buf.writeVarInt(index);
-        buf.writeEnum(newState);
+        buf.writeVarInt(newState.toBits());
     }
 
     @Override

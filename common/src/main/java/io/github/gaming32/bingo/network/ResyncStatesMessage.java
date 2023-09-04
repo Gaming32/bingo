@@ -18,7 +18,7 @@ public class ResyncStatesMessage extends BaseS2CMessage {
     }
 
     public ResyncStatesMessage(FriendlyByteBuf buf) {
-        states = buf.readList(b -> b.readEnum(BingoBoard.Teams.class)).toArray(BingoBoard.Teams[]::new);
+        states = buf.readList(b -> BingoBoard.Teams.fromBits(b.readVarInt())).toArray(BingoBoard.Teams[]::new);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ResyncStatesMessage extends BaseS2CMessage {
 
     @Override
     public void write(FriendlyByteBuf buf) {
-        buf.writeCollection(Arrays.asList(states), FriendlyByteBuf::writeEnum);
+        buf.writeCollection(Arrays.asList(states), (b, v) -> b.writeVarInt(v.toBits()));
     }
 
     @Override

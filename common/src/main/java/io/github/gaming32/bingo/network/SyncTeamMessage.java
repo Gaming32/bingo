@@ -15,7 +15,7 @@ public class SyncTeamMessage extends BaseS2CMessage {
     }
 
     public SyncTeamMessage(FriendlyByteBuf buf) {
-        team = buf.readEnum(BingoBoard.Teams.class);
+        team = BingoBoard.Teams.fromBits(buf.readVarInt());
     }
 
     @Override
@@ -25,7 +25,7 @@ public class SyncTeamMessage extends BaseS2CMessage {
 
     @Override
     public void write(FriendlyByteBuf buf) {
-        buf.writeEnum(team);
+        buf.writeVarInt(team.toBits());
     }
 
     @Override

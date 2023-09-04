@@ -5,9 +5,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.CompoundEventResult;
@@ -21,6 +19,7 @@ import dev.architectury.registry.ReloadListenerRegistry;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.ext.CommandContextExt;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
@@ -76,11 +75,6 @@ public class Bingo {
             final CommandNode<CommandSourceStack> bingoCommand = dispatcher.register(literal("bingo")
                 .then(literal("start")
                     .requires(source -> source.hasPermission(2) && activeGame == null)
-                    .then(argument("team1", TeamArgument.team())
-                        .then(argument("team2", TeamArgument.team())
-                            .executes(Bingo::startGame)
-                        )
-                    )
                 )
                 .then(literal("stop")
                     .requires(source -> source.hasPermission(2) && activeGame != null)
@@ -147,21 +141,31 @@ public class Bingo {
                 )
             );
 
-            final CommandNode<CommandSourceStack> startCommand = bingoCommand.getChild("start");
-            dispatcher.register(literal("bingo")
-                .then(literal("start")
-                    .then(literal("--difficulty")
-                        .then(argument("difficulty", IntegerArgumentType.integer(0, 4))
-                            .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+            {
+                final CommandNode<CommandSourceStack> startCommand = bingoCommand.getChild("start");
+                dispatcher.register(literal("bingo")
+                    .then(literal("start")
+                        .then(literal("--difficulty")
+                            .then(argument("difficulty", IntegerArgumentType.integer(0, 4))
+                                .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+                            )
+                        )
+                        .then(literal("--seed")
+                            .then(argument("seed", LongArgumentType.longArg())
+                                .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+                            )
                         )
                     )
-                    .then(literal("--seed")
-                        .then(argument("seed", LongArgumentType.longArg())
-                            .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
-                        )
-                    )
-                )
-            );
+                );
+                CommandNode<CommandSourceStack> currentCommand = startCommand;
+                for (int i = 1; i <= 32; i++) {
+                    final CommandNode<CommandSourceStack> subCommand = argument("team" + i, TeamArgument.team())
+                        .executes(Bingo::startGame)
+                        .build();
+                    currentCommand.addChild(subCommand);
+                    currentCommand = subCommand;
+                }
+            }
         });
 
         PlayerEvent.PLAYER_JOIN.register(player -> {
@@ -207,19 +211,27 @@ public class Bingo {
     private static int startGame(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         final int difficulty = getArg(context, "difficulty", () -> 2, IntegerArgumentType::getInteger);
         final long seed = getArg(context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong);
-        final PlayerTeam team1 = TeamArgument.getTeam(context, "team1");
-        final PlayerTeam team2 = TeamArgument.getTeam(context, "team2");
-
-        if (team1 == team2) {
-            // Should probably be a CommandSyntaxException?
-            throw new CommandRuntimeException(Component.translatable("bingo.duplicate_teams"));
+        final Set<PlayerTeam> teams = new LinkedHashSet<>();
+        for (int i = 1; i <= 32; i++) {
+            if (!((CommandContextExt)context).bingo$hasArg("team" + i)) break;
+            if (!teams.add(TeamArgument.getTeam(context, "team" + i))) {
+                // Should probably be a CommandSyntaxException?
+                throw new CommandRuntimeException(Component.translatable("bingo.duplicate_teams"));
+            }
         }
+
         final MinecraftServer server = context.getSource().getServer();
         final PlayerList playerList = server.getPlayerList();
 
         final BingoBoard board;
         try {
-            board = BingoBoard.generate(difficulty, RandomSource.create(seed), server.getLootData(), gameMode::isGoalAllowed);
+            board = BingoBoard.generate(
+                difficulty,
+                teams.size(),
+                RandomSource.create(seed),
+                server.getLootData(),
+                gameMode::isGoalAllowed
+            );
         } catch (Exception e) {
             LOGGER.error("Error generating bingo board", e);
             throw new CommandRuntimeException(Component.translatable(
@@ -230,7 +242,7 @@ public class Bingo {
         }
         LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        activeGame = new BingoGame(board, gameMode, team1, team2); // TODO: Implement gamemode choosing
+        activeGame = new BingoGame(board, gameMode, teams.toArray(PlayerTeam[]::new)); // TODO: Implement gamemode choosing
         updateCommandTree(playerList);
         playerList.getPlayers().forEach(activeGame::addPlayer);
         playerList.broadcastSystemMessage(Component.translatable(
@@ -250,12 +262,8 @@ public class Bingo {
 
         while (!toVisit.isEmpty()) {
             final CommandContext<CommandSourceStack> check = toVisit.remove();
-            for (final ParsedCommandNode<?> node : check.getNodes()) {
-                if (node.getNode() instanceof ArgumentCommandNode<?, ?> argNode) {
-                    if (argNode.getName().equals(arg)) {
-                        return argGetter.apply(check, arg);
-                    }
-                }
+            if (((CommandContextExt)check).bingo$hasArg(arg)) {
+                return argGetter.apply(check, arg);
             }
             if (context.getSource() instanceof CommandSourceStackExt ext) {
                 for (final CommandContext<CommandSourceStack> extra : ext.bingo$getExtraContexts()) {

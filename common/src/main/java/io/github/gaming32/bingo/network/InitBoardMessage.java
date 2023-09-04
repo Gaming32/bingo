@@ -26,7 +26,7 @@ public class InitBoardMessage extends BaseS2CMessage {
 
     public InitBoardMessage(FriendlyByteBuf buf) {
         goals = buf.readList(ClientGoal::new).toArray(ClientGoal[]::new);
-        states = buf.readList(b -> b.readEnum(BingoBoard.Teams.class)).toArray(BingoBoard.Teams[]::new);
+        states = buf.readList(b -> BingoBoard.Teams.fromBits(b.readVarInt())).toArray(BingoBoard.Teams[]::new);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class InitBoardMessage extends BaseS2CMessage {
     @Override
     public void write(FriendlyByteBuf buf) {
         buf.writeCollection(Arrays.asList(goals), (b, v) -> v.serialize(b));
-        buf.writeCollection(Arrays.asList(states), FriendlyByteBuf::writeEnum);
+        buf.writeCollection(Arrays.asList(states), (b, v) -> b.writeVarInt(v.toBits()));
     }
 
     @Override
