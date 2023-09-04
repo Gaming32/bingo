@@ -680,7 +680,23 @@ public class BingoGoalProvider implements DataProvider {
             .difficulty(1)
             .build()
         );
-        // TODO: water, lava and milk bucket
+        goalAdder.accept(BingoGoal.builder(easyId("water_lava_milk"))
+            .criterion("buckets", InventoryChangeTrigger.TriggerInstance.hasItems(
+                Items.WATER_BUCKET, Items.LAVA_BUCKET, Items.MILK_BUCKET
+            ))
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+            .name(Component.translatable(
+                "bingo.three",
+                Items.WATER_BUCKET.getDescription(),
+                Items.LAVA_BUCKET.getDescription(),
+                Items.MILK_BUCKET.getDescription()
+            ))
+            .icon(Items.LAVA_BUCKET)
+            .antisynergy("bucket_types", "water_bucket", "lava_bucket", "milk_bucket")
+            .reactant("use_buckets")
+            .difficulty(1)
+            .build()
+        );
         // TODO: different flowers
         // TODO: colors of concrete
         // TODO: colors of glazed terracotta

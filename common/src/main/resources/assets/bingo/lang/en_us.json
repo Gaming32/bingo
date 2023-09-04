@@ -84,5 +84,6 @@
   "bingo.board.copy": "Copy board to clipboard",
   "bingo.key.board": "Show Bingo Board",
   "bingo.key.category": "Bingo",
-  "bingo.sixteen_bang": "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, and %s!"
+  "bingo.sixteen_bang": "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, and %s!",
+  "bingo.three": "%s, %s, and %s"
 }

@@ -1,0 +1,55 @@
+{
+  "antisynergy": [
+    "bucket_types",
+    "water_bucket",
+    "lava_bucket",
+    "milk_bucket"
+  ],
+  "criteria": {
+    "buckets": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:water_bucket"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:lava_bucket"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:milk_bucket"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:lava_bucket"
+  },
+  "name": {
+    "translate": "bingo.three",
+    "with": [
+      {
+        "translate": "item.minecraft.water_bucket"
+      },
+      {
+        "translate": "item.minecraft.lava_bucket"
+      },
+      {
+        "translate": "item.minecraft.milk_bucket"
+      }
+    ]
+  },
+  "reactant": "use_buckets",
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}
