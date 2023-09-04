@@ -668,7 +668,18 @@ public class BingoGoalProvider implements DataProvider {
             .catalyst("sleep")
             .difficulty(1)
             .build());
-        // TODO: grow a huge mushroom
+        goalAdder.accept(BingoGoal.builder(easyId("grow_huge_mushroom"))
+            .criterion("grow", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+                LocationPredicate.Builder.location()
+                    .setBlock(BlockPredicate.Builder.block().of(Blocks.MUSHROOM_STEM).build()),
+                ItemPredicate.Builder.item().of(Items.BONE_MEAL)
+            ))
+            .tags(BingoTags.ACTION)
+            .name(Component.translatable("bingo.goal.grow_huge_mushroom"))
+            .icon(Blocks.RED_MUSHROOM_BLOCK)
+            .difficulty(1)
+            .build()
+        );
         // TODO: water, lava and milk bucket
         // TODO: different flowers
         // TODO: colors of concrete

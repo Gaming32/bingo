@@ -1,0 +1,39 @@
+{
+  "criteria": {
+    "grow": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:mushroom_stem"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:bone_meal"
+              ]
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:red_mushroom_block"
+  },
+  "name": {
+    "translate": "bingo.goal.grow_huge_mushroom"
+  },
+  "tags": [
+    "bingo:action"
+  ]
+}
