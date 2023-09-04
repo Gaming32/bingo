@@ -15,6 +15,7 @@ public class BingoTriggers {
     public static final ItemBrokenTrigger ITEM_BROKEN = register(new ItemBrokenTrigger());
     public static final PlayerTrigger BOUNCE_ON_BED = register(new PlayerTrigger(new ResourceLocation("bingo:bounce_on_bed")));
     public static final CompleteMapTrigger COMPLETED_MAP = register(new CompleteMapTrigger());
+    public static final BeaconEffectTrigger BEACON_EFFECT = register(new BeaconEffectTrigger());
 
     public static void load() {
     }

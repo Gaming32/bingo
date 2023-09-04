@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
 public enum BoardCorner {
@@ -22,7 +23,12 @@ public enum BoardCorner {
 
         @Override
         public float getY(GuiGraphics graphics, float scale) {
-            return BingoClient.BOARD_OFFSET;
+            final Minecraft minecraft = Minecraft.getInstance();
+            float result = BingoClient.BOARD_OFFSET;
+            if (minecraft.isDemo()) {
+                result += 15;
+            }
+            return result;
         }
     },
     LOWER_LEFT {

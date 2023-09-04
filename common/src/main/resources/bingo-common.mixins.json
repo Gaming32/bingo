@@ -6,6 +6,7 @@
   "mixins": [
     "DisplayInfoAccessor",
     "MixinBasePressurePlateBlock",
+    "MixinBeaconBlockEntity",
     "MixinBedBlock",
     "MixinButtonBlock",
     "MixinCommandSourceStack",
@@ -20,6 +21,7 @@
     "PlayerAdvancementsAccessor"
   ],
   "client": [
+    "client.MixinGui"
   ],
   "injectors": {
     "defaultRequire": 1

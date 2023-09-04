@@ -21,6 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.raid.Raid;
@@ -1723,7 +1724,6 @@ public class BingoGoalProvider implements DataProvider {
             .infrequency(2)
             .difficulty(4)
             .build());
-        // TODO: complete full map in end
         goalAdder.accept(BingoGoal.builder(veryHardId("complete_full_size_end_map"))
             .criterion("complete", CompleteMapTrigger.TriggerInstance.completeMap(
                 MinMaxBounds.Ints.atLeast(MapItemSavedData.MAX_SCALE),
@@ -1756,7 +1756,15 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: all parrots dance
         // TODO: place every color of bed next to each other
         // TODO: kill enderman with only endermites
-        // TODO: get regen from a beacon
+        goalAdder.accept(BingoGoal.builder(veryHardId("beacon_regen"))
+            .criterion("effect", BeaconEffectTrigger.TriggerInstance.effectApplied(MobEffects.REGENERATION))
+            .tags(BingoTags.ITEM, BingoTags.NETHER, BingoTags.OVERWORLD, BingoTags.COMBAT)
+            .name(Component.translatable("bingo.goal.beacon_regen"))
+            .icon(Blocks.BEACON)
+            .reactant("pacifist")
+            .difficulty(4)
+            .build()
+        );
     }
 
     private static ResourceLocation veryHardId(String id) {

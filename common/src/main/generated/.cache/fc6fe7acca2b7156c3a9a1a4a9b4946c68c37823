@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-04T09:57:53.7250595	Bingo/Bingo goals
+// 1.20.1	2023-09-04T12:08:06.3228539	Bingo/Bingo goals
 9016e70d5f5b9386fe210b7f8a26848d7f831257 data/bingo/bingo/goals/easy/acacia_log.json
 bc680508ace49d383bbeec10497b05d997daebf8 data/bingo/bingo/goals/easy/acacia_planks.json
 2acbfce3602f9d4299ba993940363c77cf6d73a9 data/bingo/bingo/goals/easy/acacia_wood.json
@@ -293,8 +293,9 @@ ffab210778c074d58436853b073e669eff6d07b4 data/bingo/bingo/goals/very_easy/stripp
 d1e1d4cdfc07739b23627bc977b5ad63502eec1d data/bingo/bingo/goals/very_hard/all_diamond_craftables.json
 4c2339d5182ab9ce70ed5b0dc19c74aa4a8c8bea data/bingo/bingo/goals/very_hard/all_dyes.json
 f83b2f4f114b60e75793ef98b3a0a3d6a895d249 data/bingo/bingo/goals/very_hard/any_head.json
+8ded1b3cc89f55e253c0a4126042a6d5cb86917b data/bingo/bingo/goals/very_hard/beacon_regen.json
 d49700b29529a853db63158c00e74c5e98193dfe data/bingo/bingo/goals/very_hard/blue_ice.json
-6ba4f468d3db546a0979e8ef4569b48b6e7f20e6 data/bingo/bingo/goals/very_hard/complete_full_size_end_map.json
+1a8ed2e48a87167097f29b20d628217fd5975843 data/bingo/bingo/goals/very_hard/complete_full_size_end_map.json
 12b062c63d33cf518e6d5c960167eaa6d88c1694 data/bingo/bingo/goals/very_hard/diamond_block.json
 1e6024f31b4d574720f55c9dedd3275a07415bec data/bingo/bingo/goals/very_hard/levels.json
 5d61c29d7ec8f7ab3c1c0ad1d4401997017602cc data/bingo/bingo/goals/very_hard/mycelium.json

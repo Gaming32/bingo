@@ -1,0 +1,26 @@
+{
+  "criteria": {
+    "effect": {
+      "conditions": {
+        "effect": {
+          "minecraft:regeneration": {}
+        }
+      },
+      "trigger": "bingo:beacon_effect"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:beacon"
+  },
+  "name": {
+    "translate": "bingo.goal.beacon_regen"
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:overworld",
+    "bingo:combat"
+  ]
+}
