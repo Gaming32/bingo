@@ -14,6 +14,7 @@ public class BingoTriggers {
     public static final DistanceTrigger CROUCH = register(new DistanceTrigger(new ResourceLocation("bingo:crouch")));
     public static final ItemBrokenTrigger ITEM_BROKEN = register(new ItemBrokenTrigger());
     public static final PlayerTrigger BOUNCE_ON_BED = register(new PlayerTrigger(new ResourceLocation("bingo:bounce_on_bed")));
+    public static final CompleteMapTrigger COMPLETED_MAP = register(new CompleteMapTrigger());
 
     public static void load() {
     }

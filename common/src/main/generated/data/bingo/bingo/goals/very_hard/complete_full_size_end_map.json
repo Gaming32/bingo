@@ -1,0 +1,27 @@
+{
+  "antisynergy": "complete_map",
+  "criteria": {
+    "complete": {
+      "conditions": {
+        "center": {
+          "dimension": "minecraft:the_end"
+        },
+        "scale": {
+          "min": 4
+        }
+      },
+      "trigger": "bingo:completed_map"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:filled_map"
+  },
+  "name": {
+    "translate": "bingo.goal.complete_full_size_end_map"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

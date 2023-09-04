@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-03T21:55:41.0046354	Bingo/Bingo goals
+// 1.20.1	2023-09-04T09:57:53.7250595	Bingo/Bingo goals
 9016e70d5f5b9386fe210b7f8a26848d7f831257 data/bingo/bingo/goals/easy/acacia_log.json
 bc680508ace49d383bbeec10497b05d997daebf8 data/bingo/bingo/goals/easy/acacia_planks.json
 2acbfce3602f9d4299ba993940363c77cf6d73a9 data/bingo/bingo/goals/easy/acacia_wood.json
@@ -20,6 +20,7 @@ a92701642a677954f53ea1250d23c1b938acf5e6 data/bingo/bingo/goals/easy/carved_pump
 98c2f2e1b6604e5c0840db75553d22a20f653c55 data/bingo/bingo/goals/easy/coal_block.json
 19374fc0b179c8c011f86bfdba4eb40efe4b528e data/bingo/bingo/goals/easy/coarse_dirt.json
 450702f72873feac9c0b0b478c8260b622cf53d7 data/bingo/bingo/goals/easy/cod.json
+679a917e2daf1d088a083577c9c891ff367111da data/bingo/bingo/goals/easy/complete_map.json
 e27575d69b7dc131eb0e69e425d59851103325bc data/bingo/bingo/goals/easy/create_snow_golem.json
 2b8f42ab067da552b3cd495852e48a09f8743734 data/bingo/bingo/goals/easy/crouch_distance.json
 4f16b6811fdba2dd0d021a37ff090fe47826beda data/bingo/bingo/goals/easy/cut_sandstone.json
@@ -113,6 +114,7 @@ eb1e530ca93576d37121edfde4b7406917f6f7d7 data/bingo/bingo/goals/easy/tnt.json
 b30a81e4c4228460ab48d5ede5d954c00f6076a1 data/bingo/bingo/goals/easy/water_lava_milk.json
 63d178cac4454afe34109381d05129fcac8cc026 data/bingo/bingo/goals/easy/writable_book.json
 76f956e1f7e01946f98e622d80a0d7d3f53a34e9 data/bingo/bingo/goals/easy/yellow_dye.json
+b11078405f190ec12fd0dc3e9bb38dd4b5845d9e data/bingo/bingo/goals/hard/complete_full_size_map.json
 19a055e7853d803a51fbda883bfccf985907d79e data/bingo/bingo/goals/hard/conduit.json
 dc74f4a1805f06b2043675c3829f4ee041300be8 data/bingo/bingo/goals/hard/cookie.json
 195e98287735db7a697a9cf47b890037623f8f57 data/bingo/bingo/goals/hard/diamond_block.json
@@ -292,6 +294,7 @@ d1e1d4cdfc07739b23627bc977b5ad63502eec1d data/bingo/bingo/goals/very_hard/all_di
 4c2339d5182ab9ce70ed5b0dc19c74aa4a8c8bea data/bingo/bingo/goals/very_hard/all_dyes.json
 f83b2f4f114b60e75793ef98b3a0a3d6a895d249 data/bingo/bingo/goals/very_hard/any_head.json
 d49700b29529a853db63158c00e74c5e98193dfe data/bingo/bingo/goals/very_hard/blue_ice.json
+6ba4f468d3db546a0979e8ef4569b48b6e7f20e6 data/bingo/bingo/goals/very_hard/complete_full_size_end_map.json
 12b062c63d33cf518e6d5c960167eaa6d88c1694 data/bingo/bingo/goals/very_hard/diamond_block.json
 1e6024f31b4d574720f55c9dedd3275a07415bec data/bingo/bingo/goals/very_hard/levels.json
 5d61c29d7ec8f7ab3c1c0ad1d4401997017602cc data/bingo/bingo/goals/very_hard/mycelium.json

@@ -1,0 +1,20 @@
+{
+  "antisynergy": "complete_map",
+  "criteria": {
+    "complete": {
+      "conditions": {},
+      "trigger": "bingo:completed_map"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:filled_map"
+  },
+  "name": {
+    "translate": "bingo.goal.complete_map"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

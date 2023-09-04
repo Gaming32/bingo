@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -585,7 +586,15 @@ public class BingoGoalProvider implements DataProvider {
             .build()
         );
         // TODO: fill cauldron with water
-        // TODO: complete a map
+        goalAdder.accept(BingoGoal.builder(easyId("complete_map"))
+            .criterion("complete", CompleteMapTrigger.TriggerInstance.completeMap())
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.complete_map"))
+            .icon(Items.FILLED_MAP)
+            .antisynergy("complete_map")
+            .difficulty(1)
+            .build()
+        );
         goalAdder.accept(obtainItemGoal(easyId("soul_sand"), Items.SOUL_SAND, 5, 10)
             .tags(BingoTags.NETHER)
             .difficulty(1)
@@ -1531,7 +1540,17 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.COMBAT, BingoTags.END)
             .difficulty(3)
             .build());
-        // TODO: complete a full size map
+        goalAdder.accept(BingoGoal.builder(hardId("complete_full_size_map"))
+            .criterion("complete", CompleteMapTrigger.TriggerInstance.completeMap(
+                MinMaxBounds.Ints.atLeast(MapItemSavedData.MAX_SCALE)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.complete_full_size_map"))
+            .icon(Items.FILLED_MAP)
+            .antisynergy("complete_map")
+            .difficulty(3)
+            .build()
+        );
         // TODO: be killed by a villager
         // TODO: pop a totem
         // TODO: every type of sword
@@ -1705,6 +1724,18 @@ public class BingoGoalProvider implements DataProvider {
             .difficulty(4)
             .build());
         // TODO: complete full map in end
+        goalAdder.accept(BingoGoal.builder(veryHardId("complete_full_size_end_map"))
+            .criterion("complete", CompleteMapTrigger.TriggerInstance.completeMap(
+                MinMaxBounds.Ints.atLeast(MapItemSavedData.MAX_SCALE),
+                LocationPredicate.inDimension(Level.END)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.END)
+            .name(Component.translatable("bingo.goal.complete_full_size_end_map"))
+            .icon(Items.FILLED_MAP)
+            .antisynergy("complete_map")
+            .difficulty(4)
+            .build()
+        );
         goalAdder.accept(obtainItemGoal(veryHardId("wither_rose"), Items.WITHER_ROSE, 32, 64)
             .reactant("pacifist")
             .tags(BingoTags.NETHER, BingoTags.COMBAT)
