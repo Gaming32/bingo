@@ -16,25 +16,30 @@ import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
+import dev.architectury.utils.Env;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.ext.CommandContextExt;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
+import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.network.BingoNetwork;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
-import net.fabricmc.api.EnvType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandRuntimeException;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.TeamArgument;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
@@ -139,6 +144,45 @@ public class Bingo {
                         })
                     )
                 )
+                .then(literal("award")
+                    .requires(source -> source.hasPermission(2) && activeGame != null)
+                    .then(argument("players", EntityArgument.players())
+                        .then(argument("goal", ResourceLocationArgument.id())
+                            .suggests((context, builder) -> {
+                                if (activeGame == null) {
+                                    return builder.buildFuture();
+                                }
+                                return SharedSuggestionProvider.suggestResource(
+                                    Arrays.stream(activeGame.getBoard().getGoals())
+                                        .map(ActiveGoal::getGoal)
+                                        .map(BingoGoal::getId),
+                                    builder
+                                );
+                            })
+                            .executes(context -> {
+                                final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
+                                final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
+
+                                int success = 0;
+                                for (final ActiveGoal goal : activeGame.getBoard().getGoals()) {
+                                    if (goal.getGoal().getId().equals(goalId)) {
+                                        for (final ServerPlayer player : players) {
+                                            if (activeGame.award(player, goal)) {
+                                                success++;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                final int fSuccess = success;
+                                context.getSource().sendSuccess(() -> Component.translatable(
+                                    "bingo.award.success", players.size(), fSuccess
+                                ), true);
+                                return success;
+                            })
+                        )
+                    )
+                )
             );
 
             {
@@ -201,7 +245,7 @@ public class Bingo {
 
         BingoNetwork.load();
 
-        if (Platform.getEnv() == EnvType.CLIENT) {
+        if (Platform.getEnvironment() == Env.CLIENT) {
             ClientLifecycleEvent.CLIENT_SETUP.register(mc -> BingoClient.init());
         }
 

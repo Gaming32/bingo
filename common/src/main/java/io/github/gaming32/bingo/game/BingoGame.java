@@ -199,6 +199,14 @@ public class BingoGame {
         return awarded;
     }
 
+    public boolean award(ServerPlayer player, ActiveGoal goal) {
+        boolean awarded = false;
+        for (final String criterion : goal.getCriteria().keySet()) {
+            awarded |= award(player, goal, criterion);
+        }
+        return awarded;
+    }
+
     private void updateTeamBoard(ServerPlayer player, ActiveGoal goal) {
         final BingoBoard.Teams team = getTeam(player);
         if (!team.any()) return;
