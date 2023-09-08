@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen;
 
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoItemTags;
 import io.github.gaming32.bingo.data.BingoSub;
@@ -1593,7 +1594,24 @@ public class BingoGoalProvider implements DataProvider {
             .build());
         // TODO: make compass point to lodestone
         // TODO: give piglin brute enchanted axe
-        // TODO: 6x6 scaffolding n shape
+        goalAdder.accept(BingoGoal.builder(hardId("6x6scaffolding"))
+            .criterion("obtain", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
+                    LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.SCAFFOLDING),
+                    BlockPatternCondition.builder().aisle(
+                        "########",
+                        "#      #",
+                        "#      #",
+                        "#      #",
+                        "#      #",
+                        "#      #",
+                        "#      #"
+                    ).where('#', BlockPredicate.Builder.block().of(Blocks.SCAFFOLDING).build())))
+            .tags(BingoTags.OVERWORLD, BingoTags.BUILD)
+            .name(Component.translatable("bingo.goal.6x6scaffolding"))
+            .tooltip(Component.translatable("bingo.goal.6x6scaffolding.tooltip"))
+            .icon(Items.SCAFFOLDING)
+            .difficulty(3)
+            .build());
         goalAdder.accept(obtainItemGoal(hardId("honey_block"), Items.HONEY_BLOCK, 2, 5)
             .setAntisynergy("honey")
             .infrequency(2)
