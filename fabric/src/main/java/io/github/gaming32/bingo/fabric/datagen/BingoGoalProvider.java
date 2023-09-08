@@ -1857,7 +1857,11 @@ public class BingoGoalProvider implements DataProvider {
     private static BingoGoal.Builder obtainSomeItemsFromTag(ResourceLocation id, ItemStack icon, TagKey<Item> tag, String translationKey, int minCount, int maxCount) {
         return BingoGoal.builder(id)
             .sub("count", new BingoSub.RandomBingoSub(MinMaxBounds.Ints.between(minCount, maxCount)))
-            .criterion("obtain", HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(0).build(), subber -> subber.sub("conditions.requiredCount", "count"))
+            .criterion(
+                "obtain",
+                HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(0).build(),
+                subber -> subber.sub("conditions.required_count", "count")
+            )
             .tags(BingoTags.ITEM)
             .name(Component.translatable(translationKey, 0), subber -> subber.sub("with.0", "count"))
             .icon(icon, subber -> subber.sub("count", "count"));
