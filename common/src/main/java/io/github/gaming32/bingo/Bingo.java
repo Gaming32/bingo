@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.CompoundEventResult;
@@ -74,6 +75,18 @@ public class Bingo {
 
     public static BingoGame activeGame;
     public static final Set<ServerPlayer> needAdvancementsClear = new HashSet<>();
+
+    public static final SuggestionProvider<CommandSourceStack> GOAL_SUGGESTOR = (context, builder) -> {
+        if (activeGame == null) {
+            return builder.buildFuture();
+        }
+        return SharedSuggestionProvider.suggestResource(
+            Arrays.stream(activeGame.getBoard().getGoals())
+                .map(ActiveGoal::getGoal)
+                .map(BingoGoal::getId),
+            builder
+        );
+    };
 
     public static void init() {
         CommandRegistrationEvent.EVENT.register((dispatcher, registry, selection) -> {
@@ -144,42 +157,60 @@ public class Bingo {
                         })
                     )
                 )
-                .then(literal("award")
+                .then(literal("goals")
                     .requires(source -> source.hasPermission(2) && activeGame != null)
                     .then(argument("players", EntityArgument.players())
-                        .then(argument("goal", ResourceLocationArgument.id())
-                            .suggests((context, builder) -> {
-                                if (activeGame == null) {
-                                    return builder.buildFuture();
-                                }
-                                return SharedSuggestionProvider.suggestResource(
-                                    Arrays.stream(activeGame.getBoard().getGoals())
-                                        .map(ActiveGoal::getGoal)
-                                        .map(BingoGoal::getId),
-                                    builder
-                                );
-                            })
-                            .executes(context -> {
-                                final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
-                                final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
+                        .then(literal("award")
+                            .then(argument("goal", ResourceLocationArgument.id())
+                                .suggests(GOAL_SUGGESTOR)
+                                .executes(context -> {
+                                    final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
+                                    final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
 
-                                int success = 0;
-                                for (final ActiveGoal goal : activeGame.getBoard().getGoals()) {
-                                    if (goal.getGoal().getId().equals(goalId)) {
-                                        for (final ServerPlayer player : players) {
-                                            if (activeGame.award(player, goal)) {
-                                                success++;
+                                    int success = 0;
+                                    for (final ActiveGoal goal : activeGame.getBoard().getGoals()) {
+                                        if (goal.getGoal().getId().equals(goalId)) {
+                                            for (final ServerPlayer player : players) {
+                                                if (activeGame.award(player, goal)) {
+                                                    success++;
+                                                }
                                             }
                                         }
                                     }
-                                }
 
-                                final int fSuccess = success;
-                                context.getSource().sendSuccess(() -> Component.translatable(
-                                    "bingo.award.success", players.size(), fSuccess
-                                ), true);
-                                return success;
-                            })
+                                    final int fSuccess = success;
+                                    context.getSource().sendSuccess(() -> Component.translatable(
+                                        "bingo.award.success", players.size(), fSuccess
+                                    ), true);
+                                    return success;
+                                })
+                            )
+                        )
+                        .then(literal("revoke")
+                            .then(argument("goal", ResourceLocationArgument.id())
+                                .suggests(GOAL_SUGGESTOR)
+                                .executes(context -> {
+                                    final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
+                                    final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
+
+                                    int success = 0;
+                                    for (final ActiveGoal goal : activeGame.getBoard().getGoals()) {
+                                        if (goal.getGoal().getId().equals(goalId)) {
+                                            for (final ServerPlayer player : players) {
+                                                if (activeGame.revoke(player, goal)) {
+                                                    success++;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    final int fSuccess = success;
+                                    context.getSource().sendSuccess(() -> Component.translatable(
+                                        "bingo.revoke.success", fSuccess, players.size()
+                                    ), true);
+                                    return success;
+                                })
+                            )
                         )
                     )
                 )

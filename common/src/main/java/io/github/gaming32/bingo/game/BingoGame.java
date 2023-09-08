@@ -194,29 +194,58 @@ public class BingoGame {
             awarded = true;
         }
         if (!wasDone && progress.isDone()) {
-            updateTeamBoard(player, goal);
+            updateTeamBoard(player, goal, false);
         }
         return awarded;
     }
 
     public boolean award(ServerPlayer player, ActiveGoal goal) {
-        boolean awarded = false;
-        for (final String criterion : goal.getCriteria().keySet()) {
-            awarded |= award(player, goal, criterion);
+        final AdvancementProgress progress = getOrStartProgress(player, goal);
+        if (progress.isDone()) {
+            return false;
         }
-        return awarded;
+        for (final String criterion : progress.getRemainingCriteria()) {
+            award(player, goal, criterion);
+        }
+        return true;
     }
 
-    private void updateTeamBoard(ServerPlayer player, ActiveGoal goal) {
+    public boolean revoke(ServerPlayer player, ActiveGoal goal, String criterion) {
+        boolean revoked = false;
+        final AdvancementProgress progress = getOrStartProgress(player, goal);
+        final boolean wasDone = progress.isDone();
+        if (progress.revokeProgress(criterion)) {
+            registerListeners(player, goal);
+            revoked = true;
+        }
+        if (wasDone && !progress.isDone()) {
+            updateTeamBoard(player, goal, true);
+        }
+        return revoked;
+    }
+
+    public boolean revoke(ServerPlayer player, ActiveGoal goal) {
+        final AdvancementProgress progress = getOrStartProgress(player, goal);
+        if (!progress.hasProgress()) {
+            return false;
+        }
+        for (final String criterion : progress.getCompletedCriteria()) {
+            revoke(player, goal, criterion);
+        }
+        return true;
+    }
+
+    private void updateTeamBoard(ServerPlayer player, ActiveGoal goal, boolean revoke) {
         final BingoBoard.Teams team = getTeam(player);
         if (!team.any()) return;
         final BingoBoard.Teams[] board = this.board.getStates();
         final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
         final boolean isNever = goal.getGoal().getTagIds().contains(BingoTags.NEVER);
-        if (gameMode.canGetGoal(this.board, index, team, isNever)) {
-            board[index] = isNever ? board[index].andNot(team) : board[index].or(team);
-            notifyTeam(team, goal, player.server.getPlayerList(), index, isNever);
-            if (!isNever) {
+        if (revoke || gameMode.canGetGoal(this.board, index, team, isNever)) {
+            final boolean isLoss = isNever ^ revoke;
+            board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);
+            notifyTeam(team, goal, player.server.getPlayerList(), index, isLoss);
+            if (!isLoss) {
                 checkForWin(player.server.getPlayerList());
             }
         }
@@ -227,12 +256,12 @@ public class BingoGame {
         ActiveGoal goal,
         PlayerList playerList,
         int boardIndex,
-        boolean isNever
+        boolean isLoss
     ) {
         final PlayerTeam playerTeam = getTeam(team);
         final Component message = Component.translatable(
-            isNever ? "bingo.goal_lost" : "bingo.goal_obtained",
-            goal.getName().copy().withStyle(isNever ? ChatFormatting.GOLD : ChatFormatting.GREEN)
+            isLoss ? "bingo.goal_lost" : "bingo.goal_obtained",
+            goal.getName().copy().withStyle(isLoss ? ChatFormatting.GOLD : ChatFormatting.GREEN)
         );
         final BingoBoard.Teams boardState = board.getStates()[boardIndex];
         final UpdateStateMessage stateMessage = !Bingo.showOtherTeam
@@ -250,9 +279,9 @@ public class BingoGame {
             final ServerPlayer player = playerList.getPlayerByName(member);
             if (player == null) continue;
             player.playNotifySound(
-                isNever ? SoundEvents.RESPAWN_ANCHOR_DEPLETE.value() : SoundEvents.NOTE_BLOCK_CHIME.value(),
+                isLoss ? SoundEvents.RESPAWN_ANCHOR_DEPLETE.value() : SoundEvents.NOTE_BLOCK_CHIME.value(),
                 SoundSource.MASTER,
-                isNever ? 1f : 0.5f, 1f
+                isLoss ? 1f : 0.5f, 1f
             );
             if (!Bingo.showOtherTeam) {
                 assert stateMessage != null;
