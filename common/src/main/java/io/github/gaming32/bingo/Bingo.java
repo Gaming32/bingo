@@ -18,6 +18,7 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.utils.Env;
 import io.github.gaming32.bingo.client.BingoClient;
+import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.ext.CommandContextExt;
@@ -229,6 +230,7 @@ public class Bingo {
             return CompoundEventResult.pass();
         });
 
+        BingoConditions.load();
         BingoTriggers.load();
 
         ReloadListenerRegistry.register(

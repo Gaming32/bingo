@@ -1,0 +1,52 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "location": [
+          {
+            "block": "minecraft:scaffolding",
+            "condition": "minecraft:block_state_property"
+          },
+          {
+            "aisles": [
+              [
+                "########",
+                "#      #",
+                "#      #",
+                "#      #",
+                "#      #",
+                "#      #",
+                "#      #"
+              ]
+            ],
+            "condition": "bingo:block_pattern",
+            "where": {
+              "#": {
+                "block": {
+                  "blocks": [
+                    "minecraft:scaffolding"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:scaffolding"
+  },
+  "name": {
+    "translate": "bingo.goal.6x6scaffolding"
+  },
+  "tags": [
+    "bingo:overworld",
+    "bingo:build"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.6x6scaffolding.tooltip"
+  }
+}
