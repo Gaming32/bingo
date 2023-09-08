@@ -3,11 +3,7 @@ package io.github.gaming32.bingo.triggers;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import io.github.gaming32.bingo.Bingo;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SerializationContext;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,7 +30,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
     @NotNull
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
         TagKey<Item> tag = TagKey.create(Registries.ITEM, new ResourceLocation(GsonHelper.getAsString(json, "tag")));
-        int requiredCount = GsonHelper.getAsInt(json, "requiredCount");
+        int requiredCount = GsonHelper.getAsInt(json, "required_count");
         return new TriggerInstance(player, tag, requiredCount);
     }
 
@@ -61,7 +57,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
         public JsonObject serializeToJson(SerializationContext context) {
             JsonObject json = super.serializeToJson(context);
             json.addProperty("tag", tag.location().toString());
-            json.addProperty("requiredCount", requiredCount);
+            json.addProperty("required_count", requiredCount);
             return json;
         }
 

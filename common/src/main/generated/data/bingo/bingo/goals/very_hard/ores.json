@@ -15,6 +15,7 @@
           "bingo_type": "sub",
           "id": "count"
         },
+        "required_count": 0,
         "tag": "bingo:ores"
       },
       "trigger": "bingo:has_some_items_from_tag"
