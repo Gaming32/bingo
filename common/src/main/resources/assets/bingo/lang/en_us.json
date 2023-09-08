@@ -73,6 +73,8 @@
   "bingo.goal.6x6scaffolding": "Build a 6x6 Scaffolding n Shape (not counting corners)",
   "bingo.goal.6x6scaffolding.tooltip": "Width/height of the inside frame, disregarding corners.",
   "bingo.goal.beacon_regen": "Get Regeneration from a Beacon",
+  "bingo.goal.ores": "%s Different Ores",
+  "bingo.goal.ores.tooltip": "Coal, Diamond, Emerald, Gold, Iron, Lapis Lazuli, Nether Quartz, Nether Gold and Redstone Ores (or deepslate variants) are your choices.",
   "bingo.start.failed": "An unexpected error occurred while generating the board. Please try a different seed.",
   "bingo.start.invalid_goal": "An invalid goal was selected while generating. Please check the logs and fix the issue with your datapack.",
   "bingo.started": "A bingo game has started with %s difficulty!",

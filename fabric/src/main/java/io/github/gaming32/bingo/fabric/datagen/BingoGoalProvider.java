@@ -22,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -1644,7 +1645,11 @@ public class BingoGoalProvider implements DataProvider {
     }
 
     private static void addVeryHardGoals(Consumer<BingoGoal> goalAdder) {
-        // TODO: different ores
+        goalAdder.accept(obtainSomeItemsFromTag(veryHardId("ores"), Items.DIAMOND_ORE, BingoItemTags.ORES, "bingo.goal.ores", 5, 7)
+            .tooltip(Component.translatable("bingo.goal.ores.tooltip"))
+            .tags(BingoTags.OVERWORLD)
+            .difficulty(4)
+            .build());
         // TODO: different potions
         goalAdder.accept(BingoGoal.builder(veryHardId("all_chestplates"))
             .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
@@ -1842,6 +1847,19 @@ public class BingoGoalProvider implements DataProvider {
                 item.withCount(MinMaxBounds.Ints.atLeast(0)).build()),
                 subber -> subber.sub("conditions.items.0.count.min", "count"))
             .tags(BingoTags.ITEM)
+            .icon(icon, subber -> subber.sub("count", "count"));
+    }
+
+    private static BingoGoal.Builder obtainSomeItemsFromTag(ResourceLocation id, ItemLike icon, TagKey<Item> tag, String translationKey, int minCount, int maxCount) {
+        return obtainSomeItemsFromTag(id, new ItemStack(icon), tag, translationKey, minCount, maxCount);
+    }
+
+    private static BingoGoal.Builder obtainSomeItemsFromTag(ResourceLocation id, ItemStack icon, TagKey<Item> tag, String translationKey, int minCount, int maxCount) {
+        return BingoGoal.builder(id)
+            .sub("count", new BingoSub.RandomBingoSub(MinMaxBounds.Ints.between(minCount, maxCount)))
+            .criterion("obtain", HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(0).build(), subber -> subber.sub("conditions.requiredCount", "count"))
+            .tags(BingoTags.ITEM)
+            .name(Component.translatable(translationKey, 0), subber -> subber.sub("with.0", "count"))
             .icon(icon, subber -> subber.sub("count", "count"));
     }
 

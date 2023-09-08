@@ -16,6 +16,7 @@
     "MixinLivingEntity",
     "MixinMapItem",
     "MixinPlayer",
+    "MixinServerPlayContainerListener",
     "MixinServerPlayer",
     "MixinServerScoreboard",
     "PlayerAdvancementsAccessor",

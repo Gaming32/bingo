@@ -98,5 +98,8 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(BingoItemTags.DYES)
             .addOptionalTag(new ResourceLocation("forge:dyes"))
             .addOptionalTag(new ResourceLocation("c:dyes"));
+        getOrCreateTagBuilder(BingoItemTags.ORES)
+            .addOptionalTag(new ResourceLocation("forge:ores"))
+            .addOptionalTag(new ResourceLocation("c:ores"));
     }
 }

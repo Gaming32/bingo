@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-08T16:18:27.911326451	Bingo/Bingo goals
+// 1.20.1	2023-09-08T18:32:43.471520006	Bingo/Bingo goals
 9016e70d5f5b9386fe210b7f8a26848d7f831257 data/bingo/bingo/goals/easy/acacia_log.json
 bc680508ace49d383bbeec10497b05d997daebf8 data/bingo/bingo/goals/easy/acacia_planks.json
 2acbfce3602f9d4299ba993940363c77cf6d73a9 data/bingo/bingo/goals/easy/acacia_wood.json
@@ -301,6 +301,7 @@ d49700b29529a853db63158c00e74c5e98193dfe data/bingo/bingo/goals/very_hard/blue_i
 1e6024f31b4d574720f55c9dedd3275a07415bec data/bingo/bingo/goals/very_hard/levels.json
 5d61c29d7ec8f7ab3c1c0ad1d4401997017602cc data/bingo/bingo/goals/very_hard/mycelium.json
 76698dbe94abfe4611771be9fd701a9c097c2135 data/bingo/bingo/goals/very_hard/netherite_block.json
+57405699b09c2e7169c101300a10d6a8d49df93e data/bingo/bingo/goals/very_hard/ores.json
 dbf98e3eabf8a2f36f2165aefe56a449e2247b5b data/bingo/bingo/goals/very_hard/shulker_in_overworld.json
 d9e6c78d512929b19b890cb7ccbb1bf453af179e data/bingo/bingo/goals/very_hard/sleep_in_mansion.json
 d67e826ac3365637353e247b9bc0be92ecbc2878 data/bingo/bingo/goals/very_hard/tipped_arrow.json

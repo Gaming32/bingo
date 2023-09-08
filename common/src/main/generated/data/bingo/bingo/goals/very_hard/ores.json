@@ -1,0 +1,47 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "random",
+      "range": {
+        "max": 7,
+        "min": 5
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "requiredCount": {
+          "bingo_type": "sub",
+          "id": "count"
+        },
+        "tag": "bingo:ores"
+      },
+      "trigger": "bingo:has_some_items_from_tag"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:diamond_ore"
+  },
+  "name": {
+    "translate": "bingo.goal.ores",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.ores.tooltip"
+  }
+}
