@@ -28,6 +28,7 @@ public class BingoGame {
     private final BingoGameMode gameMode;
     private final PlayerTeam[] teams;
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> goalProgress = new HashMap<>();
+    private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
 
     public BingoGame(BingoBoard board, BingoGameMode gameMode, PlayerTeam... teams) {
         this.board = board;
@@ -235,9 +236,22 @@ public class BingoGame {
         return true;
     }
 
+    public void flushQueuedGoals(ServerPlayer player) {
+        final List<ActiveGoal> goals = queuedGoals.remove(player.getUUID());
+        if (goals == null) return;
+        for (final ActiveGoal goal : goals) {
+            updateTeamBoard(player, goal, false);
+        }
+    }
+
     private void updateTeamBoard(ServerPlayer player, ActiveGoal goal, boolean revoke) {
         final BingoBoard.Teams team = getTeam(player);
-        if (!team.any()) return;
+        if (!team.any()) {
+            if (!revoke) {
+                queuedGoals.computeIfAbsent(player.getUUID(), k -> new ArrayList<>()).add(goal);
+            }
+            return;
+        }
         final BingoBoard.Teams[] board = this.board.getStates();
         final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
         final boolean isNever = goal.getGoal().getTagIds().contains(BingoTags.NEVER);

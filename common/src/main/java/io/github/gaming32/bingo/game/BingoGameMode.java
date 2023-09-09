@@ -71,8 +71,9 @@ public interface BingoGameMode {
     };
 
     BingoGameMode LOCKOUT = new BingoGameMode() {
+        @NotNull
         @Override
-        public BingoBoard.@NotNull Teams getWinners(BingoBoard board, int teamCount, boolean tryHarder) {
+        public BingoBoard.Teams getWinners(BingoBoard board, int teamCount, boolean tryHarder) {
             if (teamCount != 2) {
                 // TODO
                 throw new UnsupportedOperationException("Lockout not supported on teamCount != 2 yet");
@@ -103,6 +104,40 @@ public interface BingoGameMode {
         @Override
         public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever) {
             return !board.getStates()[index].any();
+        }
+
+        @Override
+        public boolean isGoalAllowed(BingoGoal goal) {
+            return !goal.getTagIds().contains(BingoTags.NEVER);
+        }
+    };
+
+    BingoGameMode BLACKOUT = new BingoGameMode() {
+        @NotNull
+        @Override
+        public BingoBoard.Teams getWinners(BingoBoard board, int teamCount, boolean tryHarder) {
+            BingoBoard.Teams result = BingoBoard.Teams.NONE;
+            for (int i = 0; i < teamCount; i++) {
+                final BingoBoard.Teams team = BingoBoard.Teams.fromOne(i);
+                if (hasWon(board.getStates(), team)) {
+                    result = result.or(team);
+                }
+            }
+            return result;
+        }
+
+        private boolean hasWon(BingoBoard.Teams[] states, BingoBoard.Teams team) {
+            for (final BingoBoard.Teams state : states) {
+                if (!state.and(team)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever) {
+            return true;
         }
 
         @Override

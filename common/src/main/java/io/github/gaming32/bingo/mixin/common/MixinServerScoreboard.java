@@ -58,17 +58,20 @@ public class MixinServerScoreboard {
             if (player != null) {
                 final BingoBoard.Teams team = Bingo.activeGame.getTeam(player);
                 new SyncTeamMessage(team).sendTo(player);
+                if (team.any()) {
+                    Bingo.activeGame.flushQueuedGoals(player);
+                }
+                final BingoBoard.Teams[] states = Bingo.activeGame.getBoard().getStates();
                 if (!Bingo.showOtherTeam) {
-                    final BingoBoard.Teams[] states = Bingo.activeGame.getBoard().getStates();
                     new ResyncStatesMessage(BingoGame.obfuscateTeam(team, Bingo.activeGame.getBoard().getStates()))
                         .sendTo(player);
-                    player.connection.send(new ClientboundUpdateAdvancementsPacket(
-                        false,
-                        List.of(),
-                        Set.of(),
-                        VanillaNetworking.generateProgressMap(states, team)
-                    ));
                 }
+                player.connection.send(new ClientboundUpdateAdvancementsPacket(
+                    false,
+                    List.of(),
+                    Set.of(),
+                    VanillaNetworking.generateProgressMap(states, team)
+                ));
             }
         }
     }
