@@ -270,7 +270,7 @@ public class BingoGame {
         if (revoke || gameMode.canGetGoal(this.board, index, team, isNever)) {
             final boolean isLoss = isNever ^ revoke;
             board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);
-            notifyTeam(team, goal, player.server.getPlayerList(), index, isLoss);
+            notifyTeam(player, team, goal, player.server.getPlayerList(), index, isLoss);
             if (!isLoss) {
                 checkForWin(player.server.getPlayerList());
             }
@@ -278,6 +278,7 @@ public class BingoGame {
     }
 
     private void notifyTeam(
+        ServerPlayer obtainer,
         BingoBoard.Teams team,
         ActiveGoal goal,
         PlayerList playerList,
@@ -287,6 +288,7 @@ public class BingoGame {
         final PlayerTeam playerTeam = getTeam(team);
         final Component message = Component.translatable(
             isLoss ? "bingo.goal_lost" : "bingo.goal_obtained",
+            obtainer.getDisplayName(),
             goal.getName().copy().withStyle(isLoss ? ChatFormatting.GOLD : ChatFormatting.GREEN)
         );
         final BingoBoard.Teams boardState = board.getStates()[boardIndex];
