@@ -2,10 +2,13 @@
   "antisynergy": "glowstone_dust",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 64,
-        "min": 32
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 64,
+          "min_inclusive": 32
+        }
       }
     }
   },

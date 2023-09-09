@@ -19,10 +19,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -148,8 +150,8 @@ public class BingoGoalProvider implements DataProvider {
             .difficulty(0)
             .build());
         goalAdder.accept(BingoGoal.builder(veryEasyId("poppies_dandelions"))
-            .sub("poppies_count", new BingoSub.RandomBingoSub(MinMaxBounds.Ints.between(5, 25)))
-            .sub("dandelions_count", new BingoSub.RandomBingoSub(MinMaxBounds.Ints.between(5, 25)))
+            .sub("poppies_count", BingoSub.random(5, 25))
+            .sub("dandelions_count", BingoSub.random(5, 25))
             .criterion("poppy", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Items.POPPY).withCount(MinMaxBounds.Ints.exactly(0)).build()),
                 subber -> subber.sub("conditions.items.0.count", "poppies_count"))
             .criterion("dandelion", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Items.DANDELION).withCount(MinMaxBounds.Ints.exactly(0)).build()),
@@ -268,10 +270,10 @@ public class BingoGoalProvider implements DataProvider {
             .icon(Items.WHEAT_SEEDS)
             .build()
         );
-//        goalAdder.accept(crouchDistanceGoal(veryEasyId("crouch_distance"), 50, 100)
-//            .difficulty(0)
-//            .build()
-//        );
+        goalAdder.accept(crouchDistanceGoal(veryEasyId("crouch_distance"), 50, 100)
+            .difficulty(0)
+            .build()
+        );
         // TODO: fill all slots of campfire
         goalAdder.accept(BingoGoal.builder(veryEasyId("dye_sign"))
             .criterion("dye", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
@@ -846,10 +848,10 @@ public class BingoGoalProvider implements DataProvider {
             .build());
         // TODO: different edible items
         // TODO: breed 2-4 sets of mobs
-//        goalAdder.accept(crouchDistanceGoal(easyId("crouch_distance"), 100, 200)
-//            .difficulty(1)
-//            .build()
-//        );
+        goalAdder.accept(crouchDistanceGoal(easyId("crouch_distance"), 100, 200)
+            .difficulty(1)
+            .build()
+        );
         // TODO: never use debug
         // TODO: ring bell from 10 blocks away
         // TODO: repair item with grindstone
@@ -1219,10 +1221,10 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: blue shield with white flower charge pattern
         // TODO: tame a cat
         // TODO: breed mobs
-//        goalAdder.accept(crouchDistanceGoal(mediumId("crouch_distance"), 200, 400)
-//            .difficulty(2)
-//            .build()
-//        );
+        goalAdder.accept(crouchDistanceGoal(mediumId("crouch_distance"), 200, 400)
+            .difficulty(2)
+            .build()
+        );
         // TODO: kill n mobs
         goalAdder.accept(obtainItemGoal(mediumId("seagrass"), Items.SEAGRASS, 33, 64)
             .infrequency(2)
@@ -1842,7 +1844,7 @@ public class BingoGoalProvider implements DataProvider {
                 .icon(new ItemStack(icon, minCount));
         }
         return BingoGoal.builder(id)
-            .sub("count", new BingoSub.RandomBingoSub(MinMaxBounds.Ints.between(minCount, maxCount)))
+            .sub("count", BingoSub.random(minCount, maxCount))
             .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
                 item.withCount(MinMaxBounds.Ints.atLeast(0)).build()),
                 subber -> subber.sub("conditions.items.0.count.min", "count"))
@@ -1856,7 +1858,7 @@ public class BingoGoalProvider implements DataProvider {
 
     private static BingoGoal.Builder obtainSomeItemsFromTag(ResourceLocation id, ItemStack icon, TagKey<Item> tag, String translationKey, int minCount, int maxCount) {
         return BingoGoal.builder(id)
-            .sub("count", new BingoSub.RandomBingoSub(MinMaxBounds.Ints.between(minCount, maxCount)))
+            .sub("count", BingoSub.random(minCount, maxCount))
             .criterion(
                 "obtain",
                 HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(0).build(),
@@ -1869,7 +1871,7 @@ public class BingoGoalProvider implements DataProvider {
 
     private static BingoGoal.Builder obtainLevelsGoal(ResourceLocation id, int minLevels, int maxLevels) {
         return BingoGoal.builder(id)
-            .sub("count", new BingoSub.RandomBingoSub(MinMaxBounds.Ints.between(minLevels, maxLevels)))
+            .sub("count", BingoSub.random(minLevels, maxLevels))
             .criterion("obtain", ExperienceChangeTrigger.builder().levels(MinMaxBounds.Ints.atLeast(0)).build(),
                 subber -> subber.sub("conditions.levels.min", "count"))
             .tags(BingoTags.STAT)
@@ -1881,10 +1883,17 @@ public class BingoGoalProvider implements DataProvider {
 
     private static BingoGoal.Builder crouchDistanceGoal(ResourceLocation id, int minDistance, int maxDistance) {
         return BingoGoal.builder(id)
-            .sub("distance", new BingoSub.RandomBingoSub(MinMaxBounds.Ints.between(minDistance, maxDistance)))
+            .sub("distance", BingoSub.random(minDistance, maxDistance))
             .criterion("crouch",
-                BingoTriggers.crouch(DistancePredicate.horizontal(MinMaxBounds.Doubles.atLeast(0))),
-                subber -> subber.sub("conditions.distance.horizontal.min", "distance")
+                BingoTriggers.statChanged(Stats.CUSTOM.get(Stats.CROUCH_ONE_CM), MinMaxBounds.Ints.atLeast(0)),
+                subber -> subber.sub(
+                    "conditions.player.0.predicate.type_specific.bingo:relative_stats.0.value.min",
+                    new BingoSub.CompoundBingoSub(
+                        BingoSub.CompoundBingoSub.Operator.MULTIPLY,
+                        new BingoSub.SubBingoSub("distance"),
+                        new BingoSub.IntBingoSub(ConstantInt.of(100))
+                    )
+                )
             )
             .name(Component.translatable("bingo.goal.crouch_distance", 0), subber -> subber.sub("with.0", "distance"))
             .antisynergy("crouch_distance")

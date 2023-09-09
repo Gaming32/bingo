@@ -2,10 +2,13 @@
   "antisynergy": "vine",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 30,
-        "min": 10
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 30,
+          "min_inclusive": 10
+        }
       }
     }
   },

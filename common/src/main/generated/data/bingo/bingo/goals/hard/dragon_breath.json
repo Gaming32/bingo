@@ -2,10 +2,13 @@
   "antisynergy": "dragon_breath",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 16,
-        "min": 5
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 16,
+          "min_inclusive": 5
+        }
       }
     }
   },

@@ -2,10 +2,13 @@
   "antisynergy": "coal_block",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 6,
-        "min": 3
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 6,
+          "min_inclusive": 3
+        }
       }
     }
   },

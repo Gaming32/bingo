@@ -2,10 +2,13 @@
   "antisynergy": "basalt",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 6,
-        "min": 2
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 6,
+          "min_inclusive": 2
+        }
       }
     }
   },

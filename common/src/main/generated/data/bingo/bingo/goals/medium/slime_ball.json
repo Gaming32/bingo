@@ -2,10 +2,13 @@
   "antisynergy": "slime_ball",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 9,
-        "min": 5
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 9,
+          "min_inclusive": 5
+        }
       }
     }
   },

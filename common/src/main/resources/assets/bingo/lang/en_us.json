@@ -91,6 +91,7 @@
   "bingo.goal_obtained": "Your team got the goal %s",
   "bingo.goal_lost": "Your team lost the goal %s",
   "bingo.duplicate_teams": "Cannot start a bingo with the same team twice!",
+  "bingo.unknown_goal": "Unknown goal %s",
   "bingo.board.title": "Bingo Board",
   "bingo.board.copy": "Copy board to clipboard",
   "bingo.key.board": "Show Bingo Board",

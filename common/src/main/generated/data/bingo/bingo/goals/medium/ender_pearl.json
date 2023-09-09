@@ -2,10 +2,13 @@
   "antisynergy": "ender_pearl",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 6,
-        "min": 4
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 6,
+          "min_inclusive": 4
+        }
       }
     }
   },

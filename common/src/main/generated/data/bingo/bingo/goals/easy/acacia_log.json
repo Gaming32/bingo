@@ -2,10 +2,13 @@
   "antisynergy": "acacia_log",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 32,
-        "min": 16
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 32,
+          "min_inclusive": 16
+        }
       }
     }
   },

@@ -1,17 +1,23 @@
 {
   "bingo_subs": {
     "dandelions_count": {
-      "type": "random",
-      "range": {
-        "max": 25,
-        "min": 5
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 25,
+          "min_inclusive": 5
+        }
       }
     },
     "poppies_count": {
-      "type": "random",
-      "range": {
-        "max": 25,
-        "min": 5
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 25,
+          "min_inclusive": 5
+        }
       }
     }
   },

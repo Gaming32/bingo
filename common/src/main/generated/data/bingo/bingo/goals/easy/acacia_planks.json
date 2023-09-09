@@ -2,10 +2,13 @@
   "antisynergy": "acacia_planks",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 128,
-        "min": 65
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 128,
+          "min_inclusive": 65
+        }
       }
     }
   },

@@ -2,10 +2,13 @@
   "antisynergy": "dried_kelp_block",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 20,
-        "min": 11
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 20,
+          "min_inclusive": 11
+        }
       }
     }
   },

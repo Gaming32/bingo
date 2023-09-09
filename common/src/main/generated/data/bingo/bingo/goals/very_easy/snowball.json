@@ -2,10 +2,13 @@
   "antisynergy": "snowball",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 16,
-        "min": 8
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 16,
+          "min_inclusive": 8
+        }
       }
     }
   },

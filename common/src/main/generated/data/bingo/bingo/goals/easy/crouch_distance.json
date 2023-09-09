@@ -1,0 +1,78 @@
+{
+  "antisynergy": "crouch_distance",
+  "bingo_subs": {
+    "distance": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 200,
+          "min_inclusive": 100
+        }
+      }
+    }
+  },
+  "criteria": {
+    "crouch": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "player",
+                "bingo:relative_stats": [
+                  {
+                    "type": "minecraft:custom",
+                    "stat": "minecraft:crouch_one_cm",
+                    "value": {
+                      "min": {
+                        "bingo_type": "compound",
+                        "factors": [
+                          {
+                            "type": "sub",
+                            "id": "distance"
+                          },
+                          {
+                            "type": "int",
+                            "value": 100
+                          }
+                        ],
+                        "operator": "multiply"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:tick"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "distance"
+    },
+    "item": "minecraft:leather_boots",
+    "nbt": "{Damage:0}"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.crouch_distance",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "distance"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:stat"
+  ]
+}

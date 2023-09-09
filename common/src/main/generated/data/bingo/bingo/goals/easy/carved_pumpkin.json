@@ -2,10 +2,13 @@
   "antisynergy": "carved_pumpkin",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 5,
-        "min": 2
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 5,
+          "min_inclusive": 2
+        }
       }
     }
   },

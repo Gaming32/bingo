@@ -77,7 +77,7 @@ public class Bingo {
     public static BingoGame activeGame;
     public static final Set<ServerPlayer> needAdvancementsClear = new HashSet<>();
 
-    public static final SuggestionProvider<CommandSourceStack> GOAL_SUGGESTOR = (context, builder) -> {
+    public static final SuggestionProvider<CommandSourceStack> ACTIVE_GOAL_SUGGESTOR = (context, builder) -> {
         if (activeGame == null) {
             return builder.buildFuture();
         }
@@ -163,7 +163,7 @@ public class Bingo {
                     .then(argument("players", EntityArgument.players())
                         .then(literal("award")
                             .then(argument("goal", ResourceLocationArgument.id())
-                                .suggests(GOAL_SUGGESTOR)
+                                .suggests(ACTIVE_GOAL_SUGGESTOR)
                                 .executes(context -> {
                                     final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
                                     final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
@@ -189,7 +189,7 @@ public class Bingo {
                         )
                         .then(literal("revoke")
                             .then(argument("goal", ResourceLocationArgument.id())
-                                .suggests(GOAL_SUGGESTOR)
+                                .suggests(ACTIVE_GOAL_SUGGESTOR)
                                 .executes(context -> {
                                     final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
                                     final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
@@ -228,6 +228,14 @@ public class Bingo {
                         )
                         .then(literal("--seed")
                             .then(argument("seed", LongArgumentType.longArg())
+                                .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+                            )
+                        )
+                        .then(literal("--require-goal")
+                            .then(argument("required_goal", ResourceLocationArgument.id())
+                                .suggests((context, builder) -> SharedSuggestionProvider.suggestResource(
+                                    BingoGoal.getGoalIds(), builder
+                                ))
                                 .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                             )
                         )
@@ -288,6 +296,8 @@ public class Bingo {
     private static int startGame(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         final int difficulty = getArg(context, "difficulty", () -> 2, IntegerArgumentType::getInteger);
         final long seed = getArg(context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong);
+        final ResourceLocation requiredGoalId = getArg(context, "required_goal", () -> null, ResourceLocationArgument::getId);
+
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
         for (int i = 1; i <= 32; i++) {
             if (!((CommandContextExt)context).bingo$hasArg("team" + i)) break;
@@ -295,6 +305,16 @@ public class Bingo {
                 // Should probably be a CommandSyntaxException?
                 throw new CommandRuntimeException(Component.translatable("bingo.duplicate_teams"));
             }
+        }
+
+        final BingoGoal requiredGoal;
+        if (requiredGoalId != null) {
+            requiredGoal = BingoGoal.getGoal(requiredGoalId);
+            if (requiredGoal == null) {
+                throw new CommandRuntimeException(Component.translatable("bingo.unknown_goal", requiredGoalId));
+            }
+        } else {
+            requiredGoal = null;
         }
 
         final MinecraftServer server = context.getSource().getServer();
@@ -307,7 +327,8 @@ public class Bingo {
                 teams.size(),
                 RandomSource.create(seed),
                 server.getLootData(),
-                gameMode::isGoalAllowed
+                gameMode::isGoalAllowed,
+                requiredGoal
             );
         } catch (Exception e) {
             LOGGER.error("Error generating bingo board", e);

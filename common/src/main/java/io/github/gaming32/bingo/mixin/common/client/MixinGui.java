@@ -3,14 +3,12 @@ package io.github.gaming32.bingo.mixin.common.client;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.client.BoardCorner;
 import net.minecraft.client.gui.Gui;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(Gui.class)
-@Debug(export = true)
 public class MixinGui {
     @ModifyArg(
         method = "renderEffects",

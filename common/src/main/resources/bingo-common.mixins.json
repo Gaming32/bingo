@@ -16,10 +16,13 @@
     "MixinLivingEntity",
     "MixinMapItem",
     "MixinPlayer",
+    "MixinPlayerPredicate",
+    "MixinPlayerPredicate_Builder",
     "MixinServerPlayContainerListener",
     "MixinServerPlayer",
     "MixinServerScoreboard",
     "PlayerAdvancementsAccessor",
+    "StatsCounterAccessor",
     "brigadier.MixinCommandContext"
   ],
   "client": [

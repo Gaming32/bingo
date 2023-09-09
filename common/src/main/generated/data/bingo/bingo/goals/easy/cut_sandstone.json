@@ -2,10 +2,13 @@
   "antisynergy": "sandstone",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 32,
-        "min": 11
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 32,
+          "min_inclusive": 11
+        }
       }
     }
   },

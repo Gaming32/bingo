@@ -1,7 +1,10 @@
 package io.github.gaming32.bingo.triggers;
 
+import io.github.gaming32.bingo.ext.PlayerPredicateBuilderExt;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.stats.Stat;
 
 import static net.minecraft.advancements.CriteriaTriggers.register;
 
@@ -27,5 +30,15 @@ public class BingoTriggers {
 
     public static PlayerTrigger.TriggerInstance bounceOnBed() {
         return new PlayerTrigger.TriggerInstance(BOUNCE_ON_BED.getId(), ContextAwarePredicate.ANY);
+    }
+
+    public static PlayerTrigger.TriggerInstance statChanged(Stat<?> relativeStat, MinMaxBounds.Ints toValue) {
+        return new PlayerTrigger.TriggerInstance(CriteriaTriggers.TICK.getId(), EntityPredicate.wrap(
+            EntityPredicate.Builder.entity().subPredicate(
+                ((PlayerPredicateBuilderExt)PlayerPredicate.Builder.player())
+                    .bingo$addRelativeStat(relativeStat, toValue)
+                    .build()
+            ).build()
+        ));
     }
 }

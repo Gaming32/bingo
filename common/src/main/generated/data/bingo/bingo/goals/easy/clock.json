@@ -2,10 +2,13 @@
   "antisynergy": "clock",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 3,
-        "min": 2
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 3,
+          "min_inclusive": 2
+        }
       }
     }
   },

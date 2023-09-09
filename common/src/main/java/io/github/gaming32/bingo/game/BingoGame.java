@@ -2,7 +2,10 @@ package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
 import io.github.gaming32.bingo.network.*;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.advancements.*;
@@ -12,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stat;
 import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +33,7 @@ public class BingoGame {
     private final PlayerTeam[] teams;
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> goalProgress = new HashMap<>();
     private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
+    private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
 
     public BingoGame(BingoBoard board, BingoGameMode gameMode, PlayerTeam... teams) {
         this.board = board;
@@ -59,6 +64,9 @@ public class BingoGame {
         }
 
         registerListeners(player);
+        baseStats.computeIfAbsent(player.getUUID(), k -> new Object2IntOpenHashMap<>(
+            ((StatsCounterAccessor)player.getStats()).getStats()
+        ));
 
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamMessage(team).sendTo(player);
@@ -92,6 +100,10 @@ public class BingoGame {
             return state;
         }
         return state.and(playerTeam) ? playerTeam : BingoBoard.Teams.NONE;
+    }
+
+    public Object2IntMap<Stat<?>> getBaseStats(ServerPlayer player) {
+        return baseStats.get(player.getUUID());
     }
 
     public void endGame(PlayerList playerList, BingoBoard.Teams winner) {

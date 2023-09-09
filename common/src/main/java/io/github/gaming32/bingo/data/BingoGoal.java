@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class BingoGoal {
@@ -91,6 +90,10 @@ public class BingoGoal {
         this.difficulty = difficulty;
 
         this.tagIds = tags.stream().map(BingoTag::id).collect(ImmutableSet.toImmutableSet());
+    }
+
+    public static Set<ResourceLocation> getGoalIds() {
+        return goals.keySet();
     }
 
     public static BingoGoal getGoal(ResourceLocation id) {
@@ -164,15 +167,7 @@ public class BingoGoal {
             GsonHelper.getAsJsonObject(json, "bingo_subs", new JsonObject())
                 .entrySet()
                 .stream()
-                .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> {
-                    final JsonObject data = GsonHelper.convertToJsonObject(e.getValue(), "bingo sub");
-                    final String type = GsonHelper.getAsString(data, "type");
-                    final Function<JsonObject, BingoSub> factory = BingoSub.SUBS.get(type);
-                    if (factory == null) {
-                        throw new JsonSyntaxException("Bingo sub type not found: " + type);
-                    }
-                    return factory.apply(data);
-                })),
+                .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> BingoSub.deserialize(e.getValue(), "type"))),
             criteria, requirements,
             GsonHelper.getAsJsonArray(json, "tags", new JsonArray())
                 .asList()
@@ -433,12 +428,7 @@ public class BingoGoal {
         if (value.isJsonObject()) {
             final JsonObject obj = value.getAsJsonObject();
             if (obj.has("bingo_type")) {
-                final String type = GsonHelper.getAsString(obj, "bingo_type");
-                final Function<JsonObject, BingoSub> factory = BingoSub.SUBS.get(type);
-                if (factory == null) {
-                    throw new JsonSyntaxException("Bingo sub type not found: " + type);
-                }
-                return factory.apply(obj).substitute(referable, rand);
+                return BingoSub.deserialize(obj, "bingo_type").substitute(referable, rand);
             }
             final JsonObject result = new JsonObject();
             for (final var entry : obj.entrySet()) {

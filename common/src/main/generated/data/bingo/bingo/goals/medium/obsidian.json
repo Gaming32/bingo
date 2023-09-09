@@ -2,10 +2,13 @@
   "antisynergy": "obsidian",
   "bingo_subs": {
     "count": {
-      "type": "random",
-      "range": {
-        "max": 10,
-        "min": 3
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 10,
+          "min_inclusive": 3
+        }
       }
     }
   },

@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.text.WordUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -34,10 +35,11 @@ public class BingoBoard {
         int teamCount,
         RandomSource rand,
         LootDataManager lootData,
-        Predicate<BingoGoal> isAllowedGoal
+        Predicate<BingoGoal> isAllowedGoal,
+        @Nullable BingoGoal requiredGoal
     ) {
         final BingoBoard board = new BingoBoard();
-        final BingoGoal[] generatedSheet = generateGoals(difficulty, rand, isAllowedGoal);
+        final BingoGoal[] generatedSheet = generateGoals(difficulty, rand, isAllowedGoal, requiredGoal);
         for (int i = 0; i < SIZE_SQ; i++) {
             board.goals[i] = generatedSheet[i].build(rand, lootData);
             if (generatedSheet[i].getTagIds().contains(BingoTags.NEVER)) {
@@ -47,7 +49,12 @@ public class BingoBoard {
         return board;
     }
 
-    public static BingoGoal[] generateGoals(int difficulty, RandomSource rand, Predicate<BingoGoal> isAllowedGoal) {
+    public static BingoGoal[] generateGoals(
+        int difficulty,
+        RandomSource rand,
+        Predicate<BingoGoal> isAllowedGoal,
+        @Nullable BingoGoal requiredGoal
+    ) {
         final BingoGoal[] generatedSheet = new BingoGoal[SIZE_SQ];
 
         final int[] difficultyLayout = generateDifficulty(difficulty, rand);
@@ -67,6 +74,12 @@ public class BingoBoard {
 
             goalGen:
             while (true) {
+                if (requiredGoal != null) {
+                    goal = requiredGoal;
+                    requiredGoal = null;
+                    break;
+                }
+
                 failSafe++;
 
                 if (failSafe >= 500) {
