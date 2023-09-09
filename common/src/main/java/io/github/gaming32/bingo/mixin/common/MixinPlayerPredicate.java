@@ -20,7 +20,6 @@ import net.minecraft.stats.StatType;
 import net.minecraft.stats.StatsCounter;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -31,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.HashMap;
 import java.util.Map;
 
-@Debug(export = true)
 @Mixin(PlayerPredicate.class)
 public abstract class MixinPlayerPredicate implements PlayerPredicateExt {
     @Shadow
