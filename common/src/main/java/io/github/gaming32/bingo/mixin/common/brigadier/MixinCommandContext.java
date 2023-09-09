@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Mixin(CommandContext.class)
 public class MixinCommandContext<S> implements CommandContextExt {
-    @Shadow @Final private Map<String, ParsedArgument<S, ?>> arguments;
+    @Shadow(remap = false) @Final private Map<String, ParsedArgument<S, ?>> arguments;
 
     @Override
     public boolean bingo$hasArg(String arg) {

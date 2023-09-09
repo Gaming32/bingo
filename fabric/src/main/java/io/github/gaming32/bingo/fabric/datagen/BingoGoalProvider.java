@@ -268,10 +268,10 @@ public class BingoGoalProvider implements DataProvider {
             .icon(Items.WHEAT_SEEDS)
             .build()
         );
-        goalAdder.accept(crouchDistanceGoal(veryEasyId("crouch_distance"), 50, 100)
-            .difficulty(0)
-            .build()
-        );
+//        goalAdder.accept(crouchDistanceGoal(veryEasyId("crouch_distance"), 50, 100)
+//            .difficulty(0)
+//            .build()
+//        );
         // TODO: fill all slots of campfire
         goalAdder.accept(BingoGoal.builder(veryEasyId("dye_sign"))
             .criterion("dye", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
@@ -846,10 +846,10 @@ public class BingoGoalProvider implements DataProvider {
             .build());
         // TODO: different edible items
         // TODO: breed 2-4 sets of mobs
-        goalAdder.accept(crouchDistanceGoal(easyId("crouch_distance"), 100, 200)
-            .difficulty(1)
-            .build()
-        );
+//        goalAdder.accept(crouchDistanceGoal(easyId("crouch_distance"), 100, 200)
+//            .difficulty(1)
+//            .build()
+//        );
         // TODO: never use debug
         // TODO: ring bell from 10 blocks away
         // TODO: repair item with grindstone
@@ -1219,10 +1219,10 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: blue shield with white flower charge pattern
         // TODO: tame a cat
         // TODO: breed mobs
-        goalAdder.accept(crouchDistanceGoal(mediumId("crouch_distance"), 200, 400)
-            .difficulty(2)
-            .build()
-        );
+//        goalAdder.accept(crouchDistanceGoal(mediumId("crouch_distance"), 200, 400)
+//            .difficulty(2)
+//            .build()
+//        );
         // TODO: kill n mobs
         goalAdder.accept(obtainItemGoal(mediumId("seagrass"), Items.SEAGRASS, 33, 64)
             .infrequency(2)
