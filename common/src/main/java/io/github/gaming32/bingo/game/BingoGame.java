@@ -110,7 +110,7 @@ public class BingoGame {
         clearListeners(playerList);
         final Component message;
         if (winner.any()) {
-            if (winner.all(teams.length)) {
+            if (!winner.one() && winner.all(teams.length)) {
                 message = Component.translatable("bingo.ended.tie");
             } else {
                 final PlayerTeam playerTeam = getTeam(winner);
