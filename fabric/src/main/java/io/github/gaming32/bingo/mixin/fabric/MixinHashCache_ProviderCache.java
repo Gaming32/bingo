@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.io.BufferedWriter;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.Map;
 
 @Mixin(targets = "net.minecraft.data.HashCache$ProviderCache")
@@ -42,7 +43,7 @@ public class MixinHashCache_ProviderCache {
     ) {
         return original.call(instance)
             .stream()
-            .sorted(Map.Entry.comparingByKey())
+            .sorted(Map.Entry.comparingByKey(Comparator.comparing(k -> k.toString().replace('\\', '/'))))
             .collect(ImmutableSet.toImmutableSet());
     }
 
