@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:horse"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:tame_animal"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:horse_spawn_egg"
+  },
+  "name": {
+    "translate": "bingo.goal.tame_horse"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

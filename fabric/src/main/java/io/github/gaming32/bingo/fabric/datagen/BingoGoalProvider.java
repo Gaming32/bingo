@@ -938,7 +938,13 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.OVERWORLD)
             .difficulty(1)
             .build());
-        // TODO: tame horse
+        goalAdder.accept(BingoGoal.builder(easyId("tame_horse"))
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.HORSE).build()))
+            .name(Component.translatable("bingo.goal.tame_horse"))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .icon(Items.HORSE_SPAWN_EGG)
+            .difficulty(1)
+            .build());
         // TODO: hatch chicken from egg
         // TODO: empty cauldron without buckets or bottles
         // TODO: sleep in villager's bed
@@ -1223,7 +1229,13 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: never use axe
         // TODO: enchant an item
         // TODO: blue shield with white flower charge pattern
-        // TODO: tame a cat
+        goalAdder.accept(BingoGoal.builder(mediumId("tame_cat"))
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.CAT).build()))
+            .name(Component.translatable("bingo.goal.tame_cat"))
+            .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD)
+            .icon(Items.CAT_SPAWN_EGG)
+            .difficulty(2)
+            .build());
         // TODO: breed mobs
         goalAdder.accept(crouchDistanceGoal(mediumId("crouch_distance"), 200, 400)
             .difficulty(2)
@@ -1785,7 +1797,13 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.OCEAN, BingoTags.COMBAT, BingoTags.OVERWORLD)
             .difficulty(4)
             .build());
-        // TODO: tame skeleton horse
+        goalAdder.accept(BingoGoal.builder(veryHardId("tame_skeleton_horse"))
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.SKELETON_HORSE).build()))
+            .name(Component.translatable("bingo.goal.tame_skeleton_horse"))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .icon(Items.SKELETON_HORSE_SPAWN_EGG)
+            .difficulty(4)
+            .build());
         // TODO: all parrots dance
         goalAdder.accept(bedRowGoal(veryHardId("bed_row"), 16, 16)
             .reactant("use_furnace")

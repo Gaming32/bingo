@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:cat"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:tame_animal"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:cat_spawn_egg"
+  },
+  "name": {
+    "translate": "bingo.goal.tame_cat"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:village",
+    "bingo:overworld"
+  ]
+}
