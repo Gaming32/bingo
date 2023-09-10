@@ -48,5 +48,6 @@
   ],
   "tooltip": {
     "translate": "bingo.goal.6x6scaffolding.tooltip"
-  }
+  },
+  "tooltip_icon": "bingo:textures/gui/tooltips/6x6scaffolding.png"
 }

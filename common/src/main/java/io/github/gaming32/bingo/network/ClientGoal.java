@@ -5,21 +5,41 @@ import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public record ClientGoal(Component name, @Nullable Component tooltip, ItemStack icon, boolean isNever) {
+public record ClientGoal(
+    Component name,
+    @Nullable Component tooltip,
+    @Nullable ResourceLocation tooltipIcon,
+    ItemStack icon,
+    boolean isNever
+) {
     public ClientGoal(ActiveGoal goal) {
-        this(goal.getName(), goal.getTooltip(), goal.getIcon(), goal.getGoal().getTagIds().contains(BingoTags.NEVER));
+        this(
+            goal.getName(),
+            goal.getTooltip(),
+            goal.getGoal().getTooltipIcon(),
+            goal.getIcon(),
+            goal.getGoal().getTagIds().contains(BingoTags.NEVER)
+        );
     }
 
     public ClientGoal(FriendlyByteBuf buf) {
-        this(buf.readComponent(), buf.readNullable(FriendlyByteBuf::readComponent), readIcon(buf), buf.readBoolean());
+        this(
+            buf.readComponent(),
+            buf.readNullable(FriendlyByteBuf::readComponent),
+            buf.readNullable(FriendlyByteBuf::readResourceLocation),
+            readIcon(buf),
+            buf.readBoolean()
+        );
     }
 
     public void serialize(FriendlyByteBuf buf) {
         buf.writeComponent(name);
         buf.writeNullable(tooltip, FriendlyByteBuf::writeComponent);
+        buf.writeNullable(tooltipIcon, FriendlyByteBuf::writeResourceLocation);
         writeIcon(buf, icon);
         buf.writeBoolean(isNever);
     }

@@ -20,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class BingoClient {
@@ -130,7 +131,11 @@ public class BingoClient {
                 lines.add(CommonComponents.EMPTY);
                 lines.add(goal.tooltip());
             }
-            graphics.renderComponentTooltip(minecraft.font, lines, (int)mouseX, (int)mouseY);
+            graphics.renderTooltip(
+                minecraft.font, lines,
+                Optional.ofNullable(goal.tooltipIcon()).map(IconTooltip::new),
+                (int)mouseX, (int)mouseY
+            );
         }
     }
 }

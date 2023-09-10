@@ -27,6 +27,7 @@
     "brigadier.MixinCommandContext"
   ],
   "client": [
+    "client.MixinClientTooltipComponent",
     "client.MixinGui"
   ],
   "injectors": {

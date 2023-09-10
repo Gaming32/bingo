@@ -1612,6 +1612,7 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.OVERWORLD, BingoTags.BUILD)
             .name(Component.translatable("bingo.goal.6x6scaffolding"))
             .tooltip(Component.translatable("bingo.goal.6x6scaffolding.tooltip"))
+            .tooltipIcon(new ResourceLocation("bingo:textures/gui/tooltips/6x6scaffolding.png"))
             .icon(Items.SCAFFOLDING)
             .difficulty(3)
             .build());

@@ -50,6 +50,8 @@ public class BingoGoal {
     @Nullable
     private final JsonElement tooltip;
     @Nullable
+    private final ResourceLocation tooltipIcon;
+    @Nullable
     private final JsonObject icon;
     @Nullable
     private final Integer infrequency;
@@ -68,6 +70,7 @@ public class BingoGoal {
         List<BingoTag> tags,
         JsonElement name,
         @Nullable JsonElement tooltip,
+        @Nullable ResourceLocation tooltipIcon,
         @Nullable JsonObject icon,
         @Nullable Integer infrequency,
         List<String> antisynergy,
@@ -82,6 +85,7 @@ public class BingoGoal {
         this.tags = tags;
         this.name = name;
         this.tooltip = tooltip;
+        this.tooltipIcon = tooltipIcon;
         this.icon = icon;
         this.infrequency = infrequency;
         this.antisynergy = antisynergy;
@@ -183,6 +187,8 @@ public class BingoGoal {
                 .toList(),
             GsonHelper.getNonNull(json, "name"),
             json.get("tooltip"),
+            json.has("tooltip_icon")
+                ? new ResourceLocation(GsonHelper.getAsString(json, "tooltip_icon")) : null,
             GsonHelper.getAsJsonObject(json, "icon", null),
             json.has("infrequency") ? GsonHelper.getAsInt(json, "infrequency") : null,
             getListString(json, "antisynergy"),
@@ -254,6 +260,10 @@ public class BingoGoal {
             result.add("tooltip", tooltip);
         }
 
+        if (tooltipIcon != null) {
+            result.addProperty("tooltip_icon", tooltipIcon.toString());
+        }
+
         if (icon != null) {
             result.add("icon", icon);
         }
@@ -312,6 +322,11 @@ public class BingoGoal {
     @Nullable
     public JsonElement getTooltip() {
         return tooltip;
+    }
+
+    @Nullable
+    public ResourceLocation getTooltipIcon() {
+        return tooltipIcon;
     }
 
     @Nullable
@@ -459,6 +474,8 @@ public class BingoGoal {
         @Nullable
         private JsonElement tooltip;
         @Nullable
+        private ResourceLocation tooltipIcon;
+        @Nullable
         private JsonObject icon;
         @Nullable
         private Integer infrequency;
@@ -529,6 +546,11 @@ public class BingoGoal {
             JsonSubber json = new JsonSubber(Component.Serializer.toJsonTree(tooltip));
             subber.accept(json);
             this.tooltip = json.json;
+            return this;
+        }
+
+        public Builder tooltipIcon(ResourceLocation tooltipIcon) {
+            this.tooltipIcon = tooltipIcon;
             return this;
         }
 
@@ -611,6 +633,7 @@ public class BingoGoal {
                 tags,
                 name,
                 tooltip,
+                tooltipIcon,
                 icon,
                 infrequency,
                 antisynergy,
