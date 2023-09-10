@@ -132,9 +132,9 @@ public interface BingoSub {
         }
 
         public IntBingoSub(JsonObject data) {
-            this(IntProvider.CODEC.decode(
+            this(IntProvider.CODEC.parse(
                 JsonOps.INSTANCE, GsonHelper.getNonNull(data, "value")
-            ).get().orThrow().getFirst());
+            ).get().orThrow());
         }
 
         @Override
