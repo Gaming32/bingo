@@ -109,6 +109,7 @@ f24f52bdf1effa0e4b212be2b0f499a4aa067eaf data/bingo/bingo/goals/easy/stripped_da
 1703f366975d0f5b1287fbbe28ed530fd124b716 data/bingo/bingo/goals/easy/stripped_spruce_log.json
 4ee200ae874e41ecd277800c7443caa61aaf4d4e data/bingo/bingo/goals/easy/stripped_spruce_wood.json
 c8eacfc2619ee1bbc8057ecb8941a17d51160b4f data/bingo/bingo/goals/easy/sweet_berries.json
+9ea4edd74cbcc9c5a3ba041ef7c009af29edd62e data/bingo/bingo/goals/easy/tame_horse.json
 c0dd29d0a1632aae1b27d1c266e0369cdbe6a407 data/bingo/bingo/goals/easy/tnt.json
 9027916cb7a0d4a45c436e525227e3f3d59f3d81 data/bingo/bingo/goals/easy/tropical_fish.json
 7a791c491b3de1f5343b2e6fe4557e63058c6e8f data/bingo/bingo/goals/easy/vine.json
@@ -216,6 +217,7 @@ ef78cab0648ef2ffa5d33693c6f6de27595f1fb2 data/bingo/bingo/goals/medium/stripped_
 2596bf8da2c0a26c552d81254925dbffea8e85a6 data/bingo/bingo/goals/medium/stripped_warped_hyphae.json
 86f7b3e4d23b833233410e6521a356dc13867ecc data/bingo/bingo/goals/medium/stripped_warped_stem.json
 eaa67022d1e9c77786c6f44c7c54164d1359947e data/bingo/bingo/goals/medium/swiftness_potion.json
+e06aad5e07b06a00b236c449fdd79b9bf5af1680 data/bingo/bingo/goals/medium/tame_cat.json
 0fb6174590c8b50c79a9791674242342bc456b02 data/bingo/bingo/goals/medium/tame_wolf.json
 b97e494982b56bc4e858c0c9e6e82aff274c7878 data/bingo/bingo/goals/medium/turtle_master_potion.json
 1a9843fb2d93edc10559fb8318e4ad943ccdca47 data/bingo/bingo/goals/medium/warped_fungus_on_a_stick.json
@@ -308,6 +310,7 @@ d10da692d5a6d131f3fd9ea7e4f31af3dfe90d29 data/bingo/bingo/goals/very_hard/nether
 690c514c4b8584d1b52c6b79c16992d2ad386dad data/bingo/bingo/goals/very_hard/ores.json
 dbf98e3eabf8a2f36f2165aefe56a449e2247b5b data/bingo/bingo/goals/very_hard/shulker_in_overworld.json
 d9e6c78d512929b19b890cb7ccbb1bf453af179e data/bingo/bingo/goals/very_hard/sleep_in_mansion.json
+25bc76e728a975e2561d61b416a0caafa8e6438b data/bingo/bingo/goals/very_hard/tame_skeleton_horse.json
 5d01305e71bc31a4a25df1fe5598057e5b876bd9 data/bingo/bingo/goals/very_hard/tipped_arrow.json
 55d8738e88f1f54effbc7148428a1ee395c5f83b data/bingo/bingo/goals/very_hard/trident.json
 29160ea6414244acecb32bffec5d2fb74be0d48d data/bingo/bingo/goals/very_hard/wither_rose.json
