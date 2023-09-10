@@ -1,0 +1,86 @@
+{
+  "antisynergy": [
+    "bed_color",
+    "every_color"
+  ],
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "count": 16
+      },
+      "trigger": "bingo:bed_row"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "count": 16,
+    "item": "minecraft:purple_bed"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.bed_row",
+    "with": [
+      "16"
+    ]
+  },
+  "reactant": "use_furnace",
+  "tags": [
+    "bingo:build",
+    "bingo:color",
+    "bingo:overworld",
+    "bingo:action"
+  ],
+  "tooltip": {
+    "translate": "bingo.sixteen_bang",
+    "with": [
+      {
+        "translate": "color.minecraft.white"
+      },
+      {
+        "translate": "color.minecraft.orange"
+      },
+      {
+        "translate": "color.minecraft.magenta"
+      },
+      {
+        "translate": "color.minecraft.light_blue"
+      },
+      {
+        "translate": "color.minecraft.yellow"
+      },
+      {
+        "translate": "color.minecraft.lime"
+      },
+      {
+        "translate": "color.minecraft.pink"
+      },
+      {
+        "translate": "color.minecraft.gray"
+      },
+      {
+        "translate": "color.minecraft.light_gray"
+      },
+      {
+        "translate": "color.minecraft.cyan"
+      },
+      {
+        "translate": "color.minecraft.purple"
+      },
+      {
+        "translate": "color.minecraft.blue"
+      },
+      {
+        "translate": "color.minecraft.brown"
+      },
+      {
+        "translate": "color.minecraft.green"
+      },
+      {
+        "translate": "color.minecraft.red"
+      },
+      {
+        "translate": "color.minecraft.black"
+      }
+    ]
+  }
+}

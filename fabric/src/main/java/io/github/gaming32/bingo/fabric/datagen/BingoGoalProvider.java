@@ -714,7 +714,9 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: different flowers
         // TODO: colors of concrete
         // TODO: colors of glazed terracotta
-        // TODO: colors of bed next to each other
+        goalAdder.accept(bedRowGoal(easyId("bed_row"), 3, 6)
+            .difficulty(1)
+            .build());
         // TODO: finish where you spawned using compass
         goalAdder.accept(obtainItemGoal(easyId("stone"), Items.STONE, 32, 64)
             .tooltip(Component.translatable("bingo.goal.stone.tooltip"))
@@ -1114,7 +1116,9 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: colors of terracotta
         // TODO: colors of glazed terracotta
         // TODO: colors of concrete
-        // TODO: colors of bed next to each other
+        goalAdder.accept(bedRowGoal(mediumId("bed_row"), 7, 10)
+            .difficulty(2)
+            .build());
         // TODO: power redstone lamp
         // TODO: different flowers
         // TODO: put zombified piglin in water
@@ -1442,7 +1446,9 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: colors of terracotta
         // TODO: colors of glazed terracotta
         // TODO: colors of concrete
-        // TODO: colors of bed next to each other
+        goalAdder.accept(bedRowGoal(hardId("bed_row"), 11, 14)
+            .difficulty(3)
+            .build());
         goalAdder.accept(BingoGoal.builder(hardId("poison_parrot"))
             .criterion("poison", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
                 ItemPredicate.Builder.item().of(Items.COOKIE),
@@ -1781,7 +1787,15 @@ public class BingoGoalProvider implements DataProvider {
             .build());
         // TODO: tame skeleton horse
         // TODO: all parrots dance
-        // TODO: place every color of bed next to each other
+        goalAdder.accept(bedRowGoal(veryHardId("bed_row"), 16, 16)
+            .reactant("use_furnace")
+            .antisynergy("every_color")
+            .infrequency(2)
+            .tags(BingoTags.ACTION)
+            .tooltip(Component.translatable("bingo.sixteen_bang",
+                Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new)))
+            .difficulty(4)
+            .build());
         // TODO: kill enderman with only endermites
         goalAdder.accept(BingoGoal.builder(veryHardId("beacon_regen"))
             .criterion("effect", BeaconEffectTrigger.TriggerInstance.effectApplied(MobEffects.REGENERATION))
@@ -1901,6 +1915,26 @@ public class BingoGoalProvider implements DataProvider {
             .infrequency(2)
             .tags(BingoTags.ACTION, BingoTags.STAT)
             .icon(Items.LEATHER_BOOTS, subber -> subber.sub("count", "distance"));
+    }
+
+    private static BingoGoal.Builder bedRowGoal(ResourceLocation id, int minCount, int maxCount) {
+        if (minCount == maxCount) {
+            return BingoGoal.builder(id)
+                .criterion("obtain", BedRowTrigger.create(minCount))
+                .name(Component.translatable("bingo.goal.bed_row", minCount))
+                .antisynergy("bed_color")
+                .infrequency(4)
+                .icon(new ItemStack(Items.PURPLE_BED, minCount))
+                .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
+        }
+        return BingoGoal.builder(id)
+            .sub("count", BingoSub.random(minCount, maxCount))
+            .criterion("obtain", BedRowTrigger.create(0), subber -> subber.sub("conditions.count", "count"))
+            .name(Component.translatable("bingo.goal.bed_row", 0), subber -> subber.sub("with.0", "count"))
+            .antisynergy("bed_color")
+            .infrequency(4)
+            .icon(Items.PURPLE_BED, subber -> subber.sub("count", "count"))
+            .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
     }
 
     private static ItemStack makeItemWithGlint(ItemLike item) {

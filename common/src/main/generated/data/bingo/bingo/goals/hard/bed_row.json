@@ -1,0 +1,49 @@
+{
+  "antisynergy": "bed_color",
+  "bingo_subs": {
+    "count": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 14,
+          "min_inclusive": 11
+        }
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "count": {
+          "bingo_type": "sub",
+          "id": "count"
+        }
+      },
+      "trigger": "bingo:bed_row"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:purple_bed"
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "bingo.goal.bed_row",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:build",
+    "bingo:color",
+    "bingo:overworld"
+  ]
+}
