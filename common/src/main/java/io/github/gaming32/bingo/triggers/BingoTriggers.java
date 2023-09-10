@@ -19,6 +19,7 @@ public class BingoTriggers {
     public static final PlayerTrigger BOUNCE_ON_BED = register(new PlayerTrigger(new ResourceLocation("bingo:bounce_on_bed")));
     public static final CompleteMapTrigger COMPLETED_MAP = register(new CompleteMapTrigger());
     public static final BeaconEffectTrigger BEACON_EFFECT = register(new BeaconEffectTrigger());
+    public static final TotalCountInventoryChangeTrigger TOTAL_COUNT_INVENTORY_CHANGE = register(new TotalCountInventoryChangeTrigger());
     public static final HasSomeItemsFromTagTrigger HAS_SOME_ITEMS_FROM_TAG = register(new HasSomeItemsFromTagTrigger());
 
     public static void load() {

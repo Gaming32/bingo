@@ -1,4 +1,4 @@
-// 1.20.1	2023-09-09T15:38:52.9324397	Bingo/Tags for minecraft:item
+// 1.20.1	2023-09-10T23:19:37.440688875	Bingo/Tags for minecraft:item
 0b28a6ba79867893f21def1536801e425c5ebdc5 data/bingo/tags/items/allowed_heads.json
 b34799aba76be37a9283c882a547ca27f7339d7e data/bingo/tags/items/armor.json
 ca703260519e0983b55f8c3c1175b660e2698111 data/bingo/tags/items/armor/boots.json
@@ -6,8 +6,8 @@ ca703260519e0983b55f8c3c1175b660e2698111 data/bingo/tags/items/armor/boots.json
 3db5b095fc3baa9455599f250097c1bdb07b1607 data/bingo/tags/items/armor/helmets.json
 a1a5483fd0abefea41b48b86fa6a167ef95450e9 data/bingo/tags/items/armor/leggings.json
 1be7f5e520a75e6ab67d3bea9ee0f8fd47b68a8e data/bingo/tags/items/dyes.json
+3f0dc7aab019d84118a55998558e89ffb21d84e7 data/bingo/tags/items/fish_buckets.json
 67ce7fac1b13a424db9fccd2737e1141578ee3b8 data/bingo/tags/items/fishing_junk.json
 fbf5858464a6de015aab103699b540a1738fd6f4 data/bingo/tags/items/fishing_treasure.json
-3f0dc7aab019d84118a55998558e89ffb21d84e7 data/bingo/tags/items/fish_buckets.json
 d551751fd85e19e4842bc037d7058d4f63be72b3 data/bingo/tags/items/ores.json
 ffbaabd646906684659256eb37b9930eeba23998 data/bingo/tags/items/shields.json

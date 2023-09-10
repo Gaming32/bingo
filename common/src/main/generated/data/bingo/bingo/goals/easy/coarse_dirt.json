@@ -29,7 +29,7 @@
           }
         ]
       },
-      "trigger": "minecraft:inventory_changed"
+      "trigger": "bingo:total_count_inventory_changed"
     }
   },
   "difficulty": 1,

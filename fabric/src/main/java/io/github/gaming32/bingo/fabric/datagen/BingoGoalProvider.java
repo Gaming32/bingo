@@ -152,9 +152,9 @@ public class BingoGoalProvider implements DataProvider {
         goalAdder.accept(BingoGoal.builder(veryEasyId("poppies_dandelions"))
             .sub("poppies_count", BingoSub.random(5, 25))
             .sub("dandelions_count", BingoSub.random(5, 25))
-            .criterion("poppy", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Items.POPPY).withCount(MinMaxBounds.Ints.exactly(0)).build()),
+            .criterion("poppy", TotalCountInventoryChangeTrigger.builder().items(ItemPredicate.Builder.item().of(Items.POPPY).withCount(MinMaxBounds.Ints.exactly(0)).build()).build(),
                 subber -> subber.sub("conditions.items.0.count", "poppies_count"))
-            .criterion("dandelion", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Items.DANDELION).withCount(MinMaxBounds.Ints.exactly(0)).build()),
+            .criterion("dandelion", TotalCountInventoryChangeTrigger.builder().items(ItemPredicate.Builder.item().of(Items.DANDELION).withCount(MinMaxBounds.Ints.exactly(0)).build()).build(),
                 subber -> subber.sub("conditions.items.0.count", "dandelions_count"))
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.and",
@@ -1810,11 +1810,11 @@ public class BingoGoalProvider implements DataProvider {
     private static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemStack icon, ItemPredicate.Builder... items) {
         BingoGoal.Builder builder = BingoGoal.builder(id);
         if (items.length == 1) {
-            builder.criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(items[0].build()));
+            builder.criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(items[0].build()).build());
         } else {
             List<String> requirements = new ArrayList<>(items.length);
             for (int i = 0; i < items.length; i++) {
-                builder.criterion("obtain_" + i, InventoryChangeTrigger.TriggerInstance.hasItems(items[i].build()));
+                builder.criterion("obtain_" + i, TotalCountInventoryChangeTrigger.builder().items(items[i].build()).build());
                 requirements.add("obtain_" + i);
             }
             builder.requirements(requirements);
@@ -1839,14 +1839,14 @@ public class BingoGoalProvider implements DataProvider {
     private static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike icon, ItemPredicate.Builder item, int minCount, int maxCount) {
         if (minCount == maxCount) {
             return BingoGoal.builder(id)
-                .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(item.withCount(MinMaxBounds.Ints.exactly(minCount)).build()))
+                .criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(item.withCount(MinMaxBounds.Ints.exactly(minCount)).build()).build())
                 .tags(BingoTags.ITEM)
                 .icon(new ItemStack(icon, minCount));
         }
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minCount, maxCount))
-            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
-                item.withCount(MinMaxBounds.Ints.atLeast(0)).build()),
+            .criterion("obtain",
+                TotalCountInventoryChangeTrigger.builder().items(item.withCount(MinMaxBounds.Ints.atLeast(0)).build()).build(),
                 subber -> subber.sub("conditions.items.0.count.min", "count"))
             .tags(BingoTags.ITEM)
             .icon(icon, subber -> subber.sub("count", "count"));

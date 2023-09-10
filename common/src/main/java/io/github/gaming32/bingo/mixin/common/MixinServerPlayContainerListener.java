@@ -25,6 +25,7 @@ public class MixinServerPlayContainerListener {
         )
     )
     private void onInventoryChanged(AbstractContainerMenu containerToSend, int dataSlotIndex, ItemStack stack, CallbackInfo ci) {
+        BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGE.trigger(this$0, this$0.getInventory());
         BingoTriggers.HAS_SOME_ITEMS_FROM_TAG.trigger(this$0, this$0.getInventory());
     }
 }
