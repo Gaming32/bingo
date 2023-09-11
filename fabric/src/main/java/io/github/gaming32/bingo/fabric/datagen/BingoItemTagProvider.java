@@ -101,5 +101,13 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(BingoItemTags.ORES)
             .addOptionalTag(new ResourceLocation("forge:ores"))
             .addOptionalTag(new ResourceLocation("c:ores"));
+
+        getOrCreateTagBuilder(BingoItemTags.LIVING_CORAL_BLOCKS).add(
+            Items.TUBE_CORAL_BLOCK,
+            Items.BRAIN_CORAL_BLOCK,
+            Items.BUBBLE_CORAL_BLOCK,
+            Items.FIRE_CORAL_BLOCK,
+            Items.HORN_CORAL_BLOCK
+        );
     }
 }

@@ -1,0 +1,49 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:tube_coral_block"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:brain_coral_block"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:bubble_coral_block"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:fire_coral_block"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:horn_coral_block"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:brain_coral_block"
+  },
+  "name": {
+    "translate": "bingo.goal.coral_blocks"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:rare_biome",
+    "bingo:ocean",
+    "bingo:overworld"
+  ]
+}

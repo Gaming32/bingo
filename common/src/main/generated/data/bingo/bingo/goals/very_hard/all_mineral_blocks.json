@@ -2,7 +2,6 @@
   "criteria": {
     "pillar": {
       "conditions": {
-        "require_all": true,
         "tag": "bingo:all_mineral_blocks"
       },
       "trigger": "bingo:mineral_pillar"

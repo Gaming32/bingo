@@ -1754,7 +1754,17 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .difficulty(4)
             .build());
-        // TODO: 5 types of coral blocks
+        goalAdder.accept(BingoGoal.builder(veryHardId("coral_blocks"))
+            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
+                Items.TUBE_CORAL_BLOCK, Items.BRAIN_CORAL_BLOCK, Items.BUBBLE_CORAL_BLOCK,
+                Items.FIRE_CORAL_BLOCK, Items.HORN_CORAL_BLOCK
+            ))
+            .tags(BingoTags.ITEM, BingoTags.RARE_BIOME, BingoTags.OCEAN, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.coral_blocks"))
+            .icon(Blocks.BRAIN_CORAL_BLOCK)
+            .difficulty(4)
+            .build()
+        );
         goalAdder.accept(obtainItemGoal(veryHardId("blue_ice"), Items.BLUE_ICE, 32, 64)
             .tags(BingoTags.OVERWORLD)
             .difficulty(4)
