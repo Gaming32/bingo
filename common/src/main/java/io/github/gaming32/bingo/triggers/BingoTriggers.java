@@ -23,6 +23,7 @@ public class BingoTriggers {
     public static final HasSomeItemsFromTagTrigger HAS_SOME_ITEMS_FROM_TAG = register(new HasSomeItemsFromTagTrigger());
     public static final BedRowTrigger BED_ROW = register(new BedRowTrigger());
     public static final MineralPillarTrigger MINERAL_PILLAR = register(new MineralPillarTrigger());
+    public static final ItemPickedUpTrigger ITEM_PICKED_UP = register(new ItemPickedUpTrigger());
 
     public static void load() {
     }

@@ -1,0 +1,34 @@
+{
+  "criteria": {
+    "pickup": {
+      "conditions": {
+        "item_entity": {
+          "type_specific": {
+            "type": "bingo:item",
+            "dropped_by": {
+              "type": "minecraft:panda"
+            },
+            "item": {
+              "items": [
+                "minecraft:slime_ball"
+              ]
+            }
+          }
+        }
+      },
+      "trigger": "bingo:item_picked_up"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:slime_ball"
+  },
+  "name": {
+    "translate": "bingo.goal.panda_slime_ball"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}

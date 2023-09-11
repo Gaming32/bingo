@@ -1,0 +1,35 @@
+{
+  "criteria": {
+    "pickup": {
+      "conditions": {
+        "item_entity": {
+          "type_specific": {
+            "type": "bingo:item",
+            "dropped_by": {
+              "type": "minecraft:skeleton"
+            },
+            "item": {
+              "items": [
+                "minecraft:bow"
+              ]
+            }
+          }
+        }
+      },
+      "trigger": "bingo:item_picked_up"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:bow",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "bingo.goal.skeleton_bow"
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:item",
+    "bingo:combat"
+  ]
+}

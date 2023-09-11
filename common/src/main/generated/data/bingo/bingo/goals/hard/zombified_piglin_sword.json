@@ -1,0 +1,36 @@
+{
+  "criteria": {
+    "pickup": {
+      "conditions": {
+        "item_entity": {
+          "type_specific": {
+            "type": "bingo:item",
+            "dropped_by": {
+              "type": "minecraft:zombified_piglin"
+            },
+            "item": {
+              "items": [
+                "minecraft:golden_sword"
+              ]
+            }
+          }
+        }
+      },
+      "trigger": "bingo:item_picked_up"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:golden_sword",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "bingo.goal.zombified_piglin_sword"
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:item",
+    "bingo:combat",
+    "bingo:nether"
+  ]
+}

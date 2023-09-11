@@ -1023,7 +1023,18 @@ public class BingoGoalProvider implements DataProvider {
             .catalyst("wear_armor")
             .difficulty(2)
             .build());
-        // TODO: get a skeleton's bow
+        goalAdder.accept(BingoGoal.builder(mediumId("skeleton_bow"))
+            .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
+                ItemPredicate.Builder.item().of(Items.BOW).build(),
+                EntityPredicate.Builder.entity().of(EntityType.SKELETON).build()
+            ))
+            .reactant("pacifist")
+            .tags(BingoTags.ITEM, BingoTags.COMBAT)
+            .name(Component.translatable("bingo.goal.skeleton_bow"))
+            .icon(Items.BOW)
+            .difficulty(2)
+            .build()
+        );
         goalAdder.accept(obtainItemGoal(mediumId("diamond_block"), Items.DIAMOND_BLOCK)
             .infrequency(2)
             .difficulty(2)
@@ -1268,7 +1279,18 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: max scale map
         // TODO: ignite TNT with lectern
         // TODO: kill hostile mob with berry bush
-        // TODO: get pillager's crossbow
+        goalAdder.accept(BingoGoal.builder(mediumId("pillager_crossbow"))
+            .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
+                ItemPredicate.Builder.item().of(Items.CROSSBOW).build(),
+                EntityPredicate.Builder.entity().of(EntityType.PILLAGER).build()
+            ))
+            .reactant("pacifist")
+            .tags(BingoTags.ITEM, BingoTags.COMBAT, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .name(Component.translatable("bingo.goal.pillager_crossbow"))
+            .icon(Items.CROSSBOW)
+            .difficulty(2)
+            .build()
+        );
         ItemStack ominousBanner = Raid.getLeaderBannerInstance();
         goalAdder.accept(obtainItemGoal(mediumId("ominous_banner"), ominousBanner, ItemPredicate.Builder.item().of(ominousBanner.getItem()).hasNbt(ominousBanner.getTag()))
             .antisynergy("ominous_banner")
@@ -1450,7 +1472,18 @@ public class BingoGoalProvider implements DataProvider {
             .infrequency(2)
             .difficulty(3)
             .build());
-        // TODO: get zombified piglin's sword
+        goalAdder.accept(BingoGoal.builder(hardId("zombified_piglin_sword"))
+            .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
+                ItemPredicate.Builder.item().of(Items.GOLDEN_SWORD).build(),
+                EntityPredicate.Builder.entity().of(EntityType.ZOMBIFIED_PIGLIN).build()
+            ))
+            .reactant("pacifist")
+            .tags(BingoTags.ITEM, BingoTags.COMBAT, BingoTags.NETHER)
+            .name(Component.translatable("bingo.goal.zombified_piglin_sword"))
+            .icon(Items.GOLDEN_SWORD)
+            .difficulty(3)
+            .build()
+        );
         // TODO: finish by launching foreworks of n different colors
         goalAdder.accept(BingoGoal.builder(hardId("nametag_enderman"))
             .criterion("nametag", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
@@ -1811,7 +1844,18 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.NETHER, BingoTags.COMBAT)
             .difficulty(4)
             .build());
-        // TODO: get slime ball from panda
+        goalAdder.accept(BingoGoal.builder(veryHardId("panda_slime_ball"))
+            // Currently untested. They have a 1/175,000 or a 1/2,100,000 chance to drop one on a tick.
+            .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
+                ItemPredicate.Builder.item().of(Items.SLIME_BALL).build(),
+                EntityPredicate.Builder.entity().of(EntityType.PANDA).build()
+            ))
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .name(Component.translatable("bingo.goal.panda_slime_ball"))
+            .icon(Items.SLIME_BALL)
+            .difficulty(4)
+            .build()
+        );
         goalAdder.accept(obtainItemGoal(veryHardId("netherite_block"), Items.NETHERITE_BLOCK, 2, 2)
             .tags(BingoTags.NETHER)
             .difficulty(4)

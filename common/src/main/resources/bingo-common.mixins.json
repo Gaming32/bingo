@@ -15,6 +15,8 @@
     "MixinCommandSourceStack",
     "MixinEnchantmentMenu",
     "MixinEntity",
+    "MixinEntitySubPredicate_Types",
+    "MixinItemEntity",
     "MixinItemStack",
     "MixinLivingEntity",
     "MixinMapItem",
