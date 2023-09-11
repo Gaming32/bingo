@@ -3,9 +3,10 @@ package io.github.gaming32.bingo.fabric.datagen;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
-import io.github.gaming32.bingo.data.BingoItemTags;
 import io.github.gaming32.bingo.data.BingoSub;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.tags.BingoBlockTags;
+import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
 import io.github.gaming32.bingo.triggers.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -35,6 +36,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -1128,7 +1130,13 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: power redstone lamp
         // TODO: different flowers
         // TODO: put zombified piglin in water
-        // TODO: place an iron, gold, diamond block on top of each other
+        goalAdder.accept(mineralPillarGoal(mediumId("basic_mineral_blocks"), BingoBlockTags.BASIC_MINERAL_BLOCKS)
+            .name(Component.translatable("bingo.goal.basic_mineral_blocks"))
+            .difficulty(2)
+            .tags(BingoTags.OVERWORLD)
+            .icon(Blocks.DIAMOND_BLOCK)
+            .build()
+        );
         // TODO: kill hostile mob with anvil
         goalAdder.accept(obtainLevelsGoal(mediumId("levels"), 16, 26)
             .infrequency(2)
@@ -1725,7 +1733,14 @@ public class BingoGoalProvider implements DataProvider {
             .icon(PotionUtils.setPotion(new ItemStack(Items.TIPPED_ARROW), Potions.MUNDANE), subber -> subber.sub("count", "count"))
             .difficulty(4)
             .build());
-        // TODO: place one of each mineral block on top of each other
+        goalAdder.accept(mineralPillarGoal(veryHardId("all_mineral_blocks"), BingoBlockTags.ALL_MINERAL_BLOCKS)
+            .name(Component.translatable("bingo.goal.all_mineral_blocks"))
+            .tooltip(Component.translatable("bingo.goal.all_mineral_blocks.tooltip"))
+            .difficulty(4)
+            .tags(BingoTags.OVERWORLD, BingoTags.NETHER)
+            .icon(Blocks.NETHERITE_BLOCK)
+            .build()
+        );
         goalAdder.accept(BingoGoal.builder(veryHardId("sleep_in_mansion"))
             .criterion("sleep", new PlayerTrigger.TriggerInstance(
                 CriteriaTriggers.SLEPT_IN_BED.getId(),
@@ -1953,6 +1968,12 @@ public class BingoGoalProvider implements DataProvider {
             .infrequency(4)
             .icon(Items.PURPLE_BED, subber -> subber.sub("count", "count"))
             .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
+    }
+
+    private static BingoGoal.Builder mineralPillarGoal(ResourceLocation id, TagKey<Block> tag) {
+        return BingoGoal.builder(id)
+            .criterion("pillar", MineralPillarTrigger.TriggerInstance.pillar(tag))
+            .tags(BingoTags.BUILD);
     }
 
     private static ItemStack makeItemWithGlint(ItemLike item) {

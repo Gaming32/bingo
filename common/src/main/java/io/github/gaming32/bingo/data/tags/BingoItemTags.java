@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.data;
+package io.github.gaming32.bingo.data.tags;
 
 import io.github.gaming32.bingo.Bingo;
 import net.minecraft.core.registries.Registries;

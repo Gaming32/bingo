@@ -6,9 +6,11 @@
   "mixins": [
     "DisplayInfoAccessor",
     "ItemPredicateAccessor",
+    "MixinAxeItem",
     "MixinBasePressurePlateBlock",
     "MixinBeaconBlockEntity",
     "MixinBedBlock",
+    "MixinBlockItem",
     "MixinButtonBlock",
     "MixinCommandSourceStack",
     "MixinEnchantmentMenu",

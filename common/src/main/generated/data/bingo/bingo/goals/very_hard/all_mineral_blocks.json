@@ -1,0 +1,26 @@
+{
+  "criteria": {
+    "pillar": {
+      "conditions": {
+        "require_all": true,
+        "tag": "bingo:all_mineral_blocks"
+      },
+      "trigger": "bingo:mineral_pillar"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:netherite_block"
+  },
+  "name": {
+    "translate": "bingo.goal.all_mineral_blocks"
+  },
+  "tags": [
+    "bingo:build",
+    "bingo:overworld",
+    "bingo:nether"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.all_mineral_blocks.tooltip"
+  }
+}

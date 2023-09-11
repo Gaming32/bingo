@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "pillar": {
+      "conditions": {
+        "require_all": true,
+        "tag": "bingo:basic_mineral_blocks"
+      },
+      "trigger": "bingo:mineral_pillar"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:diamond_block"
+  },
+  "name": {
+    "translate": "bingo.goal.basic_mineral_blocks"
+  },
+  "tags": [
+    "bingo:build",
+    "bingo:overworld"
+  ]
+}

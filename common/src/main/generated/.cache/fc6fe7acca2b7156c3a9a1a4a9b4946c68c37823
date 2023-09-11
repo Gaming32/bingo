@@ -152,6 +152,7 @@ a8a8f84e5ab41da826923b79b96bb42aba0ed27d data/bingo/bingo/goals/hard/tame_parrot
 3755fc982ad8c35788a5d7fa5b1567b959cb8906 data/bingo/bingo/goals/hard/turtle_helmet.json
 d2dd416dbf753bdda138c4064e90e14690b27266 data/bingo/bingo/goals/hard/wither_skeleton_skull.json
 59b43f10fa7971fdcd58f945b738d839b336af41 data/bingo/bingo/goals/medium/bamboo.json
+504e64e9bad07e661be3fb030ee091f6d5b18e52 data/bingo/bingo/goals/medium/basic_mineral_blocks.json
 de04e73af461088bcc1f2dcbf17117f25ba796dc data/bingo/bingo/goals/medium/bed_row.json
 ad4781234e06f2663ceb04a6d7d846a199521f7d data/bingo/bingo/goals/medium/beetroot_soup.json
 715de2ffc70144510f8c5cf1ab758184f3542314 data/bingo/bingo/goals/medium/blaze_rod.json
@@ -298,6 +299,7 @@ a5bf489787d892a79febd77aa4e501c92069f133 data/bingo/bingo/goals/very_easy/water_
 69cdc4390d73223f53d27f1ab62a322176d23e8c data/bingo/bingo/goals/very_hard/all_chestplates.json
 d1e1d4cdfc07739b23627bc977b5ad63502eec1d data/bingo/bingo/goals/very_hard/all_diamond_craftables.json
 4c2339d5182ab9ce70ed5b0dc19c74aa4a8c8bea data/bingo/bingo/goals/very_hard/all_dyes.json
+a0b7a39471c3f20cbd302abbfc8243bc9e36aeba data/bingo/bingo/goals/very_hard/all_mineral_blocks.json
 c1ea16e33cbdd23c58cbfd295451e981039311fd data/bingo/bingo/goals/very_hard/any_head.json
 8ded1b3cc89f55e253c0a4126042a6d5cb86917b data/bingo/bingo/goals/very_hard/beacon_regen.json
 b7e90c72e4233dfe86d448d5738020d38a574506 data/bingo/bingo/goals/very_hard/bed_row.json

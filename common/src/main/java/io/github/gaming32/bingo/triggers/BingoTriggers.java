@@ -22,6 +22,7 @@ public class BingoTriggers {
     public static final TotalCountInventoryChangeTrigger TOTAL_COUNT_INVENTORY_CHANGE = register(new TotalCountInventoryChangeTrigger());
     public static final HasSomeItemsFromTagTrigger HAS_SOME_ITEMS_FROM_TAG = register(new HasSomeItemsFromTagTrigger());
     public static final BedRowTrigger BED_ROW = register(new BedRowTrigger());
+    public static final MineralPillarTrigger MINERAL_PILLAR = register(new MineralPillarTrigger());
 
     public static void load() {
     }
