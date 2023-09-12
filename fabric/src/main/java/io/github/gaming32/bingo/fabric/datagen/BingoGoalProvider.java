@@ -1896,7 +1896,7 @@ public class BingoGoalProvider implements DataProvider {
             .criterion("party", PartyParrotsTrigger.TriggerInstance.partyParrots())
             .name(Component.translatable("bingo.goal.party_parrots"))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
-            .icon(Items.MUSIC_DISC_WARD)
+            .icon(Items.MUSIC_DISC_CAT)
             .difficulty(4)
             .build()
         );

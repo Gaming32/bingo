@@ -10,6 +10,7 @@ import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.ClientGoal;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -127,6 +128,9 @@ public class BingoClient {
             final ClientGoal goal = clientBoard.getGoal(slotIdX, slotIdY);
             final List<Component> lines = new ArrayList<>(3);
             lines.add(goal.name());
+            if (minecraft.options.advancedItemTooltips) {
+                lines.add(Component.literal(goal.id().toString()).withStyle(ChatFormatting.DARK_GRAY));
+            }
             if (goal.tooltip() != null) {
                 lines.add(CommonComponents.EMPTY);
                 lines.add(goal.tooltip());

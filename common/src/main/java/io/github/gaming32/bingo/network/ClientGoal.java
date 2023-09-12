@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public record ClientGoal(
+    ResourceLocation id, // Used for advanced tooltips
     Component name,
     @Nullable Component tooltip,
     @Nullable ResourceLocation tooltipIcon,
@@ -18,6 +19,7 @@ public record ClientGoal(
 ) {
     public ClientGoal(ActiveGoal goal) {
         this(
+            goal.getGoal().getId(),
             goal.getName(),
             goal.getTooltip(),
             goal.getGoal().getTooltipIcon(),
@@ -28,6 +30,7 @@ public record ClientGoal(
 
     public ClientGoal(FriendlyByteBuf buf) {
         this(
+            buf.readResourceLocation(),
             buf.readComponent(),
             buf.readNullable(FriendlyByteBuf::readComponent),
             buf.readNullable(FriendlyByteBuf::readResourceLocation),
@@ -37,6 +40,7 @@ public record ClientGoal(
     }
 
     public void serialize(FriendlyByteBuf buf) {
+        buf.writeResourceLocation(id);
         buf.writeComponent(name);
         buf.writeNullable(tooltip, FriendlyByteBuf::writeComponent);
         buf.writeNullable(tooltipIcon, FriendlyByteBuf::writeResourceLocation);
