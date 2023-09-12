@@ -2,19 +2,25 @@
   "criteria": {
     "pickup": {
       "conditions": {
-        "item_entity": {
-          "type_specific": {
-            "type": "bingo:item",
-            "dropped_by": {
-              "type": "minecraft:zombified_piglin"
-            },
-            "item": {
-              "items": [
-                "minecraft:golden_sword"
-              ]
+        "item_entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "bingo:item",
+                "dropped_by": {
+                  "type": "minecraft:zombified_piglin"
+                },
+                "item": {
+                  "items": [
+                    "minecraft:golden_sword"
+                  ]
+                }
+              }
             }
           }
-        }
+        ]
       },
       "trigger": "bingo:item_picked_up"
     }

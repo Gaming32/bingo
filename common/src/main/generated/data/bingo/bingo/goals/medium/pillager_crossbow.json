@@ -2,19 +2,25 @@
   "criteria": {
     "pickup": {
       "conditions": {
-        "item_entity": {
-          "type_specific": {
-            "type": "bingo:item",
-            "dropped_by": {
-              "type": "minecraft:pillager"
-            },
-            "item": {
-              "items": [
-                "minecraft:crossbow"
-              ]
+        "item_entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "bingo:item",
+                "dropped_by": {
+                  "type": "minecraft:pillager"
+                },
+                "item": {
+                  "items": [
+                    "minecraft:crossbow"
+                  ]
+                }
+              }
             }
           }
-        }
+        ]
       },
       "trigger": "bingo:item_picked_up"
     }
