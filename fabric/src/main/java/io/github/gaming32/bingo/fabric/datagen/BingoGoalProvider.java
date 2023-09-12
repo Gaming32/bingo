@@ -1862,6 +1862,26 @@ public class BingoGoalProvider implements DataProvider {
             .build());
         // TODO: full netherite armor and tools
         // TODO: convert pig into zombified piglin
+        goalAdder.accept(BingoGoal.builder(veryHardId("zombify_pig"))
+            .criterion("channel", ZombifyPigTrigger.zombifyPig()
+                .direct(true)
+                .build()
+            )
+            .criterion("nearby", ZombifyPigTrigger.zombifyPig()
+                .pig(EntityPredicate.Builder.entity()
+                    .distance(DistancePredicate.absolute(MinMaxBounds.Doubles.atMost(16)))
+                    .build()
+                )
+                .direct(false)
+                .build()
+            )
+            .requirements(List.of("channel", "nearby"))
+            .name(Component.translatable("bingo.goal.zombify_pig"))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .icon(Items.COOKED_PORKCHOP)
+            .difficulty(4)
+            .build()
+        );
         goalAdder.accept(obtainItemGoal(veryHardId("trident"), Items.TRIDENT)
             .tags(BingoTags.OCEAN, BingoTags.COMBAT, BingoTags.OVERWORLD)
             .difficulty(4)

@@ -1,0 +1,46 @@
+{
+  "criteria": {
+    "channel": {
+      "conditions": {
+        "direct": true
+      },
+      "trigger": "bingo:zombify_pig"
+    },
+    "nearby": {
+      "conditions": {
+        "direct": false,
+        "pig": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "distance": {
+                "absolute": {
+                  "max": 16.0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "bingo:zombify_pig"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:cooked_porkchop"
+  },
+  "name": {
+    "translate": "bingo.goal.zombify_pig"
+  },
+  "requirements": [
+    [
+      "channel",
+      "nearby"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

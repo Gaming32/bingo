@@ -24,6 +24,7 @@ public class BingoTriggers {
     public static final BedRowTrigger BED_ROW = register(new BedRowTrigger());
     public static final MineralPillarTrigger MINERAL_PILLAR = register(new MineralPillarTrigger());
     public static final ItemPickedUpTrigger ITEM_PICKED_UP = register(new ItemPickedUpTrigger());
+    public static final ZombifyPigTrigger ZOMBIFY_PIG = register(new ZombifyPigTrigger());
 
     public static void load() {
     }
