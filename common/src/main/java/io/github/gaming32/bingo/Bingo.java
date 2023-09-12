@@ -17,6 +17,7 @@ import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
+import dev.architectury.registry.registries.RegistrarManager;
 import dev.architectury.utils.Env;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.conditions.BingoConditions;
@@ -70,6 +71,8 @@ import static net.minecraft.commands.Commands.literal;
 public class Bingo {
     public static final String MOD_ID = "bingo";
     public static final Logger LOGGER = LogUtils.getLogger();
+
+    public static final RegistrarManager REGISTRAR_MANAGER = RegistrarManager.get(MOD_ID);
 
     public static boolean showOtherTeam;
     public static BingoGameMode gameMode = BingoGameMode.STANDARD;

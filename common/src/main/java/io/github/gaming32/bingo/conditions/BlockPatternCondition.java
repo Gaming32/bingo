@@ -19,12 +19,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class BlockPatternCondition implements LootItemCondition {
@@ -61,7 +56,7 @@ public class BlockPatternCondition implements LootItemCondition {
     @Override
     @NotNull
     public LootItemConditionType getType() {
-        return BingoConditions.BLOCK_PATTERN;
+        return BingoConditions.BLOCK_PATTERN.get();
     }
 
     @Override

@@ -1,23 +1,28 @@
 package io.github.gaming32.bingo.conditions;
 
+import dev.architectury.registry.registries.Registrar;
+import dev.architectury.registry.registries.RegistrySupplier;
 import io.github.gaming32.bingo.Bingo;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.Serializer;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
+import java.util.function.Supplier;
+
 public final class BingoConditions {
     private BingoConditions() {
     }
 
-    public static final LootItemConditionType BLOCK_PATTERN = register("block_pattern", new BlockPatternCondition.Serializer());
+    private static final Registrar<LootItemConditionType> REGISTRAR = Bingo.REGISTRAR_MANAGER.get(Registries.LOOT_CONDITION_TYPE);
+
+    public static final RegistrySupplier<LootItemConditionType> BLOCK_PATTERN = register("block_pattern", BlockPatternCondition.Serializer::new);
 
     public static void load() {
     }
 
-    private static LootItemConditionType register(String registryName, Serializer<? extends LootItemCondition> serializer) {
-        return Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, new ResourceLocation(Bingo.MOD_ID, registryName), new LootItemConditionType(serializer));
+    private static RegistrySupplier<LootItemConditionType> register(String registryName, Supplier<Serializer<? extends LootItemCondition>> serializer) {
+        return REGISTRAR.register(new ResourceLocation(Bingo.MOD_ID, registryName), () -> new LootItemConditionType(serializer.get()));
     }
 }
