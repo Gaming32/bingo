@@ -1,0 +1,20 @@
+{
+  "criteria": {
+    "party": {
+      "conditions": {},
+      "trigger": "bingo:party_parrots"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:music_disc_ward"
+  },
+  "name": {
+    "translate": "bingo.goal.party_parrots"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}

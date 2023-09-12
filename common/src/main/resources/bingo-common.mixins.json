@@ -24,6 +24,7 @@
     "MixinPlayer",
     "MixinPlayerPredicate",
     "MixinPlayerPredicate_Builder",
+    "MixinRecordItem",
     "MixinServerPlayContainerListener",
     "MixinServerPlayer",
     "MixinServerScoreboard",

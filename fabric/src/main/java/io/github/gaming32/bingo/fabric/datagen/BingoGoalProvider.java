@@ -1861,7 +1861,6 @@ public class BingoGoalProvider implements DataProvider {
             .difficulty(4)
             .build());
         // TODO: full netherite armor and tools
-        // TODO: convert pig into zombified piglin
         goalAdder.accept(BingoGoal.builder(veryHardId("zombify_pig"))
             .criterion("channel", ZombifyPigTrigger.zombifyPig()
                 .direct(true)
@@ -1893,7 +1892,14 @@ public class BingoGoalProvider implements DataProvider {
             .icon(Items.SKELETON_HORSE_SPAWN_EGG)
             .difficulty(4)
             .build());
-        // TODO: all parrots dance
+        goalAdder.accept(BingoGoal.builder(veryHardId("party_parrots"))
+            .criterion("party", PartyParrotsTrigger.TriggerInstance.partyParrots())
+            .name(Component.translatable("bingo.goal.party_parrots"))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .icon(Items.MUSIC_DISC_WARD)
+            .difficulty(4)
+            .build()
+        );
         goalAdder.accept(bedRowGoal(veryHardId("bed_row"), 16, 16)
             .reactant("use_furnace")
             .antisynergy("every_color")

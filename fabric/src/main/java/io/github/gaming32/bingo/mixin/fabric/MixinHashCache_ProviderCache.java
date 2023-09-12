@@ -34,7 +34,8 @@ public class MixinHashCache_ProviderCache {
         method = "save",
         at = @At(
             value = "INVOKE",
-            target = "Lcom/google/common/collect/ImmutableMap;entrySet()Lcom/google/common/collect/ImmutableSet;"
+            target = "Lcom/google/common/collect/ImmutableMap;entrySet()Lcom/google/common/collect/ImmutableSet;",
+            remap = false
         )
     )
     private ImmutableSet<Map.Entry<Path, HashCode>> standardizeOrder(
