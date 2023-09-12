@@ -4,9 +4,11 @@
   "package": "io.github.gaming32.bingo.mixin.fabric",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinHashCache_ProviderCache"
+    "MixinHashCache_ProviderCache",
+    "brigadier.MixinCommandContext"
   ],
   "client": [
+    "client.MixinClientTooltipComponent"
   ],
   "injectors": {
     "defaultRequire": 1

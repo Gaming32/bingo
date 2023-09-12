@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.mixin.common.client;
+package io.github.gaming32.bingo.mixin.fabric.client;
 
 import io.github.gaming32.bingo.client.ClientIconTooltip;
 import io.github.gaming32.bingo.client.IconTooltip;

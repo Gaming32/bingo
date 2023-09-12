@@ -29,11 +29,9 @@
     "MixinServerPlayer",
     "MixinServerScoreboard",
     "PlayerAdvancementsAccessor",
-    "StatsCounterAccessor",
-    "brigadier.MixinCommandContext"
+    "StatsCounterAccessor"
   ],
   "client": [
-    "client.MixinClientTooltipComponent",
     "client.MixinGui"
   ],
   "injectors": {

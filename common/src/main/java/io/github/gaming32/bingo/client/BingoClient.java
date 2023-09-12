@@ -6,6 +6,7 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.client.recipeviewer.RecipeViewerPlugin;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.ClientGoal;
 import net.fabricmc.api.EnvType;
@@ -38,6 +39,8 @@ public class BingoClient {
     public static BingoBoard.Teams clientTeam = BingoBoard.Teams.NONE;
     public static ClientBoard clientBoard;
 
+    private static RecipeViewerPlugin recipeViewerPlugin;
+
     public static void init() {
         ClientGuiEvent.RENDER_HUD.register((graphics, tickDelta) -> {
             if (clientBoard == null) return;
@@ -54,6 +57,7 @@ public class BingoClient {
             clientBoard = null;
         });
 
+        // TODO: Maybe figure out warning on Forge? Priority: Low
         final KeyMapping boardKey = new KeyMapping("bingo.key.board", InputConstants.KEY_B, "bingo.key.category");
         KeyMappingRegistry.register(boardKey);
         ClientTickEvent.CLIENT_PRE.register(instance -> {
@@ -63,6 +67,13 @@ public class BingoClient {
                 }
             }
         });
+    }
+
+    public static RecipeViewerPlugin getRecipeViewerPlugin() {
+        if (recipeViewerPlugin == null) {
+            recipeViewerPlugin = RecipeViewerPlugin.detect();
+        }
+        return recipeViewerPlugin;
     }
 
     public static void renderBingo(GuiGraphics graphics, boolean mouseHover, float x, float y, float scale) {
@@ -140,6 +151,13 @@ public class BingoClient {
                 Optional.ofNullable(goal.tooltipIcon()).map(IconTooltip::new),
                 (int)mouseX, (int)mouseY
             );
+
+            final RecipeViewerPlugin plugin = getRecipeViewerPlugin();
+            if (plugin.isViewRecipe(minecraft)) {
+                plugin.showRecipe(goal.icon());
+            } else if (plugin.isViewUsages(minecraft)) {
+                plugin.showUsages(goal.icon());
+            }
         }
     }
 }

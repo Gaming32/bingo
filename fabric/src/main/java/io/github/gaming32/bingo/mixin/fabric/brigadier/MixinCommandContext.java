@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.mixin.common.brigadier;
+package io.github.gaming32.bingo.mixin.fabric.brigadier;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedArgument;

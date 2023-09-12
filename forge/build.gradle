@@ -7,13 +7,6 @@ architectury {
     forge()
 }
 
-loom {
-    forge {
-        mixinConfig "bingo-common.mixins.json"
-        mixinConfig "bingo.mixins.json"
-    }
-}
-
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
@@ -32,6 +25,8 @@ dependencies {
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-rc.2"))
     implementation(include("io.github.llamalad7:mixinextras-forge:0.2.0-rc.2"))
+
+    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-forge:12.0.652")
 }
 
 processResources {
@@ -82,5 +77,12 @@ publishing {
     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
         // Add repositories to publish to here.
+    }
+}
+
+loom {
+    forge {
+        mixinConfig "bingo-common.mixins.json"
+        mixinConfig "bingo.mixins.json"
     }
 }

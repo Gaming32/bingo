@@ -5,8 +5,10 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.CompoundEventResult;
@@ -303,7 +305,7 @@ public class Bingo {
 
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
         for (int i = 1; i <= 32; i++) {
-            if (!((CommandContextExt)context).bingo$hasArg("team" + i)) break;
+            if (!hasArg(context, "team" + i)) break;
             if (!teams.add(TeamArgument.getTeam(context, "team" + i))) {
                 // Should probably be a CommandSyntaxException?
                 throw new CommandRuntimeException(Component.translatable("bingo.duplicate_teams"));
@@ -363,7 +365,7 @@ public class Bingo {
 
         while (!toVisit.isEmpty()) {
             final CommandContext<CommandSourceStack> check = toVisit.remove();
-            if (((CommandContextExt)check).bingo$hasArg(arg)) {
+            if (hasArg(check, arg)) {
                 return argGetter.apply(check, arg);
             }
             if (context.getSource() instanceof CommandSourceStackExt ext) {
@@ -380,5 +382,17 @@ public class Bingo {
 
     public static void updateCommandTree(PlayerList playerList) {
         playerList.getPlayers().forEach(playerList.getServer().getCommands()::sendCommands);
+    }
+
+    public static boolean hasArg(CommandContext<?> context, String name) {
+        if (context instanceof CommandContextExt ext) { // false on Forge
+            return ext.bingo$hasArg(name);
+        }
+        for (final ParsedCommandNode<?> node : context.getNodes()) {
+            if (node.getNode() instanceof ArgumentCommandNode<?, ?> argument && argument.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
