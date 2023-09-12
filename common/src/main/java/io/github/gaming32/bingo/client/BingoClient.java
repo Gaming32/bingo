@@ -1,8 +1,10 @@
 package io.github.gaming32.bingo.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
+import dev.architectury.event.events.client.ClientScreenInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import io.github.gaming32.bingo.Bingo;
@@ -47,9 +49,29 @@ public class BingoClient {
             final Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.options.renderDebug || minecraft.screen instanceof BoardScreen) return;
             final float scale = boardScale;
-            final float x = boardCorner.getX(graphics, scale);
-            final float y = boardCorner.getY(graphics, scale);
+            final float x = boardCorner.getX(graphics.guiWidth(), scale);
+            final float y = boardCorner.getY(graphics.guiHeight(), scale);
             renderBingo(graphics, minecraft.screen instanceof ChatScreen, x, y, scale);
+        });
+
+        ClientScreenInputEvent.KEY_RELEASED_PRE.register((client, screen, keyCode, scanCode, modifiers) -> {
+            if (clientBoard == null || !(screen instanceof ChatScreen)) {
+                return EventResult.pass();
+            }
+            final float scale = boardScale;
+            final float x = boardCorner.getX(client.getWindow().getGuiScaledWidth(), scale);
+            final float y = boardCorner.getY(client.getWindow().getGuiScaledHeight(), scale);
+            return detectPress(keyCode, scanCode, x, y, scale) ? EventResult.interruptTrue() : EventResult.pass();
+        });
+
+        ClientScreenInputEvent.MOUSE_RELEASED_PRE.register((client, screen, mouseX, mouseY, button) -> {
+            if (clientBoard == null || !(screen instanceof ChatScreen)) {
+                return EventResult.pass();
+            }
+            final float scale = boardScale;
+            final float x = boardCorner.getX(client.getWindow().getGuiScaledWidth(), scale);
+            final float y = boardCorner.getY(client.getWindow().getGuiScaledHeight(), scale);
+            return detectClick(button, x, y, scale) ? EventResult.interruptTrue() : EventResult.pass();
         });
 
         ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> {
@@ -87,23 +109,7 @@ public class BingoClient {
         graphics.pose().scale(scale, scale, 1);
         graphics.pose().translate(x, y, 0);
 
-        double mouseX = 0;
-        double mouseY = 0;
-        int slotIdX = -1;
-        int slotIdY = -1;
-        if (mouseHover) {
-            mouseX = minecraft.mouseHandler.xpos() * minecraft.getWindow().getGuiScaledWidth() / minecraft.getWindow().getScreenWidth();
-            mouseY = minecraft.mouseHandler.ypos() * minecraft.getWindow().getGuiScaledHeight() / minecraft.getWindow().getScreenHeight();
-            final double relX = (mouseX - x / scale) * scale;
-            final double relY = (mouseY - y / scale) * scale;
-            final double slotIdXD = (relX - 7) / 18;
-            final double slotIdYD = (relY - 17) / 18;
-
-            if (slotIdXD >= 0 && slotIdXD < 5 && slotIdYD >= 0 && slotIdYD < 5) {
-                slotIdX = (int)((relX - 7) / 18);
-                slotIdY = (int)((relY - 17) / 18);
-            }
-        }
+        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, x, y, scale) : null;
 
         graphics.blit(BOARD_TEXTURE, 0, 0, 0, 0, 128, 128, 128, 128);
         graphics.drawString(minecraft.font, BOARD_TITLE, 8, 6, 0x404040, false);
@@ -125,18 +131,18 @@ public class BingoClient {
             }
         }
 
-        if (slotIdX != -1) {
+        if (BingoMousePos.hasSlotPos(mousePos)) {
             graphics.pose().pushPose();
             graphics.pose().translate(0f, 0f, 200f);
-            final int slotX = slotIdX * 18 + 8;
-            final int slotY = slotIdY * 18 + 18;
+            final int slotX = mousePos.slotIdX() * 18 + 8;
+            final int slotY = mousePos.slotIdY() * 18 + 18;
             graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0x80ffffff);
             graphics.pose().popPose();
         }
 
         graphics.pose().popPose();
-        if (slotIdX != -1) {
-            final ClientGoal goal = clientBoard.getGoal(slotIdX, slotIdY);
+        if (BingoMousePos.hasSlotPos(mousePos)) {
+            final ClientGoal goal = clientBoard.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
             final List<Component> lines = new ArrayList<>(3);
             lines.add(goal.name());
             if (minecraft.options.advancedItemTooltips) {
@@ -149,15 +155,40 @@ public class BingoClient {
             graphics.renderTooltip(
                 minecraft.font, lines,
                 Optional.ofNullable(goal.tooltipIcon()).map(IconTooltip::new),
-                (int)mouseX, (int)mouseY
+                (int)mousePos.mouseX(), (int)mousePos.mouseY()
             );
-
-            final RecipeViewerPlugin plugin = getRecipeViewerPlugin();
-            if (plugin.isViewRecipe(minecraft)) {
-                plugin.showRecipe(goal.icon());
-            } else if (plugin.isViewUsages(minecraft)) {
-                plugin.showUsages(goal.icon());
-            }
         }
+    }
+
+    public static boolean detectClick(int button, float x, float y, float scale) {
+        return detectClickOrPress(InputConstants.Type.MOUSE.getOrCreate(button), x, y, scale);
+    }
+
+    public static boolean detectPress(int keyCode, int scanCode, float x, float y, float scale) {
+        return detectClickOrPress(InputConstants.getKey(keyCode, scanCode), x, y, scale);
+    }
+
+    public static boolean detectClickOrPress(InputConstants.Key key, float x, float y, float scale) {
+        if (clientBoard == null) {
+            return false;
+        }
+
+        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), x, y, scale);
+        if (!mousePos.hasSlotPos()) {
+            return false;
+        }
+
+        final ClientGoal goal = clientBoard.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
+
+        final RecipeViewerPlugin plugin = getRecipeViewerPlugin();
+        if (plugin.isViewRecipe(key)) {
+            plugin.showRecipe(goal.icon());
+            return true;
+        }
+        if (plugin.isViewUsages(key)) {
+            plugin.showUsages(goal.icon());
+            return true;
+        }
+        return false;
     }
 }

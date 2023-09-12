@@ -1,16 +1,16 @@
 package io.github.gaming32.bingo.client.recipeviewer;
 
-import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.world.item.ItemStack;
 
 public class NoPlugin extends RecipeViewerPlugin {
     @Override
-    public boolean isViewRecipe(Minecraft minecraft) {
+    public boolean isViewRecipe(InputConstants.Key key) {
         return false;
     }
 
     @Override
-    public boolean isViewUsages(Minecraft minecraft) {
+    public boolean isViewUsages(InputConstants.Key key) {
         return false;
     }
 

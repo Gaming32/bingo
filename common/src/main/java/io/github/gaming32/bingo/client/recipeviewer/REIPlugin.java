@@ -5,29 +5,27 @@ import me.shedaniel.clothconfig2.api.ModifierKeyCode;
 import me.shedaniel.rei.api.client.config.ConfigObject;
 import me.shedaniel.rei.api.client.view.ViewSearchBuilder;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 
 public class REIPlugin extends RecipeViewerPlugin {
+
     @Override
-    public boolean isViewRecipe(Minecraft minecraft) {
-        return isPressed(ConfigObject.getInstance().getRecipeKeybind(), 0);
+    public boolean isViewRecipe(InputConstants.Key key) {
+        return isKey(ConfigObject.getInstance().getRecipeKeybind(), key, InputConstants.MOUSE_BUTTON_LEFT);
     }
 
     @Override
-    public boolean isViewUsages(Minecraft minecraft) {
-        return isPressed(ConfigObject.getInstance().getUsageKeybind(), 1);
+    public boolean isViewUsages(InputConstants.Key key) {
+        return isKey(ConfigObject.getInstance().getUsageKeybind(), key, InputConstants.MOUSE_BUTTON_RIGHT);
     }
 
-    private boolean isPressed(ModifierKeyCode key, int mouseOverride) {
-        if (key.matchesCurrentMouse() || key.matchesCurrentKey()) {
-            return true;
-        }
-        if (key.getType() == InputConstants.Type.MOUSE) {
-            return false;
-        }
-        return GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), mouseOverride) == GLFW.GLFW_PRESS;
+    private boolean isKey(ModifierKeyCode reiKey, InputConstants.Key mcKey, int mouseOverride) {
+        return switch (mcKey.getType()) {
+            case KEYSYM -> reiKey.matchesKey(mcKey.getValue(), -1);
+            case SCANCODE -> reiKey.matchesKey(-1, mcKey.getValue());
+            case MOUSE -> reiKey.matchesMouse(mcKey.getValue()) ||
+                (reiKey.getType() != InputConstants.Type.MOUSE && mcKey.getValue() == mouseOverride);
+        };
     }
 
     @Override

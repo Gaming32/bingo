@@ -41,6 +41,10 @@ dependencies {
 //    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:12.0.652") {
 //        exclude(module: "fabric-api")
 //    }
+
+//    modRuntimeOnly("mezz.jei:jei-1.20.1-fabric:15.2.0.27") {
+//        exclude(module: "fabric-api")
+//    }
 }
 
 processResources {

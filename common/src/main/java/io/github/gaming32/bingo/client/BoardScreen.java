@@ -20,6 +20,32 @@ public class BoardScreen extends Screen {
     }
 
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (BingoClient.detectPress(
+            keyCode, scanCode,
+            width / 2f - BingoClient.BOARD_WIDTH / 2f,
+            height / 2f - BingoClient.BOARD_HEIGHT / 2f,
+            1f
+        )) {
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (BingoClient.detectClick(
+            button,
+            width / 2f - BingoClient.BOARD_WIDTH / 2f,
+            height / 2f - BingoClient.BOARD_HEIGHT / 2f,
+            1f
+        )) {
+            return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
     public void tick() {
         if (BingoClient.clientBoard == null && minecraft != null) {
             minecraft.setScreen(null);

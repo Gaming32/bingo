@@ -20,6 +20,9 @@
     ],
     "fabric-datagen": [
       "io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric"
+    ],
+    "jei_mod_plugin": [
+      "io.github.gaming32.bingo.client.recipeviewer.jei.BingoJeiPlugin"
     ]
   },
   "mixins": [
