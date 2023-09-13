@@ -22,10 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
+import net.minecraft.tags.*;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -1112,7 +1109,19 @@ public class BingoGoalProvider implements DataProvider {
 
         // TODO: finish by jumping from top to bottom of world
         // TODO: vegetarian
-        // TODO: kill self with arrow
+        goalAdder.accept(BingoGoal.builder(mediumId("kill_self_with_arrow"))
+            .criterion("kill", KillSelfTrigger.TriggerInstance.killSelf(
+                DamageSourcePredicate.Builder.damageType()
+                    .tag(TagPredicate.is(DamageTypeTags.IS_PROJECTILE))
+                    .direct(EntityPredicate.Builder.entity().of(EntityTypeTags.ARROWS))
+                    .build()
+            ))
+            .tags(BingoTags.ACTION)
+            .name(Component.translatable("bingo.goal.kill_self_with_arrow"))
+            .icon(Items.ARROW)
+            .difficulty(3)
+            .build()
+        );
         // TODO: get a whilst trying to escape death
         // TODO: finish on top of the world
         // TODO: kill hostile mob with gravel

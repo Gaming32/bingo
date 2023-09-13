@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "killing_blow": {
+          "direct_entity": {
+            "type": "#minecraft:arrows"
+          },
+          "tags": [
+            {
+              "expected": true,
+              "id": "minecraft:is_projectile"
+            }
+          ]
+        }
+      },
+      "trigger": "bingo:kill_self"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:arrow"
+  },
+  "name": {
+    "translate": "bingo.goal.kill_self_with_arrow"
+  },
+  "tags": [
+    "bingo:action"
+  ]
+}

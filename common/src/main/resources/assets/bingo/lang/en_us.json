@@ -95,6 +95,7 @@
   "bingo.goal.different_potions.tooltip": "Splash, Lingering, Enhanced and Extended variants DON'T count!",
   "bingo.goal.skull_banner_pattern": "%s %s",
   "bingo.goal.carrot_stick_to_rod": "Convert a %s into a %s",
+  "bingo.goal.kill_self_with_arrow": "Kill yourself with your own arrow",
   "bingo.start.failed": "An unexpected error occurred while generating the board. Please try a different seed.",
   "bingo.start.invalid_goal": "An invalid goal was selected while generating. Please check the logs and fix the issue with your datapack.",
   "bingo.started": "A bingo game has started with %s difficulty!",
