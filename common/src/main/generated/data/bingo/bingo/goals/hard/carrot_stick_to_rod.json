@@ -1,0 +1,34 @@
+{
+  "criteria": {
+    "break": {
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:carrot_on_a_stick"
+          ]
+        }
+      },
+      "trigger": "bingo:item_broken"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:carrot_on_a_stick",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "bingo.goal.carrot_stick_to_rod",
+    "with": [
+      {
+        "translate": "item.minecraft.carrot_on_a_stick"
+      },
+      {
+        "translate": "item.minecraft.fishing_rod"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

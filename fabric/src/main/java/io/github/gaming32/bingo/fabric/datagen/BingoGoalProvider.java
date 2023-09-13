@@ -1698,7 +1698,18 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: throw huge nether fungus in overworld
         // TODO: 32-64 dirt, netherrack and end stone
         // TODO: tame a mule
-        // TODO: convert carrot on a stick to fishing rod
+        goalAdder.accept(BingoGoal.builder(hardId("carrot_stick_to_rod"))
+            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(ItemPredicate.Builder.item().of(Items.CARROT_ON_A_STICK)))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name(Component.translatable(
+                "bingo.goal.carrot_stick_to_rod",
+                Items.CARROT_ON_A_STICK.getDescription(),
+                Items.FISHING_ROD.getDescription()
+            ))
+            .icon(Items.CARROT_ON_A_STICK)
+            .difficulty(3)
+            .build()
+        );
         goalAdder.accept(obtainItemGoal(hardId("skull_banner_pattern"), Items.SKULL_BANNER_PATTERN)
             .tags(BingoTags.NETHER, BingoTags.COMBAT, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name(Component.translatable(

@@ -118,6 +118,7 @@ b30a81e4c4228460ab48d5ede5d954c00f6076a1 data/bingo/bingo/goals/easy/water_lava_
 907c64dea9bea38f548718374c3bb09269efaac6 data/bingo/bingo/goals/easy/yellow_dye.json
 c177d185aba57fc7e80a8b0ecc63093189582da5 data/bingo/bingo/goals/hard/6x6scaffolding.json
 7199727a78b94bd4b8bac2dc95be1856fc444abb data/bingo/bingo/goals/hard/bed_row.json
+8c9d1e897e4f2b13c3375529b61351a854f95804 data/bingo/bingo/goals/hard/carrot_stick_to_rod.json
 b11078405f190ec12fd0dc3e9bb38dd4b5845d9e data/bingo/bingo/goals/hard/complete_full_size_map.json
 15da9b014a9a859e726ee2efeaa8c60b4464ec27 data/bingo/bingo/goals/hard/conduit.json
 e2e2f674bbbe1a2ad5456db6c729dfee2180b6d5 data/bingo/bingo/goals/hard/cookie.json
