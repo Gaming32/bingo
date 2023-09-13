@@ -26,8 +26,8 @@
     "MixinPlayerPredicate",
     "MixinPlayerPredicate_Builder",
     "MixinRecordItem",
-    "MixinServerPlayContainerListener",
     "MixinServerPlayer",
+    "MixinServerPlayer_2",
     "MixinServerScoreboard",
     "PlayerAdvancementsAccessor",
     "StatsCounterAccessor"

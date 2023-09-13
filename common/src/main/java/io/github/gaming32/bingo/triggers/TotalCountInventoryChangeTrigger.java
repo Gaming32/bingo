@@ -4,13 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.mixin.common.ItemPredicateAccessor;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.SerializationContext;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
@@ -77,7 +71,8 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
         public boolean matches(Inventory inventory) {
             int[] counts = new int[items.length];
 
-            for (ItemStack item : inventory.items) {
+            for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
+                final ItemStack item = inventory.getItem(i);
                 if (item.isEmpty()) {
                     continue;
                 }

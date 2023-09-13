@@ -1075,7 +1075,7 @@ public class BingoGoalProvider implements DataProvider {
         goalAdder.accept(potionGoal("healing_potion", Potions.HEALING, Potions.STRONG_HEALING)
             .tags(BingoTags.OVERWORLD, BingoTags.COMBAT)
             .build());
-        goalAdder.accept(potionGoal("posion_potion", Potions.POISON, Potions.LONG_POISON, Potions.STRONG_POISON)
+        goalAdder.accept(potionGoal("poison_potion", Potions.POISON, Potions.LONG_POISON, Potions.STRONG_POISON)
             .tags(BingoTags.OVERWORLD, BingoTags.COMBAT)
             .build());
         goalAdder.accept(potionGoal("harming_potion", Potions.HARMING, Potions.STRONG_HARMING)
@@ -1712,7 +1712,26 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.OVERWORLD)
             .difficulty(4)
             .build());
-        // TODO: different potions
+        goalAdder.accept(BingoGoal.builder(veryHardId("different_potions"))
+            .sub("count", BingoSub.random(12, 15))
+            .criterion("potions",
+                DifferentPotionsTrigger.TriggerInstance.differentPotions(0),
+                subber -> subber.sub("conditions.min_count", "count")
+            )
+            .tags(BingoTags.ITEM, BingoTags.NETHER, BingoTags.COMBAT, BingoTags.OVERWORLD)
+            .reactant("pacifist")
+            .name(
+                Component.translatable("bingo.goal.different_potions", 0),
+                subber -> subber.sub("with.0", "count")
+            )
+            .tooltip(Component.translatable("bingo.goal.different_potions.tooltip"))
+            .icon(
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.MUNDANE),
+                subber -> subber.sub("count", "count")
+            )
+            .difficulty(4)
+            .build()
+        );
         goalAdder.accept(BingoGoal.builder(veryHardId("all_chestplates"))
             .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
                 Items.LEATHER_CHESTPLATE, Items.GOLDEN_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE,

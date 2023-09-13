@@ -17,9 +17,9 @@ public class TemplateTrigger extends SimpleCriterionTrigger<TemplateTrigger.Trig
 
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
         return new TriggerInstance(
-            predicate
+            player
         );
     }
 
@@ -28,8 +28,8 @@ public class TemplateTrigger extends SimpleCriterionTrigger<TemplateTrigger.Trig
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        public TriggerInstance(ContextAwarePredicate predicate) {
-            super(ID, predicate);
+        public TriggerInstance(ContextAwarePredicate player) {
+            super(ID, player);
         }
 
         @NotNull

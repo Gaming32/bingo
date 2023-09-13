@@ -198,7 +198,7 @@ f6416cd3c6e37a617f3d99584894a6fb86ca354e data/bingo/bingo/goals/medium/never_wea
 981a0192adba5d00ad224167fc295964adbbb6ca data/bingo/bingo/goals/medium/ominous_banner.json
 bb22d129f3b98826b4aac4bf15100ed51652c531 data/bingo/bingo/goals/medium/phantom_membrane.json
 7d872307617e4b7c0da29ab417e5700a0b8ae040 data/bingo/bingo/goals/medium/pillager_crossbow.json
-efea85a50c379b5ebedbdcb6f6956f0361023c6b data/bingo/bingo/goals/medium/posion_potion.json
+ba206c381f5fe9419e54b4d655c7b6fa5c5501a4 data/bingo/bingo/goals/medium/poison_potion.json
 0cd77f038f12809a3a396723d38619a44c8a6f28 data/bingo/bingo/goals/medium/potted_cactus.json
 e0d48a18a9cb9ab5029d1eca3e97db42d7fb4f69 data/bingo/bingo/goals/medium/prismarine_crystals.json
 903d9ae143c4581dac8554b41d88e91b1f26a302 data/bingo/bingo/goals/medium/quartz_block.json
@@ -310,6 +310,7 @@ b7e90c72e4233dfe86d448d5738020d38a574506 data/bingo/bingo/goals/very_hard/bed_ro
 1a8ed2e48a87167097f29b20d628217fd5975843 data/bingo/bingo/goals/very_hard/complete_full_size_end_map.json
 a8c1223316a8583a1221b9c1c4e8293bfffcd181 data/bingo/bingo/goals/very_hard/coral_blocks.json
 12d5fd026080d2d59b8920ebf5c17188bf84c029 data/bingo/bingo/goals/very_hard/diamond_block.json
+1083ec53d85c145fc43b3f1389b961364986aa7b data/bingo/bingo/goals/very_hard/different_potions.json
 29a0d5e544ca575afb6612411b50a1abe7fa23e0 data/bingo/bingo/goals/very_hard/full_netherite_armor_and_tools.json
 461bdfef27c3caa426428ee5421621dd790317ad data/bingo/bingo/goals/very_hard/full_power_conduit.json
 1e6024f31b4d574720f55c9dedd3275a07415bec data/bingo/bingo/goals/very_hard/levels.json

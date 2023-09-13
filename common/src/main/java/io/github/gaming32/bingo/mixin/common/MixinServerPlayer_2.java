@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(targets = "net.minecraft.server.level.ServerPlayer$2")
-public class MixinServerPlayContainerListener {
+public class MixinServerPlayer_2 {
     @Shadow(aliases = {"field_29183", "f_143458_"}, remap = false)
     @Final
     private ServerPlayer this$0;
@@ -27,5 +27,6 @@ public class MixinServerPlayContainerListener {
     private void onInventoryChanged(AbstractContainerMenu containerToSend, int dataSlotIndex, ItemStack stack, CallbackInfo ci) {
         BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGE.trigger(this$0, this$0.getInventory());
         BingoTriggers.HAS_SOME_ITEMS_FROM_TAG.trigger(this$0, this$0.getInventory());
+        BingoTriggers.DIFFERENT_POTIONS.trigger(this$0, this$0.getInventory());
     }
 }

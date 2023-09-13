@@ -27,6 +27,7 @@ public class BingoTriggers {
     public static final ZombifyPigTrigger ZOMBIFY_PIG = register(new ZombifyPigTrigger());
     public static final PartyParrotsTrigger PARTY_PARROTS = register(new PartyParrotsTrigger());
     public static final PowerConduitTrigger POWER_CONDUIT = register(new PowerConduitTrigger());
+    public static final DifferentPotionsTrigger DIFFERENT_POTIONS = register(new DifferentPotionsTrigger());
 
     public static void load() {
     }

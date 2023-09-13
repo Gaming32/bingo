@@ -63,7 +63,8 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
 
         public boolean matches(Inventory inventory) {
             Set<Item> foundItems = Sets.newIdentityHashSet();
-            for (ItemStack item : inventory.items) {
+            for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
+                final ItemStack item = inventory.getItem(i);
                 if (item.is(tag) && foundItems.add(item.getItem()) && foundItems.size() >= requiredCount) {
                     return true;
                 }

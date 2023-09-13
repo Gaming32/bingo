@@ -1,5 +1,5 @@
 {
-  "antisynergy": "posion_potion",
+  "antisynergy": "poison_potion",
   "criteria": {
     "obtain_0": {
       "conditions": {

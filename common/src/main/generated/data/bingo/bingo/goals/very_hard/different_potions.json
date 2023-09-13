@@ -1,0 +1,53 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 15,
+          "min_inclusive": 12
+        }
+      }
+    }
+  },
+  "criteria": {
+    "potions": {
+      "conditions": {
+        "min_count": {
+          "bingo_type": "sub",
+          "id": "count"
+        }
+      },
+      "trigger": "bingo:different_potions"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:potion",
+    "nbt": "{Potion:\"minecraft:mundane\"}"
+  },
+  "name": {
+    "translate": "bingo.goal.different_potions",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      }
+    ]
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:combat",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.different_potions.tooltip"
+  }
+}
