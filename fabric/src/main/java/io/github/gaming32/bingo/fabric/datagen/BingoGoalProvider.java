@@ -19,6 +19,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
@@ -39,6 +40,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatterns;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -1695,7 +1699,17 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: 32-64 dirt, netherrack and end stone
         // TODO: tame a mule
         // TODO: convert carrot on a stick to fishing rod
-        // TODO: skull charge banner pattern
+        goalAdder.accept(obtainItemGoal(hardId("skull_banner_pattern"), Items.SKULL_BANNER_PATTERN)
+            .tags(BingoTags.NETHER, BingoTags.COMBAT, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .name(Component.translatable(
+                "bingo.goal.skull_banner_pattern",
+                Component.translatable("item.minecraft.skull_banner_pattern.desc"),
+                Component.translatable("item.minecraft.skull_banner_pattern")
+            ))
+            .icon(makeBannerWithPattern(Items.WHITE_BANNER, BannerPatterns.SKULL, DyeColor.BLACK))
+            .difficulty(3)
+            .build()
+        );
         goalAdder.accept(obtainItemGoal(hardId("turtle_helmet"), Items.TURTLE_HELMET)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD)
             .difficulty(3)
@@ -2096,6 +2110,14 @@ public class BingoGoalProvider implements DataProvider {
         ListTag enchantments = new ListTag();
         enchantments.add(new CompoundTag());
         result.getOrCreateTag().put("Enchantments", enchantments);
+        return result;
+    }
+
+    private static ItemStack makeBannerWithPattern(Item base, ResourceKey<BannerPattern> pattern, DyeColor color) {
+        final ItemStack result = new ItemStack(base);
+        final CompoundTag compound = new CompoundTag();
+        compound.put("Patterns", new BannerPattern.Builder().addPattern(pattern, color).toListTag());
+        BlockItem.setBlockEntityData(result, BlockEntityType.BANNER, compound);
         return result;
     }
 }

@@ -1,0 +1,40 @@
+{
+  "antisynergy": "skull_banner_pattern",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:skull_banner_pattern"
+            ]
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:white_banner",
+    "nbt": "{BlockEntityTag:{Patterns:[{Color:15,Pattern:\"sku\"}],id:\"minecraft:banner\"}}"
+  },
+  "name": {
+    "translate": "bingo.goal.skull_banner_pattern",
+    "with": [
+      {
+        "translate": "item.minecraft.skull_banner_pattern.desc"
+      },
+      {
+        "translate": "item.minecraft.skull_banner_pattern"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:combat",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}
