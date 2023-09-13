@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "power": {
+      "conditions": {
+        "level": 6
+      },
+      "trigger": "bingo:power_conduit"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:conduit"
+  },
+  "name": {
+    "translate": "bingo.goal.full_power_conduit"
+  },
+  "tags": [
+    "bingo:build",
+    "bingo:ocean",
+    "bingo:overworld"
+  ]
+}

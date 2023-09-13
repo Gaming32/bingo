@@ -1802,7 +1802,14 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.OVERWORLD)
             .difficulty(4)
             .build());
-        // TODO: fully power conduit
+        goalAdder.accept(BingoGoal.builder(veryHardId("full_power_conduit"))
+            .criterion("power", PowerConduitTrigger.TriggerInstance.powerConduit(MinMaxBounds.Ints.exactly(6)))
+            .tags(BingoTags.BUILD, BingoTags.OCEAN, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.full_power_conduit"))
+            .icon(Blocks.CONDUIT)
+            .difficulty(4)
+            .build()
+        );
         goalAdder.accept(BingoGoal.builder(veryHardId("all_diamond_craftables"))
             .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
                 Items.DIAMOND_BLOCK, Items.DIAMOND_AXE, Items.DIAMOND_BOOTS,

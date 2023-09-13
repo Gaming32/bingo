@@ -13,6 +13,7 @@
     "MixinBlockItem",
     "MixinButtonBlock",
     "MixinCommandSourceStack",
+    "MixinConduitBlockEntity",
     "MixinEnchantmentMenu",
     "MixinEntity",
     "MixinEntitySubPredicate_Types",
