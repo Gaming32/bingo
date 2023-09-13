@@ -1860,7 +1860,16 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.NETHER)
             .difficulty(4)
             .build());
-        // TODO: full netherite armor and tools
+        goalAdder.accept(BingoGoal.builder(veryHardId("full_netherite_armor_and_tools"))
+            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
+                Items.NETHERITE_BOOTS, Items.NETHERITE_LEGGINGS, Items.NETHERITE_CHESTPLATE, Items.NETHERITE_HELMET,
+                Items.NETHERITE_SWORD, Items.NETHERITE_SHOVEL, Items.NETHERITE_PICKAXE, Items.NETHERITE_AXE, Items.NETHERITE_HOE
+            ))
+            .tags(BingoTags.ITEM, BingoTags.NETHER)
+            .name(Component.translatable("bingo.goal.full_netherite_armor_and_tools"))
+            .icon(Items.NETHERITE_HOE)
+            .difficulty(4)
+            .build());
         goalAdder.accept(BingoGoal.builder(veryHardId("zombify_pig"))
             .criterion("channel", ZombifyPigTrigger.zombifyPig()
                 .direct(true)

@@ -7,7 +7,7 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:music_disc_ward"
+    "item": "minecraft:music_disc_cat"
   },
   "name": {
     "translate": "bingo.goal.party_parrots"

@@ -1,0 +1,68 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:netherite_boots"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:netherite_leggings"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:netherite_chestplate"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:netherite_helmet"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:netherite_sword"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:netherite_shovel"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:netherite_pickaxe"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:netherite_axe"
+            ]
+          },
+          {
+            "items": [
+              "minecraft:netherite_hoe"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:netherite_hoe",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "bingo.goal.full_netherite_armor_and_tools"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:nether"
+  ]
+}
