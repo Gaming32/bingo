@@ -45,6 +45,11 @@ dependencies {
 //    modRuntimeOnly("mezz.jei:jei-1.20.1-fabric:15.2.0.27") {
 //        exclude(module: "fabric-api")
 //    }
+
+//    modRuntimeOnly("dev.emi:emi-fabric:1.0.19+1.20.1") {
+//        exclude(module: "fabric-api")
+//    }
+//    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api-deprecated:${rootProject.fabric_api_version}") // Required by EMI
 }
 
 processResources {

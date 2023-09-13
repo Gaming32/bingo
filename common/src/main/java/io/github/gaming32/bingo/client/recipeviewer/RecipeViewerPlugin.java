@@ -7,6 +7,9 @@ import net.minecraft.world.item.ItemStack;
 
 public abstract class RecipeViewerPlugin {
     public static RecipeViewerPlugin detect() {
+        if (Platform.isModLoaded("emi")) {
+            return new EMIPlugin();
+        }
         if (Platform.isModLoaded("jei")) {
             return new JEIPlugin();
         }
