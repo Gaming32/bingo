@@ -4,8 +4,11 @@ import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 import java.util.concurrent.CompletableFuture;
@@ -113,5 +116,14 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         // The vanilla flower tag contains weird stuff like cherry leaves that bees are attracted to, but they are not flowers
         getOrCreateTagBuilder(BingoItemTags.FLOWERS).forceAddTag(ItemTags.SMALL_FLOWERS).forceAddTag(ItemTags.TALL_FLOWERS);
+
+        var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
+        var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);
+        for (DyeColor dyeColor : DyeColor.values()) {
+            Item glazedTerracotta = BuiltInRegistries.ITEM.get(new ResourceLocation(dyeColor.getName() + "_glazed_terracotta"));
+            glazedTerracottaBuilder.add(glazedTerracotta);
+            Item concrete = BuiltInRegistries.ITEM.get(new ResourceLocation(dyeColor.getName() + "_concrete"));
+            concreteBuilder.add(concrete);
+        }
     }
 }

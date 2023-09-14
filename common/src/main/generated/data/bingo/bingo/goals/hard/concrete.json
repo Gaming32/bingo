@@ -1,0 +1,50 @@
+{
+  "antisynergy": "concrete_color",
+  "bingo_subs": {
+    "count": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 14,
+          "min_inclusive": 12
+        }
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": {
+          "bingo_type": "sub",
+          "id": "count"
+        },
+        "tag": "bingo:concrete"
+      },
+      "trigger": "bingo:has_some_items_from_tag"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:purple_concrete"
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "bingo.goal.concrete",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:color",
+    "bingo:overworld"
+  ]
+}

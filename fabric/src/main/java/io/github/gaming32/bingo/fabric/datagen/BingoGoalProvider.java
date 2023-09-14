@@ -10,6 +10,7 @@ import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
 import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.util.BlockPattern;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
@@ -44,6 +45,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -1114,10 +1116,24 @@ public class BingoGoalProvider implements DataProvider {
             .name(Component.translatable("bingo.goal.nametag_enderman"))
             .icon(Items.NAME_TAG));
         // TODO: finish on top of blaze spawner
-        // TODO: colors of wool
-        // TODO: colors of terracotta
-        // TODO: colors of glazed terracotta
-        // TODO: colors of concrete
+        goalAdder.accept(obtainSomeItemsFromTag(id("wool"), Items.PURPLE_WOOL, ItemTags.WOOL, "bingo.goal.wool", 12, 14)
+            .antisynergy("wool_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
+        goalAdder.accept(obtainSomeItemsFromTag(id("terracotta"), Items.PURPLE_TERRACOTTA, ItemTags.TERRACOTTA, "bingo.goal.terracotta", 12, 14)
+            .reactant("use_furnace")
+            .antisynergy("terracotta_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
+        goalAdder.accept(obtainSomeItemsFromTag(id("glazed_terracotta"), Items.PURPLE_GLAZED_TERRACOTTA, BingoItemTags.GLAZED_TERRACOTTA, "bingo.goal.glazed_terracotta", 11, 14)
+            .reactant("use_furnace")
+            .antisynergy("glazed_terracotta_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
+        goalAdder.accept(obtainSomeItemsFromTag(id("concrete"), Items.PURPLE_CONCRETE, BingoItemTags.CONCRETE, "bingo.goal.concrete", 12, 14)
+            .antisynergy("concrete_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         goalAdder.accept(bedRowGoal(id("bed_row"), 11, 14));
         goalAdder.accept(BingoGoal.builder(id("poison_parrot"))
             .criterion("poison", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
@@ -1134,7 +1150,17 @@ public class BingoGoalProvider implements DataProvider {
             .name(Component.translatable("bingo.goal.tame_parrot"))
             .icon(Items.PARROT_SPAWN_EGG)
             .infrequency(2));
-        // TODO: ice block on top of magma block
+        goalAdder.accept(BingoGoal.builder(id("ice_on_magma"))
+            .criterion("obtain", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
+                AnyOfCondition.anyOf(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.ICE),
+                    LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.MAGMA_BLOCK)),
+                BlockPatternCondition.builder().aisle("i", "m")
+                    .where('i', BlockPredicate.Builder.block().of(Blocks.ICE).build())
+                    .where('m', BlockPredicate.Builder.block().of(Blocks.MAGMA_BLOCK).build())
+                    .rotations(BlockPattern.Rotations.NONE)))
+            .tags(BingoTags.ITEM, BingoTags.BUILD, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.ice_on_magma"))
+            .icon(Items.BASALT));
         goalAdder.accept(obtainLevelsGoal(id("levels"), 27, 37));
         // TODO: build an ice cube
         // TODO: finish on top of stairway to heaven
@@ -1259,7 +1285,11 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: never smelt with furnaces
         // TODO: throw huge nether fungus in overworld
         // TODO: 32-64 dirt, netherrack and end stone
-        // TODO: tame a mule
+        goalAdder.accept(BingoGoal.builder(id("tame_mule"))
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.MULE).build()))
+            .name(Component.translatable("bingo.goal.tame_mule"))
+            .icon(Items.MULE_SPAWN_EGG)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
         goalAdder.accept(BingoGoal.builder(id("carrot_stick_to_rod"))
             .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(ItemPredicate.Builder.item().of(Items.CARROT_ON_A_STICK)))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
