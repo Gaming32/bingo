@@ -1,6 +1,9 @@
 package io.github.gaming32.bingo.mixin.common;
 
 import io.github.gaming32.bingo.ext.ItemEntityExt;
+import io.github.gaming32.bingo.triggers.BingoTriggers;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -44,5 +47,17 @@ public abstract class MixinEntity {
         if (cir.getReturnValue() instanceof ItemEntityExt itemEntity) {
             itemEntity.bingo$setDroppedBy((Entity)(Object)this);
         }
+    }
+
+    @Inject(
+        method = "awardKillScore",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/advancements/critereon/KilledTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;)V",
+            shift = At.Shift.AFTER
+        )
+    )
+    private void customTrigger(Entity killed, int scoreValue, DamageSource source, CallbackInfo ci) {
+        BingoTriggers.ENTITY_KILLED_PLAYER.trigger((ServerPlayer)killed, (Entity)(Object)this, source);
     }
 }

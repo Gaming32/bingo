@@ -30,6 +30,7 @@ public class BingoTriggers {
     public static final DifferentPotionsTrigger DIFFERENT_POTIONS = register(new DifferentPotionsTrigger());
     public static final KillSelfTrigger KILL_SELF = register(new KillSelfTrigger());
     public static final EntityDieNearPlayerTrigger ENTITY_DIE_NEAR_PLAYER = register(new EntityDieNearPlayerTrigger());
+    public static final EntityKilledPlayerTrigger ENTITY_KILLED_PLAYER = register(new EntityKilledPlayerTrigger());
 
     public static void load() {
     }

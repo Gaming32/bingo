@@ -44,10 +44,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -98,15 +95,19 @@ public class BingoGoalProvider implements DataProvider {
         difficulty = 0;
         prefix = "very_easy/";
         addVeryEasyGoals(goalAdder);
+
         difficulty = 1;
         prefix = "easy/";
         addEasyGoals(goalAdder);
+
         difficulty = 2;
         prefix = "medium/";
         addMediumGoals(goalAdder);
+
         difficulty = 3;
         prefix = "hard/";
         addHardGoals(goalAdder);
+
         difficulty = 4;
         prefix = "very_hard/";
         addVeryHardGoals(goalAdder);
@@ -797,7 +798,24 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.ACTION)
             .name(Component.translatable("bingo.goal.kill_self_with_arrow"))
             .icon(Items.ARROW));
-        // TODO: get a whilst trying to escape death
+        goalAdder.accept(BingoGoal.builder(id("whilst_trying_to_escape"))
+            .criterion("die", new EntityKilledPlayerTrigger.TriggerInstance(
+                ContextAwarePredicate.ANY,
+                ContextAwarePredicate.ANY,
+                ContextAwarePredicate.ANY,
+                ContextAwarePredicate.create(
+                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.ANY).build(),
+                    InvertedLootItemCondition.invert(LootItemEntityPropertyCondition.hasProperties(
+                        LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().build()
+                    )).build()
+                ),
+                DamageSourcePredicate.ANY
+            ))
+            .tags(BingoTags.ACTION)
+            .name(Component.translatable("bingo.goal.whilst_trying_to_escape"))
+            .tooltip(Component.translatable("bingo.goal.whilst_trying_to_escape.tooltip"))
+            .icon(Items.ZOMBIE_HEAD)
+        );
         // TODO: finish on top of the world
         // TODO: kill hostile mob with gravel
         // TODO: kill hostile mob with sand
