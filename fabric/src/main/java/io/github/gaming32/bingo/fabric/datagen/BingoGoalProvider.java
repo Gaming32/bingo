@@ -1072,7 +1072,10 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.ITEM)
             .name(Component.translatable("bingo.goal.listen_to_music"))
             .icon(Items.JUKEBOX));
-        // TODO: different flowers
+        goalAdder.accept(obtainSomeItemsFromTag(id("flowers"), Items.AZURE_BLUET, BingoItemTags.FLOWERS, "bingo.goal.flowers", 11, 14)
+            .antisynergy("flowers")
+            .infrequency(3)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
         goalAdder.accept(obtainItemGoal(id("diamond_block"), Items.DIAMOND_BLOCK, 2, 4)
             .infrequency(2));
         goalAdder.accept(BingoGoal.builder(id("zombified_piglin_sword"))
