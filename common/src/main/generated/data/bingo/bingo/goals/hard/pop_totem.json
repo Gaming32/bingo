@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "totem": {
+      "conditions": {
+        "item": {
+          "items": [
+            "minecraft:totem_of_undying"
+          ]
+        }
+      },
+      "trigger": "minecraft:used_totem"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:totem_of_undying"
+  },
+  "name": {
+    "translate": "bingo.goal.pop_totem"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

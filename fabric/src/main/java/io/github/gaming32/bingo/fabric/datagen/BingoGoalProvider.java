@@ -1238,7 +1238,11 @@ public class BingoGoalProvider implements DataProvider {
             .icon(Items.FILLED_MAP)
             .antisynergy("complete_map"));
         // TODO: be killed by a villager
-        // TODO: pop a totem
+        goalAdder.accept(BingoGoal.builder(id("pop_totem"))
+            .criterion("totem", UsedTotemTrigger.TriggerInstance.usedTotem(Items.TOTEM_OF_UNDYING))
+            .name(Component.translatable("bingo.goal.pop_totem"))
+            .icon(Items.TOTEM_OF_UNDYING)
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD));
         // TODO: every type of sword
         // TODO: every type of pickaxe
         goalAdder.accept(BingoGoal.builder(id("pacifist"))
