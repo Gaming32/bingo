@@ -1,0 +1,132 @@
+{
+  "bingo_subs": {
+    "depth": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 4,
+          "min_inclusive": 2
+        }
+      }
+    },
+    "height": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 4,
+          "min_inclusive": 2
+        }
+      }
+    },
+    "width": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 4,
+          "min_inclusive": 2
+        }
+      }
+    }
+  },
+  "criteria": {
+    "cube": {
+      "conditions": {
+        "location": [
+          {
+            "aisles": {
+              "bingo_type": "compound",
+              "element_type": "array",
+              "factors": [
+                {
+                  "type": "wrap",
+                  "value": [
+                    {
+                      "bingo_type": "compound",
+                      "element_type": "array",
+                      "factors": [
+                        {
+                          "type": "wrap",
+                          "value": [
+                            {
+                              "bingo_type": "compound",
+                              "element_type": "string",
+                              "factors": [
+                                {
+                                  "type": "wrap",
+                                  "value": "#"
+                                },
+                                {
+                                  "type": "sub",
+                                  "id": "width"
+                                }
+                              ],
+                              "operator": "mul"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "sub",
+                          "id": "height"
+                        }
+                      ],
+                      "operator": "mul"
+                    }
+                  ]
+                },
+                {
+                  "type": "sub",
+                  "id": "depth"
+                }
+              ],
+              "operator": "mul"
+            },
+            "condition": "bingo:block_pattern",
+            "rotations": "all",
+            "where": {
+              "#": {
+                "block": {
+                  "tag": "minecraft:leaves"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "item": "minecraft:oak_leaves"
+  },
+  "name": {
+    "translate": "bingo.goal.cube",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "width"
+      },
+      {
+        "bingo_type": "sub",
+        "id": "height"
+      },
+      {
+        "bingo_type": "sub",
+        "id": "depth"
+      },
+      {
+        "translate": "bingo.goal.cube.leaf"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:build",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.cube.tooltip"
+  }
+}

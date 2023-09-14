@@ -45,7 +45,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -171,7 +170,7 @@ public class BingoGoalProvider implements DataProvider {
         goalAdder.accept(obtainItemGoal(id("leaves"), Items.OAK_LEAVES, ItemPredicate.Builder.item().of(ItemTags.LEAVES), 32, 64)
             .name(Component.translatable("bingo.goal.leaves"))
             .tags(BingoTags.OVERWORLD));
-        // TODO: leaf cube
+        goalAdder.accept(blockCubeGoal(id("leaf_cube"), Blocks.OAK_LEAVES, BlockTags.LEAVES, Component.translatable("bingo.goal.cube.leaf")));
         // TODO: colors of wool
         goalAdder.accept(obtainItemGoal(id("snowball"), Items.SNOWBALL, 8, 16)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
@@ -1162,7 +1161,7 @@ public class BingoGoalProvider implements DataProvider {
             .name(Component.translatable("bingo.goal.ice_on_magma"))
             .icon(Items.BASALT));
         goalAdder.accept(obtainLevelsGoal(id("levels"), 27, 37));
-        // TODO: build an ice cube
+        goalAdder.accept(blockCubeGoal(id("ice_cube"), Blocks.ICE, BlockTags.ICE, Blocks.ICE.getName()));
         // TODO: finish on top of stairway to heaven
         // TODO: get ghast into overworld
         goalAdder.accept(obtainItemGoal(id("enchanted_golden_apple"), Items.ENCHANTED_GOLDEN_APPLE));
@@ -1643,6 +1642,48 @@ public class BingoGoalProvider implements DataProvider {
         return BingoGoal.builder(id)
             .criterion("pillar", MineralPillarTrigger.TriggerInstance.pillar(tag))
             .tags(BingoTags.BUILD);
+    }
+
+    private static BingoGoal.Builder blockCubeGoal(ResourceLocation id, Block icon, TagKey<Block> tag, Component tagName) {
+        return BingoGoal.builder(id)
+            .sub("width", BingoSub.random(2, 4))
+            .sub("height", BingoSub.random(2, 4))
+            .sub("depth", BingoSub.random(2, 4))
+            .criterion("cube",
+                ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
+//                    LootItemBlockStatePropertyCondition.hasBlockStateProperties()
+                    BlockPatternCondition.builder().aisle("#")
+                        .where('#', BlockPredicate.Builder.block().of(tag).build())
+                        .rotations(BlockPattern.Rotations.ALL)
+                ),
+                subber -> subber.sub("conditions.location.0.aisles", new BingoSub.CompoundBingoSub(
+                    BingoSub.CompoundBingoSub.ElementType.ARRAY,
+                    BingoSub.CompoundBingoSub.Operator.MUL,
+                    BingoSub.wrapInArray(
+                        new BingoSub.CompoundBingoSub(
+                            BingoSub.CompoundBingoSub.ElementType.ARRAY,
+                            BingoSub.CompoundBingoSub.Operator.MUL,
+                            BingoSub.wrapInArray(
+                                new BingoSub.CompoundBingoSub(
+                                    BingoSub.CompoundBingoSub.ElementType.STRING,
+                                    BingoSub.CompoundBingoSub.Operator.MUL,
+                                    BingoSub.literal("#"),
+                                    new BingoSub.SubBingoSub("width")
+                                )
+                            ),
+                            new BingoSub.SubBingoSub("height")
+                        )
+                    ),
+                    new BingoSub.SubBingoSub("depth")
+                ))
+            )
+            .tags(BingoTags.BUILD, BingoTags.OVERWORLD)
+            .name(
+                Component.translatable("bingo.goal.cube", 0, 0, 0, tagName),
+                subber -> subber.sub("with.0", "width").sub("with.1", "height").sub("with.2", "depth")
+            )
+            .tooltip(Component.translatable("bingo.goal.cube.tooltip"))
+            .icon(icon);
     }
 
     private static ItemStack makeItemWithGlint(ItemLike item) {
