@@ -187,7 +187,7 @@ f25b23fed00c0e5d01910bf9c38a028a2f267d95 data/bingo/bingo/goals/medium/honey_blo
 f73f01bb2d5d61fc0b8e7038f7a8eeb0dd0dba18 data/bingo/bingo/goals/medium/ink_sac.json
 2360cbda9894f5c880b8c3a71ca5843ef83578b0 data/bingo/bingo/goals/medium/iron_block.json
 b50c7692e7fd6a697cfbc775583a369b8d7fe87d data/bingo/bingo/goals/medium/item_frame.json
-357ac5eb278625eed0603b1369e61b53924721d0 data/bingo/bingo/goals/medium/kill_self_with_arrow.json
+109e0b29321d36cf5075ef43d7a445aa0186fe2a data/bingo/bingo/goals/medium/kill_self_with_arrow.json
 8d3c77688659e8b7562d064c7a6e7ed8a524e64a data/bingo/bingo/goals/medium/lapis_block.json
 ee13ab9a198e5931ad550d79fccde476acef0c54 data/bingo/bingo/goals/medium/leaping_potion.json
 03e834fff06d2bc646d9ce0c02f6a350c1d91b06 data/bingo/bingo/goals/medium/levels.json
@@ -212,7 +212,7 @@ b7261787cbb6062f0ba64535587ab093d00b4a55 data/bingo/bingo/goals/medium/red_nethe
 3307b7e97785e99edcae73e52effd67cf1c5b0e7 data/bingo/bingo/goals/medium/saddle.json
 9c41ac464354e32a0fbc7eae702ec5100845e0a6 data/bingo/bingo/goals/medium/scute.json
 0f27bdeb747e33ae725ea942d00f7dccb291cac3 data/bingo/bingo/goals/medium/seagrass.json
-9312c6ef5ca2ae4f1b7d1d4e4c4537d8c0f54715 data/bingo/bingo/goals/medium/sized_nether_portal.json
+e25656b23aca8c1d09c0e28e81b91d0c6320d201 data/bingo/bingo/goals/medium/sized_nether_portal.json
 74a3896c1c47b1a939ef866ab837760d1e903025 data/bingo/bingo/goals/medium/skeleton_bow.json
 4554033e1e4dae815ec99d6cac9a2cd9fec894cc data/bingo/bingo/goals/medium/slime_ball.json
 fc1bcea7b6e556e38d220d96d628148160e48945 data/bingo/bingo/goals/medium/slow_falling_potion.json

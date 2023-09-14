@@ -17,7 +17,7 @@
       "trigger": "bingo:kill_self"
     }
   },
-  "difficulty": 3,
+  "difficulty": 2,
   "icon": {
     "item": "minecraft:arrow"
   },

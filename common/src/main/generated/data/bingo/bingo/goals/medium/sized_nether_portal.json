@@ -79,7 +79,7 @@
       "trigger": "minecraft:placed_block"
     }
   },
-  "difficulty": 3,
+  "difficulty": 2,
   "icon": {
     "item": "minecraft:obsidian"
   },
