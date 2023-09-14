@@ -29,6 +29,7 @@
                     "value": {
                       "min": {
                         "bingo_type": "compound",
+                        "element_type": "int",
                         "factors": [
                           {
                             "type": "sub",
@@ -39,7 +40,7 @@
                             "value": 100
                           }
                         ],
-                        "operator": "multiply"
+                        "operator": "mul"
                       }
                     }
                   }

@@ -643,6 +643,7 @@ public class BingoGoal {
             );
         }
 
+        // TODO: Move
         public static final class JsonSubber {
             private final JsonElement json;
 
@@ -701,6 +702,10 @@ public class BingoGoal {
                 }
 
                 return this;
+            }
+
+            public JsonElement getJson() {
+                return json;
             }
         }
     }

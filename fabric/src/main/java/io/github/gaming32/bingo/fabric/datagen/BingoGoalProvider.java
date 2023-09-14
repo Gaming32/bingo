@@ -23,7 +23,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.*;
-import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -1127,7 +1126,38 @@ public class BingoGoalProvider implements DataProvider {
         // TODO: kill hostile mob with gravel
         // TODO: kill hostile mob with sand
         // TODO: put carpet on llama
-        // TODO: activate a (4-6)x(4-6) nether portal
+        goalAdder.accept(BingoGoal.builder(mediumId("sized_nether_portal"))
+            .sub("width", BingoSub.random(4, 6))
+            .sub("height", BingoSub.random(4, 6))
+            .criterion("activate",
+                ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
+                    LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.NETHER_PORTAL),
+                    BlockPatternCondition.builder().aisle("P")
+                        .where('P', BlockPredicate.Builder.block().of(Blocks.NETHER_PORTAL).build())
+                ),
+                subber -> subber.sub("conditions.location.1.aisles.0", new BingoSub.CompoundBingoSub(
+                    BingoSub.CompoundBingoSub.ElementType.ARRAY,
+                    BingoSub.CompoundBingoSub.Operator.MUL,
+                    BingoSub.wrapInArray(
+                        new BingoSub.CompoundBingoSub(
+                            BingoSub.CompoundBingoSub.ElementType.STRING,
+                            BingoSub.CompoundBingoSub.Operator.MUL,
+                            BingoSub.literal("P"),
+                            new BingoSub.SubBingoSub("width")
+                        )
+                    ),
+                    new BingoSub.SubBingoSub("height")
+                ))
+            )
+            .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.NETHER)
+            .name(
+                Component.translatable("bingo.goal.sized_nether_portal", 0, 0),
+                subber -> subber.sub("with.0", "width").sub("with.1", "height")
+            )
+            .icon(Blocks.OBSIDIAN)
+            .difficulty(3)
+            .build()
+        );
         goalAdder.accept(obtainItemGoal(mediumId("obsidian"), Items.OBSIDIAN, 3, 10)
             .difficulty(2)
             .build());
@@ -2086,9 +2116,10 @@ public class BingoGoalProvider implements DataProvider {
                 subber -> subber.sub(
                     "conditions.player.0.predicate.type_specific.bingo:relative_stats.0.value.min",
                     new BingoSub.CompoundBingoSub(
-                        BingoSub.CompoundBingoSub.Operator.MULTIPLY,
+                        BingoSub.CompoundBingoSub.ElementType.INT,
+                        BingoSub.CompoundBingoSub.Operator.MUL,
                         new BingoSub.SubBingoSub("distance"),
-                        new BingoSub.IntBingoSub(ConstantInt.of(100))
+                        BingoSub.literal(100)
                     )
                 )
             )

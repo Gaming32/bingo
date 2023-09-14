@@ -1,0 +1,104 @@
+{
+  "bingo_subs": {
+    "height": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 6,
+          "min_inclusive": 4
+        }
+      }
+    },
+    "width": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 6,
+          "min_inclusive": 4
+        }
+      }
+    }
+  },
+  "criteria": {
+    "activate": {
+      "conditions": {
+        "location": [
+          {
+            "block": "minecraft:nether_portal",
+            "condition": "minecraft:block_state_property"
+          },
+          {
+            "aisles": [
+              {
+                "bingo_type": "compound",
+                "element_type": "array",
+                "factors": [
+                  {
+                    "type": "wrap",
+                    "value": [
+                      {
+                        "bingo_type": "compound",
+                        "element_type": "string",
+                        "factors": [
+                          {
+                            "type": "wrap",
+                            "value": "P"
+                          },
+                          {
+                            "type": "sub",
+                            "id": "width"
+                          }
+                        ],
+                        "operator": "mul"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "sub",
+                    "id": "height"
+                  }
+                ],
+                "operator": "mul"
+              }
+            ],
+            "condition": "bingo:block_pattern",
+            "where": {
+              "P": {
+                "block": {
+                  "blocks": [
+                    "minecraft:nether_portal"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:obsidian"
+  },
+  "name": {
+    "translate": "bingo.goal.sized_nether_portal",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "width"
+      },
+      {
+        "bingo_type": "sub",
+        "id": "height"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:build",
+    "bingo:nether"
+  ]
+}
