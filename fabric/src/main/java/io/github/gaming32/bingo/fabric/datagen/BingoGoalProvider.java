@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.fabric.datagen;
 
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
+import io.github.gaming32.bingo.conditions.EndermanHasOnlyBeenDamagedByEndermiteCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoSub;
 import io.github.gaming32.bingo.data.BingoTags;
@@ -42,9 +43,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -1436,7 +1439,17 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.ACTION)
             .tooltip(Component.translatable("bingo.sixteen_bang",
                 Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new))));
-        // TODO: kill enderman with only endermites
+        goalAdder.accept(BingoGoal.builder(id("kill_enderman_with_endermites"))
+            .criterion("obtain", EntityDieNearPlayerTrigger.builder()
+                .entity(ContextAwarePredicate.create(
+                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(EntityType.ENDERMAN)).build(),
+                    new EndermanHasOnlyBeenDamagedByEndermiteCondition()))
+                .killingBlow(DamagePredicate.Builder.damageInstance().sourceEntity(EntityPredicate.Builder.entity().of(EntityType.ENDERMITE).build()).build())
+                .build())
+            .name(Component.translatable("bingo.goal.kill_enderman_with_endermites"))
+            .tooltip(Component.translatable("bingo.goal.kill_enderman_with_endermites.tooltip"))
+            .icon(Items.ENDERMITE_SPAWN_EGG)
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.END));
         goalAdder.accept(BingoGoal.builder(id("beacon_regen"))
             .criterion("effect", BeaconEffectTrigger.TriggerInstance.effectApplied(MobEffects.REGENERATION))
             .tags(BingoTags.ITEM, BingoTags.NETHER, BingoTags.OVERWORLD, BingoTags.COMBAT)

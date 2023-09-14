@@ -18,6 +18,7 @@ public final class BingoConditions {
     private static final Registrar<LootItemConditionType> REGISTRAR = Bingo.REGISTRAR_MANAGER.get(Registries.LOOT_CONDITION_TYPE);
 
     public static final RegistrySupplier<LootItemConditionType> BLOCK_PATTERN = register("block_pattern", BlockPatternCondition.Serializer::new);
+    public static final RegistrySupplier<LootItemConditionType> ENDERMAN_HAS_ONLY_BEEN_DAMAGED_BY_ENDERMITE = register("enderman_has_only_been_damaged_by_endermite", EndermanHasOnlyBeenDamagedByEndermiteCondition.Serializer::new);
 
     public static void load() {
     }

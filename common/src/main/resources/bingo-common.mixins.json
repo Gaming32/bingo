@@ -15,6 +15,7 @@
     "MixinCommandSourceStack",
     "MixinConduitBlockEntity",
     "MixinEnchantmentMenu",
+    "MixinEnderMan",
     "MixinEntity",
     "MixinEntitySubPredicate_Types",
     "MixinItemEntity",

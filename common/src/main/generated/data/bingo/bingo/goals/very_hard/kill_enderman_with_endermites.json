@@ -1,0 +1,41 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:enderman"
+            }
+          },
+          {
+            "condition": "bingo:enderman_has_only_been_damaged_by_endermite"
+          }
+        ],
+        "killing_blow": {
+          "source_entity": {
+            "type": "minecraft:endermite"
+          }
+        }
+      },
+      "trigger": "bingo:entity_die_near_player"
+    }
+  },
+  "difficulty": 4,
+  "icon": {
+    "item": "minecraft:endermite_spawn_egg"
+  },
+  "name": {
+    "translate": "bingo.goal.kill_enderman_with_endermites"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:combat",
+    "bingo:end"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.kill_enderman_with_endermites.tooltip"
+  }
+}
