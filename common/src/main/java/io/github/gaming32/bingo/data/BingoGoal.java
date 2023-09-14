@@ -509,7 +509,7 @@ public class BingoGoal {
         public Builder criterion(String key, Criterion criterion, Consumer<JsonSubber> subber) {
             JsonSubber json = new JsonSubber(criterion.serializeToJson());
             subber.accept(json);
-            this.criteria.put(key, json.json.getAsJsonObject());
+            this.criteria.put(key, json.json().getAsJsonObject());
             this.requirements.add(List.of(key));
             return this;
         }
@@ -534,7 +534,7 @@ public class BingoGoal {
         public Builder name(Component name, Consumer<JsonSubber> subber) {
             JsonSubber json = new JsonSubber(Component.Serializer.toJsonTree(name));
             subber.accept(json);
-            this.name = json.json;
+            this.name = json.json();
             return this;
         }
 
@@ -545,7 +545,7 @@ public class BingoGoal {
         public Builder tooltip(Component tooltip, Consumer<JsonSubber> subber) {
             JsonSubber json = new JsonSubber(Component.Serializer.toJsonTree(tooltip));
             subber.accept(json);
-            this.tooltip = json.json;
+            this.tooltip = json.json();
             return this;
         }
 
@@ -576,7 +576,7 @@ public class BingoGoal {
 
             JsonSubber jsonSubber = new JsonSubber(json);
             subber.accept(jsonSubber);
-            this.icon = jsonSubber.json.getAsJsonObject();
+            this.icon = jsonSubber.json().getAsJsonObject();
 
             // remove count: 1
             JsonElement count = this.icon.get("count");
@@ -643,71 +643,6 @@ public class BingoGoal {
             );
         }
 
-        // TODO: Move
-        public static final class JsonSubber {
-            private final JsonElement json;
-
-            public JsonSubber(JsonElement json) {
-                this.json = json;
-            }
-
-            public JsonSubber sub(String path, String key) {
-                return sub(path, new BingoSub.SubBingoSub(key));
-            }
-
-            public JsonSubber sub(String path, BingoSub sub) {
-                JsonElement element = json;
-                String[] parts = path.split("\\.");
-                for (int i = 0; i < parts.length - 1; i++) {
-                    String part = parts[i];
-                    if (element.isJsonObject()) {
-                        element = element.getAsJsonObject().get(part);
-                        if (element == null) {
-                            throw new IllegalArgumentException("Could not find member \"" + part + "\" in json object");
-                        }
-                    } else if (element.isJsonArray()) {
-                        int index;
-                        try {
-                            index = Integer.parseInt(part);
-                        } catch (NumberFormatException e) {
-                            throw new IllegalArgumentException("Invalid index \"" + part + "\" into json array");
-                        }
-                        JsonArray array = element.getAsJsonArray();
-                        if (index < 0 || index >= array.size()) {
-                            throw new IllegalArgumentException("Index " + index + " is out of bounds for json array with length " + array.size());
-                        }
-                        element = array.get(index);
-                    } else {
-                        throw new IllegalArgumentException("Could not find member \"" + part + "\" in json element of type " + GsonHelper.getType(element));
-                    }
-                }
-
-                String finalPart = parts[parts.length - 1];
-                if (element.isJsonObject()) {
-                    element.getAsJsonObject().add(finalPart, sub.serializeWithType("bingo_type"));
-                } else if (element.isJsonArray()) {
-                    int index;
-                    try {
-                        index = Integer.parseInt(finalPart);
-                    } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Invalid index \"" + finalPart + "\" into json array");
-                    }
-                    JsonArray array = element.getAsJsonArray();
-                    if (index < 0 || index >= array.size()) {
-                        throw new IllegalArgumentException("Index " + index + " is out of bounds for json array with length " + array.size());
-                    }
-                    array.set(index, sub.serializeWithType("bingo_type"));
-                } else {
-                    throw new IllegalArgumentException("Could not find member \"" + finalPart + "\" in json element of type " + GsonHelper.getType(element));
-                }
-
-                return this;
-            }
-
-            public JsonElement getJson() {
-                return json;
-            }
-        }
     }
 
     public static class ReloadListener extends SimpleJsonResourceReloadListener {

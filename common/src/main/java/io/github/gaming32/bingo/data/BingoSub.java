@@ -181,10 +181,10 @@ public interface BingoSub {
             this.value = value;
         }
 
-        public WrapBingoSub(JsonElement value, Consumer<BingoGoal.Builder.JsonSubber> subber) {
-            final BingoGoal.Builder.JsonSubber useSubber = new BingoGoal.Builder.JsonSubber(value);
+        public WrapBingoSub(JsonElement value, Consumer<JsonSubber> subber) {
+            final JsonSubber useSubber = new JsonSubber(value);
             subber.accept(useSubber);
-            this.value = useSubber.getJson();
+            this.value = useSubber.json();
         }
 
         public WrapBingoSub(JsonObject data) {
