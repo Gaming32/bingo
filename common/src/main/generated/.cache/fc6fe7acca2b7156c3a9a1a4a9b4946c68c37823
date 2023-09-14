@@ -133,7 +133,7 @@ e718ea88a935f69ce7f15ccb9413116842420037 data/bingo/bingo/goals/hard/flowers.jso
 c29d66f5c8d5116764f4954cc79a6ae9f285f6c6 data/bingo/bingo/goals/hard/glazed_terracotta.json
 41ac282c7d3801f4ce7801e8ef06c945b2fa701f data/bingo/bingo/goals/hard/honey_block.json
 4038bcf3ba4fa1f4cb40d982b074d1fe37679db2 data/bingo/bingo/goals/hard/honeycomb_block.json
-d22a582256565c9f317c6021dfed6e7848a914c8 data/bingo/bingo/goals/hard/ice_cube.json
+8b7a5d14c3a7b0d81b163ddecd56b57afa5c4d7b data/bingo/bingo/goals/hard/ice_cube.json
 c42c7b8b7dd77ff852bb7a44118bda634117c532 data/bingo/bingo/goals/hard/ice_on_magma.json
 f1667e2894c9f3c9f34cfc7f89e82c3fb4301161 data/bingo/bingo/goals/hard/jungle_log.json
 74ca0aa2b6ec1a406f8c7dd4e5aa35c319fa536f data/bingo/bingo/goals/hard/jungle_wood.json
@@ -280,7 +280,7 @@ de757eb80fa1b9a7bb5fe6d46040cfeb7c968229 data/bingo/bingo/goals/very_easy/hay_bl
 e01158c15ebf13281915d6b83ab766fd4c4e40ce data/bingo/bingo/goals/very_easy/iron_block.json
 2a847ac828221a4f98bee77709803cf1b6a497c9 data/bingo/bingo/goals/very_easy/kelp.json
 b41458974999e5522b11862cbad999d965e856ab data/bingo/bingo/goals/very_easy/lava_bucket.json
-85ec3d5da974acc29d501e173abc6b88a1487f13 data/bingo/bingo/goals/very_easy/leaf_cube.json
+0eba6e4f9dbbd8778feea11498c1bf851e63fc70 data/bingo/bingo/goals/very_easy/leaf_cube.json
 b9a64005e5ec9f074305ec091e5d93f363a80922 data/bingo/bingo/goals/very_easy/leaves.json
 5cfac40e4f6800b4f3816947b67f57142f4bddf5 data/bingo/bingo/goals/very_easy/levels.json
 d9bd23f831f1ac471ba9d8f09c92d8683a8f0224 data/bingo/bingo/goals/very_easy/milk_bucket.json

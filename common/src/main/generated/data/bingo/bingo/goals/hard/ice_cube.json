@@ -36,6 +36,14 @@
       "conditions": {
         "location": [
           {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "tag": "minecraft:ice"
+              }
+            }
+          },
+          {
             "aisles": {
               "bingo_type": "compound",
               "element_type": "array",

@@ -1660,19 +1660,19 @@ public class BingoGoalProvider implements DataProvider {
             .tags(BingoTags.BUILD);
     }
 
-    private static BingoGoal.Builder blockCubeGoal(ResourceLocation id, Block icon, TagKey<Block> tag, Component tagName) {
+    private static BingoGoal.Builder blockCubeGoal(ResourceLocation id, Block icon, TagKey<Block> blockTag, Component tagName) {
         return BingoGoal.builder(id)
             .sub("width", BingoSub.random(2, 4))
             .sub("height", BingoSub.random(2, 4))
             .sub("depth", BingoSub.random(2, 4))
             .criterion("cube",
                 ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
-//                    LootItemBlockStatePropertyCondition.hasBlockStateProperties()
+                    LocationCheck.checkLocation(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blockTag).build())),
                     BlockPatternCondition.builder().aisle("#")
-                        .where('#', BlockPredicate.Builder.block().of(tag).build())
+                        .where('#', BlockPredicate.Builder.block().of(blockTag).build())
                         .rotations(BlockPattern.Rotations.ALL)
                 ),
-                subber -> subber.sub("conditions.location.0.aisles", new BingoSub.CompoundBingoSub(
+                subber -> subber.sub("conditions.location.1.aisles", new BingoSub.CompoundBingoSub(
                     BingoSub.CompoundBingoSub.ElementType.ARRAY,
                     BingoSub.CompoundBingoSub.Operator.MUL,
                     BingoSub.wrapInArray(
