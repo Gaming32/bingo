@@ -1,0 +1,62 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:any_of",
+            "terms": [
+              {
+                "block": "minecraft:ice",
+                "condition": "minecraft:block_state_property"
+              },
+              {
+                "block": "minecraft:magma_block",
+                "condition": "minecraft:block_state_property"
+              }
+            ]
+          },
+          {
+            "aisles": [
+              [
+                "i",
+                "m"
+              ]
+            ],
+            "condition": "bingo:block_pattern",
+            "rotations": "none",
+            "where": {
+              "i": {
+                "block": {
+                  "blocks": [
+                    "minecraft:ice"
+                  ]
+                }
+              },
+              "m": {
+                "block": {
+                  "blocks": [
+                    "minecraft:magma_block"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:basalt"
+  },
+  "name": {
+    "translate": "bingo.goal.ice_on_magma"
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:build",
+    "bingo:overworld"
+  ]
+}

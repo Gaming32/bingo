@@ -10,6 +10,7 @@ import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
 import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.util.BlockPattern;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
@@ -44,6 +45,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -1130,7 +1132,17 @@ public class BingoGoalProvider implements DataProvider {
             .name(Component.translatable("bingo.goal.tame_parrot"))
             .icon(Items.PARROT_SPAWN_EGG)
             .infrequency(2));
-        // TODO: ice block on top of magma block
+        goalAdder.accept(BingoGoal.builder(id("ice_on_magma"))
+            .criterion("obtain", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
+                AnyOfCondition.anyOf(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.ICE),
+                    LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.MAGMA_BLOCK)),
+                BlockPatternCondition.builder().aisle("i", "m")
+                    .where('i', BlockPredicate.Builder.block().of(Blocks.ICE).build())
+                    .where('m', BlockPredicate.Builder.block().of(Blocks.MAGMA_BLOCK).build())
+                    .rotations(BlockPattern.Rotations.NONE)))
+            .tags(BingoTags.ITEM, BingoTags.BUILD, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.ice_on_magma"))
+            .icon(Items.BASALT));
         goalAdder.accept(obtainLevelsGoal(id("levels"), 27, 37));
         // TODO: build an ice cube
         // TODO: finish on top of stairway to heaven
