@@ -26,6 +26,7 @@ public final class BingoItemTags {
     public static final TagKey<Item> FLOWERS = create("flowers");
     public static final TagKey<Item> GLAZED_TERRACOTTA = create("glazed_terracotta");
     public static final TagKey<Item> CONCRETE = create("concrete");
+    public static final TagKey<Item> BUCKETS = create("buckets");
 
     private static TagKey<Item> create(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(Bingo.MOD_ID, name));

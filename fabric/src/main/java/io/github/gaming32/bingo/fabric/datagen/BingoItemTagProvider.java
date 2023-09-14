@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -124,6 +125,19 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             glazedTerracottaBuilder.add(glazedTerracotta);
             Item concrete = BuiltInRegistries.ITEM.get(new ResourceLocation(dyeColor.getName() + "_concrete"));
             concreteBuilder.add(concrete);
+        }
+
+        var bucketsBuilder = getOrCreateTagBuilder(BingoItemTags.BUCKETS)
+            .addOptionalTag(new ResourceLocation("c:water_buckets"))
+            .addOptionalTag(new ResourceLocation("c:entity_water_buckets"))
+            .addOptionalTag(new ResourceLocation("c:lava_buckets"))
+            .addOptionalTag(new ResourceLocation("c:milk_buckets"))
+            .addOptionalTag(new ResourceLocation("c:empty_buckets"))
+            .add(Items.MILK_BUCKET);
+        for (Item item : BuiltInRegistries.ITEM) {
+            if (item instanceof BucketItem) {
+                bucketsBuilder.add(item);
+            }
         }
     }
 }

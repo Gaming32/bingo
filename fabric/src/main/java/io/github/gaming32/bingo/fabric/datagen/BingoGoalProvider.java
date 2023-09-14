@@ -1184,7 +1184,16 @@ public class BingoGoalProvider implements DataProvider {
             .catalyst("wear_armor"));
         // TODO: kill mob that is wearing full armor
         // TODO: enchant 5 items
-        // TODO: never use buckets
+        goalAdder.accept(BingoGoal.builder(id("never_use_buckets"))
+            .criterion("filled_bucket", FilledBucketTrigger.TriggerInstance.filledBucket(ItemPredicate.ANY))
+            .criterion("placed_block", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(MatchTool.toolMatches(ItemPredicate.Builder.item().of(BingoItemTags.BUCKETS))))
+            .criterion("use_on_entity", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(ItemPredicate.Builder.item().of(BingoItemTags.BUCKETS), ContextAwarePredicate.ANY))
+            .criterion("consume", ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(BingoItemTags.BUCKETS).build()))
+            .requirements(List.of("filled_bucket", "placed_block", "use_on_entity", "consume"))
+            .tags(BingoTags.NEVER)
+            .catalyst("use_buckets")
+            .name(Component.translatable("bingo.goal.never_use_buckets"))
+            .icon(Items.BUCKET));
         goalAdder.accept(obtainItemGoal(id("conduit"), Items.CONDUIT)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         // TODO: 2-5 types of dead coral blocks

@@ -1,0 +1,56 @@
+{
+  "catalyst": "use_buckets",
+  "criteria": {
+    "consume": {
+      "conditions": {
+        "item": {
+          "tag": "bingo:buckets"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    },
+    "filled_bucket": {
+      "conditions": {},
+      "trigger": "minecraft:filled_bucket"
+    },
+    "placed_block": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "tag": "bingo:buckets"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    },
+    "use_on_entity": {
+      "conditions": {
+        "item": {
+          "tag": "bingo:buckets"
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:bucket"
+  },
+  "name": {
+    "translate": "bingo.goal.never_use_buckets"
+  },
+  "requirements": [
+    [
+      "filled_bucket",
+      "placed_block",
+      "use_on_entity",
+      "consume"
+    ]
+  ],
+  "tags": [
+    "bingo:never"
+  ]
+}
