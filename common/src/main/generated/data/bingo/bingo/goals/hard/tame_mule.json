@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:mule"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:tame_animal"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:mule_spawn_egg"
+  },
+  "name": {
+    "translate": "bingo.goal.tame_mule"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

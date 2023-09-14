@@ -120,6 +120,7 @@ c177d185aba57fc7e80a8b0ecc63093189582da5 data/bingo/bingo/goals/hard/6x6scaffold
 7199727a78b94bd4b8bac2dc95be1856fc444abb data/bingo/bingo/goals/hard/bed_row.json
 8c9d1e897e4f2b13c3375529b61351a854f95804 data/bingo/bingo/goals/hard/carrot_stick_to_rod.json
 b11078405f190ec12fd0dc3e9bb38dd4b5845d9e data/bingo/bingo/goals/hard/complete_full_size_map.json
+49b3224c392ebd09e0dceac42ce8769c58979630 data/bingo/bingo/goals/hard/concrete.json
 15da9b014a9a859e726ee2efeaa8c60b4464ec27 data/bingo/bingo/goals/hard/conduit.json
 e2e2f674bbbe1a2ad5456db6c729dfee2180b6d5 data/bingo/bingo/goals/hard/cookie.json
 7bb1d93c68dfe99dda31bb935194cd2904282947 data/bingo/bingo/goals/hard/diamond_block.json
@@ -129,6 +130,7 @@ be23fd909d7afc380a3fb37ebeac782f1524dd69 data/bingo/bingo/goals/hard/dragon_egg.
 1615492347ae0c5727391f537ff664e10e643039 data/bingo/bingo/goals/hard/ender_eye.json
 e718ea88a935f69ce7f15ccb9413116842420037 data/bingo/bingo/goals/hard/flowers.json
 73bf34677f691b127057bcd177e44c4fe6ae2b0e data/bingo/bingo/goals/hard/gilded_blackstone.json
+c29d66f5c8d5116764f4954cc79a6ae9f285f6c6 data/bingo/bingo/goals/hard/glazed_terracotta.json
 41ac282c7d3801f4ce7801e8ef06c945b2fa701f data/bingo/bingo/goals/hard/honey_block.json
 4038bcf3ba4fa1f4cb40d982b074d1fe37679db2 data/bingo/bingo/goals/hard/honeycomb_block.json
 f1667e2894c9f3c9f34cfc7f89e82c3fb4301161 data/bingo/bingo/goals/hard/jungle_log.json
@@ -151,9 +153,12 @@ f07ca75ae42684c2125322bbe00e6511444ca68b data/bingo/bingo/goals/hard/skull_banne
 9ab57e6139c5c1390663493b0aa25239f992cffc data/bingo/bingo/goals/hard/sponge.json
 3aae1304dbfa94f788c23480d60c0edf72f382b0 data/bingo/bingo/goals/hard/stripped_jungle_log.json
 bd60642da6dc75bae7f94eabf8ccc9a8bb0c3ab4 data/bingo/bingo/goals/hard/stripped_jungle_wood.json
+060f60af7b5f56ff34c1969f1713273287969b51 data/bingo/bingo/goals/hard/tame_mule.json
 a8a8f84e5ab41da826923b79b96bb42aba0ed27d data/bingo/bingo/goals/hard/tame_parrot.json
+e64cec417516807701b0c9898ae741a7ccfe07be data/bingo/bingo/goals/hard/terracotta.json
 3755fc982ad8c35788a5d7fa5b1567b959cb8906 data/bingo/bingo/goals/hard/turtle_helmet.json
 d2dd416dbf753bdda138c4064e90e14690b27266 data/bingo/bingo/goals/hard/wither_skeleton_skull.json
+7c4d0e045c73d56a4d93966f148747efc13ffab3 data/bingo/bingo/goals/hard/wool.json
 91710bc05a22bc120bb696cd195f9baee686b7b1 data/bingo/bingo/goals/hard/zombified_piglin_sword.json
 59b43f10fa7971fdcd58f945b738d839b336af41 data/bingo/bingo/goals/medium/bamboo.json
 d280a50faf6210e938e4880044c6fc4eeb84781b data/bingo/bingo/goals/medium/basic_mineral_blocks.json
