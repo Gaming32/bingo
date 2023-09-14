@@ -1,13 +1,13 @@
 {
   "criteria": {
-    "kill": {
+    "murder": {
       "conditions": {
         "entity": [
           {
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:shulker",
+              "type": "minecraft:ghast",
               "location": {
                 "dimension": "minecraft:overworld"
               }
@@ -18,18 +18,17 @@
       "trigger": "minecraft:player_killed_entity"
     }
   },
-  "difficulty": 4,
+  "difficulty": 3,
   "icon": {
-    "item": "minecraft:shulker_shell"
+    "item": "minecraft:ghast_tear"
   },
   "name": {
-    "translate": "bingo.goal.shulker_in_overworld"
+    "translate": "bingo.goal.kill_ghast_in_overworld"
   },
   "reactant": "pacifist",
   "tags": [
     "bingo:action",
-    "bingo:combat",
-    "bingo:end",
+    "bingo:nether",
     "bingo:overworld"
   ]
 }

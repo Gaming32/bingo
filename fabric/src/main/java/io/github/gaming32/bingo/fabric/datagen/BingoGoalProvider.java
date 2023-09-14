@@ -1163,7 +1163,13 @@ public class BingoGoalProvider implements DataProvider {
         goalAdder.accept(obtainLevelsGoal(id("levels"), 27, 37));
         goalAdder.accept(blockCubeGoal(id("ice_cube"), Blocks.ICE, BlockTags.ICE, Blocks.ICE.getName()));
         // TODO: finish on top of stairway to heaven
-        // TODO: get ghast into overworld
+        goalAdder.accept(BingoGoal.builder(id("kill_ghast_in_overworld"))
+            .criterion("murder", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(EntityType.GHAST)
+                .located(LocationPredicate.inDimension(Level.OVERWORLD))))
+            .name(Component.translatable("bingo.goal.kill_ghast_in_overworld"))
+            .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
+            .icon(Items.GHAST_TEAR)
+            .reactant("pacifist"));
         goalAdder.accept(obtainItemGoal(id("enchanted_golden_apple"), Items.ENCHANTED_GOLDEN_APPLE));
 
         goalAdder.accept(BingoGoal.builder(id("never_wear_armor_or_use_shields"))
@@ -1419,7 +1425,8 @@ public class BingoGoalProvider implements DataProvider {
                 EntityPredicate.Builder.entity().of(EntityType.SHULKER).located(LocationPredicate.inDimension(Level.OVERWORLD))))
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.END, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.shulker_in_overworld"))
-            .icon(Items.SHULKER_SHELL));
+            .icon(Items.SHULKER_SHELL)
+            .reactant("pacifist"));
         goalAdder.accept(obtainItemGoal(id("diamond_block"), Items.DIAMOND_BLOCK, 5, 10)
             .infrequency(2));
         goalAdder.accept(BingoGoal.builder(id("complete_full_size_end_map"))
