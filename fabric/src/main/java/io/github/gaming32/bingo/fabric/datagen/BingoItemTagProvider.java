@@ -118,6 +118,14 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         // The vanilla flower tag contains weird stuff like cherry leaves that bees are attracted to, but they are not flowers
         getOrCreateTagBuilder(BingoItemTags.FLOWERS).forceAddTag(ItemTags.SMALL_FLOWERS).forceAddTag(ItemTags.TALL_FLOWERS);
 
+        getOrCreateTagBuilder(BingoItemTags.DEAD_CORAL_BLOCKS).add(
+            Items.DEAD_BRAIN_CORAL_BLOCK,
+            Items.DEAD_BUBBLE_CORAL_BLOCK,
+            Items.DEAD_FIRE_CORAL_BLOCK,
+            Items.DEAD_HORN_CORAL_BLOCK,
+            Items.DEAD_TUBE_CORAL_BLOCK
+        );
+
         var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
         var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);
         for (DyeColor dyeColor : DyeColor.values()) {

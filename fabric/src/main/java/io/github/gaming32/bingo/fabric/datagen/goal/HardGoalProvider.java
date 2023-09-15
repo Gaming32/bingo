@@ -188,7 +188,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(Items.BUCKET));
         addGoal(obtainItemGoal(id("conduit"), Items.CONDUIT)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
-        // TODO: 2-5 types of dead coral blocks
+        addGoal(obtainSomeItemsFromTag(id("dead_coral_blocks"), Items.DEAD_BRAIN_CORAL_BLOCK, BingoItemTags.DEAD_CORAL_BLOCKS, "bingo.goal.dead_coral_blocks", 2, 5)
+            .tags(BingoTags.OCEAN, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("sea_pickle"), Items.SEA_PICKLE, 16, 32)
             .tags(BingoTags.OCEAN, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
         // TODO: didn't want to live in the same world as death message
