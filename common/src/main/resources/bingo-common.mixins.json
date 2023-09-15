@@ -27,6 +27,7 @@
     "MixinPlayerPredicate",
     "MixinPlayerPredicate_Builder",
     "MixinRecordItem",
+    "MixinRespawnAnchorBlock",
     "MixinServerPlayer",
     "MixinServerPlayer_2",
     "MixinServerScoreboard",

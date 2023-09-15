@@ -5,7 +5,7 @@
 3ba5afb1c59c61e12f7ac2aab4419089e638c20f data/bingo/bingo/goals/easy/apple.json
 140ad8e055c6025f58de407f13cb76335d735795 data/bingo/bingo/goals/easy/arrow.json
 00ef458c8fea4460c5b13dcbeab1c87384671892 data/bingo/bingo/goals/easy/basalt.json
-6b67341dfaaf681629fffa4f31040a93e7b04be6 data/bingo/bingo/goals/easy/bed_row.json
+bcafd6c607b06e260183990765f169855ccdab7d data/bingo/bingo/goals/easy/bed_row.json
 459e79afd96544c57ffe894b6d8ff413103623da data/bingo/bingo/goals/easy/birch_log.json
 05c984013c378290d82376f28e61993226610a1c data/bingo/bingo/goals/easy/birch_planks.json
 54f031f72bbe9dc436264376a491c30d3926de18 data/bingo/bingo/goals/easy/birch_wood.json
@@ -89,6 +89,7 @@ af313dc1302779989dc6d4b448c2c7803d8658a5 data/bingo/bingo/goals/easy/purple_dye.
 21facab0ad6311080057bddedd04822cfbe02c46 data/bingo/bingo/goals/easy/sandstone.json
 6cc8cb2cab6bb415d0f9ae72f2d20c905a037da3 data/bingo/bingo/goals/easy/seagrass.json
 dae34180a8134371d207d1916ff7c6c33e15bb42 data/bingo/bingo/goals/easy/shoot_button.json
+d721ede6e722f8b1e94f2dc1422f76f64781db60 data/bingo/bingo/goals/easy/sleep_in_nether.json
 f9c94f5d9cbd105a6f4aafb9501ac08de70451d4 data/bingo/bingo/goals/easy/soul_lantern.json
 b2234bc20e10f02283e47118d33d913bf3609430 data/bingo/bingo/goals/easy/soul_sand.json
 c05bbb70ed3f8e07fd1f58fa5a251ebf952c55ce data/bingo/bingo/goals/easy/soul_soil.json
@@ -117,7 +118,7 @@ b30a81e4c4228460ab48d5ede5d954c00f6076a1 data/bingo/bingo/goals/easy/water_lava_
 1a11263ec94a4738d2d55f74095a40309438b91b data/bingo/bingo/goals/easy/writable_book.json
 907c64dea9bea38f548718374c3bb09269efaac6 data/bingo/bingo/goals/easy/yellow_dye.json
 c177d185aba57fc7e80a8b0ecc63093189582da5 data/bingo/bingo/goals/hard/6x6scaffolding.json
-7199727a78b94bd4b8bac2dc95be1856fc444abb data/bingo/bingo/goals/hard/bed_row.json
+1b53a3cc30280dcafcf8186d6dea7af1ffc57382 data/bingo/bingo/goals/hard/bed_row.json
 8c9d1e897e4f2b13c3375529b61351a854f95804 data/bingo/bingo/goals/hard/carrot_stick_to_rod.json
 b11078405f190ec12fd0dc3e9bb38dd4b5845d9e data/bingo/bingo/goals/hard/complete_full_size_map.json
 49b3224c392ebd09e0dceac42ce8769c58979630 data/bingo/bingo/goals/hard/concrete.json
@@ -165,9 +166,10 @@ e64cec417516807701b0c9898ae741a7ccfe07be data/bingo/bingo/goals/hard/terracotta.
 d2dd416dbf753bdda138c4064e90e14690b27266 data/bingo/bingo/goals/hard/wither_skeleton_skull.json
 7c4d0e045c73d56a4d93966f148747efc13ffab3 data/bingo/bingo/goals/hard/wool.json
 91710bc05a22bc120bb696cd195f9baee686b7b1 data/bingo/bingo/goals/hard/zombified_piglin_sword.json
+54c1d3a1d7b39a8ad72f2794846ac582c8cbb6fc data/bingo/bingo/goals/medium/anchor_in_overworld.json
 59b43f10fa7971fdcd58f945b738d839b336af41 data/bingo/bingo/goals/medium/bamboo.json
 d280a50faf6210e938e4880044c6fc4eeb84781b data/bingo/bingo/goals/medium/basic_mineral_blocks.json
-de04e73af461088bcc1f2dcbf17117f25ba796dc data/bingo/bingo/goals/medium/bed_row.json
+692b125c4a40f4010c6d7a6cf43809cf644db3fd data/bingo/bingo/goals/medium/bed_row.json
 ad4781234e06f2663ceb04a6d7d846a199521f7d data/bingo/bingo/goals/medium/beetroot_soup.json
 715de2ffc70144510f8c5cf1ab758184f3542314 data/bingo/bingo/goals/medium/blaze_rod.json
 87045bab98d0e37949fa96ec3469ec492c5a26d0 data/bingo/bingo/goals/medium/brown_wool.json
@@ -322,7 +324,7 @@ d1e1d4cdfc07739b23627bc977b5ad63502eec1d data/bingo/bingo/goals/very_hard/all_di
 b8f59d3dd21b17dc7dcfa3c156bc18be22858f7c data/bingo/bingo/goals/very_hard/all_mineral_blocks.json
 c1ea16e33cbdd23c58cbfd295451e981039311fd data/bingo/bingo/goals/very_hard/any_head.json
 8ded1b3cc89f55e253c0a4126042a6d5cb86917b data/bingo/bingo/goals/very_hard/beacon_regen.json
-b7e90c72e4233dfe86d448d5738020d38a574506 data/bingo/bingo/goals/very_hard/bed_row.json
+8e1944dd75f1b5bcba4b911d22d0d6b476bfc41e data/bingo/bingo/goals/very_hard/bed_row.json
 08324a5f85e8de2ddce9663e719fdc033925a996 data/bingo/bingo/goals/very_hard/blue_ice.json
 1a8ed2e48a87167097f29b20d628217fd5975843 data/bingo/bingo/goals/very_hard/complete_full_size_end_map.json
 a8c1223316a8583a1221b9c1c4e8293bfffcd181 data/bingo/bingo/goals/very_hard/coral_blocks.json

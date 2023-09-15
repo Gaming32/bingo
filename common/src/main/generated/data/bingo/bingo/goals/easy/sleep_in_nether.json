@@ -1,0 +1,24 @@
+{
+  "criteria": {
+    "sleep": {
+      "conditions": {
+        "respawn": {
+          "dimension": "minecraft:the_nether"
+        }
+      },
+      "trigger": "bingo:intentional_game_design"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:purple_bed"
+  },
+  "name": {
+    "translate": "bingo.goal.sleep_in_nether"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:nether",
+    "bingo:overworld"
+  ]
+}

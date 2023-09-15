@@ -472,7 +472,14 @@ public class BingoGoalProvider implements DataProvider {
             .reactant("use_furnace")
             .tags(BingoTags.NETHER));
         goalAdder.accept(obtainItemGoal(id("arrow"), Items.ARROW, 16, 64));
-        // TODO: try to sleep in nether
+        goalAdder.accept(BingoGoal.builder(id("sleep_in_nether"))
+            .criterion("sleep", IntentionalGameDesignTrigger.TriggerInstance.clicked(
+                LocationPredicate.inDimension(Level.NETHER)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.sleep_in_nether"))
+            .icon(Items.PURPLE_BED)
+        );
         goalAdder.accept(obtainItemGoal(id("fermented_spider_eye"), Items.FERMENTED_SPIDER_EYE)
             .tags(BingoTags.OVERWORLD));
         // TODO: different stairs
@@ -1011,7 +1018,14 @@ public class BingoGoalProvider implements DataProvider {
 
         goalAdder.accept(obtainItemGoal(id("quartz_block"), Items.QUARTZ_BLOCK)
             .tags(BingoTags.NETHER));
-        // TODO: try to use respawn anchor in overworld
+        goalAdder.accept(BingoGoal.builder(id("anchor_in_overworld"))
+            .criterion("anchor", IntentionalGameDesignTrigger.TriggerInstance.clicked(
+                LocationPredicate.inDimension(Level.OVERWORLD)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.anchor_in_overworld", Blocks.RESPAWN_ANCHOR.getName()))
+            .icon(Blocks.RESPAWN_ANCHOR)
+        );
         goalAdder.accept(obtainItemGoal(id("warped_fungus_on_a_stick"), Items.WARPED_FUNGUS_ON_A_STICK)
             .tags(BingoTags.NETHER));
         // TODO: convert hoglin into zoglin
@@ -1645,7 +1659,7 @@ public class BingoGoalProvider implements DataProvider {
                 .name(Component.translatable("bingo.goal.bed_row", minCount))
                 .antisynergy("bed_color")
                 .infrequency(4)
-                .icon(new ItemStack(Items.PURPLE_BED, minCount))
+                .icon(new ItemStack(Items.MAGENTA_BED, minCount))
                 .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
         }
         return BingoGoal.builder(id)
@@ -1654,7 +1668,7 @@ public class BingoGoalProvider implements DataProvider {
             .name(Component.translatable("bingo.goal.bed_row", 0), subber -> subber.sub("with.0", "count"))
             .antisynergy("bed_color")
             .infrequency(4)
-            .icon(Items.PURPLE_BED, subber -> subber.sub("count", "count"))
+            .icon(Items.MAGENTA_BED, subber -> subber.sub("count", "count"))
             .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
     }
 

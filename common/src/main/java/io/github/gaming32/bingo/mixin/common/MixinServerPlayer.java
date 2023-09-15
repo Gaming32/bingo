@@ -34,4 +34,9 @@ public class MixinServerPlayer {
             BingoTriggers.KILL_SELF.trigger((ServerPlayer)killed, source);
         }
     }
+
+    @Inject(method = "die", at = @At("RETURN"))
+    private void deathTrigger(DamageSource damageSource, CallbackInfo ci) {
+        BingoTriggers.DEATH.trigger((ServerPlayer)(Object)this, damageSource);
+    }
 }

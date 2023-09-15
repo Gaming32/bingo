@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "anchor": {
+      "conditions": {
+        "respawn": {
+          "dimension": "minecraft:overworld"
+        }
+      },
+      "trigger": "bingo:intentional_game_design"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:respawn_anchor"
+  },
+  "name": {
+    "translate": "bingo.goal.anchor_in_overworld",
+    "with": [
+      {
+        "translate": "block.minecraft.respawn_anchor"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:nether",
+    "bingo:overworld"
+  ]
+}
