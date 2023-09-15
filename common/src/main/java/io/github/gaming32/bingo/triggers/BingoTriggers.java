@@ -33,6 +33,7 @@ public class BingoTriggers {
     public static final EntityKilledPlayerTrigger ENTITY_KILLED_PLAYER = register(new EntityKilledPlayerTrigger());
     public static final DeathTrigger DEATH = register(new DeathTrigger());
     public static final IntentionalGameDesignTrigger INTENTIONAL_GAME_DESIGN = register(new IntentionalGameDesignTrigger());
+    public static final BreakBlockTrigger BREAK_BLOCK = register(new BreakBlockTrigger());
 
     public static void load() {
     }

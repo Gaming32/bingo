@@ -1,0 +1,27 @@
+{
+  "criteria": {
+    "destroy": {
+      "conditions": {
+        "location": {
+          "block": {
+            "blocks": [
+              "minecraft:spawner"
+            ]
+          }
+        }
+      },
+      "trigger": "bingo:break_block"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:spawner"
+  },
+  "name": {
+    "translate": "bingo.goal.destroy_spawner"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:combat"
+  ]
+}

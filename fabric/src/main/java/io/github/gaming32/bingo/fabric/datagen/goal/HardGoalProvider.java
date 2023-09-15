@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.triggers.BreakBlockTrigger;
 import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
 import io.github.gaming32.bingo.triggers.EquipItemTrigger;
@@ -216,7 +217,11 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainSomeItemsFromTag(id("diamond_in_name"), Items.DIAMOND_HELMET, BingoItemTags.DIAMOND_IN_NAME, "bingo.goal.diamond_in_name", 5, 7)
             .antisynergy("diamond_items")
             .tooltip(Component.translatable("bingo.goal.diamond_in_name.tooltip")));
-        // TODO: destroy mob spawner
+        addGoal(BingoGoal.builder(id("destroy_spawner"))
+            .criterion("destroy", BreakBlockTrigger.builder().block(Blocks.SPAWNER).build())
+            .name(Component.translatable("bingo.goal.destroy_spawner"))
+            .icon(Items.SPAWNER)
+            .tags(BingoTags.ACTION, BingoTags.COMBAT));
         addGoal(obtainItemGoal(id("popped_chorus_fruit"), Items.POPPED_CHORUS_FRUIT, 32, 64)
             .tags(BingoTags.END));
         // TODO: get villager into the end
