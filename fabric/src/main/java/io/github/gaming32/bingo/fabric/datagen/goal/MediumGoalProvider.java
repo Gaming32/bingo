@@ -246,7 +246,9 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("glowstone_dust"), Items.GLOWSTONE_DUST, 32, 64)
             .tags(BingoTags.NETHER));
         addGoal(obtainItemGoal(id("item_frame"), Items.ITEM_FRAME, 10, 32));
-        // TODO: different diamond items
+        addGoal(obtainSomeItemsFromTag(id("diamond_in_name"), Items.DIAMOND_HELMET, BingoItemTags.DIAMOND_IN_NAME, "bingo.goal.diamond_in_name", 3, 4)
+            .antisynergy("diamond_items")
+            .tooltip(Component.translatable("bingo.goal.diamond_in_name.tooltip")));
         addGoal(obtainItemGoal(id("prismarine_crystals"), Items.PRISMARINE_CRYSTALS, 2, 4)
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));

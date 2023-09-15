@@ -213,7 +213,9 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .reactant("axe_use")
             .infrequency(4)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
-        // TODO: different diamond items
+        addGoal(obtainSomeItemsFromTag(id("diamond_in_name"), Items.DIAMOND_HELMET, BingoItemTags.DIAMOND_IN_NAME, "bingo.goal.diamond_in_name", 5, 7)
+            .antisynergy("diamond_items")
+            .tooltip(Component.translatable("bingo.goal.diamond_in_name.tooltip")));
         // TODO: destroy mob spawner
         addGoal(obtainItemGoal(id("popped_chorus_fruit"), Items.POPPED_CHORUS_FRUIT, 32, 64)
             .tags(BingoTags.END));

@@ -126,6 +126,7 @@ b11078405f190ec12fd0dc3e9bb38dd4b5845d9e data/bingo/bingo/goals/hard/complete_fu
 e2e2f674bbbe1a2ad5456db6c729dfee2180b6d5 data/bingo/bingo/goals/hard/cookie.json
 a45cc23f6bdf111f80e504e94fe7db4e0ca5753b data/bingo/bingo/goals/hard/dead_coral_blocks.json
 7bb1d93c68dfe99dda31bb935194cd2904282947 data/bingo/bingo/goals/hard/diamond_block.json
+53509768b116eda59df1d021e08df29613cc6a4e data/bingo/bingo/goals/hard/diamond_in_name.json
 5fb9c5999f27d9f1df715a03017df20cb584fa93 data/bingo/bingo/goals/hard/dragon_breath.json
 be23fd909d7afc380a3fb37ebeac782f1524dd69 data/bingo/bingo/goals/hard/dragon_egg.json
 8699479c7945b519787ab7235d14afc1feb2090b data/bingo/bingo/goals/hard/enchanted_golden_apple.json
@@ -182,6 +183,7 @@ baeb34bac4224fad57c77c272a80e9f6167127dd data/bingo/bingo/goals/medium/crimson_h
 a3663b1da05c43c9f1e03f6623651979e9c0b59b data/bingo/bingo/goals/medium/damaged_anvil.json
 ebcdff2efe03e7a80fbf671e8f6efcd7482c856a data/bingo/bingo/goals/medium/daylight_detector.json
 e1ac297eb9317e567f8bf5dd70c2d12cc99a4720 data/bingo/bingo/goals/medium/diamond_block.json
+3cac4838f2a58d21275a666c6fe4dcf9b57f4266 data/bingo/bingo/goals/medium/diamond_in_name.json
 d64aa9c6759db559fbdb73ab42025c1b2d632b47 data/bingo/bingo/goals/medium/dried_kelp_block.json
 38ad0004cc5b604cbe69ad2cef4536ed94f7666c data/bingo/bingo/goals/medium/ender_eye.json
 60b008e001cc21ef8f11fff5056b7fc36cb557e8 data/bingo/bingo/goals/medium/ender_pearl.json

@@ -13,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
 
 public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public BingoItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
@@ -142,9 +143,14 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .addOptionalTag(new ResourceLocation("c:milk_buckets"))
             .addOptionalTag(new ResourceLocation("c:empty_buckets"))
             .add(Items.MILK_BUCKET);
+        var diamondInNameBuilder = getOrCreateTagBuilder(BingoItemTags.DIAMOND_IN_NAME);
+        Pattern diamondPattern = Pattern.compile("Diamond\\b");
         for (Item item : BuiltInRegistries.ITEM) {
             if (item instanceof BucketItem) {
                 bucketsBuilder.add(item);
+            }
+            if (diamondPattern.matcher(item.getDescription().getString()).find()) {
+                diamondInNameBuilder.add(item);
             }
         }
     }
