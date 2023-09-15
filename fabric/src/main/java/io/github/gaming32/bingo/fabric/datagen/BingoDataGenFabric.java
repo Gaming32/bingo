@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.fabric.datagen;
 
+import io.github.gaming32.bingo.fabric.datagen.goal.BingoGoalProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
