@@ -384,14 +384,16 @@ public class BingoGoal {
     }
 
     public MutableComponent buildName(Map<String, JsonElement> referable, RandomSource rand) {
-        return Bingo.ensureHasFallback(Component.Serializer.fromJson(performSubstitutions(name, referable, rand)));
+        MutableComponent component = Component.Serializer.fromJson(performSubstitutions(name, referable, rand));
+        return component == null ? Component.empty() : Bingo.ensureHasFallback(component);
     }
 
     public MutableComponent buildTooltip(Map<String, JsonElement> referable, RandomSource rand) {
         if (tooltip == null) {
             return null;
         }
-        return Bingo.ensureHasFallback(Component.Serializer.fromJson(performSubstitutions(tooltip, referable, rand)));
+        MutableComponent component = Component.Serializer.fromJson(performSubstitutions(tooltip, referable, rand));
+        return component == null ? Component.empty() : Bingo.ensureHasFallback(component);
     }
 
     public ItemStack buildIcon(Map<String, JsonElement> referable, RandomSource rand) {

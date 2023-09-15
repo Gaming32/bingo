@@ -40,7 +40,6 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.TeamArgument;
-import net.minecraft.locale.Language;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -402,39 +401,13 @@ public class Bingo {
     }
 
     public static MutableComponent translatable(String key, Object... args) {
-        return Component.translatableWithFallback(key, createFallback(key, args), args);
+        return ensureHasFallback(Component.translatable(key, args));
     }
 
-    @Contract("null -> null; !null -> !null")
-    @Nullable
-    public static MutableComponent ensureHasFallback(@Nullable MutableComponent component) {
-        if (component == null) {
-            return null;
-        }
-
+    public static MutableComponent ensureHasFallback(MutableComponent component) {
         if (component.getContents() instanceof TranslatableContents translatable && translatable.getFallback() == null) {
-            return Component.translatableWithFallback(translatable.getKey(), createFallback(translatable.getKey(), translatable.getArgs()), translatable.getArgs());
+            return Component.translatableWithFallback(translatable.getKey(), component.getString(), translatable.getArgs());
         }
         return component;
-    }
-
-    private static String createFallback(String key, Object... args) {
-        Language language = Language.getInstance();
-        args = args.clone();
-        for (int i = 0; i < args.length; i++) {
-            if (args[i] instanceof Component component && component.getContents() instanceof TranslatableContents translatable) {
-                String innerKey = translatable.getKey();
-                if (translatable.getFallback() != null && !language.has(innerKey)) {
-                    innerKey = translatable.getFallback();
-                }
-                args[i] = createFallback(innerKey, translatable.getArgs());
-            }
-        }
-        String translatedKey = language.getOrDefault(key, key);
-        try {
-            return String.format(translatedKey, args);
-        } catch (IllegalFormatException e) {
-            return "Format error: " + translatedKey;
-        }
     }
 }
