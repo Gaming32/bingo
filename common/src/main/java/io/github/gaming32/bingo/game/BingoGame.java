@@ -111,20 +111,20 @@ public class BingoGame {
         final Component message;
         if (winner.any()) {
             if (!winner.one() && winner.all(teams.length)) {
-                message = Component.translatable("bingo.ended.tie");
+                message = Bingo.translatable("bingo.ended.tie");
             } else {
                 final PlayerTeam playerTeam = getTeam(winner);
                 Component teamName = playerTeam.getDisplayName();
                 if (playerTeam.getColor() != ChatFormatting.RESET) {
                     teamName = teamName.copy().withStyle(playerTeam.getColor());
                 }
-                message = Component.translatable("bingo.ended", teamName);
+                message = Bingo.translatable("bingo.ended", teamName);
             }
             for (final ServerPlayer player : playerList.getPlayers()) {
                 player.playNotifySound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.MASTER, 1f, 1f);
             }
         } else {
-            message = Component.translatable("bingo.ended.draw");
+            message = Bingo.translatable("bingo.ended.draw");
         }
         playerList.broadcastSystemMessage(message, false);
 
@@ -286,7 +286,7 @@ public class BingoGame {
         boolean isLoss
     ) {
         final PlayerTeam playerTeam = getTeam(team);
-        final Component message = Component.translatable(
+        final Component message = Bingo.translatable(
             isLoss ? "bingo.goal_lost" : "bingo.goal_obtained",
             obtainer.getDisplayName(),
             goal.getName().copy().withStyle(isLoss ? ChatFormatting.GOLD : ChatFormatting.GREEN)

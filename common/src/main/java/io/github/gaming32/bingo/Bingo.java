@@ -40,10 +40,13 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.TeamArgument;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -60,7 +63,9 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -130,7 +135,7 @@ public class Bingo {
                             @NotNull
                             @Override
                             public Component getDisplayName() {
-                                return Component.translatable("bingo.board.title");
+                                return Bingo.translatable("bingo.board.title");
                             }
                         });
                         return Command.SINGLE_SUCCESS;
@@ -138,10 +143,10 @@ public class Bingo {
                     .then(literal("copy")
                         .executes(ctx -> {
                             ctx.getSource().sendSuccess(() -> ComponentUtils.wrapInSquareBrackets(
-                                Component.translatable("bingo.board.copy")
+                                Bingo.translatable("bingo.board.copy")
                             ).withStyle(s -> s
                                 .withColor(ChatFormatting.GREEN)
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.copy.click")))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Bingo.translatable("chat.copy.click")))
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, activeGame.getBoard().toString())) // TODO: I18n?
                             ), false);
                             return Command.SINGLE_SUCCESS;
@@ -185,7 +190,7 @@ public class Bingo {
                                     }
 
                                     final int fSuccess = success;
-                                    context.getSource().sendSuccess(() -> Component.translatable(
+                                    context.getSource().sendSuccess(() -> Bingo.translatable(
                                         "bingo.award.success", players.size(), fSuccess
                                     ), true);
                                     return success;
@@ -211,7 +216,7 @@ public class Bingo {
                                     }
 
                                     final int fSuccess = success;
-                                    context.getSource().sendSuccess(() -> Component.translatable(
+                                    context.getSource().sendSuccess(() -> Bingo.translatable(
                                         "bingo.revoke.success", fSuccess, players.size()
                                     ), true);
                                     return success;
@@ -308,7 +313,7 @@ public class Bingo {
             if (!hasArg(context, "team" + i)) break;
             if (!teams.add(TeamArgument.getTeam(context, "team" + i))) {
                 // Should probably be a CommandSyntaxException?
-                throw new CommandRuntimeException(Component.translatable("bingo.duplicate_teams"));
+                throw new CommandRuntimeException(Bingo.translatable("bingo.duplicate_teams"));
             }
         }
 
@@ -316,7 +321,7 @@ public class Bingo {
         if (requiredGoalId != null) {
             requiredGoal = BingoGoal.getGoal(requiredGoalId);
             if (requiredGoal == null) {
-                throw new CommandRuntimeException(Component.translatable("bingo.unknown_goal", requiredGoalId));
+                throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_goal", requiredGoalId));
             }
         } else {
             requiredGoal = null;
@@ -337,7 +342,7 @@ public class Bingo {
             );
         } catch (Exception e) {
             LOGGER.error("Error generating bingo board", e);
-            throw new CommandRuntimeException(Component.translatable(
+            throw new CommandRuntimeException(Bingo.translatable(
                 e instanceof JsonSyntaxException ? "bingo.start.invalid_goal" : "bingo.start.failed"
             ).withStyle(s -> s.withHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT, Component.literal(e.getMessage())
@@ -348,8 +353,8 @@ public class Bingo {
         activeGame = new BingoGame(board, gameMode, teams.toArray(PlayerTeam[]::new)); // TODO: Implement gamemode choosing
         updateCommandTree(playerList);
         playerList.getPlayers().forEach(activeGame::addPlayer);
-        playerList.broadcastSystemMessage(Component.translatable(
-            "bingo.started", Component.translatable("bingo.difficulty." + difficulty)
+        playerList.broadcastSystemMessage(Bingo.translatable(
+            "bingo.started", Bingo.translatable("bingo.difficulty." + difficulty)
         ), false);
         return Command.SINGLE_SUCCESS;
     }
@@ -394,5 +399,42 @@ public class Bingo {
             }
         }
         return false;
+    }
+
+    public static MutableComponent translatable(String key, Object... args) {
+        return Component.translatableWithFallback(key, createFallback(key, args), args);
+    }
+
+    @Contract("null -> null; !null -> !null")
+    @Nullable
+    public static MutableComponent ensureHasFallback(@Nullable MutableComponent component) {
+        if (component == null) {
+            return null;
+        }
+
+        if (component.getContents() instanceof TranslatableContents translatable && translatable.getFallback() == null) {
+            return Component.translatableWithFallback(translatable.getKey(), createFallback(translatable.getKey(), translatable.getArgs()), translatable.getArgs());
+        }
+        return component;
+    }
+
+    private static String createFallback(String key, Object... args) {
+        Language language = Language.getInstance();
+        args = args.clone();
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] instanceof Component component && component.getContents() instanceof TranslatableContents translatable) {
+                String innerKey = translatable.getKey();
+                if (translatable.getFallback() != null && !language.has(innerKey)) {
+                    innerKey = translatable.getFallback();
+                }
+                args[i] = createFallback(innerKey, translatable.getArgs());
+            }
+        }
+        String translatedKey = language.getOrDefault(key, key);
+        try {
+            return String.format(translatedKey, args);
+        } catch (IllegalFormatException e) {
+            return "Format error: " + translatedKey;
+        }
     }
 }

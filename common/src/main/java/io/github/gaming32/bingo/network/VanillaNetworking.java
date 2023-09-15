@@ -1,10 +1,10 @@
 package io.github.gaming32.bingo.network;
 
+import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import net.minecraft.advancements.*;
 import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -19,7 +19,7 @@ public class VanillaNetworking {
         null,
         new DisplayInfo(
             new ItemStack(Items.PLAYER_HEAD),
-            Component.translatable("bingo.board.title"),
+            Bingo.translatable("bingo.board.title"),
             CommonComponents.EMPTY,
             new ResourceLocation("minecraft:textures/gui/advancements/backgrounds/stone.png"),
             FrameType.TASK,
