@@ -34,6 +34,7 @@ public class BingoTriggers {
     public static final DeathTrigger DEATH = register(new DeathTrigger());
     public static final IntentionalGameDesignTrigger INTENTIONAL_GAME_DESIGN = register(new IntentionalGameDesignTrigger());
     public static final BreakBlockTrigger BREAK_BLOCK = register(new BreakBlockTrigger());
+    public static final KillItemTrigger KILL_ITEM = register(new KillItemTrigger());
 
     public static void load() {
     }

@@ -12,11 +12,13 @@ import net.minecraft.advancements.critereon.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatterns;
@@ -291,7 +293,15 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.cure_zombie_villager"))
             .icon(Items.GOLDEN_APPLE)
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
-        // TODO: throw mending book into lava
+        addGoal(BingoGoal.builder(id("burn_mending_book"))
+            .criterion("obtain", KillItemTrigger.builder()
+                .item(ItemPredicate.Builder.item().of(Items.ENCHANTED_BOOK)
+                    .hasStoredEnchantment(new EnchantmentPredicate(Enchantments.MENDING, MinMaxBounds.Ints.ANY)).build())
+                .damage(DamagePredicate.Builder.damageInstance().type(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_FIRE))).build())
+                .build())
+            .name(Component.translatable("bingo.goal.burn_mending_book"))
+            .icon(Items.ENCHANTED_BOOK)
+            .tags(BingoTags.ACTION));
         // TODO: never smelt with furnaces
         // TODO: throw huge nether fungus in overworld
         // TODO: 32-64 dirt, netherrack and end stone
