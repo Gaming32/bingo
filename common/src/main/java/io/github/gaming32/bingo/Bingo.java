@@ -40,11 +40,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.TeamArgument;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -404,7 +400,11 @@ public class Bingo {
 
     public static MutableComponent ensureHasFallback(MutableComponent component) {
         if (component.getContents() instanceof TranslatableContents translatable && translatable.getFallback() == null) {
-            return Component.translatableWithFallback(translatable.getKey(), component.getString(), translatable.getArgs());
+            final MutableComponent result = Component.translatableWithFallback(
+                translatable.getKey(), component.getString(), translatable.getArgs()
+            ).withStyle(component.getStyle());
+            result.getSiblings().addAll(component.getSiblings());
+            return result;
         }
         return component;
     }
