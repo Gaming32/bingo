@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "cure": {
+      "conditions": {},
+      "trigger": "minecraft:cured_zombie_villager"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:golden_apple"
+  },
+  "name": {
+    "translate": "bingo.goal.cure_zombie_villager"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

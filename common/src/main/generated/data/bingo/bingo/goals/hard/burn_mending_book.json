@@ -1,0 +1,44 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "damage": {
+          "type": {
+            "tags": [
+              {
+                "expected": true,
+                "id": "minecraft:is_fire"
+              }
+            ]
+          }
+        },
+        "item": {
+          "type_specific": {
+            "type": "bingo:item",
+            "item": {
+              "items": [
+                "minecraft:enchanted_book"
+              ],
+              "stored_enchantments": [
+                {
+                  "enchantment": "minecraft:mending"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "trigger": "bingo:kill_item"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:enchanted_book"
+  },
+  "name": {
+    "translate": "bingo.goal.burn_mending_book"
+  },
+  "tags": [
+    "bingo:action"
+  ]
+}
