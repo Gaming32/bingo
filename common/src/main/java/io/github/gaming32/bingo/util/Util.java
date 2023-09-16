@@ -2,8 +2,11 @@ package io.github.gaming32.bingo.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.RandomSource;
 
+import java.util.Map;
 import java.util.stream.Collector;
 
 public class Util {
@@ -31,5 +34,11 @@ public class Util {
             a.addAll(b);
             return a;
         });
+    }
+
+    public static CompoundTag compound(Map<String, Tag> nbt) {
+        final CompoundTag result = new CompoundTag();
+        nbt.forEach(result::put);
+        return result;
     }
 }

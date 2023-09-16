@@ -7,8 +7,10 @@ import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BlockPattern;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
+import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
@@ -90,7 +93,25 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.nametag_enderman"))
             .icon(Items.NAME_TAG));
-        // TODO: finish on top of blaze spawner
+        addGoal(BingoGoal.builder(id("finish_on_blaze_spawner"))
+            .criterion("spawner", new PlayerTrigger.TriggerInstance(
+                CriteriaTriggers.LOCATION.getId(),
+                ContextAwarePredicate.create(LocationCheck.checkLocation(
+                    LocationPredicate.Builder.location().setBlock(spawnerPredicate(EntityType.BLAZE).build()),
+                    new BlockPos(0, -1, 0)
+                ).build())
+            ))
+            .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.COMBAT, BingoTags.FINISH)
+            .name(Component.translatable(
+                "bingo.goal.finish_on_top_of_a",
+                Component.translatable(
+                    "bingo.spawner",
+                    EntityType.BLAZE.getDescription(),
+                    Blocks.SPAWNER.getName()
+                )
+            ))
+            .icon(Blocks.SPAWNER)
+        );
         addGoal(obtainSomeItemsFromTag(id("wool"), Items.PURPLE_WOOL, ItemTags.WOOL, "bingo.goal.wool", 12, 14)
             .antisynergy("wool_color")
             .infrequency(4)

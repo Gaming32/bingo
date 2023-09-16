@@ -1,0 +1,49 @@
+{
+  "criteria": {
+    "spawner": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:location_check",
+            "offsetY": -1,
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:spawner"
+                ],
+                "nbt": "{SpawnData:{entity:{id:\"minecraft:blaze\"}}}"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:spawner"
+  },
+  "name": {
+    "translate": "bingo.goal.finish_on_top_of_a",
+    "with": [
+      {
+        "translate": "bingo.spawner",
+        "with": [
+          {
+            "translate": "entity.minecraft.blaze"
+          },
+          {
+            "translate": "block.minecraft.spawner"
+          }
+        ]
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:nether",
+    "bingo:combat",
+    "bingo:finish"
+  ]
+}

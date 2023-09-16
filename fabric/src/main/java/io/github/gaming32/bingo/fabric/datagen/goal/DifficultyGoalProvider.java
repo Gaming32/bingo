@@ -5,39 +5,31 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoSub;
 import io.github.gaming32.bingo.data.BingoTags;
-import io.github.gaming32.bingo.triggers.BedRowTrigger;
-import io.github.gaming32.bingo.triggers.BingoTriggers;
-import io.github.gaming32.bingo.triggers.ExperienceChangeTrigger;
-import io.github.gaming32.bingo.triggers.HasSomeItemsFromTagTrigger;
-import io.github.gaming32.bingo.triggers.MineralPillarTrigger;
-import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
+import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BlockPattern;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import io.github.gaming32.bingo.util.Util;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class DifficultyGoalProvider {
@@ -253,5 +245,17 @@ public abstract class DifficultyGoalProvider {
         compound.put("Patterns", new BannerPattern.Builder().addPattern(pattern, color).toListTag());
         BlockItem.setBlockEntityData(result, BlockEntityType.BANNER, compound);
         return result;
+    }
+
+    protected static BlockPredicate.Builder spawnerPredicate(EntityType<?> entityType) {
+        return BlockPredicate.Builder.block()
+            .of(Blocks.SPAWNER)
+            .hasNbt(Util.compound(Map.of(
+                "SpawnData", Util.compound(Map.of(
+                    "entity", Util.compound(Map.of(
+                        "id", StringTag.valueOf(BuiltInRegistries.ENTITY_TYPE.getKey(entityType).toString())
+                    ))
+                ))
+            )));
     }
 }
