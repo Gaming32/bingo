@@ -44,8 +44,6 @@ public class StairwayToHeavenCondition implements LootItemCondition {
             return scan(level, origin, originState.getValue(StairBlock.FACING));
         }
 
-        level.getChunkSource().getGenerator().getFirstFreeHeight(0, 0, Heightmap.Types.WORLD_SURFACE_WG, level, level.getChunkSource().randomState());
-
         return scan(level, origin.north(), Direction.NORTH)
             || scan(level, origin.south(), Direction.SOUTH)
             || scan(level, origin.east(), Direction.EAST)
