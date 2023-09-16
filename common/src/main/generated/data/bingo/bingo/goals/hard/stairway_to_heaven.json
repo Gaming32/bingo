@@ -1,0 +1,39 @@
+{
+  "criteria": {
+    "stairway": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "position": {
+                "y": {
+                  "min": 319.0
+                }
+              }
+            }
+          },
+          {
+            "condition": "bingo:stairway_to_heaven"
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:cobblestone_stairs"
+  },
+  "name": {
+    "translate": "bingo.goal.stairway_to_heaven"
+  },
+  "tags": [
+    "bingo:build",
+    "bingo:overworld",
+    "bingo:finish"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.stairway_to_heaven.tooltip"
+  }
+}

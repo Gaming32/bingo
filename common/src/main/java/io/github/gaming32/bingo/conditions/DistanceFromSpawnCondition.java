@@ -8,11 +8,14 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 public class DistanceFromSpawnCondition implements LootItemCondition {
     private final DistancePredicate distance;
@@ -29,14 +32,8 @@ public class DistanceFromSpawnCondition implements LootItemCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
-        final Entity entity = lootContext.getParamOrNull(LootContextParams.THIS_ENTITY);
-        if (entity == null) {
-            return false;
-        }
-        final Vec3 origin = lootContext.getParamOrNull(LootContextParams.ORIGIN);
-        if (origin == null) {
-            return false;
-        }
+        final Entity entity = lootContext.getParam(LootContextParams.THIS_ENTITY);
+        final Vec3 origin = lootContext.getParam(LootContextParams.ORIGIN);
         final GlobalPos spawnPoint = CompassItem.getSpawnPosition(entity.level());
         if (spawnPoint == null || spawnPoint.dimension() != entity.level().dimension()) { // Maybe some mod does something interesting?
             return false;
@@ -46,6 +43,12 @@ public class DistanceFromSpawnCondition implements LootItemCondition {
             origin.x, origin.y, origin.z,
             spawnVec.x, spawnVec.y, spawnVec.z
         );
+    }
+
+    @NotNull
+    @Override
+    public Set<LootContextParam<?>> getReferencedContextParams() {
+        return Set.of(LootContextParams.THIS_ENTITY, LootContextParams.ORIGIN);
     }
 
     public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<DistanceFromSpawnCondition> {

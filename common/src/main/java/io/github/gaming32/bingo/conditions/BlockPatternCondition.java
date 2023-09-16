@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -64,6 +65,12 @@ public class BlockPatternCondition implements LootItemCondition {
         ServerLevel level = lootContext.getLevel();
         BlockPos origin = BlockPos.containing(lootContext.getParam(LootContextParams.ORIGIN));
         return blockPattern.find(level, origin, rotations);
+    }
+
+    @NotNull
+    @Override
+    public Set<LootContextParam<?>> getReferencedContextParams() {
+        return Set.of(LootContextParams.ORIGIN);
     }
 
     public static Builder builder() {

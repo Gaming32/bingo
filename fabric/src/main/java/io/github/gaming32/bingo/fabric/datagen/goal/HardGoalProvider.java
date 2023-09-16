@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
+import io.github.gaming32.bingo.conditions.StairwayToHeavenCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
@@ -161,7 +162,21 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(Items.BASALT));
         addGoal(obtainLevelsGoal(id("levels"), 27, 37));
         addGoal(blockCubeGoal(id("ice_cube"), Blocks.ICE, BlockTags.ICE, Blocks.ICE.getName()));
-        // TODO: finish on top of stairway to heaven
+        addGoal(BingoGoal.builder(id("stairway_to_heaven"))
+            .criterion("stairway", new PlayerTrigger.TriggerInstance(
+                CriteriaTriggers.LOCATION.getId(),
+                ContextAwarePredicate.create(
+                    LocationCheck.checkLocation(
+                        LocationPredicate.Builder.location().setY(MinMaxBounds.Doubles.atLeast(319))
+                    ).build(),
+                    new StairwayToHeavenCondition()
+                )
+            ))
+            .name(Component.translatable("bingo.goal.stairway_to_heaven"))
+            .tooltip(Component.translatable("bingo.goal.stairway_to_heaven.tooltip"))
+            .tags(BingoTags.BUILD, BingoTags.OVERWORLD, BingoTags.FINISH)
+            .icon(Blocks.COBBLESTONE_STAIRS)
+        );
         addGoal(BingoGoal.builder(id("kill_ghast_in_overworld"))
             .criterion("murder", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(EntityType.GHAST)
                 .located(LocationPredicate.inDimension(Level.OVERWORLD))))
