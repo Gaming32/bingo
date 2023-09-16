@@ -6,22 +6,9 @@ import io.github.gaming32.bingo.data.BingoSub;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.triggers.EntityKilledPlayerTrigger;
-import io.github.gaming32.bingo.triggers.EquipItemTrigger;
-import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
-import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
-import io.github.gaming32.bingo.triggers.KillSelfTrigger;
+import io.github.gaming32.bingo.triggers.*;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.RecipeCraftedTrigger;
-import net.minecraft.advancements.critereon.TagPredicate;
-import net.minecraft.advancements.critereon.TameAnimalTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -130,7 +117,20 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(potionGoal("turtle_master_potion", Potions.TURTLE_MASTER, Potions.LONG_TURTLE_MASTER, Potions.STRONG_TURTLE_MASTER)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD, BingoTags.COMBAT));
 
-        // TODO: finish by jumping from top to bottom of world
+        addGoal(BingoGoal.builder(id("finish_by_free_falling"))
+            .criterion("free_fall", DistanceTrigger.TriggerInstance.fallFromHeight(
+                // Copy of Vanilla's "fall_from_world_height" or "Caves & Cliffs" advancement
+                EntityPredicate.Builder.entity().located(
+                    LocationPredicate.atYLocation(MinMaxBounds.Doubles.atMost(-59))
+                ),
+                DistancePredicate.vertical(MinMaxBounds.Doubles.atLeast(379)),
+                LocationPredicate.atYLocation(MinMaxBounds.Doubles.atLeast(319))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.FINISH)
+            .name(Component.translatable("bingo.goal.finish_by_free_falling"))
+            .tooltip(Component.translatable("advancements.adventure.fall_from_world_height.description"))
+            .icon(Items.WATER_BUCKET)
+        );
         // TODO: vegetarian
         addGoal(BingoGoal.builder(id("kill_self_with_arrow"))
             .criterion("kill", KillSelfTrigger.TriggerInstance.killSelf(

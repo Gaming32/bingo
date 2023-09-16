@@ -1,0 +1,51 @@
+{
+  "criteria": {
+    "free_fall": {
+      "conditions": {
+        "distance": {
+          "y": {
+            "min": 379.0
+          }
+        },
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "position": {
+                  "y": {
+                    "max": -59.0
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "start_position": {
+          "position": {
+            "y": {
+              "min": 319.0
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:fall_from_height"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "item": "minecraft:water_bucket"
+  },
+  "name": {
+    "translate": "bingo.goal.finish_by_free_falling"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:finish"
+  ],
+  "tooltip": {
+    "translate": "advancements.adventure.fall_from_world_height.description"
+  }
+}
