@@ -62,6 +62,7 @@ public class BingoGoal {
     private final int difficulty;
 
     private final Set<ResourceLocation> tagIds;
+    private final BingoTag.SpecialType specialType;
 
     public BingoGoal(
         ResourceLocation id,
@@ -95,6 +96,18 @@ public class BingoGoal {
         this.difficulty = difficulty;
 
         this.tagIds = tags.stream().map(BingoTag::id).collect(ImmutableSet.toImmutableSet());
+
+        BingoTag.SpecialType specialType = null;
+        for (final BingoTag tag : tags) {
+            if (specialType == null) {
+                specialType = tag.specialType();
+                continue;
+            }
+            if (tag.specialType() != specialType) {
+                throw new IllegalArgumentException("Inconsistent specialTypes: " + tag.specialType() + " does not match " + specialType);
+            }
+        }
+        this.specialType = specialType;
     }
 
     public static Set<ResourceLocation> getGoalIds() {
@@ -358,6 +371,10 @@ public class BingoGoal {
 
     public Set<ResourceLocation> getTagIds() {
         return tagIds;
+    }
+
+    public BingoTag.SpecialType getSpecialType() {
+        return specialType;
     }
 
     public ActiveGoal build(RandomSource rand, LootDataManager lootData) {

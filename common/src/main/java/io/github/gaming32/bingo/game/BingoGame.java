@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
 import io.github.gaming32.bingo.network.*;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -266,7 +266,7 @@ public class BingoGame {
         }
         final BingoBoard.Teams[] board = this.board.getStates();
         final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
-        final boolean isNever = BingoTags.isNever(goal.getGoal().getTags());
+        final boolean isNever = goal.getGoal().getSpecialType() == BingoTag.SpecialType.NEVER;
         if (revoke || gameMode.canGetGoal(this.board, index, team, isNever)) {
             final boolean isLoss = isNever ^ revoke;
             board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);

@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.network;
 
-import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,7 +15,7 @@ public record ClientGoal(
     @Nullable Component tooltip,
     @Nullable ResourceLocation tooltipIcon,
     ItemStack icon,
-    boolean isNever
+    BingoTag.SpecialType specialType
 ) {
     public ClientGoal(ActiveGoal goal) {
         this(
@@ -24,7 +24,7 @@ public record ClientGoal(
             goal.getTooltip(),
             goal.getGoal().getTooltipIcon(),
             goal.getIcon(),
-            BingoTags.isNever(goal.getGoal().getTags())
+            goal.getGoal().getSpecialType()
         );
     }
 
@@ -35,7 +35,7 @@ public record ClientGoal(
             buf.readNullable(FriendlyByteBuf::readComponent),
             buf.readNullable(FriendlyByteBuf::readResourceLocation),
             readIcon(buf),
-            buf.readBoolean()
+            buf.readEnum(BingoTag.SpecialType.class)
         );
     }
 
@@ -45,7 +45,7 @@ public record ClientGoal(
         buf.writeNullable(tooltip, FriendlyByteBuf::writeComponent);
         buf.writeNullable(tooltipIcon, FriendlyByteBuf::writeResourceLocation);
         writeIcon(buf, icon);
-        buf.writeBoolean(isNever);
+        buf.writeEnum(specialType);
     }
 
     private static void writeIcon(FriendlyByteBuf buf, ItemStack icon) {

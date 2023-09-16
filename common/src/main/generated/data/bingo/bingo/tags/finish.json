@@ -1,9 +1,11 @@
 {
+  "allowed_on_same_line": false,
   "difficulty_max": [
     1,
     1,
     1,
     1,
     1
-  ]
+  ],
+  "special_type": "finish"
 }

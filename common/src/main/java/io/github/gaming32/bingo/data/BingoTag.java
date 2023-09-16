@@ -2,24 +2,28 @@ package io.github.gaming32.bingo.data;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
+import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
 public record BingoTag(
     ResourceLocation id,
     IntList difficultyMax,
     boolean allowedOnSameLine,
-    boolean isNever
+    SpecialType specialType
 ) {
     private static Map<ResourceLocation, BingoTag> tags = Collections.emptyMap();
 
@@ -40,7 +44,9 @@ public record BingoTag(
             id,
             IntList.of(difficultyMax),
             GsonHelper.getAsBoolean(json, "allowed_on_same_line", true),
-            GsonHelper.getAsBoolean(json, "is_never", false)
+            json.has("special_type")
+                ? Util.getOrThrow(SpecialType.CODEC.parse(JsonOps.INSTANCE, json.get("special_type")), JsonSyntaxException::new)
+                : SpecialType.NONE
         );
     }
 
@@ -57,8 +63,8 @@ public record BingoTag(
             result.addProperty("allowed_on_same_line", false);
         }
 
-        if (isNever) {
-            result.addProperty("is_never", true);
+        if (specialType != SpecialType.NONE) {
+            result.addProperty("special_type", specialType.getSerializedName());
         }
 
         return result;
@@ -72,7 +78,7 @@ public record BingoTag(
         private final ResourceLocation id;
         private IntList difficultyMax = new IntArrayList();
         private boolean allowedOnSameLine = true;
-        private boolean isNever = false;
+        private SpecialType specialType = SpecialType.NONE;
 
         private Builder(ResourceLocation id) {
             this.id = id;
@@ -88,13 +94,13 @@ public record BingoTag(
             return this;
         }
 
-        public Builder isNever() {
-            this.isNever = true;
+        public Builder specialType(SpecialType specialType) {
+            this.specialType = specialType;
             return this;
         }
 
         public BingoTag build() {
-            return new BingoTag(id, difficultyMax, allowedOnSameLine, isNever);
+            return new BingoTag(id, difficultyMax, allowedOnSameLine, specialType);
         }
     }
 
@@ -125,6 +131,25 @@ public record BingoTag(
             }
             tags = result.build();
             Bingo.LOGGER.info("Loaded {} bingo tags", tags.size());
+        }
+    }
+
+    public enum SpecialType implements StringRepresentable {
+        NONE(0), NEVER(0xff5555), FINISH(0x5555ff);
+
+        @SuppressWarnings("deprecation")
+        public static final EnumCodec<SpecialType> CODEC = StringRepresentable.fromEnum(SpecialType::values);
+
+        public final int incompleteColor;
+
+        SpecialType(int incompleteColor) {
+            this.incompleteColor = incompleteColor;
+        }
+
+        @NotNull
+        @Override
+        public String getSerializedName() {
+            return name().toLowerCase(Locale.ROOT);
         }
     }
 }

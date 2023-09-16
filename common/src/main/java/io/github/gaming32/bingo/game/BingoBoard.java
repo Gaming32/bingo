@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
-import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.util.Util;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
@@ -42,7 +41,7 @@ public class BingoBoard {
         final BingoGoal[] generatedSheet = generateGoals(difficulty, rand, isAllowedGoal, requiredGoal);
         for (int i = 0; i < SIZE_SQ; i++) {
             board.goals[i] = generatedSheet[i].build(rand, lootData);
-            if (BingoTags.isNever(generatedSheet[i].getTags())) {
+            if (generatedSheet[i].getSpecialType() == BingoTag.SpecialType.NEVER) {
                 board.states[i] = Teams.fromAll(teamCount);
             }
         }

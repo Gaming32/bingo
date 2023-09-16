@@ -4,10 +4,10 @@
 92eb3d4878b6471e6b8ff1b76b19d4d73aa10289 data/bingo/bingo/tags/color.json
 d523ed4c0ef8fe312f972c7d50772f078bcabaf7 data/bingo/bingo/tags/combat.json
 4e98336112a740d6c6c8e6c2d0e90b0661423101 data/bingo/bingo/tags/end.json
-703fe608ab305826d3b68ba4d0c2ab6ce2661c34 data/bingo/bingo/tags/finish.json
+a571139cf3d90269fdb2ad9034db545d7b6b3640 data/bingo/bingo/tags/finish.json
 d2cc0e012e1d6f494c77dd0d54041295ec706bc2 data/bingo/bingo/tags/item.json
 4797054610562d32704f65cdf033d8d557b83377 data/bingo/bingo/tags/nether.json
-f6eafaf583d3ae480fd09dbbb0c2df63e3034acb data/bingo/bingo/tags/never.json
+0f162dea0bf2b11c231fb83c21468267c897de57 data/bingo/bingo/tags/never.json
 69be1a2a8ecd27ded6dc5e6a791d0da6c7fa4e5d data/bingo/bingo/tags/ocean.json
 4526761b733f739e7ed73a96f24a54f0d63e3d69 data/bingo/bingo/tags/overworld.json
 a07aedd0f7ee3d0fcb48327235c6624bfb3b4f80 data/bingo/bingo/tags/rare_biome.json
