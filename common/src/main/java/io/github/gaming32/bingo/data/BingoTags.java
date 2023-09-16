@@ -3,6 +3,8 @@ package io.github.gaming32.bingo.data;
 import io.github.gaming32.bingo.Bingo;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Collection;
+
 public final class BingoTags {
     private BingoTags() {
     }
@@ -24,5 +26,9 @@ public final class BingoTags {
 
     private static ResourceLocation create(String name) {
         return new ResourceLocation(Bingo.MOD_ID, name);
+    }
+
+    public static boolean isNever(Collection<BingoTag> tags) {
+        return tags.stream().anyMatch(BingoTag::isNever);
     }
 }

@@ -15,7 +15,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.Map;
 
-public record BingoTag(ResourceLocation id, IntList difficultyMax, boolean allowedOnSameLine) {
+public record BingoTag(
+    ResourceLocation id,
+    IntList difficultyMax,
+    boolean allowedOnSameLine,
+    boolean isNever
+) {
     private static Map<ResourceLocation, BingoTag> tags = Collections.emptyMap();
 
     public static BingoTag getTag(ResourceLocation id) {
@@ -34,7 +39,8 @@ public record BingoTag(ResourceLocation id, IntList difficultyMax, boolean allow
         return new BingoTag(
             id,
             IntList.of(difficultyMax),
-            GsonHelper.getAsBoolean(json, "allowed_on_same_line", true)
+            GsonHelper.getAsBoolean(json, "allowed_on_same_line", true),
+            GsonHelper.getAsBoolean(json, "is_never", false)
         );
     }
 
@@ -51,6 +57,10 @@ public record BingoTag(ResourceLocation id, IntList difficultyMax, boolean allow
             result.addProperty("allowed_on_same_line", false);
         }
 
+        if (isNever) {
+            result.addProperty("is_never", true);
+        }
+
         return result;
     }
 
@@ -62,6 +72,7 @@ public record BingoTag(ResourceLocation id, IntList difficultyMax, boolean allow
         private final ResourceLocation id;
         private IntList difficultyMax = new IntArrayList();
         private boolean allowedOnSameLine = true;
+        private boolean isNever = false;
 
         private Builder(ResourceLocation id) {
             this.id = id;
@@ -77,8 +88,13 @@ public record BingoTag(ResourceLocation id, IntList difficultyMax, boolean allow
             return this;
         }
 
+        public Builder isNever() {
+            this.isNever = true;
+            return this;
+        }
+
         public BingoTag build() {
-            return new BingoTag(id, difficultyMax, allowedOnSameLine);
+            return new BingoTag(id, difficultyMax, allowedOnSameLine, isNever);
         }
     }
 

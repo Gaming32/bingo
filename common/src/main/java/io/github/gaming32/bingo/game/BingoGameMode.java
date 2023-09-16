@@ -108,7 +108,7 @@ public interface BingoGameMode {
 
         @Override
         public boolean isGoalAllowed(BingoGoal goal) {
-            return !goal.getTagIds().contains(BingoTags.NEVER);
+            return !BingoTags.isNever(goal.getTags());
         }
     };
 
@@ -142,7 +142,7 @@ public interface BingoGameMode {
 
         @Override
         public boolean isGoalAllowed(BingoGoal goal) {
-            return !goal.getTagIds().contains(BingoTags.NEVER);
+            return !BingoTags.isNever(goal.getTags());
         }
     };
 

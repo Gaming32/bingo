@@ -524,10 +524,10 @@ public class BingoGoal {
         }
 
         public Builder requirements(RequirementsStrategy strategy) {
-            if (requirements != null) {
+            if (this.requirements != null) {
                 throw new IllegalStateException("RequirementsStrategy specified after specifying explicit requirements");
             }
-            requirementsStrategy = strategy;
+            this.requirementsStrategy = strategy;
             return this;
         }
 

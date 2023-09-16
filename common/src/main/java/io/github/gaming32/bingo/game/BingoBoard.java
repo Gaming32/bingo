@@ -42,7 +42,7 @@ public class BingoBoard {
         final BingoGoal[] generatedSheet = generateGoals(difficulty, rand, isAllowedGoal, requiredGoal);
         for (int i = 0; i < SIZE_SQ; i++) {
             board.goals[i] = generatedSheet[i].build(rand, lootData);
-            if (generatedSheet[i].getTagIds().contains(BingoTags.NEVER)) {
+            if (BingoTags.isNever(generatedSheet[i].getTags())) {
                 board.states[i] = Teams.fromAll(teamCount);
             }
         }

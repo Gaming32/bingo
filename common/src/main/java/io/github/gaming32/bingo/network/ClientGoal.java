@@ -24,7 +24,7 @@ public record ClientGoal(
             goal.getTooltip(),
             goal.getGoal().getTooltipIcon(),
             goal.getIcon(),
-            goal.getGoal().getTagIds().contains(BingoTags.NEVER)
+            BingoTags.isNever(goal.getGoal().getTags())
         );
     }
 

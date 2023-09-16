@@ -266,7 +266,7 @@ public class BingoGame {
         }
         final BingoBoard.Teams[] board = this.board.getStates();
         final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
-        final boolean isNever = goal.getGoal().getTagIds().contains(BingoTags.NEVER);
+        final boolean isNever = BingoTags.isNever(goal.getGoal().getTags());
         if (revoke || gameMode.canGetGoal(this.board, index, team, isNever)) {
             final boolean isLoss = isNever ^ revoke;
             board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);
