@@ -24,7 +24,6 @@ public abstract class MixinPlayer extends MixinEntity {
         )
     )
     private void sneakingTrigger(double distanceX, double distanceY, double distanceZ, CallbackInfo ci) {
-        //noinspection ConstantValue
         if ((Object)this instanceof ServerPlayer serverPlayer) {
             if (bingo$startSneakingPos == null) {
                 Bingo.LOGGER.warn("bingo$startSneakingPos was null but player was sneaking");
