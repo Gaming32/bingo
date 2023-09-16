@@ -23,7 +23,6 @@ public abstract class MixinLivingEntity {
         )
     )
     private void onEquipItem(EquipmentSlot slot, ItemStack oldItem, ItemStack newItem, CallbackInfo ci) {
-        //noinspection ConstantValue
         if ((Object)this instanceof ServerPlayer player) {
             BingoTriggers.EQUIP_ITEM.trigger(player, oldItem, newItem, slot);
         }
