@@ -280,8 +280,17 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .setAntisynergy("honeycomb")
             .infrequency(2)
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
-        // TODO: kill a wandering trader
-        // TODO: cure a zombie villager
+        addGoal(BingoGoal.builder(id("kill_wandering_trader"))
+            .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(EntityType.WANDERING_TRADER)))
+            .name(Component.translatable("bingo.goal.kill_wandering_trader"))
+            .icon(Items.WANDERING_TRADER_SPAWN_EGG)
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT));
+        addGoal(BingoGoal.builder(id("cure_zombie_villager"))
+            .criterion("cure", CuredZombieVillagerTrigger.TriggerInstance.curedZombieVillager())
+            .name(Component.translatable("bingo.goal.cure_zombie_villager"))
+            .icon(Items.GOLDEN_APPLE)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
         // TODO: throw mending book into lava
         // TODO: never smelt with furnaces
         // TODO: throw huge nether fungus in overworld
