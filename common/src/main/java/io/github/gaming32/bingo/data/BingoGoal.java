@@ -109,6 +109,10 @@ public class BingoGoal {
             }
         }
         this.specialType = specialType;
+
+        if (specialType == BingoTag.SpecialType.FINISH && requirements.length != 1) {
+            throw new IllegalArgumentException("\"finish\" goals must have only ORed requirements");
+        }
     }
 
     public static Set<ResourceLocation> getGoalIds() {
@@ -489,7 +493,7 @@ public class BingoGoal {
         private final Map<String, BingoSub> subs = new LinkedHashMap<>();
         private final Map<String, JsonObject> criteria = new LinkedHashMap<>();
         private List<List<String>> requirements = null;
-        private RequirementsStrategy requirementsStrategy = RequirementsStrategy.AND;
+        private RequirementsStrategy requirementsStrategy = null;
         private final List<BingoTag> tags = new ArrayList<>();
         @Nullable
         private JsonElement name;
@@ -652,6 +656,11 @@ public class BingoGoal {
             }
             if (difficulty == null) {
                 throw new IllegalStateException("Bingo goal difficulty has not been set");
+            }
+
+            if (requirementsStrategy == null) {
+                requirementsStrategy = tags.stream().anyMatch(t -> t.specialType() == BingoTag.SpecialType.FINISH)
+                    ? RequirementsStrategy.OR : RequirementsStrategy.AND;
             }
 
             return new BingoGoal(

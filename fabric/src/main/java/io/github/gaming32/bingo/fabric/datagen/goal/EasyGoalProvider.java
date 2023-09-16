@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
+import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
@@ -8,22 +9,7 @@ import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
 import io.github.gaming32.bingo.triggers.EquipItemTrigger;
 import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.ConsumeItemTrigger;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.EntityTypePredicate;
-import net.minecraft.advancements.critereon.FishingRodHookedTrigger;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.PlayerInteractTrigger;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.advancements.critereon.SummonedEntityTrigger;
-import net.minecraft.advancements.critereon.TameAnimalTrigger;
-import net.minecraft.advancements.critereon.UsingItemTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -252,7 +238,18 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         // TODO: colors of concrete
         // TODO: colors of glazed terracotta
         addGoal(bedRowGoal(id("bed_row"), 3, 6));
-        // TODO: finish where you spawned using compass
+        addGoal(BingoGoal.builder(id("finish_at_spawn"))
+            .criterion("nearby", new PlayerTrigger.TriggerInstance(
+                CriteriaTriggers.LOCATION.getId(),
+                ContextAwarePredicate.create(new DistanceFromSpawnCondition(
+                    DistancePredicate.horizontal(MinMaxBounds.Doubles.atMost(3))
+                ))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.FINISH)
+            .name(Component.translatable("bingo.goal.finish_at_spawn", Items.COMPASS.getDescription()))
+            .tooltip(Component.translatable("bingo.goal.finish_at_spawn.tooltip"))
+            .icon(Items.COMPASS)
+        );
         addGoal(obtainItemGoal(id("stone"), Items.STONE, 32, 64)
             .tooltip(Component.translatable("bingo.goal.stone.tooltip"))
             .infrequency(2)

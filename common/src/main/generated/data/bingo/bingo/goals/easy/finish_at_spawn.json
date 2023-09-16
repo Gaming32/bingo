@@ -1,0 +1,39 @@
+{
+  "criteria": {
+    "nearby": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "bingo:distance_from_spawn",
+            "distance": {
+              "horizontal": {
+                "max": 3.0
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:compass"
+  },
+  "name": {
+    "translate": "bingo.goal.finish_at_spawn",
+    "with": [
+      {
+        "translate": "item.minecraft.compass"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:finish"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.finish_at_spawn.tooltip"
+  }
+}

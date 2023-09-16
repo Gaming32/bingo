@@ -19,6 +19,7 @@ public final class BingoConditions {
 
     public static final RegistrySupplier<LootItemConditionType> BLOCK_PATTERN = register("block_pattern", BlockPatternCondition.Serializer::new);
     public static final RegistrySupplier<LootItemConditionType> ENDERMAN_HAS_ONLY_BEEN_DAMAGED_BY_ENDERMITE = register("enderman_has_only_been_damaged_by_endermite", EndermanHasOnlyBeenDamagedByEndermiteCondition.Serializer::new);
+    public static final RegistrySupplier<LootItemConditionType> DISTANCE_FROM_SPAWN = register("distance_from_spawn", DistanceFromSpawnCondition.Serializer::new);
 
     public static void load() {
     }

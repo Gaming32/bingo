@@ -199,6 +199,18 @@ public class BingoGame {
     }
 
     public boolean award(ServerPlayer player, ActiveGoal goal, String criterion) {
+        if (goal.getGoal().getSpecialType() == BingoTag.SpecialType.FINISH) {
+            final BingoBoard.Teams team = getTeam(player);
+            final BingoBoard.Teams[] board = this.board.getStates();
+            final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
+            final BingoBoard.Teams oldTeams = board[index];
+            board[index] = board[index].or(team);
+            final boolean winner = getWinner(false).and(team);
+            board[index] = oldTeams;
+            if (!winner) {
+                return false;
+            }
+        }
         boolean awarded = false;
         final AdvancementProgress progress = getOrStartProgress(player, goal);
         final boolean wasDone = progress.isDone();
@@ -217,10 +229,11 @@ public class BingoGame {
         if (progress.isDone()) {
             return false;
         }
+        boolean success = false;
         for (final String criterion : progress.getRemainingCriteria()) {
-            award(player, goal, criterion);
+            success |= award(player, goal, criterion);
         }
-        return true;
+        return success;
     }
 
     public boolean revoke(ServerPlayer player, ActiveGoal goal, String criterion) {
@@ -242,10 +255,11 @@ public class BingoGame {
         if (!progress.hasProgress()) {
             return false;
         }
+        boolean success = false;
         for (final String criterion : progress.getCompletedCriteria()) {
-            revoke(player, goal, criterion);
+            success |= revoke(player, goal, criterion);
         }
-        return true;
+        return success;
     }
 
     public void flushQueuedGoals(ServerPlayer player) {
