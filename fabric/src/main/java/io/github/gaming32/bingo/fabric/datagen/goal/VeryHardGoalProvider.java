@@ -6,27 +6,10 @@ import io.github.gaming32.bingo.data.BingoSub;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.triggers.BeaconEffectTrigger;
-import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
-import io.github.gaming32.bingo.triggers.DifferentPotionsTrigger;
-import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
-import io.github.gaming32.bingo.triggers.ExperienceChangeTrigger;
-import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
-import io.github.gaming32.bingo.triggers.PartyParrotsTrigger;
-import io.github.gaming32.bingo.triggers.PowerConduitTrigger;
-import io.github.gaming32.bingo.triggers.ZombifyPigTrigger;
+import io.github.gaming32.bingo.triggers.*;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DamagePredicate;
-import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.KilledTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.advancements.critereon.TameAnimalTrigger;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -45,7 +28,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class VeryHardGoalProvider extends DifficultyGoalProvider {
@@ -199,7 +181,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.full_netherite_armor_and_tools"))
             .icon(Items.NETHERITE_HOE));
         addGoal(BingoGoal.builder(id("zombify_pig"))
-            .criterion("channel", ZombifyPigTrigger.zombifyPig()
+            .criterion("channeling", ZombifyPigTrigger.zombifyPig()
                 .direct(true)
                 .build()
             )
@@ -211,7 +193,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 .direct(false)
                 .build()
             )
-            .requirements(List.of("channel", "nearby"))
+            .requirements(RequirementsStrategy.OR)
             .name(Component.translatable("bingo.goal.zombify_pig"))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .icon(Items.COOKED_PORKCHOP));

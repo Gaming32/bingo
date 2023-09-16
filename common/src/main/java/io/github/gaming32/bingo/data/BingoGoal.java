@@ -9,6 +9,7 @@ import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.mixin.common.DisplayInfoAccessor;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -469,7 +470,8 @@ public class BingoGoal {
         private final ResourceLocation id;
         private final Map<String, BingoSub> subs = new LinkedHashMap<>();
         private final Map<String, JsonObject> criteria = new LinkedHashMap<>();
-        private List<List<String>> requirements = new ArrayList<>();
+        private List<List<String>> requirements = null;
+        private RequirementsStrategy requirementsStrategy = RequirementsStrategy.AND;
         private final List<BingoTag> tags = new ArrayList<>();
         @Nullable
         private JsonElement name;
@@ -512,13 +514,20 @@ public class BingoGoal {
             JsonSubber json = new JsonSubber(criterion.serializeToJson());
             subber.accept(json);
             this.criteria.put(key, json.json().getAsJsonObject());
-            this.requirements.add(List.of(key));
             return this;
         }
 
         @SafeVarargs
         public final Builder requirements(List<String>... requirements) {
             this.requirements = Arrays.stream(requirements).collect(Collectors.toCollection(ArrayList::new));
+            return this;
+        }
+
+        public Builder requirements(RequirementsStrategy strategy) {
+            if (requirements != null) {
+                throw new IllegalStateException("RequirementsStrategy specified after specifying explicit requirements");
+            }
+            requirementsStrategy = strategy;
             return this;
         }
 
@@ -631,7 +640,9 @@ public class BingoGoal {
                 id,
                 subs,
                 criteria,
-                requirements.stream().map(clause -> clause.toArray(String[]::new)).toArray(String[][]::new),
+                requirements != null
+                    ? requirements.stream().map(clause -> clause.toArray(String[]::new)).toArray(String[][]::new)
+                    : requirementsStrategy.createRequirements(criteria.keySet()),
                 tags,
                 name,
                 tooltip,

@@ -1,6 +1,6 @@
 {
   "criteria": {
-    "channel": {
+    "channeling": {
       "conditions": {
         "direct": true
       },
@@ -35,7 +35,7 @@
   },
   "requirements": [
     [
-      "channel",
+      "channeling",
       "nearby"
     ]
   ],

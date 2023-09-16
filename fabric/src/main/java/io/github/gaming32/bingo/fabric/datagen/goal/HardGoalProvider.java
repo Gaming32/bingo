@@ -4,27 +4,11 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.triggers.BreakBlockTrigger;
-import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
-import io.github.gaming32.bingo.triggers.EquipItemTrigger;
-import io.github.gaming32.bingo.triggers.ItemBrokenTrigger;
-import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
+import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BlockPattern;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.ConsumeItemTrigger;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.FilledBucketTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.KilledTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PlayerInteractTrigger;
-import net.minecraft.advancements.critereon.TameAnimalTrigger;
-import net.minecraft.advancements.critereon.UsedTotemTrigger;
-import net.minecraft.advancements.critereon.UsingItemTrigger;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -41,7 +25,6 @@ import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class HardGoalProvider extends DifficultyGoalProvider {
@@ -168,7 +151,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("never_wear_armor_or_use_shields"))
             .criterion("equip", EquipItemTrigger.builder().newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR).build()).build())
             .criterion("use", new UsingItemTrigger.TriggerInstance(ContextAwarePredicate.ANY, ItemPredicate.Builder.item().of(BingoItemTags.SHIELDS).build()))
-            .requirements(List.of("equip", "use"))
+            .requirements(RequirementsStrategy.OR)
             .tags(BingoTags.NEVER)
             .name(Component.translatable("bingo.goal.never_wear_armor_or_use_shields"))
             .tooltip(Component.translatable("bingo.goal.never_wear_armor_or_use_shields.tooltip"))
@@ -182,7 +165,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .criterion("placed_block", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(MatchTool.toolMatches(ItemPredicate.Builder.item().of(BingoItemTags.BUCKETS))))
             .criterion("use_on_entity", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(ItemPredicate.Builder.item().of(BingoItemTags.BUCKETS), ContextAwarePredicate.ANY))
             .criterion("consume", ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(BingoItemTags.BUCKETS).build()))
-            .requirements(List.of("filled_bucket", "placed_block", "use_on_entity", "consume"))
+            .requirements(RequirementsStrategy.OR)
             .tags(BingoTags.NEVER)
             .catalyst("use_buckets")
             .name(Component.translatable("bingo.goal.never_use_buckets"))

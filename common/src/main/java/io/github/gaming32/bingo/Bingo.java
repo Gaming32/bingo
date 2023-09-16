@@ -402,7 +402,7 @@ public class Bingo {
         if (component.getContents() instanceof TranslatableContents translatable && translatable.getFallback() == null) {
             final MutableComponent result = Component.translatableWithFallback(
                 translatable.getKey(), component.getString(), translatable.getArgs()
-            ).withStyle(component.getStyle());
+            ).setStyle(component.getStyle());
             result.getSiblings().addAll(component.getSiblings());
             return result;
         }
