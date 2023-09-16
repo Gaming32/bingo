@@ -97,9 +97,10 @@ public class BingoGoal {
 
         this.tagIds = tags.stream().map(BingoTag::id).collect(ImmutableSet.toImmutableSet());
 
-        BingoTag.SpecialType specialType = null;
+        BingoTag.SpecialType specialType = BingoTag.SpecialType.NONE;
         for (final BingoTag tag : tags) {
-            if (specialType == null) {
+            if (tag.specialType() == BingoTag.SpecialType.NONE) continue;
+            if (specialType == BingoTag.SpecialType.NONE) {
                 specialType = tag.specialType();
                 continue;
             }
