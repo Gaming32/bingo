@@ -1,0 +1,31 @@
+{
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:wandering_trader"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:wandering_trader_spawn_egg"
+  },
+  "name": {
+    "translate": "bingo.goal.kill_wandering_trader"
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:combat"
+  ]
+}
