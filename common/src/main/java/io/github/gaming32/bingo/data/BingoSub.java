@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multisets;
 import com.google.gson.*;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.Util;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
@@ -151,9 +152,9 @@ public interface BingoSub {
         }
 
         public IntBingoSub(JsonObject data) {
-            this(IntProvider.CODEC.parse(
+            this(Util.getOrThrow(IntProvider.CODEC.parse(
                 JsonOps.INSTANCE, GsonHelper.getNonNull(data, "value")
-            ).get().orThrow());
+            ), JsonSyntaxException::new));
         }
 
         @Override
@@ -164,7 +165,9 @@ public interface BingoSub {
         @Override
         public JsonObject serialize() {
             final JsonObject result = new JsonObject();
-            result.add("value", IntProvider.CODEC.encodeStart(JsonOps.INSTANCE, provider).get().orThrow());
+            result.add("value", Util.getOrThrow(
+                IntProvider.CODEC.encodeStart(JsonOps.INSTANCE, provider), IllegalArgumentException::new
+            ));
             return result;
         }
 
