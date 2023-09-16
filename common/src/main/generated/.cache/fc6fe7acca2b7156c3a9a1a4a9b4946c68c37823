@@ -49,8 +49,8 @@ b5b7a9c5269b8b9a9571b975e2291f60a1a8e30a data/bingo/bingo/goals/easy/golden_appl
 7b50cabcd9a588f945022fb9f53937eb04cc77b5 data/bingo/bingo/goals/easy/golden_carrot.json
 67f94f7e24909bbdfc08a90d160b3e5bdda847e0 data/bingo/bingo/goals/easy/grass.json
 2ae8cbccbd08237efa4c8b455f60226a0674fbaf data/bingo/bingo/goals/easy/green_dye.json
-e408a724204a88efb640c74214a6ed87e94d3a64 data/bingo/bingo/goals/easy/grow_huge_mushroom.json
-dec44d660b2c3dc19b84f72788d42991e7d19cfd data/bingo/bingo/goals/easy/grow_tree_in_nether.json
+0383c7ae147784e32772ef33f2419495fe3f980b data/bingo/bingo/goals/easy/grow_huge_mushroom.json
+1e27e22b70b9970a6e5d27006d7ecea9daab0cd1 data/bingo/bingo/goals/easy/grow_tree_in_nether.json
 5789938248b15436bd7fbc46f10c995feac06a52 data/bingo/bingo/goals/easy/gunpowder.json
 8e7d3f50f7345bc7c3f110fecced395da619a1ce data/bingo/bingo/goals/easy/hay_block.json
 a5c64ea8a6e38ca5702adae6050f625c0974ba53 data/bingo/bingo/goals/easy/honey_bottle.json
@@ -141,6 +141,7 @@ e718ea88a935f69ce7f15ccb9413116842420037 data/bingo/bingo/goals/hard/flowers.jso
 c29d66f5c8d5116764f4954cc79a6ae9f285f6c6 data/bingo/bingo/goals/hard/glazed_terracotta.json
 41ac282c7d3801f4ce7801e8ef06c945b2fa701f data/bingo/bingo/goals/hard/honey_block.json
 4038bcf3ba4fa1f4cb40d982b074d1fe37679db2 data/bingo/bingo/goals/hard/honeycomb_block.json
+5b94961ac0f150a2c3bd1fdb0740808b894981ef data/bingo/bingo/goals/hard/huge_fungus_in_overworld.json
 8b7a5d14c3a7b0d81b163ddecd56b57afa5c4d7b data/bingo/bingo/goals/hard/ice_cube.json
 c42c7b8b7dd77ff852bb7a44118bda634117c532 data/bingo/bingo/goals/hard/ice_on_magma.json
 f1667e2894c9f3c9f34cfc7f89e82c3fb4301161 data/bingo/bingo/goals/hard/jungle_log.json

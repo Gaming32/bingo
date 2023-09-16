@@ -3,10 +3,12 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.ArrowPressTrigger;
 import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
 import io.github.gaming32.bingo.triggers.EquipItemTrigger;
+import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
 import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
@@ -37,12 +39,10 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
     public void addGoals() {
         // TODO: different fish
         addGoal(BingoGoal.builder(id("grow_tree_in_nether"))
-            .criterion("grow", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
-                LocationPredicate.Builder.location()
-                    .setBlock(BlockPredicate.Builder.block().of(BlockTags.OVERWORLD_NATURAL_LOGS).build())
-                    .setDimension(Level.NETHER),
-                ItemPredicate.Builder.item().of(Items.BONE_MEAL)
-            ))
+            .criterion("grow", GrowFeatureTrigger.builder()
+                .feature(BingoFeatureTags.TREES)
+                .location(LocationPredicate.inDimension(Level.NETHER))
+                .build())
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.grow_tree_in_nether"))
             .tooltip(Component.translatable("bingo.goal.grow_tree_in_nether.tooltip"))
@@ -212,11 +212,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(Items.RED_BED)
             .catalyst("sleep"));
         addGoal(BingoGoal.builder(id("grow_huge_mushroom"))
-            .criterion("grow", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
-                LocationPredicate.Builder.location()
-                    .setBlock(BlockPredicate.Builder.block().of(Blocks.MUSHROOM_STEM).build()),
-                ItemPredicate.Builder.item().of(Items.BONE_MEAL)
-            ))
+            .criterion("grow", GrowFeatureTrigger.builder().feature(BingoFeatureTags.HUGE_MUSHROOMS).build())
             .tags(BingoTags.ACTION)
             .name(Component.translatable("bingo.goal.grow_huge_mushroom"))
             .icon(Blocks.RED_MUSHROOM_BLOCK));

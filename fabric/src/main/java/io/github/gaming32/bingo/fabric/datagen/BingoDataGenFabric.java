@@ -12,5 +12,6 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
         pack.addProvider(BingoTagProvider::new);
         pack.addProvider(BingoItemTagProvider::new);
         pack.addProvider(BingoBlockTagProvider::new);
+        pack.addProvider(BingoFeatureTagProvider::new);
     }
 }

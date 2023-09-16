@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.StairwayToHeavenCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
 import io.github.gaming32.bingo.triggers.*;
@@ -339,7 +340,15 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(Items.ENCHANTED_BOOK)
             .tags(BingoTags.ACTION));
         // TODO: never smelt with furnaces
-        // TODO: throw huge nether fungus in overworld
+        addGoal(BingoGoal.builder(id("huge_fungus_in_overworld"))
+            .criterion("grow", GrowFeatureTrigger.builder()
+                .feature(BingoFeatureTags.HUGE_FUNGI)
+                .location(LocationPredicate.inDimension(Level.OVERWORLD))
+                .build())
+            .name(Component.translatable("bingo.goal.huge_fungus_in_overworld"))
+            .icon(Items.WARPED_FUNGUS)
+            .antisynergy("grow_fungus")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.NETHER));
         // TODO: 32-64 dirt, netherrack and end stone
         addGoal(BingoGoal.builder(id("tame_mule"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.MULE).build()))

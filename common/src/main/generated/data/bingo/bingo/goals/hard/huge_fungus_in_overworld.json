@@ -1,0 +1,29 @@
+{
+  "antisynergy": "grow_fungus",
+  "criteria": {
+    "grow": {
+      "conditions": {
+        "feature": {
+          "expected": true,
+          "id": "bingo:huge_fungi"
+        },
+        "location": {
+          "dimension": "minecraft:overworld"
+        }
+      },
+      "trigger": "bingo:grow_feature"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:warped_fungus"
+  },
+  "name": {
+    "translate": "bingo.goal.huge_fungus_in_overworld"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:nether"
+  ]
+}
