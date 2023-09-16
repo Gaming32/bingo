@@ -42,6 +42,7 @@
   },
   "tags": [
     "bingo:action",
+    "bingo:build",
     "bingo:overworld",
     "bingo:finish"
   ],

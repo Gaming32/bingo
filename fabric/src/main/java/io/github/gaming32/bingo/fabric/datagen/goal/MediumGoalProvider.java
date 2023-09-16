@@ -126,7 +126,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 DistancePredicate.vertical(MinMaxBounds.Doubles.atLeast(379)),
                 LocationPredicate.atYLocation(MinMaxBounds.Doubles.atLeast(319))
             ))
-            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.FINISH)
+            .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.OVERWORLD, BingoTags.FINISH)
             .name(Component.translatable("bingo.goal.finish_by_free_falling"))
             .tooltip(Component.translatable("advancements.adventure.fall_from_world_height.description"))
             .icon(Items.WATER_BUCKET)
@@ -160,7 +160,15 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tooltip(Component.translatable("bingo.goal.whilst_trying_to_escape.tooltip"))
             .icon(Items.ZOMBIE_HEAD)
         );
-        // TODO: finish on top of the world
+        addGoal(BingoGoal.builder(id("finish_on_top"))
+            .criterion("on_top", PlayerTrigger.TriggerInstance.located(
+                LocationPredicate.atYLocation(MinMaxBounds.Doubles.atLeast(319))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.FINISH)
+            .name(Component.translatable("bingo.goal.finish_on_top"))
+            .tooltip(Component.translatable("bingo.goal.finish_on_top.tooltip"))
+            .icon(new ItemStack(Items.DIRT, 320))
+        );
         // TODO: kill hostile mob with gravel
         // TODO: kill hostile mob with sand
         // TODO: put carpet on llama
