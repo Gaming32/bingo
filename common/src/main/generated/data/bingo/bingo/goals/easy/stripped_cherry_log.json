@@ -1,0 +1,61 @@
+{
+  "antisynergy": "stripped_cherry_log",
+  "bingo_subs": {
+    "count": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 32,
+          "min_inclusive": 16
+        }
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:stripped_cherry_log"
+            ]
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:stripped_cherry_log"
+  },
+  "infrequency": 25,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.stripped_cherry_log"
+      }
+    ]
+  },
+  "reactant": "axe_use",
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

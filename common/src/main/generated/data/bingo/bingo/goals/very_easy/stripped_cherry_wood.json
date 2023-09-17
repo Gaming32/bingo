@@ -1,0 +1,61 @@
+{
+  "antisynergy": "stripped_cherry_wood",
+  "bingo_subs": {
+    "count": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 10,
+          "min_inclusive": 5
+        }
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:stripped_cherry_wood"
+            ]
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:stripped_cherry_wood"
+  },
+  "infrequency": 25,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.stripped_cherry_wood"
+      }
+    ]
+  },
+  "reactant": "axe_use",
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

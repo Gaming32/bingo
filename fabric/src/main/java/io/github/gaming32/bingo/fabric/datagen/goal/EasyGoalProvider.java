@@ -5,11 +5,7 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.triggers.ArrowPressTrigger;
-import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
-import io.github.gaming32.bingo.triggers.EquipItemTrigger;
-import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
-import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
+import io.github.gaming32.bingo.triggers.*;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -274,7 +270,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
 
-        for (String woodType : List.of("oak", "spruce", "birch", "dark_oak", "acacia")) {
+        for (String woodType : List.of("oak", "spruce", "birch", "dark_oak", "acacia", "cherry")) {
             Item planksItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_planks"));
             addGoal(obtainItemGoal(id(woodType + "_planks"), planksItem, 65, 128)
                 .tags(BingoTags.OVERWORLD)

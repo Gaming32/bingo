@@ -9,16 +9,7 @@ import io.github.gaming32.bingo.triggers.ItemBrokenTrigger;
 import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
 import io.github.gaming32.bingo.triggers.TryUseItemTrigger;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.BredAnimalsTrigger;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PickedUpItemTrigger;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -227,7 +218,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION)
             .icon(Blocks.COMPOSTER));
 
-        for (String woodType : List.of("oak", "spruce", "birch", "dark_oak", "acacia")) {
+        for (String woodType : List.of("oak", "spruce", "birch", "dark_oak", "acacia", "cherry")) {
             Item planksItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_planks"));
             addGoal(obtainItemGoal(id(woodType + "_planks"), planksItem, 32, 64)
                 .tags(BingoTags.OVERWORLD)

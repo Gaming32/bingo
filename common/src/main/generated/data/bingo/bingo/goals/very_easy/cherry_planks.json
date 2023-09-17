@@ -1,0 +1,60 @@
+{
+  "antisynergy": "cherry_planks",
+  "bingo_subs": {
+    "count": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 64,
+          "min_inclusive": 32
+        }
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:cherry_planks"
+            ]
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:cherry_planks"
+  },
+  "infrequency": 25,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.cherry_planks"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}
