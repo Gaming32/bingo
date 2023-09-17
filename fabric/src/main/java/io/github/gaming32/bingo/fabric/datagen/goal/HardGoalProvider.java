@@ -228,10 +228,17 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.void_death_to_entity"))
             .icon(Blocks.BLACK_CONCRETE)
         );
-        // TODO: didn't want to live in the same world as death message
         addGoal(obtainItemGoal(id("cookie"), Items.COOKIE)
             .tags(BingoTags.OVERWORLD));
-        // TODO: grow full jungle tree
+        addGoal(BingoGoal.builder(id("mega_jungle_tree"))
+            .criterion("grow", GrowFeatureTrigger.builder()
+                .feature(BingoFeatureTags.MEGA_JUNGLE_TREES)
+                .build()
+            )
+            .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.mega_jungle_tree"))
+            .icon(new ItemStack(Blocks.JUNGLE_SAPLING, 4))
+        );
         addGoal(obtainItemGoal(id("prismarine_shard"), Items.PRISMARINE_SHARD, 2, 10)
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
