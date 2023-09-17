@@ -279,7 +279,16 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.complete_full_size_map"))
             .icon(Items.FILLED_MAP)
             .antisynergy("complete_map"));
-        // TODO: be killed by a villager
+        addGoal(BingoGoal.builder(id("die_to_villager"))
+            .criterion("die", EntityKilledPlayerTrigger.builder()
+                .creditedEntity(EntityPredicate.Builder.entity().of(EntityType.VILLAGER).build())
+                .build()
+            )
+            .tags(BingoTags.VILLAGE, BingoTags.OVERWORLD, BingoTags.STAT, BingoTags.COMBAT)
+            .name(Component.translatable("bingo.goal.die_to_villager"))
+            .tooltip(Component.translatable("bingo.goal.die_to_villager.tooltip"))
+            .icon(Items.VILLAGER_SPAWN_EGG)
+        );
         addGoal(BingoGoal.builder(id("pop_totem"))
             .criterion("totem", UsedTotemTrigger.TriggerInstance.usedTotem(Items.TOTEM_OF_UNDYING))
             .name(Component.translatable("bingo.goal.pop_totem"))

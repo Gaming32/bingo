@@ -1,0 +1,34 @@
+{
+  "criteria": {
+    "die": {
+      "conditions": {
+        "credited_entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:villager"
+            }
+          }
+        ]
+      },
+      "trigger": "bingo:entity_killed_player"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:villager_spawn_egg"
+  },
+  "name": {
+    "translate": "bingo.goal.die_to_villager"
+  },
+  "tags": [
+    "bingo:village",
+    "bingo:overworld",
+    "bingo:stat",
+    "bingo:combat"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.die_to_villager.tooltip"
+  }
+}
