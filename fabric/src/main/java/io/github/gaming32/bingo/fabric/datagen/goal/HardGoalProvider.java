@@ -1,12 +1,14 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
+import io.github.gaming32.bingo.conditions.PillarCondition;
 import io.github.gaming32.bingo.conditions.StairwayToHeavenCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoDamageTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.mixin.common.LocationCheckAccessor;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BlockPattern;
@@ -313,7 +315,21 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tooltip(Component.translatable("bingo.goal.pacifist.tooltip"))
             .icon(Items.DIAMOND_SWORD)
             .catalyst("pacifist"));
-        // TODO: finish by scaffolding tower then removing it
+        addGoal(BingoGoal.builder(id("scaffolding_tower"))
+            .criterion("destroy", BreakBlockTrigger.builder()
+                .location(
+                    LocationCheckAccessor.createLocationCheck(
+                        LocationPredicate.atYLocation(MinMaxBounds.Doubles.atMost(-58)), BlockPos.ZERO
+                    ),
+                    new PillarCondition(379, BlockPredicate.Builder.block().of(Blocks.SCAFFOLDING).build())
+                )
+                .build()
+            )
+            .tags(BingoTags.BUILD, BingoTags.OVERWORLD, BingoTags.FINISH)
+            .name(Component.translatable("bingo.goal.scaffolding_tower"))
+            .tooltip(Component.translatable("bingo.goal.scaffolding_tower.tooltip"))
+            .icon(makeItemWithGlint(Blocks.SCAFFOLDING))
+        );
         // TODO: feed panda cake
         // TODO: breed pandas
         // TODO: disarm pillager

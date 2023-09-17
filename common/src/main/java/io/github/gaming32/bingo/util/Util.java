@@ -2,6 +2,10 @@ package io.github.gaming32.bingo.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import io.github.gaming32.bingo.mixin.common.LocationCheckAccessor;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.RandomSource;
@@ -40,5 +44,9 @@ public class Util {
         final CompoundTag result = new CompoundTag();
         nbt.forEach(result::put);
         return result;
+    }
+
+    public static ContextAwarePredicate wrapLocation(LocationPredicate location) {
+        return ContextAwarePredicate.create(LocationCheckAccessor.createLocationCheck(location, BlockPos.ZERO));
     }
 }

@@ -2,13 +2,18 @@
   "criteria": {
     "destroy": {
       "conditions": {
-        "location": {
-          "block": {
-            "blocks": [
-              "minecraft:spawner"
-            ]
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:spawner"
+                ]
+              }
+            }
           }
-        }
+        ]
       },
       "trigger": "bingo:break_block"
     }

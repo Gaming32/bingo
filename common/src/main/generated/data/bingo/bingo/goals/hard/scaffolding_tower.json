@@ -1,0 +1,46 @@
+{
+  "criteria": {
+    "destroy": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "position": {
+                "y": {
+                  "max": -58.0
+                }
+              }
+            }
+          },
+          {
+            "block": {
+              "blocks": [
+                "minecraft:scaffolding"
+              ]
+            },
+            "condition": "bingo:pillar",
+            "min_height": 379
+          }
+        ]
+      },
+      "trigger": "bingo:break_block"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:scaffolding",
+    "nbt": "{Enchantments:[{}]}"
+  },
+  "name": {
+    "translate": "bingo.goal.scaffolding_tower"
+  },
+  "tags": [
+    "bingo:build",
+    "bingo:overworld",
+    "bingo:finish"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.scaffolding_tower.tooltip"
+  }
+}

@@ -6,6 +6,7 @@
   "mixins": [
     "DisplayInfoAccessor",
     "ItemPredicateAccessor",
+    "LocationCheckAccessor",
     "MixinAbstractMegaTreeGrower",
     "MixinAbstractTreeGrower",
     "MixinAxeItem",

@@ -133,7 +133,7 @@ b11078405f190ec12fd0dc3e9bb38dd4b5845d9e data/bingo/bingo/goals/hard/complete_fu
 e2e2f674bbbe1a2ad5456db6c729dfee2180b6d5 data/bingo/bingo/goals/hard/cookie.json
 7ec2193d4d671737b4ac1ae6b188939d7bce8eb1 data/bingo/bingo/goals/hard/cure_zombie_villager.json
 a45cc23f6bdf111f80e504e94fe7db4e0ca5753b data/bingo/bingo/goals/hard/dead_coral_blocks.json
-58b633b89dc4ae1dcc9809d1f0cbe95cd844bbc3 data/bingo/bingo/goals/hard/destroy_spawner.json
+cf91316a9f40a487334821bfd60144ae1e70a469 data/bingo/bingo/goals/hard/destroy_spawner.json
 7bb1d93c68dfe99dda31bb935194cd2904282947 data/bingo/bingo/goals/hard/diamond_block.json
 53509768b116eda59df1d021e08df29613cc6a4e data/bingo/bingo/goals/hard/diamond_in_name.json
 08688c26b99977d70d5ec3d667ec4f8516a75df0 data/bingo/bingo/goals/hard/die_to_villager.json
@@ -168,6 +168,7 @@ ce9dfb7b0511a05b444eb247ed7420910c3f7ec2 data/bingo/bingo/goals/hard/poison_parr
 19d08d400e36ca5a6b8c9b130fe56127e4c88762 data/bingo/bingo/goals/hard/pop_totem.json
 2a29aa9be78419f90d81e1563d21e7bd4c0b25f9 data/bingo/bingo/goals/hard/popped_chorus_fruit.json
 c606e195d1ba29276a42d797553290a9ff950a8d data/bingo/bingo/goals/hard/prismarine_shard.json
+eb7d49f2f875e45047936581aeba0633d109bdfb data/bingo/bingo/goals/hard/scaffolding_tower.json
 d4019164c42a89b0dca4426ba75a56198e39febc data/bingo/bingo/goals/hard/sea_lantern.json
 787d31623d108d31de34d315542bfe852cdcec06 data/bingo/bingo/goals/hard/sea_pickle.json
 12097b3258007c0b2a871facbf6b76022f8dd1ad data/bingo/bingo/goals/hard/shear_mooshroom.json
