@@ -266,7 +266,17 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.COMBAT));
         addGoal(obtainItemGoal(id("popped_chorus_fruit"), Items.POPPED_CHORUS_FRUIT, 32, 64)
             .tags(BingoTags.END));
-        // TODO: get villager into the end
+        addGoal(BingoGoal.builder(id("villager_in_end"))
+            .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
+                EntityPredicate.Builder.entity()
+                    .of(EntityType.VILLAGER)
+                    .located(LocationPredicate.inDimension(Level.END))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.END, BingoTags.VILLAGE, BingoTags.COMBAT)
+            .reactant("pacifist")
+            .name(Component.translatable("bingo.goal.villager_in_end", EntityType.VILLAGER.getDescription()))
+            .icon(Blocks.CAULDRON)
+        );
         addGoal(obtainItemGoal(id("dragon_breath"), Items.DRAGON_BREATH, 5, 16)
             .tags(BingoTags.COMBAT, BingoTags.END));
         addGoal(obtainItemGoal(id("dragon_egg"), Items.DRAGON_EGG)
@@ -285,7 +295,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 .build()
             )
             .tags(BingoTags.VILLAGE, BingoTags.OVERWORLD, BingoTags.STAT, BingoTags.COMBAT)
-            .name(Component.translatable("bingo.goal.die_to_villager"))
+            .name(Component.translatable("bingo.goal.die_to_villager", EntityType.VILLAGER.getDescription()))
             .tooltip(Component.translatable("bingo.goal.die_to_villager.tooltip"))
             .icon(Items.VILLAGER_SPAWN_EGG)
         );

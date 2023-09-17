@@ -1,39 +1,40 @@
 {
   "criteria": {
-    "die": {
+    "kill": {
       "conditions": {
-        "credited_entity": [
+        "entity": [
           {
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:villager"
+              "type": "minecraft:villager",
+              "location": {
+                "dimension": "minecraft:the_end"
+              }
             }
           }
         ]
       },
-      "trigger": "bingo:entity_killed_player"
+      "trigger": "minecraft:player_killed_entity"
     }
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:villager_spawn_egg"
+    "item": "minecraft:cauldron"
   },
   "name": {
-    "translate": "bingo.goal.die_to_villager",
+    "translate": "bingo.goal.villager_in_end",
     "with": [
       {
         "translate": "entity.minecraft.villager"
       }
     ]
   },
+  "reactant": "pacifist",
   "tags": [
+    "bingo:action",
+    "bingo:end",
     "bingo:village",
-    "bingo:overworld",
-    "bingo:stat",
     "bingo:combat"
-  ],
-  "tooltip": {
-    "translate": "bingo.goal.die_to_villager.tooltip"
-  }
+  ]
 }
