@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.fabric.datagen;
+package io.github.gaming32.bingo.fabric.datagen.tag;
 
 import com.mojang.logging.LogUtils;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;

@@ -1,0 +1,27 @@
+{
+  "criteria": {
+    "death": {
+      "conditions": {
+        "source": {
+          "tags": [
+            {
+              "expected": true,
+              "id": "bingo:void"
+            }
+          ]
+        }
+      },
+      "trigger": "bingo:entity_killed_player"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:black_concrete"
+  },
+  "name": {
+    "translate": "bingo.goal.void_death_to_entity"
+  },
+  "tags": [
+    "bingo:action"
+  ]
+}

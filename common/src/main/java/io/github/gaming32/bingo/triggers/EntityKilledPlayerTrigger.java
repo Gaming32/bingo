@@ -41,6 +41,10 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
         trigger(player, instance -> instance.matches(player, creditedEntityContext, directEntityContext, sourceEntityContext, source));
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final ContextAwarePredicate creditedEntity;
         private final ContextAwarePredicate directEntity;
@@ -92,6 +96,68 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
                 return false;
             }
             return true;
+        }
+    }
+
+    public static class Builder {
+        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
+        private ContextAwarePredicate creditedEntity = ContextAwarePredicate.ANY;
+        private ContextAwarePredicate directEntity = ContextAwarePredicate.ANY;
+        private ContextAwarePredicate sourceEntity = ContextAwarePredicate.ANY;
+        private DamageSourcePredicate source = DamageSourcePredicate.ANY;
+
+        private Builder() {
+        }
+
+        public Builder player(ContextAwarePredicate player) {
+            this.player = player;
+            return this;
+        }
+
+        public Builder player(EntityPredicate player) {
+            return player(EntityPredicate.wrap(player));
+        }
+
+        public Builder creditedEntity(ContextAwarePredicate creditedEntity) {
+            this.creditedEntity = creditedEntity;
+            return this;
+        }
+
+        public Builder creditedEntity(EntityPredicate creditedEntity) {
+            return creditedEntity(EntityPredicate.wrap(creditedEntity));
+        }
+
+        public Builder directEntity(ContextAwarePredicate directEntity) {
+            this.directEntity = directEntity;
+            return this;
+        }
+
+        public Builder directEntity(EntityPredicate directEntity) {
+            return directEntity(EntityPredicate.wrap(directEntity));
+        }
+
+        public Builder sourceEntity(ContextAwarePredicate sourceEntity) {
+            this.sourceEntity = sourceEntity;
+            return this;
+        }
+
+        public Builder sourceEntity(EntityPredicate sourceEntity) {
+            return sourceEntity(EntityPredicate.wrap(sourceEntity));
+        }
+
+        public Builder source(DamageSourcePredicate source) {
+            this.source = source;
+            return this;
+        }
+
+        public TriggerInstance build() {
+            return new TriggerInstance(
+                player,
+                creditedEntity,
+                directEntity,
+                sourceEntity,
+                source
+            );
         }
     }
 }

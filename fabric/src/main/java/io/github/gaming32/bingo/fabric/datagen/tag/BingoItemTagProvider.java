@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.fabric.datagen;
+package io.github.gaming32.bingo.fabric.datagen.tag;
 
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;

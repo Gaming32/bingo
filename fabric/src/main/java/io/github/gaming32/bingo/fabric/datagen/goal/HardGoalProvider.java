@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.StairwayToHeavenCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.tags.BingoDamageTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
@@ -215,6 +216,18 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OCEAN, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("sea_pickle"), Items.SEA_PICKLE, 16, 32)
             .tags(BingoTags.OCEAN, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(id("void_death_to_entity"))
+            .criterion("death", EntityKilledPlayerTrigger.builder()
+                .source(DamageSourcePredicate.Builder.damageType()
+                    .tag(TagPredicate.is(BingoDamageTypeTags.VOID))
+                    .build()
+                )
+                .build()
+            )
+            .tags(BingoTags.ACTION)
+            .name(Component.translatable("bingo.goal.void_death_to_entity"))
+            .icon(Blocks.BLACK_CONCRETE)
+        );
         // TODO: didn't want to live in the same world as death message
         addGoal(obtainItemGoal(id("cookie"), Items.COOKIE)
             .tags(BingoTags.OVERWORLD));
