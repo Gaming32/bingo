@@ -8,7 +8,10 @@
           "id": "bingo:huge_fungi"
         },
         "location": {
-          "dimension": "minecraft:overworld"
+          "bingo:dimension_tag": {
+            "expected": true,
+            "id": "bingo:overworlds"
+          }
         }
       },
       "trigger": "bingo:grow_feature"
