@@ -4,7 +4,10 @@
     "complete": {
       "conditions": {
         "center": {
-          "dimension": "minecraft:the_end"
+          "bingo:dimension_tag": {
+            "expected": true,
+            "id": "bingo:ends"
+          }
         },
         "scale": {
           "min": 4

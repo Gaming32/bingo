@@ -3,8 +3,10 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.ext.LocationPredicateExt;
 import io.github.gaming32.bingo.triggers.*;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
@@ -17,7 +19,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -37,7 +38,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("grow_tree_in_nether"))
             .criterion("grow", GrowFeatureTrigger.builder()
                 .feature(BingoFeatureTags.TREES)
-                .location(LocationPredicate.inDimension(Level.NETHER))
+                .location(LocationPredicateExt.inDimension(BingoDimensionTags.NETHERS))
                 .build())
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.grow_tree_in_nether"))
@@ -172,7 +173,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("arrow"), Items.ARROW, 16, 64));
         addGoal(BingoGoal.builder(id("sleep_in_nether"))
             .criterion("sleep", IntentionalGameDesignTrigger.TriggerInstance.clicked(
-                LocationPredicate.inDimension(Level.NETHER)
+                LocationPredicateExt.inDimension(BingoDimensionTags.NETHERS)
             ))
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.sleep_in_nether"))

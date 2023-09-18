@@ -3,7 +3,10 @@
     "sleep": {
       "conditions": {
         "respawn": {
-          "dimension": "minecraft:the_nether"
+          "bingo:dimension_tag": {
+            "expected": true,
+            "id": "bingo:nethers"
+          }
         }
       },
       "trigger": "bingo:intentional_game_design"

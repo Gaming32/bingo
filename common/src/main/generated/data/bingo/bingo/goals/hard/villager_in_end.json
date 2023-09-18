@@ -9,7 +9,10 @@
             "predicate": {
               "type": "minecraft:villager",
               "location": {
-                "dimension": "minecraft:the_end"
+                "bingo:dimension_tag": {
+                  "expected": true,
+                  "id": "bingo:ends"
+                }
               }
             }
           }

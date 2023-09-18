@@ -9,7 +9,10 @@
             "predicate": {
               "type": "minecraft:shulker",
               "location": {
-                "dimension": "minecraft:overworld"
+                "bingo:dimension_tag": {
+                  "expected": true,
+                  "id": "bingo:overworlds"
+                }
               }
             }
           }

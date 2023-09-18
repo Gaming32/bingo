@@ -5,7 +5,9 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoSub;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
+import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.ext.LocationPredicateExt;
 import io.github.gaming32.bingo.triggers.*;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.RequirementsStrategy;
@@ -20,7 +22,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -142,7 +143,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .antisynergy("diamond_items"));
         addGoal(BingoGoal.builder(id("shulker_in_overworld"))
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
-                EntityPredicate.Builder.entity().of(EntityType.SHULKER).located(LocationPredicate.inDimension(Level.OVERWORLD))))
+                EntityPredicate.Builder.entity().of(EntityType.SHULKER).located(LocationPredicateExt.inDimension(BingoDimensionTags.OVERWORLDS))))
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.END, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.shulker_in_overworld"))
             .icon(Items.SHULKER_SHELL)
@@ -152,7 +153,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("complete_full_size_end_map"))
             .criterion("complete", CompleteMapTrigger.TriggerInstance.completeMap(
                 MinMaxBounds.Ints.atLeast(MapItemSavedData.MAX_SCALE),
-                LocationPredicate.inDimension(Level.END)
+                LocationPredicateExt.inDimension(BingoDimensionTags.ENDS)
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.END)
             .name(Component.translatable("bingo.goal.complete_full_size_end_map"))
