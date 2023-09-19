@@ -350,7 +350,22 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("gilded_blackstone"), Items.GILDED_BLACKSTONE)
             .tags(BingoTags.NETHER, BingoTags.RARE_BIOME));
         // TODO: make compass point to lodestone
-        // TODO: give piglin brute enchanted axe
+        addGoal(BingoGoal.builder(id("piglin_brute_axe"))
+            .criterion("give", PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByEntity(
+                ContextAwarePredicate.ANY,
+                ItemPredicate.Builder.item()
+                    .of(ItemTags.AXES)
+                    .hasEnchantment(new EnchantmentPredicate(null, MinMaxBounds.Ints.atLeast(1)))
+                    .build(),
+                EntityPredicate.wrap(EntityPredicate.Builder.entity()
+                    .of(EntityType.PIGLIN_BRUTE)
+                    .build()
+                )
+            ))
+            .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.COMBAT)
+            .name(Component.translatable("bingo.goal.piglin_brute_axe", EntityType.PIGLIN_BRUTE.getDescription()))
+            .icon(makeItemWithGlint(Items.GOLDEN_AXE))
+        );
         addGoal(BingoGoal.builder(id("6x6scaffolding"))
             .criterion("obtain", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
                 LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.SCAFFOLDING),

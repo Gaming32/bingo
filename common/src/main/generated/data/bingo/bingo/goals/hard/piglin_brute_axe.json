@@ -1,0 +1,46 @@
+{
+  "criteria": {
+    "give": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:piglin_brute"
+            }
+          }
+        ],
+        "item": {
+          "enchantments": [
+            {
+              "levels": {
+                "min": 1
+              }
+            }
+          ],
+          "tag": "minecraft:axes"
+        }
+      },
+      "trigger": "minecraft:thrown_item_picked_up_by_entity"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:golden_axe",
+    "nbt": "{Damage:0,Enchantments:[{}]}"
+  },
+  "name": {
+    "translate": "bingo.goal.piglin_brute_axe",
+    "with": [
+      {
+        "translate": "entity.minecraft.piglin_brute"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:nether",
+    "bingo:combat"
+  ]
+}
