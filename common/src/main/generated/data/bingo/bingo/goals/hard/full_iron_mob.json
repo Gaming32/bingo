@@ -1,0 +1,62 @@
+{
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:inverted",
+            "term": {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "type": "minecraft:player"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "equipment": {
+                "chest": {
+                  "items": [
+                    "minecraft:iron_chestplate"
+                  ]
+                },
+                "feet": {
+                  "items": [
+                    "minecraft:iron_boots"
+                  ]
+                },
+                "head": {
+                  "items": [
+                    "minecraft:iron_helmet"
+                  ]
+                },
+                "legs": {
+                  "items": [
+                    "minecraft:iron_leggings"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:iron_sword",
+    "nbt": "{Damage:0,Enchantments:[{}]}"
+  },
+  "name": {
+    "translate": "bingo.goal.full_iron_mob"
+  },
+  "reactant": "pacifist",
+  "tags": [
+    "bingo:action",
+    "bingo:combat"
+  ]
+}

@@ -33,10 +33,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
-import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.MatchTool;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.*;
 
 import java.util.function.Consumer;
 
@@ -158,8 +156,10 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .infrequency(2));
         addGoal(BingoGoal.builder(id("ice_on_magma"))
             .criterion("obtain", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
-                AnyOfCondition.anyOf(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.ICE),
-                    LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.MAGMA_BLOCK)),
+                AnyOfCondition.anyOf(
+                    LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.ICE),
+                    LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.MAGMA_BLOCK)
+                ),
                 BlockPatternCondition.builder().aisle("i", "m")
                     .where('i', BlockPredicate.Builder.block().of(Blocks.ICE).build())
                     .where('m', BlockPredicate.Builder.block().of(Blocks.MAGMA_BLOCK).build())
@@ -203,7 +203,33 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(makeItemWithGlint(Items.SHIELD))
             .antisynergy("never_wear_armor")
             .catalyst("wear_armor"));
-        // TODO: kill mob that is wearing full armor
+        addGoal(BingoGoal.builder(id("full_iron_mob"))
+            .criterion("kill", new KilledTrigger.TriggerInstance(
+                CriteriaTriggers.PLAYER_KILLED_ENTITY.getId(),
+                ContextAwarePredicate.ANY,
+                ContextAwarePredicate.create(
+                    LootItemEntityPropertyCondition.hasProperties(
+                        LootContext.EntityTarget.THIS,
+                        EntityPredicate.Builder.entity().of(EntityType.PLAYER).build()
+                    ).invert().build(),
+                    LootItemEntityPropertyCondition.hasProperties(
+                        LootContext.EntityTarget.THIS,
+                        EntityPredicate.Builder.entity().equipment(EntityEquipmentPredicate.Builder.equipment()
+                            .head(ItemPredicate.Builder.item().of(Items.IRON_HELMET).build())
+                            .chest(ItemPredicate.Builder.item().of(Items.IRON_CHESTPLATE).build())
+                            .legs(ItemPredicate.Builder.item().of(Items.IRON_LEGGINGS).build())
+                            .feet(ItemPredicate.Builder.item().of(Items.IRON_BOOTS).build())
+                            .build()
+                        )
+                    ).build()
+                ),
+                DamageSourcePredicate.ANY
+            ))
+            .tags(BingoTags.ACTION, BingoTags.COMBAT)
+            .reactant("pacifist")
+            .name(Component.translatable("bingo.goal.full_iron_mob"))
+            .icon(makeItemWithGlint(Items.IRON_SWORD))
+        );
         // TODO: enchant 5 items
         addGoal(BingoGoal.builder(id("never_use_buckets"))
             .criterion("filled_bucket", FilledBucketTrigger.TriggerInstance.filledBucket(ItemPredicate.ANY))
