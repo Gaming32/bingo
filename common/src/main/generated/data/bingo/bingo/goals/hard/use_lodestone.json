@@ -1,0 +1,48 @@
+{
+  "criteria": {
+    "use": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:lodestone"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:compass"
+              ]
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:lodestone"
+  },
+  "name": {
+    "translate": "bingo.goal.use_lodestone",
+    "with": [
+      {
+        "translate": "item.minecraft.compass"
+      },
+      {
+        "translate": "block.minecraft.lodestone"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:nether"
+  ]
+}

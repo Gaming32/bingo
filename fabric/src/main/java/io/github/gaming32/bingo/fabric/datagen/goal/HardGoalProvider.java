@@ -349,7 +349,20 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER, BingoTags.COMBAT, BingoTags.RARE_BIOME));
         addGoal(obtainItemGoal(id("gilded_blackstone"), Items.GILDED_BLACKSTONE)
             .tags(BingoTags.NETHER, BingoTags.RARE_BIOME));
-        // TODO: make compass point to lodestone
+        addGoal(BingoGoal.builder(id("use_lodestone"))
+            .criterion("use", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+                LocationPredicate.Builder.location().setBlock(
+                    BlockPredicate.Builder.block().of(Blocks.LODESTONE).build()
+                ),
+                ItemPredicate.Builder.item().of(Items.COMPASS)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.NETHER)
+            .name(Component.translatable(
+                "bingo.goal.use_lodestone",
+                Items.COMPASS.getDescription(), Blocks.LODESTONE.getName()
+            ))
+            .icon(Blocks.LODESTONE)
+        );
         addGoal(BingoGoal.builder(id("piglin_brute_axe"))
             .criterion("give", PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByEntity(
                 ContextAwarePredicate.ANY,
