@@ -1,0 +1,37 @@
+{
+  "criteria": {
+    "break": {
+      "conditions": {
+        "mob": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:pillager"
+            }
+          }
+        ]
+      },
+      "trigger": "bingo:mob_broke_crossbow"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:crossbow",
+    "nbt": "{Damage:0}"
+  },
+  "name": {
+    "translate": "bingo.goal.disarm_pillager",
+    "with": [
+      {
+        "translate": "entity.minecraft.pillager"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:combat",
+    "bingo:rare_biome"
+  ]
+}

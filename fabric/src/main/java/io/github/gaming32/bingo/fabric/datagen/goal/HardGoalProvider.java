@@ -335,7 +335,17 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         );
         // TODO: feed panda cake
         // TODO: breed pandas
-        // TODO: disarm pillager
+        addGoal(BingoGoal.builder(id("disarm_pillager"))
+            .criterion("break", MobBrokeCrossbowTrigger.TriggerInstance.brokeCrossbow(
+                EntityPredicate.Builder.entity().of(EntityType.PILLAGER).build()
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT, BingoTags.RARE_BIOME)
+            .name(Component.translatable(
+                "bingo.goal.disarm_pillager",
+                EntityType.PILLAGER.getDescription()
+            ))
+            .icon(Items.CROSSBOW)
+        );
         // TODO: stun ravager
         addGoal(BingoGoal.builder(id("hero_of_the_village"))
             .criterion("raid_won", PlayerTrigger.TriggerInstance.raidWon())
