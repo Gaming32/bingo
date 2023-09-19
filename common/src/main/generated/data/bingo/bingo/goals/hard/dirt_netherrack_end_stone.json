@@ -1,0 +1,88 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 64,
+          "min_inclusive": 32
+        }
+      }
+    }
+  },
+  "criteria": {
+    "items": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:dirt"
+            ]
+          },
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:netherrack"
+            ]
+          },
+          {
+            "count": {
+              "min": {
+                "bingo_type": "sub",
+                "id": "count"
+              }
+            },
+            "items": [
+              "minecraft:end_stone"
+            ]
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:end_stone"
+  },
+  "name": {
+    "translate": "bingo.goal.dirt_netherrack_end_stone",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      },
+      {
+        "translate": "block.minecraft.dirt"
+      },
+      {
+        "translate": "block.minecraft.netherrack"
+      },
+      {
+        "translate": "block.minecraft.end_stone"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:item",
+    "bingo:overworld",
+    "bingo:nether",
+    "bingo:end"
+  ]
+}

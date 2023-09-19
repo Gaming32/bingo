@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.PillarCondition;
 import io.github.gaming32.bingo.conditions.StairwayToHeavenCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.data.BingoSub;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoDamageTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
@@ -405,7 +406,30 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(Items.WARPED_FUNGUS)
             .antisynergy("grow_fungus")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.NETHER));
-        // TODO: 32-64 dirt, netherrack and end stone
+        addGoal(BingoGoal.builder(id("dirt_netherrack_end_stone"))
+            .sub("count", BingoSub.random(32, 64))
+            .criterion("items", TotalCountInventoryChangeTrigger.builder()
+                .items(
+                    ItemPredicate.Builder.item().of(Blocks.DIRT).withCount(MinMaxBounds.Ints.atLeast(0)).build(),
+                    ItemPredicate.Builder.item().of(Blocks.NETHERRACK).withCount(MinMaxBounds.Ints.atLeast(0)).build(),
+                    ItemPredicate.Builder.item().of(Blocks.END_STONE).withCount(MinMaxBounds.Ints.atLeast(0)).build()
+                )
+                .build(),
+                subber -> subber
+                    .sub("conditions.items.0.count.min", "count")
+                    .sub("conditions.items.1.count.min", "count")
+                    .sub("conditions.items.2.count.min", "count")
+            )
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD, BingoTags.NETHER, BingoTags.END)
+            .name(
+                Component.translatable(
+                    "bingo.goal.dirt_netherrack_end_stone",
+                    0, Blocks.DIRT.getName(), Blocks.NETHERRACK.getName(), Blocks.END_STONE.getName()
+                ),
+                subber -> subber.sub("with.0", "count")
+            )
+            .icon(Blocks.END_STONE, subber -> subber.sub("count", "count"))
+        );
         addGoal(BingoGoal.builder(id("tame_mule"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.MULE).build()))
             .name(Component.translatable("bingo.goal.tame_mule"))
