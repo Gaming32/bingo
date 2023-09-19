@@ -232,11 +232,14 @@ public abstract class DifficultyGoalProvider {
     }
 
     protected static ItemStack makeItemWithGlint(ItemLike item) {
-        ItemStack result = new ItemStack(item);
+        return makeItemWithGlint(new ItemStack(item));
+    }
+
+    protected static ItemStack makeItemWithGlint(ItemStack item) {
         ListTag enchantments = new ListTag();
         enchantments.add(new CompoundTag());
-        result.getOrCreateTag().put("Enchantments", enchantments);
-        return result;
+        item.getOrCreateTag().put("Enchantments", enchantments);
+        return item;
     }
 
     protected static ItemStack makeBannerWithPattern(Item base, ResourceKey<BannerPattern> pattern, DyeColor color) {

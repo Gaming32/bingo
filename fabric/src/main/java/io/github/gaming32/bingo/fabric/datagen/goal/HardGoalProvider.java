@@ -25,6 +25,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -336,7 +337,13 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         // TODO: breed pandas
         // TODO: disarm pillager
         // TODO: stun ravager
-        // TODO: hero of the village
+        addGoal(BingoGoal.builder(id("hero_of_the_village"))
+            .criterion("raid_won", PlayerTrigger.TriggerInstance.raidWon())
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT, BingoTags.VILLAGE)
+            .reactant("pacifist")
+            .name(Component.translatable("advancements.adventure.hero_of_the_village.title"))
+            .icon(Raid.getLeaderBannerInstance())
+        );
         addGoal(BingoGoal.builder(id("ocelot_trust"))
             .criterion("trust", TameAnimalTrigger.TriggerInstance.tamedAnimal(
                 EntityPredicate.Builder.entity().of(EntityType.OCELOT).build()
