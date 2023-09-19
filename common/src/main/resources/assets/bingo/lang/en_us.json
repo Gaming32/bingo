@@ -76,7 +76,6 @@
   "bingo.goal.ores": "%s Different Ores",
   "bingo.goal.ores.tooltip": "Coal, Diamond, Emerald, Gold, Iron, Lapis Lazuli, Nether Quartz, Nether Gold and Redstone Ores (or deepslate variants) are your choices.",
   "bingo.goal.bed_row": "Place %s colors of bed next to each other",
-  "bingo.goal.tame_skeleton_horse": "Tame a Skeleton Horse",
   "bingo.goal.tame_cat": "Tame a Cat",
   "bingo.goal.tame_horse": "Tame a Horse",
   "bingo.goal.basic_mineral_blocks": "Place Iron, Gold, and Diamond blocks on top of each other",

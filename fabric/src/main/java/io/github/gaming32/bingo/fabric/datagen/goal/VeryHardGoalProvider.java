@@ -200,11 +200,6 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .icon(Items.COOKED_PORKCHOP));
         addGoal(obtainItemGoal(id("trident"), Items.TRIDENT)
             .tags(BingoTags.OCEAN, BingoTags.COMBAT, BingoTags.OVERWORLD));
-        addGoal(BingoGoal.builder(id("tame_skeleton_horse"))
-            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.SKELETON_HORSE).build()))
-            .name(Component.translatable("bingo.goal.tame_skeleton_horse"))
-            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
-            .icon(Items.SKELETON_HORSE_SPAWN_EGG));
         addGoal(BingoGoal.builder(id("party_parrots"))
             .criterion("party", PartyParrotsTrigger.TriggerInstance.partyParrots())
             .name(Component.translatable("bingo.goal.party_parrots"))
