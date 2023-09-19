@@ -29,6 +29,7 @@
     "MixinLocationPredicate",
     "MixinMapItem",
     "MixinMushroomBlock",
+    "MixinOcelot",
     "MixinPig",
     "MixinPlayer",
     "MixinPlayerPredicate",

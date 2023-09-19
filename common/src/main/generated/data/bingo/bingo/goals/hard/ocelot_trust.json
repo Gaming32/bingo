@@ -1,0 +1,35 @@
+{
+  "criteria": {
+    "trust": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:ocelot"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:tame_animal"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:salmon"
+  },
+  "name": {
+    "translate": "bingo.goal.ocelot_trust",
+    "with": [
+      {
+        "translate": "entity.minecraft.ocelot"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}

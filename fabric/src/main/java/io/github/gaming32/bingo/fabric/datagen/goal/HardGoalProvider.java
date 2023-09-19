@@ -337,7 +337,17 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         // TODO: disarm pillager
         // TODO: stun ravager
         // TODO: hero of the village
-        // TODO: gail ocelot's trust
+        addGoal(BingoGoal.builder(id("ocelot_trust"))
+            .criterion("trust", TameAnimalTrigger.TriggerInstance.tamedAnimal(
+                EntityPredicate.Builder.entity().of(EntityType.OCELOT).build()
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .name(Component.translatable(
+                "bingo.goal.ocelot_trust",
+                EntityType.OCELOT.getDescription()
+            ))
+            .icon(Items.SALMON)
+        );
         addGoal(obtainItemGoal(id("ender_eye"), Items.ENDER_EYE, 12, 12)
             .reactant("pacifist")
             .tags(BingoTags.NETHER, BingoTags.COMBAT)
