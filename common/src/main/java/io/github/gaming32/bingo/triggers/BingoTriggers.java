@@ -36,7 +36,8 @@ public class BingoTriggers {
     public static final BreakBlockTrigger BREAK_BLOCK = register(new BreakBlockTrigger());
     public static final KillItemTrigger KILL_ITEM = register(new KillItemTrigger());
     public static final GrowFeatureTrigger GROW_FEATURE = register(new GrowFeatureTrigger());
-    public static final MobBrokeCrossbowTrigger MOB_BROKE_CROSSBOW = register(new MobBrokeCrossbowTrigger());
+    public static final EntityTrigger MOB_BROKE_CROSSBOW = register(new EntityTrigger(new ResourceLocation("bingo:mob_broke_crossbow")));
+    public static final EntityTrigger STUN_RAVAGER = register(new EntityTrigger(new ResourceLocation("bingo:stun_ravager")));
 
     public static void load() {
     }

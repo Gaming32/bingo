@@ -1,0 +1,26 @@
+{
+  "criteria": {
+    "stun": {
+      "conditions": {},
+      "trigger": "bingo:stun_ravager"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:ravager_spawn_egg"
+  },
+  "name": {
+    "translate": "bingo.goal.stun_ravager",
+    "with": [
+      {
+        "translate": "entity.minecraft.ravager"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:combat",
+    "bingo:village"
+  ]
+}

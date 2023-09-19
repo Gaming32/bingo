@@ -138,7 +138,7 @@ cf91316a9f40a487334821bfd60144ae1e70a469 data/bingo/bingo/goals/hard/destroy_spa
 53509768b116eda59df1d021e08df29613cc6a4e data/bingo/bingo/goals/hard/diamond_in_name.json
 08688c26b99977d70d5ec3d667ec4f8516a75df0 data/bingo/bingo/goals/hard/die_to_villager.json
 50ada08346fda432b7b8f36468f53f7b86f5df65 data/bingo/bingo/goals/hard/dirt_netherrack_end_stone.json
-3474cb10fc9dc1f1ea63441b4f3d6470584ee5c3 data/bingo/bingo/goals/hard/disarm_pillager.json
+579f09c912bfef62bb14898b772f98d70bd274af data/bingo/bingo/goals/hard/disarm_pillager.json
 5fb9c5999f27d9f1df715a03017df20cb584fa93 data/bingo/bingo/goals/hard/dragon_breath.json
 be23fd909d7afc380a3fb37ebeac782f1524dd69 data/bingo/bingo/goals/hard/dragon_egg.json
 8699479c7945b519787ab7235d14afc1feb2090b data/bingo/bingo/goals/hard/enchanted_golden_apple.json
@@ -182,6 +182,7 @@ f07ca75ae42684c2125322bbe00e6511444ca68b data/bingo/bingo/goals/hard/skull_banne
 e987f90ee45cb4cc5d19034d7e2099e82d351aec data/bingo/bingo/goals/hard/stairway_to_heaven.json
 3aae1304dbfa94f788c23480d60c0edf72f382b0 data/bingo/bingo/goals/hard/stripped_jungle_log.json
 bd60642da6dc75bae7f94eabf8ccc9a8bb0c3ab4 data/bingo/bingo/goals/hard/stripped_jungle_wood.json
+10cd366be78d2097484ee2c5a4bf110439a40b15 data/bingo/bingo/goals/hard/stun_ravager.json
 060f60af7b5f56ff34c1969f1713273287969b51 data/bingo/bingo/goals/hard/tame_mule.json
 a8a8f84e5ab41da826923b79b96bb42aba0ed27d data/bingo/bingo/goals/hard/tame_parrot.json
 e64cec417516807701b0c9898ae741a7ccfe07be data/bingo/bingo/goals/hard/terracotta.json

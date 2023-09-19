@@ -36,6 +36,7 @@
     "MixinPlayerPredicate",
     "MixinPlayerPredicate_Builder",
     "MixinRangedCrossbowAttackGoal",
+    "MixinRavager",
     "MixinRecordItem",
     "MixinRespawnAnchorBlock",
     "MixinServerPlayer",
