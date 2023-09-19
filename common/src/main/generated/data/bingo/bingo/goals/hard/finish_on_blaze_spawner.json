@@ -4,14 +4,16 @@
       "conditions": {
         "player": [
           {
-            "condition": "minecraft:location_check",
-            "offsetY": -1,
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
             "predicate": {
-              "block": {
-                "blocks": [
-                  "minecraft:spawner"
-                ],
-                "nbt": "{SpawnData:{entity:{id:\"minecraft:blaze\"}}}"
+              "stepping_on": {
+                "block": {
+                  "blocks": [
+                    "minecraft:spawner"
+                  ],
+                  "nbt": "{SpawnData:{entity:{id:\"minecraft:blaze\"}}}"
+                }
               }
             }
           }

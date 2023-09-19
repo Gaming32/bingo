@@ -102,12 +102,12 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.nametag_enderman"))
             .icon(Items.NAME_TAG));
         addGoal(BingoGoal.builder(id("finish_on_blaze_spawner"))
-            .criterion("spawner", new PlayerTrigger.TriggerInstance(
-                CriteriaTriggers.LOCATION.getId(),
-                ContextAwarePredicate.create(LocationCheck.checkLocation(
-                    LocationPredicate.Builder.location().setBlock(spawnerPredicate(EntityType.BLAZE).build()),
-                    new BlockPos(0, -1, 0)
-                ).build())
+            .criterion("spawner", PlayerTrigger.TriggerInstance.located(EntityPredicate.Builder.entity()
+                .steppingOn(LocationPredicate.Builder.location()
+                    .setBlock(spawnerPredicate(EntityType.BLAZE).build())
+                    .build()
+                )
+                .build()
             ))
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.COMBAT, BingoTags.FINISH)
             .name(Component.translatable(
