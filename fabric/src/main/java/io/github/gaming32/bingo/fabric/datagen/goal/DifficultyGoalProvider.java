@@ -8,6 +8,7 @@ import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BlockPattern;
 import io.github.gaming32.bingo.util.Util;
+import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -27,10 +28,9 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public abstract class DifficultyGoalProvider {
     private final int difficulty;
@@ -67,17 +67,15 @@ public abstract class DifficultyGoalProvider {
         return obtainItemGoal(id, new ItemStack(icon), item);
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemStack icon, ItemPredicate.Builder... items) {
+    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemStack icon, ItemPredicate.Builder... oneOfThese) {
         BingoGoal.Builder builder = BingoGoal.builder(id);
-        if (items.length == 1) {
-            builder.criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(items[0].build()).build());
+        if (oneOfThese.length == 1) {
+            builder.criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(oneOfThese[0].build()).build());
         } else {
-            List<String> requirements = new ArrayList<>(items.length);
-            for (int i = 0; i < items.length; i++) {
-                builder.criterion("obtain_" + i, TotalCountInventoryChangeTrigger.builder().items(items[i].build()).build());
-                requirements.add("obtain_" + i);
+            for (int i = 0; i < oneOfThese.length; i++) {
+                builder.criterion("obtain_" + i, TotalCountInventoryChangeTrigger.builder().items(oneOfThese[i].build()).build());
             }
-            builder.requirements(requirements);
+            builder.requirements(RequirementsStrategy.OR);
         }
         return builder
             .tags(BingoTags.ITEM)
@@ -110,6 +108,17 @@ public abstract class DifficultyGoalProvider {
                 subber -> subber.sub("conditions.items.0.count.min", "count"))
             .tags(BingoTags.ITEM)
             .icon(icon, subber -> subber.sub("count", "count"));
+    }
+
+    protected <T extends Item> BingoGoal.Builder allSomethingsGoal(String what, Class<T> clazz, Predicate<T> predicate) {
+        return BingoGoal.builder(id("all_" + what))
+            .criterion("obtain", allItemsOfType(clazz, predicate))
+            .tags(BingoTags.ITEM, BingoTags.NETHER)
+            .name(Component.translatable(
+                "bingo.goal.all_somethings",
+                Component.translatable("bingo.goal.all_somethings." + what)
+            ))
+            .tooltip(Component.translatable("bingo.goal.all_somethings.tooltip"));
     }
 
     protected static BingoGoal.Builder obtainSomeItemsFromTag(ResourceLocation id, ItemLike icon, TagKey<Item> tag, String translationKey, int minCount, int maxCount) {
@@ -260,5 +269,18 @@ public abstract class DifficultyGoalProvider {
                     ))
                 ))
             )));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <T extends Item> InventoryChangeTrigger.TriggerInstance allItemsOfType(
+        Class<T> clazz, Predicate<T> predicate
+    ) {
+        return InventoryChangeTrigger.TriggerInstance.hasItems(
+            BuiltInRegistries.ITEM.stream()
+                .filter(clazz::isInstance)
+                .map(i -> (T)i)
+                .filter(predicate)
+                .toArray(Item[]::new)
+        );
     }
 }

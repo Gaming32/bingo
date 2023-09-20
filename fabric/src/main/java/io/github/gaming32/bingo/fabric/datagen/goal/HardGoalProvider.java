@@ -26,9 +26,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.raid.Raid;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatterns;
@@ -335,8 +333,12 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.pop_totem"))
             .icon(Items.TOTEM_OF_UNDYING)
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD));
-        // TODO: every type of sword
-        // TODO: every type of pickaxe
+        addGoal(allSomethingsGoal("swords", SwordItem.class, i -> true)
+            .icon(Items.NETHERITE_SWORD)
+        );
+        addGoal(allSomethingsGoal("pickaxes", PickaxeItem.class, i -> true)
+            .icon(Items.NETHERITE_PICKAXE)
+        );
         addGoal(BingoGoal.builder(id("pacifist"))
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity())
             .tags(BingoTags.NEVER, BingoTags.STAT)

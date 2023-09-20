@@ -5,32 +5,32 @@
         "items": [
           {
             "items": [
-              "minecraft:leather_chestplate"
+              "minecraft:wooden_sword"
             ]
           },
           {
             "items": [
-              "minecraft:chainmail_chestplate"
+              "minecraft:stone_sword"
             ]
           },
           {
             "items": [
-              "minecraft:iron_chestplate"
+              "minecraft:golden_sword"
             ]
           },
           {
             "items": [
-              "minecraft:diamond_chestplate"
+              "minecraft:iron_sword"
             ]
           },
           {
             "items": [
-              "minecraft:golden_chestplate"
+              "minecraft:diamond_sword"
             ]
           },
           {
             "items": [
-              "minecraft:netherite_chestplate"
+              "minecraft:netherite_sword"
             ]
           }
         ]
@@ -38,16 +38,16 @@
       "trigger": "minecraft:inventory_changed"
     }
   },
-  "difficulty": 4,
+  "difficulty": 3,
   "icon": {
-    "item": "minecraft:netherite_chestplate",
+    "item": "minecraft:netherite_sword",
     "nbt": "{Damage:0}"
   },
   "name": {
     "translate": "bingo.goal.all_somethings",
     "with": [
       {
-        "translate": "bingo.goal.all_somethings.chestplates"
+        "translate": "bingo.goal.all_somethings.swords"
       }
     ]
   },

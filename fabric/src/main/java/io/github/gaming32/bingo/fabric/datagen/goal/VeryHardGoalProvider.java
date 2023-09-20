@@ -15,10 +15,7 @@ import net.minecraft.advancements.critereon.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
@@ -58,14 +55,9 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.MUNDANE),
                 subber -> subber.sub("count", "count")
             ));
-        addGoal(BingoGoal.builder(id("all_chestplates"))
-            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
-                Items.LEATHER_CHESTPLATE, Items.GOLDEN_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE,
-                Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE))
-            .tags(BingoTags.ITEM, BingoTags.COMBAT)
-            .name(Component.translatable("bingo.goal.all_chestplates"))
-            .tooltip(Component.translatable("bingo.goal.all_chestplates.tooltip"))
-            .icon(Items.NETHERITE_CHESTPLATE));
+        addGoal(allSomethingsGoal("chestplates", ArmorItem.class, i -> i.getType() == ArmorItem.Type.CHESTPLATE)
+            .icon(Items.NETHERITE_CHESTPLATE)
+        );
         addGoal(obtainItemGoal(
             id("any_head"),
             new ItemStack(Items.ZOMBIE_HEAD),

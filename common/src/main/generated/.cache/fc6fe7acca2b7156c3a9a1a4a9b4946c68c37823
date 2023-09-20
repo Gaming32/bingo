@@ -124,6 +124,8 @@ b30a81e4c4228460ab48d5ede5d954c00f6076a1 data/bingo/bingo/goals/easy/water_lava_
 1a11263ec94a4738d2d55f74095a40309438b91b data/bingo/bingo/goals/easy/writable_book.json
 907c64dea9bea38f548718374c3bb09269efaac6 data/bingo/bingo/goals/easy/yellow_dye.json
 c177d185aba57fc7e80a8b0ecc63093189582da5 data/bingo/bingo/goals/hard/6x6scaffolding.json
+3133fdef83819b5c368f1250e4efdbcede6816df data/bingo/bingo/goals/hard/all_pickaxes.json
+50dc6fcad51566249e65cf3586f70cb8ab804350 data/bingo/bingo/goals/hard/all_swords.json
 1b53a3cc30280dcafcf8186d6dea7af1ffc57382 data/bingo/bingo/goals/hard/bed_row.json
 6886b107bd8f93d6f025d986d038f9c77f9f8409 data/bingo/bingo/goals/hard/burn_mending_book.json
 8c9d1e897e4f2b13c3375529b61351a854f95804 data/bingo/bingo/goals/hard/carrot_stick_to_rod.json
@@ -354,7 +356,7 @@ e32cf92eff541e78cbe0f79cc95560b4fd854f5a data/bingo/bingo/goals/very_easy/stripp
 b8b2d87bd0ccd9c4407468bc32e2b6b889223220 data/bingo/bingo/goals/very_easy/stripped_spruce_log.json
 d1832eb7458dce224e1eaaa2b13224621546bf0d data/bingo/bingo/goals/very_easy/stripped_spruce_wood.json
 a5bf489787d892a79febd77aa4e501c92069f133 data/bingo/bingo/goals/very_easy/water_bucket.json
-69cdc4390d73223f53d27f1ab62a322176d23e8c data/bingo/bingo/goals/very_hard/all_chestplates.json
+9937fc027ef55ccafc34f19bb4d12082b3326eea data/bingo/bingo/goals/very_hard/all_chestplates.json
 d1e1d4cdfc07739b23627bc977b5ad63502eec1d data/bingo/bingo/goals/very_hard/all_diamond_craftables.json
 4c2339d5182ab9ce70ed5b0dc19c74aa4a8c8bea data/bingo/bingo/goals/very_hard/all_dyes.json
 b8f59d3dd21b17dc7dcfa3c156bc18be22858f7c data/bingo/bingo/goals/very_hard/all_mineral_blocks.json
