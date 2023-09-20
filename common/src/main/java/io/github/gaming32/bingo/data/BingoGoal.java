@@ -81,18 +81,18 @@ public class BingoGoal {
         int difficulty
     ) {
         this.id = id;
-        this.subs = subs;
-        this.criteria = criteria;
+        this.subs = ImmutableMap.copyOf(subs);
+        this.criteria = ImmutableMap.copyOf(criteria);
         this.requirements = requirements;
-        this.tags = tags;
+        this.tags = ImmutableList.copyOf(tags);
         this.name = name;
         this.tooltip = tooltip;
         this.tooltipIcon = tooltipIcon;
         this.icon = icon;
         this.infrequency = infrequency;
-        this.antisynergy = antisynergy;
-        this.catalyst = catalyst;
-        this.reactant = reactant;
+        this.antisynergy = ImmutableList.copyOf(antisynergy);
+        this.catalyst = ImmutableList.copyOf(catalyst);
+        this.reactant = ImmutableList.copyOf(reactant);
         this.difficulty = difficulty;
 
         this.tagIds = tags.stream().map(BingoTag::id).collect(ImmutableSet.toImmutableSet());
