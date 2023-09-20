@@ -202,7 +202,10 @@ public class BingoGame {
         if (goal.getGoal().getSpecialType() == BingoTag.SpecialType.FINISH) {
             final BingoBoard.Teams team = getTeam(player);
             final BingoBoard.Teams[] board = this.board.getStates();
-            final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
+            final int index = getBoardIndex(player, goal);
+            if (index == -1) {
+                return false;
+            }
             final BingoBoard.Teams oldTeams = board[index];
             board[index] = board[index].or(team);
             final boolean winner = getWinner(false).and(team);
@@ -279,14 +282,8 @@ public class BingoGame {
             return;
         }
         final BingoBoard.Teams[] board = this.board.getStates();
-        final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
-        if (index == -1) {
-            Bingo.LOGGER.warn(
-                "Player {} got a goal ({}) from a previous game! This should not happen.",
-                player.getScoreboardName(), goal.getGoal().getId()
-            );
-            return;
-        }
+        final int index = getBoardIndex(player, goal);
+        if (index == -1) return;
         final boolean isNever = goal.getGoal().getSpecialType() == BingoTag.SpecialType.NEVER;
         if (revoke || gameMode.canGetGoal(this.board, index, team, isNever)) {
             final boolean isLoss = isNever ^ revoke;
@@ -296,6 +293,17 @@ public class BingoGame {
                 checkForWin(player.server.getPlayerList());
             }
         }
+    }
+
+    private int getBoardIndex(ServerPlayer player, ActiveGoal goal) {
+        final int index = ArrayUtils.indexOf(this.board.getGoals(), goal);
+        if (index == -1) {
+            Bingo.LOGGER.warn(
+                "Player {} got a goal ({}) from a previous game! This should not happen.",
+                player.getScoreboardName(), goal.getGoal().getId()
+            );
+        }
+        return index;
     }
 
     private void notifyTeam(
