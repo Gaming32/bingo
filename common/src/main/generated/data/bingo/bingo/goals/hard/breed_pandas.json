@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "breed": {
+      "conditions": {
+        "child": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:panda"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:bred_animals"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:bamboo"
+  },
+  "name": {
+    "translate": "bingo.goal.breed_pandas"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}

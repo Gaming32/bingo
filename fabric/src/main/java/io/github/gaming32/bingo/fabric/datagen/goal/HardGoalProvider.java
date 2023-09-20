@@ -361,8 +361,27 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tooltip(Component.translatable("bingo.goal.scaffolding_tower.tooltip"))
             .icon(makeItemWithGlint(Blocks.SCAFFOLDING))
         );
-        // TODO: feed panda cake
-        // TODO: breed pandas
+        addGoal(BingoGoal.builder(id("feed_panda_cake"))
+            .criterion("feed", PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByEntity(
+                ContextAwarePredicate.ANY,
+                ItemPredicate.Builder.item().of(Blocks.CAKE).build(),
+                EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.PANDA).build())
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .name(Component.translatable(
+                "bingo.goal.feed_panda_cake",
+                EntityType.PANDA.getDescription(), Blocks.CAKE.getName()
+            ))
+            .icon(Items.PANDA_SPAWN_EGG)
+        );
+        addGoal(BingoGoal.builder(id("breed_pandas"))
+            .criterion("breed", BredAnimalsTrigger.TriggerInstance.bredAnimals(
+                EntityPredicate.Builder.entity().of(EntityType.PANDA)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .name(Component.translatable("bingo.goal.breed_pandas"))
+            .icon(Items.BAMBOO)
+        );
         addGoal(BingoGoal.builder(id("disarm_pillager"))
             .criterion("break", EntityTrigger.TriggerInstance.brokeCrossbow(
                 EntityPredicate.Builder.entity().of(EntityType.PILLAGER).build()

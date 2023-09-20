@@ -127,6 +127,7 @@ c177d185aba57fc7e80a8b0ecc63093189582da5 data/bingo/bingo/goals/hard/6x6scaffold
 3133fdef83819b5c368f1250e4efdbcede6816df data/bingo/bingo/goals/hard/all_pickaxes.json
 50dc6fcad51566249e65cf3586f70cb8ab804350 data/bingo/bingo/goals/hard/all_swords.json
 1b53a3cc30280dcafcf8186d6dea7af1ffc57382 data/bingo/bingo/goals/hard/bed_row.json
+0c816c2a609c73e7e9d24ef97735ab75faadaa4b data/bingo/bingo/goals/hard/breed_pandas.json
 6886b107bd8f93d6f025d986d038f9c77f9f8409 data/bingo/bingo/goals/hard/burn_mending_book.json
 8c9d1e897e4f2b13c3375529b61351a854f95804 data/bingo/bingo/goals/hard/carrot_stick_to_rod.json
 b11078405f190ec12fd0dc3e9bb38dd4b5845d9e data/bingo/bingo/goals/hard/complete_full_size_map.json
@@ -145,6 +146,7 @@ cf91316a9f40a487334821bfd60144ae1e70a469 data/bingo/bingo/goals/hard/destroy_spa
 be23fd909d7afc380a3fb37ebeac782f1524dd69 data/bingo/bingo/goals/hard/dragon_egg.json
 8699479c7945b519787ab7235d14afc1feb2090b data/bingo/bingo/goals/hard/enchanted_golden_apple.json
 1615492347ae0c5727391f537ff664e10e643039 data/bingo/bingo/goals/hard/ender_eye.json
+55373dc6692cb2655f77fbe7d268607fb8868e4e data/bingo/bingo/goals/hard/feed_panda_cake.json
 70af8bf20dc320da4d40bd248a69d351b68e2bb7 data/bingo/bingo/goals/hard/finish_on_blaze_spawner.json
 e718ea88a935f69ce7f15ccb9413116842420037 data/bingo/bingo/goals/hard/flowers.json
 0828551a346287b3869d338cdeb1bb9d28c90b65 data/bingo/bingo/goals/hard/full_iron_mob.json

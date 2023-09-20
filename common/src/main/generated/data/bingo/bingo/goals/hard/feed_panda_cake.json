@@ -1,0 +1,43 @@
+{
+  "criteria": {
+    "feed": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:panda"
+            }
+          }
+        ],
+        "item": {
+          "items": [
+            "minecraft:cake"
+          ]
+        }
+      },
+      "trigger": "minecraft:thrown_item_picked_up_by_entity"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "item": "minecraft:panda_spawn_egg"
+  },
+  "name": {
+    "translate": "bingo.goal.feed_panda_cake",
+    "with": [
+      {
+        "translate": "entity.minecraft.panda"
+      },
+      {
+        "translate": "block.minecraft.cake"
+      }
+    ]
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}
