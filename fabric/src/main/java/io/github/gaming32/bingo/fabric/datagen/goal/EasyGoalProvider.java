@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
+import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
@@ -396,6 +398,15 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         // TODO: set fire to villager's house
         addGoal(obtainItemGoal(id("emerald"), Items.EMERALD)
             .tags(BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(id("milk_cure"))
+            .criterion("cure", new ConsumeMilkBucketTrigger.TriggerInstance(
+                ContextAwarePredicate.create(new HasAnyEffectCondition(LootContext.EntityTarget.THIS)),
+                ItemPredicate.ANY
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD) // TODO
+            .name(Component.translatable("bingo.goal.milk_cure"))
+            .icon(Items.MILK_BUCKET)
+        );
     }
 
     private BingoGoal.Builder eatEntireCake() {

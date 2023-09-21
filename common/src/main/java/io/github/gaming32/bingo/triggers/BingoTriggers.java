@@ -38,6 +38,7 @@ public class BingoTriggers {
     public static final GrowFeatureTrigger GROW_FEATURE = register(new GrowFeatureTrigger());
     public static final EntityTrigger MOB_BROKE_CROSSBOW = register(new EntityTrigger(new ResourceLocation("bingo:mob_broke_crossbow")));
     public static final EntityTrigger STUN_RAVAGER = register(new EntityTrigger(new ResourceLocation("bingo:stun_ravager")));
+    public static final ConsumeMilkBucketTrigger CONSUME_MILK_BUCKET = register(new ConsumeMilkBucketTrigger());
 
     public static void load() {
     }

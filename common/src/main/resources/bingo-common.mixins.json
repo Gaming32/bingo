@@ -29,6 +29,7 @@
     "MixinLivingEntity",
     "MixinLocationPredicate",
     "MixinMapItem",
+    "MixinMilkBucketItem",
     "MixinMushroomBlock",
     "MixinOcelot",
     "MixinPig",

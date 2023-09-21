@@ -1,0 +1,26 @@
+{
+  "criteria": {
+    "cure": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "bingo:has_any_effect",
+            "entity": "this"
+          }
+        ]
+      },
+      "trigger": "bingo:consume_milk_bucket"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "item": "minecraft:milk_bucket"
+  },
+  "name": {
+    "translate": "bingo.goal.milk_cure"
+  },
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}
