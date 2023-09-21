@@ -4,16 +4,10 @@
       "conditions": {
         "location": [
           {
-            "condition": "minecraft:location_check",
-            "predicate": {
-              "block": {
-                "blocks": [
-                  "minecraft:composter"
-                ],
-                "state": {
-                  "level": "7"
-                }
-              }
+            "block": "minecraft:composter",
+            "condition": "minecraft:block_state_property",
+            "properties": {
+              "level": "7"
             }
           }
         ]

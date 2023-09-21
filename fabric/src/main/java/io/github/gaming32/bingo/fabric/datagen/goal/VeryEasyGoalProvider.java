@@ -19,7 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -205,13 +205,10 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .criterion("fill", new ItemUsedOnLocationTrigger.TriggerInstance(
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.getId(),
                 ContextAwarePredicate.ANY,
-                ContextAwarePredicate.create(LocationCheck.checkLocation(
-                    LocationPredicate.Builder.location().setBlock(
-                        BlockPredicate.Builder.block().of(Blocks.COMPOSTER).setProperties(
-                            StatePropertiesPredicate.Builder.properties().hasProperty(ComposterBlock.LEVEL, 7).build()
-                        ).build()
-                    )
-                ).build())
+                ContextAwarePredicate.create(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.COMPOSTER)
+                    .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ComposterBlock.LEVEL, 7))
+                    .build()
+                )
             ))
             .name(Component.translatable("bingo.goal.fill_composter"))
             .tooltip(Component.translatable("bingo.goal.fill_composter.tooltip"))
