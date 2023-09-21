@@ -157,6 +157,7 @@ public class BingoClient {
                 Optional.ofNullable(goal.tooltipIcon()).map(IconTooltip::new),
                 (int)mousePos.mouseX(), (int)mousePos.mouseY()
             );
+            graphics.flush();
         }
     }
 
