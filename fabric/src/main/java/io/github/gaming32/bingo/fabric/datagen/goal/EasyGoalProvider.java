@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
@@ -46,7 +47,12 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.grow_tree_in_nether"))
             .tooltip(Component.translatable("bingo.goal.grow_tree_in_nether.tooltip"))
             .icon(Items.BONE_MEAL));
-        // TODO: colors of terracotta
+        addGoal(obtainSomeItemsFromTag(id("colors_of_terracotta"), Items.TERRACOTTA, ItemTags.TERRACOTTA, "bingo.goal.colors_of_terracotta", 4, 7)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD)
+            .reactant("use_furnace")
+            .antisynergy("terracotta_color")
+            .infrequency(4)
+        );
         addGoal(obtainItemGoal(id("mushroom_stew"), Items.MUSHROOM_STEW, 2, 5));
         addGoal(BingoGoal.builder(id("shoot_button"))
             .criterion("obtain", ArrowPressTrigger.builder()

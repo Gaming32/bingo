@@ -1,0 +1,51 @@
+{
+  "antisynergy": "terracotta_color",
+  "bingo_subs": {
+    "count": {
+      "type": "int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 7,
+          "min_inclusive": 4
+        }
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": {
+          "bingo_type": "sub",
+          "id": "count"
+        },
+        "tag": "minecraft:terracotta"
+      },
+      "trigger": "bingo:has_some_items_from_tag"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "count": {
+      "bingo_type": "sub",
+      "id": "count"
+    },
+    "item": "minecraft:terracotta"
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "bingo.goal.colors_of_terracotta",
+    "with": [
+      {
+        "bingo_type": "sub",
+        "id": "count"
+      }
+    ]
+  },
+  "reactant": "use_furnace",
+  "tags": [
+    "bingo:item",
+    "bingo:color",
+    "bingo:overworld"
+  ]
+}
