@@ -1,7 +1,7 @@
 {
   "bingo_subs": {
     "count": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -18,8 +18,8 @@
           {
             "count": {
               "min": {
-                "bingo_type": "sub",
-                "id": "count"
+                "bingo_type": "bingo:sub",
+                "value": "count"
               }
             },
             "items": [
@@ -29,8 +29,8 @@
           {
             "count": {
               "min": {
-                "bingo_type": "sub",
-                "id": "count"
+                "bingo_type": "bingo:sub",
+                "value": "count"
               }
             },
             "items": [
@@ -40,8 +40,8 @@
           {
             "count": {
               "min": {
-                "bingo_type": "sub",
-                "id": "count"
+                "bingo_type": "bingo:sub",
+                "value": "count"
               }
             },
             "items": [
@@ -56,8 +56,8 @@
   "difficulty": 3,
   "icon": {
     "count": {
-      "bingo_type": "sub",
-      "id": "count"
+      "bingo_type": "bingo:sub",
+      "value": "count"
     },
     "item": "minecraft:end_stone"
   },
@@ -65,8 +65,8 @@
     "translate": "bingo.goal.dirt_netherrack_end_stone",
     "with": [
       {
-        "bingo_type": "sub",
-        "id": "count"
+        "bingo_type": "bingo:sub",
+        "value": "count"
       },
       {
         "translate": "block.minecraft.dirt"

@@ -2,7 +2,7 @@
   "antisynergy": "crouch_distance",
   "bingo_subs": {
     "distance": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -28,15 +28,14 @@
                     "stat": "minecraft:crouch_one_cm",
                     "value": {
                       "min": {
-                        "bingo_type": "compound",
-                        "element_type": "int",
+                        "bingo_type": "bingo:compound",
                         "factors": [
                           {
-                            "type": "sub",
-                            "id": "distance"
+                            "type": "bingo:sub",
+                            "value": "distance"
                           },
                           {
-                            "type": "int",
+                            "type": "bingo:int",
                             "value": 100
                           }
                         ],
@@ -56,8 +55,8 @@
   "difficulty": 0,
   "icon": {
     "count": {
-      "bingo_type": "sub",
-      "id": "distance"
+      "bingo_type": "bingo:sub",
+      "value": "distance"
     },
     "item": "minecraft:leather_boots",
     "nbt": "{Damage:0}"
@@ -67,8 +66,8 @@
     "translate": "bingo.goal.crouch_distance",
     "with": [
       {
-        "bingo_type": "sub",
-        "id": "distance"
+        "bingo_type": "bingo:sub",
+        "value": "distance"
       }
     ]
   },

@@ -2,8 +2,10 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
-import io.github.gaming32.bingo.data.BingoSub;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.subs.BingoSub;
+import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
+import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
@@ -179,18 +181,18 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                     BlockPatternCondition.builder().aisle("P")
                         .where('P', BlockPredicate.Builder.block().of(Blocks.NETHER_PORTAL).build())
                 ),
-                subber -> subber.sub("conditions.location.1.aisles.0", new BingoSub.CompoundBingoSub(
-                    BingoSub.CompoundBingoSub.ElementType.ARRAY,
-                    BingoSub.CompoundBingoSub.Operator.MUL,
+                subber -> subber.sub("conditions.location.1.aisles.0", new CompoundBingoSub(
+                    CompoundBingoSub.ElementType.ARRAY,
+                    CompoundBingoSub.Operator.MUL,
                     BingoSub.wrapInArray(
-                        new BingoSub.CompoundBingoSub(
-                            BingoSub.CompoundBingoSub.ElementType.STRING,
-                            BingoSub.CompoundBingoSub.Operator.MUL,
+                        new CompoundBingoSub(
+                            CompoundBingoSub.ElementType.STRING,
+                            CompoundBingoSub.Operator.MUL,
                             BingoSub.literal("P"),
-                            new BingoSub.SubBingoSub("width")
+                            new SubBingoSub("width")
                         )
                     ),
-                    new BingoSub.SubBingoSub("height")
+                    new SubBingoSub("height")
                 ))
             )
             .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.NETHER)

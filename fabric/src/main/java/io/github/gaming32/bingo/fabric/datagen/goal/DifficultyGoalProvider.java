@@ -3,8 +3,10 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
-import io.github.gaming32.bingo.data.BingoSub;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.subs.BingoSub;
+import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
+import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BlockPattern;
 import io.github.gaming32.bingo.util.Util;
@@ -157,10 +159,10 @@ public abstract class DifficultyGoalProvider {
                 BingoTriggers.statChanged(Stats.CUSTOM.get(Stats.CROUCH_ONE_CM), MinMaxBounds.Ints.atLeast(0)),
                 subber -> subber.sub(
                     "conditions.player.0.predicate.type_specific.bingo:relative_stats.0.value.min",
-                    new BingoSub.CompoundBingoSub(
-                        BingoSub.CompoundBingoSub.ElementType.INT,
-                        BingoSub.CompoundBingoSub.Operator.MUL,
-                        new BingoSub.SubBingoSub("distance"),
+                    new CompoundBingoSub(
+                        CompoundBingoSub.ElementType.INT,
+                        CompoundBingoSub.Operator.MUL,
+                        new SubBingoSub("distance"),
                         BingoSub.literal(100)
                     )
                 )
@@ -210,25 +212,25 @@ public abstract class DifficultyGoalProvider {
                         .where('#', BlockPredicate.Builder.block().of(blockTag).build())
                         .rotations(BlockPattern.Rotations.ALL)
                 ),
-                subber -> subber.sub("conditions.location.1.aisles", new BingoSub.CompoundBingoSub(
-                    BingoSub.CompoundBingoSub.ElementType.ARRAY,
-                    BingoSub.CompoundBingoSub.Operator.MUL,
+                subber -> subber.sub("conditions.location.1.aisles", new CompoundBingoSub(
+                    CompoundBingoSub.ElementType.ARRAY,
+                    CompoundBingoSub.Operator.MUL,
                     BingoSub.wrapInArray(
-                        new BingoSub.CompoundBingoSub(
-                            BingoSub.CompoundBingoSub.ElementType.ARRAY,
-                            BingoSub.CompoundBingoSub.Operator.MUL,
+                        new CompoundBingoSub(
+                            CompoundBingoSub.ElementType.ARRAY,
+                            CompoundBingoSub.Operator.MUL,
                             BingoSub.wrapInArray(
-                                new BingoSub.CompoundBingoSub(
-                                    BingoSub.CompoundBingoSub.ElementType.STRING,
-                                    BingoSub.CompoundBingoSub.Operator.MUL,
+                                new CompoundBingoSub(
+                                    CompoundBingoSub.ElementType.STRING,
+                                    CompoundBingoSub.Operator.MUL,
                                     BingoSub.literal("#"),
-                                    new BingoSub.SubBingoSub("width")
+                                    new SubBingoSub("width")
                                 )
                             ),
-                            new BingoSub.SubBingoSub("height")
+                            new SubBingoSub("height")
                         )
                     ),
-                    new BingoSub.SubBingoSub("depth")
+                    new SubBingoSub("depth")
                 ))
             )
             .tags(BingoTags.BUILD, BingoTags.OVERWORLD)

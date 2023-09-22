@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.mixin.common.DisplayInfoAccessor;
 import net.minecraft.advancements.Criterion;
@@ -190,7 +191,7 @@ public class BingoGoal {
             GsonHelper.getAsJsonObject(json, "bingo_subs", new JsonObject())
                 .entrySet()
                 .stream()
-                .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> BingoSub.deserialize(e.getValue(), "type"))),
+                .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> BingoSub.deserialize(e.getValue()))),
             criteria, requirements,
             GsonHelper.getAsJsonArray(json, "tags", new JsonArray())
                 .asList()
@@ -235,7 +236,7 @@ public class BingoGoal {
         if (!subs.isEmpty()) {
             final JsonObject subsObj = new JsonObject();
             for (final var entry : subs.entrySet()) {
-                subsObj.add(entry.getKey(), entry.getValue().serializeWithType("type"));
+                subsObj.add(entry.getKey(), entry.getValue().serializeToJson());
             }
             result.add("bingo_subs", subsObj);
         }
@@ -468,7 +469,7 @@ public class BingoGoal {
         if (value.isJsonObject()) {
             final JsonObject obj = value.getAsJsonObject();
             if (obj.has("bingo_type")) {
-                return BingoSub.deserialize(obj, "bingo_type").substitute(referable, rand);
+                return BingoSub.deserializeInner(obj).substitute(referable, rand);
             }
             final JsonObject result = new JsonObject();
             for (final var entry : obj.entrySet()) {

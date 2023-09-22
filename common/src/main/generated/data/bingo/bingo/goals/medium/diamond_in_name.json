@@ -2,7 +2,7 @@
   "antisynergy": "diamond_items",
   "bingo_subs": {
     "count": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -16,8 +16,8 @@
     "obtain": {
       "conditions": {
         "required_count": {
-          "bingo_type": "sub",
-          "id": "count"
+          "bingo_type": "bingo:sub",
+          "value": "count"
         },
         "tag": "bingo:diamond_in_name"
       },
@@ -27,8 +27,8 @@
   "difficulty": 2,
   "icon": {
     "count": {
-      "bingo_type": "sub",
-      "id": "count"
+      "bingo_type": "bingo:sub",
+      "value": "count"
     },
     "item": "minecraft:diamond_helmet",
     "nbt": "{Damage:0}"
@@ -37,8 +37,8 @@
     "translate": "bingo.goal.diamond_in_name",
     "with": [
       {
-        "bingo_type": "sub",
-        "id": "count"
+        "bingo_type": "bingo:sub",
+        "value": "count"
       }
     ]
   },

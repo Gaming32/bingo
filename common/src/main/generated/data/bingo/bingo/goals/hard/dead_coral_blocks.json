@@ -1,7 +1,7 @@
 {
   "bingo_subs": {
     "count": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -15,8 +15,8 @@
     "obtain": {
       "conditions": {
         "required_count": {
-          "bingo_type": "sub",
-          "id": "count"
+          "bingo_type": "bingo:sub",
+          "value": "count"
         },
         "tag": "bingo:dead_coral_blocks"
       },
@@ -26,8 +26,8 @@
   "difficulty": 3,
   "icon": {
     "count": {
-      "bingo_type": "sub",
-      "id": "count"
+      "bingo_type": "bingo:sub",
+      "value": "count"
     },
     "item": "minecraft:dead_brain_coral_block"
   },
@@ -35,8 +35,8 @@
     "translate": "bingo.goal.dead_coral_blocks",
     "with": [
       {
-        "bingo_type": "sub",
-        "id": "count"
+        "bingo_type": "bingo:sub",
+        "value": "count"
       }
     ]
   },

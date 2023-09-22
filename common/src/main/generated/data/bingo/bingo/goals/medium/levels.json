@@ -2,7 +2,7 @@
   "antisynergy": "levels",
   "bingo_subs": {
     "count": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -17,8 +17,8 @@
       "conditions": {
         "levels": {
           "min": {
-            "bingo_type": "sub",
-            "id": "count"
+            "bingo_type": "bingo:sub",
+            "value": "count"
           }
         }
       },
@@ -28,8 +28,8 @@
   "difficulty": 2,
   "icon": {
     "count": {
-      "bingo_type": "sub",
-      "id": "count"
+      "bingo_type": "bingo:sub",
+      "value": "count"
     },
     "item": "minecraft:experience_bottle"
   },
@@ -38,8 +38,8 @@
     "translate": "bingo.goal.levels",
     "with": [
       {
-        "bingo_type": "sub",
-        "id": "count"
+        "bingo_type": "bingo:sub",
+        "value": "count"
       }
     ]
   },

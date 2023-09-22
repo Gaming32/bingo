@@ -1,7 +1,7 @@
 {
   "bingo_subs": {
     "count": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -15,8 +15,8 @@
     "potions": {
       "conditions": {
         "min_count": {
-          "bingo_type": "sub",
-          "id": "count"
+          "bingo_type": "bingo:sub",
+          "value": "count"
         }
       },
       "trigger": "bingo:different_potions"
@@ -25,8 +25,8 @@
   "difficulty": 4,
   "icon": {
     "count": {
-      "bingo_type": "sub",
-      "id": "count"
+      "bingo_type": "bingo:sub",
+      "value": "count"
     },
     "item": "minecraft:potion",
     "nbt": "{Potion:\"minecraft:mundane\"}"
@@ -35,8 +35,8 @@
     "translate": "bingo.goal.different_potions",
     "with": [
       {
-        "bingo_type": "sub",
-        "id": "count"
+        "bingo_type": "bingo:sub",
+        "value": "count"
       }
     ]
   },

@@ -2,7 +2,7 @@
   "antisynergy": "bed_color",
   "bingo_subs": {
     "count": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -16,8 +16,8 @@
     "obtain": {
       "conditions": {
         "count": {
-          "bingo_type": "sub",
-          "id": "count"
+          "bingo_type": "bingo:sub",
+          "value": "count"
         }
       },
       "trigger": "bingo:bed_row"
@@ -26,8 +26,8 @@
   "difficulty": 2,
   "icon": {
     "count": {
-      "bingo_type": "sub",
-      "id": "count"
+      "bingo_type": "bingo:sub",
+      "value": "count"
     },
     "item": "minecraft:magenta_bed"
   },
@@ -36,8 +36,8 @@
     "translate": "bingo.goal.bed_row",
     "with": [
       {
-        "bingo_type": "sub",
-        "id": "count"
+        "bingo_type": "bingo:sub",
+        "value": "count"
       }
     ]
   },

@@ -1,7 +1,7 @@
 {
   "bingo_subs": {
     "count": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -18,8 +18,8 @@
           {
             "count": {
               "min": {
-                "bingo_type": "sub",
-                "id": "count"
+                "bingo_type": "bingo:sub",
+                "value": "count"
               }
             },
             "tag": "minecraft:leaves"
@@ -32,8 +32,8 @@
   "difficulty": 0,
   "icon": {
     "count": {
-      "bingo_type": "sub",
-      "id": "count"
+      "bingo_type": "bingo:sub",
+      "value": "count"
     },
     "item": "minecraft:oak_leaves"
   },

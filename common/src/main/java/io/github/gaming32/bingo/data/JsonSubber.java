@@ -2,11 +2,13 @@ package io.github.gaming32.bingo.data;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import io.github.gaming32.bingo.data.subs.BingoSub;
+import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import net.minecraft.util.GsonHelper;
 
 public record JsonSubber(JsonElement json) {
     public JsonSubber sub(String path, String key) {
-        return sub(path, new BingoSub.SubBingoSub(key));
+        return sub(path, new SubBingoSub(key));
     }
 
     public JsonSubber sub(String path, BingoSub sub) {
@@ -38,7 +40,7 @@ public record JsonSubber(JsonElement json) {
 
         String finalPart = parts[parts.length - 1];
         if (element.isJsonObject()) {
-            element.getAsJsonObject().add(finalPart, sub.serializeWithType("bingo_type"));
+            element.getAsJsonObject().add(finalPart, sub.serializeInnerToJson());
         } else if (element.isJsonArray()) {
             int index;
             try {
@@ -50,7 +52,7 @@ public record JsonSubber(JsonElement json) {
             if (index < 0 || index >= array.size()) {
                 throw new IllegalArgumentException("Index " + index + " is out of bounds for json array with length " + array.size());
             }
-            array.set(index, sub.serializeWithType("bingo_type"));
+            array.set(index, sub.serializeInnerToJson());
         } else {
             throw new IllegalArgumentException("Could not find member \"" + finalPart + "\" in json element of type " + GsonHelper.getType(element));
         }

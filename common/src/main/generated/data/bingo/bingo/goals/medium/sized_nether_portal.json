@@ -1,7 +1,7 @@
 {
   "bingo_subs": {
     "height": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -11,7 +11,7 @@
       }
     },
     "width": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -32,23 +32,23 @@
           {
             "aisles": [
               {
-                "bingo_type": "compound",
+                "bingo_type": "bingo:compound",
                 "element_type": "array",
                 "factors": [
                   {
-                    "type": "wrap",
+                    "type": "bingo:wrap",
                     "value": [
                       {
-                        "bingo_type": "compound",
+                        "bingo_type": "bingo:compound",
                         "element_type": "string",
                         "factors": [
                           {
-                            "type": "wrap",
+                            "type": "bingo:wrap",
                             "value": "P"
                           },
                           {
-                            "type": "sub",
-                            "id": "width"
+                            "type": "bingo:sub",
+                            "value": "width"
                           }
                         ],
                         "operator": "mul"
@@ -56,8 +56,8 @@
                     ]
                   },
                   {
-                    "type": "sub",
-                    "id": "height"
+                    "type": "bingo:sub",
+                    "value": "height"
                   }
                 ],
                 "operator": "mul"
@@ -87,12 +87,12 @@
     "translate": "bingo.goal.sized_nether_portal",
     "with": [
       {
-        "bingo_type": "sub",
-        "id": "width"
+        "bingo_type": "bingo:sub",
+        "value": "width"
       },
       {
-        "bingo_type": "sub",
-        "id": "height"
+        "bingo_type": "bingo:sub",
+        "value": "height"
       }
     ]
   },

@@ -2,7 +2,7 @@
   "antisynergy": "carved_pumpkin",
   "bingo_subs": {
     "count": {
-      "type": "int",
+      "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
@@ -19,8 +19,8 @@
           {
             "count": {
               "min": {
-                "bingo_type": "sub",
-                "id": "count"
+                "bingo_type": "bingo:sub",
+                "value": "count"
               }
             },
             "items": [
@@ -35,8 +35,8 @@
   "difficulty": 1,
   "icon": {
     "count": {
-      "bingo_type": "sub",
-      "id": "count"
+      "bingo_type": "bingo:sub",
+      "value": "count"
     },
     "item": "minecraft:carved_pumpkin"
   },
@@ -44,8 +44,8 @@
     "translate": "bingo.count",
     "with": [
       {
-        "bingo_type": "sub",
-        "id": "count"
+        "bingo_type": "bingo:sub",
+        "value": "count"
       },
       {
         "translate": "block.minecraft.carved_pumpkin"
