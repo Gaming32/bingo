@@ -102,6 +102,9 @@ public class Bingo {
                 .then(literal("stop")
                     .requires(source -> source.hasPermission(2) && activeGame != null)
                     .executes(ctx -> {
+                        if (activeGame == null) {
+                            throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                        }
                         activeGame.endGame(ctx.getSource().getServer().getPlayerList(), activeGame.getWinner(true));
                         return Command.SINGLE_SUCCESS;
                     })
@@ -109,6 +112,9 @@ public class Bingo {
                 .then(literal("board")
                     .requires(source -> activeGame != null)
                     .executes(ctx -> {
+                        if (activeGame == null) {
+                            throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                        }
                         ctx.getSource().getPlayerOrException().openMenu(new MenuProvider() {
                             @Override
                             public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
@@ -136,6 +142,9 @@ public class Bingo {
                     })
                     .then(literal("copy")
                         .executes(ctx -> {
+                            if (activeGame == null) {
+                                throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                            }
                             ctx.getSource().sendSuccess(() -> ComponentUtils.wrapInSquareBrackets(
                                 Bingo.translatable("bingo.board.copy")
                             ).withStyle(s -> s
@@ -149,6 +158,9 @@ public class Bingo {
                     .then(literal("difficulties")
                         .requires(source -> source.hasPermission(2))
                         .executes(ctx -> {
+                            if (activeGame == null) {
+                                throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                            }
                             final BingoBoard board = activeGame.getBoard();
                             final StringBuilder line = new StringBuilder(BingoBoard.SIZE);
                             for (int y = 0; y < BingoBoard.SIZE; y++) {
@@ -169,6 +181,9 @@ public class Bingo {
                             .then(argument("goal", ResourceLocationArgument.id())
                                 .suggests(ACTIVE_GOAL_SUGGESTOR)
                                 .executes(context -> {
+                                    if (activeGame == null) {
+                                        throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                                    }
                                     final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
                                     final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
 
@@ -195,6 +210,9 @@ public class Bingo {
                             .then(argument("goal", ResourceLocationArgument.id())
                                 .suggests(ACTIVE_GOAL_SUGGESTOR)
                                 .executes(context -> {
+                                    if (activeGame == null) {
+                                        throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                                    }
                                     final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
                                     final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
 
@@ -299,6 +317,10 @@ public class Bingo {
     }
 
     private static int startGame(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        if (activeGame != null) {
+            throw new CommandRuntimeException(Component.translatable("bingo.game_running"));
+        }
+
         final int difficulty = getArg(context, "difficulty", () -> 2, IntegerArgumentType::getInteger);
         final long seed = getArg(context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong);
         final ResourceLocation requiredGoalId = getArg(context, "required_goal", () -> null, ResourceLocationArgument::getId);

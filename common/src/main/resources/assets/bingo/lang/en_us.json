@@ -175,5 +175,7 @@
   "bingo.key.category": "Bingo",
   "bingo.sixteen_bang": "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, and %s!",
   "bingo.three": "%s, %s, and %s",
-  "bingo.spawner": "%s %s"
+  "bingo.spawner": "%s %s",
+  "bingo.game_running": "Bingo game already running!",
+  "bingo.no_game_running": "No Bingo game is running!"
 }
