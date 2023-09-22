@@ -19,14 +19,13 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 public record CompoundBingoSub(ElementType elementType, Operator operator, List<BingoSub> factors) implements BingoSub {
-    public static final Codec<List<BingoSub>> FACTORS_CODEC = BingoSub.CODEC.listOf().comapFlatMap(
-        list -> !list.isEmpty() ? DataResult.success(list) : DataResult.error(() -> "factors is empty!"),
-        Function.identity()
-    );
     public static final Codec<CompoundBingoSub> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         ElementType.CODEC.optionalFieldOf("element_type", ElementType.INT).forGetter(CompoundBingoSub::elementType),
         Operator.CODEC.fieldOf("operator").forGetter(CompoundBingoSub::operator),
-        FACTORS_CODEC.fieldOf("factors").forGetter(CompoundBingoSub::factors)
+        BingoSub.CODEC.listOf().comapFlatMap(
+            list -> !list.isEmpty() ? DataResult.success(list) : DataResult.error(() -> "factors is empty!"),
+            Function.identity()
+        ).fieldOf("factors").forGetter(CompoundBingoSub::factors)
     ).apply(instance, CompoundBingoSub::new));
 
     public CompoundBingoSub {
