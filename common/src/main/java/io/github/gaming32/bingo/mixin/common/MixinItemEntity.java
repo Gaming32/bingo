@@ -59,11 +59,18 @@ public abstract class MixinItemEntity extends Entity implements ItemEntityExt {
 
     @Inject(
         method = "hurt",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;)V"
-        )
+        at = {
+            @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;)V"
+            ),
+            @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;Lnet/minecraft/world/damagesource/DamageSource;)V"
+            )
+        }
     )
+    @SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"})
     private void onKilled(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         BingoTriggers.KILL_ITEM.trigger((ItemEntity) (Object) this, source, amount);
     }
