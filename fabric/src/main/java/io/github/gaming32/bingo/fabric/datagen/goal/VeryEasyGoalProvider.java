@@ -4,10 +4,8 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.triggers.BingoTriggers;
-import io.github.gaming32.bingo.triggers.ItemBrokenTrigger;
-import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
-import io.github.gaming32.bingo.triggers.TryUseItemTrigger;
+import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
+import io.github.gaming32.bingo.triggers.*;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -84,7 +82,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("leaves"), Items.OAK_LEAVES, ItemPredicate.Builder.item().of(ItemTags.LEAVES), 32, 64)
-            .name(Component.translatable("bingo.goal.leaves"))
+            .name(Component.translatable("bingo.goal.leaves", 0), subber -> subber.sub("with.0", "count"))
             .tags(BingoTags.OVERWORLD));
         addGoal(blockCubeGoal(id("leaf_cube"), Blocks.OAK_LEAVES, BlockTags.LEAVES, Component.translatable("bingo.goal.cube.leaf")));
         // TODO: colors of wool
@@ -164,8 +162,11 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .icon(Items.CAMPFIRE)
         );
         addGoal(BingoGoal.builder(id("never_pickup_crafting_tables"))
-            .criterion("pickup", PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByPlayer(
-                ContextAwarePredicate.ANY, ItemPredicate.Builder.item().of(Items.CRAFTING_TABLE).build(), ContextAwarePredicate.ANY))
+            .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUp(
+                EntityPredicate.Builder.entity().subPredicate(
+                    ItemEntityPredicate.item(ItemPredicate.Builder.item().of(Items.CRAFTING_TABLE).build())
+                ).build()
+            ))
             .tags(BingoTags.NEVER)
             .name(Component.translatable("bingo.goal.never_pickup_crafting_tables"))
             .tooltip(Component.translatable("bingo.goal.never_pickup_crafting_tables.tooltip"))

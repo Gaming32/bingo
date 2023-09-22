@@ -38,7 +38,13 @@
     "item": "minecraft:oak_leaves"
   },
   "name": {
-    "translate": "bingo.goal.leaves"
+    "translate": "bingo.goal.leaves",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      }
+    ]
   },
   "tags": [
     "bingo:item",

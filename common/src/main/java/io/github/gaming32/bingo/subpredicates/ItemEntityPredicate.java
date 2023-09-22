@@ -26,6 +26,10 @@ public class ItemEntityPredicate implements EntitySubPredicate {
         this.droppedBy = droppedBy;
     }
 
+    public static ItemEntityPredicate item(ItemPredicate item) {
+        return new ItemEntityPredicate(item, MinMaxBounds.Ints.ANY, EntityPredicate.ANY);
+    }
+
     public static ItemEntityPredicate droppedBy(ItemPredicate item, EntityPredicate droppedBy) {
         return new ItemEntityPredicate(item, MinMaxBounds.Ints.ANY, droppedBy);
     }
