@@ -18,7 +18,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:compass"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:compass"
+    }
   },
   "name": {
     "translate": "bingo.goal.finish_at_spawn",

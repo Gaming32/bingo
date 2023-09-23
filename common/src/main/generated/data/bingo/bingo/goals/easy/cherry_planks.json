@@ -34,11 +34,14 @@
   },
   "difficulty": 1,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:cherry_planks"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:cherry_planks"
+    }
   },
   "infrequency": 25,
   "name": {

@@ -16,8 +16,14 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:trident",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:trident",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "item.minecraft.trident"

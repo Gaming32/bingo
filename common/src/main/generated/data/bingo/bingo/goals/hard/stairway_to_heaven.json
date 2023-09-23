@@ -23,7 +23,20 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:cobblestone_stairs"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:cobblestone_stairs",
+      "Properties": {
+        "facing": "north",
+        "half": "bottom",
+        "shape": "straight",
+        "waterlogged": "false"
+      }
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:cobblestone_stairs"
+    }
   },
   "name": {
     "translate": "bingo.goal.stairway_to_heaven"

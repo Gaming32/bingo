@@ -23,7 +23,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:cauldron"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:cauldron"
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:cauldron"
+    }
   },
   "name": {
     "translate": "bingo.goal.villager_in_end",

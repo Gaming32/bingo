@@ -43,8 +43,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:potion",
-    "nbt": "{Potion:\"minecraft:regeneration\"}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:potion",
+      "tag": {
+        "Potion": "minecraft:regeneration"
+      }
+    }
   },
   "infrequency": 12,
   "name": {

@@ -16,7 +16,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:daylight_detector"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:daylight_detector"
+    }
   },
   "name": {
     "translate": "block.minecraft.daylight_detector"

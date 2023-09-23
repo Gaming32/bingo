@@ -20,7 +20,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:spawner"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:spawner"
+    }
   },
   "name": {
     "translate": "bingo.goal.destroy_spawner"

@@ -9,7 +9,17 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:conduit"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:conduit",
+      "Properties": {
+        "waterlogged": "true"
+      }
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:conduit"
+    }
   },
   "name": {
     "translate": "bingo.goal.full_power_conduit"

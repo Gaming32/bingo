@@ -30,8 +30,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:potion",
-    "nbt": "{Potion:\"minecraft:fire_resistance\"}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:potion",
+      "tag": {
+        "Potion": "minecraft:fire_resistance"
+      }
+    }
   },
   "infrequency": 12,
   "name": {

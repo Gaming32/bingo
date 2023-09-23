@@ -34,11 +34,14 @@
   },
   "difficulty": 1,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:mossy_cobblestone"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:mossy_cobblestone"
+    }
   },
   "name": {
     "translate": "bingo.count",

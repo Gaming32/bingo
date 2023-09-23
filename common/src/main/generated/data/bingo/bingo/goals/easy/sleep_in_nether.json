@@ -14,7 +14,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:purple_bed"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:purple_bed"
+    }
   },
   "name": {
     "translate": "bingo.goal.sleep_in_nether"

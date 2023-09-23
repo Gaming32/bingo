@@ -34,11 +34,14 @@
   },
   "difficulty": 0,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:stripped_spruce_log"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:stripped_spruce_log"
+    }
   },
   "infrequency": 25,
   "name": {

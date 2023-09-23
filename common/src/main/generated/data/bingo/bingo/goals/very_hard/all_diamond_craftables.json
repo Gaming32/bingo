@@ -76,8 +76,14 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:diamond_hoe",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:diamond_hoe",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.all_diamond_craftables"

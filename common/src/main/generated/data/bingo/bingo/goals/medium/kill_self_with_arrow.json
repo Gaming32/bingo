@@ -19,7 +19,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:arrow"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:arrow"
+    }
   },
   "name": {
     "translate": "bingo.goal.kill_self_with_arrow"

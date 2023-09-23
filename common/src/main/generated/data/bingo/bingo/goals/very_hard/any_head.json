@@ -20,7 +20,11 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:zombie_head"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:zombie_head"
+    }
   },
   "name": {
     "translate": "bingo.goal.any_head"

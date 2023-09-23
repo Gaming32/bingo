@@ -27,8 +27,17 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:golden_axe",
-    "nbt": "{Damage:0,Enchantments:[{}]}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:golden_axe",
+      "tag": {
+        "Damage": 0,
+        "Enchantments": [
+          {}
+        ]
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.piglin_brute_axe",

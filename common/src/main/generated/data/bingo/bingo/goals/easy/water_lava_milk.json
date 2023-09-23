@@ -31,7 +31,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:lava_bucket"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:lava_bucket"
+    }
   },
   "name": {
     "translate": "bingo.three",

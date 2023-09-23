@@ -14,7 +14,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:cactus"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:cactus"
+    }
   },
   "name": {
     "translate": "bingo.goal.potted_cactus"

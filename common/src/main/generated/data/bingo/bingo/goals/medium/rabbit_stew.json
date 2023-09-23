@@ -16,7 +16,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:rabbit_stew"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:rabbit_stew"
+    }
   },
   "name": {
     "translate": "item.minecraft.rabbit_stew"

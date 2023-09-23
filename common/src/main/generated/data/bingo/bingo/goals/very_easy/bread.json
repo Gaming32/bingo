@@ -34,11 +34,14 @@
   },
   "difficulty": 0,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:bread"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:bread"
+    }
   },
   "infrequency": 2,
   "name": {

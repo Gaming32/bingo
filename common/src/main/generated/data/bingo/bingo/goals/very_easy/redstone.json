@@ -16,7 +16,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:redstone"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:redstone"
+    }
   },
   "infrequency": 2,
   "name": {

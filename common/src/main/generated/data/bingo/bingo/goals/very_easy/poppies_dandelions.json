@@ -57,7 +57,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:poppy"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:poppy"
+    }
   },
   "name": {
     "translate": "bingo.and",

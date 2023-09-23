@@ -16,7 +16,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:soul_lantern"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:soul_lantern"
+    }
   },
   "name": {
     "translate": "block.minecraft.soul_lantern"

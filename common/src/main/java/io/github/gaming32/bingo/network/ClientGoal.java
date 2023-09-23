@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.network;
 
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
-import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
@@ -24,7 +23,7 @@ public record ClientGoal(
             goal.getName(),
             goal.getTooltip(),
             goal.getGoal().getTooltipIcon(),
-            new ItemIcon(goal.getIcon()),
+            goal.getIcon(),
             goal.getGoal().getSpecialType()
         );
     }

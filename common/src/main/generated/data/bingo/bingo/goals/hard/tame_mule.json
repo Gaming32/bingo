@@ -17,7 +17,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:mule_spawn_egg"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:mule_spawn_egg"
+    }
   },
   "name": {
     "translate": "bingo.goal.tame_mule"

@@ -34,11 +34,14 @@
   },
   "difficulty": 1,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:lily_pad"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:lily_pad"
+    }
   },
   "name": {
     "translate": "bingo.count",

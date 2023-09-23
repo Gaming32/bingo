@@ -16,7 +16,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:diamond"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:diamond"
+    }
   },
   "name": {
     "translate": "item.minecraft.diamond"

@@ -81,7 +81,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:obsidian"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:obsidian"
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:obsidian"
+    }
   },
   "name": {
     "translate": "bingo.goal.sized_nether_portal",

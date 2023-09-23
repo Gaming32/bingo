@@ -17,8 +17,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "count": 3,
-    "item": "minecraft:honeycomb_block"
+    "type": "bingo:item",
+    "value": {
+      "Count": 3,
+      "id": "minecraft:honeycomb_block"
+    }
   },
   "infrequency": 2,
   "name": {

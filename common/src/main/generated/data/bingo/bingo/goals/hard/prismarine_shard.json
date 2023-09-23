@@ -34,11 +34,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:prismarine_shard"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:prismarine_shard"
+    }
   },
   "infrequency": 2,
   "name": {

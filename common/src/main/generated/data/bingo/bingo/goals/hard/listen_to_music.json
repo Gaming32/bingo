@@ -26,7 +26,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:jukebox"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:jukebox"
+    }
   },
   "name": {
     "translate": "bingo.goal.listen_to_music"

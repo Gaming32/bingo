@@ -28,7 +28,11 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:cooked_porkchop"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:cooked_porkchop"
+    }
   },
   "name": {
     "translate": "bingo.goal.zombify_pig"

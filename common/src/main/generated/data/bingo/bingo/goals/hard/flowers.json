@@ -26,11 +26,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:azure_bluet"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:azure_bluet"
+    }
   },
   "infrequency": 3,
   "name": {

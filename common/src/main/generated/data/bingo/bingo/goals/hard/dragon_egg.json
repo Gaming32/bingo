@@ -16,7 +16,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:dragon_egg"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:dragon_egg"
+    }
   },
   "name": {
     "translate": "block.minecraft.dragon_egg"

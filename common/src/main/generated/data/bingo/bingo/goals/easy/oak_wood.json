@@ -34,11 +34,14 @@
   },
   "difficulty": 1,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:oak_wood"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:oak_wood"
+    }
   },
   "infrequency": 25,
   "name": {

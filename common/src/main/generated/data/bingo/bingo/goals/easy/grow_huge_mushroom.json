@@ -12,7 +12,22 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:red_mushroom_block"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:red_mushroom_block",
+      "Properties": {
+        "down": "true",
+        "east": "true",
+        "north": "true",
+        "south": "true",
+        "up": "true",
+        "west": "true"
+      }
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:red_mushroom_block"
+    }
   },
   "name": {
     "translate": "bingo.goal.grow_huge_mushroom"

@@ -16,7 +16,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:golden_carrot"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:golden_carrot"
+    }
   },
   "name": {
     "translate": "item.minecraft.golden_carrot"

@@ -16,7 +16,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:cookie"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:cookie"
+    }
   },
   "name": {
     "translate": "item.minecraft.cookie"

@@ -37,7 +37,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:scaffolding"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:scaffolding"
+    }
   },
   "name": {
     "translate": "bingo.goal.6x6scaffolding"

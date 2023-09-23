@@ -16,7 +16,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:honey_bottle"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:honey_bottle"
+    }
   },
   "infrequency": 2,
   "name": {

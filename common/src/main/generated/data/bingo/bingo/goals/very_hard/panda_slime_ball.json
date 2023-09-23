@@ -27,7 +27,11 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:slime_ball"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:slime_ball"
+    }
   },
   "name": {
     "translate": "bingo.goal.panda_slime_ball"

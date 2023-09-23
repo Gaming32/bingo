@@ -16,7 +16,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:jukebox"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:jukebox"
+    }
   },
   "name": {
     "translate": "block.minecraft.jukebox"

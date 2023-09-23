@@ -16,7 +16,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:enchanted_golden_apple"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:enchanted_golden_apple"
+    }
   },
   "name": {
     "translate": "item.minecraft.enchanted_golden_apple"

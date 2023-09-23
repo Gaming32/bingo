@@ -8,7 +8,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:red_bed"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:red_bed"
+    }
   },
   "name": {
     "translate": "bingo.goal.never_sleep"

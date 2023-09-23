@@ -34,11 +34,14 @@
   },
   "difficulty": 1,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:note_block"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:note_block"
+    }
   },
   "infrequency": 2,
   "name": {

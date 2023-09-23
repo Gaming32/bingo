@@ -24,7 +24,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:oak_sign"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:oak_sign"
+    }
   },
   "name": {
     "translate": "bingo.goal.dye_sign"

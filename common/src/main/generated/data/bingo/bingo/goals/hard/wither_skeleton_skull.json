@@ -16,7 +16,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:wither_skeleton_skull"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:wither_skeleton_skull"
+    }
   },
   "name": {
     "translate": "block.minecraft.wither_skeleton_skull"

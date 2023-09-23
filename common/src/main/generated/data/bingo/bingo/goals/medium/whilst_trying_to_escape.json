@@ -22,7 +22,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:zombie_head"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:zombie_head"
+    }
   },
   "name": {
     "translate": "bingo.goal.whilst_trying_to_escape"

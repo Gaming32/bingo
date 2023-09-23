@@ -16,7 +16,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:milk_bucket"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:milk_bucket"
+    }
   },
   "infrequency": 4,
   "name": {

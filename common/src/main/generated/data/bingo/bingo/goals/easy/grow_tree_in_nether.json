@@ -18,7 +18,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:bone_meal"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:bone_meal"
+    }
   },
   "name": {
     "translate": "bingo.goal.grow_tree_in_nether"

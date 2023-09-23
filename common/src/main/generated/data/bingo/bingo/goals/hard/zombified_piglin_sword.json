@@ -27,8 +27,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:golden_sword",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:golden_sword",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.zombified_piglin_sword"

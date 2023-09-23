@@ -34,11 +34,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:glowstone_dust"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:glowstone_dust"
+    }
   },
   "name": {
     "translate": "bingo.count",

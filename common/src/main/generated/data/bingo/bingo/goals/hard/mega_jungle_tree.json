@@ -12,8 +12,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "count": 4,
-    "item": "minecraft:jungle_sapling"
+    "type": "bingo:item",
+    "value": {
+      "Count": 4,
+      "id": "minecraft:jungle_sapling"
+    }
   },
   "name": {
     "translate": "bingo.goal.mega_jungle_tree"

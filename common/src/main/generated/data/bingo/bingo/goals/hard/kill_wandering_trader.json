@@ -17,7 +17,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:wandering_trader_spawn_egg"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:wandering_trader_spawn_egg"
+    }
   },
   "name": {
     "translate": "bingo.goal.kill_wandering_trader"

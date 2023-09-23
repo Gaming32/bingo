@@ -109,7 +109,7 @@ public abstract class DifficultyGoalProvider {
                 TotalCountInventoryChangeTrigger.builder().items(item.withCount(MinMaxBounds.Ints.atLeast(0)).build()).build(),
                 subber -> subber.sub("conditions.items.0.count.min", "count"))
             .tags(BingoTags.ITEM)
-            .icon(icon, subber -> subber.sub("count", "count"));
+            .icon(icon, subber -> subber.sub("value.Count", "count"));
     }
 
     protected <T extends Item> BingoGoal.Builder allSomethingsGoal(String what, Class<T> clazz, Predicate<T> predicate) {
@@ -137,7 +137,7 @@ public abstract class DifficultyGoalProvider {
             )
             .tags(BingoTags.ITEM)
             .name(Component.translatable(translationKey, 0), subber -> subber.sub("with.0", "count"))
-            .icon(icon, subber -> subber.sub("count", "count"));
+            .icon(icon, subber -> subber.sub("value.Count", "count"));
     }
 
     protected static BingoGoal.Builder obtainLevelsGoal(ResourceLocation id, int minLevels, int maxLevels) {
@@ -147,7 +147,7 @@ public abstract class DifficultyGoalProvider {
                 subber -> subber.sub("conditions.levels.min", "count"))
             .tags(BingoTags.STAT)
             .name(Component.translatable("bingo.goal.levels", 0), subber -> subber.sub("with.0", "count"))
-            .icon(Items.EXPERIENCE_BOTTLE, subber -> subber.sub("count", "count"))
+            .icon(Items.EXPERIENCE_BOTTLE, subber -> subber.sub("value.Count", "count"))
             .infrequency(2)
             .antisynergy("levels");
     }
@@ -171,7 +171,7 @@ public abstract class DifficultyGoalProvider {
             .antisynergy("crouch_distance")
             .infrequency(2)
             .tags(BingoTags.ACTION, BingoTags.STAT)
-            .icon(Items.LEATHER_BOOTS, subber -> subber.sub("count", "distance"));
+            .icon(Items.LEATHER_BOOTS, subber -> subber.sub("value.Count", "distance"));
     }
 
     protected static BingoGoal.Builder bedRowGoal(ResourceLocation id, int minCount, int maxCount) {
@@ -190,7 +190,7 @@ public abstract class DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.bed_row", 0), subber -> subber.sub("with.0", "count"))
             .antisynergy("bed_color")
             .infrequency(4)
-            .icon(Items.MAGENTA_BED, subber -> subber.sub("count", "count"))
+            .icon(Items.MAGENTA_BED, subber -> subber.sub("value.Count", "count"))
             .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
     }
 

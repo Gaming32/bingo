@@ -108,7 +108,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:ice"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:ice"
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:ice"
+    }
   },
   "name": {
     "translate": "bingo.goal.cube",

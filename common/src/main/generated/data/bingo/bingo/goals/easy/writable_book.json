@@ -16,7 +16,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:writable_book"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:writable_book"
+    }
   },
   "name": {
     "translate": "item.minecraft.writable_book"

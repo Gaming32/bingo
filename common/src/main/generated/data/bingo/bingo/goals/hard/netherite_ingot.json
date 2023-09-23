@@ -16,7 +16,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:netherite_ingot"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:netherite_ingot"
+    }
   },
   "name": {
     "translate": "item.minecraft.netherite_ingot"

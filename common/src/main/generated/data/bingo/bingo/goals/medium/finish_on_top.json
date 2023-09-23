@@ -23,8 +23,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "count": 320,
-    "item": "minecraft:dirt"
+    "type": "bingo:item",
+    "value": {
+      "Count": 320,
+      "id": "minecraft:dirt"
+    }
   },
   "name": {
     "translate": "bingo.goal.finish_on_top"

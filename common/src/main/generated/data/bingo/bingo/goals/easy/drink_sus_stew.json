@@ -13,7 +13,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:suspicious_stew"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:suspicious_stew"
+    }
   },
   "name": {
     "translate": "bingo.goal.drink_sus_stew",

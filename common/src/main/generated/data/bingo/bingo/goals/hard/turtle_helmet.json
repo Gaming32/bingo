@@ -16,8 +16,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:turtle_helmet",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:turtle_helmet",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "item.minecraft.turtle_helmet"

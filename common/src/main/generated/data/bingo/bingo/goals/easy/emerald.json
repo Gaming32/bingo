@@ -16,7 +16,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:emerald"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:emerald"
+    }
   },
   "name": {
     "translate": "item.minecraft.emerald"

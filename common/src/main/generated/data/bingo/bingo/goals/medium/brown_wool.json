@@ -16,7 +16,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:brown_wool"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:brown_wool"
+    }
   },
   "name": {
     "translate": "block.minecraft.brown_wool"

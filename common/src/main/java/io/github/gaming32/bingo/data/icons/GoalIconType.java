@@ -16,6 +16,7 @@ public interface GoalIconType<I extends GoalIcon> {
         .syncToClients()
         .build();
 
+    RegistrySupplier<GoalIconType<EmptyIcon>> EMPTY = register("empty", EmptyIcon.CODEC);
     RegistrySupplier<GoalIconType<ItemIcon>> ITEM = register("item", ItemIcon.CODEC);
     RegistrySupplier<GoalIconType<BlockIcon>> BLOCK = register("block", BlockIcon.CODEC);
 

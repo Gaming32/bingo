@@ -23,7 +23,11 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:shulker_shell"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:shulker_shell"
+    }
   },
   "name": {
     "translate": "bingo.goal.shulker_in_overworld"

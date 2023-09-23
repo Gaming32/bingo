@@ -9,7 +9,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:stick"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:stick"
+    }
   },
   "name": {
     "translate": "bingo.goal.never_craft_sticks"

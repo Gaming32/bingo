@@ -34,11 +34,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:dragon_breath"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:dragon_breath"
+    }
   },
   "name": {
     "translate": "bingo.count",

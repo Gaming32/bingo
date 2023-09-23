@@ -24,7 +24,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:spawner"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:spawner"
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:spawner"
+    }
   },
   "name": {
     "translate": "bingo.goal.finish_on_top_of_a",

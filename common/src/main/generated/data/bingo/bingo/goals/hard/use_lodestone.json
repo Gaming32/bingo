@@ -28,7 +28,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:lodestone"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:lodestone"
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:lodestone"
+    }
   },
   "name": {
     "translate": "bingo.goal.use_lodestone",

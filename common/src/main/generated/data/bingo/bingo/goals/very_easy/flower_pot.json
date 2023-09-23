@@ -16,7 +16,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:flower_pot"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:flower_pot"
+    }
   },
   "name": {
     "translate": "block.minecraft.flower_pot"

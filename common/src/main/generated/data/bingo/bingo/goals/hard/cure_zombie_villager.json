@@ -7,7 +7,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:golden_apple"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:golden_apple"
+    }
   },
   "name": {
     "translate": "bingo.goal.cure_zombie_villager"

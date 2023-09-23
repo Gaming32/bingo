@@ -34,11 +34,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:popped_chorus_fruit"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:popped_chorus_fruit"
+    }
   },
   "name": {
     "translate": "bingo.count",

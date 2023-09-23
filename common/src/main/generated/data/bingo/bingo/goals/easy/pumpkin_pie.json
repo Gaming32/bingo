@@ -16,7 +16,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:pumpkin_pie"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:pumpkin_pie"
+    }
   },
   "name": {
     "translate": "item.minecraft.pumpkin_pie"

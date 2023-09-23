@@ -34,11 +34,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:stripped_crimson_hyphae"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:stripped_crimson_hyphae"
+    }
   },
   "infrequency": 25,
   "name": {

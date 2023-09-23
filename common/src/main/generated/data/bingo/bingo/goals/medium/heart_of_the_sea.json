@@ -16,7 +16,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:heart_of_the_sea"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:heart_of_the_sea"
+    }
   },
   "name": {
     "translate": "item.minecraft.heart_of_the_sea"

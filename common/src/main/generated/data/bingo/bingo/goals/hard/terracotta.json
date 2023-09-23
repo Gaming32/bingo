@@ -26,11 +26,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:purple_terracotta"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:purple_terracotta"
+    }
   },
   "infrequency": 4,
   "name": {

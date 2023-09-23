@@ -33,7 +33,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:enchanted_book"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:enchanted_book"
+    }
   },
   "name": {
     "translate": "bingo.goal.burn_mending_book"

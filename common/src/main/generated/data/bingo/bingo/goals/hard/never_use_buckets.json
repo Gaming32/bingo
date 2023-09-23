@@ -37,7 +37,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:bucket"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:bucket"
+    }
   },
   "name": {
     "translate": "bingo.goal.never_use_buckets"

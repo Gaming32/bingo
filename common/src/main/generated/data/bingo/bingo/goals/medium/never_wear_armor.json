@@ -13,8 +13,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:diamond_chestplate",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:diamond_chestplate",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.never_wear_armor"

@@ -11,7 +11,14 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:beacon"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:beacon"
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:beacon"
+    }
   },
   "name": {
     "translate": "bingo.goal.beacon_regen"

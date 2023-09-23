@@ -16,7 +16,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:firework_star"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:firework_star"
+    }
   },
   "name": {
     "translate": "item.minecraft.firework_star"

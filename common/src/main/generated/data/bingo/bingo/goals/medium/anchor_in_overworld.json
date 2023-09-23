@@ -14,7 +14,17 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:respawn_anchor"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:respawn_anchor",
+      "Properties": {
+        "charges": "0"
+      }
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:respawn_anchor"
+    }
   },
   "name": {
     "translate": "bingo.goal.anchor_in_overworld",

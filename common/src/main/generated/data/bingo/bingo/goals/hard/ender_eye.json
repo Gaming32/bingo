@@ -17,8 +17,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "count": 12,
-    "item": "minecraft:ender_eye"
+    "type": "bingo:item",
+    "value": {
+      "Count": 12,
+      "id": "minecraft:ender_eye"
+    }
   },
   "name": {
     "translate": "bingo.count",

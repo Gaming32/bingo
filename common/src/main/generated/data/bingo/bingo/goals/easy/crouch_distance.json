@@ -54,12 +54,17 @@
   },
   "difficulty": 1,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "distance"
-    },
-    "item": "minecraft:leather_boots",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "distance"
+      },
+      "id": "minecraft:leather_boots",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "infrequency": 2,
   "name": {

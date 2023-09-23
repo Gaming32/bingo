@@ -30,8 +30,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:potion",
-    "nbt": "{Potion:\"minecraft:weakness\"}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:potion",
+      "tag": {
+        "Potion": "minecraft:weakness"
+      }
+    }
   },
   "infrequency": 12,
   "name": {

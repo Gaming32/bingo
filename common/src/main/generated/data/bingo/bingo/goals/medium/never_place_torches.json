@@ -14,7 +14,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:torch"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:torch"
+    }
   },
   "name": {
     "translate": "bingo.goal.never_place_torches"

@@ -49,7 +49,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:basalt"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:basalt"
+    }
   },
   "name": {
     "translate": "bingo.goal.ice_on_magma"

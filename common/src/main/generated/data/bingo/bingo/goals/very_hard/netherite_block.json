@@ -17,8 +17,11 @@
   },
   "difficulty": 4,
   "icon": {
-    "count": 2,
-    "item": "minecraft:netherite_block"
+    "type": "bingo:item",
+    "value": {
+      "Count": 2,
+      "id": "minecraft:netherite_block"
+    }
   },
   "name": {
     "translate": "bingo.count",

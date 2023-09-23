@@ -538,7 +538,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 ),
                 subber -> subber.sub("with.0", "count")
             )
-            .icon(Blocks.END_STONE, subber -> subber.sub("count", "count"))
+            .icon(Blocks.END_STONE, subber -> subber.sub("item.Count", "count"))
         );
         addGoal(BingoGoal.builder(id("tame_mule"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.MULE).build()))

@@ -17,7 +17,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:salmon"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:salmon"
+    }
   },
   "name": {
     "translate": "bingo.goal.ocelot_trust",

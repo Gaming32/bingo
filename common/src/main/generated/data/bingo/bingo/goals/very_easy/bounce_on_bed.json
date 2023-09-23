@@ -7,7 +7,19 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:white_bed"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:white_bed",
+      "Properties": {
+        "facing": "north",
+        "occupied": "false",
+        "part": "foot"
+      }
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:white_bed"
+    }
   },
   "name": {
     "translate": "bingo.goal.bounce_on_bed"

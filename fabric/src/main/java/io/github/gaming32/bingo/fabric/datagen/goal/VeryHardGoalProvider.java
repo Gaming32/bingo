@@ -53,7 +53,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tooltip(Component.translatable("bingo.goal.different_potions.tooltip"))
             .icon(
                 PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.MUNDANE),
-                subber -> subber.sub("count", "count")
+                subber -> subber.sub("value.Count", "count")
             ));
         addGoal(allSomethingsGoal("chestplates", ArmorItem.class, i -> i.getType() == ArmorItem.Type.CHESTPLATE)
             .icon(Items.NETHERITE_CHESTPLATE)
@@ -92,7 +92,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .antisynergy("levels"));
         addGoal(obtainItemGoal(id("tipped_arrow"), Items.TIPPED_ARROW, 16, 32)
             .tags(BingoTags.NETHER, BingoTags.OVERWORLD)
-            .icon(PotionUtils.setPotion(new ItemStack(Items.TIPPED_ARROW), Potions.MUNDANE), subber -> subber.sub("count", "count")));
+            .icon(PotionUtils.setPotion(new ItemStack(Items.TIPPED_ARROW), Potions.MUNDANE), subber -> subber.sub("value.Count", "count")));
         addGoal(mineralPillarGoal(id("all_mineral_blocks"), BingoBlockTags.ALL_MINERAL_BLOCKS)
             .name(Component.translatable("bingo.goal.all_mineral_blocks"))
             .tooltip(Component.translatable("bingo.goal.all_mineral_blocks.tooltip"))

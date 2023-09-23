@@ -11,8 +11,14 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:shield",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:shield",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.never_use_shields"

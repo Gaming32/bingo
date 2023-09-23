@@ -43,8 +43,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:potion",
-    "nbt": "{Potion:\"minecraft:strength\"}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:potion",
+      "tag": {
+        "Potion": "minecraft:strength"
+      }
+    }
   },
   "infrequency": 12,
   "name": {

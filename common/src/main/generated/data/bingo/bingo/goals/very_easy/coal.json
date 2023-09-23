@@ -16,7 +16,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:coal"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:coal"
+    }
   },
   "name": {
     "translate": "item.minecraft.coal"

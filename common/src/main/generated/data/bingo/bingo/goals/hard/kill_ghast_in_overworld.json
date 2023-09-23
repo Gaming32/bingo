@@ -23,7 +23,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:ghast_tear"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:ghast_tear"
+    }
   },
   "name": {
     "translate": "bingo.goal.kill_ghast_in_overworld"

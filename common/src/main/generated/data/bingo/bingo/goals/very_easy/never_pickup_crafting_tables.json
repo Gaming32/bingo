@@ -24,7 +24,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:crafting_table"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:crafting_table"
+    }
   },
   "name": {
     "translate": "bingo.goal.never_pickup_crafting_tables"

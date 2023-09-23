@@ -8,8 +8,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:diamond_sword",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:diamond_sword",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.pacifist"

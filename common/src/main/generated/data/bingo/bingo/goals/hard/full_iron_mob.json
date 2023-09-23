@@ -48,8 +48,17 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:iron_sword",
-    "nbt": "{Damage:0,Enchantments:[{}]}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:iron_sword",
+      "tag": {
+        "Damage": 0,
+        "Enchantments": [
+          {}
+        ]
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.full_iron_mob"

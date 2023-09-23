@@ -16,7 +16,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:apple"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:apple"
+    }
   },
   "name": {
     "translate": "item.minecraft.apple"

@@ -16,7 +16,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:sponge"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:sponge"
+    }
   },
   "name": {
     "translate": "block.minecraft.sponge"

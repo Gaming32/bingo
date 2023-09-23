@@ -17,8 +17,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "count": 16,
-    "item": "minecraft:egg"
+    "type": "bingo:item",
+    "value": {
+      "Count": 16,
+      "id": "minecraft:egg"
+    }
   },
   "name": {
     "translate": "bingo.count",

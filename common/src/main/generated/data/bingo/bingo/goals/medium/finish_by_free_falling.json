@@ -35,7 +35,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:water_bucket"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:water_bucket"
+    }
   },
   "name": {
     "translate": "bingo.goal.finish_by_free_falling"

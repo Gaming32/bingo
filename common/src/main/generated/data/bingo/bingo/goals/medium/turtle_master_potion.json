@@ -43,8 +43,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:potion",
-    "nbt": "{Potion:\"minecraft:turtle_master\"}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:potion",
+      "tag": {
+        "Potion": "minecraft:turtle_master"
+      }
+    }
   },
   "infrequency": 12,
   "name": {

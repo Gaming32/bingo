@@ -19,7 +19,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:warped_fungus"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:warped_fungus"
+    }
   },
   "name": {
     "translate": "bingo.goal.huge_fungus_in_overworld"

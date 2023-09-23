@@ -19,8 +19,14 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:fishing_rod",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:fishing_rod",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.fish_treasure_junk"

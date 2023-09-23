@@ -34,11 +34,14 @@
   },
   "difficulty": 4,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:wither_rose"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:wither_rose"
+    }
   },
   "name": {
     "translate": "bingo.count",

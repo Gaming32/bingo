@@ -34,11 +34,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:magma_cream"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:magma_cream"
+    }
   },
   "name": {
     "translate": "bingo.count",

@@ -34,11 +34,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:spider_eye"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:spider_eye"
+    }
   },
   "infrequency": 2,
   "name": {

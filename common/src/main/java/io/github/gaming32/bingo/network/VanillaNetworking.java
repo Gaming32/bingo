@@ -49,7 +49,7 @@ public class VanillaNetworking {
 
     public static Advancement generateAdvancement(int index, ActiveGoal goal, int x, int y) {
         final DisplayInfo displayInfo = new DisplayInfo(
-            goal.getIcon(),
+            goal.getIcon().item(),
             goal.getName(),
             Objects.requireNonNullElse(goal.getTooltip(), CommonComponents.EMPTY),
             null,

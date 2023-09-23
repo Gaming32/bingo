@@ -16,7 +16,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:charcoal"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:charcoal"
+    }
   },
   "name": {
     "translate": "item.minecraft.charcoal"

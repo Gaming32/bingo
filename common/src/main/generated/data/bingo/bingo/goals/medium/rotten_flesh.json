@@ -34,11 +34,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:rotten_flesh"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:rotten_flesh"
+    }
   },
   "infrequency": 2,
   "name": {

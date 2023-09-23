@@ -16,7 +16,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:black_concrete"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:black_concrete"
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:black_concrete"
+    }
   },
   "name": {
     "translate": "bingo.goal.void_death_to_entity"

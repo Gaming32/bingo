@@ -11,8 +11,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "count": 10,
-    "item": "minecraft:enchanting_table"
+    "type": "bingo:item",
+    "value": {
+      "Count": 10,
+      "id": "minecraft:enchanting_table"
+    }
   },
   "name": {
     "translate": "bingo.goal.level_10_enchant"

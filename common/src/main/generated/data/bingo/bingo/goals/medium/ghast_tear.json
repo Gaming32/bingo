@@ -16,7 +16,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:ghast_tear"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:ghast_tear"
+    }
   },
   "name": {
     "translate": "item.minecraft.ghast_tear"

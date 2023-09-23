@@ -17,7 +17,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:bone"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:bone"
+    }
   },
   "name": {
     "translate": "bingo.goal.tame_wolf"

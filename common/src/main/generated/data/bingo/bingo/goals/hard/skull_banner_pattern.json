@@ -16,8 +16,22 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:white_banner",
-    "nbt": "{BlockEntityTag:{Patterns:[{Color:15,Pattern:\"sku\"}],id:\"minecraft:banner\"}}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:white_banner",
+      "tag": {
+        "BlockEntityTag": {
+          "Patterns": [
+            {
+              "Color": 15,
+              "Pattern": "sku"
+            }
+          ],
+          "id": "minecraft:banner"
+        }
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.skull_banner_pattern",

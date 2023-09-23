@@ -22,7 +22,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:name_tag"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:name_tag"
+    }
   },
   "name": {
     "translate": "bingo.goal.nametag_enderman"

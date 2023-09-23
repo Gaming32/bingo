@@ -26,7 +26,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:campfire"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:campfire"
+    }
   },
   "name": {
     "translate": "bingo.goal.extinguish_campfire"

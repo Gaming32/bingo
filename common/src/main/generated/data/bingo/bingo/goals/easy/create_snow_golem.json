@@ -17,7 +17,17 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:carved_pumpkin"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:carved_pumpkin",
+      "Properties": {
+        "facing": "north"
+      }
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:carved_pumpkin"
+    }
   },
   "name": {
     "translate": "bingo.goal.create_snow_golem"

@@ -98,7 +98,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:cake"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:cake"
+    }
   },
   "name": {
     "translate": "bingo.goal.eat_entire_cake"

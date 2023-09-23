@@ -19,7 +19,11 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:brown_bed"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:brown_bed"
+    }
   },
   "name": {
     "translate": "bingo.goal.sleep_in_mansion"

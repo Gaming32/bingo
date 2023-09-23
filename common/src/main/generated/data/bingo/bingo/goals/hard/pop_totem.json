@@ -13,7 +13,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:totem_of_undying"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:totem_of_undying"
+    }
   },
   "name": {
     "translate": "bingo.goal.pop_totem"

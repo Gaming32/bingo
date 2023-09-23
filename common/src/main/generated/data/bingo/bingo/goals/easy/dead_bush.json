@@ -16,7 +16,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:dead_bush"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:dead_bush"
+    }
   },
   "name": {
     "translate": "block.minecraft.dead_bush"

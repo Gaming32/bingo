@@ -13,8 +13,14 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:carrot_on_a_stick",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:carrot_on_a_stick",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.carrot_stick_to_rod",

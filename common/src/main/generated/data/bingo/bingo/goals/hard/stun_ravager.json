@@ -7,7 +7,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:ravager_spawn_egg"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:ravager_spawn_egg"
+    }
   },
   "name": {
     "translate": "bingo.goal.stun_ravager",

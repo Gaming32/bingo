@@ -16,7 +16,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:phantom_membrane"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:phantom_membrane"
+    }
   },
   "name": {
     "translate": "item.minecraft.phantom_membrane"

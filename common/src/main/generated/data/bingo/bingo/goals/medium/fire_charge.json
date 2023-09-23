@@ -17,8 +17,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "count": 6,
-    "item": "minecraft:fire_charge"
+    "type": "bingo:item",
+    "value": {
+      "Count": 6,
+      "id": "minecraft:fire_charge"
+    }
   },
   "name": {
     "translate": "bingo.count",

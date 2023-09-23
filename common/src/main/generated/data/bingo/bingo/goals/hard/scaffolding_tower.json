@@ -29,8 +29,16 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:scaffolding",
-    "nbt": "{Enchantments:[{}]}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:scaffolding",
+      "tag": {
+        "Enchantments": [
+          {}
+        ]
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.scaffolding_tower"

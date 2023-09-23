@@ -18,7 +18,11 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:filled_map"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:filled_map"
+    }
   },
   "name": {
     "translate": "bingo.goal.complete_full_size_end_map"

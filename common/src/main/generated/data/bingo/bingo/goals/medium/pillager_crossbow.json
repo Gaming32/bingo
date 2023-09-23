@@ -27,8 +27,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:crossbow",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:crossbow",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.pillager_crossbow"

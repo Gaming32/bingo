@@ -17,7 +17,17 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:composter"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:composter",
+      "Properties": {
+        "level": "0"
+      }
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:composter"
+    }
   },
   "name": {
     "translate": "bingo.goal.fill_composter"

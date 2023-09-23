@@ -16,7 +16,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:grass_block"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:grass_block"
+    }
   },
   "name": {
     "translate": "block.minecraft.grass_block"

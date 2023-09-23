@@ -9,7 +9,14 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:diamond_block"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:diamond_block"
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:diamond_block"
+    }
   },
   "name": {
     "translate": "bingo.goal.basic_mineral_blocks"

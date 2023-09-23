@@ -21,8 +21,17 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:shield",
-    "nbt": "{Damage:0,Enchantments:[{}]}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:shield",
+      "tag": {
+        "Damage": 0,
+        "Enchantments": [
+          {}
+        ]
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.never_wear_armor_or_use_shields"

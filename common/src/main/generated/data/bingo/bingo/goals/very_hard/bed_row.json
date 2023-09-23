@@ -13,8 +13,11 @@
   },
   "difficulty": 4,
   "icon": {
-    "count": 16,
-    "item": "minecraft:magenta_bed"
+    "type": "bingo:item",
+    "value": {
+      "Count": 16,
+      "id": "minecraft:magenta_bed"
+    }
   },
   "infrequency": 2,
   "name": {

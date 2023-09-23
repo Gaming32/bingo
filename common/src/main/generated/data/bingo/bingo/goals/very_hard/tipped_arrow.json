@@ -34,12 +34,17 @@
   },
   "difficulty": 4,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:tipped_arrow",
-    "nbt": "{Potion:\"minecraft:mundane\"}"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:tipped_arrow",
+      "tag": {
+        "Potion": "minecraft:mundane"
+      }
+    }
   },
   "name": {
     "translate": "bingo.count",

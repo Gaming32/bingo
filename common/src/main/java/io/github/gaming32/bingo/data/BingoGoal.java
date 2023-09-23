@@ -5,14 +5,16 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.data.icons.BlockIcon;
+import io.github.gaming32.bingo.data.icons.EmptyIcon;
+import io.github.gaming32.bingo.data.icons.GoalIcon;
+import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.game.ActiveGoal;
-import io.github.gaming32.bingo.mixin.common.DisplayInfoAccessor;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -24,6 +26,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -420,18 +424,11 @@ public class BingoGoal {
         return component == null ? Component.empty() : Bingo.ensureHasFallback(component);
     }
 
-    public ItemStack buildIcon(Map<String, JsonElement> referable, RandomSource rand) {
+    public GoalIcon buildIcon(Map<String, JsonElement> referable, RandomSource rand) {
         if (icon == null) {
-            return ItemStack.EMPTY;
+            return EmptyIcon.INSTANCE;
         }
-        final JsonObject iconSubbed = GsonHelper.convertToJsonObject(
-            performSubstitutions(icon, referable, rand), "icon"
-        );
-        final ItemStack icon = DisplayInfoAccessor.invokeGetIcon(iconSubbed);
-        if (iconSubbed.has("count")) {
-            icon.setCount(GsonHelper.getAsInt(iconSubbed, "count"));
-        }
-        return icon;
+        return GoalIcon.deserialize(performSubstitutions(icon, referable, rand));
     }
 
     public Map<String, Criterion> buildCriteria(
@@ -589,35 +586,45 @@ public class BingoGoal {
         }
 
         public Builder icon(ItemLike icon) {
-            return this.icon(icon, subber -> {});
-        }
-
-        public Builder icon(ItemStack icon) {
-            return this.icon(icon, subber -> {});
+            return icon(icon, subber -> {});
         }
 
         public Builder icon(ItemLike icon, Consumer<JsonSubber> subber) {
-            return this.icon(new ItemStack(icon), subber);
+            return icon(new ItemStack(icon), subber);
+        }
+
+        public Builder icon(Block icon) {
+            return icon(icon, subber -> {});
+        }
+
+        public Builder icon(Block icon, Consumer<JsonSubber> subber) {
+            return icon(BlockIcon.ofBlock(icon), subber);
+        }
+
+        public Builder icon(ItemStack icon) {
+            return icon(icon, subber -> {});
         }
 
         public Builder icon(ItemStack icon, Consumer<JsonSubber> subber) {
-            JsonObject json = new JsonObject();
-            json.addProperty("item", BuiltInRegistries.ITEM.getKey(icon.getItem()).toString());
-            json.addProperty("count", icon.getCount());
-            if (icon.hasTag()) {
-                json.addProperty("nbt", icon.getTag().toString());
-            }
+            return icon(new ItemIcon(icon), subber);
+        }
 
-            JsonSubber jsonSubber = new JsonSubber(json);
+        public Builder icon(BlockState icon) {
+            return icon(icon, subber -> {});
+        }
+
+        public Builder icon(BlockState icon, Consumer<JsonSubber> subber) {
+            return icon(BlockIcon.ofBlock(icon), subber);
+        }
+
+        public Builder icon(GoalIcon icon) {
+            return icon(icon, subber -> {});
+        }
+
+        public Builder icon(GoalIcon icon, Consumer<JsonSubber> subber) {
+            JsonSubber jsonSubber = new JsonSubber(icon.serializeToJson());
             subber.accept(jsonSubber);
             this.icon = jsonSubber.json().getAsJsonObject();
-
-            // remove count: 1
-            JsonElement count = this.icon.get("count");
-            if (count.isJsonPrimitive() && count.getAsJsonPrimitive().getAsInt() == 1) {
-                this.icon.remove("count");
-            }
-
             return this;
         }
 

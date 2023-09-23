@@ -16,7 +16,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "item": "minecraft:beetroot_soup"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:beetroot_soup"
+    }
   },
   "name": {
     "translate": "item.minecraft.beetroot_soup"

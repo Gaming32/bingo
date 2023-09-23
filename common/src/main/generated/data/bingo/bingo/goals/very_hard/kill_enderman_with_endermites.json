@@ -25,7 +25,11 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:endermite_spawn_egg"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:endermite_spawn_egg"
+    }
   },
   "name": {
     "translate": "bingo.goal.kill_enderman_with_endermites"

@@ -16,7 +16,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:purple_dye"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:purple_dye"
+    }
   },
   "infrequency": 10,
   "name": {

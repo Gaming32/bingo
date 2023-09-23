@@ -14,7 +14,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:tropical_fish_bucket"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:tropical_fish_bucket"
+    }
   },
   "infrequency": 4,
   "name": {

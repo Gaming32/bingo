@@ -34,11 +34,14 @@
   },
   "difficulty": 4,
   "icon": {
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
-    "item": "minecraft:blue_ice"
+    "type": "bingo:item",
+    "value": {
+      "Count": {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      },
+      "id": "minecraft:blue_ice"
+    }
   },
   "name": {
     "translate": "bingo.count",

@@ -30,8 +30,14 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:iron_helmet",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:iron_helmet",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "infrequency": 3,
   "name": {

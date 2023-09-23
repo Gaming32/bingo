@@ -14,7 +14,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:oak_button"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:oak_button"
+    }
   },
   "name": {
     "translate": "bingo.goal.shoot_button"

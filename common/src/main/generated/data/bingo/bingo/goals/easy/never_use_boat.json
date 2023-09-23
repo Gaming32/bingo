@@ -17,7 +17,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:oak_boat"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:oak_boat"
+    }
   },
   "name": {
     "translate": "bingo.goal.never_use_boat"

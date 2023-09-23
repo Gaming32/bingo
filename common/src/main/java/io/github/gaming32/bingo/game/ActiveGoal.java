@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.data.icons.GoalIcon;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -14,10 +15,10 @@ public final class ActiveGoal {
     private final BingoGoal goal;
     private final Component name;
     private final Component tooltip;
-    private final ItemStack icon;
+    private final GoalIcon icon;
     private final Map<String, Criterion> criteria;
 
-    public ActiveGoal(BingoGoal goal, Component name, Component tooltip, ItemStack icon, Map<String, Criterion> criteria) {
+    public ActiveGoal(BingoGoal goal, Component name, Component tooltip, GoalIcon icon, Map<String, Criterion> criteria) {
         this.goal = goal;
         this.name = name;
         this.tooltip = tooltip;
@@ -37,7 +38,7 @@ public final class ActiveGoal {
         return tooltip;
     }
 
-    public ItemStack getIcon() {
+    public GoalIcon getIcon() {
         return icon;
     }
 
@@ -55,7 +56,7 @@ public final class ActiveGoal {
     }
 
     public ItemStack toSingleStack() {
-        final ItemStack result = icon.copy();
+        final ItemStack result = icon.item().copy();
         result.setHoverName(name);
         if (tooltip != null) {
             final ListTag lore = new ListTag();

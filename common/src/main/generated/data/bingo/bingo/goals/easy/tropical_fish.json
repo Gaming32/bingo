@@ -16,7 +16,11 @@
   },
   "difficulty": 1,
   "icon": {
-    "item": "minecraft:tropical_fish"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:tropical_fish"
+    }
   },
   "name": {
     "translate": "item.minecraft.tropical_fish"

@@ -17,7 +17,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "item": "minecraft:bamboo"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:bamboo"
+    }
   },
   "name": {
     "translate": "bingo.goal.breed_pandas"

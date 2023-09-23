@@ -16,7 +16,11 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:hay_block"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:hay_block"
+    }
   },
   "infrequency": 2,
   "name": {

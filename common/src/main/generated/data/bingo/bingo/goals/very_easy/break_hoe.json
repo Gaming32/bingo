@@ -11,8 +11,14 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:stone_hoe",
-    "nbt": "{Damage:0}"
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:stone_hoe",
+      "tag": {
+        "Damage": 0
+      }
+    }
   },
   "name": {
     "translate": "bingo.goal.break_hoe"

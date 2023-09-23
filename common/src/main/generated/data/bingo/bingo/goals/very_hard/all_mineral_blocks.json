@@ -9,7 +9,14 @@
   },
   "difficulty": 4,
   "icon": {
-    "item": "minecraft:netherite_block"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:netherite_block"
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:netherite_block"
+    }
   },
   "name": {
     "translate": "bingo.goal.all_mineral_blocks"

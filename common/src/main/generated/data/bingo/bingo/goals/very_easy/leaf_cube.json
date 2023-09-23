@@ -108,7 +108,19 @@
   },
   "difficulty": 0,
   "icon": {
-    "item": "minecraft:oak_leaves"
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:oak_leaves",
+      "Properties": {
+        "distance": "7",
+        "persistent": "false",
+        "waterlogged": "false"
+      }
+    },
+    "item": {
+      "Count": 1,
+      "id": "minecraft:oak_leaves"
+    }
   },
   "name": {
     "translate": "bingo.goal.cube",
