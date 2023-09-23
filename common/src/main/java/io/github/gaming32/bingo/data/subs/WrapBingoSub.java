@@ -24,7 +24,7 @@ public record WrapBingoSub(JsonElement value) implements BingoSub {
     }
 
     @Override
-    public BingoSubType<WrapBingoSub> getType() {
+    public BingoSubType<WrapBingoSub> type() {
         return BingoSubType.WRAP.get();
     }
 }

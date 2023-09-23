@@ -1,10 +1,12 @@
 package io.github.gaming32.bingo.data.subs;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.util.BingoCodecs;
-import net.minecraft.Util;
+import io.github.gaming32.bingo.util.Util;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -13,28 +15,28 @@ import java.util.Map;
 
 public interface BingoSub {
     Codec<BingoSub> CODEC = BingoCodecs.registrarByName(BingoSubType.REGISTRAR)
-        .dispatch(BingoSub::getType, BingoSubType::codec);
+        .dispatch(BingoSub::type, BingoSubType::codec);
     Codec<BingoSub> INNER_CODEC = BingoCodecs.registrarByName(BingoSubType.REGISTRAR)
-        .dispatch("bingo_type", BingoSub::getType, BingoSubType::codec);
+        .dispatch("bingo_type", BingoSub::type, BingoSubType::codec);
 
     JsonElement substitute(Map<String, JsonElement> referable, RandomSource rand);
 
-    BingoSubType<?> getType();
+    BingoSubType<?> type();
 
     default JsonObject serializeToJson() {
-        return Util.getOrThrow(CODEC.encodeStart(JsonOps.INSTANCE, this), IllegalArgumentException::new).getAsJsonObject();
+        return Util.toJsonObject(CODEC, this);
     }
 
     default JsonObject serializeInnerToJson() {
-        return Util.getOrThrow(INNER_CODEC.encodeStart(JsonOps.INSTANCE, this), IllegalArgumentException::new).getAsJsonObject();
+        return Util.toJsonObject(INNER_CODEC, this);
     }
 
     static BingoSub deserialize(JsonElement element) {
-        return Util.getOrThrow(CODEC.parse(JsonOps.INSTANCE, element), JsonSyntaxException::new);
+        return Util.fromJsonElement(CODEC, element);
     }
 
     static BingoSub deserializeInner(JsonElement element) {
-        return Util.getOrThrow(INNER_CODEC.parse(JsonOps.INSTANCE, element), JsonSyntaxException::new);
+        return Util.fromJsonElement(INNER_CODEC, element);
     }
 
     static BingoSub random(int min, int max) {

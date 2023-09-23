@@ -119,8 +119,8 @@ public class BingoClient {
                 final ClientGoal goal = clientBoard.getGoal(sx, sy);
                 final int slotX = sx * 18 + 8;
                 final int slotY = sy * 18 + 18;
-                graphics.renderFakeItem(goal.icon(), slotX, slotY);
-                graphics.renderItemDecorations(minecraft.font, goal.icon(), slotX, slotY);
+                goal.icon().render(graphics, slotX, slotY);
+                graphics.renderItemDecorations(minecraft.font, goal.icon().item(), slotX, slotY);
                 if (clientTeam.any()) {
                     final BingoBoard.Teams state = clientBoard.getState(sx, sy);
                     final int color = state.and(clientTeam) ? 0x55ff55 : goal.specialType().incompleteColor;
@@ -183,11 +183,11 @@ public class BingoClient {
 
         final RecipeViewerPlugin plugin = getRecipeViewerPlugin();
         if (plugin.isViewRecipe(key)) {
-            plugin.showRecipe(goal.icon());
+            plugin.showRecipe(goal.icon().item());
             return true;
         }
         if (plugin.isViewUsages(key)) {
-            plugin.showUsages(goal.icon());
+            plugin.showUsages(goal.icon().item());
             return true;
         }
         return false;

@@ -25,6 +25,7 @@ import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.ext.CommandContextExt;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
@@ -292,6 +293,7 @@ public class Bingo {
         });
 
         BingoConditions.load();
+        GoalIconType.load();
         BingoSubType.load();
         BingoTriggers.load();
 

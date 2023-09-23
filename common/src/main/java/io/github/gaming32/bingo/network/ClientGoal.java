@@ -1,12 +1,13 @@
 package io.github.gaming32.bingo.network;
 
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.icons.GoalIcon;
+import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.game.ActiveGoal;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public record ClientGoal(
@@ -14,7 +15,7 @@ public record ClientGoal(
     Component name,
     @Nullable Component tooltip,
     @Nullable ResourceLocation tooltipIcon,
-    ItemStack icon,
+    GoalIcon icon,
     BingoTag.SpecialType specialType
 ) {
     public ClientGoal(ActiveGoal goal) {
@@ -23,40 +24,30 @@ public record ClientGoal(
             goal.getName(),
             goal.getTooltip(),
             goal.getGoal().getTooltipIcon(),
-            goal.getIcon(),
+            new ItemIcon(goal.getIcon()),
             goal.getGoal().getSpecialType()
         );
     }
 
+    @SuppressWarnings("deprecation")
     public ClientGoal(FriendlyByteBuf buf) {
         this(
             buf.readResourceLocation(),
             buf.readComponent(),
             buf.readNullable(FriendlyByteBuf::readComponent),
             buf.readNullable(FriendlyByteBuf::readResourceLocation),
-            readIcon(buf),
+            buf.readWithCodec(NbtOps.INSTANCE, GoalIcon.CODEC),
             buf.readEnum(BingoTag.SpecialType.class)
         );
     }
 
+    @SuppressWarnings("deprecation")
     public void serialize(FriendlyByteBuf buf) {
         buf.writeResourceLocation(id);
         buf.writeComponent(name);
         buf.writeNullable(tooltip, FriendlyByteBuf::writeComponent);
         buf.writeNullable(tooltipIcon, FriendlyByteBuf::writeResourceLocation);
-        writeIcon(buf, icon);
+        buf.writeWithCodec(NbtOps.INSTANCE, GoalIcon.CODEC, icon);
         buf.writeEnum(specialType);
-    }
-
-    private static void writeIcon(FriendlyByteBuf buf, ItemStack icon) {
-        buf.writeId(BuiltInRegistries.ITEM, icon.getItem());
-        buf.writeVarInt(icon.getCount());
-        buf.writeNbt(icon.getTag());
-    }
-
-    private static ItemStack readIcon(FriendlyByteBuf buf) {
-        final ItemStack icon = new ItemStack(buf.readById(BuiltInRegistries.ITEM), buf.readVarInt());
-        icon.setTag(buf.readNbt());
-        return icon;
     }
 }

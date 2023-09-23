@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.network;
 
+import com.google.common.collect.ImmutableMap;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
@@ -28,13 +29,13 @@ public class VanillaNetworking {
             true
         ),
         AdvancementRewards.EMPTY,
-        Map.of(),
+        ImmutableMap.of(),
         new String[0][0],
         false
     );
 
     public static final String CRITERION = "criterion";
-    public static final Map<String, Criterion> CRITERIA = Map.of(CRITERION, new Criterion());
+    public static final Map<String, Criterion> CRITERIA = ImmutableMap.of(CRITERION, new Criterion());
     public static final String[][] REQUIREMENTS = {{CRITERION}};
 
     public static List<Advancement> generateAdvancements(ActiveGoal[] goals) {

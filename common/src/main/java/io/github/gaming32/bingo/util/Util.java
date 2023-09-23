@@ -2,6 +2,10 @@ package io.github.gaming32.bingo.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.mixin.common.LocationCheckAccessor;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -48,5 +52,13 @@ public class Util {
 
     public static ContextAwarePredicate wrapLocation(LocationPredicate location) {
         return ContextAwarePredicate.create(LocationCheckAccessor.createLocationCheck(location, BlockPos.ZERO));
+    }
+
+    public static <T> JsonObject toJsonObject(Codec<T> codec, T obj) {
+        return net.minecraft.Util.getOrThrow(codec.encodeStart(JsonOps.INSTANCE, obj), IllegalArgumentException::new).getAsJsonObject();
+    }
+
+    public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) {
+        return net.minecraft.Util.getOrThrow(codec.parse(JsonOps.INSTANCE, element), JsonSyntaxException::new);
     }
 }

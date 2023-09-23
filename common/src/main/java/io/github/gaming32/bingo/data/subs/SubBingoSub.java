@@ -19,7 +19,7 @@ public record SubBingoSub(String key) implements BingoSub {
     }
 
     @Override
-    public BingoSubType<SubBingoSub> getType() {
+    public BingoSubType<SubBingoSub> type() {
         return BingoSubType.SUB.get();
     }
 }

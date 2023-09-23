@@ -49,7 +49,7 @@ public record CompoundBingoSub(ElementType elementType, Operator operator, List<
     }
 
     @Override
-    public BingoSubType<CompoundBingoSub> getType() {
+    public BingoSubType<CompoundBingoSub> type() {
         return BingoSubType.COMPOUND.get();
     }
 

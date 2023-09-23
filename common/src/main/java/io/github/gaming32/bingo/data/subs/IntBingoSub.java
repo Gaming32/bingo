@@ -17,7 +17,7 @@ public record IntBingoSub(IntProvider provider) implements BingoSub {
     }
 
     @Override
-    public BingoSubType<IntBingoSub> getType() {
+    public BingoSubType<IntBingoSub> type() {
         return BingoSubType.INT.get();
     }
 }
