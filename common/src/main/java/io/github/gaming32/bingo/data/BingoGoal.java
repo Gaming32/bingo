@@ -25,6 +25,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -590,6 +591,9 @@ public class BingoGoal {
         }
 
         public Builder icon(ItemLike icon, Consumer<JsonSubber> subber) {
+            if (icon.asItem() == Items.AIR) {
+                throw new IllegalArgumentException("Unknown item for " + icon + ". Please use a different overload.");
+            }
             return icon(new ItemStack(icon), subber);
         }
 
@@ -599,6 +603,14 @@ public class BingoGoal {
 
         public Builder icon(Block icon, Consumer<JsonSubber> subber) {
             return icon(BlockIcon.ofBlock(icon), subber);
+        }
+
+        public Builder icon(Block icon, ItemLike fallback) {
+            return icon(icon, fallback, subber -> {});
+        }
+
+        public Builder icon(Block icon, ItemLike fallback, Consumer<JsonSubber> subber) {
+            return icon(new BlockIcon(icon.defaultBlockState(), new ItemStack(fallback)), subber);
         }
 
         public Builder icon(ItemStack icon) {

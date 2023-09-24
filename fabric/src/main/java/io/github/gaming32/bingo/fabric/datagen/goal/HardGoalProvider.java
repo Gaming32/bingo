@@ -291,7 +291,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("destroy_spawner"))
             .criterion("destroy", BreakBlockTrigger.builder().block(Blocks.SPAWNER).build())
             .name(Component.translatable("bingo.goal.destroy_spawner"))
-            .icon(Items.SPAWNER)
+            .icon(Blocks.SPAWNER)
             .tags(BingoTags.ACTION, BingoTags.COMBAT));
         addGoal(obtainItemGoal(id("popped_chorus_fruit"), Items.POPPED_CHORUS_FRUIT, 32, 64)
             .tags(BingoTags.END));
@@ -504,7 +504,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 .damage(DamagePredicate.Builder.damageInstance().type(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_FIRE))).build())
                 .build())
             .name(Component.translatable("bingo.goal.burn_mending_book"))
-            .icon(Items.ENCHANTED_BOOK)
+            .icon(Blocks.FIRE, Items.ENCHANTED_BOOK)
             .tags(BingoTags.ACTION));
         // TODO: never smelt with furnaces
         addGoal(BingoGoal.builder(id("huge_fungus_in_overworld"))

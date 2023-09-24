@@ -14,8 +14,11 @@
   },
   "difficulty": 2,
   "icon": {
-    "type": "bingo:item",
-    "value": {
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:potted_cactus"
+    },
+    "item": {
       "Count": 1,
       "id": "minecraft:cactus"
     }

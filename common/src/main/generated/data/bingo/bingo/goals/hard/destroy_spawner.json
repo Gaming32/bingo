@@ -20,8 +20,11 @@
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:item",
-    "value": {
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:spawner"
+    },
+    "item": {
       "Count": 1,
       "id": "minecraft:spawner"
     }

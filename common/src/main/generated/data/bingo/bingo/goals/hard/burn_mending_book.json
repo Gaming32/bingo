@@ -33,8 +33,19 @@
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:item",
-    "value": {
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:fire",
+      "Properties": {
+        "age": "0",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    "item": {
       "Count": 1,
       "id": "minecraft:enchanted_book"
     }

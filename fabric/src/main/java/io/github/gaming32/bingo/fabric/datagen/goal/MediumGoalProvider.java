@@ -53,7 +53,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 ContextAwarePredicate.create(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.POTTED_CACTUS).build())))
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.potted_cactus"))
-            .icon(Items.CACTUS));
+            .icon(Blocks.POTTED_CACTUS, Blocks.CACTUS)
+        );
         // TODO: detonate TNT minecart
         addGoal(obtainItemGoal(id("magma_block"), Items.MAGMA_BLOCK, 10, 30));
         addGoal(obtainItemGoal(id("damaged_anvil"), Items.DAMAGED_ANVIL));
@@ -200,7 +201,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 Component.translatable("bingo.goal.sized_nether_portal", 0, 0),
                 subber -> subber.sub("with.0", "width").sub("with.1", "height")
             )
-            .icon(Blocks.OBSIDIAN));
+            .icon(Blocks.NETHER_PORTAL, Blocks.OBSIDIAN));
         addGoal(obtainItemGoal(id("obsidian"), Items.OBSIDIAN, 3, 10));
         addGoal(obtainItemGoal(id("iron_block"), Items.IRON_BLOCK, 5, 7)
             .infrequency(2));

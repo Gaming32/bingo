@@ -83,7 +83,10 @@
   "icon": {
     "type": "bingo:block",
     "block": {
-      "Name": "minecraft:obsidian"
+      "Name": "minecraft:nether_portal",
+      "Properties": {
+        "axis": "x"
+      }
     },
     "item": {
       "Count": 1,
