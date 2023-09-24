@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo;
 
+import com.demonwav.mcdev.annotations.Translatable;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -420,7 +421,7 @@ public class Bingo {
         return false;
     }
 
-    public static MutableComponent translatable(String key, Object... args) {
+    public static MutableComponent translatable(@Translatable String key, Object... args) {
         return ensureHasFallback(Component.translatable(key, args));
     }
 
