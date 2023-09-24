@@ -5,9 +5,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 
 public record ItemIcon(ItemStack item) implements GoalIcon {
     public static final Codec<ItemIcon> CODEC = ItemStack.CODEC.xmap(ItemIcon::new, ItemIcon::item);
+
+    public static ItemIcon ofItem(ItemLike item) {
+        return new ItemIcon(new ItemStack(item));
+    }
 
     @Override
     @Environment(EnvType.CLIENT)

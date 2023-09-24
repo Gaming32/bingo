@@ -7,8 +7,12 @@ import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.Util;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface GoalIcon {
     Codec<GoalIcon> CODEC = BingoCodecs.registrarByName(GoalIconType.REGISTRAR)
@@ -22,6 +26,11 @@ public interface GoalIcon {
     @Environment(EnvType.CLIENT)
     void render(GuiGraphics graphics, int x, int y);
 
+    @Environment(EnvType.CLIENT)
+    default void renderDecorations(Font font, GuiGraphics graphics, int x, int y) {
+        graphics.renderItemDecorations(font, item(), x, y);
+    }
+
     GoalIconType<?> type();
 
     default JsonObject serializeToJson() {
@@ -30,5 +39,27 @@ public interface GoalIcon {
 
     static GoalIcon deserialize(JsonElement element) {
         return Util.fromJsonElement(CODEC, element);
+    }
+
+    static GoalIcon infer(Object obj) {
+        if (obj == null) {
+            return EmptyIcon.INSTANCE;
+        }
+        if (obj instanceof GoalIcon icon) {
+            return icon;
+        }
+        if (obj instanceof ItemStack stack) {
+            return new ItemIcon(stack);
+        }
+        if (obj instanceof Block block) {
+            return BlockIcon.ofBlock(block);
+        }
+        if (obj instanceof BlockState state) {
+            return BlockIcon.ofBlock(state);
+        }
+        if (obj instanceof ItemLike item) {
+            return ItemIcon.ofItem(item);
+        }
+        throw new IllegalArgumentException("Couldn't infer GoalIcon from " + obj);
     }
 }

@@ -5,6 +5,8 @@ import io.github.gaming32.bingo.conditions.PillarCondition;
 import io.github.gaming32.bingo.conditions.StairwayToHeavenCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.icons.BlockIcon;
+import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoDamageTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
@@ -525,10 +527,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     ItemPredicate.Builder.item().of(Blocks.END_STONE).withCount(MinMaxBounds.Ints.atLeast(0)).build()
                 )
                 .build(),
-                subber -> subber
-                    .sub("conditions.items.0.count.min", "count")
-                    .sub("conditions.items.1.count.min", "count")
-                    .sub("conditions.items.2.count.min", "count")
+                subber -> subber.multiSub("conditions.items.*.count.min", "count")
             )
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD, BingoTags.NETHER, BingoTags.END)
             .name(
@@ -538,7 +537,11 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 ),
                 subber -> subber.sub("with.0", "count")
             )
-            .icon(Blocks.END_STONE, subber -> subber.sub("item.Count", "count"))
+            .icon(new CycleIcon(
+                BlockIcon.ofBlock(Blocks.DIRT),
+                BlockIcon.ofBlock(Blocks.NETHERRACK),
+                BlockIcon.ofBlock(Blocks.END_STONE)
+            ), subber -> subber.multiSub("value.*.item.Count", "count"))
         );
         addGoal(BingoGoal.builder(id("tame_mule"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.MULE).build()))

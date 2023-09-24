@@ -2,6 +2,8 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.icons.CycleIcon;
+import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
@@ -76,7 +78,10 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                     Component.translatable("bingo.count", 0, Items.POPPY.getDescription()),
                     Component.translatable("bingo.count", 0, Items.DANDELION.getDescription())),
                 subber -> subber.sub("with.0.with.0", "poppies_count").sub("with.1.with.0", "dandelions_count"))
-            .icon(Items.POPPY));
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.POPPY),
+                ItemIcon.ofItem(Items.DANDELION)
+            ), subber -> subber.sub("value.0.value.Count", "poppies_count").sub("value.1.value.Count", "dandelions_count")));
         addGoal(obtainLevelsGoal(id("levels"), 5, 7));
         addGoal(obtainItemGoal(id("note_block"), Items.NOTE_BLOCK, 5, 7)
             .infrequency(2)

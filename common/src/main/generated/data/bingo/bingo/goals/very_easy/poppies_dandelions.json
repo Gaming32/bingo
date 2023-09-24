@@ -57,11 +57,29 @@
   },
   "difficulty": 0,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": 1,
-      "id": "minecraft:poppy"
-    }
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "poppies_count"
+          },
+          "id": "minecraft:poppy"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "dandelions_count"
+          },
+          "id": "minecraft:dandelion"
+        }
+      }
+    ]
   },
   "name": {
     "translate": "bingo.and",

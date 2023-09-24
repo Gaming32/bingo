@@ -120,7 +120,7 @@ public class BingoClient {
                 final int slotX = sx * 18 + 8;
                 final int slotY = sy * 18 + 18;
                 goal.icon().render(graphics, slotX, slotY);
-                graphics.renderItemDecorations(minecraft.font, goal.icon().item(), slotX, slotY);
+                goal.icon().renderDecorations(minecraft.font, graphics, slotX, slotY);
                 if (clientTeam.any()) {
                     final BingoBoard.Teams state = clientBoard.getState(sx, sy);
                     final int color = state.and(clientTeam) ? 0x55ff55 : goal.specialType().incompleteColor;

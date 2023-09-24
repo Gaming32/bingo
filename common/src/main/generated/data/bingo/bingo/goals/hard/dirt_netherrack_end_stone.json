@@ -55,17 +55,48 @@
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:end_stone"
-    },
-    "item": {
-      "Count": {
-        "bingo_type": "bingo:sub",
-        "value": "count"
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:block",
+        "block": {
+          "Name": "minecraft:dirt"
+        },
+        "item": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:dirt"
+        }
       },
-      "id": "minecraft:end_stone"
-    }
+      {
+        "type": "bingo:block",
+        "block": {
+          "Name": "minecraft:netherrack"
+        },
+        "item": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:netherrack"
+        }
+      },
+      {
+        "type": "bingo:block",
+        "block": {
+          "Name": "minecraft:end_stone"
+        },
+        "item": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:end_stone"
+        }
+      }
+    ]
   },
   "name": {
     "translate": "bingo.goal.dirt_netherrack_end_stone",

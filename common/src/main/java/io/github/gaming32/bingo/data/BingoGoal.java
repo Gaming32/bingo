@@ -8,7 +8,6 @@ import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.icons.BlockIcon;
 import io.github.gaming32.bingo.data.icons.EmptyIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
-import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.advancements.Criterion;
@@ -25,10 +24,8 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -586,23 +583,12 @@ public class BingoGoal {
             return this;
         }
 
-        public Builder icon(ItemLike icon) {
+        public Builder icon(Object icon) {
             return icon(icon, subber -> {});
         }
 
-        public Builder icon(ItemLike icon, Consumer<JsonSubber> subber) {
-            if (icon.asItem() == Items.AIR) {
-                throw new IllegalArgumentException("Unknown item for " + icon + ". Please use a different overload.");
-            }
-            return icon(new ItemStack(icon), subber);
-        }
-
-        public Builder icon(Block icon) {
-            return icon(icon, subber -> {});
-        }
-
-        public Builder icon(Block icon, Consumer<JsonSubber> subber) {
-            return icon(BlockIcon.ofBlock(icon), subber);
+        public Builder icon(Object icon, Consumer<JsonSubber> subber) {
+            return icon(GoalIcon.infer(icon), subber);
         }
 
         public Builder icon(Block icon, ItemLike fallback) {
@@ -611,22 +597,6 @@ public class BingoGoal {
 
         public Builder icon(Block icon, ItemLike fallback, Consumer<JsonSubber> subber) {
             return icon(new BlockIcon(icon.defaultBlockState(), new ItemStack(fallback)), subber);
-        }
-
-        public Builder icon(ItemStack icon) {
-            return icon(icon, subber -> {});
-        }
-
-        public Builder icon(ItemStack icon, Consumer<JsonSubber> subber) {
-            return icon(new ItemIcon(icon), subber);
-        }
-
-        public Builder icon(BlockState icon) {
-            return icon(icon, subber -> {});
-        }
-
-        public Builder icon(BlockState icon, Consumer<JsonSubber> subber) {
-            return icon(BlockIcon.ofBlock(icon), subber);
         }
 
         public Builder icon(GoalIcon icon) {

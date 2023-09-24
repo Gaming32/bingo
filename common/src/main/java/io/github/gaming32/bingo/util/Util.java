@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.util;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.RandomSource;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
 
@@ -60,5 +62,10 @@ public class Util {
 
     public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) {
         return net.minecraft.Util.getOrThrow(codec.parse(JsonOps.INSTANCE, element), JsonSyntaxException::new);
+    }
+
+    public static <T> List<T> addToList(List<T> a, T b) {
+        //noinspection UnstableApiUsage
+        return ImmutableList.<T>builderWithExpectedSize(a.size() + 1).addAll(a).add(b).build();
     }
 }

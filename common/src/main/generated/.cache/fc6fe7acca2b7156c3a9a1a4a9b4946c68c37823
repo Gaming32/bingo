@@ -142,7 +142,7 @@ fa0cc3bc8f37a79a685700d4402f9c81dbbb3157 data/bingo/bingo/goals/hard/conduit.jso
 45aa367bae150c4075974f16aae3a83811ed4575 data/bingo/bingo/goals/hard/diamond_block.json
 5c33df7780767caf8bd0ac916e5d02540957a05d data/bingo/bingo/goals/hard/diamond_in_name.json
 92d370cfe1225c4c31d2128fe1e5e308cb296f98 data/bingo/bingo/goals/hard/die_to_villager.json
-8e22f3f9a7e81cb2912bbe3e92262e4d32dc7d12 data/bingo/bingo/goals/hard/dirt_netherrack_end_stone.json
+594f8f2cc83676f44e61ca20ef6d1dfad2b23ca3 data/bingo/bingo/goals/hard/dirt_netherrack_end_stone.json
 8ab0fa3bedf65efecbff9813f937851d3d6ad3d2 data/bingo/bingo/goals/hard/disarm_pillager.json
 dcc2da036e8c3066de22349138cdbcaf1633dbbd data/bingo/bingo/goals/hard/dragon_breath.json
 e3e352080fc6ea0d8ac824176ccec4a38ec6b439 data/bingo/bingo/goals/hard/dragon_egg.json
@@ -334,7 +334,7 @@ d2696389702d812a049ea52a65e91834dba600cc data/bingo/bingo/goals/very_easy/oak_lo
 f229b286279b8d6380d7582af9581023f034e5f6 data/bingo/bingo/goals/very_easy/oak_planks.json
 22dba325d134fdf95d0683981a9aac5bb18050c3 data/bingo/bingo/goals/very_easy/oak_wood.json
 db81232148b70f57e4198b382bba77c028d112f1 data/bingo/bingo/goals/very_easy/paper.json
-229c37b8843458847216316c53b042ef1da99ceb data/bingo/bingo/goals/very_easy/poppies_dandelions.json
+f30b7c1059aaa85d3b4664f762861eeba91ac703 data/bingo/bingo/goals/very_easy/poppies_dandelions.json
 3edbe47f07a57e6f496f5f967c9a4a4fb40abd90 data/bingo/bingo/goals/very_easy/redstone.json
 91577cdec7a0eb4e0586124ddd3aca64cb9cae10 data/bingo/bingo/goals/very_easy/rotten_flesh.json
 a1c23b0fe1cb09fbbc1d3353f24551b5e03d1da6 data/bingo/bingo/goals/very_easy/salmon.json
