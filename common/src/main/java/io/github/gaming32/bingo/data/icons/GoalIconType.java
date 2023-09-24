@@ -27,7 +27,18 @@ public interface GoalIconType<I extends GoalIcon> {
         if (id.indexOf(':') < 0) {
             id = "bingo:" + id;
         }
-        return REGISTRAR.register(new ResourceLocation(id), () -> () -> codec);
+        final ResourceLocation location = new ResourceLocation(id);
+        return REGISTRAR.register(location, () -> new GoalIconType<>() {
+            @Override
+            public Codec<I> codec() {
+                return codec;
+            }
+
+            @Override
+            public String toString() {
+                return "GoalIconType[" + location + "]";
+            }
+        });
     }
 
     static void load() {

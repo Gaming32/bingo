@@ -5,10 +5,6 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.Util;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -22,14 +18,6 @@ public interface GoalIcon {
      * Used for rendering count, as well as for a fallback for Vanilla clients.
      */
     ItemStack item();
-
-    @Environment(EnvType.CLIENT)
-    void render(GuiGraphics graphics, int x, int y);
-
-    @Environment(EnvType.CLIENT)
-    default void renderDecorations(Font font, GuiGraphics graphics, int x, int y) {
-        graphics.renderItemDecorations(font, item(), x, y);
-    }
 
     GoalIconType<?> type();
 

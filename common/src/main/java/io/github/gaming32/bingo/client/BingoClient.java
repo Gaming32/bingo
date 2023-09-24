@@ -8,7 +8,11 @@ import dev.architectury.event.events.client.ClientScreenInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.client.icons.DefaultIconRenderers;
+import io.github.gaming32.bingo.client.icons.IconRenderer;
+import io.github.gaming32.bingo.client.icons.IconRenderers;
 import io.github.gaming32.bingo.client.recipeviewer.RecipeViewerPlugin;
+import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.ClientGoal;
 import net.fabricmc.api.EnvType;
@@ -79,6 +83,8 @@ public class BingoClient {
             clientBoard = null;
         });
 
+        DefaultIconRenderers.setup();
+
         // TODO: Maybe figure out warning on Forge? Priority: Low
         final KeyMapping boardKey = new KeyMapping("bingo.key.board", InputConstants.KEY_B, "bingo.key.category");
         KeyMappingRegistry.register(boardKey);
@@ -119,8 +125,10 @@ public class BingoClient {
                 final ClientGoal goal = clientBoard.getGoal(sx, sy);
                 final int slotX = sx * 18 + 8;
                 final int slotY = sy * 18 + 18;
-                goal.icon().render(graphics, slotX, slotY);
-                goal.icon().renderDecorations(minecraft.font, graphics, slotX, slotY);
+                final GoalIcon icon = goal.icon();
+                final IconRenderer<? super GoalIcon> renderer = IconRenderers.getRenderer(icon);
+                renderer.render(icon, graphics, slotX, slotY);
+                renderer.renderDecorations(icon, minecraft.font, graphics, slotX, slotY);
                 if (clientTeam.any()) {
                     final BingoBoard.Teams state = clientBoard.getState(sx, sy);
                     final int color = state.and(clientTeam) ? 0x55ff55 : goal.specialType().incompleteColor;
