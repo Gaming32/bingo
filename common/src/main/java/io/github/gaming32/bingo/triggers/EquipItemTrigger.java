@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.github.gaming32.bingo.util.BingoUtil;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
@@ -128,8 +129,10 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, oldItem, newItem, slots);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.EQUIP_ITEM.createCriterion(
+                new TriggerInstance(player, oldItem, newItem, slots)
+            );
         }
     }
 }

@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
@@ -38,6 +39,12 @@ public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTr
         trigger(player, instance -> instance.matches(level, pos));
     }
 
+    public static Criterion<TriggerInstance> pillar(TagKey<Block> tag) {
+        return BingoTriggers.MINERAL_PILLAR.createCriterion(
+            new TriggerInstance(Optional.empty(), tag)
+        );
+    }
+
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final TagKey<Block> tag;
 
@@ -52,10 +59,6 @@ public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTr
             final JsonObject result = super.serializeToJson();
             result.addProperty("tag", tag.location().toString());
             return result;
-        }
-
-        public static TriggerInstance pillar(TagKey<Block> tag) {
-            return new TriggerInstance(Optional.empty(), tag);
         }
 
         public boolean matches(BlockGetter level, BlockPos pos) {

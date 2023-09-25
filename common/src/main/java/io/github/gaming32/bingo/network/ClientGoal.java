@@ -35,7 +35,7 @@ public record ClientGoal(
             buf.readComponent(),
             buf.readNullable(FriendlyByteBuf::readComponent),
             buf.readNullable(FriendlyByteBuf::readResourceLocation),
-            buf.readWithCodec(NbtOps.INSTANCE, GoalIcon.CODEC),
+            buf.readWithCodecTrusted(NbtOps.INSTANCE, GoalIcon.CODEC),
             buf.readEnum(BingoTag.SpecialType.class)
         );
     }

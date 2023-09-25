@@ -1,7 +1,6 @@
 package io.github.gaming32.bingo.mixin.common;
 
 import io.github.gaming32.bingo.ext.PlayerPredicateBuilderExt;
-import io.github.gaming32.bingo.ext.PlayerPredicateExt;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.PlayerPredicate;
 import net.minecraft.stats.Stat;
@@ -28,7 +27,8 @@ public class MixinPlayerPredicate_Builder implements PlayerPredicateBuilderExt {
     @Inject(method = "build", at = @At("RETURN"))
     private void appendCustomFields(CallbackInfoReturnable<PlayerPredicate> cir) {
         if (!bingo$relativeStats.isEmpty()) {
-            ((PlayerPredicateExt)cir.getReturnValue()).bingo$setRelativeStats(bingo$relativeStats);
+            // TODO: Rework
+//            ((PlayerPredicateExt)cir.getReturnValue()).bingo$setRelativeStats(bingo$relativeStats);
         }
     }
 }

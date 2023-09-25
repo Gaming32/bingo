@@ -10,7 +10,8 @@ import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
-import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.AdvancementRequirements;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -77,7 +78,7 @@ public abstract class DifficultyGoalProvider {
             for (int i = 0; i < oneOfThese.length; i++) {
                 builder.criterion("obtain_" + i, TotalCountInventoryChangeTrigger.builder().items(oneOfThese[i].build()).build());
             }
-            builder.requirements(RequirementsStrategy.OR);
+            builder.requirements(AdvancementRequirements.Strategy.OR);
         }
         return builder
             .tags(BingoTags.ITEM)
@@ -196,7 +197,7 @@ public abstract class DifficultyGoalProvider {
 
     protected static BingoGoal.Builder mineralPillarGoal(ResourceLocation id, TagKey<Block> tag) {
         return BingoGoal.builder(id)
-            .criterion("pillar", MineralPillarTrigger.TriggerInstance.pillar(tag))
+            .criterion("pillar", MineralPillarTrigger.pillar(tag))
             .tags(BingoTags.BUILD);
     }
 
@@ -207,7 +208,7 @@ public abstract class DifficultyGoalProvider {
             .sub("depth", BingoSub.random(2, 4))
             .criterion("cube",
                 ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
-                    LocationCheck.checkLocation(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blockTag).build())),
+                    LocationCheck.checkLocation(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blockTag))),
                     BlockPatternCondition.builder().aisle("#")
                         .where('#', BlockPredicate.Builder.block().of(blockTag))
                         .rotations(BlockPattern.Rotations.ALL)
@@ -274,7 +275,7 @@ public abstract class DifficultyGoalProvider {
     }
 
     @SuppressWarnings("unchecked")
-    protected static <T extends Item> InventoryChangeTrigger.TriggerInstance allItemsOfType(
+    protected static <T extends Item> Criterion<InventoryChangeTrigger.TriggerInstance> allItemsOfType(
         Class<T> clazz, Predicate<T> predicate
     ) {
         return InventoryChangeTrigger.TriggerInstance.hasItems(

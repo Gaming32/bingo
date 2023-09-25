@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
@@ -92,14 +93,16 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
             return this;
         }
 
-        public TriggerInstance build() {
+        public Criterion<TriggerInstance> build() {
             if (tag == null) {
                 throw new IllegalStateException("Did not specify tag");
             }
             if (requiredCount == -1) {
                 throw new IllegalStateException("Did not specify requiredCount");
             }
-            return new TriggerInstance(player, tag, requiredCount);
+            return BingoTriggers.HAS_SOME_ITEMS_FROM_TAG.createCriterion(
+                new TriggerInstance(player, tag, requiredCount)
+            );
         }
     }
 }

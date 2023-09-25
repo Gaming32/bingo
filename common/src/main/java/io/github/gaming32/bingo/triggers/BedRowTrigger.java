@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
@@ -32,8 +33,10 @@ public class BedRowTrigger extends SimpleCriterionTrigger<BedRowTrigger.TriggerI
         trigger(player, triggerInstance -> triggerInstance.matches(level, pos));
     }
 
-    public static TriggerInstance create(int count) {
-        return new TriggerInstance(Optional.empty(), count);
+    public static Criterion<TriggerInstance> create(int count) {
+        return BingoTriggers.BED_ROW.createCriterion(
+            new TriggerInstance(Optional.empty(), count)
+        );
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {

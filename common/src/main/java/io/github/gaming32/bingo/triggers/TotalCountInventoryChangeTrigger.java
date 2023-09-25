@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.triggers;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.util.BingoUtil;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -103,8 +104,10 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, List.copyOf(items));
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGED.createCriterion(
+                new TriggerInstance(player, List.copyOf(items))
+            );
         }
     }
 }

@@ -51,7 +51,7 @@ public class BingoClient {
         ClientGuiEvent.RENDER_HUD.register((graphics, tickDelta) -> {
             if (clientBoard == null) return;
             final Minecraft minecraft = Minecraft.getInstance();
-            if (minecraft.options.renderDebug || minecraft.screen instanceof BoardScreen) return;
+            if (minecraft.getDebugOverlay().showDebugScreen() || minecraft.screen instanceof BoardScreen) return;
             final float scale = boardScale;
             final float x = boardCorner.getX(graphics.guiWidth(), scale);
             final float y = boardCorner.getY(graphics.guiHeight(), scale);

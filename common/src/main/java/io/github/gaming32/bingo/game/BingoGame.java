@@ -149,21 +149,35 @@ public class BingoGame {
         }
     }
 
+    private <T extends CriterionTriggerInstance> CriterionTrigger.Listener<T> createListener(
+        Criterion<T> criterion, String criterionId, ActiveGoal goal
+    ) {
+        return new CriterionTrigger.Listener<>(
+            criterion.triggerInstance(),
+            new AdvancementHolder(BingoBoard.generateVanillaId(board.getIndex(goal)), null),
+            criterionId
+        );
+    }
+
+    private <T extends CriterionTriggerInstance> void addListener(
+        Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
+    ) {
+        criterion.trigger().addPlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
+    }
+
+    private <T extends CriterionTriggerInstance> void removeListener(
+        Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
+    ) {
+        criterion.trigger().removePlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
+    }
+
     private void registerListeners(ServerPlayer player, ActiveGoal goal) {
         final AdvancementProgress progress = getOrStartProgress(player, goal);
         if (!progress.isDone()) {
             for (final var entry : goal.getCriteria().entrySet()) {
                 final CriterionProgress criterionProgress = progress.getCriterion(entry.getKey());
                 if (criterionProgress != null && !criterionProgress.isDone()) {
-                    final CriterionTriggerInstance triggerInstance = entry.getValue().getTrigger();
-                    if (triggerInstance != null) {
-                        final CriterionTrigger<CriterionTriggerInstance> trigger = CriteriaTriggers.getCriterion(triggerInstance.getCriterion());
-                        if (trigger != null) {
-                            trigger.addPlayerListener(
-                                player.getAdvancements(), new GoalListener<>(triggerInstance, goal, entry.getKey())
-                            );
-                        }
-                    }
+                    addListener(entry.getValue(), entry.getKey(), player, goal);
                 }
             }
         }
@@ -174,15 +188,7 @@ public class BingoGame {
         for (final var entry : goal.getCriteria().entrySet()) {
             final CriterionProgress criterionProgress = progress.getCriterion(entry.getKey());
             if (criterionProgress != null && (force || criterionProgress.isDone() || progress.isDone())) {
-                final CriterionTriggerInstance triggerInstance = entry.getValue().getTrigger();
-                if (triggerInstance != null) {
-                    final CriterionTrigger<CriterionTriggerInstance> trigger = CriteriaTriggers.getCriterion(triggerInstance.getCriterion());
-                    if (trigger != null) {
-                        trigger.removePlayerListener(
-                            player.getAdvancements(), new GoalListener<>(triggerInstance, goal, entry.getKey())
-                        );
-                    }
-                }
+                removeListener(entry.getValue(), entry.getKey(), player, goal);
             }
         }
     }
@@ -192,7 +198,7 @@ public class BingoGame {
         AdvancementProgress progress = map.get(goal);
         if (progress == null) {
             progress = new AdvancementProgress();
-            progress.update(goal.getCriteria(), goal.getGoal().getRequirements());
+            progress.update(goal.getGoal().getRequirements());
             map.put(goal, progress);
         }
         return progress;
@@ -328,7 +334,7 @@ public class BingoGame {
             List.of(),
             Set.of(),
             Map.of(
-                VanillaNetworking.generateAdvancementId(boardIndex),
+                BingoBoard.generateVanillaId(boardIndex),
                 VanillaNetworking.generateProgress(boardState.and(team))
             )
         );

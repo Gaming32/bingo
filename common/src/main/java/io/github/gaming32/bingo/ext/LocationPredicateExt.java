@@ -10,19 +10,22 @@ public interface LocationPredicateExt {
     void bingo$setDimensionTag(TagPredicate<LevelStem> dimensionTag);
     void bingo$setBiomeTag(TagPredicate<Biome> biomeTag);
 
-    static LocationPredicate inDimension(TagPredicate<LevelStem> dimension) {
-        LocationPredicate predicate = LocationPredicate.Builder.location().build();
-        ((LocationPredicateExt) predicate).bingo$setDimensionTag(dimension);
-        return predicate;
+    static LocationPredicate.Builder inDimension(TagPredicate<LevelStem> dimension) {
+        // TODO: Rework
+//        LocationPredicate predicate = LocationPredicate.Builder.location().build();
+//        ((LocationPredicateExt) predicate).bingo$setDimensionTag(dimension);
+//        return predicate;
+        return null;
     }
 
-    static LocationPredicate inDimension(TagKey<LevelStem> dimension) {
+    static LocationPredicate.Builder inDimension(TagKey<LevelStem> dimension) {
         return inDimension(TagPredicate.is(dimension));
     }
 
     static LocationPredicate inBiome(TagPredicate<Biome> biome) {
         LocationPredicate predicate = LocationPredicate.Builder.location().build();
-        ((LocationPredicateExt) predicate).bingo$setBiomeTag(biome);
+        // TODO: Rework
+//        ((LocationPredicateExt) predicate).bingo$setBiomeTag(biome);
         return predicate;
     }
 

@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -79,8 +80,10 @@ public class EnchantedItemTrigger extends SimpleCriterionTrigger<EnchantedItemTr
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, levelsSpent, requiredLevels);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.ENCHANTED_ITEM.createCriterion(
+                new TriggerInstance(player, levelsSpent, requiredLevels)
+            );
         }
     }
 }

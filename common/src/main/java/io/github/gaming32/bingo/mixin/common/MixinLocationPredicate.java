@@ -1,8 +1,5 @@
 package io.github.gaming32.bingo.mixin.common;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import io.github.gaming32.bingo.ext.LocationPredicateExt;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.TagPredicate;
@@ -40,33 +37,34 @@ public class MixinLocationPredicate implements LocationPredicateExt {
         bingo$biomeTag = biomeTag;
     }
 
-    @ModifyReturnValue(method = "serializeToJson", at = @At("RETURN"))
-    private JsonElement serializeToJsonExt(JsonElement jsonElt) {
-        if (jsonElt instanceof JsonObject json) {
-            if (bingo$dimensionTag != null) {
-                json.add("bingo:dimension_tag", bingo$dimensionTag.serializeToJson());
-            }
-            if (bingo$biomeTag != null) {
-                json.add("bingo:biome_tag", bingo$biomeTag.serializeToJson());
-            }
-        }
-        return jsonElt;
-    }
-
-    @ModifyReturnValue(method = "fromJson", at = @At("RETURN"))
-    private static LocationPredicate fromJsonExt(LocationPredicate predicate, JsonElement jsonElt) {
-        if (predicate == LocationPredicate.ANY) {
-            return predicate;
-        }
-        JsonObject json = jsonElt.getAsJsonObject();
-        if (json.has("bingo:dimension_tag")) {
-            ((LocationPredicateExt) predicate).bingo$setDimensionTag(TagPredicate.fromJson(json.get("bingo:dimension_tag"), Registries.LEVEL_STEM));
-        }
-        if (json.has("bingo:biome_tag")) {
-            ((LocationPredicateExt) predicate).bingo$setBiomeTag(TagPredicate.fromJson(json.get("bingo:biome_tag"), Registries.BIOME));
-        }
-        return predicate;
-    }
+    // TODO: Rework
+//    @ModifyReturnValue(method = "serializeToJson", at = @At("RETURN"))
+//    private JsonElement serializeToJsonExt(JsonElement jsonElt) {
+//        if (jsonElt instanceof JsonObject json) {
+//            if (bingo$dimensionTag != null) {
+//                json.add("bingo:dimension_tag", bingo$dimensionTag.serializeToJson());
+//            }
+//            if (bingo$biomeTag != null) {
+//                json.add("bingo:biome_tag", bingo$biomeTag.serializeToJson());
+//            }
+//        }
+//        return jsonElt;
+//    }
+//
+//    @ModifyReturnValue(method = "fromJson", at = @At("RETURN"))
+//    private static LocationPredicate fromJsonExt(LocationPredicate predicate, JsonElement jsonElt) {
+//        if (predicate == LocationPredicate.ANY) {
+//            return predicate;
+//        }
+//        JsonObject json = jsonElt.getAsJsonObject();
+//        if (json.has("bingo:dimension_tag")) {
+//            ((LocationPredicateExt) predicate).bingo$setDimensionTag(TagPredicate.fromJson(json.get("bingo:dimension_tag"), Registries.LEVEL_STEM));
+//        }
+//        if (json.has("bingo:biome_tag")) {
+//            ((LocationPredicateExt) predicate).bingo$setBiomeTag(TagPredicate.fromJson(json.get("bingo:biome_tag"), Registries.BIOME));
+//        }
+//        return predicate;
+//    }
 
     @Inject(method = "matches", at = @At("HEAD"), cancellable = true)
     private void matchesExt(ServerLevel level, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
@@ -81,7 +79,6 @@ public class MixinLocationPredicate implements LocationPredicateExt {
         if (bingo$biomeTag != null) {
             if (!bingo$biomeTag.matches(level.getBiome(BlockPos.containing(x, y, z)))) {
                 cir.setReturnValue(false);
-                return;
             }
         }
     }

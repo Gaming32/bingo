@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -97,8 +98,10 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, levels, progress, totalExperience);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.EXPERIENCE_CHANGED.createCriterion(
+                new TriggerInstance(player, levels, progress, totalExperience)
+            );
         }
     }
 }
