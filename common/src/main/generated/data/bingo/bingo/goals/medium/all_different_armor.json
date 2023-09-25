@@ -1,0 +1,44 @@
+{
+  "criteria": {
+    "armor": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "bingo:wearing_different_armor",
+            "different_types": {
+              "min": 4
+            },
+            "equipped_armor": {
+              "min": 4
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:golden_chestplate",
+      "tag": {
+        "Damage": 0,
+        "Enchantments": [
+          {}
+        ]
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.all_different_armor",
+    "with": [
+      "4"
+    ]
+  },
+  "reactant": "wear_armor",
+  "tags": [
+    "bingo:item"
+  ]
+}

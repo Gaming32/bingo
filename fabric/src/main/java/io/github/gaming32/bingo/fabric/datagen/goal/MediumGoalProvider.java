@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
+import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.subs.BingoSub;
@@ -400,6 +401,21 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("scute"), Items.SCUTE)
             .setAntisynergy("turtle_helmet")
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(id("all_different_armor"))
+            .criterion("armor", new InventoryChangeTrigger.TriggerInstance(
+                ContextAwarePredicate.create(new WearingDifferentArmorCondition(
+                    MinMaxBounds.Ints.atLeast(4), MinMaxBounds.Ints.atLeast(4)
+                )),
+                MinMaxBounds.Ints.ANY,
+                MinMaxBounds.Ints.ANY,
+                MinMaxBounds.Ints.ANY,
+                new ItemPredicate[0]
+            ))
+            .tags(BingoTags.ITEM)
+            .reactant("wear_armor")
+            .name(Component.translatable("bingo.goal.all_different_armor", 4))
+            .icon(makeItemWithGlint(Items.GOLDEN_CHESTPLATE))
+        );
     }
 
     private BingoGoal.Builder potionGoal(String id, Potion... potions) {

@@ -129,12 +129,10 @@ public class BingoClient {
                 final IconRenderer<? super GoalIcon> renderer = IconRenderers.getRenderer(icon);
                 renderer.render(icon, graphics, slotX, slotY);
                 renderer.renderDecorations(icon, minecraft.font, graphics, slotX, slotY);
-                if (clientTeam.any()) {
-                    final BingoBoard.Teams state = clientBoard.getState(sx, sy);
-                    final int color = state.and(clientTeam) ? 0x55ff55 : goal.specialType().incompleteColor;
-                    if (color != 0) {
-                        graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
-                    }
+                final BingoBoard.Teams state = clientBoard.getState(sx, sy);
+                final int color = state.and(clientTeam) ? 0x55ff55 : goal.specialType().incompleteColor;
+                if (color != 0) {
+                    graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
                 }
             }
         }
