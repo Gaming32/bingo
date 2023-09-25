@@ -8,8 +8,8 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
-import io.github.gaming32.bingo.util.Util;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -264,9 +264,9 @@ public abstract class DifficultyGoalProvider {
     protected static BlockPredicate.Builder spawnerPredicate(EntityType<?> entityType) {
         return BlockPredicate.Builder.block()
             .of(Blocks.SPAWNER)
-            .hasNbt(Util.compound(Map.of(
-                "SpawnData", Util.compound(Map.of(
-                    "entity", Util.compound(Map.of(
+            .hasNbt(BingoUtil.compound(Map.of(
+                "SpawnData", BingoUtil.compound(Map.of(
+                    "entity", BingoUtil.compound(Map.of(
                         "id", StringTag.valueOf(BuiltInRegistries.ENTITY_TYPE.getKey(entityType).toString())
                     ))
                 ))

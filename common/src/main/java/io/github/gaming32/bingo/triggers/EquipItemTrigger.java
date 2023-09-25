@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import io.github.gaming32.bingo.util.Util;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
@@ -69,7 +69,7 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
                     slots.stream()
                         .map(EquipmentSlot::getName)
                         .map(JsonPrimitive::new)
-                        .collect(Util.toJsonArray())
+                        .collect(BingoUtil.toJsonArray())
             );
             return result;
         }

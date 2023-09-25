@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.util.BingoCodecs;
-import io.github.gaming32.bingo.util.Util;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -24,19 +24,19 @@ public interface BingoSub {
     BingoSubType<?> type();
 
     default JsonObject serializeToJson() {
-        return Util.toJsonObject(CODEC, this);
+        return BingoUtil.toJsonObject(CODEC, this);
     }
 
     default JsonObject serializeInnerToJson() {
-        return Util.toJsonObject(INNER_CODEC, this);
+        return BingoUtil.toJsonObject(INNER_CODEC, this);
     }
 
     static BingoSub deserialize(JsonElement element) {
-        return Util.fromJsonElement(CODEC, element);
+        return BingoUtil.fromJsonElement(CODEC, element);
     }
 
     static BingoSub deserializeInner(JsonElement element) {
-        return Util.fromJsonElement(INNER_CODEC, element);
+        return BingoUtil.fromJsonElement(INNER_CODEC, element);
     }
 
     static BingoSub random(int min, int max) {

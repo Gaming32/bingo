@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
-import io.github.gaming32.bingo.util.Util;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.util.GsonHelper;
 
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public record JsonSubber(JsonElement json) {
             } else {
                 throw notAnArrayOrObject();
             }
-            return new SubbingElement(Util.addToList(path, offset), next);
+            return new SubbingElement(BingoUtil.addToList(path, offset), next);
         }
 
         void resolveAll(String offset, List<SubbingElement> output) {
@@ -96,12 +96,12 @@ public record JsonSubber(JsonElement json) {
             }
             if (value.isJsonObject()) {
                 for (final var entry : value.getAsJsonObject().entrySet()) {
-                    output.add(new SubbingElement(Util.addToList(path, entry.getKey()), entry.getValue()));
+                    output.add(new SubbingElement(BingoUtil.addToList(path, entry.getKey()), entry.getValue()));
                 }
             } else if (value.isJsonArray()) {
                 final JsonArray array = value.getAsJsonArray();
                 for (int i = 0; i < array.size(); i++) {
-                    output.add(new SubbingElement(Util.addToList(path, Integer.toString(i)), array.get(i)));
+                    output.add(new SubbingElement(BingoUtil.addToList(path, Integer.toString(i)), array.get(i)));
                 }
             } else {
                 throw notAnArrayOrObject();

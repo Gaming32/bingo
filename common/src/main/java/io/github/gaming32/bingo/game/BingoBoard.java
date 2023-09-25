@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
-import io.github.gaming32.bingo.util.Util;
+import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -57,7 +57,7 @@ public class BingoBoard {
         final BingoGoal[] generatedSheet = new BingoGoal[SIZE_SQ];
 
         final int[] difficultyLayout = generateDifficulty(difficulty, rand);
-        final int[] indices = Util.shuffle(Util.generateIntArray(SIZE_SQ), rand);
+        final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(SIZE_SQ), rand);
 
         final Set<ResourceLocation> usedGoals = new HashSet<>();
         final Object2IntOpenHashMap<ResourceLocation> tagCount = new Object2IntOpenHashMap<>();

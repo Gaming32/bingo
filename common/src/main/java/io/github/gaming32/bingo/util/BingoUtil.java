@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.mixin.common.LocationCheckAccessor;
+import net.minecraft.Util;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.core.BlockPos;
@@ -17,9 +18,10 @@ import net.minecraft.util.RandomSource;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collector;
 
-public class Util {
+public class BingoUtil {
     public static int[] generateIntArray(int length) {
         final int[] result = new int[length];
         for (int i = 1; i < length; i++) {
@@ -57,15 +59,18 @@ public class Util {
     }
 
     public static <T> JsonObject toJsonObject(Codec<T> codec, T obj) {
-        return net.minecraft.Util.getOrThrow(codec.encodeStart(JsonOps.INSTANCE, obj), IllegalArgumentException::new).getAsJsonObject();
+        return Util.getOrThrow(codec.encodeStart(JsonOps.INSTANCE, obj), IllegalStateException::new).getAsJsonObject();
     }
 
     public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) {
-        return net.minecraft.Util.getOrThrow(codec.parse(JsonOps.INSTANCE, element), JsonSyntaxException::new);
+        return Util.getOrThrow(codec.parse(JsonOps.INSTANCE, element), JsonSyntaxException::new);
     }
 
     public static <T> List<T> addToList(List<T> a, T b) {
-        //noinspection UnstableApiUsage
         return ImmutableList.<T>builderWithExpectedSize(a.size() + 1).addAll(a).add(b).build();
+    }
+
+    public static <T> Optional<T> fromOptionalJsonElement(Codec<T> codec, JsonElement element) {
+        return element == null || element.isJsonNull() ? Optional.empty() : Optional.of(fromJsonElement(codec, element));
     }
 }
