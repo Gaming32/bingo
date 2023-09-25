@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
@@ -38,8 +39,10 @@ public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPot
             this.minCount = minCount;
         }
 
-        public static TriggerInstance differentPotions(int minCount) {
-            return new TriggerInstance(Optional.empty(), minCount);
+        public static Criterion<TriggerInstance> differentPotions(int minCount) {
+            return BingoTriggers.DIFFERENT_POTIONS.createCriterion(
+                new TriggerInstance(Optional.empty(), minCount)
+            );
         }
 
         @NotNull

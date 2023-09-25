@@ -9,8 +9,8 @@ import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.ext.LocationPredicateExt;
 import io.github.gaming32.bingo.triggers.*;
+import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
@@ -26,6 +26,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class VeryHardGoalProvider extends DifficultyGoalProvider {
@@ -78,11 +79,14 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 Arrays.stream(DyeColor.values()).map(DyeItem::byColor).toArray(ItemLike[]::new)))
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.all_dyes"))
-            .tooltip(Component.translatable("bingo.sixteen_bang",
-                Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new)))
+            .tooltip(Component.translatable(
+                "bingo.sixteen_bang",
+                Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new)
+            ))
             .icon(new ItemStack(Items.RED_DYE, 16))
             .antisynergy("every_color")
-            .reactant("use_furnace"));
+            .reactant("use_furnace")
+        );
         addGoal(BingoGoal.builder(id("levels"))
             .criterion("obtain", ExperienceChangeTrigger.builder().levels(MinMaxBounds.Ints.atLeast(50)).build())
             .tags(BingoTags.STAT)
@@ -100,9 +104,15 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .icon(Blocks.NETHERITE_BLOCK)
         );
         addGoal(BingoGoal.builder(id("sleep_in_mansion"))
-            .criterion("sleep", new PlayerTrigger.TriggerInstance(
-                CriteriaTriggers.SLEPT_IN_BED.getId(),
-                EntityPredicate.wrap(EntityPredicate.Builder.entity().located(LocationPredicate.inStructure(BuiltinStructures.WOODLAND_MANSION)).build())))
+            .criterion("sleep", CriteriaTriggers.SLEPT_IN_BED.createCriterion(
+                new PlayerTrigger.TriggerInstance(
+                    Optional.of(EntityPredicate.wrap(
+                        EntityPredicate.Builder.entity()
+                            .located(LocationPredicate.Builder.inStructure(BuiltinStructures.WOODLAND_MANSION))
+                            .build()
+                    ))
+                )
+            ))
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.sleep_in_mansion"))
             .icon(Items.BROWN_BED));
@@ -145,7 +155,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("complete_full_size_end_map"))
             .criterion("complete", CompleteMapTrigger.TriggerInstance.completeMap(
                 MinMaxBounds.Ints.atLeast(MapItemSavedData.MAX_SCALE),
-                LocationPredicateExt.inDimension(BingoDimensionTags.ENDS)
+                LocationPredicateExt.inDimension(BingoDimensionTags.ENDS).build()
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.END)
             .name(Component.translatable("bingo.goal.complete_full_size_end_map"))
@@ -186,7 +196,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 .direct(false)
                 .build()
             )
-            .requirements(RequirementsStrategy.OR)
+            .requirements(AdvancementRequirements.Strategy.OR)
             .name(Component.translatable("bingo.goal.zombify_pig"))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .icon(Items.COOKED_PORKCHOP));
@@ -202,15 +212,20 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .antisynergy("every_color")
             .infrequency(2)
             .tags(BingoTags.ACTION)
-            .tooltip(Component.translatable("bingo.sixteen_bang",
-                Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new))));
+            .tooltip(Component.translatable(
+                "bingo.sixteen_bang",
+                Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new)
+            ))
+        );
         addGoal(BingoGoal.builder(id("kill_enderman_with_endermites"))
             .criterion("obtain", EntityDieNearPlayerTrigger.builder()
                 .entity(ContextAwarePredicate.create(
                     LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(EntityType.ENDERMAN)).build(),
-                    new EndermanHasOnlyBeenDamagedByEndermiteCondition()))
+                    EndermanHasOnlyBeenDamagedByEndermiteCondition.INSTANCE
+                ))
                 .killingBlow(DamagePredicate.Builder.damageInstance().sourceEntity(EntityPredicate.Builder.entity().of(EntityType.ENDERMITE).build()).build())
-                .build())
+                .build()
+            )
             .name(Component.translatable("bingo.goal.kill_enderman_with_endermites"))
             .tooltip(Component.translatable("bingo.goal.kill_enderman_with_endermites.tooltip"))
             .icon(Items.ENDERMITE_SPAWN_EGG)

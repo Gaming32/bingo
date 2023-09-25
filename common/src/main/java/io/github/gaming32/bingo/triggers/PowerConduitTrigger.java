@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -26,12 +27,16 @@ public class PowerConduitTrigger extends SimpleCriterionTrigger<PowerConduitTrig
             this.level = level;
         }
 
-        public static TriggerInstance powerConduit() {
-            return new TriggerInstance(Optional.empty(), MinMaxBounds.Ints.ANY);
+        public static Criterion<TriggerInstance> powerConduit() {
+            return BingoTriggers.POWER_CONDUIT.createCriterion(
+                new TriggerInstance(Optional.empty(), MinMaxBounds.Ints.ANY)
+            );
         }
 
-        public static TriggerInstance powerConduit(MinMaxBounds.Ints level) {
-            return new TriggerInstance(Optional.empty(), level);
+        public static Criterion<TriggerInstance> powerConduit(MinMaxBounds.Ints level) {
+            return BingoTriggers.POWER_CONDUIT.createCriterion(
+                new TriggerInstance(Optional.empty(), level)
+            );
         }
 
         @NotNull

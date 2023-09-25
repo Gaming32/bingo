@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
@@ -115,8 +116,10 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, pig, zombifiedPiglin, direct);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.ZOMBIFY_PIG.createCriterion(
+                new TriggerInstance(player, pig, zombifiedPiglin, direct)
+            );
         }
     }
 }

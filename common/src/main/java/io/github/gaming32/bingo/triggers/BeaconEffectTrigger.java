@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
@@ -39,11 +40,13 @@ public class BeaconEffectTrigger extends SimpleCriterionTrigger<BeaconEffectTrig
             this.totalEffects = totalEffects;
         }
 
-        public static TriggerInstance effectApplied(MobEffect effect) {
-            return new TriggerInstance(
-                Optional.empty(),
-                MobEffectsPredicate.Builder.effects().and(effect).build(),
-                Optional.empty()
+        public static Criterion<TriggerInstance> effectApplied(MobEffect effect) {
+            return BingoTriggers.BEACON_EFFECT.createCriterion(
+                new TriggerInstance(
+                    Optional.empty(),
+                    MobEffectsPredicate.Builder.effects().and(effect).build(),
+                    Optional.empty()
+                )
             );
         }
 

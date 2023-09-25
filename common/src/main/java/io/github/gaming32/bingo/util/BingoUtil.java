@@ -4,12 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
-import io.github.gaming32.bingo.mixin.common.LocationCheckAccessor;
 import net.minecraft.Util;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.GsonHelper;
@@ -52,10 +49,6 @@ public class BingoUtil {
         final CompoundTag result = new CompoundTag();
         nbt.forEach(result::put);
         return result;
-    }
-
-    public static ContextAwarePredicate wrapLocation(LocationPredicate location) {
-        return ContextAwarePredicate.create(LocationCheckAccessor.createLocationCheck(location, BlockPos.ZERO));
     }
 
     public static <T> JsonElement toJsonElement(Codec<T> codec, T obj) {

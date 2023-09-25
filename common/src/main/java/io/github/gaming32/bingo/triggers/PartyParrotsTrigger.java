@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
@@ -31,8 +32,10 @@ public class PartyParrotsTrigger extends SimpleCriterionTrigger<PartyParrotsTrig
             super(predicate);
         }
 
-        public static TriggerInstance partyParrots() {
-            return new TriggerInstance(Optional.empty());
+        public static Criterion<TriggerInstance> partyParrots() {
+            return BingoTriggers.PARTY_PARROTS.createCriterion(
+                new TriggerInstance(Optional.empty())
+            );
         }
 
         public boolean matches(JukeboxBlockEntity blockEntity) {
