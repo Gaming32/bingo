@@ -3,21 +3,12 @@ package io.github.gaming32.bingo.triggers;
 import com.google.gson.JsonObject;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemPickedUpTrigger extends SimpleCriterionTrigger<ItemPickedUpTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:item_picked_up");
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
     @NotNull
     @Override
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {

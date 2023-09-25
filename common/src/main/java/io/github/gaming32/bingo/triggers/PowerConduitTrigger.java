@@ -2,19 +2,10 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class PowerConduitTrigger extends SimpleCriterionTrigger<PowerConduitTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:power_conduit");
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
     @NotNull
     @Override
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {

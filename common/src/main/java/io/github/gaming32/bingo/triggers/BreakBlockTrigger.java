@@ -1,11 +1,9 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.mixin.common.LocationCheckAccessor;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
@@ -20,18 +18,10 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
 public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.TriggerInstance> {
-    private static final ResourceLocation ID = new ResourceLocation(Bingo.MOD_ID, "break_block");
-
     @Override
     @NotNull
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
         return new TriggerInstance(player, EntityPredicate.fromJson(json, "location", context));
-    }
-
-    @Override
-    @NotNull
-    public ResourceLocation getId() {
-        return ID;
     }
 
     public void trigger(ServerPlayer player, BlockPos pos, ItemStack tool) {

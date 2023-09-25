@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
@@ -10,14 +9,6 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.NotNull;
 
 public class CompleteMapTrigger extends SimpleCriterionTrigger<CompleteMapTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:completed_map");
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
     @NotNull
     @Override
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {

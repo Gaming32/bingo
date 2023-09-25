@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.github.gaming32.bingo.util.Util;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -18,14 +17,6 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:equip_item");
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
     @NotNull
     @Override
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {

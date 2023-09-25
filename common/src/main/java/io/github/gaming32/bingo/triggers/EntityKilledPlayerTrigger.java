@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -10,14 +9,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKilledPlayerTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:entity_killed_player");
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
     @NotNull
     @Override
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {

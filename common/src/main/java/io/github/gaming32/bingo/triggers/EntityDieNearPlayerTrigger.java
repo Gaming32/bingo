@@ -1,16 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.Bingo;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DamagePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SerializationContext;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,18 +11,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDieNearPlayerTrigger.TriggerInstance> {
-    private static final ResourceLocation ID = new ResourceLocation(Bingo.MOD_ID, "entity_die_near_player");
-
     @Override
     @NotNull
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
         return new TriggerInstance(player, EntityPredicate.fromJson(json, "entity", context), DamagePredicate.fromJson(json.get("killing_blow")), DistancePredicate.fromJson(json.get("distance")));
-    }
-
-    @Override
-    @NotNull
-    public ResourceLocation getId() {
-        return ID;
     }
 
     public static Builder builder() {

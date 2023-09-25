@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
@@ -16,20 +15,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:try_use_item");
-
     private static final Map<String, InteractionHand> HANDS = ImmutableMap.of(
         "main_hand", InteractionHand.MAIN_HAND,
         "off_hand", InteractionHand.OFF_HAND
     );
     private static final Map<InteractionHand, String> INVERSE_HANDS = HANDS.entrySet()
         .stream().collect(Maps.toImmutableEnumMap(Map.Entry::getValue, Map.Entry::getKey));
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
 
     @NotNull
     @Override

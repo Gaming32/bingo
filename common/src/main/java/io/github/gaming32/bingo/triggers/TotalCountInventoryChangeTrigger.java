@@ -2,10 +2,8 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.mixin.common.ItemPredicateAccessor;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,8 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<TotalCountInventoryChangeTrigger.TriggerInstance> {
-    private static final ResourceLocation ID = new ResourceLocation(Bingo.MOD_ID, "total_count_inventory_changed");
-
     @Override
     @NotNull
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
@@ -30,12 +26,6 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
         }
 
         return new TriggerInstance(player, items);
-    }
-
-    @Override
-    @NotNull
-    public ResourceLocation getId() {
-        return ID;
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {

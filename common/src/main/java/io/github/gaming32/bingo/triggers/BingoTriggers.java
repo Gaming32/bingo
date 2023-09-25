@@ -1,63 +1,71 @@
 package io.github.gaming32.bingo.triggers;
 
-import io.github.gaming32.bingo.ext.PlayerPredicateBuilderExt;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.DistancePredicate;
+import net.minecraft.advancements.critereon.DistanceTrigger;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.stats.Stat;
+
+import java.util.Optional;
 
 import static net.minecraft.advancements.CriteriaTriggers.register;
 
 public class BingoTriggers {
-    public static final ExperienceChangeTrigger EXPERIENCE_CHANGED = register(new ExperienceChangeTrigger());
-    public static final EnchantedItemTrigger ENCHANTED_ITEM = register(new EnchantedItemTrigger());
-    public static final ArrowPressTrigger ARROW_PRESS = register(new ArrowPressTrigger());
-    public static final TryUseItemTrigger USE_ITEM = register(new TryUseItemTrigger());
-    public static final EquipItemTrigger EQUIP_ITEM = register(new EquipItemTrigger());
-    public static final DistanceTrigger CROUCH = register(new DistanceTrigger(new ResourceLocation("bingo:crouch")));
-    public static final ItemBrokenTrigger ITEM_BROKEN = register(new ItemBrokenTrigger());
-    public static final PlayerTrigger BOUNCE_ON_BED = register(new PlayerTrigger(new ResourceLocation("bingo:bounce_on_bed")));
-    public static final CompleteMapTrigger COMPLETED_MAP = register(new CompleteMapTrigger());
-    public static final BeaconEffectTrigger BEACON_EFFECT = register(new BeaconEffectTrigger());
-    public static final TotalCountInventoryChangeTrigger TOTAL_COUNT_INVENTORY_CHANGE = register(new TotalCountInventoryChangeTrigger());
-    public static final HasSomeItemsFromTagTrigger HAS_SOME_ITEMS_FROM_TAG = register(new HasSomeItemsFromTagTrigger());
-    public static final BedRowTrigger BED_ROW = register(new BedRowTrigger());
-    public static final MineralPillarTrigger MINERAL_PILLAR = register(new MineralPillarTrigger());
-    public static final ItemPickedUpTrigger ITEM_PICKED_UP = register(new ItemPickedUpTrigger());
-    public static final ZombifyPigTrigger ZOMBIFY_PIG = register(new ZombifyPigTrigger());
-    public static final PartyParrotsTrigger PARTY_PARROTS = register(new PartyParrotsTrigger());
-    public static final PowerConduitTrigger POWER_CONDUIT = register(new PowerConduitTrigger());
-    public static final DifferentPotionsTrigger DIFFERENT_POTIONS = register(new DifferentPotionsTrigger());
-    public static final KillSelfTrigger KILL_SELF = register(new KillSelfTrigger());
-    public static final EntityDieNearPlayerTrigger ENTITY_DIE_NEAR_PLAYER = register(new EntityDieNearPlayerTrigger());
-    public static final EntityKilledPlayerTrigger ENTITY_KILLED_PLAYER = register(new EntityKilledPlayerTrigger());
-    public static final DeathTrigger DEATH = register(new DeathTrigger());
-    public static final IntentionalGameDesignTrigger INTENTIONAL_GAME_DESIGN = register(new IntentionalGameDesignTrigger());
-    public static final BreakBlockTrigger BREAK_BLOCK = register(new BreakBlockTrigger());
-    public static final KillItemTrigger KILL_ITEM = register(new KillItemTrigger());
-    public static final GrowFeatureTrigger GROW_FEATURE = register(new GrowFeatureTrigger());
-    public static final EntityTrigger MOB_BROKE_CROSSBOW = register(new EntityTrigger(new ResourceLocation("bingo:mob_broke_crossbow")));
-    public static final EntityTrigger STUN_RAVAGER = register(new EntityTrigger(new ResourceLocation("bingo:stun_ravager")));
-    public static final ConsumeMilkBucketTrigger CONSUME_MILK_BUCKET = register(new ConsumeMilkBucketTrigger());
+    public static final ExperienceChangeTrigger EXPERIENCE_CHANGED = register("bingo:experience_changed", new ExperienceChangeTrigger());
+    public static final EnchantedItemTrigger ENCHANTED_ITEM = register("bingo:enchanted_item", new EnchantedItemTrigger());
+    public static final ArrowPressTrigger ARROW_PRESS = register("bingo:arrow_press", new ArrowPressTrigger());
+    public static final TryUseItemTrigger USE_ITEM = register("bingo:try_use_item", new TryUseItemTrigger());
+    public static final EquipItemTrigger EQUIP_ITEM = register("bingo:equip_item", new EquipItemTrigger());
+    public static final DistanceTrigger CROUCH = register("bingo:crouch", new DistanceTrigger());
+    public static final ItemBrokenTrigger ITEM_BROKEN = register("bingo:item_broken", new ItemBrokenTrigger());
+    public static final PlayerTrigger BOUNCE_ON_BED = register("bingo:bounce_on_bed", new PlayerTrigger());
+    public static final CompleteMapTrigger COMPLETED_MAP = register("bingo:completed_map", new CompleteMapTrigger());
+    public static final BeaconEffectTrigger BEACON_EFFECT = register("bingo:beacon_effect", new BeaconEffectTrigger());
+    public static final TotalCountInventoryChangeTrigger TOTAL_COUNT_INVENTORY_CHANGED = register("bingo:total_count_inventory_changed", new TotalCountInventoryChangeTrigger());
+    public static final HasSomeItemsFromTagTrigger HAS_SOME_ITEMS_FROM_TAG = register("bingo:has_some_items_from_tag", new HasSomeItemsFromTagTrigger());
+    public static final BedRowTrigger BED_ROW = register("bingo:bed_row", new BedRowTrigger());
+    public static final MineralPillarTrigger MINERAL_PILLAR = register("bingo:mineral_pillar", new MineralPillarTrigger());
+    public static final ItemPickedUpTrigger ITEM_PICKED_UP = register("bingo:item_picked_up", new ItemPickedUpTrigger());
+    public static final ZombifyPigTrigger ZOMBIFY_PIG = register("bingo:zombify_pig", new ZombifyPigTrigger());
+    public static final PartyParrotsTrigger PARTY_PARROTS = register("bingo:party_parrots", new PartyParrotsTrigger());
+    public static final PowerConduitTrigger POWER_CONDUIT = register("bingo:power_conduit", new PowerConduitTrigger());
+    public static final DifferentPotionsTrigger DIFFERENT_POTIONS = register("bingo:different_potions", new DifferentPotionsTrigger());
+    public static final KillSelfTrigger KILL_SELF = register("bingo:kill_self", new KillSelfTrigger());
+    public static final EntityDieNearPlayerTrigger ENTITY_DIE_NEAR_PLAYER = register("bingo:entity_die_near_player", new EntityDieNearPlayerTrigger());
+    public static final EntityKilledPlayerTrigger ENTITY_KILLED_PLAYER = register("bingo:entity_killed_player", new EntityKilledPlayerTrigger());
+    public static final DeathTrigger DEATH = register("bingo:death", new DeathTrigger());
+    public static final IntentionalGameDesignTrigger INTENTIONAL_GAME_DESIGN = register("bingo:intentional_game_design", new IntentionalGameDesignTrigger());
+    public static final BreakBlockTrigger BREAK_BLOCK = register("bingo:break_block", new BreakBlockTrigger());
+    public static final KillItemTrigger KILL_ITEM = register("bingo:kill_item", new KillItemTrigger());
+    public static final GrowFeatureTrigger GROW_FEATURE = register("bingo:grow_feature", new GrowFeatureTrigger());
+    public static final EntityTrigger MOB_BROKE_CROSSBOW = register("bingo:mob_broke_crossbow", new EntityTrigger());
+    public static final EntityTrigger STUN_RAVAGER = register("bingo:stun_ravager", new EntityTrigger());
+    public static final ConsumeMilkBucketTrigger CONSUME_MILK_BUCKET = register("bingo:consume_milk_bucket", new ConsumeMilkBucketTrigger());
 
     public static void load() {
     }
 
-    public static DistanceTrigger.TriggerInstance crouch(DistancePredicate distance) {
-        return new DistanceTrigger.TriggerInstance(CROUCH.getId(), ContextAwarePredicate.ANY, LocationPredicate.ANY, distance);
+    public static Criterion<DistanceTrigger.TriggerInstance> crouch(DistancePredicate distance) {
+        return CROUCH.createCriterion(
+            new DistanceTrigger.TriggerInstance(Optional.empty(), Optional.empty(), Optional.of(distance))
+        );
     }
 
-    public static PlayerTrigger.TriggerInstance bounceOnBed() {
-        return new PlayerTrigger.TriggerInstance(BOUNCE_ON_BED.getId(), ContextAwarePredicate.ANY);
+    public static Criterion<PlayerTrigger.TriggerInstance> bounceOnBed() {
+        return BOUNCE_ON_BED.createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty()));
     }
 
-    public static PlayerTrigger.TriggerInstance statChanged(Stat<?> relativeStat, MinMaxBounds.Ints toValue) {
-        return new PlayerTrigger.TriggerInstance(CriteriaTriggers.TICK.getId(), EntityPredicate.wrap(
-            EntityPredicate.Builder.entity().subPredicate(
-                ((PlayerPredicateBuilderExt)PlayerPredicate.Builder.player())
-                    .bingo$addRelativeStat(relativeStat, toValue)
-                    .build()
-            ).build()
-        ));
+    public static Criterion<PlayerTrigger.TriggerInstance> statChanged(Stat<?> relativeStat, MinMaxBounds.Ints toValue) {
+        throw new UnsupportedOperationException("Not implemented yet");
+//        return CriteriaTriggers.TICK.createCriterion(
+//            new PlayerTrigger.TriggerInstance(EntityPredicate.wrap(
+//                EntityPredicate.Builder.entity().subPredicate(
+//                    ((PlayerPredicateBuilderExt)PlayerPredicate.Builder.player())
+//                        .bingo$addRelativeStat(relativeStat, toValue)
+//                        .build()
+//                )
+//            ))
+//        );
     }
 }

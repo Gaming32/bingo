@@ -9,18 +9,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityTrigger extends SimpleCriterionTrigger<EntityTrigger.TriggerInstance> {
-    private final ResourceLocation id;
-
-    public EntityTrigger(ResourceLocation id) {
-        this.id = id;
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
     @NotNull
     @Override
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {

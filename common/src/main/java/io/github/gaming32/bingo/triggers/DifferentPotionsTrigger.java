@@ -1,8 +1,10 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
-import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,14 +19,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPotionsTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:different_potions");
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
     @NotNull
     @Override
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {

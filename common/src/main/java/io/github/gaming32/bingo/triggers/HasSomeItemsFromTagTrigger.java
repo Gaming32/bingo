@@ -2,8 +2,10 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.Bingo;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,14 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 
 public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeItemsFromTagTrigger.TriggerInstance> {
-    static final ResourceLocation ID = new ResourceLocation(Bingo.MOD_ID, "has_some_items_from_tag");
-
-    @Override
-    @NotNull
-    public ResourceLocation getId() {
-        return ID;
-    }
-
     @Override
     @NotNull
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {

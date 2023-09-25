@@ -1,21 +1,15 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.Bingo;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SerializationContext;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -24,19 +18,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.EnumSet;
 
 public class BedRowTrigger extends SimpleCriterionTrigger<BedRowTrigger.TriggerInstance> {
-    private static final ResourceLocation ID = new ResourceLocation(Bingo.MOD_ID, "bed_row");
-
     @Override
     @NotNull
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
         int count = GsonHelper.getAsInt(json, "count");
         return new TriggerInstance(player, count);
-    }
-
-    @Override
-    @NotNull
-    public ResourceLocation getId() {
-        return ID;
     }
 
     public void trigger(ServerPlayer player, Level level, BlockPos pos) {

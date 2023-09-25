@@ -2,20 +2,11 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import org.jetbrains.annotations.NotNull;
 
 public class KillSelfTrigger extends SimpleCriterionTrigger<KillSelfTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:kill_self");
-
-    @NotNull
-    @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
     @NotNull
     @Override
     protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
