@@ -161,8 +161,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.MAGMA_BLOCK)
                 ),
                 BlockPatternCondition.builder().aisle("i", "m")
-                    .where('i', BlockPredicate.Builder.block().of(Blocks.ICE).build())
-                    .where('m', BlockPredicate.Builder.block().of(Blocks.MAGMA_BLOCK).build())
+                    .where('i', BlockPredicate.Builder.block().of(Blocks.ICE))
+                    .where('m', BlockPredicate.Builder.block().of(Blocks.MAGMA_BLOCK))
                     .rotations(BlockPattern.Rotations.NONE)))
             .tags(BingoTags.ITEM, BingoTags.BUILD, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.ice_on_magma"))
@@ -474,7 +474,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     "#      #",
                     "#      #",
                     "#      #"
-                ).where('#', BlockPredicate.Builder.block().of(Blocks.SCAFFOLDING).build())))
+                ).where('#', BlockPredicate.Builder.block().of(Blocks.SCAFFOLDING))))
             .tags(BingoTags.OVERWORLD, BingoTags.BUILD)
             .name(Component.translatable("bingo.goal.6x6scaffolding"))
             .tooltip(Component.translatable("bingo.goal.6x6scaffolding.tooltip"))

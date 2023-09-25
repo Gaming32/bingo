@@ -1,10 +1,10 @@
 package io.github.gaming32.bingo.util;
 
-import com.google.gson.JsonSyntaxException;
+import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import dev.architectury.registry.registries.Registrar;
-import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
@@ -12,19 +12,13 @@ import net.minecraft.util.ExtraCodecs;
 import java.util.Optional;
 
 public final class BingoCodecs {
+    public static final Codec<Character> CHAR = Codec.STRING.comapFlatMap(
+        s -> s.length() == 1 ? DataResult.success(s.charAt(0)) : DataResult.error(() -> "String must be exactly one char, not " + s.length()),
+        c -> Character.toString(c)
+    );
+
     private BingoCodecs() {
     }
-
-    public static final Codec<MinMaxBounds.Ints> INTS = ExtraCodecs.JSON.comapFlatMap(
-        json -> {
-            try {
-                return DataResult.success(MinMaxBounds.Ints.fromJson(json));
-            } catch (JsonSyntaxException e) {
-                return DataResult.error(e::getMessage);
-            }
-        },
-        MinMaxBounds.Ints::serializeToJson
-    );
 
     // Registry.byNameCodec, but adapted for Registrar
     public static <T> Codec<T> registrarByName(Registrar<T> registrar) {
@@ -43,5 +37,12 @@ public final class BingoCodecs {
             -1
         );
         return ExtraCodecs.orCompressed(uncompressed, compressed);
+    }
+
+    public static <T> Codec<Optional<T>> optional(Codec<T> codec) {
+        return Codec.either(Codec.EMPTY.codec(), codec).xmap(
+            either -> either.map(u -> Optional.empty(), Optional::of),
+            value -> value.<Either<Unit, T>>map(Either::right).orElseGet(() -> Either.left(Unit.INSTANCE))
+        );
     }
 }

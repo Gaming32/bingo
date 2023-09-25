@@ -7,7 +7,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
@@ -102,7 +101,7 @@ public class BlockPattern {
         NONE("none"), HORIZONTAL("horizontal"), ALL("all");
 
         @SuppressWarnings("deprecation")
-        private static final EnumCodec<Rotations> CODEC = StringRepresentable.fromEnum(Rotations::values);
+        public static final EnumCodec<Rotations> CODEC = StringRepresentable.fromEnum(Rotations::values);
 
         private final String serializedName;
 
@@ -114,11 +113,6 @@ public class BlockPattern {
         @NotNull
         public String getSerializedName() {
             return serializedName;
-        }
-
-        @Nullable
-        public static Rotations fromSerializedName(String serializedName) {
-            return CODEC.byName(serializedName);
         }
     }
 }

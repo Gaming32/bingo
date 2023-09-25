@@ -6,8 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
@@ -20,12 +20,9 @@ import java.util.function.Function;
 
 public record CompoundBingoSub(ElementType elementType, Operator operator, List<BingoSub> factors) implements BingoSub {
     public static final Codec<CompoundBingoSub> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        ElementType.CODEC.optionalFieldOf("element_type", ElementType.INT).forGetter(CompoundBingoSub::elementType),
+        ExtraCodecs.strictOptionalField(ElementType.CODEC, "element_type", ElementType.INT).forGetter(CompoundBingoSub::elementType),
         Operator.CODEC.fieldOf("operator").forGetter(CompoundBingoSub::operator),
-        BingoSub.CODEC.listOf().comapFlatMap(
-            list -> !list.isEmpty() ? DataResult.success(list) : DataResult.error(() -> "factors is empty!"),
-            Function.identity()
-        ).fieldOf("factors").forGetter(CompoundBingoSub::factors)
+        ExtraCodecs.nonEmptyList(BingoSub.CODEC.listOf()).fieldOf("factors").forGetter(CompoundBingoSub::factors)
     ).apply(instance, CompoundBingoSub::new));
 
     public CompoundBingoSub {
@@ -96,7 +93,6 @@ public record CompoundBingoSub(ElementType elementType, Operator operator, List<
                 final JsonArray aa = a.getAsJsonArray();
                 final JsonArray ba = b.getAsJsonArray();
                 final JsonArray result = new JsonArray(aa.size() - ba.size());
-                //noinspection UnstableApiUsage
                 result.asList().addAll(Multisets.difference(
                     ImmutableMultiset.copyOf(aa), ImmutableMultiset.copyOf(ba)
                 ));

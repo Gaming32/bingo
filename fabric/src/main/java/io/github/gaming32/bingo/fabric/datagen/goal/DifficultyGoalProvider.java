@@ -209,7 +209,7 @@ public abstract class DifficultyGoalProvider {
                 ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
                     LocationCheck.checkLocation(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blockTag).build())),
                     BlockPatternCondition.builder().aisle("#")
-                        .where('#', BlockPredicate.Builder.block().of(blockTag).build())
+                        .where('#', BlockPredicate.Builder.block().of(blockTag))
                         .rotations(BlockPattern.Rotations.ALL)
                 ),
                 subber -> subber.sub("conditions.location.1.aisles", new CompoundBingoSub(

@@ -1,8 +1,6 @@
 package io.github.gaming32.bingo.conditions;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerChunkCache;
@@ -24,7 +22,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public class StairwayToHeavenCondition implements LootItemCondition {
+public enum StairwayToHeavenCondition implements LootItemCondition {
+    INSTANCE;
+
+    public static final Codec<StairwayToHeavenCondition> CODEC = Codec.unit(INSTANCE);
+
     @NotNull
     @Override
     public LootItemConditionType getType() {
@@ -84,17 +86,5 @@ public class StairwayToHeavenCondition implements LootItemCondition {
     @Override
     public Set<LootContextParam<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.THIS_ENTITY);
-    }
-
-    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<StairwayToHeavenCondition> {
-        @Override
-        public void serialize(JsonObject json, StairwayToHeavenCondition value, JsonSerializationContext serializationContext) {
-        }
-
-        @NotNull
-        @Override
-        public StairwayToHeavenCondition deserialize(JsonObject json, JsonDeserializationContext serializationContext) {
-            return new StairwayToHeavenCondition();
-        }
     }
 }

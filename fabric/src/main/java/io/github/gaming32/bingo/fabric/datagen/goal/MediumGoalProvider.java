@@ -181,7 +181,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
                     LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.NETHER_PORTAL),
                     BlockPatternCondition.builder().aisle("P")
-                        .where('P', BlockPredicate.Builder.block().of(Blocks.NETHER_PORTAL).build())
+                        .where('P', BlockPredicate.Builder.block().of(Blocks.NETHER_PORTAL))
                 ),
                 subber -> subber.sub("conditions.location.1.aisles.0", new CompoundBingoSub(
                     CompoundBingoSub.ElementType.ARRAY,
