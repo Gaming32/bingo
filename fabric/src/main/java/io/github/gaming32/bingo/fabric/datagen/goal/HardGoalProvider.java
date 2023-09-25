@@ -549,7 +549,9 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(Items.MULE_SPAWN_EGG)
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("carrot_stick_to_rod"))
-            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(ItemPredicate.Builder.item().of(Items.CARROT_ON_A_STICK)))
+            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(
+                ItemPredicate.Builder.item().of(Items.CARROT_ON_A_STICK).build()
+            ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name(Component.translatable(
                 "bingo.goal.carrot_stick_to_rod",

@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -8,10 +9,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class IntentionalGameDesignTrigger extends SimpleCriterionTrigger<IntentionalGameDesignTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(player, LocationPredicate.fromJson(json.get("respawn")));
     }
 
@@ -21,27 +24,29 @@ public class IntentionalGameDesignTrigger extends SimpleCriterionTrigger<Intenti
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final LocationPredicate respawn;
+        private final Optional<LocationPredicate> respawn;
 
-        public TriggerInstance(ContextAwarePredicate player, LocationPredicate respawn) {
-            super(ID, player);
+        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<LocationPredicate> respawn) {
+            super(player);
             this.respawn = respawn;
         }
 
-        public static TriggerInstance clicked(LocationPredicate respawn) {
-            return new TriggerInstance(ContextAwarePredicate.ANY, respawn);
+        public static Criterion<TriggerInstance> clicked(LocationPredicate respawn) {
+            return BingoTriggers.INTENTIONAL_GAME_DESIGN.createCriterion(new TriggerInstance(
+                Optional.empty(), Optional.ofNullable(respawn)
+            ));
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
-            result.add("respawn", respawn.serializeToJson());
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            respawn.ifPresent(p -> result.add("respawn", p.serializeToJson()));
             return result;
         }
 
         public boolean matches(ServerLevel level, Vec3 pos) {
-            return respawn.matches(level, pos.x, pos.y, pos.z);
+            return respawn.isEmpty() || respawn.get().matches(level, pos.x, pos.y, pos.z);
         }
     }
 }

@@ -15,17 +15,19 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeItemsFromTagTrigger.TriggerInstance> {
-    @Override
     @NotNull
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
-        TagKey<Item> tag = TagKey.create(Registries.ITEM, new ResourceLocation(GsonHelper.getAsString(json, "tag")));
-        int requiredCount = GsonHelper.getAsInt(json, "required_count");
-        return new TriggerInstance(player, tag, requiredCount);
+    @Override
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(
+            player,
+            TagKey.create(Registries.ITEM, new ResourceLocation(GsonHelper.getAsString(json, "tag"))),
+            GsonHelper.getAsInt(json, "required_count")
+        );
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
@@ -40,19 +42,19 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
         private final TagKey<Item> tag;
         private final int requiredCount;
 
-        public TriggerInstance(ContextAwarePredicate player, TagKey<Item> tag, int requiredCount) {
-            super(ID, player);
+        public TriggerInstance(Optional<ContextAwarePredicate> player, TagKey<Item> tag, int requiredCount) {
+            super(player);
             this.tag = tag;
             this.requiredCount = requiredCount;
         }
 
-        @Override
         @NotNull
-        public JsonObject serializeToJson(SerializationContext context) {
-            JsonObject json = super.serializeToJson(context);
-            json.addProperty("tag", tag.location().toString());
-            json.addProperty("required_count", requiredCount);
-            return json;
+        @Override
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            result.addProperty("tag", tag.location().toString());
+            result.addProperty("required_count", requiredCount);
+            return result;
         }
 
         public boolean matches(Inventory inventory) {
@@ -68,17 +70,15 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
     }
 
     public static final class Builder {
-        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
-        @Nullable
+        private Optional<ContextAwarePredicate> player = Optional.empty();
         private TagKey<Item> tag;
-        @Nullable
-        private Integer requiredCount;
+        private int requiredCount = -1;
 
         private Builder() {
         }
 
         public Builder player(ContextAwarePredicate player) {
-            this.player = player;
+            this.player = Optional.ofNullable(player);
             return this;
         }
 
@@ -96,7 +96,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
             if (tag == null) {
                 throw new IllegalStateException("Did not specify tag");
             }
-            if (requiredCount == null) {
+            if (requiredCount == -1) {
                 throw new IllegalStateException("Did not specify requiredCount");
             }
             return new TriggerInstance(player, tag, requiredCount);

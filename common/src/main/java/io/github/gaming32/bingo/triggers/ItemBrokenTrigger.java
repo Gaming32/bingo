@@ -6,14 +6,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class ItemBrokenTrigger extends SimpleCriterionTrigger<ItemBrokenTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
-        return new TriggerInstance(
-            predicate,
-            ItemPredicate.fromJson(json.get("item"))
-        );
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(player, ItemPredicate.fromJson(json.get("item")));
     }
 
     public void trigger(ServerPlayer player, ItemStack item) {
@@ -21,30 +20,27 @@ public class ItemBrokenTrigger extends SimpleCriterionTrigger<ItemBrokenTrigger.
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ItemPredicate item;
+        private final Optional<ItemPredicate> item;
 
-        public TriggerInstance(ContextAwarePredicate predicate, ItemPredicate item) {
-            super(ID, predicate);
+        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ItemPredicate> item) {
+            super(player);
             this.item = item;
         }
 
-        public static TriggerInstance itemBroken(ItemPredicate.Builder predicate) {
-            return new TriggerInstance(ContextAwarePredicate.ANY, predicate.build());
+        public static TriggerInstance itemBroken(ItemPredicate predicate) {
+            return new TriggerInstance(Optional.empty(), Optional.ofNullable(predicate));
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
-            result.add("item", item.serializeToJson());
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            item.ifPresent(p -> result.add("item", p.serializeToJson()));
             return result;
         }
 
         public boolean matches(ItemStack item) {
-            if (!this.item.matches(item)) {
-                return false;
-            }
-            return true;
+            return this.item.isEmpty() || this.item.get().matches(item);
         }
     }
 }

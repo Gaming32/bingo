@@ -198,7 +198,9 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .icon(Items.FISHING_ROD)
             .catalyst("fishing"));
         addGoal(BingoGoal.builder(id("break_hoe"))
-            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(ItemPredicate.Builder.item().of(ItemTags.HOES)))
+            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(
+                ItemPredicate.Builder.item().of(ItemTags.HOES).build()
+            ))
             .tags(BingoTags.ACTION, BingoTags.STAT)
             .name(Component.translatable("bingo.goal.break_hoe"))
             .icon(Items.STONE_HOE));

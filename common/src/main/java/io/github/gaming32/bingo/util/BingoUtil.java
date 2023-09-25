@@ -58,8 +58,12 @@ public class BingoUtil {
         return ContextAwarePredicate.create(LocationCheckAccessor.createLocationCheck(location, BlockPos.ZERO));
     }
 
+    public static <T> JsonElement toJsonElement(Codec<T> codec, T obj) {
+        return Util.getOrThrow(codec.encodeStart(JsonOps.INSTANCE, obj), IllegalStateException::new);
+    }
+
     public static <T> JsonObject toJsonObject(Codec<T> codec, T obj) {
-        return Util.getOrThrow(codec.encodeStart(JsonOps.INSTANCE, obj), IllegalStateException::new).getAsJsonObject();
+        return toJsonElement(codec, obj).getAsJsonObject();
     }
 
     public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) {

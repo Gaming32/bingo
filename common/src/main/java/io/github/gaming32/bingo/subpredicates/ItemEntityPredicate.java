@@ -35,8 +35,8 @@ public record ItemEntityPredicate(
         return new ItemEntityPredicate(Optional.of(item), MinMaxBounds.Ints.ANY, Optional.empty());
     }
 
-    public static ItemEntityPredicate droppedBy(ItemPredicate item, EntityPredicate droppedBy) {
-        return new ItemEntityPredicate(Optional.of(item), MinMaxBounds.Ints.ANY, Optional.of(droppedBy));
+    public static ItemEntityPredicate droppedBy(Optional<ItemPredicate> item, Optional<EntityPredicate> droppedBy) {
+        return new ItemEntityPredicate(item, MinMaxBounds.Ints.ANY, droppedBy);
     }
 
     @Override

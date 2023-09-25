@@ -12,13 +12,14 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class PartyParrotsTrigger extends SimpleCriterionTrigger<PartyParrotsTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
-        return new TriggerInstance(predicate);
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(player);
     }
 
     public void trigger(ServerPlayer player, JukeboxBlockEntity blockEntity) {
@@ -26,12 +27,12 @@ public class PartyParrotsTrigger extends SimpleCriterionTrigger<PartyParrotsTrig
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        public TriggerInstance(ContextAwarePredicate predicate) {
-            super(ID, predicate);
+        public TriggerInstance(Optional<ContextAwarePredicate> predicate) {
+            super(predicate);
         }
 
         public static TriggerInstance partyParrots() {
-            return new TriggerInstance(ContextAwarePredicate.ANY);
+            return new TriggerInstance(Optional.empty());
         }
 
         public boolean matches(JukeboxBlockEntity blockEntity) {

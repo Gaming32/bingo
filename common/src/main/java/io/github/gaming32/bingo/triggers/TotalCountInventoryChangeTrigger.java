@@ -1,11 +1,10 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.mixin.common.ItemPredicateAccessor;
+import com.mojang.serialization.Codec;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -13,19 +12,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<TotalCountInventoryChangeTrigger.TriggerInstance> {
-    @Override
     @NotNull
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
-        JsonArray itemsArray = GsonHelper.getAsJsonArray(json, "items");
-
-        ItemPredicate[] items = new ItemPredicate[itemsArray.size()];
-        for (int i = 0; i < items.length; i++) {
-            items[i] = ItemPredicate.fromJson(itemsArray.get(i));
-        }
-
-        return new TriggerInstance(player, items);
+    @Override
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(player, BingoUtil.fromJsonElement(TriggerInstance.ITEMS_CODEC, json.get("items")));
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
@@ -37,29 +30,25 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ItemPredicate[] items;
+        private static final Codec<List<ItemPredicate>> ITEMS_CODEC = ItemPredicate.CODEC.listOf();
 
-        public TriggerInstance(ContextAwarePredicate player, ItemPredicate[] items) {
-            super(ID, player);
+        private final List<ItemPredicate> items;
+
+        public TriggerInstance(Optional<ContextAwarePredicate> player, List<ItemPredicate> items) {
+            super(player);
             this.items = items;
         }
 
-        @Override
         @NotNull
-        public JsonObject serializeToJson(SerializationContext context) {
-            JsonObject json = super.serializeToJson(context);
-
-            JsonArray items = new JsonArray(this.items.length);
-            for (ItemPredicate item : this.items) {
-                items.add(item.serializeToJson());
-            }
-            json.add("items", items);
-
-            return json;
+        @Override
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            result.add("items", BingoUtil.toJsonElement(ITEMS_CODEC, items));
+            return result;
         }
 
         public boolean matches(Inventory inventory) {
-            int[] counts = new int[items.length];
+            int[] counts = new int[items.size()];
 
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
@@ -69,14 +58,15 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
 
                 for (int predicateIndex = 0; predicateIndex < counts.length; predicateIndex++) {
                     // test if the predicate matches the item stack excluding the count
-                    MinMaxBounds.Ints originalCount = ((ItemPredicateAccessor) items[predicateIndex]).getCount();
+                    final ItemPredicate predicate = items.get(predicateIndex);
+                    final int itemCount = item.getCount();
                     try {
-                        ((ItemPredicateAccessor) items[predicateIndex]).setCount(MinMaxBounds.Ints.exactly(item.getCount()));
-                        if (items[predicateIndex].matches(item)) {
-                            counts[predicateIndex] += item.getCount();
+                        item.setCount(predicate.count().min().orElse(1));
+                        if (predicate.matches(item)) {
+                            counts[predicateIndex] += itemCount;
                         }
                     } finally {
-                        ((ItemPredicateAccessor) items[predicateIndex]).setCount(originalCount);
+                        item.setCount(itemCount);
                     }
                 }
             }
@@ -87,7 +77,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
                     return false;
                 }
 
-                if (!((ItemPredicateAccessor) items[predicateIndex]).getCount().matches(counts[predicateIndex])) {
+                if (!items.get(predicateIndex).count().matches(counts[predicateIndex])) {
                     return false;
                 }
             }
@@ -97,14 +87,14 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
     }
 
     public static final class Builder {
-        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
+        private Optional<ContextAwarePredicate> player = Optional.empty();
         private final List<ItemPredicate> items = new ArrayList<>();
 
         private Builder() {
         }
 
         public Builder player(ContextAwarePredicate player) {
-            this.player = player;
+            this.player = Optional.ofNullable(player);
             return this;
         }
 
@@ -114,7 +104,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
         }
 
         public TriggerInstance build() {
-            return new TriggerInstance(player, items.toArray(ItemPredicate[]::new));
+            return new TriggerInstance(player, List.copyOf(items));
         }
     }
 }

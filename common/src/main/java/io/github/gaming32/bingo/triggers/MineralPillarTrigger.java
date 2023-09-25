@@ -21,14 +21,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(
-            predicate,
+            player,
             TagKey.create(Registries.BLOCK, new ResourceLocation(GsonHelper.getAsString(json, "tag")))
         );
     }
@@ -40,21 +41,21 @@ public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTr
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final TagKey<Block> tag;
 
-        public TriggerInstance(ContextAwarePredicate predicate, TagKey<Block> tag) {
-            super(ID, predicate);
+        public TriggerInstance(Optional<ContextAwarePredicate> predicate, TagKey<Block> tag) {
+            super(predicate);
             this.tag = tag;
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
             result.addProperty("tag", tag.location().toString());
             return result;
         }
 
         public static TriggerInstance pillar(TagKey<Block> tag) {
-            return new TriggerInstance(ContextAwarePredicate.ANY, tag);
+            return new TriggerInstance(Optional.empty(), tag);
         }
 
         public boolean matches(BlockGetter level, BlockPos pos) {
