@@ -8,14 +8,15 @@ import net.minecraft.world.effect.MobEffectInstance;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class BeaconEffectTrigger extends SimpleCriterionTrigger<BeaconEffectTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(
-            predicate,
-            MobEffectsPredicate.fromJson(json.get("effect")),
+            player,
+            MobEffectsPredicate.fromJson(json.get("effects")),
             MobEffectsPredicate.fromJson(json.get("total_effects"))
         );
     }
@@ -25,41 +26,41 @@ public class BeaconEffectTrigger extends SimpleCriterionTrigger<BeaconEffectTrig
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final MobEffectsPredicate effect;
-        private final MobEffectsPredicate totalEffects;
+        private final Optional<MobEffectsPredicate> effect;
+        private final Optional<MobEffectsPredicate> totalEffects;
 
         public TriggerInstance(
-            ContextAwarePredicate predicate,
-            MobEffectsPredicate effect,
-            MobEffectsPredicate totalEffects
+            Optional<ContextAwarePredicate> predicate,
+            Optional<MobEffectsPredicate> effect,
+            Optional<MobEffectsPredicate> totalEffects
         ) {
-            super(ID, predicate);
+            super(predicate);
             this.effect = effect;
             this.totalEffects = totalEffects;
         }
 
         public static TriggerInstance effectApplied(MobEffect effect) {
             return new TriggerInstance(
-                ContextAwarePredicate.ANY,
-                MobEffectsPredicate.effects().and(effect),
-                MobEffectsPredicate.ANY
+                Optional.empty(),
+                MobEffectsPredicate.Builder.effects().and(effect).build(),
+                Optional.empty()
             );
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
-            result.add("effect", effect.serializeToJson());
-            result.add("total_effects", totalEffects.serializeToJson());
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            effect.ifPresent(p -> result.add("effect", p.serializeToJson()));
+            totalEffects.ifPresent(p -> result.add("total_effects", p.serializeToJson()));
             return result;
         }
 
         public boolean matches(ServerPlayer player, MobEffectInstance newEffect) {
-            if (!this.effect.matches(Map.of(newEffect.getEffect(), newEffect))) {
+            if (this.effect.isPresent() && !this.effect.get().matches(Map.of(newEffect.getEffect(), newEffect))) {
                 return false;
             }
-            if (!this.totalEffects.matches(player)) {
+            if (this.totalEffects.isPresent() && !this.totalEffects.get().matches(player)) {
                 return false;
             }
             return true;
