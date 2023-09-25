@@ -5,11 +5,11 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-rc.2"))
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-rc.5"))
 
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:12.0.652")
-    modCompileOnly("mezz.jei:jei-1.20.1-common-api:15.2.0.27")
-    modCompileOnly("dev.emi:emi-xplat-intermediary:1.0.19+1.20.1") // Unfortunately, although the API does what I need, it does in a way that's wholly different from the other recipe vieweers
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:13.0.655")
+    modCompileOnly("mezz.jei:jei-1.20.2-common-api:16.0.0.28")
+//    modCompileOnly("dev.emi:emi-xplat-intermediary:1.0.19+1.20.1") // Unfortunately, although the API does what I need, it does in a way that's wholly different from the other recipe viewers
 }
 
 architectury {
