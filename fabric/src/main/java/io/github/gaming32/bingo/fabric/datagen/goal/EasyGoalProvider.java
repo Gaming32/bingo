@@ -4,10 +4,8 @@ import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
 import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
-import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.ext.LocationPredicateExt;
 import io.github.gaming32.bingo.triggers.*;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
@@ -21,6 +19,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -28,6 +27,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class EasyGoalProvider extends DifficultyGoalProvider {
@@ -41,8 +41,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("grow_tree_in_nether"))
             .criterion("grow", GrowFeatureTrigger.builder()
                 .feature(BingoFeatureTags.TREES)
-                .location(LocationPredicateExt.inDimension(BingoDimensionTags.NETHERS))
-                .build())
+                .location(LocationPredicate.Builder.inDimension(Level.NETHER).build())
+                .build()
+            )
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.grow_tree_in_nether"))
             .tooltip(Component.translatable("bingo.goal.grow_tree_in_nether.tooltip"))
@@ -58,7 +59,8 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .criterion("obtain", ArrowPressTrigger.builder()
                 .arrow(EntityPredicate.Builder.entity().of(EntityTypeTags.ARROWS).build())
                 .buttonOrPlate(BlockPredicate.Builder.block().of(BlockTags.BUTTONS).build())
-                .build())
+                .build()
+            )
             .tags(BingoTags.ACTION)
             .name(Component.translatable("bingo.goal.shoot_button"))
             .icon(Items.OAK_BUTTON));
@@ -70,9 +72,13 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("fish_treasure_junk"))
             .criterion("treasure", FishingRodHookedTrigger.TriggerInstance.fishedItem(
-                ItemPredicate.ANY, EntityPredicate.ANY, ItemPredicate.Builder.item().of(BingoItemTags.FISHING_TREASURE).build()))
+                Optional.empty(), Optional.empty(),
+                Optional.of(ItemPredicate.Builder.item().of(BingoItemTags.FISHING_TREASURE).build())
+            ))
             .criterion("junk", FishingRodHookedTrigger.TriggerInstance.fishedItem(
-                ItemPredicate.ANY, EntityPredicate.ANY, ItemPredicate.Builder.item().of(BingoItemTags.FISHING_JUNK).build()))
+                Optional.empty(), Optional.empty(),
+                Optional.of(ItemPredicate.Builder.item().of(BingoItemTags.FISHING_JUNK).build())
+            ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.fish_treasure_junk"))
             .tooltip(Component.translatable("bingo.goal.fish_treasure_junk.tooltip"))
@@ -100,7 +106,12 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .antisynergy("never_wear_armor")
             .catalyst("wear_armor"));
         addGoal(BingoGoal.builder(id("never_use_shields"))
-            .criterion("use", new UsingItemTrigger.TriggerInstance(ContextAwarePredicate.ANY, ItemPredicate.Builder.item().of(BingoItemTags.SHIELDS).build()))
+            .criterion("use", CriteriaTriggers.USING_ITEM.createCriterion(
+                new UsingItemTrigger.TriggerInstance(
+                    Optional.empty(),
+                    Optional.of(ItemPredicate.Builder.item().of(BingoItemTags.SHIELDS).build())
+                )
+            ))
             .tags(BingoTags.NEVER)
             .name(Component.translatable("bingo.goal.never_use_shields"))
             .tooltip(Component.translatable("bingo.goal.never_use_shields.tooltip"))
@@ -181,7 +192,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("arrow"), Items.ARROW, 16, 64));
         addGoal(BingoGoal.builder(id("sleep_in_nether"))
             .criterion("sleep", IntentionalGameDesignTrigger.TriggerInstance.clicked(
-                LocationPredicateExt.inDimension(BingoDimensionTags.NETHERS)
+                LocationPredicate.Builder.inDimension(Level.NETHER).build()
             ))
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.sleep_in_nether"))
@@ -240,11 +251,12 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         // TODO: colors of glazed terracotta
         addGoal(bedRowGoal(id("bed_row"), 3, 6));
         addGoal(BingoGoal.builder(id("finish_at_spawn"))
-            .criterion("nearby", new PlayerTrigger.TriggerInstance(
-                CriteriaTriggers.LOCATION.getId(),
-                ContextAwarePredicate.create(new DistanceFromSpawnCondition(
-                    DistancePredicate.horizontal(MinMaxBounds.Doubles.atMost(3))
-                ))
+            .criterion("nearby", CriteriaTriggers.LOCATION.createCriterion(
+                new PlayerTrigger.TriggerInstance(
+                    Optional.of(ContextAwarePredicate.create(new DistanceFromSpawnCondition(
+                        Optional.of(DistancePredicate.horizontal(MinMaxBounds.Doubles.atMost(3)))
+                    )))
+                )
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.FINISH)
             .name(Component.translatable("bingo.goal.finish_at_spawn", Items.COMPASS.getDescription()))
@@ -319,10 +331,14 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .infrequency(2)
             .tags(BingoTags.OVERWORLD, BingoTags.OCEAN));
         addGoal(BingoGoal.builder(id("never_use_boat"))
-            .criterion("use", new PlayerInteractTrigger.TriggerInstance(
-                ContextAwarePredicate.ANY,
-                ItemPredicate.ANY,
-                EntityPredicate.wrap(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(EntityType.BOAT)).build())))
+            .criterion("use", CriteriaTriggers.PLAYER_INTERACTED_WITH_ENTITY.createCriterion(
+                new PlayerInteractTrigger.TriggerInstance(
+                    Optional.empty(), Optional.empty(),
+                    Optional.of(EntityPredicate.wrap(
+                        EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(EntityType.BOAT)).build()
+                    ))
+                )
+            ))
             .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.never_use_boat"))
             .icon(Items.OAK_BOAT));
@@ -394,7 +410,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("apple"), Items.APPLE, 2, 5)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("tame_horse"))
-            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.HORSE).build()))
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(
+                EntityPredicate.Builder.entity().of(EntityType.HORSE)
+            ))
             .name(Component.translatable("bingo.goal.tame_horse"))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .icon(Items.HORSE_SPAWN_EGG));
@@ -405,9 +423,13 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("emerald"), Items.EMERALD)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("milk_cure"))
-            .criterion("cure", new ConsumeMilkBucketTrigger.TriggerInstance(
-                ContextAwarePredicate.create(new HasAnyEffectCondition(LootContext.EntityTarget.THIS)),
-                ItemPredicate.ANY
+            .criterion("cure", BingoTriggers.CONSUME_MILK_BUCKET.createCriterion(
+                new ConsumeMilkBucketTrigger.TriggerInstance(
+                    Optional.of(ContextAwarePredicate.create(
+                        new HasAnyEffectCondition(LootContext.EntityTarget.THIS)
+                    )),
+                    Optional.empty()
+                )
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD) // TODO
             .name(Component.translatable("bingo.goal.milk_cure"))
@@ -427,10 +449,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                     .build();
             }
             ContextAwarePredicate location = ContextAwarePredicate.create(block);
-            builder.criterion("level_" + level, new ItemUsedOnLocationTrigger.TriggerInstance(
-                CriteriaTriggers.ITEM_USED_ON_BLOCK.getId(),
-                ContextAwarePredicate.ANY,
-                location));
+            builder.criterion("level_" + level, CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
+                new ItemUsedOnLocationTrigger.TriggerInstance(Optional.empty(), Optional.of(location))
+            ));
         }
         return builder
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)

@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import io.github.gaming32.bingo.util.BingoUtil;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -111,8 +112,10 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, arrow, buttonOrPlate, location);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.ARROW_PRESS.createCriterion(
+                new TriggerInstance(player, arrow, buttonOrPlate, location)
+            );
         }
     }
 }
