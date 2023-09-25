@@ -16,12 +16,13 @@ import net.minecraft.world.item.alchemy.Potions;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPotionsTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(player, GsonHelper.getAsInt(json, "min_count"));
     }
 
@@ -32,19 +33,19 @@ public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPot
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final int minCount;
 
-        public TriggerInstance(ContextAwarePredicate player, int minCount) {
-            super(ID, player);
+        public TriggerInstance(Optional<ContextAwarePredicate> player, int minCount) {
+            super(player);
             this.minCount = minCount;
         }
 
         public static TriggerInstance differentPotions(int minCount) {
-            return new TriggerInstance(ContextAwarePredicate.ANY, minCount);
+            return new TriggerInstance(Optional.empty(), minCount);
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
             result.addProperty("min_count", minCount);
             return result;
         }

@@ -6,10 +6,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class ConsumeMilkBucketTrigger extends SimpleCriterionTrigger<ConsumeMilkBucketTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(player, ItemPredicate.fromJson(json.get("item")));
     }
 
@@ -18,23 +20,23 @@ public class ConsumeMilkBucketTrigger extends SimpleCriterionTrigger<ConsumeMilk
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ItemPredicate item;
+        private final Optional<ItemPredicate> item;
 
-        public TriggerInstance(ContextAwarePredicate player, ItemPredicate item) {
-            super(ID, player);
+        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ItemPredicate> item) {
+            super(player);
             this.item = item;
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
-            result.add("item", item.serializeToJson());
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            item.ifPresent(p -> result.add("item", p.serializeToJson()));
             return result;
         }
 
         public boolean matches(ItemStack item) {
-            return this.item.matches(item);
+            return this.item.isEmpty() || this.item.get().matches(item);
         }
     }
 }
