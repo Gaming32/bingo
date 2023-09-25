@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,16 +44,22 @@ public class CompleteMapTrigger extends SimpleCriterionTrigger<CompleteMapTrigge
             this.center = center;
         }
 
-        public static TriggerInstance completeMap() {
-            return new TriggerInstance(Optional.empty(), MinMaxBounds.Ints.ANY, Optional.empty(), Optional.empty());
+        public static Criterion<TriggerInstance> completeMap() {
+            return BingoTriggers.COMPLETED_MAP.createCriterion(
+                new TriggerInstance(Optional.empty(), MinMaxBounds.Ints.ANY, Optional.empty(), Optional.empty())
+            );
         }
 
-        public static TriggerInstance completeMap(MinMaxBounds.Ints scale) {
-            return new TriggerInstance(Optional.empty(), scale, Optional.empty(), Optional.empty());
+        public static Criterion<TriggerInstance> completeMap(MinMaxBounds.Ints scale) {
+            return BingoTriggers.COMPLETED_MAP.createCriterion(
+                new TriggerInstance(Optional.empty(), scale, Optional.empty(), Optional.empty())
+            );
         }
 
-        public static TriggerInstance completeMap(MinMaxBounds.Ints scale, LocationPredicate center) {
-            return new TriggerInstance(Optional.empty(), scale, Optional.empty(), Optional.of(center));
+        public static Criterion<TriggerInstance> completeMap(MinMaxBounds.Ints scale, LocationPredicate center) {
+            return BingoTriggers.COMPLETED_MAP.createCriterion(
+                new TriggerInstance(Optional.empty(), scale, Optional.empty(), Optional.of(center))
+            );
         }
 
         @NotNull

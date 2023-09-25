@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -143,13 +144,9 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(
-                player,
-                creditedEntity,
-                directEntity,
-                sourceEntity,
-                source
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.ENTITY_KILLED_PLAYER.createCriterion(
+                new TriggerInstance(player, creditedEntity, directEntity, sourceEntity, source)
             );
         }
     }

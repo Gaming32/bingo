@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -27,8 +28,10 @@ public class ItemBrokenTrigger extends SimpleCriterionTrigger<ItemBrokenTrigger.
             this.item = item;
         }
 
-        public static TriggerInstance itemBroken(ItemPredicate predicate) {
-            return new TriggerInstance(Optional.empty(), Optional.ofNullable(predicate));
+        public static Criterion<TriggerInstance> itemBroken(ItemPredicate predicate) {
+            return BingoTriggers.ITEM_BROKEN.createCriterion(
+                new TriggerInstance(Optional.empty(), Optional.ofNullable(predicate))
+            );
         }
 
         @NotNull

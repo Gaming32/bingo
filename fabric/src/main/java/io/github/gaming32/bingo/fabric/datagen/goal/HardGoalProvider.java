@@ -13,7 +13,6 @@ import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.ext.LocationPredicateExt;
-import io.github.gaming32.bingo.mixin.common.LocationCheckAccessor;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BlockPattern;
@@ -366,10 +365,11 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("scaffolding_tower"))
             .criterion("destroy", BreakBlockTrigger.builder()
                 .location(
-                    LocationCheckAccessor.createLocationCheck(
-                        LocationPredicate.atYLocation(MinMaxBounds.Doubles.atMost(-58)), BlockPos.ZERO
+                    new LocationCheck(
+                        Optional.of(LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atMost(-58)).build()),
+                        BlockPos.ZERO
                     ),
-                    new PillarCondition(379, BlockPredicate.Builder.block().of(Blocks.SCAFFOLDING).build())
+                    new PillarCondition(379, Optional.of(BlockPredicate.Builder.block().of(Blocks.SCAFFOLDING).build()))
                 )
                 .build()
             )
@@ -379,10 +379,12 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(makeItemWithGlint(Blocks.SCAFFOLDING))
         );
         addGoal(BingoGoal.builder(id("feed_panda_cake"))
-            .criterion("feed", PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByEntity(
-                ContextAwarePredicate.ANY,
-                ItemPredicate.Builder.item().of(Blocks.CAKE).build(),
-                EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.PANDA).build())
+            .criterion("feed", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(
+                new PickedUpItemTrigger.TriggerInstance(
+                    Optional.empty(),
+                    Optional.of(ItemPredicate.Builder.item().of(Blocks.CAKE).build()),
+                    Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.PANDA).build()))
+                )
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
             .name(Component.translatable(
@@ -428,7 +430,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(BingoGoal.builder(id("ocelot_trust"))
             .criterion("trust", TameAnimalTrigger.TriggerInstance.tamedAnimal(
-                EntityPredicate.Builder.entity().of(EntityType.OCELOT).build()
+                EntityPredicate.Builder.entity().of(EntityType.OCELOT)
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
             .name(Component.translatable(
@@ -451,7 +453,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("use_lodestone"))
             .criterion("use", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(
-                    BlockPredicate.Builder.block().of(Blocks.LODESTONE).build()
+                    BlockPredicate.Builder.block().of(Blocks.LODESTONE)
                 ),
                 ItemPredicate.Builder.item().of(Items.COMPASS)
             ))
@@ -463,15 +465,18 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(Blocks.LODESTONE)
         );
         addGoal(BingoGoal.builder(id("piglin_brute_axe"))
-            .criterion("give", PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByEntity(
-                ContextAwarePredicate.ANY,
-                ItemPredicate.Builder.item()
-                    .of(ItemTags.AXES)
-                    .hasEnchantment(new EnchantmentPredicate(null, MinMaxBounds.Ints.atLeast(1)))
-                    .build(),
-                EntityPredicate.wrap(EntityPredicate.Builder.entity()
-                    .of(EntityType.PIGLIN_BRUTE)
-                    .build()
+            .criterion("give", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(
+                new PickedUpItemTrigger.TriggerInstance(
+                    Optional.empty(),
+                    Optional.of(ItemPredicate.Builder.item()
+                        .of(ItemTags.AXES)
+                        .hasEnchantment(new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1)))
+                        .build()
+                    ),
+                    Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity()
+                        .of(EntityType.PIGLIN_BRUTE)
+                        .build()
+                    ))
                 )
             ))
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.COMBAT)
@@ -519,7 +524,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 .item(ItemPredicate.Builder.item().of(Items.ENCHANTED_BOOK)
                     .hasStoredEnchantment(new EnchantmentPredicate(Enchantments.MENDING, MinMaxBounds.Ints.ANY)).build())
                 .damage(DamagePredicate.Builder.damageInstance().type(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_FIRE))).build())
-                .build())
+                .build()
+            )
             .name(Component.translatable("bingo.goal.burn_mending_book"))
             .icon(Blocks.FIRE, Items.ENCHANTED_BOOK)
             .tags(BingoTags.ACTION));
@@ -527,8 +533,9 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("huge_fungus_in_overworld"))
             .criterion("grow", GrowFeatureTrigger.builder()
                 .feature(BingoFeatureTags.HUGE_FUNGI)
-                .location(LocationPredicateExt.inDimension(BingoDimensionTags.OVERWORLDS))
-                .build())
+                .location(LocationPredicateExt.inDimension(BingoDimensionTags.OVERWORLDS).build())
+                .build()
+            )
             .name(Component.translatable("bingo.goal.huge_fungus_in_overworld"))
             .icon(Items.WARPED_FUNGUS)
             .antisynergy("grow_fungus")
@@ -559,7 +566,9 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             ), subber -> subber.multiSub("value.*.item.Count", "count"))
         );
         addGoal(BingoGoal.builder(id("tame_mule"))
-            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.MULE).build()))
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(
+                EntityPredicate.Builder.entity().of(EntityType.MULE)
+            ))
             .name(Component.translatable("bingo.goal.tame_mule"))
             .icon(Items.MULE_SPAWN_EGG)
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));

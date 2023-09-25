@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.ext.GlobalVars;
 import io.github.gaming32.bingo.util.BingoUtil;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -129,8 +130,10 @@ public class GrowFeatureTrigger extends SimpleCriterionTrigger<GrowFeatureTrigge
             return feature(TagPredicate.is(feature));
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, location, List.copyOf(tags));
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.GROW_FEATURE.createCriterion(
+                new TriggerInstance(player, location, List.copyOf(tags))
+            );
         }
     }
 }

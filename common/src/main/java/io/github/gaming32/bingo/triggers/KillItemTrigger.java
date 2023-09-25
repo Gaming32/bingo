@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -102,8 +103,8 @@ public class KillItemTrigger extends SimpleCriterionTrigger<KillItemTrigger.Trig
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, item, damage);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.KILL_ITEM.createCriterion(new TriggerInstance(player, item, damage));
         }
     }
 }

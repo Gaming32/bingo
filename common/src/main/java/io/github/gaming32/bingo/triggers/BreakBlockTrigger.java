@@ -1,8 +1,8 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.mixin.common.LocationCheckAccessor;
 import io.github.gaming32.bingo.util.BingoUtil;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -15,6 +15,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
@@ -87,7 +88,7 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
         }
 
         public Builder location(LocationPredicate location) {
-            return location(LocationCheckAccessor.createLocationCheck(location, BlockPos.ZERO));
+            return location(new LocationCheck(Optional.ofNullable(location), BlockPos.ZERO));
         }
 
         public Builder block(BlockPredicate.Builder block) {
@@ -102,8 +103,8 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
             return block(BlockPredicate.Builder.block().of(blockTag));
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, location);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.BREAK_BLOCK.createCriterion(new TriggerInstance(player, location));
         }
     }
 }
