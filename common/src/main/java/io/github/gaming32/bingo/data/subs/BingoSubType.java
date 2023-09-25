@@ -25,7 +25,18 @@ public interface BingoSubType<S extends BingoSub> {
         if (id.indexOf(':') < 0) {
             id = "bingo:" + id;
         }
-        return REGISTRAR.register(new ResourceLocation(id), () -> () -> codec);
+        final ResourceLocation location = new ResourceLocation(id);
+        return REGISTRAR.register(location, () -> new BingoSubType<>() {
+            @Override
+            public Codec<S> codec() {
+                return codec;
+            }
+
+            @Override
+            public String toString() {
+                return "BingoSubType[" + location + "]";
+            }
+        });
     }
 
     static void load() {

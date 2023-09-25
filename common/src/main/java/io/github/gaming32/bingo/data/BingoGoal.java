@@ -206,7 +206,7 @@ public class BingoGoal {
                     }
                     return tag;
                 })
-                .toList(),
+                .collect(ImmutableList.toImmutableList()),
             GsonHelper.getNonNull(json, "name"),
             json.get("tooltip"),
             json.has("tooltip_icon")
@@ -227,9 +227,9 @@ public class BingoGoal {
                     .asList()
                     .stream()
                     .map(a -> GsonHelper.convertToString(a, key))
-                    .toList()
-                : List.of(GsonHelper.getAsString(json, key))
-        ) : List.of();
+                    .collect(ImmutableList.toImmutableList())
+                : ImmutableList.of(GsonHelper.getAsString(json, key))
+        ) : ImmutableList.of();
     }
 
     public JsonObject serialize() {
