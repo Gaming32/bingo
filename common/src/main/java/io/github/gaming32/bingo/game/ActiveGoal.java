@@ -10,15 +10,14 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
 
-@SuppressWarnings("ClassCanBeRecord")
 public final class ActiveGoal {
     private final BingoGoal goal;
     private final Component name;
     private final Component tooltip;
     private final GoalIcon icon;
-    private final Map<String, Criterion> criteria;
+    private final Map<String, Criterion<?>> criteria;
 
-    public ActiveGoal(BingoGoal goal, Component name, Component tooltip, GoalIcon icon, Map<String, Criterion> criteria) {
+    public ActiveGoal(BingoGoal goal, Component name, Component tooltip, GoalIcon icon, Map<String, Criterion<?>> criteria) {
         this.goal = goal;
         this.name = name;
         this.tooltip = tooltip;
@@ -42,7 +41,7 @@ public final class ActiveGoal {
         return icon;
     }
 
-    public Map<String, Criterion> getCriteria() {
+    public Map<String, Criterion<?>> getCriteria() {
         return criteria;
     }
 
