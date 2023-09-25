@@ -1,7 +1,10 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,13 +19,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
+import java.util.Optional;
 
 public class BedRowTrigger extends SimpleCriterionTrigger<BedRowTrigger.TriggerInstance> {
-    @Override
     @NotNull
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
-        int count = GsonHelper.getAsInt(json, "count");
-        return new TriggerInstance(player, count);
+    @Override
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(player, GsonHelper.getAsInt(json, "count"));
     }
 
     public void trigger(ServerPlayer player, Level level, BlockPos pos) {
@@ -30,23 +33,23 @@ public class BedRowTrigger extends SimpleCriterionTrigger<BedRowTrigger.TriggerI
     }
 
     public static TriggerInstance create(int count) {
-        return new TriggerInstance(ContextAwarePredicate.ANY, count);
+        return new TriggerInstance(Optional.empty(), count);
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final int count;
 
-        public TriggerInstance(ContextAwarePredicate player, int count) {
-            super(ID, player);
+        public TriggerInstance(Optional<ContextAwarePredicate> player, int count) {
+            super(player);
             this.count = count;
         }
 
-        @Override
         @NotNull
-        public JsonObject serializeToJson(SerializationContext context) {
-            JsonObject json = super.serializeToJson(context);
-            json.addProperty("count", count);
-            return json;
+        @Override
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            result.addProperty("count", count);
+            return result;
         }
 
         public boolean matches(Level level, BlockPos pos) {
