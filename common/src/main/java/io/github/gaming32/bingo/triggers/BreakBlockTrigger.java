@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import io.github.gaming32.bingo.mixin.common.LocationCheckAccessor;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -17,11 +18,13 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.TriggerInstance> {
-    @Override
     @NotNull
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
-        return new TriggerInstance(player, EntityPredicate.fromJson(json, "location", context));
+    @Override
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(player, BingoUtil.getAdvancementLocation(json, "location", context));
     }
 
     public void trigger(ServerPlayer player, BlockPos pos, ItemStack tool) {
@@ -33,8 +36,7 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
             .withParameter(LootContextParams.BLOCK_STATE, state)
             .withParameter(LootContextParams.TOOL, tool)
             .create(LootContextParamSets.ADVANCEMENT_LOCATION);
-        final LootContext location = new LootContext.Builder(locationParams).create(null);
-
+        final LootContext location = new LootContext.Builder(locationParams).create(Optional.empty());
         trigger(player, triggerInstance -> triggerInstance.matches(location));
     }
 
@@ -43,40 +45,40 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ContextAwarePredicate location;
+        private final Optional<ContextAwarePredicate> location;
 
-        public TriggerInstance(ContextAwarePredicate player, ContextAwarePredicate location) {
-            super(ID, player);
+        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> location) {
+            super(player);
             this.location = location;
         }
 
-        @Override
         @NotNull
-        public JsonObject serializeToJson(SerializationContext context) {
-            JsonObject json = super.serializeToJson(context);
-            json.add("location", location.toJson(context));
-            return json;
+        @Override
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            location.ifPresent(p -> result.add("location", p.toJson()));
+            return result;
         }
 
         public boolean matches(LootContext location) {
-            return this.location.matches(location);
+            return this.location.isEmpty() || this.location.get().matches(location);
         }
     }
 
     public static final class Builder {
-        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
-        private ContextAwarePredicate location = ContextAwarePredicate.ANY;
+        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<ContextAwarePredicate> location = Optional.empty();
 
         private Builder() {
         }
 
         public Builder player(ContextAwarePredicate player) {
-            this.player = player;
+            this.player = Optional.ofNullable(player);
             return this;
         }
 
         public Builder location(ContextAwarePredicate location) {
-            this.location = location;
+            this.location = Optional.ofNullable(location);
             return this;
         }
 
@@ -88,16 +90,16 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
             return location(LocationCheckAccessor.createLocationCheck(location, BlockPos.ZERO));
         }
 
-        public Builder block(BlockPredicate block) {
+        public Builder block(BlockPredicate.Builder block) {
             return location(LocationPredicate.Builder.location().setBlock(block).build());
         }
 
         public Builder block(Block block) {
-            return block(BlockPredicate.Builder.block().of(block).build());
+            return block(BlockPredicate.Builder.block().of(block));
         }
 
         public Builder block(TagKey<Block> blockTag) {
-            return block(BlockPredicate.Builder.block().of(blockTag).build());
+            return block(BlockPredicate.Builder.block().of(blockTag));
         }
 
         public TriggerInstance build() {
