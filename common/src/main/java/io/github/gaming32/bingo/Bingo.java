@@ -288,7 +288,7 @@ public class Bingo {
 
         InteractionEvent.RIGHT_CLICK_ITEM.register((player, hand) -> {
             if (player instanceof ServerPlayer serverPlayer) {
-                BingoTriggers.USE_ITEM.trigger(serverPlayer, hand);
+                BingoTriggers.TRY_USE_ITEM.trigger(serverPlayer, hand);
             }
             return CompoundEventResult.pass();
         });

@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.emerald"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

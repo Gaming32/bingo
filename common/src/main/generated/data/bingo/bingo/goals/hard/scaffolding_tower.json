@@ -43,6 +43,11 @@
   "name": {
     "translate": "bingo.goal.scaffolding_tower"
   },
+  "requirements": [
+    [
+      "destroy"
+    ]
+  ],
   "tags": [
     "bingo:build",
     "bingo:overworld",

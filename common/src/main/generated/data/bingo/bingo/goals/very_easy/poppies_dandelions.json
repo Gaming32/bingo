@@ -110,6 +110,14 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "poppy"
+    ],
+    [
+      "dandelion"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

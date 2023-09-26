@@ -2,9 +2,15 @@
   "criteria": {
     "obtain": {
       "conditions": {
-        "arrow": {
-          "type": "#minecraft:arrows"
-        },
+        "arrow": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#minecraft:arrows"
+            }
+          }
+        ],
         "button_or_plate": {
           "tag": "minecraft:buttons"
         }
@@ -23,6 +29,11 @@
   "name": {
     "translate": "bingo.goal.shoot_button"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:action"
   ]

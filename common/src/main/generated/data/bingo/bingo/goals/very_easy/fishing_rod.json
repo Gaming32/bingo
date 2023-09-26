@@ -28,6 +28,11 @@
   "name": {
     "translate": "item.minecraft.fishing_rod"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

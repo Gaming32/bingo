@@ -1,40 +1,32 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DamagePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.SerializationContext;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class KillItemTrigger extends SimpleCriterionTrigger<KillItemTrigger.TriggerInstance> {
-    private static final ResourceLocation ID = new ResourceLocation(Bingo.MOD_ID, "kill_item");
-
-    @Override
     @NotNull
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext deserializationContext) {
-        return new TriggerInstance(player, EntityPredicate.fromJson(json.get("item")), DamagePredicate.fromJson(json.get("damage")));
-    }
-
     @Override
-    @NotNull
-    public ResourceLocation getId() {
-        return ID;
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(
+            player,
+            EntityPredicate.fromJson(json, "item", context),
+            DamagePredicate.fromJson(json.get("damage"))
+        );
     }
 
     public void trigger(ItemEntity item, DamageSource source, float amount) {
         if (item.getOwner() instanceof ServerPlayer player) {
-            trigger(player, triggerInstance -> triggerInstance.matches(player, item, source, amount));
+            final LootContext itemContext = EntityPredicate.createContext(player, item);
+            trigger(player, triggerInstance -> triggerInstance.matches(player, itemContext, source, amount));
         }
     }
 
@@ -43,58 +35,76 @@ public class KillItemTrigger extends SimpleCriterionTrigger<KillItemTrigger.Trig
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final EntityPredicate item;
-        private final DamagePredicate damage;
+        private final Optional<ContextAwarePredicate> item;
+        private final Optional<DamagePredicate> damage;
 
-        public TriggerInstance(ContextAwarePredicate player, EntityPredicate item, DamagePredicate damage) {
-            super(ID, player);
+        public TriggerInstance(
+            Optional<ContextAwarePredicate> player,
+            Optional<ContextAwarePredicate> item,
+            Optional<DamagePredicate> damage
+        ) {
+            super(player);
             this.item = item;
             this.damage = damage;
         }
 
-        @Override
         @NotNull
-        public JsonObject serializeToJson(SerializationContext context) {
-            JsonObject json = super.serializeToJson(context);
-            json.add("item", item.serializeToJson());
-            json.add("damage", damage.serializeToJson());
-            return json;
+        @Override
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            item.ifPresent(p -> result.add("item", p.toJson()));
+            damage.ifPresent(p -> result.add("damage", p.serializeToJson()));
+            return result;
         }
 
-        public boolean matches(ServerPlayer player, ItemEntity item, DamageSource source, float amount) {
-            return this.item.matches(player, item) && this.damage.matches(player, source, amount, amount, false);
+        public boolean matches(ServerPlayer player, LootContext item, DamageSource source, float amount) {
+            if (this.item.isPresent() && !this.item.get().matches(item)) {
+                return false;
+            }
+            if (this.damage.isPresent() && !this.damage.get().matches(player, source, amount, amount, false)) {
+                return false;
+            }
+            return true;
         }
     }
 
     public static final class Builder {
-        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
-        private EntityPredicate item = EntityPredicate.ANY;
-        private DamagePredicate damage = DamagePredicate.ANY;
+        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<ContextAwarePredicate> item = Optional.empty();
+        private Optional<DamagePredicate> damage = Optional.empty();
 
         private Builder() {
         }
 
         public Builder player(ContextAwarePredicate player) {
-            this.player = player;
+            this.player = Optional.ofNullable(player);
+            return this;
+        }
+
+        public Builder item(ContextAwarePredicate item) {
+            this.item = Optional.ofNullable(item);
             return this;
         }
 
         public Builder item(EntityPredicate item) {
-            this.item = item;
+            this.item = EntityPredicate.wrap(Optional.ofNullable(item));
             return this;
         }
 
         public Builder item(ItemPredicate item) {
-            return item(EntityPredicate.Builder.entity().subPredicate(ItemEntityPredicate.droppedBy(item, EntityPredicate.ANY)).build());
+            return item(EntityPredicate.Builder.entity()
+                .subPredicate(ItemEntityPredicate.droppedBy(Optional.ofNullable(item), Optional.empty()))
+                .build()
+            );
         }
 
         public Builder damage(DamagePredicate damage) {
-            this.damage = damage;
+            this.damage = Optional.ofNullable(damage);
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, item, damage);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.KILL_ITEM.createCriterion(new TriggerInstance(player, item, damage));
         }
     }
 }

@@ -10,9 +10,8 @@ import io.github.gaming32.bingo.data.icons.EmptyIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.game.ActiveGoal;
+import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -27,13 +26,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootDataManager;
-import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class BingoGoal {
     private static Map<ResourceLocation, BingoGoal> goals = Collections.emptyMap();
@@ -48,7 +45,7 @@ public class BingoGoal {
     private final ResourceLocation id;
     private final Map<String, BingoSub> subs;
     private final Map<String, JsonObject> criteria;
-    private final String[][] requirements;
+    private final AdvancementRequirements requirements;
     private final List<BingoTag> tags;
     private final JsonElement name;
     @Nullable
@@ -71,7 +68,7 @@ public class BingoGoal {
         ResourceLocation id,
         Map<String, BingoSub> subs,
         Map<String, JsonObject> criteria,
-        String[][] requirements,
+        AdvancementRequirements requirements,
         List<BingoTag> tags,
         JsonElement name,
         @Nullable JsonElement tooltip,
@@ -113,7 +110,7 @@ public class BingoGoal {
         }
         this.specialType = specialType;
 
-        if (specialType == BingoTag.SpecialType.FINISH && requirements.length != 1) {
+        if (specialType == BingoTag.SpecialType.FINISH && requirements.size() != 1) {
             throw new IllegalArgumentException("\"finish\" goals must have only ORed requirements");
         }
     }
@@ -138,55 +135,11 @@ public class BingoGoal {
                 Map.Entry::getKey,
                 e -> GsonHelper.convertToJsonObject(e.getValue(), "criterion")
             ));
-        if (criteria.isEmpty()) {
-            throw new JsonSyntaxException("Bingo goal criteria cannot be empty");
-        }
 
         final JsonArray reqArray = GsonHelper.getAsJsonArray(json, "requirements", new JsonArray());
-        String[][] requirements = new String[reqArray.size()][];
-
-        for (int i = 0; i < requirements.length; i++) {
-            final JsonArray innerArray = GsonHelper.convertToJsonArray(reqArray.get(i), "requirements[" + i + "]");
-            requirements[i] = new String[innerArray.size()];
-            for (int j = 0; j < innerArray.size(); j++) {
-                requirements[i][j] = GsonHelper.convertToString(innerArray.get(j), "requirements[" + i + "][" + j + "]");
-            }
-        }
-
-        if (requirements.length == 0) {
-            requirements = new String[criteria.size()][];
-            int i = 0;
-            for (final String criterion : criteria.keySet()) {
-                requirements[i++] = new String[] {criterion};
-            }
-        }
-
-        for (final String[] innerArray : requirements) {
-            if (innerArray.length == 0 && criteria.isEmpty()) {
-                throw new JsonSyntaxException("Requirement entry cannot be empty");
-            }
-            for (final String req : innerArray) {
-                if (!criteria.containsKey(req)) {
-                    throw new JsonSyntaxException("Unknown required criterion '" + req + "'");
-                }
-            }
-        }
-
-        for (final String criterion : criteria.keySet()) {
-            boolean isRequired = false;
-            for (final String[] innerArray : requirements) {
-                if (ArrayUtils.contains(innerArray, criterion)) {
-                    isRequired = true;
-                    break;
-                }
-            }
-            if (!isRequired) {
-                throw new JsonSyntaxException(
-                    "Criterion '" + criterion + "' isn't a requirement for completion. " +
-                        "This isn't supported behavior, all criteria must be required."
-                );
-            }
-        }
+        final AdvancementRequirements requirements = reqArray.isEmpty()
+            ? AdvancementRequirements.allOf(criteria.keySet())
+            : AdvancementRequirements.fromJson(reqArray, criteria.keySet());
 
         return new BingoGoal(
             id,
@@ -249,24 +202,7 @@ public class BingoGoal {
         }
         result.add("criteria", criteriaObj);
 
-        boolean includeRequirements = false;
-        for (final String[] subArray : requirements) {
-            if (subArray.length != 1) {
-                includeRequirements = true;
-                break;
-            }
-        }
-        if (includeRequirements) {
-            final JsonArray reqArray = new JsonArray(requirements.length);
-            for (final String[] subArray : requirements) {
-                final JsonArray subJsonArray = new JsonArray(subArray.length);
-                for (final String req : subArray) {
-                    subJsonArray.add(req);
-                }
-                reqArray.add(subJsonArray);
-            }
-            result.add("requirements", reqArray);
-        }
+        result.add("requirements", requirements.toJson());
 
         if (!tags.isEmpty()) {
             final JsonArray array = new JsonArray(tags.size());
@@ -329,7 +265,7 @@ public class BingoGoal {
         return criteria;
     }
 
-    public String[][] getRequirements() {
+    public AdvancementRequirements getRequirements() {
         return requirements;
     }
 
@@ -429,14 +365,13 @@ public class BingoGoal {
         return GoalIcon.deserialize(performSubstitutions(icon, referable, rand));
     }
 
-    public Map<String, Criterion> buildCriteria(
+    public Map<String, Criterion<?>> buildCriteria(
         Map<String, JsonElement> referable,
         RandomSource rand,
         LootDataManager lootData
     ) {
         final DeserializationContext context = new DeserializationContext(id, lootData);
-        //noinspection UnstableApiUsage
-        final ImmutableMap.Builder<String, Criterion> result = ImmutableMap.builderWithExpectedSize(criteria.size());
+        final ImmutableMap.Builder<String, Criterion<?>> result = ImmutableMap.builderWithExpectedSize(criteria.size());
         for (final var entry : criteria.entrySet()) {
             result.put(entry.getKey(), Criterion.criterionFromJson(GsonHelper.convertToJsonObject(
                 performSubstitutions(entry.getValue(), referable, rand), "criterion"
@@ -486,13 +421,12 @@ public class BingoGoal {
 
     public static final class Builder {
         private final ResourceLocation id;
-        private final Map<String, BingoSub> subs = new LinkedHashMap<>();
-        private final Map<String, JsonObject> criteria = new LinkedHashMap<>();
-        private List<List<String>> requirements = null;
-        private RequirementsStrategy requirementsStrategy = RequirementsStrategy.AND;
-        private final List<BingoTag> tags = new ArrayList<>();
-        @Nullable
-        private JsonElement name;
+        private final ImmutableMap.Builder<String, BingoSub> subs = ImmutableMap.builder();
+        private final ImmutableMap.Builder<String, JsonObject> criteria = ImmutableMap.builder();
+        private Optional<AdvancementRequirements> requirements = Optional.empty();
+        private AdvancementRequirements.Strategy requirementsStrategy = AdvancementRequirements.Strategy.AND;
+        private final ImmutableList.Builder<BingoTag> tags = ImmutableList.builder();
+        private Optional<JsonElement> name = Optional.empty();
         @Nullable
         private JsonElement tooltip;
         @Nullable
@@ -501,11 +435,10 @@ public class BingoGoal {
         private JsonObject icon;
         @Nullable
         private Integer infrequency;
-        private final List<String> antisynergy = new ArrayList<>();
-        private final List<String> catalyst = new ArrayList<>();
-        private final List<String> reactant = new ArrayList<>();
-        @Nullable
-        private Integer difficulty;
+        private ImmutableList.Builder<String> antisynergy = ImmutableList.builder();
+        private final ImmutableList.Builder<String> catalyst = ImmutableList.builder();
+        private final ImmutableList.Builder<String> reactant = ImmutableList.builder();
+        private OptionalInt difficulty;
 
         private Builder(ResourceLocation id) {
             this.id = id;
@@ -516,35 +449,23 @@ public class BingoGoal {
             return this;
         }
 
-        public Builder criterion(String key, CriterionTriggerInstance criterion) {
+        public Builder criterion(String key, Criterion<?> criterion) {
             return criterion(key, criterion, subber -> {});
         }
 
-        public Builder criterion(String key, CriterionTriggerInstance criterion, Consumer<JsonSubber> subber) {
-            return criterion(key, new Criterion(criterion), subber);
-        }
-
-        public Builder criterion(String key, Criterion criterion) {
-            return criterion(key, criterion, subber -> {});
-        }
-
-        public Builder criterion(String key, Criterion criterion, Consumer<JsonSubber> subber) {
+        public Builder criterion(String key, Criterion<?> criterion, Consumer<JsonSubber> subber) {
             JsonSubber json = new JsonSubber(criterion.serializeToJson());
             subber.accept(json);
             this.criteria.put(key, json.json().getAsJsonObject());
             return this;
         }
 
-        @SafeVarargs
-        public final Builder requirements(List<String>... requirements) {
-            this.requirements = Arrays.stream(requirements).collect(Collectors.toCollection(ArrayList::new));
+        public Builder requirements(AdvancementRequirements requirements) {
+            this.requirements = Optional.of(requirements);
             return this;
         }
 
-        public Builder requirements(RequirementsStrategy strategy) {
-            if (this.requirements != null) {
-                throw new IllegalStateException("RequirementsStrategy specified after specifying explicit requirements");
-            }
+        public Builder requirements(AdvancementRequirements.Strategy strategy) {
             this.requirementsStrategy = strategy;
             return this;
         }
@@ -563,7 +484,7 @@ public class BingoGoal {
         public Builder name(Component name, Consumer<JsonSubber> subber) {
             JsonSubber json = new JsonSubber(Component.Serializer.toJsonTree(name));
             subber.accept(json);
-            this.name = json.json();
+            this.name = Optional.of(json.json());
             return this;
         }
 
@@ -616,55 +537,47 @@ public class BingoGoal {
         }
 
         public Builder setAntisynergy(String... antisynergy) {
-            this.antisynergy.clear();
+            this.antisynergy = ImmutableList.builderWithExpectedSize(antisynergy.length);
             return this.antisynergy(antisynergy);
         }
 
         public Builder antisynergy(String... antisynergy) {
-            Collections.addAll(this.antisynergy, antisynergy);
+            this.antisynergy.add(antisynergy);
             return this;
         }
 
         public Builder catalyst(String... catalyst) {
-            Collections.addAll(this.catalyst, catalyst);
+            this.catalyst.add(catalyst);
             return this;
         }
 
         public Builder reactant(String... reactant) {
-            Collections.addAll(this.reactant, reactant);
+            this.reactant.add(reactant);
             return this;
         }
 
         public Builder difficulty(int difficulty) {
-            this.difficulty = difficulty;
+            this.difficulty = OptionalInt.of(difficulty);
             return this;
         }
 
         public BingoGoal build() {
-            if (name == null) {
-                throw new IllegalStateException("Bingo goal name has not been set");
-            }
-            if (difficulty == null) {
-                throw new IllegalStateException("Bingo goal difficulty has not been set");
-            }
-
+            final Map<String, JsonObject> criteria = this.criteria.build();
             return new BingoGoal(
                 id,
-                subs,
+                subs.buildOrThrow(),
                 criteria,
-                requirements != null
-                    ? requirements.stream().map(clause -> clause.toArray(String[]::new)).toArray(String[][]::new)
-                    : requirementsStrategy.createRequirements(criteria.keySet()),
-                tags,
-                name,
+                requirements.orElseGet(() -> requirementsStrategy.create(criteria.keySet())),
+                tags.build(),
+                name.orElseThrow(() -> new IllegalStateException("Bingo goal name has not been set")),
                 tooltip,
                 tooltipIcon,
                 icon,
                 infrequency,
-                antisynergy,
-                catalyst,
-                reactant,
-                difficulty
+                antisynergy.build(),
+                catalyst.build(),
+                reactant.build(),
+                difficulty.orElseThrow(() -> new IllegalStateException("Bingo goal difficulty has not been set"))
             );
         }
 

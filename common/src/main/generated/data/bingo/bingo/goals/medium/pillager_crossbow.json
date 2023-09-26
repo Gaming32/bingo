@@ -1,27 +1,6 @@
 {
   "criteria": {
     "pickup": {
-      "conditions": {
-        "item_entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type_specific": {
-                "type": "bingo:item",
-                "dropped_by": {
-                  "type": "minecraft:pillager"
-                },
-                "item": {
-                  "items": [
-                    "minecraft:crossbow"
-                  ]
-                }
-              }
-            }
-          }
-        ]
-      },
       "trigger": "bingo:item_picked_up"
     }
   },
@@ -40,6 +19,11 @@
     "translate": "bingo.goal.pillager_crossbow"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "pickup"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:combat",

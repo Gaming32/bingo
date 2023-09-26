@@ -26,6 +26,11 @@
   "name": {
     "translate": "block.minecraft.gold_block"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

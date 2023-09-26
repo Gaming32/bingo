@@ -25,6 +25,11 @@
   "name": {
     "translate": "block.minecraft.grass_block"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

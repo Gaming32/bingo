@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.firework_star"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

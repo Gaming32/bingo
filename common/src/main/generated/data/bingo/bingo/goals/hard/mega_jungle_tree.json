@@ -2,10 +2,12 @@
   "criteria": {
     "grow": {
       "conditions": {
-        "feature": {
-          "expected": true,
-          "id": "bingo:mega_jungle_trees"
-        }
+        "tags": [
+          {
+            "expected": true,
+            "id": "bingo:mega_jungle_trees"
+          }
+        ]
       },
       "trigger": "bingo:grow_feature"
     }
@@ -21,6 +23,11 @@
   "name": {
     "translate": "bingo.goal.mega_jungle_tree"
   },
+  "requirements": [
+    [
+      "grow"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:rare_biome",

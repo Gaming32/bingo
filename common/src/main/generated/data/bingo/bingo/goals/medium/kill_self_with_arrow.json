@@ -28,6 +28,11 @@
   "name": {
     "translate": "bingo.goal.kill_self_with_arrow"
   },
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
   "tags": [
     "bingo:action"
   ]

@@ -1,50 +1,40 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import java.util.Optional;
 
 public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:try_use_item");
-
-    private static final Map<String, InteractionHand> HANDS = ImmutableMap.of(
+    private static final BiMap<String, InteractionHand> HANDS = ImmutableBiMap.of(
         "main_hand", InteractionHand.MAIN_HAND,
         "off_hand", InteractionHand.OFF_HAND
     );
-    private static final Map<InteractionHand, String> INVERSE_HANDS = HANDS.entrySet()
-        .stream().collect(Maps.toImmutableEnumMap(Map.Entry::getValue, Map.Entry::getKey));
 
     @NotNull
     @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext deserializationContext) {
-        final InteractionHand hand;
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        final Optional<InteractionHand> hand;
         if (json.has("hand")) {
             final String stringHand = GsonHelper.getAsString(json, "hand");
-            hand = HANDS.get(stringHand);
-            if (hand == null) {
+            hand = Optional.ofNullable(HANDS.get(stringHand));
+            if (hand.isEmpty()) {
                 throw new JsonSyntaxException("Unknown hand \"" + stringHand + "\"");
             }
         } else {
-            hand = null;
+            hand = Optional.empty();
         }
-        return new TriggerInstance(predicate, ItemPredicate.fromJson(json.get("item")), hand);
+
+        return new TriggerInstance(player, ItemPredicate.fromJson(json.get("item")), hand);
     }
 
     public void trigger(ServerPlayer player, InteractionHand hand) {
@@ -57,30 +47,29 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ItemPredicate item;
-        @Nullable
-        private final InteractionHand hand;
+        private final Optional<ItemPredicate> item;
+        private final Optional<InteractionHand> hand;
 
-        public TriggerInstance(ContextAwarePredicate player, ItemPredicate item, @Nullable InteractionHand hand) {
-            super(ID, player);
+        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ItemPredicate> item, Optional<InteractionHand> hand) {
+            super(player);
             this.item = item;
             this.hand = hand;
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
-            result.add("item", item.serializeToJson());
-            result.addProperty("hand", INVERSE_HANDS.get(hand));
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            item.ifPresent(p -> result.add("item", p.serializeToJson()));
+            hand.ifPresent(p -> result.addProperty("hand", HANDS.inverse().get(p)));
             return result;
         }
 
         public boolean matches(ItemStack item, InteractionHand hand) {
-            if (!this.item.matches(item)) {
+            if (this.item.isPresent() && !this.item.get().matches(item)) {
                 return false;
             }
-            if (this.hand != null && hand != this.hand) {
+            if (this.hand.isPresent() && hand != this.hand.get()) {
                 return false;
             }
             return true;
@@ -88,31 +77,30 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
     }
 
     public static final class Builder {
-        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
-        private ItemPredicate item = ItemPredicate.ANY;
-        @Nullable
-        private InteractionHand hand;
+        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<ItemPredicate> item = Optional.empty();
+        private Optional<InteractionHand> hand = Optional.empty();
 
         private Builder() {
         }
 
         public Builder player(ContextAwarePredicate player) {
-            this.player = player;
+            this.player = Optional.ofNullable(player);
             return this;
         }
 
         public Builder item(ItemPredicate item) {
-            this.item = item;
+            this.item = Optional.ofNullable(item);
             return this;
         }
 
         public Builder hand(InteractionHand hand) {
-            this.hand = hand;
+            this.hand = Optional.ofNullable(hand);
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, item, hand);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.TRY_USE_ITEM.createCriterion(new TriggerInstance(player, item, hand));
         }
     }
 }

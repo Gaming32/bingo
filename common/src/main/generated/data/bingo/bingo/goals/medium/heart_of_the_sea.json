@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.heart_of_the_sea"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:ocean",

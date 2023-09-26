@@ -1,16 +1,15 @@
 package io.github.gaming32.bingo.conditions;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.Util;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
@@ -24,25 +23,38 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class BlockPatternCondition implements LootItemCondition {
-    private final String[][] aisles;
-    private final Map<Character, LocationPredicate> predicatesByChar;
-    private final BlockPattern blockPattern;
-    private final BlockPattern.Rotations rotations;
+    public static final Codec<BlockPatternCondition> CODEC = RecordCodecBuilder.create(instance ->
+        instance.group(
+            Codec.STRING.listOf().listOf().fieldOf("aisles").forGetter(BlockPatternCondition::aisles),
+            Codec.unboundedMap(BingoCodecs.CHAR, LocationPredicate.CODEC).fieldOf("where").forGetter(BlockPatternCondition::where),
+            ExtraCodecs.strictOptionalField(BlockPattern.Rotations.CODEC, "rotations", BlockPattern.Rotations.HORIZONTAL).forGetter(BlockPatternCondition::rotations)
+        ).apply(instance, BlockPatternCondition::new)
+    );
 
-    public BlockPatternCondition(String[][] aisles, Map<Character, LocationPredicate> predicatesByChar, BlockPattern.Rotations rotations) {
+    private final List<List<String>> aisles;
+    private final Map<Character, LocationPredicate> where;
+    private final BlockPattern.Rotations rotations;
+    private final BlockPattern blockPattern;
+
+    public BlockPatternCondition(
+        List<List<String>> aisles,
+        Map<Character, LocationPredicate> where,
+        BlockPattern.Rotations rotations
+    ) {
         this.aisles = aisles;
-        this.predicatesByChar = predicatesByChar;
-        this.blockPattern = buildBlockPattern(aisles, predicatesByChar);
+        this.where = where;
         this.rotations = rotations;
+
+        this.blockPattern = buildBlockPattern(aisles, where);
     }
 
     @SuppressWarnings("unchecked")
-    private static BlockPattern buildBlockPattern(String[][] patternChars, Map<Character, LocationPredicate> predicatesByChar) {
-        Map<Character, Predicate<BlockInWorld>> predicates = predicatesByChar.entrySet().stream()
+    private static BlockPattern buildBlockPattern(List<List<String>> patternChars, Map<Character, LocationPredicate> where) {
+        Map<Character, Predicate<BlockInWorld>> predicates = where.entrySet().stream()
             .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(), new BlockPredicateAdapter(entry.getValue())))
             .collect(Util.toMap());
-        return new BlockPattern(Arrays.stream(patternChars).map(aisle -> {
-            Predicate<BlockInWorld>[][] aislePredicates = Arrays.stream(aisle).map(row -> row.chars().mapToObj(ch -> {
+        return new BlockPattern(patternChars.stream().map(aisle -> {
+            Predicate<BlockInWorld>[][] aislePredicates = aisle.stream().map(row -> row.chars().mapToObj(ch -> {
                 Predicate<BlockInWorld> predicate = ch == ' ' ? blockInWorld -> true : predicates.get((char) ch);
                 if (predicate == null) {
                     throw new IllegalStateException("Block pattern uses undefined char '" + (char) ch + "'");
@@ -58,6 +70,18 @@ public class BlockPatternCondition implements LootItemCondition {
     @NotNull
     public LootItemConditionType getType() {
         return BingoConditions.BLOCK_PATTERN.get();
+    }
+
+    public List<List<String>> aisles() {
+        return aisles;
+    }
+
+    public Map<Character, LocationPredicate> where() {
+        return where;
+    }
+
+    public BlockPattern.Rotations rotations() {
+        return rotations;
     }
 
     @Override
@@ -87,44 +111,8 @@ public class BlockPatternCondition implements LootItemCondition {
         }
     }
 
-    public static final class Serializer implements net.minecraft.world.level.storage.loot.Serializer<BlockPatternCondition> {
-        @Override
-        public void serialize(JsonObject json, BlockPatternCondition value, JsonSerializationContext context) {
-            json.add("aisles", context.serialize(value.aisles));
-            JsonObject where = new JsonObject();
-            value.predicatesByChar.forEach((symbol, predicate) -> where.add(symbol.toString(), predicate.serializeToJson()));
-            json.add("where", where);
-            if (value.rotations != BlockPattern.Rotations.HORIZONTAL) {
-                json.addProperty("rotations", value.rotations.getSerializedName());
-            }
-        }
-
-        @Override
-        @NotNull
-        public BlockPatternCondition deserialize(JsonObject json, JsonDeserializationContext context) {
-            String[][] aisles = context.deserialize(GsonHelper.getAsJsonArray(json, "aisles"), String[][].class);
-
-            JsonObject where = GsonHelper.getAsJsonObject(json, "where");
-            Map<Character, LocationPredicate> predicatesByChar = new LinkedHashMap<>(where.size());
-            where.asMap().forEach((symbol, predicate) -> {
-                if (symbol.length() != 1) {
-                    throw new JsonSyntaxException("Symbol '" + symbol + "' is not a character");
-                }
-                predicatesByChar.put(symbol.charAt(0), LocationPredicate.fromJson(predicate));
-            });
-
-            String rotationsStr = GsonHelper.getAsString(json, "rotations", BlockPattern.Rotations.HORIZONTAL.getSerializedName());
-            BlockPattern.Rotations rotations = BlockPattern.Rotations.fromSerializedName(rotationsStr);
-            if (rotations == null) {
-                throw new JsonSyntaxException("Invalid rotation '" + rotationsStr + "'");
-            }
-
-            return new BlockPatternCondition(aisles, predicatesByChar, rotations);
-        }
-    }
-
     public static final class Builder implements LootItemCondition.Builder {
-        private final List<String[]> aisles = new ArrayList<>();
+        private final List<List<String>> aisles = new ArrayList<>();
         private final Map<Character, LocationPredicate> predicatesByChar = new LinkedHashMap<>();
         private BlockPattern.Rotations rotations = BlockPattern.Rotations.HORIZONTAL;
 
@@ -132,7 +120,7 @@ public class BlockPatternCondition implements LootItemCondition {
         }
 
         public Builder aisle(String... aisle) {
-            this.aisles.add(aisle);
+            this.aisles.add(List.of(aisle));
             return this;
         }
 
@@ -141,7 +129,7 @@ public class BlockPatternCondition implements LootItemCondition {
             return this;
         }
 
-        public Builder where(char symbol, BlockPredicate block) {
+        public Builder where(char symbol, BlockPredicate.Builder block) {
             return where(symbol, LocationPredicate.Builder.location().setBlock(block).build());
         }
 
@@ -153,7 +141,7 @@ public class BlockPatternCondition implements LootItemCondition {
         @Override
         @NotNull
         public BlockPatternCondition build() {
-            return new BlockPatternCondition(aisles.toArray(String[][]::new), predicatesByChar, rotations);
+            return new BlockPatternCondition(List.copyOf(aisles), predicatesByChar, rotations);
         }
     }
 }

@@ -27,6 +27,11 @@
     ]
   },
   "reactant": "use_furnace",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:build",
     "bingo:color",

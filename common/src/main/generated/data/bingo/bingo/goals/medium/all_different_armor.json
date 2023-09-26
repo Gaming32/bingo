@@ -38,6 +38,11 @@
     ]
   },
   "reactant": "wear_armor",
+  "requirements": [
+    [
+      "armor"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

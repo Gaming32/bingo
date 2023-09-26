@@ -32,6 +32,11 @@
   "name": {
     "translate": "bingo.goal.finish_on_top"
   },
+  "requirements": [
+    [
+      "on_top"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:build",

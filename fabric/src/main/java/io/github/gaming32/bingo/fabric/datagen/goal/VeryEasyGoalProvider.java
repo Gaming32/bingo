@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class VeryEasyGoalProvider extends DifficultyGoalProvider {
@@ -150,7 +151,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         // TODO: fill all slots of campfire
         addGoal(BingoGoal.builder(id("dye_sign"))
             .criterion("dye", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
-                LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.ALL_SIGNS).build()),
+                LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.ALL_SIGNS)),
                 ItemPredicate.Builder.item().of(BingoItemTags.DYES)
             ))
             .name(Component.translatable("bingo.goal.dye_sign"))
@@ -159,7 +160,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(BingoGoal.builder(id("extinguish_campfire"))
             .criterion("extinguish", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
-                LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(Blocks.CAMPFIRE).build()),
+                LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(Blocks.CAMPFIRE)),
                 ItemPredicate.Builder.item().of(ItemTags.SHOVELS)
             ))
             .name(Component.translatable("bingo.goal.extinguish_campfire"))
@@ -198,7 +199,9 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .icon(Items.FISHING_ROD)
             .catalyst("fishing"));
         addGoal(BingoGoal.builder(id("break_hoe"))
-            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(ItemPredicate.Builder.item().of(ItemTags.HOES)))
+            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(
+                ItemPredicate.Builder.item().of(ItemTags.HOES).build()
+            ))
             .tags(BingoTags.ACTION, BingoTags.STAT)
             .name(Component.translatable("bingo.goal.break_hoe"))
             .icon(Items.STONE_HOE));
@@ -208,12 +211,15 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.bounce_on_bed"))
             .icon(Blocks.WHITE_BED));
         addGoal(BingoGoal.builder(id("fill_composter"))
-            .criterion("fill", new ItemUsedOnLocationTrigger.TriggerInstance(
-                CriteriaTriggers.ITEM_USED_ON_BLOCK.getId(),
-                ContextAwarePredicate.ANY,
-                ContextAwarePredicate.create(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.COMPOSTER)
-                    .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ComposterBlock.LEVEL, 7))
-                    .build()
+            .criterion("fill", CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
+                new ItemUsedOnLocationTrigger.TriggerInstance(
+                    Optional.empty(),
+                    Optional.of(
+                        ContextAwarePredicate.create(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.COMPOSTER)
+                            .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ComposterBlock.LEVEL, 7))
+                            .build()
+                        )
+                    )
                 )
             ))
             .name(Component.translatable("bingo.goal.fill_composter"))

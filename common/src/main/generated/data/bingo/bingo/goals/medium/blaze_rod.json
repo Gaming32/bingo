@@ -26,6 +26,11 @@
     "translate": "item.minecraft.blaze_rod"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:nether",

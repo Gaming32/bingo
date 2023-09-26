@@ -43,6 +43,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:ocean",

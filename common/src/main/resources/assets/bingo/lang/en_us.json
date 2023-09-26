@@ -11,7 +11,7 @@
   "bingo.goal.level_10_enchant": "Create an Enchantment requiring level 10+",
   "bingo.goal.milk_mooshroom": "Milk a Mooshroom",
   "bingo.goal.shear_mooshroom": "Shear a Mooshroom",
-  "bingo.goal.all_somethings": "Every type of Chestplate",
+  "bingo.goal.all_somethings": "Every type of %s",
   "bingo.goal.all_somethings.tooltip": "Leather, Gold, Chainmail, Iron, Diamond, and, yes, even Netherite.",
   "bingo.goal.all_somethings.chestplates": "Chestplate",
   "bingo.goal.all_somethings.swords": "Sword",

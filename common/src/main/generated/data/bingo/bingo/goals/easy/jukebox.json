@@ -25,6 +25,11 @@
   "name": {
     "translate": "block.minecraft.jukebox"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

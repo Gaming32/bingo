@@ -56,6 +56,11 @@
     ]
   },
   "reactant": "never_coal",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.pufferfish"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld",

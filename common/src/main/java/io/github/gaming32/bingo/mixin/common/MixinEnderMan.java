@@ -15,29 +15,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EnderMan.class)
 public class MixinEnderMan implements EnderManExt {
     @Unique
-    private boolean hasOnlyBeenDamagedByEndermite = true;
+    private boolean bingo$hasOnlyBeenDamagedByEndermite = true;
 
     @Inject(method = "hurt", at = @At("RETURN"))
     private void onHurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValueZ()) {
             if (!(source.getEntity() instanceof Endermite)) {
-                hasOnlyBeenDamagedByEndermite = false;
+                bingo$hasOnlyBeenDamagedByEndermite = false;
             }
         }
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
     private void onWriteNbt(CompoundTag nbt, CallbackInfo ci) {
-        nbt.putBoolean("bingo:has_only_been_damaged_by_endermite", hasOnlyBeenDamagedByEndermite);
+        nbt.putBoolean("bingo:has_only_been_damaged_by_endermite", bingo$hasOnlyBeenDamagedByEndermite);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     private void onReadNbt(CompoundTag nbt, CallbackInfo ci) {
-        hasOnlyBeenDamagedByEndermite = nbt.getBoolean("bingo:has_only_been_damaged_by_endermite");
+        bingo$hasOnlyBeenDamagedByEndermite = nbt.getBoolean("bingo:has_only_been_damaged_by_endermite");
     }
 
     @Override
     public boolean bingo$hasOnlyBeenDamagedByEndermite() {
-        return hasOnlyBeenDamagedByEndermite;
+        return bingo$hasOnlyBeenDamagedByEndermite;
     }
 }

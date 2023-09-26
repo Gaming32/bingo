@@ -28,6 +28,11 @@
   "name": {
     "translate": "bingo.goal.sleep_in_mansion"
   },
+  "requirements": [
+    [
+      "sleep"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:rare_biome",

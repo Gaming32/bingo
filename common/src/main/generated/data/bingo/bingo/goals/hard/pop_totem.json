@@ -22,6 +22,11 @@
   "name": {
     "translate": "bingo.goal.pop_totem"
   },
+  "requirements": [
+    [
+      "totem"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

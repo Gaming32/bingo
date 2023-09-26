@@ -28,6 +28,11 @@
   "name": {
     "translate": "item.minecraft.warped_fungus_on_a_stick"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:nether"

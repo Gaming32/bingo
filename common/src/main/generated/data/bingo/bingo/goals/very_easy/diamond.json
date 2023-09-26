@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.diamond"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

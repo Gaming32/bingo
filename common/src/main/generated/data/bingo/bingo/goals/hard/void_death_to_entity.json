@@ -28,6 +28,11 @@
   "name": {
     "translate": "bingo.goal.void_death_to_entity"
   },
+  "requirements": [
+    [
+      "death"
+    ]
+  ],
   "tags": [
     "bingo:action"
   ]

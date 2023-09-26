@@ -1,26 +1,20 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKilledPlayerTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:entity_killed_player");
-
     @NotNull
     @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(
             player,
             EntityPredicate.fromJson(json, "credited_entity", context),
@@ -46,19 +40,19 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ContextAwarePredicate creditedEntity;
-        private final ContextAwarePredicate directEntity;
-        private final ContextAwarePredicate sourceEntity;
-        private final DamageSourcePredicate source;
+        private final Optional<ContextAwarePredicate> creditedEntity;
+        private final Optional<ContextAwarePredicate> directEntity;
+        private final Optional<ContextAwarePredicate> sourceEntity;
+        private final Optional<DamageSourcePredicate> source;
 
         public TriggerInstance(
-            ContextAwarePredicate player,
-            ContextAwarePredicate creditedEntity,
-            ContextAwarePredicate directEntity,
-            ContextAwarePredicate sourceEntity,
-            DamageSourcePredicate source
+            Optional<ContextAwarePredicate> player,
+            Optional<ContextAwarePredicate> creditedEntity,
+            Optional<ContextAwarePredicate> directEntity,
+            Optional<ContextAwarePredicate> sourceEntity,
+            Optional<DamageSourcePredicate> source
         ) {
-            super(ID, player);
+            super(player);
             this.creditedEntity = creditedEntity;
             this.directEntity = directEntity;
             this.sourceEntity = sourceEntity;
@@ -67,12 +61,12 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
-            result.add("credited_entity", creditedEntity.toJson(context));
-            result.add("direct_entity", directEntity.toJson(context));
-            result.add("source_entity", sourceEntity.toJson(context));
-            result.add("source", source.serializeToJson());
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            creditedEntity.ifPresent(p -> result.add("credited_entity", p.toJson()));
+            directEntity.ifPresent(p -> result.add("direct_entity", p.toJson()));
+            sourceEntity.ifPresent(p -> result.add("source_entity", p.toJson()));
+            source.ifPresent(p -> result.add("source", p.serializeToJson()));
             return result;
         }
 
@@ -83,16 +77,16 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
             LootContext sourceEntity,
             DamageSource source
         ) {
-            if (!this.creditedEntity.matches(creditedEntity)) {
+            if (this.creditedEntity.isPresent() && !this.creditedEntity.get().matches(creditedEntity)) {
                 return false;
             }
-            if (!this.directEntity.matches(directEntity)) {
+            if (this.directEntity.isPresent() && !this.directEntity.get().matches(directEntity)) {
                 return false;
             }
-            if (!this.sourceEntity.matches(sourceEntity)) {
+            if (this.sourceEntity.isPresent() && !this.sourceEntity.get().matches(sourceEntity)) {
                 return false;
             }
-            if (!this.source.matches(player, source)) {
+            if (this.source.isPresent() && !this.source.get().matches(player, source)) {
                 return false;
             }
             return true;
@@ -100,17 +94,17 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
     }
 
     public static class Builder {
-        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
-        private ContextAwarePredicate creditedEntity = ContextAwarePredicate.ANY;
-        private ContextAwarePredicate directEntity = ContextAwarePredicate.ANY;
-        private ContextAwarePredicate sourceEntity = ContextAwarePredicate.ANY;
-        private DamageSourcePredicate source = DamageSourcePredicate.ANY;
+        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<ContextAwarePredicate> creditedEntity = Optional.empty();
+        private Optional<ContextAwarePredicate> directEntity = Optional.empty();
+        private Optional<ContextAwarePredicate> sourceEntity = Optional.empty();
+        private Optional<DamageSourcePredicate> source = Optional.empty();
 
         private Builder() {
         }
 
         public Builder player(ContextAwarePredicate player) {
-            this.player = player;
+            this.player = Optional.ofNullable(player);
             return this;
         }
 
@@ -119,7 +113,7 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
         }
 
         public Builder creditedEntity(ContextAwarePredicate creditedEntity) {
-            this.creditedEntity = creditedEntity;
+            this.creditedEntity = Optional.ofNullable(creditedEntity);
             return this;
         }
 
@@ -128,7 +122,7 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
         }
 
         public Builder directEntity(ContextAwarePredicate directEntity) {
-            this.directEntity = directEntity;
+            this.directEntity = Optional.ofNullable(directEntity);
             return this;
         }
 
@@ -137,7 +131,7 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
         }
 
         public Builder sourceEntity(ContextAwarePredicate sourceEntity) {
-            this.sourceEntity = sourceEntity;
+            this.sourceEntity = Optional.ofNullable(sourceEntity);
             return this;
         }
 
@@ -146,17 +140,13 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
         }
 
         public Builder source(DamageSourcePredicate source) {
-            this.source = source;
+            this.source = Optional.ofNullable(source);
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(
-                player,
-                creditedEntity,
-                directEntity,
-                sourceEntity,
-                source
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.ENTITY_KILLED_PLAYER.createCriterion(
+                new TriggerInstance(player, creditedEntity, directEntity, sourceEntity, source)
             );
         }
     }

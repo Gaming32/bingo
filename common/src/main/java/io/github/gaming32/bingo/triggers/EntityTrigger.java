@@ -1,30 +1,20 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class EntityTrigger extends SimpleCriterionTrigger<EntityTrigger.TriggerInstance> {
-    private final ResourceLocation id;
-
-    public EntityTrigger(ResourceLocation id) {
-        this.id = id;
-    }
-
     @NotNull
     @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
-        return new TriggerInstance(id, player, EntityPredicate.fromJson(json, "entity", context));
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(player, EntityPredicate.fromJson(json, "entity", context));
     }
 
     public void trigger(ServerPlayer player, Entity entity) {
@@ -33,31 +23,33 @@ public class EntityTrigger extends SimpleCriterionTrigger<EntityTrigger.TriggerI
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ContextAwarePredicate entity;
+        private final Optional<ContextAwarePredicate> entity;
 
-        public TriggerInstance(ResourceLocation id, ContextAwarePredicate player, ContextAwarePredicate entity) {
-            super(id, player);
+        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> entity) {
+            super(player);
             this.entity = entity;
         }
 
-        public static TriggerInstance brokeCrossbow(EntityPredicate mob) {
-            return new TriggerInstance(BingoTriggers.MOB_BROKE_CROSSBOW.getId(), ContextAwarePredicate.ANY, EntityPredicate.wrap(mob));
+        public static Criterion<TriggerInstance> brokeCrossbow(EntityPredicate mob) {
+            return BingoTriggers.MOB_BROKE_CROSSBOW.createCriterion(new TriggerInstance(
+                Optional.empty(), EntityPredicate.wrap(Optional.ofNullable(mob))
+            ));
         }
 
-        public static TriggerInstance stunnedRavager() {
-            return new TriggerInstance(BingoTriggers.STUN_RAVAGER.getId(), ContextAwarePredicate.ANY, ContextAwarePredicate.ANY);
+        public static Criterion<TriggerInstance> stunnedRavager() {
+            return BingoTriggers.STUN_RAVAGER.createCriterion(new TriggerInstance(Optional.empty(), Optional.empty()));
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
-            result.add("entity", entity.toJson(context));
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            entity.ifPresent(p -> result.add("entity", p.toJson()));
             return result;
         }
 
         public boolean matches(LootContext mob) {
-            return this.entity.matches(mob);
+            return this.entity.isEmpty() || this.entity.get().matches(mob);
         }
     }
 }

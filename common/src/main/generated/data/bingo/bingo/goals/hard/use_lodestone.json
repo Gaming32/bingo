@@ -48,6 +48,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "use"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:nether"

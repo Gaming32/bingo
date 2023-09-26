@@ -24,6 +24,11 @@
     "translate": "bingo.goal.beacon_regen"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "effect"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:nether",

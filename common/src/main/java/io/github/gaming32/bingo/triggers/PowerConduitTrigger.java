@@ -1,24 +1,18 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class PowerConduitTrigger extends SimpleCriterionTrigger<PowerConduitTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:power_conduit");
-
     @NotNull
     @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
-        return new TriggerInstance(predicate, MinMaxBounds.Ints.fromJson(json.get("level")));
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(player, MinMaxBounds.Ints.fromJson(json.get("level")));
     }
 
     public void trigger(ServerPlayer player, int level) {
@@ -28,23 +22,27 @@ public class PowerConduitTrigger extends SimpleCriterionTrigger<PowerConduitTrig
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final MinMaxBounds.Ints level;
 
-        public TriggerInstance(ContextAwarePredicate predicate, MinMaxBounds.Ints level) {
-            super(ID, predicate);
+        public TriggerInstance(Optional<ContextAwarePredicate> predicate, MinMaxBounds.Ints level) {
+            super(predicate);
             this.level = level;
         }
 
-        public static TriggerInstance powerConduit() {
-            return new TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.ANY);
+        public static Criterion<TriggerInstance> powerConduit() {
+            return BingoTriggers.POWER_CONDUIT.createCriterion(
+                new TriggerInstance(Optional.empty(), MinMaxBounds.Ints.ANY)
+            );
         }
 
-        public static TriggerInstance powerConduit(MinMaxBounds.Ints level) {
-            return new TriggerInstance(ContextAwarePredicate.ANY, level);
+        public static Criterion<TriggerInstance> powerConduit(MinMaxBounds.Ints level) {
+            return BingoTriggers.POWER_CONDUIT.createCriterion(
+                new TriggerInstance(Optional.empty(), level)
+            );
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
             result.add("level", level.serializeToJson());
             return result;
         }

@@ -2,7 +2,6 @@
   "catalyst": "pacifist",
   "criteria": {
     "kill": {
-      "conditions": {},
       "trigger": "minecraft:player_killed_entity"
     }
   },
@@ -20,6 +19,11 @@
   "name": {
     "translate": "bingo.goal.pacifist"
   },
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
   "tags": [
     "bingo:never",
     "bingo:stat"

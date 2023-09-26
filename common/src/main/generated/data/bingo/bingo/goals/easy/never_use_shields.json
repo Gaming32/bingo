@@ -23,6 +23,11 @@
   "name": {
     "translate": "bingo.goal.never_use_shields"
   },
+  "requirements": [
+    [
+      "use"
+    ]
+  ],
   "tags": [
     "bingo:never"
   ],

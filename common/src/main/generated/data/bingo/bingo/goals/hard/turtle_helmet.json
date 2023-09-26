@@ -28,6 +28,11 @@
   "name": {
     "translate": "item.minecraft.turtle_helmet"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:ocean",

@@ -28,6 +28,11 @@
   "name": {
     "translate": "item.minecraft.carrot_on_a_stick"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

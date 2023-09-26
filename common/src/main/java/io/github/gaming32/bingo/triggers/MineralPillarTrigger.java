@@ -2,7 +2,11 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -18,22 +22,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:mineral_pillar");
-
     @NotNull
     @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(
-            predicate,
+            player,
             TagKey.create(Registries.BLOCK, new ResourceLocation(GsonHelper.getAsString(json, "tag")))
         );
     }
@@ -42,24 +39,26 @@ public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTr
         trigger(player, instance -> instance.matches(level, pos));
     }
 
+    public static Criterion<TriggerInstance> pillar(TagKey<Block> tag) {
+        return BingoTriggers.MINERAL_PILLAR.createCriterion(
+            new TriggerInstance(Optional.empty(), tag)
+        );
+    }
+
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final TagKey<Block> tag;
 
-        public TriggerInstance(ContextAwarePredicate predicate, TagKey<Block> tag) {
-            super(ID, predicate);
+        public TriggerInstance(Optional<ContextAwarePredicate> predicate, TagKey<Block> tag) {
+            super(predicate);
             this.tag = tag;
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
             result.addProperty("tag", tag.location().toString());
             return result;
-        }
-
-        public static TriggerInstance pillar(TagKey<Block> tag) {
-            return new TriggerInstance(ContextAwarePredicate.ANY, tag);
         }
 
         public boolean matches(BlockGetter level, BlockPos pos) {

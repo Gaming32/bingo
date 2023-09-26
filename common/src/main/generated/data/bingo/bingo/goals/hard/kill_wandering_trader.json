@@ -27,6 +27,11 @@
     "translate": "bingo.goal.kill_wandering_trader"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld",

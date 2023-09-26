@@ -33,6 +33,11 @@
   "name": {
     "translate": "bingo.goal.dye_sign"
   },
+  "requirements": [
+    [
+      "dye"
+    ]
+  ],
   "tags": [
     "bingo:action"
   ]

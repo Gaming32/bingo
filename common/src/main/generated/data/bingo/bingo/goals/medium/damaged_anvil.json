@@ -25,6 +25,11 @@
   "name": {
     "translate": "block.minecraft.damaged_anvil"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

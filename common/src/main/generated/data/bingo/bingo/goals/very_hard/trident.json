@@ -28,6 +28,11 @@
   "name": {
     "translate": "item.minecraft.trident"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:ocean",

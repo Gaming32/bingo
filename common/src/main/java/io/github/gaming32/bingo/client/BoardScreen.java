@@ -10,7 +10,7 @@ public class BoardScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics);
+        renderBackground(graphics, mouseX, mouseY, partialTick);
         BingoClient.renderBingo(
             graphics, true,
             width / 2f - BingoClient.BOARD_WIDTH / 2f,

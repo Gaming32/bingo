@@ -33,6 +33,11 @@
     "translate": "bingo.goal.poison_parrot"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "poison"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:rare_biome",

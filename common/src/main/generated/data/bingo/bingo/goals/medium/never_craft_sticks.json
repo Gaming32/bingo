@@ -18,6 +18,11 @@
   "name": {
     "translate": "bingo.goal.never_craft_sticks"
   },
+  "requirements": [
+    [
+      "craft"
+    ]
+  ],
   "tags": [
     "bingo:never",
     "bingo:overworld"

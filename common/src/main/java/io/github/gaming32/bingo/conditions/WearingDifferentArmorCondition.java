@@ -1,10 +1,10 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.google.common.collect.Sets;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
@@ -18,14 +18,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public class WearingDifferentArmorCondition implements LootItemCondition {
-    private final MinMaxBounds.Ints equippedArmor;
-    private final MinMaxBounds.Ints differentTypes;
-
-    public WearingDifferentArmorCondition(MinMaxBounds.Ints equippedArmor, MinMaxBounds.Ints differentTypes) {
-        this.equippedArmor = equippedArmor;
-        this.differentTypes = differentTypes;
-    }
+public record WearingDifferentArmorCondition(
+    MinMaxBounds.Ints equippedArmor,
+    MinMaxBounds.Ints differentTypes
+) implements LootItemCondition {
+    public static final Codec<WearingDifferentArmorCondition> CODEC = RecordCodecBuilder.create(instance ->
+        instance.group(
+            ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "equipped_armor", MinMaxBounds.Ints.ANY).forGetter(WearingDifferentArmorCondition::equippedArmor),
+            ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "different_types", MinMaxBounds.Ints.ANY).forGetter(WearingDifferentArmorCondition::differentTypes)
+        ).apply(instance, WearingDifferentArmorCondition::new)
+    );
 
     @NotNull
     @Override
@@ -50,22 +52,5 @@ public class WearingDifferentArmorCondition implements LootItemCondition {
     @Override
     public Set<LootContextParam<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.THIS_ENTITY);
-    }
-
-    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<WearingDifferentArmorCondition> {
-        @Override
-        public void serialize(JsonObject json, WearingDifferentArmorCondition value, JsonSerializationContext serializationContext) {
-            json.add("equipped_armor", value.equippedArmor.serializeToJson());
-            json.add("different_types", value.differentTypes.serializeToJson());
-        }
-
-        @NotNull
-        @Override
-        public WearingDifferentArmorCondition deserialize(JsonObject json, JsonDeserializationContext serializationContext) {
-            return new WearingDifferentArmorCondition(
-                MinMaxBounds.Ints.fromJson(json.get("equipped_armor")),
-                MinMaxBounds.Ints.fromJson(json.get("different_types"))
-            );
-        }
     }
 }

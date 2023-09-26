@@ -26,6 +26,11 @@
   "name": {
     "translate": "bingo.goal.potted_cactus"
   },
+  "requirements": [
+    [
+      "pot"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:rare_biome",

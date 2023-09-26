@@ -8,11 +8,13 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
-import io.github.gaming32.bingo.util.Util;
-import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.AdvancementRequirements;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -77,7 +79,7 @@ public abstract class DifficultyGoalProvider {
             for (int i = 0; i < oneOfThese.length; i++) {
                 builder.criterion("obtain_" + i, TotalCountInventoryChangeTrigger.builder().items(oneOfThese[i].build()).build());
             }
-            builder.requirements(RequirementsStrategy.OR);
+            builder.requirements(AdvancementRequirements.Strategy.OR);
         }
         return builder
             .tags(BingoTags.ITEM)
@@ -156,9 +158,15 @@ public abstract class DifficultyGoalProvider {
         return BingoGoal.builder(id)
             .sub("distance", BingoSub.random(minDistance, maxDistance))
             .criterion("crouch",
-                BingoTriggers.statChanged(Stats.CUSTOM.get(Stats.CROUCH_ONE_CM), MinMaxBounds.Ints.atLeast(0)),
+                BingoTriggers.statChanged(
+                    Stats.CUSTOM,
+                    BuiltInRegistries.CUSTOM_STAT.getHolderOrThrow(ResourceKey.create(
+                        Registries.CUSTOM_STAT, Stats.CROUCH_ONE_CM
+                    )),
+                    MinMaxBounds.Ints.atLeast(0)
+                ),
                 subber -> subber.sub(
-                    "conditions.player.0.predicate.type_specific.bingo:relative_stats.0.value.min",
+                    "conditions.player.0.predicate.type_specific.relative_stats.0.value.min",
                     new CompoundBingoSub(
                         CompoundBingoSub.ElementType.INT,
                         CompoundBingoSub.Operator.MUL,
@@ -196,7 +204,7 @@ public abstract class DifficultyGoalProvider {
 
     protected static BingoGoal.Builder mineralPillarGoal(ResourceLocation id, TagKey<Block> tag) {
         return BingoGoal.builder(id)
-            .criterion("pillar", MineralPillarTrigger.TriggerInstance.pillar(tag))
+            .criterion("pillar", MineralPillarTrigger.pillar(tag))
             .tags(BingoTags.BUILD);
     }
 
@@ -207,9 +215,9 @@ public abstract class DifficultyGoalProvider {
             .sub("depth", BingoSub.random(2, 4))
             .criterion("cube",
                 ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
-                    LocationCheck.checkLocation(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blockTag).build())),
+                    LocationCheck.checkLocation(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blockTag))),
                     BlockPatternCondition.builder().aisle("#")
-                        .where('#', BlockPredicate.Builder.block().of(blockTag).build())
+                        .where('#', BlockPredicate.Builder.block().of(blockTag))
                         .rotations(BlockPattern.Rotations.ALL)
                 ),
                 subber -> subber.sub("conditions.location.1.aisles", new CompoundBingoSub(
@@ -264,9 +272,9 @@ public abstract class DifficultyGoalProvider {
     protected static BlockPredicate.Builder spawnerPredicate(EntityType<?> entityType) {
         return BlockPredicate.Builder.block()
             .of(Blocks.SPAWNER)
-            .hasNbt(Util.compound(Map.of(
-                "SpawnData", Util.compound(Map.of(
-                    "entity", Util.compound(Map.of(
+            .hasNbt(BingoUtil.compound(Map.of(
+                "SpawnData", BingoUtil.compound(Map.of(
+                    "entity", BingoUtil.compound(Map.of(
                         "id", StringTag.valueOf(BuiltInRegistries.ENTITY_TYPE.getKey(entityType).toString())
                     ))
                 ))
@@ -274,7 +282,7 @@ public abstract class DifficultyGoalProvider {
     }
 
     @SuppressWarnings("unchecked")
-    protected static <T extends Item> InventoryChangeTrigger.TriggerInstance allItemsOfType(
+    protected static <T extends Item> Criterion<InventoryChangeTrigger.TriggerInstance> allItemsOfType(
         Class<T> clazz, Predicate<T> predicate
     ) {
         return InventoryChangeTrigger.TriggerInstance.hasItems(

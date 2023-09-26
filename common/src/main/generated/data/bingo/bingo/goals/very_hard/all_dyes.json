@@ -101,6 +101,11 @@
     "translate": "bingo.goal.all_dyes"
   },
   "reactant": "use_furnace",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:color",
     "bingo:overworld"

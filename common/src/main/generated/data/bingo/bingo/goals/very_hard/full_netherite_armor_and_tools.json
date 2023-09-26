@@ -67,6 +67,11 @@
   "name": {
     "translate": "bingo.goal.full_netherite_armor_and_tools"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:nether"

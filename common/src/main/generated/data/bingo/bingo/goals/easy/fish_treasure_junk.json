@@ -32,6 +32,14 @@
     "translate": "bingo.goal.fish_treasure_junk"
   },
   "reactant": "fishing",
+  "requirements": [
+    [
+      "treasure"
+    ],
+    [
+      "junk"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld"

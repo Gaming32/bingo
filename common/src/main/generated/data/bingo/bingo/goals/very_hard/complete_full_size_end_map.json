@@ -4,10 +4,7 @@
     "complete": {
       "conditions": {
         "center": {
-          "bingo:dimension_tag": {
-            "expected": true,
-            "id": "bingo:ends"
-          }
+          "dimension": "minecraft:the_end"
         },
         "scale": {
           "min": 4
@@ -27,6 +24,11 @@
   "name": {
     "translate": "bingo.goal.complete_full_size_end_map"
   },
+  "requirements": [
+    [
+      "complete"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld",

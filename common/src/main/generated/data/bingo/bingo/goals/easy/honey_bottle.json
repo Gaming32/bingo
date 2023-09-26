@@ -26,6 +26,11 @@
   "name": {
     "translate": "item.minecraft.honey_bottle"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

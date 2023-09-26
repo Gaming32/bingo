@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.util.BingoCodecs;
-import io.github.gaming32.bingo.util.Util;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -22,11 +22,11 @@ public interface GoalIcon {
     GoalIconType<?> type();
 
     default JsonObject serializeToJson() {
-        return Util.toJsonObject(CODEC, this);
+        return BingoUtil.toJsonObject(CODEC, this);
     }
 
     static GoalIcon deserialize(JsonElement element) {
-        return Util.fromJsonElement(CODEC, element);
+        return BingoUtil.fromJsonElement(CODEC, element);
     }
 
     static GoalIcon infer(Object obj) {

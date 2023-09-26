@@ -1,10 +1,10 @@
 package io.github.gaming32.bingo.conditions;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -15,14 +15,15 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.Set;
 
-public class DistanceFromSpawnCondition implements LootItemCondition {
-    private final DistancePredicate distance;
-
-    public DistanceFromSpawnCondition(DistancePredicate distance) {
-        this.distance = distance;
-    }
+public record DistanceFromSpawnCondition(Optional<DistancePredicate> distance) implements LootItemCondition {
+    public static final Codec<DistanceFromSpawnCondition> CODEC = RecordCodecBuilder.create(instance ->
+        instance.group(
+            ExtraCodecs.strictOptionalField(DistancePredicate.CODEC, "distance").forGetter(DistanceFromSpawnCondition::distance)
+        ).apply(instance, DistanceFromSpawnCondition::new)
+    );
 
     @NotNull
     @Override
@@ -39,7 +40,7 @@ public class DistanceFromSpawnCondition implements LootItemCondition {
             return false;
         }
         final Vec3 spawnVec = Vec3.atCenterOf(spawnPoint.pos());
-        return distance.matches(
+        return distance.isEmpty() || distance.get().matches(
             origin.x, origin.y, origin.z,
             spawnVec.x, spawnVec.y, spawnVec.z
         );
@@ -49,18 +50,5 @@ public class DistanceFromSpawnCondition implements LootItemCondition {
     @Override
     public Set<LootContextParam<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.THIS_ENTITY, LootContextParams.ORIGIN);
-    }
-
-    public static class Serializer implements net.minecraft.world.level.storage.loot.Serializer<DistanceFromSpawnCondition> {
-        @Override
-        public void serialize(JsonObject json, DistanceFromSpawnCondition value, JsonSerializationContext serializationContext) {
-            json.add("distance", value.distance.serializeToJson());
-        }
-
-        @NotNull
-        @Override
-        public DistanceFromSpawnCondition deserialize(JsonObject json, JsonDeserializationContext serializationContext) {
-            return new DistanceFromSpawnCondition(DistancePredicate.fromJson(json.get("distance")));
-        }
     }
 }

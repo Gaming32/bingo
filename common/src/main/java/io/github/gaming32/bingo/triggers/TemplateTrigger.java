@@ -1,23 +1,19 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
-import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class TemplateTrigger extends SimpleCriterionTrigger<TemplateTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:template");
-
     @NotNull
     @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(
             player
         );
@@ -28,14 +24,14 @@ public class TemplateTrigger extends SimpleCriterionTrigger<TemplateTrigger.Trig
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        public TriggerInstance(ContextAwarePredicate player) {
-            super(ID, player);
+        public TriggerInstance(Optional<ContextAwarePredicate> player) {
+            super(player);
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
             return result;
         }
 

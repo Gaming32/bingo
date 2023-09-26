@@ -20,6 +20,11 @@
   "name": {
     "translate": "bingo.goal.level_10_enchant"
   },
+  "requirements": [
+    [
+      "enchant"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld"

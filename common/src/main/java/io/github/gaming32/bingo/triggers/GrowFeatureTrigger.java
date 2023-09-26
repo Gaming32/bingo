@@ -1,22 +1,16 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import io.github.gaming32.bingo.Bingo;
+import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.ext.GlobalVars;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.SerializationContext;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.advancements.critereon.TagPredicate;
+import io.github.gaming32.bingo.util.BingoUtil;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
@@ -25,31 +19,20 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class GrowFeatureTrigger extends SimpleCriterionTrigger<GrowFeatureTrigger.TriggerInstance> {
-    private static final ResourceLocation ID = new ResourceLocation(Bingo.MOD_ID, "grow_feature");
-
-    @Override
     @NotNull
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
-        LocationPredicate location = LocationPredicate.fromJson(json.get("location"));
-
-        JsonElement featureJson = json.get("feature");
-        TagPredicate<ConfiguredFeature<?, ?>> feature;
-        if (featureJson == null || featureJson.isJsonNull()) {
-            feature = null;
-        } else {
-            feature = TagPredicate.fromJson(featureJson, Registries.CONFIGURED_FEATURE);
-        }
-
-        return new TriggerInstance(player, location, feature);
-    }
-
     @Override
-    @NotNull
-    public ResourceLocation getId() {
-        return ID;
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(
+            player,
+            LocationPredicate.fromJson(json.get("location")),
+            json.has("tags") ? BingoUtil.fromJsonElement(TriggerInstance.TAGS_CODEC, json.get("tags")) : List.of()
+        );
     }
 
     public static boolean wrapPlaceOperation(
@@ -80,54 +63,66 @@ public class GrowFeatureTrigger extends SimpleCriterionTrigger<GrowFeatureTrigge
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final LocationPredicate location;
-        @Nullable
-        private final TagPredicate<ConfiguredFeature<?, ?>> feature;
+        private static final Codec<List<TagPredicate<ConfiguredFeature<?, ?>>>> TAGS_CODEC =
+            TagPredicate.codec(Registries.CONFIGURED_FEATURE).listOf();
 
-        public TriggerInstance(ContextAwarePredicate player, LocationPredicate location, @Nullable TagPredicate<ConfiguredFeature<?, ?>> feature) {
-            super(ID, player);
+        private final Optional<LocationPredicate> location;
+        private final List<TagPredicate<ConfiguredFeature<?, ?>>> tags;
+
+        public TriggerInstance(
+            Optional<ContextAwarePredicate> player,
+            Optional<LocationPredicate> location,
+            List<TagPredicate<ConfiguredFeature<?, ?>>> tags
+        ) {
+            super(player);
             this.location = location;
-            this.feature = feature;
+            this.tags = tags;
         }
 
-        @Override
         @NotNull
-        public JsonObject serializeToJson(SerializationContext context) {
-            JsonObject json = super.serializeToJson(context);
-            json.add("location", location.serializeToJson());
-            if (feature != null) {
-                json.add("feature", feature.serializeToJson());
+        @Override
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            location.ifPresent(p -> result.add("location", p.serializeToJson()));
+            if (!tags.isEmpty()) {
+                result.add("tags", BingoUtil.toJsonElement(TAGS_CODEC, tags));
             }
-            return json;
+            return result;
         }
 
         public boolean matches(ServerLevel level, BlockPos pos, Holder<ConfiguredFeature<?, ?>> feature) {
-            return location.matches(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)
-                && (this.feature == null || this.feature.matches(feature));
+            if (location.isPresent() && !location.get().matches(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)) {
+                return false;
+            }
+            for (final var tag : tags) {
+                if (!tag.matches(feature)) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
     public static final class Builder {
-        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
-        private LocationPredicate location = LocationPredicate.ANY;
-        @Nullable
-        private TagPredicate<ConfiguredFeature<?, ?>> feature;
+        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<LocationPredicate> location = Optional.empty();
+        private final List<TagPredicate<ConfiguredFeature<?, ?>>> tags = new ArrayList<>();
 
         private Builder() {
         }
 
         public Builder player(ContextAwarePredicate player) {
-            this.player = player;
+            this.player = Optional.ofNullable(player);
             return this;
         }
 
         public Builder location(LocationPredicate location) {
-            this.location = location;
+            this.location = Optional.ofNullable(location);
             return this;
         }
 
         public Builder feature(TagPredicate<ConfiguredFeature<?, ?>> feature) {
-            this.feature = feature;
+            this.tags.add(feature);
             return this;
         }
 
@@ -135,8 +130,10 @@ public class GrowFeatureTrigger extends SimpleCriterionTrigger<GrowFeatureTrigge
             return feature(TagPredicate.is(feature));
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, location, feature);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.GROW_FEATURE.createCriterion(
+                new TriggerInstance(player, location, List.copyOf(tags))
+            );
         }
     }
 }

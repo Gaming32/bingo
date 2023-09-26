@@ -44,6 +44,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:build",
     "bingo:color",

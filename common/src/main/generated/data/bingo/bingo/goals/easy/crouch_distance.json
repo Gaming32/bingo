@@ -21,8 +21,8 @@
             "entity": "this",
             "predicate": {
               "type_specific": {
-                "type": "player",
-                "bingo:relative_stats": [
+                "type": "bingo:player",
+                "relative_stats": [
                   {
                     "type": "minecraft:custom",
                     "stat": "minecraft:crouch_one_cm",
@@ -76,6 +76,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "crouch"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:stat"

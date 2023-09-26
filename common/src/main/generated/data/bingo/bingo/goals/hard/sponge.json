@@ -25,6 +25,11 @@
   "name": {
     "translate": "block.minecraft.sponge"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:ocean",

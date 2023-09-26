@@ -1,8 +1,8 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
@@ -10,23 +10,17 @@ import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:zombify_pig");
-
     @NotNull
     @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(
-            predicate,
+            player,
             EntityPredicate.fromJson(json, "pig", context),
             EntityPredicate.fromJson(json, "zombified_piglin", context),
-            json.has("direct") ? GsonHelper.getAsBoolean(json, "direct") : null
+            json.has("direct") ? Optional.of(GsonHelper.getAsBoolean(json, "direct")) : Optional.empty()
         );
     }
 
@@ -41,12 +35,17 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ContextAwarePredicate pig;
-        private final ContextAwarePredicate zombifiedPiglin;
-        private final Boolean direct;
+        private final Optional<ContextAwarePredicate> pig;
+        private final Optional<ContextAwarePredicate> zombifiedPiglin;
+        private final Optional<Boolean> direct;
 
-        public TriggerInstance(ContextAwarePredicate player, ContextAwarePredicate pig, ContextAwarePredicate zombifiedPiglin, Boolean direct) {
-            super(ID, player);
+        public TriggerInstance(
+            Optional<ContextAwarePredicate> player,
+            Optional<ContextAwarePredicate> pig,
+            Optional<ContextAwarePredicate> zombifiedPiglin,
+            Optional<Boolean> direct
+        ) {
+            super(player);
             this.pig = pig;
             this.zombifiedPiglin = zombifiedPiglin;
             this.direct = direct;
@@ -54,22 +53,22 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
-            result.add("pig", pig.toJson(context));
-            result.add("zombified_piglin", zombifiedPiglin.toJson(context));
-            result.addProperty("direct", direct);
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            pig.ifPresent(p -> result.add("pig", p.toJson()));
+            zombifiedPiglin.ifPresent(p -> result.add("zombified_piglin", p.toJson()));
+            direct.ifPresent(p -> result.addProperty("direct", p));
             return result;
         }
 
         public boolean matches(LootContext pig, LootContext zombifiedPiglin, boolean direct) {
-            if (!this.pig.matches(pig)) {
+            if (this.pig.isPresent() && !this.pig.get().matches(pig)) {
                 return false;
             }
-            if (!this.zombifiedPiglin.matches(zombifiedPiglin)) {
+            if (this.zombifiedPiglin.isPresent() && !this.zombifiedPiglin.get().matches(zombifiedPiglin)) {
                 return false;
             }
-            if (this.direct != null && direct != this.direct) {
+            if (this.direct.isPresent() && direct != this.direct.get()) {
                 return false;
             }
             return true;
@@ -77,16 +76,16 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
     }
 
     public static class Builder {
-        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
-        private ContextAwarePredicate pig = ContextAwarePredicate.ANY;
-        private ContextAwarePredicate zombifiedPiglin = ContextAwarePredicate.ANY;
-        private Boolean direct = null;
+        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<ContextAwarePredicate> pig = Optional.empty();
+        private Optional<ContextAwarePredicate> zombifiedPiglin = Optional.empty();
+        private Optional<Boolean> direct = Optional.empty();
 
         private Builder() {
         }
 
         public Builder player(ContextAwarePredicate predicate) {
-            this.player = predicate;
+            this.player = Optional.ofNullable(predicate);
             return this;
         }
 
@@ -95,7 +94,7 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
         }
 
         public Builder pig(ContextAwarePredicate predicate) {
-            this.pig = predicate;
+            this.pig = Optional.ofNullable(predicate);
             return this;
         }
 
@@ -104,7 +103,7 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
         }
 
         public Builder zombifiedPiglin(ContextAwarePredicate predicate) {
-            this.zombifiedPiglin = predicate;
+            this.zombifiedPiglin = Optional.ofNullable(predicate);
             return this;
         }
 
@@ -113,12 +112,14 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
         }
 
         public Builder direct(boolean direct) {
-            this.direct = direct;
+            this.direct = Optional.of(direct);
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, pig, zombifiedPiglin, direct);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.ZOMBIFY_PIG.createCriterion(
+                new TriggerInstance(player, pig, zombifiedPiglin, direct)
+            );
         }
     }
 }

@@ -35,6 +35,11 @@
   "name": {
     "translate": "bingo.goal.extinguish_campfire"
   },
+  "requirements": [
+    [
+      "extinguish"
+    ]
+  ],
   "tags": [
     "bingo:action"
   ]

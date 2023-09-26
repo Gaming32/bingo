@@ -1,7 +1,6 @@
 {
   "criteria": {
     "raid_won": {
-      "conditions": {},
       "trigger": "minecraft:hero_of_the_village"
     }
   },
@@ -60,6 +59,11 @@
     "translate": "advancements.adventure.hero_of_the_village.title"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "raid_won"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld",

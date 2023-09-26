@@ -21,6 +21,11 @@
   "name": {
     "translate": "bingo.goal.complete_full_size_map"
   },
+  "requirements": [
+    [
+      "complete"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld"

@@ -29,6 +29,11 @@
   "name": {
     "translate": "bingo.goal.any_head"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:combat",

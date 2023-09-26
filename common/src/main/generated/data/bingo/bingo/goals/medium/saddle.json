@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.saddle"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

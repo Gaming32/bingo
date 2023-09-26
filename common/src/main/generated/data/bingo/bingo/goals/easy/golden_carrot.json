@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.golden_carrot"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

@@ -25,6 +25,11 @@
     "translate": "bingo.goal.fish_bucket"
   },
   "reactant": "use_buckets",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:ocean",

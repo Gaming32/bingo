@@ -3,16 +3,15 @@
   "criteria": {
     "grow": {
       "conditions": {
-        "feature": {
-          "expected": true,
-          "id": "bingo:huge_fungi"
-        },
         "location": {
-          "bingo:dimension_tag": {
+          "dimension": "minecraft:overworld"
+        },
+        "tags": [
+          {
             "expected": true,
-            "id": "bingo:overworlds"
+            "id": "bingo:huge_fungi"
           }
-        }
+        ]
       },
       "trigger": "bingo:grow_feature"
     }
@@ -28,6 +27,11 @@
   "name": {
     "translate": "bingo.goal.huge_fungus_in_overworld"
   },
+  "requirements": [
+    [
+      "grow"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld",

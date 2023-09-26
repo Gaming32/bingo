@@ -21,6 +21,11 @@
   "name": {
     "translate": "bingo.goal.basic_mineral_blocks"
   },
+  "requirements": [
+    [
+      "pillar"
+    ]
+  ],
   "tags": [
     "bingo:build",
     "bingo:overworld"

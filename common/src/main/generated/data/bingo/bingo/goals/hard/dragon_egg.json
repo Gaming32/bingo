@@ -25,6 +25,11 @@
   "name": {
     "translate": "block.minecraft.dragon_egg"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:combat",

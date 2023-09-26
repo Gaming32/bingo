@@ -1,16 +1,8 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.Bingo;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DamagePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SerializationContext;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,20 +10,18 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 
 public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDieNearPlayerTrigger.TriggerInstance> {
-    private static final ResourceLocation ID = new ResourceLocation(Bingo.MOD_ID, "entity_die_near_player");
-
-    @Override
     @NotNull
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate player, DeserializationContext context) {
-        return new TriggerInstance(player, EntityPredicate.fromJson(json, "entity", context), DamagePredicate.fromJson(json.get("killing_blow")), DistancePredicate.fromJson(json.get("distance")));
-    }
-
     @Override
-    @NotNull
-    public ResourceLocation getId() {
-        return ID;
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(
+            player,
+            EntityPredicate.fromJson(json, "entity", context),
+            DamagePredicate.fromJson(json.get("killing_blow")),
+            DistancePredicate.fromJson(json.get("distance"))
+        );
     }
 
     public static Builder builder() {
@@ -48,35 +38,40 @@ public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDie
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ContextAwarePredicate entity;
-        private final DamagePredicate killingBlow;
-        private final DistancePredicate distance;
+        private final Optional<ContextAwarePredicate> entity;
+        private final Optional<DamagePredicate> killingBlow;
+        private final Optional<DistancePredicate> distance;
 
-        public TriggerInstance(ContextAwarePredicate player, ContextAwarePredicate entity, DamagePredicate killingBlow, DistancePredicate distance) {
-            super(ID, player);
+        public TriggerInstance(
+            Optional<ContextAwarePredicate> player,
+            Optional<ContextAwarePredicate> entity,
+            Optional<DamagePredicate> killingBlow,
+            Optional<DistancePredicate> distance
+        ) {
+            super(player);
             this.entity = entity;
             this.killingBlow = killingBlow;
             this.distance = distance;
         }
 
-        @Override
         @NotNull
-        public JsonObject serializeToJson(SerializationContext context) {
-            JsonObject json = super.serializeToJson(context);
-            json.add("entity", entity.toJson(context));
-            json.add("killing_blow", killingBlow.serializeToJson());
-            json.add("distance", distance.serializeToJson());
-            return json;
+        @Override
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            entity.ifPresent(p -> result.add("entity", p.toJson()));
+            killingBlow.ifPresent(p -> result.add("killing_blow", p.serializeToJson()));
+            distance.ifPresent(p -> result.add("distance", p.serializeToJson()));
+            return result;
         }
 
         public boolean matches(ServerPlayer player, LivingEntity entity, DamageSource source, float damageDealt, float damageTaken, boolean blocked) {
-            if (!this.entity.matches(EntityPredicate.createContext(player, entity))) {
+            if (this.entity.isPresent() && !this.entity.get().matches(EntityPredicate.createContext(player, entity))) {
                 return false;
             }
-            if (!killingBlow.matches(player, source, damageDealt, damageTaken, blocked)) {
+            if (this.killingBlow.isPresent() && !killingBlow.get().matches(player, source, damageDealt, damageTaken, blocked)) {
                 return false;
             }
-            if (!distance.matches(player.getX(), player.getY(), player.getZ(), entity.getX(), entity.getY(), entity.getZ())) {
+            if (distance.isPresent() && !distance.get().matches(player.getX(), player.getY(), player.getZ(), entity.getX(), entity.getY(), entity.getZ())) {
                 return false;
             }
             return true;
@@ -84,21 +79,21 @@ public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDie
     }
 
     public static final class Builder {
-        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
-        private ContextAwarePredicate entity = ContextAwarePredicate.ANY;
-        private DamagePredicate killingBlow = DamagePredicate.ANY;
-        private DistancePredicate distance = DistancePredicate.ANY;
+        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<ContextAwarePredicate> entity = Optional.empty();
+        private Optional<DamagePredicate> killingBlow = Optional.empty();
+        private Optional<DistancePredicate> distance = Optional.empty();
 
         private Builder() {
         }
 
         public Builder player(ContextAwarePredicate player) {
-            this.player = player;
+            this.player = Optional.ofNullable(player);
             return this;
         }
 
         public Builder entity(ContextAwarePredicate entity) {
-            this.entity = entity;
+            this.entity = Optional.ofNullable(entity);
             return this;
         }
 
@@ -107,17 +102,19 @@ public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDie
         }
 
         public Builder killingBlow(DamagePredicate killingBlow) {
-            this.killingBlow = killingBlow;
+            this.killingBlow = Optional.ofNullable(killingBlow);
             return this;
         }
 
         public Builder distance(DistancePredicate distance) {
-            this.distance = distance;
+            this.distance = Optional.ofNullable(distance);
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, entity, killingBlow, distance);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.ENTITY_DIE_NEAR_PLAYER.createCriterion(
+                new TriggerInstance(player, entity, killingBlow, distance)
+            );
         }
     }
 }

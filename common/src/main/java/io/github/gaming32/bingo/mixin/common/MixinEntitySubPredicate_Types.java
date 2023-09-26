@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.mixin.common;
 import com.google.common.collect.ImmutableBiMap;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import io.github.gaming32.bingo.subpredicates.BingoPlayerPredicate;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,6 +25,7 @@ public class MixinEntitySubPredicate_Types {
     ) {
         return original.call(instance
             .put("bingo:item", ItemEntityPredicate.TYPE)
+            .put("bingo:player", BingoPlayerPredicate.TYPE)
         );
     }
 }

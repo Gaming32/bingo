@@ -55,6 +55,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:end"

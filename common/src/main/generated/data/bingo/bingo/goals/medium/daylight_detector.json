@@ -25,6 +25,11 @@
   "name": {
     "translate": "block.minecraft.daylight_detector"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld",

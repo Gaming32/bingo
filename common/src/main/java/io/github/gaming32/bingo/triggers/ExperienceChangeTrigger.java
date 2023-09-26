@@ -1,25 +1,19 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceChangeTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:experience_changed");
-
     @NotNull
     @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(
-            predicate,
+            player,
             MinMaxBounds.Ints.fromJson(json.get("levels")),
             MinMaxBounds.Doubles.fromJson(json.get("progress")),
             MinMaxBounds.Ints.fromJson(json.get("total_experience"))
@@ -40,12 +34,12 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
         private final MinMaxBounds.Ints totalExperience;
 
         public TriggerInstance(
-            ContextAwarePredicate player,
+            Optional<ContextAwarePredicate> player,
             MinMaxBounds.Ints levels,
             MinMaxBounds.Doubles progress,
             MinMaxBounds.Ints totalExperience
         ) {
-            super(ID, player);
+            super(player);
             this.levels = levels;
             this.progress = progress;
             this.totalExperience = totalExperience;
@@ -53,8 +47,8 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
             result.add("levels", levels.serializeToJson());
             result.add("progress", progress.serializeToJson());
             result.add("total_experience", totalExperience.serializeToJson());
@@ -76,7 +70,7 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
     }
 
     public static final class Builder {
-        private ContextAwarePredicate player = ContextAwarePredicate.ANY;
+        private Optional<ContextAwarePredicate> player = Optional.empty();
         private MinMaxBounds.Ints levels = MinMaxBounds.Ints.ANY;
         private MinMaxBounds.Doubles progress = MinMaxBounds.Doubles.ANY;
         private MinMaxBounds.Ints totalExperience = MinMaxBounds.Ints.ANY;
@@ -84,8 +78,8 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
         private Builder() {
         }
 
-        private Builder player(ContextAwarePredicate player) {
-            this.player = player;
+        public Builder player(ContextAwarePredicate player) {
+            this.player = Optional.ofNullable(player);
             return this;
         }
 
@@ -104,8 +98,10 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, levels, progress, totalExperience);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.EXPERIENCE_CHANGED.createCriterion(
+                new TriggerInstance(player, levels, progress, totalExperience)
+            );
         }
     }
 }

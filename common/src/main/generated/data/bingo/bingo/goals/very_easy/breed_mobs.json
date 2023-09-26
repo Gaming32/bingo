@@ -2,7 +2,6 @@
   "antisynergy": "breed_animals",
   "criteria": {
     "breed": {
-      "conditions": {},
       "trigger": "minecraft:bred_animals"
     }
   },
@@ -18,6 +17,11 @@
   "name": {
     "translate": "bingo.goal.breed_mobs"
   },
+  "requirements": [
+    [
+      "breed"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:stat"

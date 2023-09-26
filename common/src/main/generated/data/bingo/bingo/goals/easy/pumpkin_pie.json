@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.pumpkin_pie"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

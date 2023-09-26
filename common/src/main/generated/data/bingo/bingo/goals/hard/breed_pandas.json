@@ -26,6 +26,11 @@
   "name": {
     "translate": "bingo.goal.breed_pandas"
   },
+  "requirements": [
+    [
+      "breed"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld",

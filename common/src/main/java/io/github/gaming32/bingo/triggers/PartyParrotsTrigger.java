@@ -1,11 +1,11 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
@@ -13,21 +13,14 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class PartyParrotsTrigger extends SimpleCriterionTrigger<PartyParrotsTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:party_parrots");
-
     @NotNull
     @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
-        return new TriggerInstance(predicate);
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(player);
     }
 
     public void trigger(ServerPlayer player, JukeboxBlockEntity blockEntity) {
@@ -35,12 +28,14 @@ public class PartyParrotsTrigger extends SimpleCriterionTrigger<PartyParrotsTrig
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        public TriggerInstance(ContextAwarePredicate predicate) {
-            super(ID, predicate);
+        public TriggerInstance(Optional<ContextAwarePredicate> predicate) {
+            super(predicate);
         }
 
-        public static TriggerInstance partyParrots() {
-            return new TriggerInstance(ContextAwarePredicate.ANY);
+        public static Criterion<TriggerInstance> partyParrots() {
+            return BingoTriggers.PARTY_PARROTS.createCriterion(
+                new TriggerInstance(Optional.empty())
+            );
         }
 
         public boolean matches(JukeboxBlockEntity blockEntity) {

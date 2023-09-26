@@ -26,6 +26,11 @@
     "translate": "item.minecraft.ender_eye"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:nether",

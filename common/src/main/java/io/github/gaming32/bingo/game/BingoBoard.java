@@ -1,8 +1,10 @@
 package io.github.gaming32.bingo.game;
 
+import com.google.common.collect.Maps;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
-import io.github.gaming32.bingo.util.Util;
+import io.github.gaming32.bingo.util.BingoUtil;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -10,10 +12,7 @@ import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class BingoBoard {
@@ -24,9 +23,12 @@ public class BingoBoard {
 
     private final Teams[] states = new Teams[SIZE_SQ];
     private final ActiveGoal[] goals = new ActiveGoal[SIZE_SQ];
+    private final Map<ResourceLocation, ActiveGoal> byVanillaId = Maps.newHashMapWithExpectedSize(SIZE_SQ);
+    private final Object2IntMap<ActiveGoal> toGoalIndex = new Object2IntOpenHashMap<>(SIZE_SQ);
 
     private BingoBoard() {
         Arrays.fill(states, Teams.NONE);
+        toGoalIndex.defaultReturnValue(-1);
     }
 
     public static BingoBoard generate(
@@ -40,10 +42,12 @@ public class BingoBoard {
         final BingoBoard board = new BingoBoard();
         final BingoGoal[] generatedSheet = generateGoals(difficulty, rand, isAllowedGoal, requiredGoal);
         for (int i = 0; i < SIZE_SQ; i++) {
-            board.goals[i] = generatedSheet[i].build(rand, lootData);
+            final ActiveGoal goal = board.goals[i] = generatedSheet[i].build(rand, lootData);
             if (generatedSheet[i].getSpecialType() == BingoTag.SpecialType.NEVER) {
                 board.states[i] = Teams.fromAll(teamCount);
             }
+            board.byVanillaId.put(generateVanillaId(i), goal);
+            board.toGoalIndex.put(goal, i);
         }
         return board;
     }
@@ -57,7 +61,7 @@ public class BingoBoard {
         final BingoGoal[] generatedSheet = new BingoGoal[SIZE_SQ];
 
         final int[] difficultyLayout = generateDifficulty(difficulty, rand);
-        final int[] indices = Util.shuffle(Util.generateIntArray(SIZE_SQ), rand);
+        final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(SIZE_SQ), rand);
 
         final Set<ResourceLocation> usedGoals = new HashSet<>();
         final Object2IntOpenHashMap<ResourceLocation> tagCount = new Object2IntOpenHashMap<>();
@@ -263,6 +267,15 @@ public class BingoBoard {
         return goals;
     }
 
+    @Nullable
+    public ActiveGoal byVanillaId(ResourceLocation id) {
+        return byVanillaId.get(id);
+    }
+
+    public int getIndex(ActiveGoal goal) {
+        return toGoalIndex.getInt(goal);
+    }
+
     @Override
     @SuppressWarnings("deprecation")
     public String toString() {
@@ -299,6 +312,10 @@ public class BingoBoard {
         result.append('+');
 
         return result.toString();
+    }
+
+    public static ResourceLocation generateVanillaId(int index) {
+        return new ResourceLocation("bingo:generated/goal/" + index);
     }
 
     public static final class Teams {

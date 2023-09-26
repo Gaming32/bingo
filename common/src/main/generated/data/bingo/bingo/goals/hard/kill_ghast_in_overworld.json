@@ -9,10 +9,7 @@
             "predicate": {
               "type": "minecraft:ghast",
               "location": {
-                "bingo:dimension_tag": {
-                  "expected": true,
-                  "id": "bingo:overworlds"
-                }
+                "dimension": "minecraft:overworld"
               }
             }
           }
@@ -33,6 +30,11 @@
     "translate": "bingo.goal.kill_ghast_in_overworld"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "murder"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:nether",

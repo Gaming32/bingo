@@ -43,6 +43,11 @@
   "name": {
     "translate": "bingo.goal.full_leather_armor"
   },
+  "requirements": [
+    [
+      "armor"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

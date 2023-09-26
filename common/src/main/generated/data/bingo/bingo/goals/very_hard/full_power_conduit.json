@@ -24,6 +24,11 @@
   "name": {
     "translate": "bingo.goal.full_power_conduit"
   },
+  "requirements": [
+    [
+      "power"
+    ]
+  ],
   "tags": [
     "bingo:build",
     "bingo:ocean",

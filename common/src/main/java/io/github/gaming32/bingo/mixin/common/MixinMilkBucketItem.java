@@ -17,6 +17,7 @@ public class MixinMilkBucketItem {
     private void triggerMilkBucketFinishBecauseForge(ItemStack stack, Level level, LivingEntity livingEntity, CallbackInfoReturnable<ItemStack> cir) {
         // Forge moved the curing to before the trigger, so we need our own trigger to go before *that*
         // https://github.com/MinecraftForge/MinecraftForge/blob/1.20.x/patches/minecraft/net/minecraft/world/item/MilkBucketItem.java.patch
+        // https://github.com/neoforged/NeoForge/issues/151
         if (livingEntity instanceof ServerPlayer serverPlayer) {
             BingoTriggers.CONSUME_MILK_BUCKET.trigger(serverPlayer, stack);
         }

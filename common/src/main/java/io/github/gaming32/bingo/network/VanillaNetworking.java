@@ -14,32 +14,33 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class VanillaNetworking {
-    public static final ResourceLocation ROOT_ID = new ResourceLocation("bingo:generated/root");
-    public static final Advancement ROOT_ADVANCEMENT = new Advancement(
-        ROOT_ID,
-        null,
-        new DisplayInfo(
-            new ItemStack(Items.PLAYER_HEAD),
-            Bingo.translatable("bingo.board.title"),
-            CommonComponents.EMPTY,
-            new ResourceLocation("minecraft:textures/gui/advancements/backgrounds/stone.png"),
-            FrameType.TASK,
-            false,
-            false,
-            true
-        ),
-        AdvancementRewards.EMPTY,
-        ImmutableMap.of(),
-        new String[0][0],
-        false
+    public static final AdvancementHolder ROOT_ADVANCEMENT = new AdvancementHolder(
+        new ResourceLocation("bingo:generated/root"),
+        new Advancement(
+            Optional.empty(),
+            Optional.of(new DisplayInfo(
+                new ItemStack(Items.PLAYER_HEAD),
+                Bingo.translatable("bingo.board.title"),
+                CommonComponents.EMPTY,
+                new ResourceLocation("minecraft:textures/gui/advancements/backgrounds/stone.png"),
+                FrameType.TASK,
+                false,
+                false,
+                true
+            )),
+            AdvancementRewards.EMPTY,
+            ImmutableMap.of(),
+            AdvancementRequirements.EMPTY,
+            false
+        )
     );
 
     public static final String CRITERION = "criterion";
-    public static final Map<String, Criterion> CRITERIA = ImmutableMap.of(CRITERION, new Criterion());
-    public static final String[][] REQUIREMENTS = {{CRITERION}};
+//    public static final String[][] REQUIREMENTS = {{CRITERION}};
+    public static final AdvancementRequirements REQUIREMENTS = AdvancementRequirements.allOf(List.of(CRITERION));
 
-    public static List<Advancement> generateAdvancements(ActiveGoal[] goals) {
-        final List<Advancement> result = new ArrayList<>(1 + goals.length);
+    public static List<AdvancementHolder> generateAdvancements(ActiveGoal[] goals) {
+        final List<AdvancementHolder> result = new ArrayList<>(1 + goals.length);
         result.add(ROOT_ADVANCEMENT);
         for (int i = 0; i < goals.length; i++) {
             result.add(generateAdvancement(i, goals[i], i % BingoBoard.SIZE, i / BingoBoard.SIZE));
@@ -47,7 +48,7 @@ public class VanillaNetworking {
         return result;
     }
 
-    public static Advancement generateAdvancement(int index, ActiveGoal goal, int x, int y) {
+    public static AdvancementHolder generateAdvancement(int index, ActiveGoal goal, int x, int y) {
         final DisplayInfo displayInfo = new DisplayInfo(
             goal.getIcon().item(),
             goal.getName(),
@@ -59,14 +60,16 @@ public class VanillaNetworking {
             false
         );
         displayInfo.setLocation(x + 0.5f, y);
-        return new Advancement(
-            generateAdvancementId(index),
-            ROOT_ADVANCEMENT,
-            displayInfo,
-            AdvancementRewards.EMPTY,
-            CRITERIA,
-            REQUIREMENTS,
-            false
+        return new AdvancementHolder(
+            BingoBoard.generateVanillaId(index),
+            new Advancement(
+                Optional.of(ROOT_ADVANCEMENT.id()),
+                Optional.of(displayInfo),
+                AdvancementRewards.EMPTY,
+                ImmutableMap.of(),
+                REQUIREMENTS,
+                false
+            )
         );
     }
 
@@ -75,14 +78,14 @@ public class VanillaNetworking {
     ) {
         final Map<ResourceLocation, AdvancementProgress> result = new HashMap<>(board.length);
         for (int i = 0; i < board.length; i++) {
-            result.put(generateAdvancementId(i), generateProgress(board[i].and(playerTeam)));
+            result.put(BingoBoard.generateVanillaId(i), generateProgress(board[i].and(playerTeam)));
         }
         return result;
     }
 
     public static AdvancementProgress generateProgress(boolean complete) {
         final AdvancementProgress result = new AdvancementProgress();
-        result.update(CRITERIA, REQUIREMENTS);
+        result.update(REQUIREMENTS);
         if (complete) {
             //noinspection DataFlowIssue
             result.getCriterion(CRITERION).grant();
@@ -92,14 +95,10 @@ public class VanillaNetworking {
 
     public static Set<ResourceLocation> generateAdvancementIds(int count) {
         final Set<ResourceLocation> result = new HashSet<>(1 + count);
-        result.add(ROOT_ID);
+        result.add(ROOT_ADVANCEMENT.id());
         IntStream.range(0, count)
-            .mapToObj(VanillaNetworking::generateAdvancementId)
+            .mapToObj(BingoBoard::generateVanillaId)
             .forEach(result::add);
         return result;
-    }
-
-    public static ResourceLocation generateAdvancementId(int index) {
-        return new ResourceLocation("bingo:generated/goal/" + index);
     }
 }

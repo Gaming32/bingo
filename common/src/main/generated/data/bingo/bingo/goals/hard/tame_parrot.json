@@ -27,6 +27,11 @@
   "name": {
     "translate": "bingo.goal.tame_parrot"
   },
+  "requirements": [
+    [
+      "tame"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:rare_biome",

@@ -2,29 +2,20 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class ItemPickedUpTrigger extends SimpleCriterionTrigger<ItemPickedUpTrigger.TriggerInstance> {
-    public static final ResourceLocation ID = new ResourceLocation("bingo:item_picked_up");
-
     @NotNull
     @Override
-    public ResourceLocation getId() {
-        return ID;
-    }
-
-    @NotNull
-    @Override
-    protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext context) {
-        return new TriggerInstance(
-            predicate,
-            EntityPredicate.fromJson(json, "item_entity", context)
-        );
+    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
+        return new TriggerInstance(player, EntityPredicate.fromJson(json, "item_entity", context));
     }
 
     public void trigger(ServerPlayer player, ItemEntity itemEntity) {
@@ -33,41 +24,40 @@ public class ItemPickedUpTrigger extends SimpleCriterionTrigger<ItemPickedUpTrig
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ContextAwarePredicate itemEntity;
+        private final Optional<ContextAwarePredicate> itemEntity;
 
-        public TriggerInstance(ContextAwarePredicate predicate, ContextAwarePredicate itemEntity) {
-            super(ID, predicate);
+        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> itemEntity) {
+            super(player);
             this.itemEntity = itemEntity;
         }
 
-        public static TriggerInstance pickedUp(EntityPredicate itemEntity) {
-            return new TriggerInstance(ContextAwarePredicate.ANY, EntityPredicate.wrap(itemEntity));
+        public static Criterion<TriggerInstance> pickedUp(EntityPredicate itemEntity) {
+            return BingoTriggers.ITEM_PICKED_UP.createCriterion(new TriggerInstance(
+                Optional.empty(), EntityPredicate.wrap(Optional.ofNullable(itemEntity))
+            ));
         }
 
-        public static TriggerInstance pickedUpFrom(EntityPredicate droppedBy) {
-            return pickedUp(EntityPredicate.Builder.entity()
-                .subPredicate(ItemEntityPredicate.droppedBy(ItemPredicate.ANY, droppedBy))
-                .build()
-            );
+        public static Criterion<TriggerInstance> pickedUpFrom(EntityPredicate droppedBy) {
+            return pickedUpFrom(null, droppedBy);
         }
 
-        public static TriggerInstance pickedUpFrom(ItemPredicate item, EntityPredicate droppedBy) {
+        public static Criterion<TriggerInstance> pickedUpFrom(ItemPredicate item, EntityPredicate droppedBy) {
             return pickedUp(EntityPredicate.Builder.entity()
-                .subPredicate(ItemEntityPredicate.droppedBy(item, droppedBy))
+                .subPredicate(ItemEntityPredicate.droppedBy(Optional.ofNullable(item), Optional.ofNullable(droppedBy)))
                 .build()
             );
         }
 
         @NotNull
         @Override
-        public JsonObject serializeToJson(SerializationContext context) {
-            final JsonObject result = super.serializeToJson(context);
-            result.add("item_entity", itemEntity.toJson(context));
-            return result;
+        public JsonObject serializeToJson() {
+            final JsonObject result = super.serializeToJson();
+            itemEntity.ifPresent(p -> result.add("item_entity", p.toJson()));
+            return super.serializeToJson();
         }
 
         public boolean matches(LootContext itemEntity) {
-            return this.itemEntity.matches(itemEntity);
+            return this.itemEntity.isEmpty() || this.itemEntity.get().matches(itemEntity);
         }
     }
 }

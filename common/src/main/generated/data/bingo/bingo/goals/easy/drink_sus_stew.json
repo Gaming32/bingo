@@ -28,6 +28,11 @@
     ]
   },
   "reactant": "eat_non_meat",
+  "requirements": [
+    [
+      "drink"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

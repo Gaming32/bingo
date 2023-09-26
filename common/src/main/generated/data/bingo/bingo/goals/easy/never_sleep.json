@@ -2,7 +2,6 @@
   "catalyst": "sleep",
   "criteria": {
     "sleep": {
-      "conditions": {},
       "trigger": "minecraft:slept_in_bed"
     }
   },
@@ -17,6 +16,11 @@
   "name": {
     "translate": "bingo.goal.never_sleep"
   },
+  "requirements": [
+    [
+      "sleep"
+    ]
+  ],
   "tags": [
     "bingo:never",
     "bingo:overworld"
