@@ -9,10 +9,8 @@ import io.github.gaming32.bingo.data.icons.BlockIcon;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoDamageTypeTags;
-import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.ext.LocationPredicateExt;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BlockPattern;
@@ -29,6 +27,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -96,7 +95,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM, BingoTags.COMBAT, BingoTags.NETHER)
             .name(Component.translatable("bingo.goal.zombified_piglin_sword"))
             .icon(Items.GOLDEN_SWORD));
-        // TODO: finish by launching foreworks of n different colors
+        // TODO: finish by launching fireworks of n different colors
         addGoal(BingoGoal.builder(id("nametag_enderman"))
             .criterion("nametag", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
                 ItemPredicate.Builder.item().of(Items.NAME_TAG),
@@ -191,7 +190,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("kill_ghast_in_overworld"))
             .criterion("murder", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity()
                 .of(EntityType.GHAST)
-                .located(LocationPredicateExt.inDimension(BingoDimensionTags.OVERWORLDS))
+                .located(LocationPredicate.Builder.inDimension(Level.OVERWORLD))
             ))
             .name(Component.translatable("bingo.goal.kill_ghast_in_overworld"))
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
@@ -315,7 +314,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
                 EntityPredicate.Builder.entity()
                     .of(EntityType.VILLAGER)
-                    .located(LocationPredicateExt.inDimension(BingoDimensionTags.ENDS))
+                    .located(LocationPredicate.Builder.inDimension(Level.END))
             ))
             .tags(BingoTags.ACTION, BingoTags.END, BingoTags.VILLAGE, BingoTags.COMBAT)
             .reactant("pacifist")
@@ -533,7 +532,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("huge_fungus_in_overworld"))
             .criterion("grow", GrowFeatureTrigger.builder()
                 .feature(BingoFeatureTags.HUGE_FUNGI)
-                .location(LocationPredicateExt.inDimension(BingoDimensionTags.OVERWORLDS).build())
+                .location(LocationPredicate.Builder.inDimension(Level.OVERWORLD).build())
                 .build()
             )
             .name(Component.translatable("bingo.goal.huge_fungus_in_overworld"))

@@ -8,9 +8,7 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
-import io.github.gaming32.bingo.data.tags.BingoDimensionTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.ext.LocationPredicateExt;
 import io.github.gaming32.bingo.triggers.*;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
@@ -27,6 +25,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
@@ -35,6 +34,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyC
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class MediumGoalProvider extends DifficultyGoalProvider {
@@ -48,10 +48,14 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("beetroot_soup"), Items.BEETROOT_SOUP)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("potted_cactus"))
-            .criterion("pot", new ItemUsedOnLocationTrigger.TriggerInstance(
-                CriteriaTriggers.ITEM_USED_ON_BLOCK.getId(),
-                ContextAwarePredicate.ANY,
-                ContextAwarePredicate.create(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.POTTED_CACTUS).build())))
+            .criterion("pot", CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
+                new ItemUsedOnLocationTrigger.TriggerInstance(
+                    Optional.empty(),
+                    Optional.of(ContextAwarePredicate.create(
+                        LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.POTTED_CACTUS).build()
+                    ))
+                ))
+            )
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.potted_cactus"))
             .icon(Blocks.POTTED_CACTUS, Blocks.CACTUS)
@@ -83,7 +87,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         // TODO: different saplings
         addGoal(BingoGoal.builder(id("tame_wolf"))
-            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.WOLF).build()))
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.WOLF)))
             .tags(BingoTags.STAT, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.tame_wolf"))
             .icon(Items.BONE));
@@ -126,10 +130,10 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .criterion("free_fall", DistanceTrigger.TriggerInstance.fallFromHeight(
                 // Copy of Vanilla's "fall_from_world_height" or "Caves & Cliffs" advancement
                 EntityPredicate.Builder.entity().located(
-                    LocationPredicate.atYLocation(MinMaxBounds.Doubles.atMost(-59))
+                    LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atMost(-59))
                 ),
                 DistancePredicate.vertical(MinMaxBounds.Doubles.atLeast(379)),
-                LocationPredicate.atYLocation(MinMaxBounds.Doubles.atLeast(319))
+                LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atLeast(319))
             ))
             .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.OVERWORLD, BingoTags.FINISH)
             .name(Component.translatable("bingo.goal.finish_by_free_falling"))
@@ -150,7 +154,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("whilst_trying_to_escape"))
             .criterion("die", EntityKilledPlayerTrigger.builder()
                 .sourceEntity(ContextAwarePredicate.create(
-                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.ANY).build(),
+                    new LootItemEntityPropertyCondition(Optional.empty(), LootContext.EntityTarget.THIS),
                     InvertedLootItemCondition.invert(LootItemEntityPropertyCondition.hasProperties(
                         LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().build()
                     )).build()
@@ -164,7 +168,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(BingoGoal.builder(id("finish_on_top"))
             .criterion("on_top", PlayerTrigger.TriggerInstance.located(
-                LocationPredicate.atYLocation(MinMaxBounds.Doubles.atLeast(319))
+                LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atLeast(319))
             ))
             .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.FINISH)
             .name(Component.translatable("bingo.goal.finish_on_top"))
@@ -289,7 +293,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         // TODO: enchant an item
         // TODO: blue shield with white flower charge pattern
         addGoal(BingoGoal.builder(id("tame_cat"))
-            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.CAT).build()))
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.CAT)))
             .name(Component.translatable("bingo.goal.tame_cat"))
             .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD)
             .icon(Items.CAT_SPAWN_EGG));
@@ -368,7 +372,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER));
         addGoal(BingoGoal.builder(id("anchor_in_overworld"))
             .criterion("anchor", IntentionalGameDesignTrigger.TriggerInstance.clicked(
-                LocationPredicateExt.inDimension(BingoDimensionTags.OVERWORLDS)
+                LocationPredicate.Builder.inDimension(Level.OVERWORLD).build()
             ))
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.anchor_in_overworld", Blocks.RESPAWN_ANCHOR.getName()))
@@ -402,14 +406,18 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .setAntisynergy("turtle_helmet")
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("all_different_armor"))
-            .criterion("armor", new InventoryChangeTrigger.TriggerInstance(
-                ContextAwarePredicate.create(new WearingDifferentArmorCondition(
-                    MinMaxBounds.Ints.atLeast(4), MinMaxBounds.Ints.atLeast(4)
-                )),
-                MinMaxBounds.Ints.ANY,
-                MinMaxBounds.Ints.ANY,
-                MinMaxBounds.Ints.ANY,
-                new ItemPredicate[0]
+            .criterion("armor", CriteriaTriggers.INVENTORY_CHANGED.createCriterion(
+                new InventoryChangeTrigger.TriggerInstance(
+                    Optional.of(
+                        ContextAwarePredicate.create(new WearingDifferentArmorCondition(
+                            MinMaxBounds.Ints.atLeast(4), MinMaxBounds.Ints.atLeast(4)
+                        ))
+                    ),
+                    MinMaxBounds.Ints.ANY,
+                    MinMaxBounds.Ints.ANY,
+                    MinMaxBounds.Ints.ANY,
+                    List.of()
+                )
             ))
             .tags(BingoTags.ITEM)
             .reactant("wear_armor")

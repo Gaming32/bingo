@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -27,12 +28,16 @@ public class KillSelfTrigger extends SimpleCriterionTrigger<KillSelfTrigger.Trig
             this.killingBlow = killingBlow;
         }
 
-        public static TriggerInstance killSelf() {
-            return new TriggerInstance(Optional.empty(), Optional.empty());
+        public static Criterion<TriggerInstance> killSelf() {
+            return BingoTriggers.KILL_SELF.createCriterion(
+                new TriggerInstance(Optional.empty(), Optional.empty())
+            );
         }
 
-        public static TriggerInstance killSelf(DamageSourcePredicate killingBlow) {
-            return new TriggerInstance(Optional.empty(), Optional.ofNullable(killingBlow));
+        public static Criterion<TriggerInstance> killSelf(DamageSourcePredicate killingBlow) {
+            return BingoTriggers.KILL_SELF.createCriterion(
+                new TriggerInstance(Optional.empty(), Optional.ofNullable(killingBlow))
+            );
         }
 
         @NotNull
