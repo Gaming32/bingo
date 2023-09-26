@@ -28,6 +28,11 @@
   "name": {
     "translate": "bingo.goal.never_wear_chestplates"
   },
+  "requirements": [
+    [
+      "equip"
+    ]
+  ],
   "tags": [
     "bingo:never"
   ]

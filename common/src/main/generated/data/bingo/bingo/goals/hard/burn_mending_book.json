@@ -12,21 +12,27 @@
             ]
           }
         },
-        "item": {
-          "type_specific": {
-            "type": "bingo:item",
-            "item": {
-              "items": [
-                "minecraft:enchanted_book"
-              ],
-              "stored_enchantments": [
-                {
-                  "enchantment": "minecraft:mending"
+        "item": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "bingo:item",
+                "item": {
+                  "items": [
+                    "minecraft:enchanted_book"
+                  ],
+                  "stored_enchantments": [
+                    {
+                      "enchantment": "minecraft:mending"
+                    }
+                  ]
                 }
-              ]
+              }
             }
           }
-        }
+        ]
       },
       "trigger": "bingo:kill_item"
     }
@@ -53,6 +59,11 @@
   "name": {
     "translate": "bingo.goal.burn_mending_book"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:action"
   ]

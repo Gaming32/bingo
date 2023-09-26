@@ -2,16 +2,15 @@
   "criteria": {
     "grow": {
       "conditions": {
-        "feature": {
-          "expected": true,
-          "id": "bingo:trees"
-        },
         "location": {
-          "bingo:dimension_tag": {
+          "dimension": "minecraft:the_nether"
+        },
+        "tags": [
+          {
             "expected": true,
-            "id": "bingo:nethers"
+            "id": "bingo:trees"
           }
-        }
+        ]
       },
       "trigger": "bingo:grow_feature"
     }
@@ -27,6 +26,11 @@
   "name": {
     "translate": "bingo.goal.grow_tree_in_nether"
   },
+  "requirements": [
+    [
+      "grow"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:nether",

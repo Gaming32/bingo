@@ -1,7 +1,6 @@
 {
   "criteria": {
     "bounce": {
-      "conditions": {},
       "trigger": "bingo:bounce_on_bed"
     }
   },
@@ -24,6 +23,11 @@
   "name": {
     "translate": "bingo.goal.bounce_on_bed"
   },
+  "requirements": [
+    [
+      "bounce"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld"

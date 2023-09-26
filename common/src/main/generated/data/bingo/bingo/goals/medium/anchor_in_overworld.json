@@ -3,10 +3,7 @@
     "anchor": {
       "conditions": {
         "respawn": {
-          "bingo:dimension_tag": {
-            "expected": true,
-            "id": "bingo:overworlds"
-          }
+          "dimension": "minecraft:overworld"
         }
       },
       "trigger": "bingo:intentional_game_design"
@@ -34,6 +31,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "anchor"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:nether",

@@ -6,7 +6,8 @@
       "conditions": {
         "new_item": {
           "tag": "bingo:armor"
-        }
+        },
+        "slots": []
       },
       "trigger": "bingo:equip_item"
     },

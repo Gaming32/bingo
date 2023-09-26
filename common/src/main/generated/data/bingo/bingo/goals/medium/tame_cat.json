@@ -26,6 +26,11 @@
   "name": {
     "translate": "bingo.goal.tame_cat"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:village",

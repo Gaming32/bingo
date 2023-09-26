@@ -46,6 +46,11 @@
   "name": {
     "translate": "bingo.goal.6x6scaffolding"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:overworld",
     "bingo:build"

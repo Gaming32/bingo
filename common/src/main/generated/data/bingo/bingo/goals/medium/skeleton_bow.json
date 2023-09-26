@@ -1,27 +1,6 @@
 {
   "criteria": {
     "pickup": {
-      "conditions": {
-        "item_entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type_specific": {
-                "type": "bingo:item",
-                "dropped_by": {
-                  "type": "minecraft:skeleton"
-                },
-                "item": {
-                  "items": [
-                    "minecraft:bow"
-                  ]
-                }
-              }
-            }
-          }
-        ]
-      },
       "trigger": "bingo:item_picked_up"
     }
   },
@@ -40,6 +19,11 @@
     "translate": "bingo.goal.skeleton_bow"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "pickup"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:combat"

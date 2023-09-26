@@ -1,7 +1,6 @@
 {
   "criteria": {
     "party": {
-      "conditions": {},
       "trigger": "bingo:party_parrots"
     }
   },
@@ -16,6 +15,11 @@
   "name": {
     "translate": "bingo.goal.party_parrots"
   },
+  "requirements": [
+    [
+      "party"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld",

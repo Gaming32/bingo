@@ -47,6 +47,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "give"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:nether",

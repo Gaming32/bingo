@@ -25,6 +25,11 @@
   "name": {
     "translate": "block.minecraft.soul_lantern"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:nether"

@@ -88,6 +88,11 @@
   "name": {
     "translate": "bingo.goal.all_diamond_craftables"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tooltip": {
     "translate": "bingo.goal.all_diamond_craftables.tooltip"
   }

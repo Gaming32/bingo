@@ -32,6 +32,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "nearby"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld",

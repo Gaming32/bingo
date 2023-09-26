@@ -26,6 +26,11 @@
     "translate": "item.minecraft.phantom_membrane"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:combat",

@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.rabbit_stew"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

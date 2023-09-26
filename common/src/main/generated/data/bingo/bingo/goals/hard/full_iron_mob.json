@@ -64,6 +64,11 @@
     "translate": "bingo.goal.full_iron_mob"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:combat"

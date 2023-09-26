@@ -41,6 +41,11 @@
   "name": {
     "translate": "bingo.goal.stairway_to_heaven"
   },
+  "requirements": [
+    [
+      "stairway"
+    ]
+  ],
   "tags": [
     "bingo:build",
     "bingo:overworld",

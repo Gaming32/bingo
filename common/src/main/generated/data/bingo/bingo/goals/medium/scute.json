@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.scute"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:ocean",

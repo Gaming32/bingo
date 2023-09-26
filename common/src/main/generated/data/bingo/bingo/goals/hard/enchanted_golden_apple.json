@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.enchanted_golden_apple"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

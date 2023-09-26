@@ -32,6 +32,11 @@
   "name": {
     "translate": "bingo.goal.shear_mooshroom"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:rare_biome",

@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.beetroot_soup"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

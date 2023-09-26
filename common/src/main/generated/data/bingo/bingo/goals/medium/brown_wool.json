@@ -25,6 +25,11 @@
   "name": {
     "translate": "block.minecraft.brown_wool"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

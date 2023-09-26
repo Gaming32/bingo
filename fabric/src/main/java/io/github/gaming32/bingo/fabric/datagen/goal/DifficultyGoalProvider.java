@@ -14,6 +14,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -157,9 +158,15 @@ public abstract class DifficultyGoalProvider {
         return BingoGoal.builder(id)
             .sub("distance", BingoSub.random(minDistance, maxDistance))
             .criterion("crouch",
-                BingoTriggers.statChanged(Stats.CUSTOM.get(Stats.CROUCH_ONE_CM), MinMaxBounds.Ints.atLeast(0)),
+                BingoTriggers.statChanged(
+                    Stats.CUSTOM,
+                    BuiltInRegistries.CUSTOM_STAT.getHolderOrThrow(ResourceKey.create(
+                        Registries.CUSTOM_STAT, Stats.CROUCH_ONE_CM
+                    )),
+                    MinMaxBounds.Ints.atLeast(0)
+                ),
                 subber -> subber.sub(
-                    "conditions.player.0.predicate.type_specific.bingo:relative_stats.0.value.min",
+                    "conditions.player.0.predicate.type_specific.relative_stats.0.value.min",
                     new CompoundBingoSub(
                         CompoundBingoSub.ElementType.INT,
                         CompoundBingoSub.Operator.MUL,

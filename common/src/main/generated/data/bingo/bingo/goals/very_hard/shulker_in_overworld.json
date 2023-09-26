@@ -9,10 +9,7 @@
             "predicate": {
               "type": "minecraft:shulker",
               "location": {
-                "bingo:dimension_tag": {
-                  "expected": true,
-                  "id": "bingo:overworlds"
-                }
+                "dimension": "minecraft:overworld"
               }
             }
           }
@@ -33,6 +30,11 @@
     "translate": "bingo.goal.shulker_in_overworld"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:combat",

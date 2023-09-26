@@ -34,6 +34,11 @@
   "name": {
     "translate": "bingo.goal.kill_enderman_with_endermites"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:combat",

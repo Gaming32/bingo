@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.writable_book"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

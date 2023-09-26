@@ -32,6 +32,11 @@
   "name": {
     "translate": "bingo.goal.create_snow_golem"
   },
+  "requirements": [
+    [
+      "summon"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:rare_biome",

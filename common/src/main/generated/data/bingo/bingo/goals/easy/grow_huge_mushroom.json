@@ -2,10 +2,12 @@
   "criteria": {
     "grow": {
       "conditions": {
-        "feature": {
-          "expected": true,
-          "id": "bingo:huge_mushrooms"
-        }
+        "tags": [
+          {
+            "expected": true,
+            "id": "bingo:huge_mushrooms"
+          }
+        ]
       },
       "trigger": "bingo:grow_feature"
     }
@@ -32,6 +34,11 @@
   "name": {
     "translate": "bingo.goal.grow_huge_mushroom"
   },
+  "requirements": [
+    [
+      "grow"
+    ]
+  ],
   "tags": [
     "bingo:action"
   ]

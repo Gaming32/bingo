@@ -26,6 +26,11 @@
     "translate": "item.minecraft.ghast_tear"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:nether",

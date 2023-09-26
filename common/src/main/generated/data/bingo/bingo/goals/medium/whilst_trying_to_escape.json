@@ -31,6 +31,11 @@
   "name": {
     "translate": "bingo.goal.whilst_trying_to_escape"
   },
+  "requirements": [
+    [
+      "die"
+    ]
+  ],
   "tags": [
     "bingo:action"
   ],

@@ -33,6 +33,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "break"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld"

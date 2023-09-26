@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.netherite_ingot"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:nether"

@@ -13,7 +13,11 @@ dependencies {
 }
 
 architectury {
-    common("fabric", "forge")
+    common("fabric" /*, "forge" */)
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/bingo.accessWidener")
 }
 
 sourceSets {

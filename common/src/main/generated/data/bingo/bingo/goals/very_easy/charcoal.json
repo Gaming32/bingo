@@ -26,6 +26,11 @@
     "translate": "item.minecraft.charcoal"
   },
   "reactant": "use_furnace",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

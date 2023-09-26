@@ -71,6 +71,11 @@
     "translate": "block.minecraft.ominous_banner"
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:combat",

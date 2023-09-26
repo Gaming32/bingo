@@ -23,6 +23,11 @@
   "name": {
     "translate": "bingo.goal.never_place_torches"
   },
+  "requirements": [
+    [
+      "place"
+    ]
+  ],
   "tags": [
     "bingo:never"
   ],

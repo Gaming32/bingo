@@ -52,6 +52,11 @@
     ]
   },
   "reactant": "use_buckets",
+  "requirements": [
+    [
+      "buckets"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

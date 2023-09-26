@@ -26,6 +26,11 @@
   "name": {
     "translate": "bingo.goal.never_fish"
   },
+  "requirements": [
+    [
+      "use"
+    ]
+  ],
   "tags": [
     "bingo:never",
     "bingo:overworld"

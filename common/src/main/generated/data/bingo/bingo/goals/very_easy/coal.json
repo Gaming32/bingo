@@ -25,6 +25,11 @@
   "name": {
     "translate": "item.minecraft.coal"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

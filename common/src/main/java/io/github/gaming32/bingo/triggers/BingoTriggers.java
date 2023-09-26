@@ -1,11 +1,11 @@
 package io.github.gaming32.bingo.triggers;
 
+import io.github.gaming32.bingo.subpredicates.BingoPlayerPredicate;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.advancements.critereon.DistanceTrigger;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.stats.Stat;
+import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.Holder;
+import net.minecraft.stats.StatType;
 
 import java.util.Optional;
 
@@ -15,7 +15,7 @@ public class BingoTriggers {
     public static final ExperienceChangeTrigger EXPERIENCE_CHANGED = register("bingo:experience_changed", new ExperienceChangeTrigger());
     public static final EnchantedItemTrigger ENCHANTED_ITEM = register("bingo:enchanted_item", new EnchantedItemTrigger());
     public static final ArrowPressTrigger ARROW_PRESS = register("bingo:arrow_press", new ArrowPressTrigger());
-    public static final TryUseItemTrigger USE_ITEM = register("bingo:try_use_item", new TryUseItemTrigger());
+    public static final TryUseItemTrigger TRY_USE_ITEM = register("bingo:try_use_item", new TryUseItemTrigger());
     public static final EquipItemTrigger EQUIP_ITEM = register("bingo:equip_item", new EquipItemTrigger());
     public static final DistanceTrigger CROUCH = register("bingo:crouch", new DistanceTrigger());
     public static final ItemBrokenTrigger ITEM_BROKEN = register("bingo:item_broken", new ItemBrokenTrigger());
@@ -56,16 +56,17 @@ public class BingoTriggers {
         return BOUNCE_ON_BED.createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty()));
     }
 
-    public static Criterion<PlayerTrigger.TriggerInstance> statChanged(Stat<?> relativeStat, MinMaxBounds.Ints toValue) {
-        throw new UnsupportedOperationException("Not implemented yet");
-//        return CriteriaTriggers.TICK.createCriterion(
-//            new PlayerTrigger.TriggerInstance(EntityPredicate.wrap(
-//                EntityPredicate.Builder.entity().subPredicate(
-//                    ((PlayerPredicateBuilderExt)PlayerPredicate.Builder.player())
-//                        .bingo$addRelativeStat(relativeStat, toValue)
-//                        .build()
-//                )
-//            ))
-//        );
+    public static <T> Criterion<PlayerTrigger.TriggerInstance> statChanged(StatType<T> type, Holder.Reference<T> holder, MinMaxBounds.Ints range) {
+        return CriteriaTriggers.TICK.createCriterion(
+            new PlayerTrigger.TriggerInstance(Optional.of(
+                EntityPredicate.wrap(
+                    EntityPredicate.Builder.entity().subPredicate(
+                        BingoPlayerPredicate.Builder.player()
+                            .addRelativeStat(type, holder, range)
+                            .build()
+                    )
+                )
+            ))
+        );
     }
 }

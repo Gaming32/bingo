@@ -26,6 +26,11 @@
   "name": {
     "translate": "block.minecraft.honey_block"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:action",

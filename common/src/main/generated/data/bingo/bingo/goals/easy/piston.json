@@ -25,6 +25,11 @@
   "name": {
     "translate": "block.minecraft.piston"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

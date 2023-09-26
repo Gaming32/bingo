@@ -1,7 +1,6 @@
 {
   "criteria": {
     "cure": {
-      "conditions": {},
       "trigger": "minecraft:cured_zombie_villager"
     }
   },
@@ -16,6 +15,11 @@
   "name": {
     "translate": "bingo.goal.cure_zombie_villager"
   },
+  "requirements": [
+    [
+      "cure"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld"

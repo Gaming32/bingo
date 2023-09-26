@@ -39,6 +39,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "feed"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld",

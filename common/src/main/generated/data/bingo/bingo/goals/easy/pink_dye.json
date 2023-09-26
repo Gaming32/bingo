@@ -26,6 +26,11 @@
   "name": {
     "translate": "item.minecraft.pink_dye"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

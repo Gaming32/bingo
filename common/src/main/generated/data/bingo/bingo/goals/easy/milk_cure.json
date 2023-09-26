@@ -23,6 +23,11 @@
   "name": {
     "translate": "bingo.goal.milk_cure"
   },
+  "requirements": [
+    [
+      "cure"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld"

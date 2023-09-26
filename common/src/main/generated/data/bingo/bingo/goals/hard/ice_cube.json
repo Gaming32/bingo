@@ -137,6 +137,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "cube"
+    ]
+  ],
   "tags": [
     "bingo:build",
     "bingo:overworld"

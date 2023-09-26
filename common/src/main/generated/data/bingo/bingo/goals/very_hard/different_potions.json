@@ -46,6 +46,11 @@
     ]
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "potions"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:nether",

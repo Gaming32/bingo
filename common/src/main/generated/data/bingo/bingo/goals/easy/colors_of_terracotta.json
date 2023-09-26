@@ -46,6 +46,11 @@
     ]
   },
   "reactant": "use_furnace",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:color",

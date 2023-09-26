@@ -32,6 +32,11 @@
   "name": {
     "translate": "bingo.goal.fill_composter"
   },
+  "requirements": [
+    [
+      "fill"
+    ]
+  ],
   "tags": [
     "bingo:action"
   ],

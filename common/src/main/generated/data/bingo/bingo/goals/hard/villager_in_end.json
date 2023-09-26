@@ -9,10 +9,7 @@
             "predicate": {
               "type": "minecraft:villager",
               "location": {
-                "bingo:dimension_tag": {
-                  "expected": true,
-                  "id": "bingo:ends"
-                }
+                "dimension": "minecraft:the_end"
               }
             }
           }
@@ -41,6 +38,11 @@
     ]
   },
   "reactant": "pacifist",
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:end",

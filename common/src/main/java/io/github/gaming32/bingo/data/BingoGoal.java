@@ -135,14 +135,19 @@ public class BingoGoal {
                 Map.Entry::getKey,
                 e -> GsonHelper.convertToJsonObject(e.getValue(), "criterion")
             ));
+
+        final JsonArray reqArray = GsonHelper.getAsJsonArray(json, "requirements", new JsonArray());
+        final AdvancementRequirements requirements = reqArray.isEmpty()
+            ? AdvancementRequirements.allOf(criteria.keySet())
+            : AdvancementRequirements.fromJson(reqArray, criteria.keySet());
+
         return new BingoGoal(
             id,
             GsonHelper.getAsJsonObject(json, "bingo_subs", new JsonObject())
                 .entrySet()
                 .stream()
                 .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> BingoSub.deserialize(e.getValue()))),
-            criteria,
-            AdvancementRequirements.fromJson(GsonHelper.getAsJsonArray(json, "requirements"), criteria.keySet()),
+            criteria, requirements,
             GsonHelper.getAsJsonArray(json, "tags", new JsonArray())
                 .asList()
                 .stream()

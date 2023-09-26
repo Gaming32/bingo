@@ -29,7 +29,7 @@ public record ItemEntityPredicate(
             ExtraCodecs.strictOptionalField(EntityPredicate.CODEC, "dropped_by").forGetter(ItemEntityPredicate::droppedBy)
         ).apply(instance, ItemEntityPredicate::new)
     );
-    public static final EntitySubPredicate.Type TYPE = new Type(CODEC);
+    public static final Type TYPE = new Type(CODEC);
 
     public static ItemEntityPredicate item(ItemPredicate item) {
         return new ItemEntityPredicate(Optional.of(item), MinMaxBounds.Ints.ANY, Optional.empty());

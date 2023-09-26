@@ -8,6 +8,7 @@ architectury {
 }
 
 loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
     runs {
         datagenClient {
             inherit client

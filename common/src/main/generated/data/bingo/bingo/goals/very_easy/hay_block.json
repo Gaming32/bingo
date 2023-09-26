@@ -26,6 +26,11 @@
   "name": {
     "translate": "block.minecraft.hay_block"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

@@ -1,7 +1,6 @@
 {
   "criteria": {
     "stun": {
-      "conditions": {},
       "trigger": "bingo:stun_ravager"
     }
   },
@@ -21,6 +20,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "stun"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld",

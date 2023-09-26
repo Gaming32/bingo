@@ -35,6 +35,11 @@
   "name": {
     "translate": "bingo.goal.listen_to_music"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

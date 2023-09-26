@@ -32,6 +32,11 @@
   "name": {
     "translate": "bingo.goal.destroy_spawner"
   },
+  "requirements": [
+    [
+      "destroy"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:combat"

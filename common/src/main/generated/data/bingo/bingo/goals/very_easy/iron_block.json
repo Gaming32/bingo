@@ -26,6 +26,11 @@
   "name": {
     "translate": "block.minecraft.iron_block"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ]

@@ -3,10 +3,7 @@
     "sleep": {
       "conditions": {
         "respawn": {
-          "bingo:dimension_tag": {
-            "expected": true,
-            "id": "bingo:nethers"
-          }
+          "dimension": "minecraft:the_nether"
         }
       },
       "trigger": "bingo:intentional_game_design"
@@ -23,6 +20,11 @@
   "name": {
     "translate": "bingo.goal.sleep_in_nether"
   },
+  "requirements": [
+    [
+      "sleep"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:nether",

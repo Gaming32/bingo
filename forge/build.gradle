@@ -83,8 +83,13 @@ publishing {
 }
 
 loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
     forge {
         mixinConfig "bingo-common.mixins.json"
         mixinConfig "bingo.mixins.json"
+
+        convertAccessWideners = true
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
     }
 }

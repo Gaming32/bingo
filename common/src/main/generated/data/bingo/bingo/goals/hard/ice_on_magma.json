@@ -58,6 +58,11 @@
   "name": {
     "translate": "bingo.goal.ice_on_magma"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:build",

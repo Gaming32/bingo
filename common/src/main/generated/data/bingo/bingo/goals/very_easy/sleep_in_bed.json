@@ -1,7 +1,6 @@
 {
   "criteria": {
     "sleep": {
-      "conditions": {},
       "trigger": "minecraft:slept_in_bed"
     }
   },
@@ -17,6 +16,11 @@
     "translate": "bingo.goal.sleep_in_bed"
   },
   "reactant": "sleep",
+  "requirements": [
+    [
+      "sleep"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:overworld"

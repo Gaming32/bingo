@@ -27,6 +27,11 @@
     "translate": "item.minecraft.milk_bucket"
   },
   "reactant": "use_buckets",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:overworld"

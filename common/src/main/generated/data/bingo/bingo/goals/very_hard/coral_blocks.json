@@ -47,6 +47,11 @@
   "name": {
     "translate": "bingo.goal.coral_blocks"
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item",
     "bingo:rare_biome",

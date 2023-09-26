@@ -10,7 +10,6 @@
       "trigger": "minecraft:consume_item"
     },
     "filled_bucket": {
-      "conditions": {},
       "trigger": "minecraft:filled_bucket"
     },
     "placed_block": {

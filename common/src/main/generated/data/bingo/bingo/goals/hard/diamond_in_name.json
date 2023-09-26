@@ -47,6 +47,11 @@
       }
     ]
   },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
   "tags": [
     "bingo:item"
   ],

@@ -23,6 +23,11 @@
   "name": {
     "translate": "bingo.goal.break_hoe"
   },
+  "requirements": [
+    [
+      "break"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:stat"

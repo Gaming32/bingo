@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;
@@ -98,8 +99,8 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
             return this;
         }
 
-        public TriggerInstance build() {
-            return new TriggerInstance(player, item, hand);
+        public Criterion<TriggerInstance> build() {
+            return BingoTriggers.TRY_USE_ITEM.createCriterion(new TriggerInstance(player, item, hand));
         }
     }
 }

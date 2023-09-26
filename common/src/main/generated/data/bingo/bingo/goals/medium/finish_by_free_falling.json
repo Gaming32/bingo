@@ -44,6 +44,11 @@
   "name": {
     "translate": "bingo.goal.finish_by_free_falling"
   },
+  "requirements": [
+    [
+      "free_fall"
+    ]
+  ],
   "tags": [
     "bingo:action",
     "bingo:build",
