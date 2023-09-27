@@ -323,10 +323,15 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM, BingoTags.COMBAT, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
             .name(Component.translatable("bingo.goal.pillager_crossbow"))
             .icon(Items.CROSSBOW));
-        ItemStack ominousBanner = Raid.getLeaderBannerInstance();
-        addGoal(obtainItemGoal(id("ominous_banner"), ominousBanner, ItemPredicate.Builder.item().of(ominousBanner.getItem()).hasNbt(ominousBanner.getTag()))
+        final ItemStack ominousBanner = simplifyBlockEntityStackData(Raid.getLeaderBannerInstance());
+        addGoal(
+            obtainItemGoal(
+                id("ominous_banner"),
+                ominousBanner,
+                ItemPredicate.Builder.item().of(ominousBanner.getItem()).hasNbt(ominousBanner.getTag())
+            )
             .antisynergy("ominous_banner")
-            .name(ominousBanner.getHoverName())
+            .name(Component.translatable("block.minecraft.ominous_banner"))
             .reactant("pacifist")
             .tags(BingoTags.COMBAT, BingoTags.OVERWORLD));
         // TODO: gain a fox's trust

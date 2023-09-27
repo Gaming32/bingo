@@ -293,4 +293,17 @@ public abstract class DifficultyGoalProvider {
                 .toArray(Item[]::new)
         );
     }
+
+    protected static ItemStack simplifyBlockEntityStackData(ItemStack stack) {
+        if (stack.hasTag()) {
+            assert stack.getTag() != null;
+            for (final String key : stack.getTag().getAllKeys().toArray(String[]::new)) {
+                if (!key.equals(BlockItem.BLOCK_ENTITY_TAG) && !key.equals(BlockItem.BLOCK_STATE_TAG)) {
+                    stack.getTag().remove(key);
+                }
+            }
+            stack.getTag().getCompound(BlockItem.BLOCK_ENTITY_TAG).remove("id");
+        }
+        return stack;
+    }
 }
