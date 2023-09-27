@@ -6,16 +6,8 @@
   },
   "difficulty": 0,
   "icon": {
-    "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:white_bed",
-      "Properties": {
-        "facing": "north",
-        "occupied": "false",
-        "part": "foot"
-      }
-    },
-    "item": {
+    "type": "bingo:item",
+    "value": {
       "Count": 1,
       "id": "minecraft:white_bed"
     }

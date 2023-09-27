@@ -209,7 +209,8 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .criterion("bounce", BingoTriggers.bounceOnBed())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.bounce_on_bed"))
-            .icon(Blocks.WHITE_BED));
+            .icon(Items.WHITE_BED)
+        );
         addGoal(BingoGoal.builder(id("fill_composter"))
             .criterion("fill", CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
                 new ItemUsedOnLocationTrigger.TriggerInstance(
