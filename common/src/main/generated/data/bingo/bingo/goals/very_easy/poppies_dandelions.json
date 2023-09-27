@@ -22,32 +22,29 @@
     }
   },
   "criteria": {
-    "dandelion": {
-      "conditions": {
-        "items": [
-          {
-            "count": {
-              "bingo_type": "bingo:sub",
-              "value": "dandelions_count"
-            },
-            "items": [
-              "minecraft:dandelion"
-            ]
-          }
-        ]
-      },
-      "trigger": "bingo:total_count_inventory_changed"
-    },
     "poppy": {
       "conditions": {
         "items": [
           {
             "count": {
-              "bingo_type": "bingo:sub",
-              "value": "poppies_count"
+              "min": {
+                "bingo_type": "bingo:sub",
+                "value": "poppies_count"
+              }
             },
             "items": [
               "minecraft:poppy"
+            ]
+          },
+          {
+            "count": {
+              "min": {
+                "bingo_type": "bingo:sub",
+                "value": "dandelions_count"
+              }
+            },
+            "items": [
+              "minecraft:dandelion"
             ]
           }
         ]
@@ -113,9 +110,6 @@
   "requirements": [
     [
       "poppy"
-    ],
-    [
-      "dandelion"
     ]
   ],
   "tags": [

@@ -70,10 +70,16 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("poppies_dandelions"))
             .sub("poppies_count", BingoSub.random(5, 25))
             .sub("dandelions_count", BingoSub.random(5, 25))
-            .criterion("poppy", TotalCountInventoryChangeTrigger.builder().items(ItemPredicate.Builder.item().of(Items.POPPY).withCount(MinMaxBounds.Ints.exactly(0)).build()).build(),
-                subber -> subber.sub("conditions.items.0.count", "poppies_count"))
-            .criterion("dandelion", TotalCountInventoryChangeTrigger.builder().items(ItemPredicate.Builder.item().of(Items.DANDELION).withCount(MinMaxBounds.Ints.exactly(0)).build()).build(),
-                subber -> subber.sub("conditions.items.0.count", "dandelions_count"))
+            .criterion("poppy", TotalCountInventoryChangeTrigger.builder()
+                .items(
+                    ItemPredicate.Builder.item().of(Items.POPPY).withCount(MinMaxBounds.Ints.atLeast(0)).build(),
+                    ItemPredicate.Builder.item().of(Items.DANDELION).withCount(MinMaxBounds.Ints.atLeast(0)).build()
+                )
+                .build(),
+                subber -> subber
+                    .sub("conditions.items.0.count.min", "poppies_count")
+                    .sub("conditions.items.1.count.min", "dandelions_count")
+            )
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.and",
                     Component.translatable("bingo.count", 0, Items.POPPY.getDescription()),
