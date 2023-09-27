@@ -29,7 +29,7 @@
     }
   },
   "name": {
-    "translate": "bingo.goal.whilst_trying_to_escape"
+    "translate": "bingo.goal.while_trying_to_escape"
   },
   "requirements": [
     [
@@ -40,6 +40,6 @@
     "bingo:action"
   ],
   "tooltip": {
-    "translate": "bingo.goal.whilst_trying_to_escape.tooltip"
+    "translate": "bingo.goal.while_trying_to_escape.tooltip"
   }
 }

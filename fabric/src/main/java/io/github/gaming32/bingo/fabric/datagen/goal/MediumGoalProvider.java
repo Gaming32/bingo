@@ -151,7 +151,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION)
             .name(Component.translatable("bingo.goal.kill_self_with_arrow"))
             .icon(Items.ARROW));
-        addGoal(BingoGoal.builder(id("whilst_trying_to_escape"))
+        addGoal(BingoGoal.builder(id("while_trying_to_escape"))
             .criterion("die", EntityKilledPlayerTrigger.builder()
                 .sourceEntity(ContextAwarePredicate.create(
                     new LootItemEntityPropertyCondition(Optional.empty(), LootContext.EntityTarget.THIS),
@@ -162,8 +162,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 .build()
             )
             .tags(BingoTags.ACTION)
-            .name(Component.translatable("bingo.goal.whilst_trying_to_escape"))
-            .tooltip(Component.translatable("bingo.goal.whilst_trying_to_escape.tooltip"))
+            .name(Component.translatable("bingo.goal.while_trying_to_escape"))
+            .tooltip(Component.translatable("bingo.goal.while_trying_to_escape.tooltip"))
             .icon(Items.ZOMBIE_HEAD)
         );
         addGoal(BingoGoal.builder(id("finish_on_top"))
