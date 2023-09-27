@@ -55,7 +55,8 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .antisynergy("fish_bucket")
             .reactant("use_buckets")
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD)
-            .infrequency(4));
+            .infrequency(4)
+        );
         addGoal(obtainItemGoal(id("andesite"), Items.ANDESITE, 16, 32)
             .infrequency(3)
             .tags(BingoTags.OVERWORLD));
@@ -70,7 +71,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("poppies_dandelions"))
             .sub("poppies_count", BingoSub.random(5, 25))
             .sub("dandelions_count", BingoSub.random(5, 25))
-            .criterion("poppy", TotalCountInventoryChangeTrigger.builder()
+            .criterion("flowers", TotalCountInventoryChangeTrigger.builder()
                 .items(
                     ItemPredicate.Builder.item().of(Items.POPPY).withCount(MinMaxBounds.Ints.atLeast(0)).build(),
                     ItemPredicate.Builder.item().of(Items.DANDELION).withCount(MinMaxBounds.Ints.atLeast(0)).build()

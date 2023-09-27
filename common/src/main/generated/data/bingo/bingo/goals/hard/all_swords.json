@@ -40,14 +40,69 @@
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": 1,
-      "id": "minecraft:netherite_sword",
-      "tag": {
-        "Damage": 0
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:wooden_sword",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:stone_sword",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:golden_sword",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:iron_sword",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_sword",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:netherite_sword",
+          "tag": {
+            "Damage": 0
+          }
+        }
       }
-    }
+    ]
   },
   "name": {
     "translate": "bingo.goal.all_somethings",

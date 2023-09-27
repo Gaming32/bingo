@@ -22,7 +22,7 @@
     }
   },
   "criteria": {
-    "poppy": {
+    "flowers": {
       "conditions": {
         "items": [
           {
@@ -109,7 +109,7 @@
   },
   "requirements": [
     [
-      "poppy"
+      "flowers"
     ]
   ],
   "tags": [

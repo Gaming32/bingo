@@ -1,9 +1,12 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
+import com.google.common.collect.ImmutableList;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.icons.CycleIcon;
+import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
@@ -11,7 +14,6 @@ import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -32,6 +34,7 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -114,10 +117,17 @@ public abstract class DifficultyGoalProvider {
             .icon(icon, subber -> subber.sub("value.Count", "count"));
     }
 
+    @SuppressWarnings("unchecked")
     protected <T extends Item> BingoGoal.Builder allSomethingsGoal(String what, Class<T> clazz, Predicate<T> predicate) {
+        final List<T> items = BuiltInRegistries.ITEM.stream()
+            .filter(clazz::isInstance)
+            .map(i -> (T)i)
+            .filter(predicate)
+            .toList();
         return BingoGoal.builder(id("all_" + what))
-            .criterion("obtain", allItemsOfType(clazz, predicate))
+            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(items.toArray(Item[]::new)))
             .tags(BingoTags.ITEM, BingoTags.NETHER)
+            .icon(new CycleIcon(items.stream().map(ItemIcon::ofItem).collect(ImmutableList.toImmutableList())))
             .name(Component.translatable(
                 "bingo.goal.all_somethings",
                 Component.translatable("bingo.goal.all_somethings." + what)
@@ -279,19 +289,6 @@ public abstract class DifficultyGoalProvider {
                     ))
                 ))
             )));
-    }
-
-    @SuppressWarnings("unchecked")
-    protected static <T extends Item> Criterion<InventoryChangeTrigger.TriggerInstance> allItemsOfType(
-        Class<T> clazz, Predicate<T> predicate
-    ) {
-        return InventoryChangeTrigger.TriggerInstance.hasItems(
-            BuiltInRegistries.ITEM.stream()
-                .filter(clazz::isInstance)
-                .map(i -> (T)i)
-                .filter(predicate)
-                .toArray(Item[]::new)
-        );
     }
 
     protected static ItemStack simplifyBlockEntityStackData(ItemStack stack) {

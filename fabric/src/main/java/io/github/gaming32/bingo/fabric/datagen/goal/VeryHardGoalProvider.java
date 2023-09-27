@@ -55,9 +55,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.MUNDANE),
                 subber -> subber.sub("value.Count", "count")
             ));
-        addGoal(allSomethingsGoal("chestplates", ArmorItem.class, i -> i.getType() == ArmorItem.Type.CHESTPLATE)
-            .icon(Items.NETHERITE_CHESTPLATE)
-        );
+        addGoal(allSomethingsGoal("chestplates", ArmorItem.class, i -> i.getType() == ArmorItem.Type.CHESTPLATE));
         addGoal(obtainItemGoal(
             id("any_head"),
             new ItemStack(Items.ZOMBIE_HEAD),

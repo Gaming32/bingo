@@ -348,12 +348,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.pop_totem"))
             .icon(Items.TOTEM_OF_UNDYING)
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD));
-        addGoal(allSomethingsGoal("swords", SwordItem.class, i -> true)
-            .icon(Items.NETHERITE_SWORD)
-        );
-        addGoal(allSomethingsGoal("pickaxes", PickaxeItem.class, i -> true)
-            .icon(Items.NETHERITE_PICKAXE)
-        );
+        addGoal(allSomethingsGoal("swords", SwordItem.class, i -> true));
+        addGoal(allSomethingsGoal("pickaxes", PickaxeItem.class, i -> true));
         addGoal(BingoGoal.builder(id("pacifist"))
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity())
             .tags(BingoTags.NEVER, BingoTags.STAT)

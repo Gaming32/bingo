@@ -40,14 +40,69 @@
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": 1,
-      "id": "minecraft:netherite_pickaxe",
-      "tag": {
-        "Damage": 0
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:wooden_pickaxe",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:stone_pickaxe",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:golden_pickaxe",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:iron_pickaxe",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_pickaxe",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:netherite_pickaxe",
+          "tag": {
+            "Damage": 0
+          }
+        }
       }
-    }
+    ]
   },
   "name": {
     "translate": "bingo.goal.all_somethings",
