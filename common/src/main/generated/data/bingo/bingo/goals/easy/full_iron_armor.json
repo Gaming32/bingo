@@ -30,14 +30,49 @@
   },
   "difficulty": 1,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": 1,
-      "id": "minecraft:iron_helmet",
-      "tag": {
-        "Damage": 0
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:iron_helmet",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:iron_chestplate",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:iron_leggings",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:iron_boots",
+          "tag": {
+            "Damage": 0
+          }
+        }
       }
-    }
+    ]
   },
   "infrequency": 3,
   "name": {

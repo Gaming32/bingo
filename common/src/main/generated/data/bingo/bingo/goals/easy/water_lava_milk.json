@@ -31,11 +31,30 @@
   },
   "difficulty": 1,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": 1,
-      "id": "minecraft:lava_bucket"
-    }
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:water_bucket"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:milk_bucket"
+        }
+      }
+    ]
   },
   "name": {
     "translate": "bingo.three",

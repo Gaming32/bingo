@@ -4,6 +4,8 @@ import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
 import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.icons.CycleIcon;
+import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
@@ -154,7 +156,13 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .infrequency(3)
             .name(Component.translatable("bingo.goal.full_iron_armor"))
-            .icon(Items.IRON_HELMET));
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.IRON_HELMET),
+                ItemIcon.ofItem(Items.IRON_CHESTPLATE),
+                ItemIcon.ofItem(Items.IRON_LEGGINGS),
+                ItemIcon.ofItem(Items.IRON_BOOTS)
+            ))
+        );
         addGoal(BingoGoal.builder(id("full_leather_armor"))
             .criterion("armor", InventoryChangeTrigger.TriggerInstance.hasItems(
                 Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS
@@ -162,7 +170,13 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .infrequency(3)
             .name(Component.translatable("bingo.goal.full_leather_armor"))
-            .icon(Items.LEATHER_HELMET));
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.LEATHER_HELMET),
+                ItemIcon.ofItem(Items.LEATHER_CHESTPLATE),
+                ItemIcon.ofItem(Items.LEATHER_LEGGINGS),
+                ItemIcon.ofItem(Items.LEATHER_BOOTS)
+            ))
+        );
         // TODO: fill cauldron with water
         addGoal(BingoGoal.builder(id("complete_map"))
             .criterion("complete", CompleteMapTrigger.TriggerInstance.completeMap())
@@ -243,7 +257,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 Items.LAVA_BUCKET.getDescription(),
                 Items.MILK_BUCKET.getDescription()
             ))
-            .icon(Items.LAVA_BUCKET)
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.WATER_BUCKET),
+                ItemIcon.ofItem(Items.LAVA_BUCKET),
+                ItemIcon.ofItem(Items.MILK_BUCKET)
+            ))
             .antisynergy("bucket_types", "water_bucket", "lava_bucket", "milk_bucket")
             .reactant("use_buckets"));
         // TODO: different flowers
@@ -431,7 +449,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                     Optional.empty()
                 )
             ))
-            .tags(BingoTags.ACTION, BingoTags.OVERWORLD) // TODO
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.milk_cure"))
             .icon(Items.MILK_BUCKET)
         );

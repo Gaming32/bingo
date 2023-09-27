@@ -45,8 +45,8 @@ ee07dab944e0408cff3ad668efb093c2d59c23d3 data/bingo/bingo/goals/easy/feather.jso
 bd1bfad3c720fa8542788090218b1c6e45e0e8cc data/bingo/bingo/goals/easy/finish_at_spawn.json
 5ce7fe6e783bba8d89b655a6e172e564e3d77ce3 data/bingo/bingo/goals/easy/fish_treasure_junk.json
 fb0f1e07c3e6868f5055d3204eb960c271b9dcc9 data/bingo/bingo/goals/easy/flint.json
-92ff373827b6e8de47f1e2d8dc35988f8e318daf data/bingo/bingo/goals/easy/full_iron_armor.json
-61d4f21822dba36fc42a0266f486347418fca114 data/bingo/bingo/goals/easy/full_leather_armor.json
+c0abda7b50f61551d830ea17665503a7bb26a2a5 data/bingo/bingo/goals/easy/full_iron_armor.json
+7ef6a87d1b347bef189a1700f22eff5b1e4c61ba data/bingo/bingo/goals/easy/full_leather_armor.json
 3a831160d15e13c82507258726b0c2a00c39924f data/bingo/bingo/goals/easy/gold_block.json
 3ce6625728d7a5dd709b1d147a80519cea11a29e data/bingo/bingo/goals/easy/gold_nugget.json
 0a094590c2c10d4d8ef0361268a5d9d860040bce data/bingo/bingo/goals/easy/golden_apple.json
@@ -122,7 +122,7 @@ f1beddf0a23a4fad00c5cfcd84d0014fb6d264e8 data/bingo/bingo/goals/easy/sweet_berri
 de5b46a76a281375f13526111fd1bf2cf1f02e4d data/bingo/bingo/goals/easy/tnt.json
 76861894d59fcc751374f036fc6728e6f41b1a80 data/bingo/bingo/goals/easy/tropical_fish.json
 0b42c28af3b75e1b7acf8283191c33814a3e16fc data/bingo/bingo/goals/easy/vine.json
-7b13e87545a92d4811c9be5c604936f4db1dad3f data/bingo/bingo/goals/easy/water_lava_milk.json
+6f8430b36414af16184b2f80fc2bc60d6cc18c3c data/bingo/bingo/goals/easy/water_lava_milk.json
 35077c96b7e3bdc006ce45b546fa58d3d9e24b33 data/bingo/bingo/goals/easy/writable_book.json
 8328dded5d38099e4dcefe3721149532d7d57889 data/bingo/bingo/goals/easy/yellow_dye.json
 f9382bd438c6f770bd0a54bd24d683b10325a47e data/bingo/bingo/goals/hard/6x6scaffolding.json

@@ -30,14 +30,49 @@
   },
   "difficulty": 1,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": 1,
-      "id": "minecraft:leather_helmet",
-      "tag": {
-        "Damage": 0
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:leather_helmet",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:leather_chestplate",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:leather_leggings",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:leather_boots",
+          "tag": {
+            "Damage": 0
+          }
+        }
       }
-    }
+    ]
   },
   "infrequency": 3,
   "name": {
