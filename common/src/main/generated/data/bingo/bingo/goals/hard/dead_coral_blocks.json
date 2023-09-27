@@ -25,14 +25,12 @@
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": {
-        "bingo_type": "bingo:sub",
-        "value": "count"
-      },
-      "id": "minecraft:dead_brain_coral_block"
-    }
+    "type": "bingo:item_tag_cycle",
+    "count": {
+      "bingo_type": "bingo:sub",
+      "value": "count"
+    },
+    "tag": "bingo:dead_coral_blocks"
   },
   "name": {
     "translate": "bingo.goal.dead_coral_blocks",

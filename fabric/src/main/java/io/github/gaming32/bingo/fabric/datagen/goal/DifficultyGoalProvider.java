@@ -7,6 +7,7 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
+import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
@@ -135,11 +136,7 @@ public abstract class DifficultyGoalProvider {
             .tooltip(Component.translatable("bingo.goal.all_somethings.tooltip"));
     }
 
-    protected static BingoGoal.Builder obtainSomeItemsFromTag(ResourceLocation id, ItemLike icon, TagKey<Item> tag, String translationKey, int minCount, int maxCount) {
-        return obtainSomeItemsFromTag(id, new ItemStack(icon), tag, translationKey, minCount, maxCount);
-    }
-
-    protected static BingoGoal.Builder obtainSomeItemsFromTag(ResourceLocation id, ItemStack icon, TagKey<Item> tag, String translationKey, int minCount, int maxCount) {
+    protected static BingoGoal.Builder obtainSomeItemsFromTag(ResourceLocation id, TagKey<Item> tag, String translationKey, int minCount, int maxCount) {
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minCount, maxCount))
             .criterion(
@@ -149,7 +146,7 @@ public abstract class DifficultyGoalProvider {
             )
             .tags(BingoTags.ITEM)
             .name(Component.translatable(translationKey, 0), subber -> subber.sub("with.0", "count"))
-            .icon(icon, subber -> subber.sub("value.Count", "count"));
+            .icon(new ItemTagCycleIcon(tag), subber -> subber.sub("count", "count"));
     }
 
     protected static BingoGoal.Builder obtainLevelsGoal(ResourceLocation id, int minLevels, int maxLevels) {

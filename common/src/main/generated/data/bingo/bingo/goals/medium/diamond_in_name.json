@@ -26,17 +26,12 @@
   },
   "difficulty": 2,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": {
-        "bingo_type": "bingo:sub",
-        "value": "count"
-      },
-      "id": "minecraft:diamond_helmet",
-      "tag": {
-        "Damage": 0
-      }
-    }
+    "type": "bingo:item_tag_cycle",
+    "count": {
+      "bingo_type": "bingo:sub",
+      "value": "count"
+    },
+    "tag": "bingo:diamond_in_name"
   },
   "name": {
     "translate": "bingo.goal.diamond_in_name",

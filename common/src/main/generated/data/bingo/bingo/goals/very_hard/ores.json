@@ -25,14 +25,12 @@
   },
   "difficulty": 4,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": {
-        "bingo_type": "bingo:sub",
-        "value": "count"
-      },
-      "id": "minecraft:diamond_ore"
-    }
+    "type": "bingo:item_tag_cycle",
+    "count": {
+      "bingo_type": "bingo:sub",
+      "value": "count"
+    },
+    "tag": "bingo:ores"
   },
   "name": {
     "translate": "bingo.goal.ores",

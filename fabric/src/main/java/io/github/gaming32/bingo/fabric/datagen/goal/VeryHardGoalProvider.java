@@ -35,7 +35,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
 
     @Override
     public void addGoals() {
-        addGoal(obtainSomeItemsFromTag(id("ores"), Items.DIAMOND_ORE, BingoItemTags.ORES, "bingo.goal.ores", 5, 7)
+        addGoal(obtainSomeItemsFromTag(id("ores"), BingoItemTags.ORES, "bingo.goal.ores", 5, 7)
             .tooltip(Component.translatable("bingo.goal.ores.tooltip"))
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("different_potions"))

@@ -3,10 +3,7 @@ package io.github.gaming32.bingo.client.icons;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import io.github.gaming32.bingo.data.icons.BlockIcon;
-import io.github.gaming32.bingo.data.icons.CycleIcon;
-import io.github.gaming32.bingo.data.icons.GoalIcon;
-import io.github.gaming32.bingo.data.icons.GoalIconType;
+import io.github.gaming32.bingo.data.icons.*;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -19,12 +16,18 @@ import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DefaultIconRenderers {
     public static void setup() {
@@ -32,6 +35,7 @@ public class DefaultIconRenderers {
         IconRenderers.register(GoalIconType.ITEM, (icon, graphics, x, y) -> graphics.renderFakeItem(icon.item(), x, y));
         IconRenderers.register(GoalIconType.BLOCK, new BlockIconRenderer());
         IconRenderers.register(GoalIconType.CYCLE, new CycleIconRenderer());
+        IconRenderers.register(GoalIconType.ITEM_TAG_CYCLE, new ItemTagCycleIconRenderer());
     }
 
     private static class BlockIconRenderer implements IconRenderer<BlockIcon> {
@@ -93,7 +97,7 @@ public class DefaultIconRenderers {
     }
 
     private static class CycleIconRenderer implements IconRenderer<CycleIcon> {
-        private static final long TIME_PER_ICON = 2000;
+        public static final long TIME_PER_ICON = 2000;
 
         @Override
         public void render(CycleIcon icon, GuiGraphics graphics, int x, int y) {
@@ -113,6 +117,29 @@ public class DefaultIconRenderers {
 
         private static GoalIcon getIcon(List<GoalIcon> icons) {
             return icons.get((int)((Util.getMillis() / TIME_PER_ICON) % icons.size()));
+        }
+    }
+
+    private static class ItemTagCycleIconRenderer implements IconRenderer<ItemTagCycleIcon> {
+        @Override
+        public void render(ItemTagCycleIcon icon, GuiGraphics graphics, int x, int y) {
+            final Optional<HolderSet.Named<Item>> items = BuiltInRegistries.ITEM.getTag(icon.tag());
+            if (items.isEmpty()) return;
+            graphics.renderFakeItem(new ItemStack(getIcon(items.get())), x, y);
+        }
+
+        @Override
+        public void renderDecorations(ItemTagCycleIcon icon, Font font, GuiGraphics graphics, int x, int y) {
+            if (icon.count() == 1) return;
+            final String text = Integer.toString(icon.count());
+            graphics.pose().pushPose();
+            graphics.pose().translate(0f, 0f, 200f);
+            graphics.drawString(font, text, x + 19 - 2 - font.width(text), y + 6 + 3, 0xffffff, true);
+            graphics.pose().popPose();
+        }
+
+        private static Holder<Item> getIcon(HolderSet.Named<Item> icons) {
+            return icons.get((int)((Util.getMillis() / CycleIconRenderer.TIME_PER_ICON) % icons.size()));
         }
     }
 }

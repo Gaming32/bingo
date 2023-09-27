@@ -80,7 +80,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .name(Component.translatable("bingo.goal.listen_to_music"))
             .icon(Items.JUKEBOX));
-        addGoal(obtainSomeItemsFromTag(id("flowers"), Items.AZURE_BLUET, BingoItemTags.FLOWERS, "bingo.goal.flowers", 11, 14)
+        addGoal(obtainSomeItemsFromTag(id("flowers"), BingoItemTags.FLOWERS, "bingo.goal.flowers", 11, 14)
             .antisynergy("flowers")
             .infrequency(3)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
@@ -121,21 +121,21 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             ))
             .icon(Blocks.SPAWNER)
         );
-        addGoal(obtainSomeItemsFromTag(id("wool"), Items.PURPLE_WOOL, ItemTags.WOOL, "bingo.goal.wool", 12, 14)
+        addGoal(obtainSomeItemsFromTag(id("wool"), ItemTags.WOOL, "bingo.goal.wool", 12, 14)
             .antisynergy("wool_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("terracotta"), Items.PURPLE_TERRACOTTA, ItemTags.TERRACOTTA, "bingo.goal.terracotta", 12, 14)
+        addGoal(obtainSomeItemsFromTag(id("terracotta"), ItemTags.TERRACOTTA, "bingo.goal.terracotta", 12, 14)
             .reactant("use_furnace")
             .antisynergy("terracotta_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("glazed_terracotta"), Items.PURPLE_GLAZED_TERRACOTTA, BingoItemTags.GLAZED_TERRACOTTA, "bingo.goal.glazed_terracotta", 11, 14)
+        addGoal(obtainSomeItemsFromTag(id("glazed_terracotta"), BingoItemTags.GLAZED_TERRACOTTA, "bingo.goal.glazed_terracotta", 11, 14)
             .reactant("use_furnace")
             .antisynergy("glazed_terracotta_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("concrete"), Items.PURPLE_CONCRETE, BingoItemTags.CONCRETE, "bingo.goal.concrete", 12, 14)
+        addGoal(obtainSomeItemsFromTag(id("concrete"), BingoItemTags.CONCRETE, "bingo.goal.concrete", 12, 14)
             .antisynergy("concrete_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
@@ -256,7 +256,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(Items.BUCKET));
         addGoal(obtainItemGoal(id("conduit"), Items.CONDUIT)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("dead_coral_blocks"), Items.DEAD_BRAIN_CORAL_BLOCK, BingoItemTags.DEAD_CORAL_BLOCKS, "bingo.goal.dead_coral_blocks", 2, 5)
+        addGoal(obtainSomeItemsFromTag(id("dead_coral_blocks"), BingoItemTags.DEAD_CORAL_BLOCKS, "bingo.goal.dead_coral_blocks", 2, 5)
             .tags(BingoTags.OCEAN, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("sea_pickle"), Items.SEA_PICKLE, 16, 32)
             .tags(BingoTags.OCEAN, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
@@ -300,7 +300,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .reactant("axe_use")
             .infrequency(4)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("diamond_in_name"), Items.DIAMOND_HELMET, BingoItemTags.DIAMOND_IN_NAME, "bingo.goal.diamond_in_name", 5, 7)
+        addGoal(obtainSomeItemsFromTag(id("diamond_in_name"), BingoItemTags.DIAMOND_IN_NAME, "bingo.goal.diamond_in_name", 5, 7)
             .antisynergy("diamond_items")
             .tooltip(Component.translatable("bingo.goal.diamond_in_name.tooltip")));
         addGoal(BingoGoal.builder(id("destroy_spawner"))

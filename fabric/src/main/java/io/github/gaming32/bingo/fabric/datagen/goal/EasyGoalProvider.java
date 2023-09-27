@@ -48,7 +48,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.grow_tree_in_nether"))
             .tooltip(Component.translatable("bingo.goal.grow_tree_in_nether.tooltip"))
             .icon(Items.BONE_MEAL));
-        addGoal(obtainSomeItemsFromTag(id("colors_of_terracotta"), Items.TERRACOTTA, ItemTags.TERRACOTTA, "bingo.goal.colors_of_terracotta", 4, 7)
+        addGoal(obtainSomeItemsFromTag(id("colors_of_terracotta"), ItemTags.TERRACOTTA, "bingo.goal.colors_of_terracotta", 4, 7)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD)
             .reactant("use_furnace")
             .antisynergy("terracotta_color")

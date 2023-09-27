@@ -20,6 +20,7 @@ public interface GoalIconType<I extends GoalIcon> {
     RegistrySupplier<GoalIconType<ItemIcon>> ITEM = register("item", ItemIcon.CODEC);
     RegistrySupplier<GoalIconType<BlockIcon>> BLOCK = register("block", BlockIcon.CODEC);
     RegistrySupplier<GoalIconType<CycleIcon>> CYCLE = register("cycle", CycleIcon.CODEC);
+    RegistrySupplier<GoalIconType<ItemTagCycleIcon>> ITEM_TAG_CYCLE = register("item_tag_cycle", ItemTagCycleIcon.CODEC);
 
     Codec<I> codec();
 
