@@ -21,7 +21,7 @@
     "block": {
       "Name": "minecraft:composter",
       "Properties": {
-        "level": "0"
+        "level": "8"
       }
     },
     "item": {

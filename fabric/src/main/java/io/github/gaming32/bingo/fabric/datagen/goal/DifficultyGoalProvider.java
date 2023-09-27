@@ -6,6 +6,7 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
+import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
@@ -71,11 +72,15 @@ public abstract class DifficultyGoalProvider {
             .name(item.asItem().getDescription());
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike icon, ItemPredicate.Builder item) {
-        return obtainItemGoal(id, new ItemStack(icon), item);
+    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike icon, ItemPredicate.Builder... oneOfThese) {
+        return obtainItemGoal(id, ItemIcon.ofItem(icon), oneOfThese);
     }
 
     protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemStack icon, ItemPredicate.Builder... oneOfThese) {
+        return obtainItemGoal(id, new ItemIcon(icon), oneOfThese);
+    }
+
+    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, GoalIcon icon, ItemPredicate.Builder... oneOfThese) {
         BingoGoal.Builder builder = BingoGoal.builder(id);
         if (oneOfThese.length == 1) {
             builder.criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(oneOfThese[0].build()).build());

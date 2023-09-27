@@ -31,14 +31,12 @@
   },
   "difficulty": 0,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": {
-        "bingo_type": "bingo:sub",
-        "value": "count"
-      },
-      "id": "minecraft:oak_leaves"
-    }
+    "type": "bingo:item_tag_cycle",
+    "count": {
+      "bingo_type": "bingo:sub",
+      "value": "count"
+    },
+    "tag": "minecraft:leaves"
   },
   "name": {
     "translate": "bingo.goal.leaves",

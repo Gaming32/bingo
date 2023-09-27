@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
+import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
@@ -49,7 +50,12 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .reactant("use_buckets")
             .tags(BingoTags.OVERWORLD)
             .infrequency(4));
-        addGoal(obtainItemGoal(id("fish_bucket"), Items.TROPICAL_FISH_BUCKET, ItemPredicate.Builder.item().of(BingoItemTags.FISH_BUCKETS))
+        addGoal(
+            obtainItemGoal(
+                id("fish_bucket"),
+                new ItemTagCycleIcon(BingoItemTags.FISH_BUCKETS),
+                ItemPredicate.Builder.item().of(BingoItemTags.FISH_BUCKETS)
+            )
             .name(Component.translatable("bingo.goal.fish_bucket"))
             .tooltip(Component.translatable("bingo.goal.fish_bucket.tooltip", Component.translatable("advancements.husbandry.tactical_fishing.title")))
             .antisynergy("fish_bucket")
@@ -95,8 +101,10 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("leaves"), Items.OAK_LEAVES, ItemPredicate.Builder.item().of(ItemTags.LEAVES), 32, 64)
+            .tags(BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.leaves", 0), subber -> subber.sub("with.0", "count"))
-            .tags(BingoTags.OVERWORLD));
+            .icon(new ItemTagCycleIcon(ItemTags.LEAVES), subber -> subber.sub("count", "count"))
+        );
         addGoal(blockCubeGoal(id("leaf_cube"), Blocks.OAK_LEAVES, BlockTags.LEAVES, Component.translatable("bingo.goal.cube.leaf")));
         // TODO: colors of wool
         addGoal(obtainItemGoal(id("snowball"), Items.SNOWBALL, 8, 16)
@@ -233,7 +241,8 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.fill_composter"))
             .tooltip(Component.translatable("bingo.goal.fill_composter.tooltip"))
             .tags(BingoTags.ACTION)
-            .icon(Blocks.COMPOSTER));
+            .icon(Blocks.COMPOSTER.defaultBlockState().setValue(ComposterBlock.LEVEL, 8))
+        );
 
         for (String woodType : List.of("oak", "spruce", "birch", "dark_oak", "acacia", "cherry")) {
             Item planksItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_planks"));
