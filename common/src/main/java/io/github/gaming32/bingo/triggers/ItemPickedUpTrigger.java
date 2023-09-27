@@ -53,7 +53,7 @@ public class ItemPickedUpTrigger extends SimpleCriterionTrigger<ItemPickedUpTrig
         public JsonObject serializeToJson() {
             final JsonObject result = super.serializeToJson();
             itemEntity.ifPresent(p -> result.add("item_entity", p.toJson()));
-            return super.serializeToJson();
+            return result;
         }
 
         public boolean matches(LootContext itemEntity) {

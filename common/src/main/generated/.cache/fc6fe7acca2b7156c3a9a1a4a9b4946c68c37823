@@ -199,7 +199,7 @@ ece5ec060814d9661e08509a2182a79b1ea4e095 data/bingo/bingo/goals/hard/villager_in
 dde525111e94c54221cbfce5103c0df3d75c6014 data/bingo/bingo/goals/hard/void_death_to_entity.json
 4f222676ff984b433e1a37c61748b146021880c4 data/bingo/bingo/goals/hard/wither_skeleton_skull.json
 cdbe60106e83fe4babf90d4c480f76fddd9b35e3 data/bingo/bingo/goals/hard/wool.json
-9191288cf3e9422c0f33b6925094431757bc17ed data/bingo/bingo/goals/hard/zombified_piglin_sword.json
+20e9dc1c9faaa50c7957a9550d2709cb46b19f9e data/bingo/bingo/goals/hard/zombified_piglin_sword.json
 98604c315a0ecd8a92add7c9f2d561befdd293d6 data/bingo/bingo/goals/medium/all_different_armor.json
 217eb0beae9a4aac378acb2adbb22ade8dca7565 data/bingo/bingo/goals/medium/anchor_in_overworld.json
 80a7e68041732b53f1f3e88ccd8f8d6e807f3aae data/bingo/bingo/goals/medium/bamboo.json
@@ -251,7 +251,7 @@ cc6bc5c2a38df1f7bac0af46073574770ec5d44c data/bingo/bingo/goals/medium/never_pla
 dee2103989560e152fd6c62c87b0966aeed90d2b data/bingo/bingo/goals/medium/obsidian.json
 9cd2e32b66b63b2691b0e51430e7b3583ff8d611 data/bingo/bingo/goals/medium/ominous_banner.json
 66ecbf27c75d07eef83bdfd62d62c66baef5b219 data/bingo/bingo/goals/medium/phantom_membrane.json
-fa60be0745b3828ce01f8c0a0be26ae4bb81171b data/bingo/bingo/goals/medium/pillager_crossbow.json
+7f1f04b957f2a2c50f3b2db6e21e7761be9b2255 data/bingo/bingo/goals/medium/pillager_crossbow.json
 e841d5e7eea6fe7473544d00f35d46b5ac2d293e data/bingo/bingo/goals/medium/poison_potion.json
 e8a34eec45572a7ddfbaefbad4a6a939c8a3a28b data/bingo/bingo/goals/medium/potted_cactus.json
 4ae03ff263127862ecad04318271ff50d2cca374 data/bingo/bingo/goals/medium/prismarine_crystals.json
@@ -264,7 +264,7 @@ e8a34eec45572a7ddfbaefbad4a6a939c8a3a28b data/bingo/bingo/goals/medium/potted_ca
 1858b5cfcc2fcb8d4085f996c3245dec1d143978 data/bingo/bingo/goals/medium/scute.json
 c397b395275f7f068c526f4a860633056619f750 data/bingo/bingo/goals/medium/seagrass.json
 fff9478fbf1bdde26f94e3351d1ff01dafb894f8 data/bingo/bingo/goals/medium/sized_nether_portal.json
-37c0c8fd0237327226bbfd9f105d0260fb91afc9 data/bingo/bingo/goals/medium/skeleton_bow.json
+0d3b1e174bcd3558bb42372010ff7f900c10e99d data/bingo/bingo/goals/medium/skeleton_bow.json
 c40399a19c9f7d7d2264eeaaf3d7a31a3933051b data/bingo/bingo/goals/medium/slime_ball.json
 94704c4901367fd653fcdb34a1df602fb3663995 data/bingo/bingo/goals/medium/slow_falling_potion.json
 eec93f7926264c135bf298f750121794535eebb4 data/bingo/bingo/goals/medium/slowness_potion.json
@@ -329,7 +329,7 @@ d0403ac697047ba0289e4aec388160eb8d266193 data/bingo/bingo/goals/very_easy/kelp.j
 f5f9780361f6ab4c6cd81ff811fcac54866fa099 data/bingo/bingo/goals/very_easy/levels.json
 4158fb906a6bf4f2229dea52ede6a89b3979737b data/bingo/bingo/goals/very_easy/milk_bucket.json
 e687c209a2f86f4ae33ca113ac33b023e8edfa86 data/bingo/bingo/goals/very_easy/never_fish.json
-60d7a13bf18c7b553a836e724b11294271f8184b data/bingo/bingo/goals/very_easy/never_pickup_crafting_tables.json
+21feb5b60a4327c5fad1270d3a55c443c62edb5c data/bingo/bingo/goals/very_easy/never_pickup_crafting_tables.json
 03461014c5e597c849659309e61380cfc672f1e3 data/bingo/bingo/goals/very_easy/note_block.json
 9e14f38b4ebd026144a169c9b67527d6ec06009d data/bingo/bingo/goals/very_easy/oak_log.json
 5a04cae1255dd979a892be716f65fca69f10ee29 data/bingo/bingo/goals/very_easy/oak_planks.json
@@ -380,7 +380,7 @@ b64590565f121ba2f7a9a3d43befa8fa27886042 data/bingo/bingo/goals/very_hard/kill_e
 51d2f4a667ace4194cf4bd239b9b8c760686ed57 data/bingo/bingo/goals/very_hard/mycelium.json
 df987096c1af3c7a195d23ffd6747422f2757309 data/bingo/bingo/goals/very_hard/netherite_block.json
 4906e582f6d942ec7ea3ad0a680a4e32375fe524 data/bingo/bingo/goals/very_hard/ores.json
-8c6e2e5122f125e027ad7109083a4f04c3317e9c data/bingo/bingo/goals/very_hard/panda_slime_ball.json
+31d6d3c614ec7600d2e9fa5498117acfcd15f29f data/bingo/bingo/goals/very_hard/panda_slime_ball.json
 8bf25d6e6ec89f4a681c4489efb4fbf9aa0d0e03 data/bingo/bingo/goals/very_hard/party_parrots.json
 df2aac6f50189f98400ac19251362b41538f92c6 data/bingo/bingo/goals/very_hard/shulker_in_overworld.json
 5b9310a4d325d302db2492e6ad464f61561ec9a8 data/bingo/bingo/goals/very_hard/sleep_in_mansion.json
