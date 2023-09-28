@@ -1,0 +1,31 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "minecraft:decorated_pot_sherds"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "tag": "minecraft:decorated_pot_sherds"
+  },
+  "name": {
+    "translate": "bingo.goal.pottery_sherd"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

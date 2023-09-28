@@ -6,6 +6,7 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
+import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
@@ -453,6 +454,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.milk_cure"))
             .icon(Items.MILK_BUCKET)
         );
+        addGoal(obtainItemGoal(id("pottery_sherd"), new ItemTagCycleIcon(ItemTags.DECORATED_POT_SHERDS), ItemPredicate.Builder.item().of(ItemTags.DECORATED_POT_SHERDS))
+            .tags(BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.pottery_sherd")));
     }
 
     private BingoGoal.Builder eatEntireCake() {
