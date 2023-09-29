@@ -35,14 +35,44 @@
   },
   "difficulty": 4,
   "icon": {
-    "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:brain_coral_block"
-    },
-    "item": {
-      "Count": 1,
-      "id": "minecraft:brain_coral_block"
-    }
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:tube_coral_block"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:brain_coral_block"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:bubble_coral_block"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:fire_coral_block"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:horn_coral_block"
+        }
+      }
+    ]
   },
   "name": {
     "translate": "bingo.goal.coral_blocks"

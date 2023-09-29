@@ -204,7 +204,7 @@ dde525111e94c54221cbfce5103c0df3d75c6014 data/bingo/bingo/goals/hard/void_death_
 98604c315a0ecd8a92add7c9f2d561befdd293d6 data/bingo/bingo/goals/medium/all_different_armor.json
 217eb0beae9a4aac378acb2adbb22ade8dca7565 data/bingo/bingo/goals/medium/anchor_in_overworld.json
 80a7e68041732b53f1f3e88ccd8f8d6e807f3aae data/bingo/bingo/goals/medium/bamboo.json
-bee75c7dc94eed02432fd2e4382a2b3179b5c8ea data/bingo/bingo/goals/medium/basic_mineral_blocks.json
+3426602684559d22c5ba9166eaee7d65f7d9fc35 data/bingo/bingo/goals/medium/basic_mineral_blocks.json
 6e90063fa84e5a957e3d9dfc88a249ea94fc60f4 data/bingo/bingo/goals/medium/bed_row.json
 7f0c7d400dc93563f5c3c8a2f59f91560436bd37 data/bingo/bingo/goals/medium/beetroot_soup.json
 b727849503ffd32c8df1a42e4635ccd4892ebaf6 data/bingo/bingo/goals/medium/blaze_rod.json
@@ -364,7 +364,7 @@ c895b1c3d0ad6029e0aa98d9ecb68bbd30682152 data/bingo/bingo/goals/very_easy/stripp
 75473ecfc945b61d8f34c4b75e2f5bf4da10d23b data/bingo/bingo/goals/very_easy/water_bucket.json
 88b4319cbe88004fc5a0b2f6501d835cc3c04805 data/bingo/bingo/goals/very_hard/all_chestplates.json
 ff05d5480679ffb4d0685bc56b5e22a35d196f08 data/bingo/bingo/goals/very_hard/all_diamond_craftables.json
-ba90635489a2cfe2b5c77b07df1b309442b13931 data/bingo/bingo/goals/very_hard/all_dyes.json
+b2aac44e6dc123676a76bc399ea2891cf0f8811e data/bingo/bingo/goals/very_hard/all_dyes.json
 bf412ba759b8a4da9e9da6c1e9961069d2904986 data/bingo/bingo/goals/very_hard/all_mineral_blocks.json
 295b36f53046958e438713dc16c0e460fcdc9bac data/bingo/bingo/goals/very_hard/any_head.json
 ddddfbb1b13d934a3180b771b17ecc46a7106a17 data/bingo/bingo/goals/very_hard/beacon_regen.json
@@ -373,7 +373,7 @@ ba75524d1309f3945af044566b244d47f5d72664 data/bingo/bingo/goals/very_hard/blue_i
 615d55b1121e13283b44e75b960bb7c2d619f12f data/bingo/bingo/goals/very_hard/complete_full_size_end_map.json
 b93a040f419cb295b1fa5fd7360c297af6e2b919 data/bingo/bingo/goals/very_hard/coral_blocks.json
 dc893999bf5b6cac7da1d691329c870bf9f7a99a data/bingo/bingo/goals/very_hard/diamond_block.json
-3871656e293b453ea5a0697891f30f97a8e53c31 data/bingo/bingo/goals/very_hard/different_potions.json
+b28aab87c114ef70f0e1ab40af49225909c177ef data/bingo/bingo/goals/very_hard/different_potions.json
 51dc5d84eb11028d39659bce426e447202890ee3 data/bingo/bingo/goals/very_hard/full_netherite_armor_and_tools.json
 0c7a56822f2b0dd589c9fd546343c205bd22b1ae data/bingo/bingo/goals/very_hard/full_power_conduit.json
 b64590565f121ba2f7a9a3d43befa8fa27886042 data/bingo/bingo/goals/very_hard/kill_enderman_with_endermites.json
@@ -385,7 +385,7 @@ df987096c1af3c7a195d23ffd6747422f2757309 data/bingo/bingo/goals/very_hard/nether
 8bf25d6e6ec89f4a681c4489efb4fbf9aa0d0e03 data/bingo/bingo/goals/very_hard/party_parrots.json
 df2aac6f50189f98400ac19251362b41538f92c6 data/bingo/bingo/goals/very_hard/shulker_in_overworld.json
 5b9310a4d325d302db2492e6ad464f61561ec9a8 data/bingo/bingo/goals/very_hard/sleep_in_mansion.json
-f1e004a93743c4ebd1af7ae7d210a5e4c3ebdd5e data/bingo/bingo/goals/very_hard/tipped_arrow.json
+af91058ee3e4c75256c8e485a854bb57e836677b data/bingo/bingo/goals/very_hard/tipped_arrow.json
 d3576307f2724c0236fac77818f0d528850a49ea data/bingo/bingo/goals/very_hard/trident.json
 71d16aaf4c2787b7c304f1e8539b4cbb3c6459ca data/bingo/bingo/goals/very_hard/wither_rose.json
 5b94a3cf439d514581a1e8373bdfd4d271ae2c90 data/bingo/bingo/goals/very_hard/zombify_pig.json

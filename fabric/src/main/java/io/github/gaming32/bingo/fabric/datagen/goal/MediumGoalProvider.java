@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
@@ -226,7 +227,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(mineralPillarGoal(id("basic_mineral_blocks"), BingoBlockTags.BASIC_MINERAL_BLOCKS)
             .name(Component.translatable("bingo.goal.basic_mineral_blocks"))
             .tags(BingoTags.OVERWORLD)
-            .icon(Blocks.DIAMOND_BLOCK)
+            .icon(new ItemTagCycleIcon(BingoItemTags.BASIC_MINERAL_BLOCKS))
         );
         // TODO: kill hostile mob with anvil
         addGoal(obtainLevelsGoal(id("levels"), 16, 26)

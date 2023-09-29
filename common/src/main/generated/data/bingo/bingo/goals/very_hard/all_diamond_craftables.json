@@ -76,14 +76,127 @@
   },
   "difficulty": 4,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": 1,
-      "id": "minecraft:diamond_hoe",
-      "tag": {
-        "Damage": 0
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_block"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_axe",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_boots",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_chestplate",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_helmet",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_hoe",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_leggings",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_pickaxe",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_shovel",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:diamond_sword",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:enchanting_table"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:firework_star"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:jukebox"
+        }
       }
-    }
+    ]
   },
   "name": {
     "translate": "bingo.goal.all_diamond_craftables"

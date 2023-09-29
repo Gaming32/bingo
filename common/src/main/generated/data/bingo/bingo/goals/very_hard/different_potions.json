@@ -24,17 +24,269 @@
   },
   "difficulty": 4,
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": {
-        "bingo_type": "bingo:sub",
-        "value": "count"
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:water"
+          }
+        }
       },
-      "id": "minecraft:potion",
-      "tag": {
-        "Potion": "minecraft:mundane"
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:mundane"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:thick"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:awkward"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:night_vision"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:invisibility"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:leaping"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:fire_resistance"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:swiftness"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:slowness"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:turtle_master"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:water_breathing"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:healing"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:harming"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:poison"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:regeneration"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:strength"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:weakness"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:luck"
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:potion",
+          "tag": {
+            "Potion": "minecraft:slow_falling"
+          }
+        }
       }
-    }
+    ]
   },
   "name": {
     "translate": "bingo.goal.different_potions",

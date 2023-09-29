@@ -29,6 +29,8 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -36,8 +38,10 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -304,5 +308,17 @@ public abstract class DifficultyGoalProvider {
             stack.getTag().getCompound(BlockItem.BLOCK_ENTITY_TAG).remove("id");
         }
         return stack;
+    }
+
+    protected static GoalIcon createPotionsIcon(Item baseItem) {
+        final Set<String> encountered = new HashSet<>();
+        return new CycleIcon(
+            BuiltInRegistries.POTION.stream()
+                .filter(p -> p != Potions.EMPTY)
+                .filter(p -> encountered.add(p.getName("")))
+                .map(p -> PotionUtils.setPotion(new ItemStack(baseItem), p))
+                .map(ItemIcon::new)
+                .collect(ImmutableList.toImmutableList())
+        );
     }
 }

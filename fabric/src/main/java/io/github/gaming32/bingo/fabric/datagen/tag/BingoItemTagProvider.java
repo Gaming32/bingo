@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.fabric.datagen.tag;
 
+import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -153,5 +154,8 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 diamondInNameBuilder.add(item);
             }
         }
+
+        copy(BingoBlockTags.BASIC_MINERAL_BLOCKS, BingoItemTags.BASIC_MINERAL_BLOCKS);
+        copy(BingoBlockTags.ALL_MINERAL_BLOCKS, BingoItemTags.ALL_MINERAL_BLOCKS);
     }
 }
