@@ -99,7 +99,7 @@ public class Bingo {
         CommandRegistrationEvent.EVENT.register((dispatcher, registry, selection) -> {
             final CommandNode<CommandSourceStack> bingoCommand = dispatcher.register(literal("bingo")
                 .then(literal("start")
-                    .requires(source -> source.hasPermission(2) && activeGame == null)
+                    .requires(source -> source.hasPermission(2))
                 )
                 .then(literal("stop")
                     .requires(source -> source.hasPermission(2) && activeGame != null)
@@ -321,7 +321,7 @@ public class Bingo {
 
     private static int startGame(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         if (activeGame != null) {
-            throw new CommandRuntimeException(Component.translatable("bingo.game_running"));
+            activeGame.endGame(context.getSource().getServer().getPlayerList(), activeGame.getWinner(true));
         }
 
         final int difficulty = getArg(context, "difficulty", () -> 2, IntegerArgumentType::getInteger);
