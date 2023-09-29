@@ -122,7 +122,7 @@
   "bingo.goal.diamond_in_name": "%s Different Diamond Items",
   "bingo.goal.diamond_in_name.tooltip": "Any item with 'Diamond' in its name (yes, even itself).",
   "bingo.goal.destroy_spawner": "Destroy a Monster Spawner",
-  "bingo.goal.finish_at_spawn": "Finish where you spawned using a %s",
+  "bingo.goal.finish_at_spawn": "Finish at world spawn using a %s",
   "bingo.goal.finish_at_spawn.tooltip": "Be stood close enough to spin your compass within a couple blocks at the end of the game",
   "bingo.goal.finish_by_free_falling": "Finish by jumping from the top to the bottom of the world",
   "bingo.goal.finish_on_top": "Finish on top of the world",
