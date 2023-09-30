@@ -95,7 +95,7 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
         private Optional<ContextAwarePredicate> player = Optional.empty();
         private Optional<ItemPredicate> oldItem = Optional.empty();
         private Optional<ItemPredicate> newItem = Optional.empty();
-        private Set<EquipmentSlot> slots = EnumSet.allOf(EquipmentSlot.class);
+        private final Set<EquipmentSlot> slots = EnumSet.allOf(EquipmentSlot.class);
 
         private Builder() {
         }
