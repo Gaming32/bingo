@@ -154,6 +154,7 @@
   "bingo.goal.colors_of_terracotta": "%s colors of Terracotta",
   "bingo.goal.all_different_armor": "Wear %s different materials of armor",
   "bingo.goal.pottery_sherd": "Pottery Sherd",
+  "bingo.goal.different_saplings": "%s different saplings",
   "bingo.start.failed": "An unexpected error occurred while generating the board. Please try a different seed.",
   "bingo.start.invalid_goal": "An invalid goal was selected while generating. Please check the logs and fix the issue with your datapack.",
   "bingo.started": "A bingo game has started with %s difficulty!",

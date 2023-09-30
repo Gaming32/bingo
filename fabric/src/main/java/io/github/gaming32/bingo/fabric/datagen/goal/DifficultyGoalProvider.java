@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
+import com.demonwav.mcdev.annotations.Translatable;
 import com.google.common.collect.ImmutableList;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
@@ -145,7 +146,10 @@ public abstract class DifficultyGoalProvider {
             .tooltip(Component.translatable("bingo.goal.all_somethings.tooltip"));
     }
 
-    protected static BingoGoal.Builder obtainSomeItemsFromTag(ResourceLocation id, TagKey<Item> tag, String translationKey, int minCount, int maxCount) {
+    protected static BingoGoal.Builder obtainSomeItemsFromTag(
+        ResourceLocation id, TagKey<Item> tag, @Translatable String translationKey,
+        int minCount, int maxCount
+    ) {
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minCount, maxCount))
             .criterion(

@@ -17,8 +17,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
-    public BingoItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
-        super(output, completableFuture);
+    public BingoItemTagProvider(
+        FabricDataOutput output,
+        CompletableFuture<HolderLookup.Provider> registriesFuture,
+        FabricTagProvider.BlockTagProvider blockTagProvider
+    ) {
+        super(output, registriesFuture, blockTagProvider);
     }
 
     @Override

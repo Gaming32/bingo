@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.Item;
@@ -86,7 +87,15 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .infrequency(2));
         addGoal(obtainItemGoal(id("lapis_block"), Items.LAPIS_BLOCK, 2, 3)
             .tags(BingoTags.OVERWORLD));
-        // TODO: different saplings
+        addGoal(
+            obtainSomeItemsFromTag(
+                id("different_saplings"),
+                ItemTags.SAPLINGS,
+                "bingo.goal.different_saplings",
+                3, 5
+            )
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+        );
         addGoal(BingoGoal.builder(id("tame_wolf"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.WOLF)))
             .tags(BingoTags.STAT, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
