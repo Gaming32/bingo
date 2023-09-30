@@ -21,6 +21,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -69,7 +70,11 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("melon_slice"), Items.MELON_SLICE, 16, 64)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("never_wear_armor"))
-            .criterion("equip", EquipItemTrigger.builder().newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR).build()).build())
+            .criterion("equip", EquipItemTrigger.builder()
+                .newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR).build())
+                .slots(EquipmentSlot.Type.ARMOR)
+                .build()
+            )
             .tags(BingoTags.NEVER)
             .name(Component.translatable("bingo.goal.never_wear_armor"))
             .icon(Items.DIAMOND_CHESTPLATE)

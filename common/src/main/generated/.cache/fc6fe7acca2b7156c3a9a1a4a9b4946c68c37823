@@ -173,7 +173,7 @@ dc3b166471c7fc4ff8d964a3edc3db8d2a302094 data/bingo/bingo/goals/hard/listen_to_m
 b839a8ff97f8958f894f7e0e44ae518ddcfa1d95 data/bingo/bingo/goals/hard/nametag_enderman.json
 28bf7e5f9288b1711a03bc78dace70c6c0104c28 data/bingo/bingo/goals/hard/netherite_ingot.json
 0a7f308f8a726a5a721ae94e2f2e44179e9d90e3 data/bingo/bingo/goals/hard/never_use_buckets.json
-c2d7e4d00f3161812dd48bea4695f026a9846872 data/bingo/bingo/goals/hard/never_wear_armor_or_use_shields.json
+70f6d0e3575d0420eda2e0d3c1831986146d28ba data/bingo/bingo/goals/hard/never_wear_armor_or_use_shields.json
 ad27039ce61222ad5f1585c51029f11997ce6ab5 data/bingo/bingo/goals/hard/ocelot_trust.json
 2ba04ee225d52751571b53d0a4fb6bc9a673b2af data/bingo/bingo/goals/hard/pacifist.json
 c38d8ad0f47898fb1660883370406a33e7a65bff data/bingo/bingo/goals/hard/piglin_brute_axe.json
@@ -249,7 +249,7 @@ eee6d593f96fff4c72b68c6babf80ef15b67b0d4 data/bingo/bingo/goals/medium/magma_blo
 11e1c996cbb37a8ac4e907e7c4bec0a103451df7 data/bingo/bingo/goals/medium/melon_slice.json
 ffba2dc84ba2f7b29d2d4f29500a15882c8c91be data/bingo/bingo/goals/medium/never_craft_sticks.json
 cc6bc5c2a38df1f7bac0af46073574770ec5d44c data/bingo/bingo/goals/medium/never_place_torches.json
-990f06ea905e46aafca58e6e79b591316a6c5f3c data/bingo/bingo/goals/medium/never_wear_armor.json
+90d889a26b1e46d4150bf2cb1ef3815a8fde1f3f data/bingo/bingo/goals/medium/never_wear_armor.json
 dee2103989560e152fd6c62c87b0966aeed90d2b data/bingo/bingo/goals/medium/obsidian.json
 d3e01ef0fa4e35ffc47effeea82c4d5d8560d83e data/bingo/bingo/goals/medium/ominous_banner.json
 66ecbf27c75d07eef83bdfd62d62c66baef5b219 data/bingo/bingo/goals/medium/phantom_membrane.json

@@ -12,10 +12,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.TriggerInstance> {
     @NotNull
@@ -98,7 +95,7 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
         private Optional<ContextAwarePredicate> player = Optional.empty();
         private Optional<ItemPredicate> oldItem = Optional.empty();
         private Optional<ItemPredicate> newItem = Optional.empty();
-        private Set<EquipmentSlot> slots = EnumSet.noneOf(EquipmentSlot.class);
+        private Set<EquipmentSlot> slots = EnumSet.allOf(EquipmentSlot.class);
 
         private Builder() {
         }
@@ -124,8 +121,9 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
             return this;
         }
 
-        public Builder allSlots() {
-            this.slots = EnumSet.allOf(EquipmentSlot.class);
+        public Builder slots(EquipmentSlot.Type type) {
+            slots.clear();
+            Arrays.stream(EquipmentSlot.values()).filter(s -> s.getType() == type).forEach(slots::add);
             return this;
         }
 

@@ -27,6 +27,7 @@ public abstract class MixinLivingEntity {
             BingoTriggers.EQUIP_ITEM.trigger(player, oldItem, newItem, slot);
         }
     }
+
     @Inject(
         method = "hurt",
         at = @At(

@@ -25,6 +25,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -203,7 +204,11 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("enchanted_golden_apple"), Items.ENCHANTED_GOLDEN_APPLE));
 
         addGoal(BingoGoal.builder(id("never_wear_armor_or_use_shields"))
-            .criterion("equip", EquipItemTrigger.builder().newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR).build()).build())
+            .criterion("equip", EquipItemTrigger.builder()
+                .newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR).build())
+                .slots(EquipmentSlot.Type.ARMOR)
+                .build()
+            )
             .criterion("use", CriteriaTriggers.USING_ITEM.createCriterion(
                 new UsingItemTrigger.TriggerInstance(
                     Optional.empty(),
