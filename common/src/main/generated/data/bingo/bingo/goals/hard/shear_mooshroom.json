@@ -22,8 +22,9 @@
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:item",
-    "value": {
+    "type": "bingo:entity",
+    "entity": "minecraft:cow",
+    "item": {
       "Count": 1,
       "id": "minecraft:cow_spawn_egg"
     }

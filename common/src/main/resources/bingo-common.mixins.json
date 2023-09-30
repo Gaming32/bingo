@@ -41,6 +41,7 @@
     "StatsCounterAccessor"
   ],
   "client": [
+    "client.CameraAccessor",
     "client.MixinGui"
   ],
   "injectors": {

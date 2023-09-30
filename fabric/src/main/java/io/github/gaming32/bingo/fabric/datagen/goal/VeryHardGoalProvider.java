@@ -5,6 +5,7 @@ import io.github.gaming32.bingo.conditions.EndermanHasOnlyBeenDamagedByEndermite
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
+import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
@@ -275,7 +276,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             )
             .name(Component.translatable("bingo.goal.kill_enderman_with_endermites"))
             .tooltip(Component.translatable("bingo.goal.kill_enderman_with_endermites.tooltip"))
-            .icon(Items.ENDERMITE_SPAWN_EGG)
+            .icon(EntityIcon.ofSpawnEgg(EntityType.ENDERMITE))
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.END));
         addGoal(BingoGoal.builder(id("beacon_regen"))
             .criterion("effect", BeaconEffectTrigger.TriggerInstance.effectApplied(MobEffects.REGENERATION))

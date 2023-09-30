@@ -17,8 +17,9 @@
   },
   "difficulty": 1,
   "icon": {
-    "type": "bingo:item",
-    "value": {
+    "type": "bingo:entity",
+    "entity": "minecraft:horse",
+    "item": {
       "Count": 1,
       "id": "minecraft:horse_spawn_egg"
     }

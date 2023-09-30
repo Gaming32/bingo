@@ -6,8 +6,9 @@
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:item",
-    "value": {
+    "type": "bingo:entity",
+    "entity": "minecraft:ravager",
+    "item": {
       "Count": 1,
       "id": "minecraft:ravager_spawn_egg"
     }

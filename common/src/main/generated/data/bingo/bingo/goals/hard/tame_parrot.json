@@ -17,8 +17,9 @@
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:item",
-    "value": {
+    "type": "bingo:entity",
+    "entity": "minecraft:parrot",
+    "item": {
       "Count": 1,
       "id": "minecraft:parrot_spawn_egg"
     }

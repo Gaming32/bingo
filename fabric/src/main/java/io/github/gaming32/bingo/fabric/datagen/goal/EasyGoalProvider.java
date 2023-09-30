@@ -5,6 +5,7 @@ import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
+import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
@@ -21,6 +22,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -134,7 +136,8 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.create_snow_golem"))
-            .icon(Blocks.CARVED_PUMPKIN));
+            .icon(EntityIcon.of(EntityType.SNOW_GOLEM, new ItemStack(Items.CARVED_PUMPKIN)))
+        );
         addGoal(obtainItemGoal(id("note_block"), Items.NOTE_BLOCK, 5, 15)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
@@ -434,7 +437,8 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .name(Component.translatable("bingo.goal.tame_horse"))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
-            .icon(Items.HORSE_SPAWN_EGG));
+            .icon(EntityIcon.ofSpawnEgg(EntityType.HORSE))
+        );
         // TODO: hatch chicken from egg
         // TODO: empty cauldron without buckets or bottles
         // TODO: sleep in villager's bed

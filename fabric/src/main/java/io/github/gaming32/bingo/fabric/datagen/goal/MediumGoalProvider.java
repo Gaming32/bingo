@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
@@ -306,7 +307,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.CAT)))
             .name(Component.translatable("bingo.goal.tame_cat"))
             .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD)
-            .icon(Items.CAT_SPAWN_EGG));
+            .icon(EntityIcon.ofSpawnEgg(EntityType.CAT))
+        );
         // TODO: breed mobs
         addGoal(crouchDistanceGoal(id("crouch_distance"), 200, 400));
         // TODO: kill n mobs
