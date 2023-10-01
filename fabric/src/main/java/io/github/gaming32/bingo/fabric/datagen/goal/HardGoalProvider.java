@@ -221,7 +221,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tooltip(Component.translatable("bingo.goal.never_wear_armor_or_use_shields.tooltip"))
             .icon(makeItemWithGlint(Items.SHIELD))
             .antisynergy("never_wear_armor")
-            .catalyst("wear_armor"));
+            .catalyst("wear_armor")
+        );
         addGoal(BingoGoal.builder(id("full_iron_mob"))
             .criterion("kill", CriteriaTriggers.PLAYER_KILLED_ENTITY.createCriterion(
                 new KilledTrigger.TriggerInstance(

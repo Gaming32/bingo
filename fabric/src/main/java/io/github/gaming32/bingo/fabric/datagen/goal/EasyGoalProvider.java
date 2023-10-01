@@ -162,6 +162,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.ITEM)
             .infrequency(3)
+            .reactant("wear_armor")
             .name(Component.translatable("bingo.goal.full_iron_armor"))
             .icon(new CycleIcon(
                 ItemIcon.ofItem(Items.IRON_HELMET),

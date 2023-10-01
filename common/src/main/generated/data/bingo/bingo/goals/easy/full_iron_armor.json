@@ -78,6 +78,7 @@
   "name": {
     "translate": "bingo.goal.full_iron_armor"
   },
+  "reactant": "wear_armor",
   "requirements": [
     [
       "armor"
