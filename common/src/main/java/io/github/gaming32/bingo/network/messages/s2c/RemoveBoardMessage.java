@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.network;
+package io.github.gaming32.bingo.network.messages.s2c;
 
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.BaseS2CMessage;
@@ -14,7 +14,7 @@ public class RemoveBoardMessage extends BaseS2CMessage {
 
     @Override
     public MessageType getType() {
-        return BingoNetwork.REMOVE_BOARD;
+        return BingoS2C.REMOVE_BOARD;
     }
 
     @Override

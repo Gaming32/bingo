@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.network;
+package io.github.gaming32.bingo.network.messages.s2c;
 
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.BaseS2CMessage;
@@ -24,7 +24,7 @@ public class UpdateStateMessage extends BaseS2CMessage {
 
     @Override
     public MessageType getType() {
-        return BingoNetwork.UPDATE_STATE;
+        return BingoS2C.UPDATE_STATE;
     }
 
     @Override

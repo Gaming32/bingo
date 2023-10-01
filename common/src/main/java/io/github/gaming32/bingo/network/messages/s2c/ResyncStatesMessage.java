@@ -1,47 +1,42 @@
-package io.github.gaming32.bingo.network;
+package io.github.gaming32.bingo.network.messages.s2c;
 
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.BaseS2CMessage;
 import dev.architectury.networking.simple.MessageType;
+import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
-import io.github.gaming32.bingo.client.ClientBoard;
-import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.Arrays;
 
-public class InitBoardMessage extends BaseS2CMessage {
-    private final ClientGoal[] goals;
+public class ResyncStatesMessage extends BaseS2CMessage {
     private final BingoBoard.Teams[] states;
 
-    public InitBoardMessage(ActiveGoal[] goals, BingoBoard.Teams[] states) {
-        this.goals = new ClientGoal[goals.length];
+    public ResyncStatesMessage(BingoBoard.Teams[] states) {
         this.states = states;
-
-        for (int i = 0; i < goals.length; i++) {
-            this.goals[i] = new ClientGoal(goals[i]);
-        }
     }
 
-    public InitBoardMessage(FriendlyByteBuf buf) {
-        goals = buf.readList(ClientGoal::new).toArray(ClientGoal[]::new);
+    public ResyncStatesMessage(FriendlyByteBuf buf) {
         states = buf.readList(b -> BingoBoard.Teams.fromBits(b.readVarInt())).toArray(BingoBoard.Teams[]::new);
     }
 
     @Override
     public MessageType getType() {
-        return BingoNetwork.INIT_BOARD;
+        return BingoS2C.RESYNC_STATES;
     }
 
     @Override
     public void write(FriendlyByteBuf buf) {
-        buf.writeCollection(Arrays.asList(goals), (b, v) -> v.serialize(b));
         buf.writeCollection(Arrays.asList(states), (b, v) -> b.writeVarInt(v.toBits()));
     }
 
     @Override
     public void handle(NetworkManager.PacketContext context) {
-        BingoClient.clientBoard = new ClientBoard(states, goals);
+        if (BingoClient.clientBoard == null) {
+            Bingo.LOGGER.warn("BingoClient.clientBoard == null while handling " + getType().getId() + "!");
+            return;
+        }
+        System.arraycopy(states, 0, BingoClient.clientBoard.states(), 0, BingoBoard.SIZE_SQ);
     }
 }

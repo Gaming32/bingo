@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.network;
+package io.github.gaming32.bingo.network.messages.s2c;
 
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.BaseS2CMessage;
@@ -20,7 +20,7 @@ public class SyncTeamMessage extends BaseS2CMessage {
 
     @Override
     public MessageType getType() {
-        return BingoNetwork.SYNC_TEAM;
+        return BingoS2C.SYNC_TEAM;
     }
 
     @Override
