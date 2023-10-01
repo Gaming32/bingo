@@ -364,7 +364,8 @@ public class Bingo {
                 RandomSource.create(seed),
                 server.getLootData(),
                 gameMode::isGoalAllowed,
-                requiredGoal
+                requiredGoal,
+                requireClient
             );
         } catch (Exception e) {
             LOGGER.error("Error generating bingo board", e);

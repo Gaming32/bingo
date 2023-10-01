@@ -11,7 +11,9 @@ import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.advancements.AdvancementRequirements;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -63,6 +65,7 @@ public class BingoGoal {
 
     private final Set<ResourceLocation> tagIds;
     private final BingoTag.SpecialType specialType;
+    private final boolean requiredOnClient;
 
     public BingoGoal(
         ResourceLocation id,
@@ -108,11 +111,23 @@ public class BingoGoal {
                 throw new IllegalArgumentException("Inconsistent specialTypes: " + tag.specialType() + " does not match " + specialType);
             }
         }
-        this.specialType = specialType;
-
         if (specialType == BingoTag.SpecialType.FINISH && requirements.size() != 1) {
             throw new IllegalArgumentException("\"finish\" goals must have only ORed requirements");
         }
+        this.specialType = specialType;
+
+        boolean requiresClient = false;
+        for (final JsonObject criterion : criteria.values()) {
+            final ResourceLocation triggerId = new ResourceLocation(GsonHelper.getAsString(criterion, "trigger"));
+            final CriterionTrigger<?> trigger = CriteriaTriggers.getCriterion(triggerId);
+            if (trigger == null) {
+                throw new IllegalArgumentException("Unknown criterion trigger " + triggerId);
+            }
+            if (trigger.requiresClientCode()) {
+                requiresClient = true;
+            }
+        }
+        this.requiredOnClient = true;
     }
 
     public static Set<ResourceLocation> getGoalIds() {
@@ -319,6 +334,10 @@ public class BingoGoal {
 
     public BingoTag.SpecialType getSpecialType() {
         return specialType;
+    }
+
+    public boolean isRequiredOnClient() {
+        return requiredOnClient;
     }
 
     public ActiveGoal build(RandomSource rand, LootDataManager lootData) {

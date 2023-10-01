@@ -37,10 +37,11 @@ public class BingoBoard {
         RandomSource rand,
         LootDataManager lootData,
         Predicate<BingoGoal> isAllowedGoal,
-        @Nullable BingoGoal requiredGoal
+        @Nullable BingoGoal requiredGoal,
+        boolean allowsClientRequired
     ) {
         final BingoBoard board = new BingoBoard();
-        final BingoGoal[] generatedSheet = generateGoals(difficulty, rand, isAllowedGoal, requiredGoal);
+        final BingoGoal[] generatedSheet = generateGoals(difficulty, rand, isAllowedGoal, requiredGoal, allowsClientRequired);
         for (int i = 0; i < SIZE_SQ; i++) {
             final ActiveGoal goal = board.goals[i] = generatedSheet[i].build(rand, lootData);
             if (generatedSheet[i].getSpecialType() == BingoTag.SpecialType.NEVER) {
@@ -56,7 +57,8 @@ public class BingoBoard {
         int difficulty,
         RandomSource rand,
         Predicate<BingoGoal> isAllowedGoal,
-        @Nullable BingoGoal requiredGoal
+        @Nullable BingoGoal requiredGoal,
+        boolean allowsClientRequired
     ) {
         final BingoGoal[] generatedSheet = new BingoGoal[SIZE_SQ];
 
@@ -97,6 +99,10 @@ public class BingoBoard {
                 final BingoGoal goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
 
                 if (!isAllowedGoal.test(goalCandidate)) {
+                    continue;
+                }
+
+                if (!allowsClientRequired && goalCandidate.isRequiredOnClient()) {
                     continue;
                 }
 

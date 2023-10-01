@@ -14,6 +14,7 @@
     "MixinButtonBlock",
     "MixinCommandSourceStack",
     "MixinConduitBlockEntity",
+    "MixinCriterionTrigger",
     "MixinCriterionTrigger_Listener",
     "MixinCrossbowAttack",
     "MixinEnchantmentMenu",
