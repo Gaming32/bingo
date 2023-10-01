@@ -42,6 +42,7 @@
   ],
   "client": [
     "client.CameraAccessor",
+    "client.MixinGameRenderer",
     "client.MixinGui"
   ],
   "injectors": {
