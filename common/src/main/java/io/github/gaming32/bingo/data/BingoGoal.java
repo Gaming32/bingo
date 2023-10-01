@@ -127,7 +127,7 @@ public class BingoGoal {
                 requiresClient = true;
             }
         }
-        this.requiredOnClient = true;
+        this.requiredOnClient = requiresClient;
     }
 
     public static Set<ResourceLocation> getGoalIds() {
