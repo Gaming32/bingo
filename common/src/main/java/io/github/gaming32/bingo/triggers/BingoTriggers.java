@@ -42,6 +42,7 @@ public class BingoTriggers {
     public static final EntityTrigger MOB_BROKE_CROSSBOW = register("bingo:mob_broke_crossbow", new EntityTrigger());
     public static final EntityTrigger STUN_RAVAGER = register("bingo:stun_ravager", new EntityTrigger());
     public static final ConsumeMilkBucketTrigger CONSUME_MILK_BUCKET = register("bingo:consume_milk_bucket", new ConsumeMilkBucketTrigger());
+    public static final KeyPressedTrigger KEY_PRESSED = register("bingo:key_pressed", new KeyPressedTrigger());
 
     public static void load() {
     }

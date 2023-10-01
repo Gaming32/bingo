@@ -6,7 +6,7 @@ import io.github.gaming32.bingo.network.messages.s2c.BingoS2C;
 import net.minecraft.resources.ResourceLocation;
 
 public class BingoNetwork {
-    public static final int PROTOCOL_VERSION = 2;
+    public static final int PROTOCOL_VERSION = 3;
     /*
         // TODO: Use this on the NeoForge end.
         final String protocolVersion = Integer.toString(BingoNetwork.PROTOCOL_VERSION);

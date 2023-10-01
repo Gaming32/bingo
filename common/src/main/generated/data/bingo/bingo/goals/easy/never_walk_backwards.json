@@ -1,0 +1,31 @@
+{
+  "criteria": {
+    "walk": {
+      "conditions": {
+        "key": "key.back"
+      },
+      "trigger": "bingo:key_pressed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:dirt_path"
+    }
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "bingo.goal.never_walk_backwards"
+  },
+  "requirements": [
+    [
+      "walk"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:never"
+  ]
+}

@@ -44,7 +44,8 @@
   "client": [
     "client.CameraAccessor",
     "client.MixinGameRenderer",
-    "client.MixinGui"
+    "client.MixinGui",
+    "client.MixinKeyMapping"
   ],
   "injectors": {
     "defaultRequire": 1

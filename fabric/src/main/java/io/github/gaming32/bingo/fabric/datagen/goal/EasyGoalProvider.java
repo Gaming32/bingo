@@ -13,6 +13,8 @@ import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -462,6 +464,14 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("pottery_sherd"), new ItemTagCycleIcon(ItemTags.DECORATED_POT_SHERDS), ItemPredicate.Builder.item().of(ItemTags.DECORATED_POT_SHERDS))
             .tags(BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.pottery_sherd")));
+        final KeyMapping walkBackwards = Minecraft.getInstance().options.keyDown;
+        addGoal(BingoGoal.builder(id("never_walk_backwards"))
+            .criterion("walk", KeyPressedTrigger.TriggerInstance.keyPressed(walkBackwards))
+            .tags(BingoTags.ACTION, BingoTags.NEVER)
+            .name(Component.translatable("bingo.goal.never_walk_backwards"))
+            .infrequency(4)
+            .icon(Items.DIRT_PATH)
+        );
     }
 
     private BingoGoal.Builder eatEntireCake() {
