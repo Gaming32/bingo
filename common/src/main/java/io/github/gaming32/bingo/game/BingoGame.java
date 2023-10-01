@@ -30,14 +30,16 @@ public class BingoGame {
 
     private final BingoBoard board;
     private final BingoGameMode gameMode;
+    private final boolean requireClient;
     private final PlayerTeam[] teams;
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> goalProgress = new HashMap<>();
     private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
     private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, PlayerTeam... teams) {
+    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, PlayerTeam... teams) {
         this.board = board;
         this.gameMode = gameMode;
+        this.requireClient = requireClient;
         this.teams = teams;
     }
 
@@ -53,6 +55,13 @@ public class BingoGame {
      * @apiNote {@code player} does <i>not</i> need to be in a team. In fact, they should be added even if they aren't!
      */
     public void addPlayer(ServerPlayer player) {
+        if (requireClient && !Bingo.isInstalledOnClient(player)) {
+            player.connection.disconnect(Component.literal(
+                "This bingo game requires the Bingo mod to be installed on the client. Please install it before joining."
+            ));
+            return;
+        }
+
         RemoveBoardMessage.INSTANCE.sendTo(player);
         if (Bingo.needAdvancementsClear.remove(player)) {
             player.connection.send(new ClientboundUpdateAdvancementsPacket(

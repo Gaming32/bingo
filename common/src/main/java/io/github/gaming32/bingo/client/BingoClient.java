@@ -6,6 +6,7 @@ import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientScreenInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import io.github.gaming32.bingo.Bingo;
@@ -15,6 +16,7 @@ import io.github.gaming32.bingo.client.icons.IconRenderers;
 import io.github.gaming32.bingo.client.recipeviewer.RecipeViewerPlugin;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.game.BingoBoard;
+import io.github.gaming32.bingo.network.BingoNetwork;
 import io.github.gaming32.bingo.network.ClientGoal;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
@@ -92,6 +94,9 @@ public class BingoClient {
             clientTeam = BingoBoard.Teams.NONE;
             clientBoard = null;
         });
+
+        // Mark as able to receive this in PLAY, for mod presence checks
+        NetworkManager.registerReceiver(NetworkManager.s2c(), BingoNetwork.PROTOCOL_VERSION_PACKET, (buf, context) -> {});
 
         DefaultIconRenderers.setup();
 

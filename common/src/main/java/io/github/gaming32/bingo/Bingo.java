@@ -18,6 +18,7 @@ import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.InteractionEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
+import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
@@ -263,6 +264,9 @@ public class Bingo {
                                 .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                             )
                         )
+                        .then(literal("--require-client")
+                            .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+                        )
                     )
                 );
                 CommandNode<CommandSourceStack> currentCommand = startCommand;
@@ -347,6 +351,8 @@ public class Bingo {
             requiredGoal = null;
         }
 
+        final boolean requireClient = hasNode(context, "--require-client");
+
         final MinecraftServer server = context.getSource().getServer();
         final PlayerList playerList = server.getPlayerList();
 
@@ -370,7 +376,7 @@ public class Bingo {
         }
         LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        activeGame = new BingoGame(board, gameMode, teams.toArray(PlayerTeam[]::new)); // TODO: Implement gamemode choosing
+        activeGame = new BingoGame(board, gameMode, requireClient, teams.toArray(PlayerTeam[]::new)); // TODO: Implement gamemode choosing
         updateCommandTree(playerList);
         playerList.getPlayers().forEach(activeGame::addPlayer);
         playerList.broadcastSystemMessage(Bingo.translatable(
@@ -393,7 +399,7 @@ public class Bingo {
             if (hasArg(check, arg)) {
                 return argGetter.apply(check, arg);
             }
-            if (context.getSource() instanceof CommandSourceStackExt ext) {
+            if (check.getSource() instanceof CommandSourceStackExt ext) {
                 for (final CommandContext<CommandSourceStack> extra : ext.bingo$getExtraContexts()) {
                     if (visited.add(extra)) {
                         toVisit.add(extra);
@@ -421,6 +427,30 @@ public class Bingo {
         return false;
     }
 
+    public static boolean hasNode(CommandContext<?> context, String name) {
+        final Set<CommandContext<?>> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+        final Queue<CommandContext<?>> toVisit = new ArrayDeque<>();
+        toVisit.add(context);
+
+        while (!toVisit.isEmpty()) {
+            final CommandContext<?> check = toVisit.remove();
+            for (final ParsedCommandNode<?> node : check.getNodes()) {
+                if (node.getNode().getName().equals(name)) {
+                    return true;
+                }
+            }
+            if (check.getSource() instanceof CommandSourceStackExt ext) {
+                for (final CommandContext<CommandSourceStack> extra : ext.bingo$getExtraContexts()) {
+                    if (visited.add(extra)) {
+                        toVisit.add(extra);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static MutableComponent translatable(@Translatable String key, Object... args) {
         return ensureHasFallback(Component.translatable(key, args));
     }
@@ -434,5 +464,9 @@ public class Bingo {
             return result;
         }
         return component;
+    }
+
+    public static boolean isInstalledOnClient(ServerPlayer player) {
+        return NetworkManager.canPlayerReceive(player, BingoNetwork.PROTOCOL_VERSION_PACKET);
     }
 }

@@ -180,6 +180,8 @@
   "bingo.three": "%s, %s, and %s",
   "bingo.spawner": "%s %s",
   "bingo.no_game_running": "No Bingo game is running!",
+  "bingo.outdated_client": "Outdated bingo client! Client version: %s. Server version: %s.",
+  "bingo.outdated_server": "Outdated bingo server! Server version: %s. Client version: %s.",
   "text.autoconfig.bingo-client.title": "Bingo Settings",
   "text.autoconfig.bingo-client.option.board": "Board",
   "text.autoconfig.bingo-client.option.board.corner": "Corner",
