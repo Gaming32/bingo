@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.mixin.common.client;
 
 import io.github.gaming32.bingo.client.BingoClient;
+import io.github.gaming32.bingo.client.BingoClientConfig;
 import io.github.gaming32.bingo.client.BoardCorner;
 import net.minecraft.client.gui.Gui;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,16 +20,18 @@ public class MixinGui {
         index = 2
     )
     private int moveEffectContainersDown(int original) {
-        if (BingoClient.clientBoard != null && BingoClient.boardCorner == BoardCorner.UPPER_RIGHT) {
-            return original + BingoClient.BOARD_HEIGHT + BingoClient.BOARD_OFFSET;
+        final BingoClientConfig.BoardConfig boardConfig = BingoClient.getConfig().board;
+        if (BingoClient.clientBoard != null && boardConfig.corner == BoardCorner.UPPER_RIGHT) {
+            return original + (int)(BingoClient.BOARD_HEIGHT * boardConfig.scale) + BingoClient.BOARD_OFFSET;
         }
         return original;
     }
 
     @ModifyVariable(method = "method_18620", at = @At("HEAD"), index = 3, argsOnly = true)
     private static int moveEffectsDown(int original) {
-        if (BingoClient.clientBoard != null && BingoClient.boardCorner == BoardCorner.UPPER_RIGHT) {
-            return original + BingoClient.BOARD_HEIGHT + BingoClient.BOARD_OFFSET;
+        final BingoClientConfig.BoardConfig boardConfig = BingoClient.getConfig().board;
+        if (BingoClient.clientBoard != null && boardConfig.corner == BoardCorner.UPPER_RIGHT) {
+            return original + (int)(BingoClient.BOARD_HEIGHT * boardConfig.scale) + BingoClient.BOARD_OFFSET;
         }
         return original;
     }

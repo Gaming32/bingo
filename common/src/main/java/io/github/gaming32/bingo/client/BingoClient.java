@@ -6,6 +6,7 @@ import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientScreenInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.icons.DefaultIconRenderers;
@@ -15,6 +16,8 @@ import io.github.gaming32.bingo.client.recipeviewer.RecipeViewerPlugin;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.ClientGoal;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -39,22 +42,29 @@ public class BingoClient {
     public static final int BOARD_HEIGHT = 114;
     public static final int BOARD_OFFSET = 3;
 
-    public static BoardCorner boardCorner = BoardCorner.UPPER_RIGHT;
-    public static float boardScale = 1f;
-
     public static BingoBoard.Teams clientTeam = BingoBoard.Teams.NONE;
     public static ClientBoard clientBoard;
 
+    private static BingoClientConfig config;
     private static RecipeViewerPlugin recipeViewerPlugin;
 
     public static void init() {
+        AutoConfig.register(BingoClientConfig.class, Toml4jConfigSerializer::new);
+        config = AutoConfig.getConfigHolder(BingoClientConfig.class).getConfig();
+
+        if (!Platform.isFabric()) {
+            Platform.getMod(Bingo.MOD_ID).registerConfigurationScreen(
+                parent -> AutoConfig.getConfigScreen(BingoClientConfig.class, parent).get()
+            );
+        }
+
         ClientGuiEvent.RENDER_HUD.register((graphics, tickDelta) -> {
             if (clientBoard == null) return;
             final Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.getDebugOverlay().showDebugScreen() || minecraft.screen instanceof BoardScreen) return;
-            final float scale = boardScale;
-            final float x = boardCorner.getX(graphics.guiWidth(), scale);
-            final float y = boardCorner.getY(graphics.guiHeight(), scale);
+            final float scale = config.board.scale;
+            final float x = config.board.corner.getX(graphics.guiWidth(), scale);
+            final float y = config.board.corner.getY(graphics.guiHeight(), scale);
             renderBingo(graphics, minecraft.screen instanceof ChatScreen, x, y, scale);
         });
 
@@ -62,9 +72,9 @@ public class BingoClient {
             if (clientBoard == null || !(screen instanceof ChatScreen)) {
                 return EventResult.pass();
             }
-            final float scale = boardScale;
-            final float x = boardCorner.getX(client.getWindow().getGuiScaledWidth(), scale);
-            final float y = boardCorner.getY(client.getWindow().getGuiScaledHeight(), scale);
+            final float scale = config.board.scale;
+            final float x = config.board.corner.getX(client.getWindow().getGuiScaledWidth(), scale);
+            final float y = config.board.corner.getY(client.getWindow().getGuiScaledHeight(), scale);
             return detectPress(keyCode, scanCode, x, y, scale) ? EventResult.interruptTrue() : EventResult.pass();
         });
 
@@ -72,9 +82,9 @@ public class BingoClient {
             if (clientBoard == null || !(screen instanceof ChatScreen)) {
                 return EventResult.pass();
             }
-            final float scale = boardScale;
-            final float x = boardCorner.getX(client.getWindow().getGuiScaledWidth(), scale);
-            final float y = boardCorner.getY(client.getWindow().getGuiScaledHeight(), scale);
+            final float scale = config.board.scale;
+            final float x = config.board.corner.getX(client.getWindow().getGuiScaledWidth(), scale);
+            final float y = config.board.corner.getY(client.getWindow().getGuiScaledHeight(), scale);
             return detectClick(button, x, y, scale) ? EventResult.interruptTrue() : EventResult.pass();
         });
 
@@ -102,6 +112,10 @@ public class BingoClient {
             recipeViewerPlugin = RecipeViewerPlugin.detect();
         }
         return recipeViewerPlugin;
+    }
+
+    public static BingoClientConfig getConfig() {
+        return config;
     }
 
     public static void renderBingo(GuiGraphics graphics, boolean mouseHover, float x, float y, float scale) {

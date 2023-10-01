@@ -6,8 +6,8 @@ public record BingoMousePos(double mouseX, double mouseY, int slotIdX, int slotI
     public static BingoMousePos getPos(Minecraft minecraft, float x, float y, float scale) {
         final double mouseX = minecraft.mouseHandler.xpos() * minecraft.getWindow().getGuiScaledWidth() / minecraft.getWindow().getScreenWidth();
         final double mouseY = minecraft.mouseHandler.ypos() * minecraft.getWindow().getGuiScaledHeight() / minecraft.getWindow().getScreenHeight();
-        final double relX = (mouseX - x / scale) * scale;
-        final double relY = (mouseY - y / scale) * scale;
+        final double relX = (mouseX - x * scale) / scale;
+        final double relY = (mouseY - y * scale) / scale;
         final double slotIdXD = (relX - 7) / 18;
         final double slotIdYD = (relY - 17) / 18;
 

@@ -179,6 +179,13 @@
   "bingo.sixteen_bang": "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, and %s!",
   "bingo.three": "%s, %s, and %s",
   "bingo.spawner": "%s %s",
-  "bingo.game_running": "Bingo game already running!",
-  "bingo.no_game_running": "No Bingo game is running!"
+  "bingo.no_game_running": "No Bingo game is running!",
+  "text.autoconfig.bingo-client.title": "Bingo Settings",
+  "text.autoconfig.bingo-client.option.board": "Board",
+  "text.autoconfig.bingo-client.option.board.corner": "Corner",
+  "text.autoconfig.bingo-client.option.board.scale": "Scale",
+  "bingo.board_corner.upper_left": "Upper-left",
+  "bingo.board_corner.upper_right": "Upper-right",
+  "bingo.board_corner.lower_left": "Lower-left",
+  "bingo.board_corner.lower_right": "Lower-right"
 }

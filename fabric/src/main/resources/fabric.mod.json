@@ -23,6 +23,9 @@
     ],
     "jei_mod_plugin": [
       "io.github.gaming32.bingo.client.recipeviewer.jei.BingoJeiPlugin"
+    ],
+    "modmenu": [
+      "io.github.gaming32.bingo.fabric.compat.ModMenuCompat"
     ]
   },
   "mixins": [
