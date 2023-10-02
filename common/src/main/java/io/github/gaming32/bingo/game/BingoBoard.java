@@ -96,7 +96,7 @@ public class BingoBoard {
 
                 if (failSafe >= 500) {
                     if (difficultyLayout[i] == 0) {
-                        throw new IllegalArgumentException("Invalid goal list");
+                        throw new IllegalArgumentException("No valid board layout was found for the specified size and difficulty");
                     }
 
                     possibleGoals = BingoGoal.getGoalsByDifficulty(--difficultyLayout[i]);
