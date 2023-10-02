@@ -13,8 +13,8 @@ public class BoardScreen extends Screen {
         renderBackground(graphics, mouseX, mouseY, partialTick);
         BingoClient.renderBingo(
             graphics, true,
-            width / 2f - BingoClient.BOARD_WIDTH / 2f,
-            height / 2f - BingoClient.BOARD_HEIGHT / 2f,
+            width / 2f - BingoClient.getBoardWidth() / 2f,
+            height / 2f - BingoClient.getBoardHeight() / 2f,
             1f
         );
     }
@@ -23,8 +23,8 @@ public class BoardScreen extends Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (BingoClient.detectPress(
             keyCode, scanCode,
-            width / 2f - BingoClient.BOARD_WIDTH / 2f,
-            height / 2f - BingoClient.BOARD_HEIGHT / 2f,
+            width / 2f - BingoClient.getBoardWidth() / 2f,
+            height / 2f - BingoClient.getBoardHeight() / 2f,
             1f
         )) {
             return true;
@@ -36,8 +36,8 @@ public class BoardScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (BingoClient.detectClick(
             button,
-            width / 2f - BingoClient.BOARD_WIDTH / 2f,
-            height / 2f - BingoClient.BOARD_HEIGHT / 2f,
+            width / 2f - BingoClient.getBoardWidth() / 2f,
+            height / 2f - BingoClient.getBoardHeight() / 2f,
             1f
         )) {
             return true;

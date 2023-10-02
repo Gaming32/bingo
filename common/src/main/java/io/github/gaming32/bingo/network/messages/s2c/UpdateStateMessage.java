@@ -35,12 +35,12 @@ public class UpdateStateMessage extends BaseS2CMessage {
 
     @Override
     public void handle(NetworkManager.PacketContext context) {
-        if (index < 0 || index >= BingoBoard.SIZE_SQ) {
-            Bingo.LOGGER.warn("Invalid " + getType().getId() + " packet: invalid board index " + index);
-            return;
-        }
         if (BingoClient.clientBoard == null) {
             Bingo.LOGGER.warn("BingoClient.clientBoard == null while handling " + getType().getId() + "!");
+            return;
+        }
+        if (index < 0 || index >= BingoClient.clientBoard.size() * BingoClient.clientBoard.size()) {
+            Bingo.LOGGER.warn("Invalid " + getType().getId() + " packet: invalid board index " + index);
             return;
         }
         BingoClient.clientBoard.states()[index] = newState;

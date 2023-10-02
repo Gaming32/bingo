@@ -25,7 +25,7 @@ public class MixinGameRenderer {
         }
 
         guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(0, BingoClient.BOARD_HEIGHT * boardConfig.scale + 2 * BingoClient.BOARD_OFFSET, 0);
+        guiGraphics.pose().translate(0, BingoClient.getBoardHeight() * boardConfig.scale + 2 * BingoClient.BOARD_OFFSET, 0);
         original.call(instance, guiGraphics);
         guiGraphics.pose().popPose();
     }

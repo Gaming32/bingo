@@ -39,11 +39,11 @@ public class VanillaNetworking {
 //    public static final String[][] REQUIREMENTS = {{CRITERION}};
     public static final AdvancementRequirements REQUIREMENTS = AdvancementRequirements.allOf(List.of(CRITERION));
 
-    public static List<AdvancementHolder> generateAdvancements(ActiveGoal[] goals) {
+    public static List<AdvancementHolder> generateAdvancements(int size, ActiveGoal[] goals) {
         final List<AdvancementHolder> result = new ArrayList<>(1 + goals.length);
         result.add(ROOT_ADVANCEMENT);
         for (int i = 0; i < goals.length; i++) {
-            result.add(generateAdvancement(i, goals[i], i % BingoBoard.SIZE, i / BingoBoard.SIZE));
+            result.add(generateAdvancement(i, goals[i], i % size, i / size));
         }
         return result;
     }

@@ -8,7 +8,6 @@ import io.github.gaming32.bingo.network.messages.s2c.*;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.advancements.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
@@ -24,11 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class BingoGame {
-    private static final BingoBoard.Teams[] EMPTY_TEAMS = Util.make(
-        new BingoBoard.Teams[BingoBoard.SIZE_SQ],
-        a -> Arrays.fill(a, BingoBoard.Teams.NONE)
-    );
-
     private final BingoBoard board;
     private final BingoGameMode gameMode;
     private final boolean requireClient;
@@ -68,7 +62,7 @@ public class BingoGame {
             player.connection.send(new ClientboundUpdateAdvancementsPacket(
                 false,
                 List.of(),
-                VanillaNetworking.generateAdvancementIds(BingoBoard.SIZE_SQ),
+                VanillaNetworking.generateAdvancementIds(BingoBoard.MAX_SIZE),
                 Map.of()
             ));
         }
@@ -81,10 +75,10 @@ public class BingoGame {
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamMessage(team).sendTo(player);
 
-        new InitBoardMessage(board.getGoals(), obfuscateTeam(team, board.getStates())).sendTo(player);
+        new InitBoardMessage(board.getSize(), board.getGoals(), obfuscateTeam(team, board.getStates())).sendTo(player);
         player.connection.send(new ClientboundUpdateAdvancementsPacket(
             false,
-            VanillaNetworking.generateAdvancements(board.getGoals()),
+            VanillaNetworking.generateAdvancements(board.getSize(), board.getGoals()),
             Set.of(),
             VanillaNetworking.generateProgressMap(board.getStates(), team)
         ));
@@ -96,7 +90,9 @@ public class BingoGame {
             return states;
         }
         if (!playerTeam.any()) {
-            return EMPTY_TEAMS;
+            BingoBoard.Teams[] ret = new BingoBoard.Teams[states.length];
+            Arrays.fill(ret, BingoBoard.Teams.NONE);
+            return ret;
         }
         final BingoBoard.Teams[] result = new BingoBoard.Teams[states.length];
         for (int i = 0; i < states.length; i++) {

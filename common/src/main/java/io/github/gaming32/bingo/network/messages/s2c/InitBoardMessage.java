@@ -13,10 +13,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import java.util.Arrays;
 
 public class InitBoardMessage extends BaseS2CMessage {
+    private final int size;
     private final ClientGoal[] goals;
     private final BingoBoard.Teams[] states;
 
-    public InitBoardMessage(ActiveGoal[] goals, BingoBoard.Teams[] states) {
+    public InitBoardMessage(int size, ActiveGoal[] goals, BingoBoard.Teams[] states) {
+        this.size = size;
         this.goals = new ClientGoal[goals.length];
         this.states = states;
 
@@ -26,6 +28,7 @@ public class InitBoardMessage extends BaseS2CMessage {
     }
 
     public InitBoardMessage(FriendlyByteBuf buf) {
+        size = buf.readVarInt();
         goals = buf.readList(ClientGoal::new).toArray(ClientGoal[]::new);
         states = buf.readList(b -> BingoBoard.Teams.fromBits(b.readVarInt())).toArray(BingoBoard.Teams[]::new);
     }
@@ -37,12 +40,13 @@ public class InitBoardMessage extends BaseS2CMessage {
 
     @Override
     public void write(FriendlyByteBuf buf) {
+        buf.writeVarInt(size);
         buf.writeCollection(Arrays.asList(goals), (b, v) -> v.serialize(b));
         buf.writeCollection(Arrays.asList(states), (b, v) -> b.writeVarInt(v.toBits()));
     }
 
     @Override
     public void handle(NetworkManager.PacketContext context) {
-        BingoClient.clientBoard = new ClientBoard(states, goals);
+        BingoClient.clientBoard = new ClientBoard(size, states, goals);
     }
 }

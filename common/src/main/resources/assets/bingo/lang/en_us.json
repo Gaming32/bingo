@@ -190,5 +190,6 @@
   "bingo.board_corner.upper_left": "Upper-left",
   "bingo.board_corner.upper_right": "Upper-right",
   "bingo.board_corner.lower_left": "Lower-left",
-  "bingo.board_corner.lower_right": "Lower-right"
+  "bingo.board_corner.lower_right": "Lower-right",
+  "bingo.cannot_show_board": "Showing a bingo board of size %s is currently unsupported."
 }

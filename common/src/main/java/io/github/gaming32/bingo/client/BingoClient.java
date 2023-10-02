@@ -40,8 +40,6 @@ public class BingoClient {
     private static final ResourceLocation BOARD_TEXTURE = new ResourceLocation("bingo:textures/gui/board.png");
     public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
 
-    public static final int BOARD_WIDTH = 104;
-    public static final int BOARD_HEIGHT = 114;
     public static final int BOARD_OFFSET = 3;
 
     public static BingoBoard.Teams clientTeam = BingoBoard.Teams.NONE;
@@ -123,6 +121,14 @@ public class BingoClient {
         return config;
     }
 
+    public static int getBoardWidth() {
+        return 14 + 18 * clientBoard.size();
+    }
+
+    public static int getBoardHeight() {
+        return 24 + 18 * clientBoard.size();
+    }
+
     public static void renderBingo(GuiGraphics graphics, boolean mouseHover, float x, float y, float scale) {
         if (clientBoard == null) {
             Bingo.LOGGER.warn("BingoClient.renderBingo() called when Bingo.clientBoard == null!");
@@ -136,11 +142,12 @@ public class BingoClient {
 
         final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, x, y, scale) : null;
 
+        // TODO: change the background texture when playing bingo sizes other than 5
         graphics.blit(BOARD_TEXTURE, 0, 0, 0, 0, 128, 128, 128, 128);
         graphics.drawString(minecraft.font, BOARD_TITLE, 8, 6, 0x404040, false);
 
-        for (int sx = 0; sx < BingoBoard.SIZE; sx++) {
-            for (int sy = 0; sy < BingoBoard.SIZE; sy++) {
+        for (int sx = 0; sx < clientBoard.size(); sx++) {
+            for (int sy = 0; sy < clientBoard.size(); sy++) {
                 final ClientGoal goal = clientBoard.getGoal(sx, sy);
                 final int slotX = sx * 18 + 8;
                 final int slotY = sy * 18 + 18;

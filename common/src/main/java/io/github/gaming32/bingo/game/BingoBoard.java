@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.game;
 
-import com.google.common.collect.Maps;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.util.BingoUtil;
@@ -16,22 +15,29 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class BingoBoard {
-    public static final int SIZE = 5;
-    public static final int SIZE_SQ = SIZE * SIZE;
+    public static final int MIN_SIZE = 1;
+    public static final int MAX_SIZE = 7;
+    public static final int DEFAULT_SIZE = 5;
 
-    private static final int[] SECONDARY_DIAGONAL = {4, 8, 12, 16, 20};
+    private final int size;
+    private final Teams[] states;
+    private final ActiveGoal[] goals;
+    private final Map<ResourceLocation, ActiveGoal> byVanillaId;
+    private final Object2IntMap<ActiveGoal> toGoalIndex;
 
-    private final Teams[] states = new Teams[SIZE_SQ];
-    private final ActiveGoal[] goals = new ActiveGoal[SIZE_SQ];
-    private final Map<ResourceLocation, ActiveGoal> byVanillaId = Maps.newHashMapWithExpectedSize(SIZE_SQ);
-    private final Object2IntMap<ActiveGoal> toGoalIndex = new Object2IntOpenHashMap<>(SIZE_SQ);
+    private BingoBoard(int size) {
+        this.size = size;
+        this.states = new Teams[size * size];
+        this.goals = new ActiveGoal[size * size];
+        this.byVanillaId = new HashMap<>(size * size);
+        this.toGoalIndex = new Object2IntOpenHashMap<>(size * size);
 
-    private BingoBoard() {
         Arrays.fill(states, Teams.NONE);
         toGoalIndex.defaultReturnValue(-1);
     }
 
     public static BingoBoard generate(
+        int size,
         int difficulty,
         int teamCount,
         RandomSource rand,
@@ -40,9 +46,9 @@ public class BingoBoard {
         @Nullable BingoGoal requiredGoal,
         boolean allowsClientRequired
     ) {
-        final BingoBoard board = new BingoBoard();
-        final BingoGoal[] generatedSheet = generateGoals(difficulty, rand, isAllowedGoal, requiredGoal, allowsClientRequired);
-        for (int i = 0; i < SIZE_SQ; i++) {
+        final BingoBoard board = new BingoBoard(size);
+        final BingoGoal[] generatedSheet = generateGoals(size, difficulty, rand, isAllowedGoal, requiredGoal, allowsClientRequired);
+        for (int i = 0; i < size * size; i++) {
             final ActiveGoal goal = board.goals[i] = generatedSheet[i].build(rand, lootData);
             if (generatedSheet[i].getSpecialType() == BingoTag.SpecialType.NEVER) {
                 board.states[i] = Teams.fromAll(teamCount);
@@ -54,16 +60,17 @@ public class BingoBoard {
     }
 
     public static BingoGoal[] generateGoals(
+        int size,
         int difficulty,
         RandomSource rand,
         Predicate<BingoGoal> isAllowedGoal,
         @Nullable BingoGoal requiredGoal,
         boolean allowsClientRequired
     ) {
-        final BingoGoal[] generatedSheet = new BingoGoal[SIZE_SQ];
+        final BingoGoal[] generatedSheet = new BingoGoal[size * size];
 
-        final int[] difficultyLayout = generateDifficulty(difficulty, rand);
-        final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(SIZE_SQ), rand);
+        final int[] difficultyLayout = generateDifficulty(size, difficulty, rand);
+        final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(size * size), rand);
 
         final Set<ResourceLocation> usedGoals = new HashSet<>();
         final Object2IntOpenHashMap<ResourceLocation> tagCount = new Object2IntOpenHashMap<>();
@@ -71,7 +78,7 @@ public class BingoBoard {
         final Set<String> reactants = new HashSet<>();
         final Set<String> catalysts = new HashSet<>();
 
-        for (int i = 0; i < SIZE_SQ; i++) {
+        for (int i = 0; i < size * size; i++) {
             List<BingoGoal> possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i]);
 
             int failSafe = 0;
@@ -126,7 +133,7 @@ public class BingoBoard {
                     if (goalCandidate.getTags().stream().anyMatch(t -> !t.allowedOnSameLine())) {
                         for (int z = 0; z < i; z++) {
                             final List<BingoTag> tags = generatedSheet[indices[z]].getTags();
-                            if (!tags.isEmpty() && isOnSameLine(indices[i], indices[z])) {
+                            if (!tags.isEmpty() && isOnSameLine(size, indices[i], indices[z])) {
                                 if (tags.stream().anyMatch(t ->
                                     !t.allowedOnSameLine() &&
                                         goalCandidate.getTags().stream().anyMatch(t2 -> t.id().equals(t2.id()))
@@ -172,24 +179,33 @@ public class BingoBoard {
         return generatedSheet;
     }
 
-    private static boolean isOnSameLine(int a, int b) {
-        if (a % 6 == 0 && b % 6 == 0) {
+    private static boolean isOnSameLine(int size, int a, int b) {
+        // check primary diagonal
+        if (a % (size + 1) == 0 && b % (size + 1) == 0) {
             return true;
         }
-        if (Arrays.binarySearch(SECONDARY_DIAGONAL, a) >= 0 && Arrays.binarySearch(SECONDARY_DIAGONAL, b) >= 0) {
+
+        // check secondary diagonal
+        if (size > 1
+            && a % (size - 1) == 0 && b % (size - 1) == 0 // this checks the secondary diagonal plus the other two corners
+            && a != 0 && b != 0 // exclude the top left corner
+            && a != size * size - 1 && b != size * size - 1 // exclude the bottom right corner
+        ) {
             return true;
         }
-        if (a / 5 == b / 5) {
+
+        // check row and column
+        if (a / size == b / size) {
             return true;
         }
-        if (a % 5 == b % 5) {
+        if (a % size == b % size) {
             return true;
         }
         return false;
     }
 
-    private static int[] generateDifficulty(int difficulty, RandomSource rand) {
-        final int[] layout = new int[SIZE_SQ];
+    private static int[] generateDifficulty(int size, int difficulty, RandomSource rand) {
+        final int[] layout = new int[size * size];
 
         final int amountOfVeryHard, amountOfHard, amountOfMedium, amountOfEasy;
         switch (difficulty) {
@@ -197,25 +213,25 @@ public class BingoBoard {
                 amountOfVeryHard = 0;
                 amountOfHard = 0;
                 amountOfMedium = 0;
-                amountOfEasy = rand.nextIntBetweenInclusive(15, 19);
+                amountOfEasy = rand.nextInt(size * size * 3 / 5, size);
             }
             case 2 -> {
                 amountOfVeryHard = 0;
                 amountOfHard = 0;
-                amountOfMedium = rand.nextIntBetweenInclusive(15, 19);
-                amountOfEasy = 25 - amountOfMedium;
+                amountOfMedium = rand.nextInt(size * size * 3 / 5, size);
+                amountOfEasy = size * size - amountOfMedium;
             }
             case 3 -> {
                 amountOfVeryHard = 0;
-                amountOfHard = rand.nextIntBetweenInclusive(15, 19);
-                amountOfMedium = 25 - amountOfHard;
-                amountOfEasy = 25 - amountOfHard - amountOfMedium;
+                amountOfHard = rand.nextInt(size * size * 3 / 5, size);
+                amountOfMedium = size * size - amountOfHard;
+                amountOfEasy = size * size - amountOfHard - amountOfMedium;
             }
             case 4 -> {
-                amountOfVeryHard = rand.nextIntBetweenInclusive(15, 19);
-                amountOfHard = 25 - amountOfVeryHard;
-                amountOfMedium = 25 - amountOfHard - amountOfVeryHard;
-                amountOfEasy = 25 - amountOfHard - amountOfMedium - amountOfVeryHard;
+                amountOfVeryHard = rand.nextInt(size * size * 3 / 5, size);
+                amountOfHard = size * size - amountOfVeryHard;
+                amountOfMedium = size * size - amountOfHard - amountOfVeryHard;
+                amountOfEasy = size * size - amountOfHard - amountOfMedium - amountOfVeryHard;
             }
             default -> {
                 amountOfVeryHard = 0;
@@ -225,15 +241,15 @@ public class BingoBoard {
             }
         }
 
-        distributeDifficulty(layout, amountOfVeryHard, 4, rand);
-        distributeDifficulty(layout, amountOfHard, 3, rand);
-        distributeDifficulty(layout, amountOfMedium, 2, rand);
-        distributeDifficulty(layout, amountOfEasy, 1, rand);
+        distributeDifficulty(size, layout, amountOfVeryHard, 4, rand);
+        distributeDifficulty(size, layout, amountOfHard, 3, rand);
+        distributeDifficulty(size, layout, amountOfMedium, 2, rand);
+        distributeDifficulty(size, layout, amountOfEasy, 1, rand);
 
         return layout;
     }
 
-    private static void distributeDifficulty(int[] layout, int amount, int difficulty, RandomSource rand) {
+    private static void distributeDifficulty(int size, int[] layout, int amount, int difficulty, RandomSource rand) {
         for (int i = 0; i < amount; i++) {
             boolean cont;
             int failSafe = 0;
@@ -242,7 +258,7 @@ public class BingoBoard {
                 cont = true;
                 failSafe++;
 
-                final int rng = rand.nextInt(SIZE_SQ);
+                final int rng = rand.nextInt(size * size);
                 if (layout[rng] == 0) {
                     layout[rng] = difficulty;
                 } else {
@@ -251,6 +267,10 @@ public class BingoBoard {
                 }
             } while (!cont);
         }
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public Teams getState(int x, int y) {
@@ -262,7 +282,7 @@ public class BingoBoard {
     }
 
     private int getIndex(int x, int y) {
-        return y * 5 + x;
+        return y * size + x;
     }
 
     public Teams[] getStates() {
@@ -288,22 +308,22 @@ public class BingoBoard {
         final int boxWidth = 20;
         final int boxHeight = 7;
 
-        final StringBuilder result = new StringBuilder((boxWidth * SIZE + 1) * (boxHeight + 1));
+        final StringBuilder result = new StringBuilder((boxWidth * size + 1) * (boxHeight + 1));
 
-        for (int y = 0; y < SIZE; y++) {
-            for (int column = 0; column < SIZE; column++) {
+        for (int y = 0; y < size; y++) {
+            for (int column = 0; column < size; column++) {
                 result.append('+');
                 result.append("-".repeat(boxWidth - 1));
             }
             result.append("+\n");
 
-            final String[][] texts = new String[SIZE][];
-            for (int x = 0; x < SIZE; x++) {
+            final String[][] texts = new String[size][];
+            for (int x = 0; x < size; x++) {
                 texts[x] = WordUtils.wrap(getGoal(x, y).getName().getString(), boxWidth - 3, "\n", true).split("\n");
             }
 
             for (int line = 0; line < boxHeight - 1; line++) {
-                for (int x = 0; x < SIZE; x++) {
+                for (int x = 0; x < size; x++) {
                     final String box = line < texts[x].length ? texts[x][line] : "";
                     result.append("| ").append(box).append(" ".repeat(boxWidth - box.length() - 2));
                 }
@@ -311,7 +331,7 @@ public class BingoBoard {
             }
         }
 
-        for (int column = 0; column < SIZE; column++) {
+        for (int column = 0; column < size; column++) {
             result.append('+');
             result.append("-".repeat(boxWidth - 1));
         }

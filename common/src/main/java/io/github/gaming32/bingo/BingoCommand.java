@@ -89,18 +89,31 @@ public class BingoCommand {
                     if (Bingo.activeGame == null) {
                         throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
                     }
+                    int size = Bingo.activeGame.getBoard().getSize();
+
+                    MenuType<?> menuType = switch (size) {
+                        case 1 -> MenuType.GENERIC_9x1;
+                        case 2 -> MenuType.GENERIC_9x2;
+                        case 3 -> MenuType.GENERIC_9x3;
+                        case 4 -> MenuType.GENERIC_9x4;
+                        case 5 -> MenuType.GENERIC_9x5;
+                        case 6 -> MenuType.GENERIC_9x6;
+                        default -> throw new CommandRuntimeException(Bingo.translatable("bingo.cannot_show_board", size));
+                    };
+
                     ctx.getSource().getPlayerOrException().openMenu(new MenuProvider() {
                         @Override
                         public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
-                            final var menu = new ChestMenu(MenuType.GENERIC_9x5, syncId, inventory, new SimpleContainer(9 * 5), 5) {
+                            final var menu = new ChestMenu(menuType, syncId, inventory, new SimpleContainer(9 * size), size) {
                                 @Override
                                 public void clicked(int slotId, int button, ClickType clickType, Player player) {
                                     sendAllDataToRemote(); // Same as in spectator mode
                                 }
                             };
-                            for (int x = 0; x < BingoBoard.SIZE; x++) {
-                                for (int y = 0; y < BingoBoard.SIZE; y++) {
-                                    menu.getContainer().setItem(2 + y * 9 + x, Bingo.activeGame.getBoard().getGoal(x, y).toSingleStack());
+                            int minX = (9 - size) / 2;
+                            for (int x = 0; x < size; x++) {
+                                for (int y = 0; y < size; y++) {
+                                    menu.getContainer().setItem(minX + y * 9 + x, Bingo.activeGame.getBoard().getGoal(x, y).toSingleStack());
                                 }
                             }
                             return menu;
@@ -136,9 +149,9 @@ public class BingoCommand {
                             throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
                         }
                         final BingoBoard board = Bingo.activeGame.getBoard();
-                        final StringBuilder line = new StringBuilder(BingoBoard.SIZE);
-                        for (int y = 0; y < BingoBoard.SIZE; y++) {
-                            for (int x = 0; x < BingoBoard.SIZE; x++) {
+                        final StringBuilder line = new StringBuilder(board.getSize());
+                        for (int y = 0; y < board.getSize(); y++) {
+                            for (int x = 0; x < board.getSize(); x++) {
                                 line.append(board.getGoal(x, y).getGoal().getDifficulty());
                             }
                             ctx.getSource().sendSuccess(() -> Component.literal(line.toString()), false);
@@ -217,6 +230,11 @@ public class BingoCommand {
             final CommandNode<CommandSourceStack> startCommand = bingoCommand.getChild("start");
             dispatcher.register(literal("bingo")
                 .then(literal("start")
+                    .then(literal("--size")
+                        .then(argument("size", IntegerArgumentType.integer(BingoBoard.MIN_SIZE, BingoBoard.MAX_SIZE))
+                            .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+                        )
+                    )
                     .then(literal("--difficulty")
                         .then(argument("difficulty", IntegerArgumentType.integer(0, 4))
                             .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
@@ -259,6 +277,7 @@ public class BingoCommand {
         final int difficulty = getArg(context, "difficulty", () -> 2, IntegerArgumentType::getInteger);
         final long seed = getArg(context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong);
         final ResourceLocation requiredGoalId = getArg(context, "required_goal", () -> null, ResourceLocationArgument::getId);
+        final int size = getArg(context, "size", () -> BingoBoard.DEFAULT_SIZE, IntegerArgumentType::getInteger);
 
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
         for (int i = 1; i <= 32; i++) {
@@ -287,6 +306,7 @@ public class BingoCommand {
         final BingoBoard board;
         try {
             board = BingoBoard.generate(
+                size,
                 difficulty,
                 teams.size(),
                 RandomSource.create(seed),

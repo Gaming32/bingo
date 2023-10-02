@@ -20,9 +20,11 @@ public interface BingoGameMode {
         }
 
         private boolean didWin(BingoBoard board, BingoBoard.Teams team) {
+            int size = board.getSize();
+
             columnsCheck:
-            for (int column = 0; column < BingoBoard.SIZE; column++) {
-                for (int y = 0; y < BingoBoard.SIZE; y++) {
+            for (int column = 0; column < size; column++) {
+                for (int y = 0; y < size; y++) {
                     if (!board.getState(column, y).and(team)) {
                         continue columnsCheck;
                     }
@@ -31,8 +33,8 @@ public interface BingoGameMode {
             }
 
             rowsCheck:
-            for (int row = 0; row < BingoBoard.SIZE; row++) {
-                for (int x = 0; x < BingoBoard.SIZE; x++) {
+            for (int row = 0; row < size; row++) {
+                for (int x = 0; x < size; x++) {
                     if (!board.getState(x, row).and(team)) {
                         continue rowsCheck;
                     }
@@ -40,8 +42,9 @@ public interface BingoGameMode {
                 return true;
             }
 
+            // check primary diagonal
             boolean win = true;
-            for (int i = 0; i < BingoBoard.SIZE; i++) {
+            for (int i = 0; i < size; i++) {
                 if (!board.getState(i, i).and(team)) {
                     win = false;
                     break;
@@ -51,8 +54,9 @@ public interface BingoGameMode {
                 return true;
             }
 
-            for (int i = 0; i < BingoBoard.SIZE; i++) {
-                if (!board.getState(i, BingoBoard.SIZE - i - 1).and(team)) {
+            // check secondary diagonal
+            for (int i = 0; i < size; i++) {
+                if (!board.getState(i, size - i - 1).and(team)) {
                     return false;
                 }
             }
@@ -78,18 +82,19 @@ public interface BingoGameMode {
                 // TODO
                 throw new UnsupportedOperationException("Lockout not supported on teamCount != 2 yet");
             }
+            final int size = board.getSize();
             int count1 = 0;
             int count2 = 0;
             for (final BingoBoard.Teams state : board.getStates()) {
                 if (state.and(BingoBoard.Teams.TEAM1)) {
                     count1++;
-                    if (count1 >= BingoBoard.SIZE_SQ / 2 + 1) {
+                    if (count1 >= size * size / 2 + 1) {
                         return BingoBoard.Teams.TEAM1;
                     }
                 }
                 if (state.and(BingoBoard.Teams.TEAM2)) {
                     count2++;
-                    if (count2 >= BingoBoard.SIZE_SQ / 2 + 1) {
+                    if (count2 >= size * size / 2 + 1) {
                         return BingoBoard.Teams.TEAM1;
                     }
                 }

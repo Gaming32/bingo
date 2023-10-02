@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.client;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.ClientGoal;
 
-public record ClientBoard(BingoBoard.Teams[] states, ClientGoal[] goals) {
+public record ClientBoard(int size, BingoBoard.Teams[] states, ClientGoal[] goals) {
     public BingoBoard.Teams getState(int x, int y) {
         return states[getIndex(x, y)];
     }

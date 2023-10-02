@@ -37,6 +37,6 @@ public class ResyncStatesMessage extends BaseS2CMessage {
             Bingo.LOGGER.warn("BingoClient.clientBoard == null while handling " + getType().getId() + "!");
             return;
         }
-        System.arraycopy(states, 0, BingoClient.clientBoard.states(), 0, BingoBoard.SIZE_SQ);
+        System.arraycopy(states, 0, BingoClient.clientBoard.states(), 0, BingoClient.clientBoard.size() * BingoClient.clientBoard.size());
     }
 }

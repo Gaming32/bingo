@@ -21,7 +21,7 @@ public enum BoardCorner implements SelectionListEntry.Translatable {
     UPPER_RIGHT {
         @Override
         public float getX(float guiWidth, float scale) {
-            return guiWidth / scale - BingoClient.BOARD_OFFSET - BingoClient.BOARD_WIDTH;
+            return guiWidth / scale - BingoClient.BOARD_OFFSET - BingoClient.getBoardWidth();
         }
 
         @Override
@@ -42,18 +42,18 @@ public enum BoardCorner implements SelectionListEntry.Translatable {
 
         @Override
         public float getY(float guiHeight, float scale) {
-            return guiHeight / scale - BingoClient.BOARD_OFFSET - BingoClient.BOARD_HEIGHT;
+            return guiHeight / scale - BingoClient.BOARD_OFFSET - BingoClient.getBoardHeight();
         }
     },
     LOWER_RIGHT {
         @Override
         public float getX(float guiWidth, float scale) {
-            return guiWidth / scale - BingoClient.BOARD_OFFSET - BingoClient.BOARD_WIDTH;
+            return guiWidth / scale - BingoClient.BOARD_OFFSET - BingoClient.getBoardWidth();
         }
 
         @Override
         public float getY(float guiHeight, float scale) {
-            return guiHeight / scale - BingoClient.BOARD_OFFSET - BingoClient.BOARD_HEIGHT;
+            return guiHeight / scale - BingoClient.BOARD_OFFSET - BingoClient.getBoardHeight();
         }
     };
 
