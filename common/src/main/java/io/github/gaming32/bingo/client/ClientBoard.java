@@ -13,6 +13,6 @@ public record ClientBoard(int size, BingoBoard.Teams[] states, ClientGoal[] goal
     }
 
     private int getIndex(int x, int y) {
-        return y * 5 + x;
+        return y * size + x;
     }
 }

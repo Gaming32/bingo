@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.client;
 import net.minecraft.client.Minecraft;
 
 public record BingoMousePos(double mouseX, double mouseY, int slotIdX, int slotIdY) {
-    public static BingoMousePos getPos(Minecraft minecraft, float x, float y, float scale) {
+    public static BingoMousePos getPos(Minecraft minecraft, int size, float x, float y, float scale) {
         final double mouseX = minecraft.mouseHandler.xpos() * minecraft.getWindow().getGuiScaledWidth() / minecraft.getWindow().getScreenWidth();
         final double mouseY = minecraft.mouseHandler.ypos() * minecraft.getWindow().getGuiScaledHeight() / minecraft.getWindow().getScreenHeight();
         final double relX = (mouseX - x * scale) / scale;
@@ -13,7 +13,7 @@ public record BingoMousePos(double mouseX, double mouseY, int slotIdX, int slotI
 
         int slotIdX = -1;
         int slotIdY = -1;
-        if (slotIdXD >= 0 && slotIdXD < 5 && slotIdYD >= 0 && slotIdYD < 5) {
+        if (slotIdXD >= 0 && slotIdXD < size && slotIdYD >= 0 && slotIdYD < size) {
             slotIdX = (int)((relX - 7) / 18);
             slotIdY = (int)((relY - 17) / 18);
         }

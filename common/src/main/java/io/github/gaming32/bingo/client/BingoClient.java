@@ -140,7 +140,7 @@ public class BingoClient {
         graphics.pose().scale(scale, scale, 1);
         graphics.pose().translate(x, y, 0);
 
-        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, x, y, scale) : null;
+        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientBoard.size(), x, y, scale) : null;
 
         // TODO: change the background texture when playing bingo sizes other than 5
         graphics.blit(BOARD_TEXTURE, 0, 0, 0, 0, 128, 128, 128, 128);
@@ -206,7 +206,7 @@ public class BingoClient {
             return false;
         }
 
-        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), x, y, scale);
+        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), clientBoard.size(), x, y, scale);
         if (!mousePos.hasSlotPos()) {
             return false;
         }
