@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 
 public class BingoBoard {
     public static final int MIN_SIZE = 1;
-    public static final int MAX_SIZE = 7;
+    public static final int MAX_SIZE = 6;
     public static final int DEFAULT_SIZE = 5;
 
     private final int size;

@@ -37,7 +37,7 @@ import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class BingoClient {
-    private static final ResourceLocation BOARD_TEXTURE = new ResourceLocation("bingo:textures/gui/board.png");
+    private static final ResourceLocation BOARD_TEXTURE = new ResourceLocation("bingo:board");
     public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
 
     public static final int BOARD_OFFSET = 3;
@@ -142,8 +142,11 @@ public class BingoClient {
 
         final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientBoard.size(), x, y, scale) : null;
 
-        // TODO: change the background texture when playing bingo sizes other than 5
-        graphics.blit(BOARD_TEXTURE, 0, 0, 0, 0, 128, 128, 128, 128);
+        graphics.blitSprite(
+            BOARD_TEXTURE, 0, 0,
+            7 + 18 * clientBoard.size() + 7,
+            17 + 18 * clientBoard.size() + 7
+        );
         graphics.drawString(minecraft.font, BOARD_TITLE, 8, 6, 0x404040, false);
 
         for (int sx = 0; sx < clientBoard.size(); sx++) {
