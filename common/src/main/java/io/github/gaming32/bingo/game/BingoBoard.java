@@ -213,22 +213,22 @@ public class BingoBoard {
                 amountOfVeryHard = 0;
                 amountOfHard = 0;
                 amountOfMedium = 0;
-                amountOfEasy = rand.nextInt(size * size * 3 / 5, size);
+                amountOfEasy = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
             }
             case 2 -> {
                 amountOfVeryHard = 0;
                 amountOfHard = 0;
-                amountOfMedium = rand.nextInt(size * size * 3 / 5, size);
+                amountOfMedium = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
                 amountOfEasy = size * size - amountOfMedium;
             }
             case 3 -> {
                 amountOfVeryHard = 0;
-                amountOfHard = rand.nextInt(size * size * 3 / 5, size);
+                amountOfHard = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
                 amountOfMedium = size * size - amountOfHard;
                 amountOfEasy = size * size - amountOfHard - amountOfMedium;
             }
             case 4 -> {
-                amountOfVeryHard = rand.nextInt(size * size * 3 / 5, size);
+                amountOfVeryHard = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
                 amountOfHard = size * size - amountOfVeryHard;
                 amountOfMedium = size * size - amountOfHard - amountOfVeryHard;
                 amountOfEasy = size * size - amountOfHard - amountOfMedium - amountOfVeryHard;
