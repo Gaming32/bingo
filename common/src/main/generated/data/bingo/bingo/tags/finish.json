@@ -1,11 +1,11 @@
 {
   "allowed_on_same_line": false,
   "difficulty_max": [
-    1,
-    1,
-    1,
-    1,
-    1
+    0.04,
+    0.04,
+    0.04,
+    0.04,
+    0.04
   ],
   "special_type": "finish"
 }

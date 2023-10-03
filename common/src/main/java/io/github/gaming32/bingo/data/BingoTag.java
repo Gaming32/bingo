@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.floats.FloatArrayList;
+import it.unimi.dsi.fastutil.floats.FloatList;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -21,7 +21,7 @@ import java.util.Map;
 
 public record BingoTag(
     ResourceLocation id,
-    IntList difficultyMax,
+    FloatList difficultyMax,
     boolean allowedOnSameLine,
     SpecialType specialType
 ) {
@@ -33,16 +33,16 @@ public record BingoTag(
 
     public static BingoTag deserialize(ResourceLocation id, JsonObject json) {
         final JsonArray difficultyMaxArray = GsonHelper.getAsJsonArray(json, "difficulty_max");
-        final int[] difficultyMax = new int[5];
+        final float[] difficultyMax = new float[5];
         if (difficultyMaxArray.size() != difficultyMax.length) {
             throw new JsonSyntaxException("difficulty_max must be exactly 5 elements long");
         }
         for (int i = 0; i < difficultyMax.length; i++) {
-            difficultyMax[i] = GsonHelper.convertToInt(difficultyMaxArray.get(i), "difficulty_max[" + i + "]");
+            difficultyMax[i] = GsonHelper.convertToFloat(difficultyMaxArray.get(i), "difficulty_max[" + i + "]");
         }
         return new BingoTag(
             id,
-            IntList.of(difficultyMax),
+            FloatList.of(difficultyMax),
             GsonHelper.getAsBoolean(json, "allowed_on_same_line", true),
             json.has("special_type")
                 ? Util.getOrThrow(SpecialType.CODEC.parse(JsonOps.INSTANCE, json.get("special_type")), JsonSyntaxException::new)
@@ -54,7 +54,7 @@ public record BingoTag(
         final JsonObject result = new JsonObject();
 
         final JsonArray difficultyMaxArray = new JsonArray(difficultyMax.size());
-        for (final Integer max : difficultyMax) {
+        for (final Float max : difficultyMax) {
             difficultyMaxArray.add(new JsonPrimitive(max));
         }
         result.add("difficulty_max", difficultyMaxArray);
@@ -76,7 +76,7 @@ public record BingoTag(
 
     public static final class Builder {
         private final ResourceLocation id;
-        private IntList difficultyMax = new IntArrayList();
+        private FloatList difficultyMax = new FloatArrayList();
         private boolean allowedOnSameLine = true;
         private SpecialType specialType = SpecialType.NONE;
 
@@ -85,7 +85,11 @@ public record BingoTag(
         }
 
         public Builder difficultyMax(int veryEasy, int easy, int medium, int hard, int veryHard) {
-            this.difficultyMax = IntList.of(veryEasy, easy, medium, hard, veryHard);
+            return this.difficultyMax(veryEasy / 25f, easy / 25f, medium / 25f, hard / 25f, veryHard / 25f);
+        }
+
+        public Builder difficultyMax(float veryEasy, float easy, float medium, float hard, float veryHard) {
+            this.difficultyMax = FloatList.of(veryEasy, easy, medium, hard, veryHard);
             return this;
         }
 

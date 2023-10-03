@@ -1,11 +1,11 @@
 {
   "allowed_on_same_line": false,
   "difficulty_max": [
-    3,
-    3,
-    3,
-    2,
-    1
+    0.12,
+    0.12,
+    0.12,
+    0.08,
+    0.04
   ],
   "special_type": "never"
 }

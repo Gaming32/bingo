@@ -6,6 +6,7 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.text.WordUtils;
@@ -16,7 +17,7 @@ import java.util.function.Predicate;
 
 public class BingoBoard {
     public static final int MIN_SIZE = 1;
-    public static final int MAX_SIZE = 6;
+    public static final int MAX_SIZE = 7;
     public static final int DEFAULT_SIZE = 5;
 
     private final int size;
@@ -125,7 +126,7 @@ public class BingoBoard {
 
                 if (!goalCandidate.getTags().isEmpty()) {
                     for (final BingoTag tag : goalCandidate.getTags()) {
-                        if (tagCount.getInt(tag.id()) >= tag.difficultyMax().getInt(difficulty)) {
+                        if (tagCount.getInt(tag.id()) >= Mth.ceil(tag.difficultyMax().getFloat(difficulty) * size * size)) {
                             continue goalGen;
                         }
                     }
