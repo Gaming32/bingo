@@ -4,10 +4,7 @@ import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.CompoundEventResult;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
-import dev.architectury.event.events.common.CommandRegistrationEvent;
-import dev.architectury.event.events.common.InteractionEvent;
-import dev.architectury.event.events.common.LifecycleEvent;
-import dev.architectury.event.events.common.PlayerEvent;
+import dev.architectury.event.events.common.*;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
@@ -63,6 +60,16 @@ public class Bingo {
                 BingoTriggers.TRY_USE_ITEM.trigger(serverPlayer, hand);
             }
             return CompoundEventResult.pass();
+        });
+
+        TickEvent.SERVER_POST.register(instance -> {
+            if (activeGame != null && activeGame.isRequireClient()) {
+                for (final ServerPlayer player : instance.getPlayerList().getPlayers()) {
+                    if (player.tickCount == 60 && !Bingo.isInstalledOnClient(player)) {
+                        player.connection.disconnect(BingoGame.REQUIRED_CLIENT_KICK);
+                    }
+                }
+            }
         });
 
         BingoConditions.load();

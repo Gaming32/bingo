@@ -23,6 +23,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class BingoGame {
+    public static final Component REQUIRED_CLIENT_KICK = Component.literal(
+        "This bingo game requires the Bingo mod to be installed on the client. Please install it before joining."
+    );
+
     private final BingoBoard board;
     private final BingoGameMode gameMode;
     private final boolean requireClient;
@@ -46,14 +50,16 @@ public class BingoGame {
         return gameMode;
     }
 
+    public boolean isRequireClient() {
+        return requireClient;
+    }
+
     /**
      * @apiNote {@code player} does <i>not</i> need to be in a team. In fact, they should be added even if they aren't!
      */
     public void addPlayer(ServerPlayer player) {
-        if (requireClient && !Bingo.isInstalledOnClient(player)) {
-            player.connection.disconnect(Component.literal(
-                "This bingo game requires the Bingo mod to be installed on the client. Please install it before joining."
-            ));
+        if (requireClient && player.tickCount > 60 && !Bingo.isInstalledOnClient(player)) {
+            player.connection.disconnect(REQUIRED_CLIENT_KICK);
             return;
         }
 
