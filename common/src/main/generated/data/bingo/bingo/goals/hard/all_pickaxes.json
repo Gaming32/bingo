@@ -2,107 +2,16 @@
   "criteria": {
     "obtain": {
       "conditions": {
-        "items": [
-          {
-            "items": [
-              "minecraft:wooden_pickaxe"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:stone_pickaxe"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:golden_pickaxe"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:iron_pickaxe"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:diamond_pickaxe"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:netherite_pickaxe"
-            ]
-          }
-        ]
+        "required_count": -1,
+        "tag": "minecraft:pickaxes"
       },
-      "trigger": "minecraft:inventory_changed"
+      "trigger": "bingo:has_some_items_from_tag"
     }
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:cycle",
-    "value": [
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:wooden_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:stone_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:golden_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:iron_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:diamond_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:netherite_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      }
-    ]
+    "type": "bingo:item_tag_cycle",
+    "tag": "minecraft:pickaxes"
   },
   "name": {
     "translate": "bingo.goal.all_somethings",

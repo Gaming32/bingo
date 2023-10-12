@@ -156,6 +156,7 @@
   "bingo.goal.pottery_sherd": "Pottery Sherd",
   "bingo.goal.different_saplings": "%s different saplings",
   "bingo.goal.never_walk_backwards": "Never walk backwards",
+  "bingo.goal.armor_trims": "%s Different Armor Trims",
   "bingo.start.failed": "An unexpected error occurred while generating the board. Please try a different seed.",
   "bingo.start.invalid_goal": "An invalid goal was selected while generating. Please check the logs and fix the issue with your datapack.",
   "bingo.started": "A bingo game has started with %s difficulty!",

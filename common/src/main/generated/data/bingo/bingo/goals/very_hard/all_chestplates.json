@@ -2,107 +2,16 @@
   "criteria": {
     "obtain": {
       "conditions": {
-        "items": [
-          {
-            "items": [
-              "minecraft:leather_chestplate"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:chainmail_chestplate"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:iron_chestplate"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:diamond_chestplate"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:golden_chestplate"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:netherite_chestplate"
-            ]
-          }
-        ]
+        "required_count": -1,
+        "tag": "bingo:armor/chestplates"
       },
-      "trigger": "minecraft:inventory_changed"
+      "trigger": "bingo:has_some_items_from_tag"
     }
   },
   "difficulty": 4,
   "icon": {
-    "type": "bingo:cycle",
-    "value": [
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:chainmail_chestplate",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:iron_chestplate",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:diamond_chestplate",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:golden_chestplate",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:netherite_chestplate",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      }
-    ]
+    "type": "bingo:item_tag_cycle",
+    "tag": "bingo:armor/chestplates"
   },
   "name": {
     "translate": "bingo.goal.all_somethings",

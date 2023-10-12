@@ -16,6 +16,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.*;
@@ -59,7 +60,9 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 subber -> subber.multiSub("value.*.value.Count", "count")
             )
         );
-        addGoal(allSomethingsGoal("chestplates", ArmorItem.class, i -> i.getType() == ArmorItem.Type.CHESTPLATE));
+        addGoal(obtainAllItemsFromTag(BingoItemTags.ARMOR_CHESTPLATES, "chestplates")
+            .tags(BingoTags.NETHER)
+            .tooltip(Component.translatable("bingo.goal.all_somethings.tooltip")));
         addGoal(obtainItemGoal(
             id("any_head"),
             new ItemStack(Items.ZOMBIE_HEAD),
@@ -284,5 +287,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.beacon_regen"))
             .icon(Blocks.BEACON)
             .reactant("pacifist"));
+        addGoal(obtainSomeItemsFromTag(id("armor_trims"), ItemTags.TRIM_TEMPLATES, "bingo.goal.armor_trims", 5, 5)
+            .antisynergy("armor_trims"));
     }
 }

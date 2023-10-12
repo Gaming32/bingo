@@ -2,107 +2,16 @@
   "criteria": {
     "obtain": {
       "conditions": {
-        "items": [
-          {
-            "items": [
-              "minecraft:wooden_sword"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:stone_sword"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:golden_sword"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:iron_sword"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:diamond_sword"
-            ]
-          },
-          {
-            "items": [
-              "minecraft:netherite_sword"
-            ]
-          }
-        ]
+        "required_count": -1,
+        "tag": "minecraft:swords"
       },
-      "trigger": "minecraft:inventory_changed"
+      "trigger": "bingo:has_some_items_from_tag"
     }
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:cycle",
-    "value": [
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:wooden_sword",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:stone_sword",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:golden_sword",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:iron_sword",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:diamond_sword",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      },
-      {
-        "type": "bingo:item",
-        "value": {
-          "Count": 1,
-          "id": "minecraft:netherite_sword",
-          "tag": {
-            "Damage": 0
-          }
-        }
-      }
-    ]
+    "type": "bingo:item_tag_cycle",
+    "tag": "minecraft:swords"
   },
   "name": {
     "translate": "bingo.goal.all_somethings",

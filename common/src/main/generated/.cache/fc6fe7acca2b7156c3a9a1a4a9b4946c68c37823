@@ -128,8 +128,9 @@ de5b46a76a281375f13526111fd1bf2cf1f02e4d data/bingo/bingo/goals/easy/tnt.json
 35077c96b7e3bdc006ce45b546fa58d3d9e24b33 data/bingo/bingo/goals/easy/writable_book.json
 8328dded5d38099e4dcefe3721149532d7d57889 data/bingo/bingo/goals/easy/yellow_dye.json
 f9382bd438c6f770bd0a54bd24d683b10325a47e data/bingo/bingo/goals/hard/6x6scaffolding.json
-068ce1785aa06c31d728594fc12d11ed7b616717 data/bingo/bingo/goals/hard/all_pickaxes.json
-f41b48c64eb60937125faba9d190f231ccd6961e data/bingo/bingo/goals/hard/all_swords.json
+bdf2d1612bcc52adb8f5f059d02fb5fbcc64c151 data/bingo/bingo/goals/hard/all_pickaxes.json
+22db15eacf677709bc36b9749246e2ab44c061af data/bingo/bingo/goals/hard/all_swords.json
+ceda7df2cdc0b1199bfdb32044d5893a1b59cc73 data/bingo/bingo/goals/hard/armor_trims.json
 77ff2b99fd3da982616a06f138e7f48483aecdbf data/bingo/bingo/goals/hard/bed_row.json
 100ed94e55bb5ab2d964730796145c8410ba33b0 data/bingo/bingo/goals/hard/breed_pandas.json
 8b7a5ffc2f0cb4b43583267fe7516ac6815c44b6 data/bingo/bingo/goals/hard/burn_mending_book.json
@@ -365,11 +366,12 @@ c895b1c3d0ad6029e0aa98d9ecb68bbd30682152 data/bingo/bingo/goals/very_easy/stripp
 3cfe2472771a71478d7805395af4e55519f5442c data/bingo/bingo/goals/very_easy/stripped_spruce_log.json
 048aeca2e794fcd8ad3c698b736d55459ef514ef data/bingo/bingo/goals/very_easy/stripped_spruce_wood.json
 75473ecfc945b61d8f34c4b75e2f5bf4da10d23b data/bingo/bingo/goals/very_easy/water_bucket.json
-88b4319cbe88004fc5a0b2f6501d835cc3c04805 data/bingo/bingo/goals/very_hard/all_chestplates.json
+6b3b8115b52236225464fc2e428b0b8fc2481693 data/bingo/bingo/goals/very_hard/all_chestplates.json
 46407954f397d4255f41434155dd6e2799add428 data/bingo/bingo/goals/very_hard/all_diamond_craftables.json
 b2aac44e6dc123676a76bc399ea2891cf0f8811e data/bingo/bingo/goals/very_hard/all_dyes.json
 03c0fba139270cda9173a08045316a2b4ca936bc data/bingo/bingo/goals/very_hard/all_mineral_blocks.json
 295b36f53046958e438713dc16c0e460fcdc9bac data/bingo/bingo/goals/very_hard/any_head.json
+1324d29b444998a4bd4ac26689f0fb25450b1ea8 data/bingo/bingo/goals/very_hard/armor_trims.json
 ddddfbb1b13d934a3180b771b17ecc46a7106a17 data/bingo/bingo/goals/very_hard/beacon_regen.json
 c5b3714e66440c7b7575e238f2d3046b40762c1a data/bingo/bingo/goals/very_hard/bed_row.json
 ba75524d1309f3945af044566b244d47f5d72664 data/bingo/bingo/goals/very_hard/blue_ice.json

@@ -40,11 +40,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public abstract class DifficultyGoalProvider {
     private final int difficulty;
@@ -128,28 +126,17 @@ public abstract class DifficultyGoalProvider {
             .icon(icon, subber -> subber.sub("value.Count", "count"));
     }
 
-    @SuppressWarnings("unchecked")
-    protected <T extends Item> BingoGoal.Builder allSomethingsGoal(String what, Class<T> clazz, Predicate<T> predicate) {
-        final List<T> items = BuiltInRegistries.ITEM.stream()
-            .filter(clazz::isInstance)
-            .map(i -> (T)i)
-            .filter(predicate)
-            .toList();
-        return BingoGoal.builder(id("all_" + what))
-            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(items.toArray(Item[]::new)))
-            .tags(BingoTags.ITEM, BingoTags.NETHER)
-            .icon(new CycleIcon(items.stream().map(ItemIcon::ofItem).collect(ImmutableList.toImmutableList())))
-            .name(Component.translatable(
-                "bingo.goal.all_somethings",
-                Component.translatable("bingo.goal.all_somethings." + what)
-            ))
-            .tooltip(Component.translatable("bingo.goal.all_somethings.tooltip"));
-    }
-
     protected static BingoGoal.Builder obtainSomeItemsFromTag(
         ResourceLocation id, TagKey<Item> tag, @Translatable String translationKey,
         int minCount, int maxCount
     ) {
+        if (minCount == maxCount) {
+            return BingoGoal.builder(id)
+                .criterion("obtain", HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(minCount).build())
+                .tags(BingoTags.ITEM)
+                .name(Component.translatable(translationKey, minCount))
+                .icon(new ItemTagCycleIcon(tag));
+        }
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minCount, maxCount))
             .criterion(
@@ -160,6 +147,14 @@ public abstract class DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .name(Component.translatable(translationKey, 0), subber -> subber.sub("with.0", "count"))
             .icon(new ItemTagCycleIcon(tag), subber -> subber.sub("count", "count"));
+    }
+
+    protected BingoGoal.Builder obtainAllItemsFromTag(TagKey<Item> tag, @Translatable(prefix = "bingo.goal.all_somethings.") String what) {
+        return BingoGoal.builder(id("all_" + what))
+            .criterion("obtain", HasSomeItemsFromTagTrigger.builder().tag(tag).requiresAll().build())
+            .tags(BingoTags.ITEM)
+            .name(Component.translatable("bingo.goal.all_somethings", Component.translatable("bingo.goal.all_somethings." + what)))
+            .icon(new ItemTagCycleIcon(tag));
     }
 
     protected static BingoGoal.Builder obtainLevelsGoal(ResourceLocation id, int minLevels, int maxLevels) {

@@ -358,8 +358,12 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.pop_totem"))
             .icon(Items.TOTEM_OF_UNDYING)
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD));
-        addGoal(allSomethingsGoal("swords", SwordItem.class, i -> true));
-        addGoal(allSomethingsGoal("pickaxes", PickaxeItem.class, i -> true));
+        addGoal(obtainAllItemsFromTag(ItemTags.SWORDS, "swords")
+            .tags(BingoTags.NETHER)
+            .tooltip(Component.translatable("bingo.goal.all_somethings.tooltip")));
+        addGoal(obtainAllItemsFromTag(ItemTags.PICKAXES, "pickaxes")
+            .tags(BingoTags.NETHER)
+            .tooltip(Component.translatable("bingo.goal.all_somethings.tooltip")));
         addGoal(BingoGoal.builder(id("pacifist"))
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity())
             .tags(BingoTags.NEVER, BingoTags.STAT)
@@ -601,5 +605,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("sniffer_egg"), Items.SNIFFER_EGG)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(obtainSomeItemsFromTag(id("armor_trims"), ItemTags.TRIM_TEMPLATES, "bingo.goal.armor_trims", 3, 3)
+            .antisynergy("armor_trims"));
     }
 }
