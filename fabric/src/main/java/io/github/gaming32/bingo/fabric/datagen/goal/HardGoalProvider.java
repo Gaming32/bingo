@@ -607,5 +607,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(obtainSomeItemsFromTag(id("armor_trims"), ItemTags.TRIM_TEMPLATES, "bingo.goal.armor_trims", 3, 3)
             .antisynergy("armor_trims"));
+        addGoal(obtainSomeItemsFromTag(id("bonemealable_blocks"), BingoItemTags.BONEMEALABLE, "bingo.goal.bonemealable", 15, 25)
+            .antisynergy("bonemealable"));
     }
 }

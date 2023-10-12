@@ -132,6 +132,7 @@ bdf2d1612bcc52adb8f5f059d02fb5fbcc64c151 data/bingo/bingo/goals/hard/all_pickaxe
 22db15eacf677709bc36b9749246e2ab44c061af data/bingo/bingo/goals/hard/all_swords.json
 ceda7df2cdc0b1199bfdb32044d5893a1b59cc73 data/bingo/bingo/goals/hard/armor_trims.json
 77ff2b99fd3da982616a06f138e7f48483aecdbf data/bingo/bingo/goals/hard/bed_row.json
+d34e487d7d1d02c5fe04c6e70f76d37e2694b083 data/bingo/bingo/goals/hard/bonemealable_blocks.json
 100ed94e55bb5ab2d964730796145c8410ba33b0 data/bingo/bingo/goals/hard/breed_pandas.json
 8b7a5ffc2f0cb4b43583267fe7516ac6815c44b6 data/bingo/bingo/goals/hard/burn_mending_book.json
 41e5b7c409a2c2e9c910529554541a92098410aa data/bingo/bingo/goals/hard/carrot_stick_to_rod.json

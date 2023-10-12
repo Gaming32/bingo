@@ -121,6 +121,40 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.HORN_CORAL_BLOCK
         );
 
+        getOrCreateTagBuilder(BingoItemTags.BONEMEALABLE)
+            .forceAddTag(ItemTags.VILLAGER_PLANTABLE_SEEDS)
+            .forceAddTag(ItemTags.SAPLINGS)
+            .forceAddTag(ItemTags.TALL_FLOWERS)
+            .add(
+                Items.BAMBOO,
+                Items.BIG_DRIPLEAF,
+                Items.SMALL_DRIPLEAF,
+                Items.GLOW_BERRIES,
+                Items.COCOA_BEANS,
+                Items.CRIMSON_FUNGUS,
+                Items.WARPED_FUNGUS,
+                Items.GLOW_LICHEN,
+                Items.GRASS_BLOCK,
+                Items.KELP,
+                Items.MANGROVE_LEAVES,
+                Items.MOSS_BLOCK,
+                Items.RED_MUSHROOM,
+                Items.BROWN_MUSHROOM,
+                Items.NETHERRACK,
+                Items.WARPED_NYLIUM,
+                Items.CRIMSON_NYLIUM,
+                Items.PINK_PETALS,
+                Items.ROOTED_DIRT,
+                Items.SEAGRASS,
+                Items.SEA_PICKLE,
+                Items.MELON_SEEDS,
+                Items.PUMPKIN_SEEDS,
+                Items.SWEET_BERRIES,
+                Items.TALL_GRASS,
+                Items.TWISTING_VINES,
+                Items.WEEPING_VINES
+            );
+
         // The vanilla flower tag contains weird stuff like cherry leaves that bees are attracted to, but they are not flowers
         getOrCreateTagBuilder(BingoItemTags.FLOWERS).forceAddTag(ItemTags.SMALL_FLOWERS).forceAddTag(ItemTags.TALL_FLOWERS);
 
