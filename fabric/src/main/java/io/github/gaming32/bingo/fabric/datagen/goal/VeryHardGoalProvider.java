@@ -289,5 +289,23 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .reactant("pacifist"));
         addGoal(obtainSomeItemsFromTag(id("armor_trims"), ItemTags.TRIM_TEMPLATES, "bingo.goal.armor_trims", 5, 5)
             .antisynergy("armor_trims"));
+
+        EntityType<?>[] tamableAnimals = {
+            EntityType.ALLAY,
+            EntityType.AXOLOTL,
+            EntityType.CAMEL,
+            EntityType.CAT,
+            EntityType.DONKEY,
+            EntityType.FOX,
+            EntityType.HORSE,
+            EntityType.LLAMA,
+            EntityType.MULE,
+            EntityType.OCELOT,
+            EntityType.PARROT,
+            EntityType.SKELETON_HORSE,
+            EntityType.STRIDER,
+            EntityType.TRADER_LLAMA,
+            EntityType.WOLF,
+        };
     }
 }
