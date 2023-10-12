@@ -1,0 +1,38 @@
+{
+  "antisynergy": "sniffer_egg",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:sniffer_egg"
+            ]
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:sniffer_egg"
+    }
+  },
+  "name": {
+    "translate": "block.minecraft.sniffer_egg"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:ocean",
+    "bingo:overworld"
+  ]
+}

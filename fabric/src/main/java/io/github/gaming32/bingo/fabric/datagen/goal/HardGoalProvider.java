@@ -599,5 +599,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(makeBannerWithPattern(Items.WHITE_BANNER, BannerPatterns.SKULL, DyeColor.BLACK)));
         addGoal(obtainItemGoal(id("turtle_helmet"), Items.TURTLE_HELMET)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(id("sniffer_egg"), Items.SNIFFER_EGG)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
     }
 }
