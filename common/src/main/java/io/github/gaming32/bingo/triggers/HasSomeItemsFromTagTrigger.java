@@ -42,7 +42,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
         return new Builder();
     }
 
-    public static class TriggerInstance  extends AbstractProgressibleTriggerInstance {
+    public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
         private final TagKey<Item> tag;
         private final int requiredCount;
 

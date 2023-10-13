@@ -132,6 +132,10 @@ public class BingoGoal {
             }
         }
         this.requiredOnClient = requiresClient;
+
+        if (progress != null && !criteria.containsKey(progress)) {
+            throw new IllegalArgumentException("Specified progress criterion '" + progress + "' does not exist");
+        }
     }
 
     public static Set<ResourceLocation> getGoalIds() {
