@@ -1,7 +1,6 @@
 package io.github.gaming32.bingo.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
@@ -34,7 +33,6 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,18 +171,16 @@ public class BingoClient {
                 GoalProgress progress = clientBoard.getProgress(sx, sy);
                 if (progress != null && !isGoalCompleted) {
                     graphics.pose().pushPose();
-                    graphics.pose().translate(0, 0, 199);
+                    graphics.pose().translate(0, 0, 200);
 
-                    graphics.fill(slotX, slotY + 14, slotX + 16, slotY + 16, -1, 0xA0000000);
-
-                    // manually fill this rectangle because the normal fill method doesn't support float coordinates
-                    Matrix4f transform = graphics.pose().last().pose();
-                    VertexConsumer vertexConsumer = graphics.bufferSource().getBuffer(RenderType.gui());
-                    float maxX = (float)slotX + 16f * Mth.clamp(progress.progress(), 0, progress.maxProgress()) / progress.maxProgress();
-                    vertexConsumer.vertex(transform, (float)slotX, (float)(slotY + 14), 0).color(0x55, 0xff, 0x55, 0xa0).endVertex();
-                    vertexConsumer.vertex(transform, (float)slotX, (float)(slotY + 16), 0).color(0x55, 0xff, 0x55, 0xa0).endVertex();
-                    vertexConsumer.vertex(transform, maxX, (float)(slotY + 16), 0).color(0x55, 0xff, 0x55, 0xa0).endVertex();
-                    vertexConsumer.vertex(transform, maxX, (float)(slotY + 14), 0).color(0x55, 0xff, 0x55, 0xa0).endVertex();
+                    final int pWidth = Math.round(progress.progress() * 13f / progress.maxProgress());
+                    final int pColor = Mth.hsvToRgb(
+                        (float)progress.progress() / progress.maxProgress() / 3f, 1f, 1f
+                    );
+                    final int pX = slotX + 2;
+                    final int pY = slotY + 13;
+                    graphics.fill(RenderType.guiOverlay(), pX, pY, pX + 13, pY + 2, 0xff000000);
+                    graphics.fill(RenderType.guiOverlay(), pX, pY, pX + pWidth, pY + 1, pColor | 0xff000000);
 
                     graphics.pose().popPose();
                 }
@@ -203,8 +199,12 @@ public class BingoClient {
         graphics.pose().popPose();
         if (BingoMousePos.hasSlotPos(mousePos)) {
             final ClientGoal goal = clientBoard.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
+            final GoalProgress progress = clientBoard.getProgress(mousePos.slotIdX(), mousePos.slotIdY());
             final List<Component> lines = new ArrayList<>(3);
             lines.add(goal.name());
+            if (progress != null) {
+                lines.add(Component.translatable("bingo.progress", progress.progress(), progress.maxProgress()));
+            }
             if (minecraft.options.advancedItemTooltips) {
                 lines.add(Component.literal(goal.id().toString()).withStyle(ChatFormatting.DARK_GRAY));
             }
