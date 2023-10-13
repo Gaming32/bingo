@@ -32,6 +32,7 @@ public final class BingoItemTags {
     public static final TagKey<Item> BASIC_MINERAL_BLOCKS = create("basic_mineral_blocks");
     public static final TagKey<Item> ALL_MINERAL_BLOCKS = create("all_mineral_blocks");
     public static final TagKey<Item> BONEMEALABLE = create("bonemealable");
+    public static final TagKey<Item> FOOD = create("food");
 
     private static TagKey<Item> create(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(Bingo.MOD_ID, name));
