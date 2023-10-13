@@ -26,6 +26,7 @@
     "translate": "item.minecraft.golden_carrot"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

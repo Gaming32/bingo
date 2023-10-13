@@ -26,6 +26,7 @@
     "translate": "block.minecraft.conduit"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

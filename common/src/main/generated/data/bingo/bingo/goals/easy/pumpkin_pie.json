@@ -26,6 +26,7 @@
     "translate": "item.minecraft.pumpkin_pie"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

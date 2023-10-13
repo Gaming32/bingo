@@ -26,6 +26,7 @@
     "translate": "item.minecraft.rabbit_stew"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

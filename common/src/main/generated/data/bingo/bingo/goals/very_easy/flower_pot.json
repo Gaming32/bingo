@@ -26,6 +26,7 @@
     "translate": "block.minecraft.flower_pot"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

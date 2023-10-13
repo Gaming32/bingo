@@ -26,6 +26,7 @@
     "translate": "item.minecraft.ender_eye"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "reactant": "pacifist",

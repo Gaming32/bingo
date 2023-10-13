@@ -26,6 +26,7 @@
     "translate": "block.minecraft.jukebox"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

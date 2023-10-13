@@ -26,6 +26,7 @@
     "translate": "block.minecraft.sniffer_egg"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

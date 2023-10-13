@@ -117,6 +117,7 @@
     ]
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "items"
   },
   "requirements": [

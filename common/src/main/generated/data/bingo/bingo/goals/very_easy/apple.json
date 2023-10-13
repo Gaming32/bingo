@@ -26,6 +26,7 @@
     "translate": "item.minecraft.apple"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

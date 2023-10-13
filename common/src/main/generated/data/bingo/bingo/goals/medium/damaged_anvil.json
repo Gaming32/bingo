@@ -26,6 +26,7 @@
     "translate": "block.minecraft.damaged_anvil"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

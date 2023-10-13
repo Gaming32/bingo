@@ -26,6 +26,7 @@
     "translate": "item.minecraft.blaze_rod"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "reactant": "pacifist",

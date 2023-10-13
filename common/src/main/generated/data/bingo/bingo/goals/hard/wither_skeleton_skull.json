@@ -26,6 +26,7 @@
     "translate": "block.minecraft.wither_skeleton_skull"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "reactant": "pacifist",

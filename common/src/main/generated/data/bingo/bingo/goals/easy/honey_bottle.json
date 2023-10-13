@@ -27,6 +27,7 @@
     "translate": "item.minecraft.honey_bottle"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

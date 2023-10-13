@@ -27,6 +27,7 @@
     "translate": "item.minecraft.milk_bucket"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "reactant": "use_buckets",

@@ -65,6 +65,7 @@
     "translate": "block.minecraft.ominous_banner"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "reactant": "pacifist",

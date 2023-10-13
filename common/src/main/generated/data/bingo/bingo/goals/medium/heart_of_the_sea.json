@@ -26,6 +26,7 @@
     "translate": "item.minecraft.heart_of_the_sea"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

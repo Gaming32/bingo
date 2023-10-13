@@ -33,6 +33,7 @@
     ]
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "reactant": "pacifist",

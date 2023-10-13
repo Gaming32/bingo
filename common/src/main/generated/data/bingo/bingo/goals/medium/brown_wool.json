@@ -26,6 +26,7 @@
     "translate": "block.minecraft.brown_wool"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

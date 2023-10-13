@@ -26,6 +26,7 @@
     "translate": "block.minecraft.dead_bush"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

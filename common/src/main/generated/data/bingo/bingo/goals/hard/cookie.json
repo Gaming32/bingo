@@ -26,6 +26,7 @@
     "translate": "item.minecraft.cookie"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

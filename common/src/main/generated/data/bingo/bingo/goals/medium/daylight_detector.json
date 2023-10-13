@@ -26,6 +26,7 @@
     "translate": "block.minecraft.daylight_detector"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

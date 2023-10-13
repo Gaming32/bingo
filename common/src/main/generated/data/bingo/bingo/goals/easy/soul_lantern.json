@@ -26,6 +26,7 @@
     "translate": "block.minecraft.soul_lantern"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

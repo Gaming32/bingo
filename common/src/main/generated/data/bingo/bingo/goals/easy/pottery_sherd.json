@@ -20,6 +20,7 @@
     "translate": "bingo.goal.pottery_sherd"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

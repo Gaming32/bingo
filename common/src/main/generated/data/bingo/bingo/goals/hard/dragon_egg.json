@@ -26,6 +26,7 @@
     "translate": "block.minecraft.dragon_egg"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

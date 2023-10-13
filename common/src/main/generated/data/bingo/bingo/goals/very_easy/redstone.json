@@ -27,6 +27,7 @@
     "translate": "item.minecraft.redstone"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

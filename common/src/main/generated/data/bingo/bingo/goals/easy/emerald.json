@@ -26,6 +26,7 @@
     "translate": "item.minecraft.emerald"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

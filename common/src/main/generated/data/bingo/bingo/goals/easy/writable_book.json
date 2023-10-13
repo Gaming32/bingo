@@ -26,6 +26,7 @@
     "translate": "item.minecraft.writable_book"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

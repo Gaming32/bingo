@@ -26,6 +26,7 @@
     "translate": "item.minecraft.netherite_ingot"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

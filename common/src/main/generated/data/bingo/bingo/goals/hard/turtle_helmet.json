@@ -29,6 +29,7 @@
     "translate": "item.minecraft.turtle_helmet"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

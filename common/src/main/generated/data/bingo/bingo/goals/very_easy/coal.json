@@ -26,6 +26,7 @@
     "translate": "item.minecraft.coal"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

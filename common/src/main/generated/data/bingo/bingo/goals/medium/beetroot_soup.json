@@ -26,6 +26,7 @@
     "translate": "item.minecraft.beetroot_soup"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

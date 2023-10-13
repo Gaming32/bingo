@@ -108,6 +108,7 @@
     ]
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "flowers"
   },
   "requirements": [

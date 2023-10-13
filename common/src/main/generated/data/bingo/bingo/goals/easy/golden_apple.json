@@ -26,6 +26,7 @@
     "translate": "item.minecraft.golden_apple"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

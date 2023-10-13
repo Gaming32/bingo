@@ -26,6 +26,7 @@
     "translate": "block.minecraft.piston"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

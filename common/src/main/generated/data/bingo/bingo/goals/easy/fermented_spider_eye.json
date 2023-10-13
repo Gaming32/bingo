@@ -26,6 +26,7 @@
     "translate": "item.minecraft.fermented_spider_eye"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

@@ -30,6 +30,7 @@
     "translate": "bingo.goal.any_head"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

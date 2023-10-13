@@ -27,6 +27,7 @@
     "translate": "block.minecraft.gold_block"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

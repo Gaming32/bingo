@@ -26,6 +26,7 @@
     "translate": "item.minecraft.diamond"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

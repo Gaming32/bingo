@@ -27,6 +27,7 @@
     "translate": "item.minecraft.lime_dye"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

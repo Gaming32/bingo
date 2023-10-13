@@ -26,6 +26,7 @@
     "translate": "block.minecraft.grass_block"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [

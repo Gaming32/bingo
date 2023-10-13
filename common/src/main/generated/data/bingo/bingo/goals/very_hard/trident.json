@@ -29,6 +29,7 @@
     "translate": "item.minecraft.trident"
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "requirements": [
