@@ -10,6 +10,7 @@ public class BingoS2C {
     public static final MessageType INIT_BOARD = NETWORK_MANAGER.registerS2C("init_board", InitBoardMessage::new);
     public static final MessageType SYNC_TEAM = NETWORK_MANAGER.registerS2C("sync_team", SyncTeamMessage::new);
     public static final MessageType RESYNC_STATES = NETWORK_MANAGER.registerS2C("resync_states", ResyncStatesMessage::new);
+    public static final MessageType UPDATE_PROGRESS = NETWORK_MANAGER.registerS2C("update_progress", UpdateProgressMessage::new);
 
     public static void load() {
     }

@@ -41,6 +41,7 @@
       }
     ]
   },
+  "progress": "obtain",
   "requirements": [
     [
       "obtain"

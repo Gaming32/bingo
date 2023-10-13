@@ -5,6 +5,7 @@ import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.*;
+import io.github.gaming32.bingo.triggers.AbstractProgressibleTriggerInstance;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
@@ -31,7 +32,8 @@ public class BingoGame {
     private final BingoGameMode gameMode;
     private final boolean requireClient;
     private final PlayerTeam[] teams;
-    private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> goalProgress = new HashMap<>();
+    private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> advancementProgress = new HashMap<>();
+    private final Map<UUID, Map<ActiveGoal, GoalProgress>> goalProgress = new HashMap<>();
     private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
     private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
 
@@ -89,6 +91,16 @@ public class BingoGame {
             VanillaNetworking.generateProgressMap(board.getStates(), team)
         ));
         Bingo.needAdvancementsClear.add(player);
+
+        Map<ActiveGoal, GoalProgress> goalProgress = this.goalProgress.get(player.getUUID());
+        if (goalProgress != null) {
+            goalProgress.forEach((goal, progress) -> {
+                int goalIndex = getBoardIndex(player, goal);
+                if (goalIndex != -1) {
+                    new UpdateProgressMessage(goalIndex, progress.progress(), progress.maxProgress()).sendTo(player);
+                }
+            });
+        }
     }
 
     public static BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam, BingoBoard.Teams[] states) {
@@ -152,7 +164,7 @@ public class BingoGame {
     }
 
     private void clearListeners(PlayerList playerList) {
-        for (final var playerEntry : goalProgress.entrySet()) {
+        for (final var playerEntry : advancementProgress.entrySet()) {
             final ServerPlayer player = playerList.getPlayer(playerEntry.getKey());
             if (player == null) continue;
             for (final ActiveGoal goal : playerEntry.getValue().keySet()) {
@@ -175,12 +187,18 @@ public class BingoGame {
         Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
     ) {
         criterion.trigger().addPlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
+        if (criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance progressibleTrigger) {
+            progressibleTrigger.addProgressListener(new BingoGameProgressListener(this, player, goal, criterionId));
+        }
     }
 
     private <T extends CriterionTriggerInstance> void removeListener(
         Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
     ) {
         criterion.trigger().removePlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
+        if (criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance progressibleTrigger) {
+            progressibleTrigger.removeProgressListener(new BingoGameProgressListener(this, player, goal, criterionId));
+        }
     }
 
     private void registerListeners(ServerPlayer player, ActiveGoal goal) {
@@ -206,7 +224,7 @@ public class BingoGame {
     }
 
     public AdvancementProgress getOrStartProgress(ServerPlayer player, ActiveGoal goal) {
-        final Map<ActiveGoal, AdvancementProgress> map = goalProgress.computeIfAbsent(player.getUUID(), k -> new HashMap<>());
+        final Map<ActiveGoal, AdvancementProgress> map = advancementProgress.computeIfAbsent(player.getUUID(), k -> new HashMap<>());
         AdvancementProgress progress = map.get(goal);
         if (progress == null) {
             progress = new AdvancementProgress();
@@ -214,6 +232,24 @@ public class BingoGame {
             map.put(goal, progress);
         }
         return progress;
+    }
+
+    private void onProgress(ServerPlayer player, ActiveGoal goal, String criterionId, int progress, int maxProgress) {
+        if (criterionId.equals(goal.getGoal().getProgress())) {
+            int goalIndex = getBoardIndex(player, goal);
+            if (goalIndex == -1) {
+                return;
+            }
+
+            Map<ActiveGoal, GoalProgress> goalProgress = this.goalProgress.computeIfAbsent(player.getUUID(), k -> new HashMap<>());
+            GoalProgress existingProgress = goalProgress.get(goal);
+            if (existingProgress != null && existingProgress.progress() == progress && existingProgress.maxProgress() == maxProgress) {
+                return;
+            }
+
+            new UpdateProgressMessage(goalIndex, progress, maxProgress).sendTo(player);
+            goalProgress.put(goal, new GoalProgress(progress, maxProgress));
+        }
     }
 
     public boolean award(ServerPlayer player, ActiveGoal goal, String criterion) {
@@ -399,5 +435,12 @@ public class BingoGame {
 
     public BingoBoard.Teams getWinner(boolean tryHarder) {
         return gameMode.getWinners(board, teams.length, tryHarder);
+    }
+
+    private record BingoGameProgressListener(BingoGame game, ServerPlayer player, ActiveGoal goal, String criterionId) implements AbstractProgressibleTriggerInstance.ProgressListener {
+        @Override
+        public void update(int progress, int maxProgress) {
+            game.onProgress(player, goal, criterionId, progress, maxProgress);
+        }
     }
 }

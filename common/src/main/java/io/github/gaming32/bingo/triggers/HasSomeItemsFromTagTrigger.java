@@ -3,7 +3,6 @@ package io.github.gaming32.bingo.triggers;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
@@ -43,7 +42,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
         return new Builder();
     }
 
-    public static class TriggerInstance  extends AbstractCriterionTriggerInstance {
+    public static class TriggerInstance  extends AbstractProgressibleTriggerInstance {
         private final TagKey<Item> tag;
         private final int requiredCount;
 
@@ -76,9 +75,12 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
                 if (item.is(tag) && foundItems.add(item.getItem()) && foundItems.size() >= requiredCount) {
+                    setProgress(requiredCount, requiredCount);
                     return true;
                 }
             }
+
+            setProgress(foundItems.size(), requiredCount);
             return false;
         }
     }

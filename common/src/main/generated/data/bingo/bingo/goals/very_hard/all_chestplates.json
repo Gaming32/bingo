@@ -21,6 +21,7 @@
       }
     ]
   },
+  "progress": "obtain",
   "requirements": [
     [
       "obtain"

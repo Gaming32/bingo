@@ -133,6 +133,7 @@ public abstract class DifficultyGoalProvider {
         if (minCount == maxCount) {
             return BingoGoal.builder(id)
                 .criterion("obtain", HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(minCount).build())
+                .progress("obtain")
                 .tags(BingoTags.ITEM)
                 .name(Component.translatable(translationKey, minCount))
                 .icon(new ItemTagCycleIcon(tag));
@@ -144,6 +145,7 @@ public abstract class DifficultyGoalProvider {
                 HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(0).build(),
                 subber -> subber.sub("conditions.required_count", "count")
             )
+            .progress("obtain")
             .tags(BingoTags.ITEM)
             .name(Component.translatable(translationKey, 0), subber -> subber.sub("with.0", "count"))
             .icon(new ItemTagCycleIcon(tag), subber -> subber.sub("count", "count"));
@@ -152,6 +154,7 @@ public abstract class DifficultyGoalProvider {
     protected BingoGoal.Builder obtainAllItemsFromTag(TagKey<Item> tag, @Translatable(prefix = "bingo.goal.all_somethings.") String what) {
         return BingoGoal.builder(id("all_" + what))
             .criterion("obtain", HasSomeItemsFromTagTrigger.builder().tag(tag).requiresAll().build())
+            .progress("obtain")
             .tags(BingoTags.ITEM)
             .name(Component.translatable("bingo.goal.all_somethings", Component.translatable("bingo.goal.all_somethings." + what)))
             .icon(new ItemTagCycleIcon(tag));

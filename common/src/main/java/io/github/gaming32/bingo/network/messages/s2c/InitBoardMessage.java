@@ -7,6 +7,7 @@ import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.client.ClientBoard;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
+import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.ClientGoal;
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -47,6 +48,12 @@ public class InitBoardMessage extends BaseS2CMessage {
 
     @Override
     public void handle(NetworkManager.PacketContext context) {
-        BingoClient.clientBoard = new ClientBoard(size, states, goals);
+        BingoClient.clientBoard = new ClientBoard(size, states, goals, new GoalProgress[size * size]);
+
+        for (int i = 0; i < goals.length; i++) {
+            if (goals[i].hasProgress()) {
+                BingoClient.clientBoard.progress()[i] = new GoalProgress(0, 1);
+            }
+        }
     }
 }

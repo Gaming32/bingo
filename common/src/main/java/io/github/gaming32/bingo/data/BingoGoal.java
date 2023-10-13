@@ -48,6 +48,8 @@ public class BingoGoal {
     private final Map<String, BingoSub> subs;
     private final Map<String, JsonObject> criteria;
     private final AdvancementRequirements requirements;
+    @Nullable
+    private final String progress;
     private final List<BingoTag> tags;
     private final JsonElement name;
     @Nullable
@@ -72,6 +74,7 @@ public class BingoGoal {
         Map<String, BingoSub> subs,
         Map<String, JsonObject> criteria,
         AdvancementRequirements requirements,
+        @Nullable String progress,
         List<BingoTag> tags,
         JsonElement name,
         @Nullable JsonElement tooltip,
@@ -87,6 +90,7 @@ public class BingoGoal {
         this.subs = ImmutableMap.copyOf(subs);
         this.criteria = ImmutableMap.copyOf(criteria);
         this.requirements = requirements;
+        this.progress = progress;
         this.tags = ImmutableList.copyOf(tags);
         this.name = name;
         this.tooltip = tooltip;
@@ -163,6 +167,7 @@ public class BingoGoal {
                 .stream()
                 .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> BingoSub.deserialize(e.getValue()))),
             criteria, requirements,
+            json.has("progress") ? GsonHelper.getAsString(json, "progress") : null,
             GsonHelper.getAsJsonArray(json, "tags", new JsonArray())
                 .asList()
                 .stream()
@@ -218,6 +223,8 @@ public class BingoGoal {
         result.add("criteria", criteriaObj);
 
         result.add("requirements", requirements.toJson());
+
+        result.addProperty("progress", progress);
 
         if (!tags.isEmpty()) {
             final JsonArray array = new JsonArray(tags.size());
@@ -282,6 +289,11 @@ public class BingoGoal {
 
     public AdvancementRequirements getRequirements() {
         return requirements;
+    }
+
+    @Nullable
+    public String getProgress() {
+        return progress;
     }
 
     public List<BingoTag> getTags() {
@@ -443,6 +455,8 @@ public class BingoGoal {
         private final ImmutableMap.Builder<String, BingoSub> subs = ImmutableMap.builder();
         private final ImmutableMap.Builder<String, JsonObject> criteria = ImmutableMap.builder();
         private Optional<AdvancementRequirements> requirements = Optional.empty();
+        @Nullable
+        private String progress;
         private AdvancementRequirements.Strategy requirementsStrategy = AdvancementRequirements.Strategy.AND;
         private final ImmutableList.Builder<BingoTag> tags = ImmutableList.builder();
         private Optional<JsonElement> name = Optional.empty();
@@ -486,6 +500,11 @@ public class BingoGoal {
 
         public Builder requirements(AdvancementRequirements.Strategy strategy) {
             this.requirementsStrategy = strategy;
+            return this;
+        }
+
+        public Builder progress(String progress) {
+            this.progress = progress;
             return this;
         }
 
@@ -587,6 +606,7 @@ public class BingoGoal {
                 subs.buildOrThrow(),
                 criteria,
                 requirements.orElseGet(() -> requirementsStrategy.create(criteria.keySet())),
+                progress,
                 tags.build(),
                 name.orElseThrow(() -> new IllegalStateException("Bingo goal name has not been set")),
                 tooltip,

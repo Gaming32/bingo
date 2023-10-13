@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
@@ -16,6 +17,7 @@ import io.github.gaming32.bingo.client.icons.IconRenderers;
 import io.github.gaming32.bingo.client.recipeviewer.RecipeViewerPlugin;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.game.BingoBoard;
+import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.BingoNetwork;
 import io.github.gaming32.bingo.network.ClientGoal;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -27,9 +29,12 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,9 +164,29 @@ public class BingoClient {
                 renderer.render(icon, graphics, slotX, slotY);
                 renderer.renderDecorations(icon, minecraft.font, graphics, slotX, slotY);
                 final BingoBoard.Teams state = clientBoard.getState(sx, sy);
-                final int color = state.and(clientTeam) ? 0x55ff55 : goal.specialType().incompleteColor;
+                boolean isGoalCompleted = state.and(clientTeam);
+                final int color = isGoalCompleted ? 0x55ff55 : goal.specialType().incompleteColor;
                 if (color != 0) {
                     graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
+                }
+
+                GoalProgress progress = clientBoard.getProgress(sx, sy);
+                if (progress != null && !isGoalCompleted) {
+                    graphics.pose().pushPose();
+                    graphics.pose().translate(0, 0, 199);
+
+                    graphics.fill(slotX, slotY + 14, slotX + 16, slotY + 16, -1, 0xA0000000);
+
+                    // manually fill this rectangle because the normal fill method doesn't support float coordinates
+                    Matrix4f transform = graphics.pose().last().pose();
+                    VertexConsumer vertexConsumer = graphics.bufferSource().getBuffer(RenderType.gui());
+                    float maxX = (float)slotX + 16f * Mth.clamp(progress.progress(), 0, progress.maxProgress()) / progress.maxProgress();
+                    vertexConsumer.vertex(transform, (float)slotX, (float)(slotY + 14), 0).color(0x55, 0xff, 0x55, 0xa0).endVertex();
+                    vertexConsumer.vertex(transform, (float)slotX, (float)(slotY + 16), 0).color(0x55, 0xff, 0x55, 0xa0).endVertex();
+                    vertexConsumer.vertex(transform, maxX, (float)(slotY + 16), 0).color(0x55, 0xff, 0x55, 0xa0).endVertex();
+                    vertexConsumer.vertex(transform, maxX, (float)(slotY + 14), 0).color(0x55, 0xff, 0x55, 0xa0).endVertex();
+
+                    graphics.pose().popPose();
                 }
             }
         }

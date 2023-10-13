@@ -43,6 +43,7 @@
       }
     ]
   },
+  "progress": "obtain",
   "reactant": "use_furnace",
   "requirements": [
     [
