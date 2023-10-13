@@ -49,11 +49,5 @@ public class InitBoardMessage extends BaseS2CMessage {
     @Override
     public void handle(NetworkManager.PacketContext context) {
         BingoClient.clientBoard = new ClientBoard(size, states, goals, new GoalProgress[size * size]);
-
-        for (int i = 0; i < goals.length; i++) {
-            if (goals[i].hasProgress()) {
-                BingoClient.clientBoard.progress()[i] = new GoalProgress(0, 1);
-            }
-        }
     }
 }

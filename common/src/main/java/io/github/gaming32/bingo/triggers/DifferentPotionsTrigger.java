@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
@@ -31,7 +30,7 @@ public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPot
         trigger(player, instance -> instance.matches(inventory));
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
+    public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
         private final int minCount;
 
         public TriggerInstance(Optional<ContextAwarePredicate> player, int minCount) {
@@ -60,10 +59,12 @@ public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPot
                 if (item.getItem() instanceof PotionItem) {
                     final Potion potion = PotionUtils.getPotion(item);
                     if (potion != Potions.EMPTY && discovered.add(potion.getName("")) && discovered.size() >= minCount) {
+                        setProgress(minCount, minCount);
                         return true;
                     }
                 }
             }
+            setProgress(discovered.size(), minCount);
             return false;
         }
     }

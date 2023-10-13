@@ -19,7 +19,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -48,6 +51,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 DifferentPotionsTrigger.TriggerInstance.differentPotions(0),
                 subber -> subber.sub("conditions.min_count", "count")
             )
+            .progress("potions")
             .tags(BingoTags.ITEM, BingoTags.NETHER, BingoTags.COMBAT, BingoTags.OVERWORLD)
             .reactant("pacifist")
             .name(
