@@ -24,7 +24,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -138,8 +137,8 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 EntityPredicate.Builder.entity().of(EntityType.SNOW_GOLEM)
             ))
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
-            .name(Component.translatable("bingo.goal.create_snow_golem"))
-            .icon(EntityIcon.of(EntityType.SNOW_GOLEM, new ItemStack(Items.CARVED_PUMPKIN)))
+            .name(Component.translatable("bingo.goal.create_snow_golem", EntityType.SNOW_GOLEM.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.SNOW_GOLEM))
         );
         addGoal(obtainItemGoal(id("note_block"), Items.NOTE_BLOCK, 5, 15)
             .infrequency(2)

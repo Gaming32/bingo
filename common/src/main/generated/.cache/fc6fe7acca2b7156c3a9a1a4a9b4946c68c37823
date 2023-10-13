@@ -26,7 +26,7 @@ ebd20b063407ba250e8e4ca852835a57655f2943 data/bingo/bingo/goals/easy/coal_block.
 950f6a3b86db3cdcb548e7868fe809637360eccc data/bingo/bingo/goals/easy/cod.json
 b0bca5bc6ad031142ca6033ae06f90235e41ca32 data/bingo/bingo/goals/easy/colors_of_terracotta.json
 9084277946c627296c27b072fd6f731a24a788fd data/bingo/bingo/goals/easy/complete_map.json
-8056ad88e5fd55f5adb2a1a7741ac8c7876e3c34 data/bingo/bingo/goals/easy/create_snow_golem.json
+83bcaea45a6b012bf8acfd5721afb0032df915bb data/bingo/bingo/goals/easy/create_snow_golem.json
 797b4fcfa6ad93407f152cf97bf7730ae1dfcc03 data/bingo/bingo/goals/easy/crouch_distance.json
 bc95bcf56e3bae661ce21efb57918397aec2af2f data/bingo/bingo/goals/easy/cut_sandstone.json
 eb4ea75f46fa2dbb69d0c8015b91ce641823a975 data/bingo/bingo/goals/easy/cyan_dye.json
@@ -213,6 +213,7 @@ bae2009116c3cb7af0434dbf5dbffb5c3a3c9a01 data/bingo/bingo/goals/medium/bamboo.js
 ec76d7ff30d174c1eacf5a854374aa0177ed66e1 data/bingo/bingo/goals/medium/beetroot_soup.json
 db3062c2272897a7b8af5ef6efa3d307e203e54d data/bingo/bingo/goals/medium/blaze_rod.json
 d8a66f7b21438e9956e44f6255372f3f31f727fb data/bingo/bingo/goals/medium/brown_wool.json
+5abadbac68c4beba2a759594fb5c38e089405320 data/bingo/bingo/goals/medium/create_iron_golem.json
 ff0a404bc4e2e7e622e96590a7fbe1b7b029ad8b data/bingo/bingo/goals/medium/crimson_hyphae.json
 e42c1e1d7b1055345c6d301f1f82e9c96f175dae data/bingo/bingo/goals/medium/crimson_planks.json
 a7631d75074e5eeb1a4574537e79415a920e64c5 data/bingo/bingo/goals/medium/crimson_stem.json

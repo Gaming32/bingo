@@ -7,7 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:snow_golem"
+              "type": "minecraft:iron_golem"
             }
           }
         ]
@@ -15,20 +15,20 @@
       "trigger": "minecraft:summoned_entity"
     }
   },
-  "difficulty": 1,
+  "difficulty": 2,
   "icon": {
     "type": "bingo:entity",
-    "entity": "minecraft:snow_golem",
+    "entity": "minecraft:iron_golem",
     "item": {
       "Count": 1,
-      "id": "minecraft:snow_golem_spawn_egg"
+      "id": "minecraft:iron_golem_spawn_egg"
     }
   },
   "name": {
-    "translate": "bingo.goal.create_snow_golem",
+    "translate": "bingo.goal.create_iron_golem",
     "with": [
       {
-        "translate": "entity.minecraft.snow_golem"
+        "translate": "entity.minecraft.iron_golem"
       }
     ]
   },
@@ -39,7 +39,6 @@
   ],
   "tags": [
     "bingo:action",
-    "bingo:rare_biome",
     "bingo:overworld"
   ]
 }

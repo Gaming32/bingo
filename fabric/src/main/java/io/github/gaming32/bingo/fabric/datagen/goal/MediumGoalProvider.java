@@ -112,6 +112,14 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("magma_cream"), Items.MAGMA_CREAM, 2, 3)
             .tags(BingoTags.NETHER, BingoTags.COMBAT));
         // TODO: create iron golem
+        addGoal(BingoGoal.builder(id("create_iron_golem"))
+            .criterion("summon", SummonedEntityTrigger.TriggerInstance.summonedEntity(
+                EntityPredicate.Builder.entity().of(EntityType.IRON_GOLEM)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.create_iron_golem", EntityType.IRON_GOLEM.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.IRON_GOLEM))
+        );
         addGoal(obtainItemGoal(id("ender_eye"), Items.ENDER_EYE)
             .reactant("pacifist")
             .tags(BingoTags.NETHER, BingoTags.COMBAT));
