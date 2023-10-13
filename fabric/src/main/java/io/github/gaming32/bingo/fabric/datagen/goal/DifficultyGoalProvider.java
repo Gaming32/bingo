@@ -194,6 +194,7 @@ public abstract class DifficultyGoalProvider {
                 )
             )
             .progress("crouch")
+            .progressScale(0.01f)
             .name(Component.translatable("bingo.goal.crouch_distance", 0), subber -> subber.sub("with.0", "distance"))
             .antisynergy("crouch_distance")
             .infrequency(2)

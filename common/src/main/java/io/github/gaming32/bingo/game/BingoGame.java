@@ -235,6 +235,9 @@ public class BingoGame {
     }
 
     private void onProgress(ServerPlayer player, ActiveGoal goal, String criterionId, int progress, int maxProgress) {
+        progress = (int) (progress * goal.getGoal().getProgressScale());
+        maxProgress = (int) (maxProgress * goal.getGoal().getProgressScale());
+
         if (criterionId.equals(goal.getGoal().getProgress())) {
             int goalIndex = getBoardIndex(player, goal);
             if (goalIndex == -1) {
