@@ -1,39 +1,30 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.gson.JsonObject;
-import com.mojang.logging.LogUtils;
-import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.BingoGame;
+import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.Util;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PlayerPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
 import net.minecraft.stats.StatsCounter;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTrigger.TriggerInstance> {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     @NotNull
     @Override
     protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(
             player,
-            PlayerPredicate.StatMatcher.CODEC.listOf().parse(JsonOps.INSTANCE, json.get("stats")).getOrThrow(false, LOGGER::error)
+            BingoUtil.fromJsonElement(PlayerPredicate.StatMatcher.CODEC.listOf(), json.get("stats"))
         );
     }
 
@@ -57,7 +48,7 @@ public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTr
         @Override
         public JsonObject serializeToJson() {
             final JsonObject result = super.serializeToJson();
-            result.add("stats", Util.getOrThrow(PlayerPredicate.StatMatcher.CODEC.listOf().encodeStart(JsonOps.INSTANCE, stats), IllegalStateException::new));
+            result.add("stats", BingoUtil.toJsonElement(PlayerPredicate.StatMatcher.CODEC.listOf(), stats));
             return result;
         }
 
@@ -71,17 +62,13 @@ public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTr
                         final Stat<?> stat = matcher.stat().get();
                         final int value = currentStats.getValue(stat) - baseStats.getInt(stat);
                         if (!matcher.range().matches(value)) {
-                            matcher.range().min().ifPresent(min -> {
-                                setProgress(Math.min(value, min), min);
-                            });
+                            matcher.range().min().ifPresent(min -> setProgress(Math.min(value, min), min));
                             return false;
                         }
                     }
 
                     if (!stats.isEmpty()) {
-                        stats.get(0).range().min().ifPresent(min -> {
-                            setProgress(min, min);
-                        });
+                        stats.get(0).range().min().ifPresent(min -> setProgress(min, min));
                     }
                 }
             }
