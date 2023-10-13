@@ -1,0 +1,57 @@
+{
+  "antisynergy": "food",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 20,
+          "min_inclusive": 15
+        }
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": {
+          "bingo_type": "bingo:sub",
+          "value": "count"
+        },
+        "tag": "bingo:food"
+      },
+      "trigger": "bingo:has_some_items_from_tag"
+    }
+  },
+  "difficulty": 3,
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "count": {
+      "bingo_type": "bingo:sub",
+      "value": "count"
+    },
+    "tag": "bingo:food"
+  },
+  "name": {
+    "translate": "bingo.goal.food",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item"
+  ]
+}
