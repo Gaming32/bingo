@@ -176,15 +176,15 @@ public abstract class DifficultyGoalProvider {
         return BingoGoal.builder(id)
             .sub("distance", BingoSub.random(minDistance, maxDistance))
             .criterion("crouch",
-                BingoTriggers.statChanged(
+                RelativeStatsTrigger.builder().stat(
                     Stats.CUSTOM,
                     BuiltInRegistries.CUSTOM_STAT.getHolderOrThrow(ResourceKey.create(
                         Registries.CUSTOM_STAT, Stats.CROUCH_ONE_CM
                     )),
-                    MinMaxBounds.Ints.atLeast(0)
-                ),
+                    0
+                ).build(),
                 subber -> subber.sub(
-                    "conditions.player.0.predicate.type_specific.relative_stats.0.value.min",
+                    "conditions.stats.0.value.min",
                     new CompoundBingoSub(
                         CompoundBingoSub.ElementType.INT,
                         CompoundBingoSub.Operator.MUL,
@@ -193,6 +193,7 @@ public abstract class DifficultyGoalProvider {
                     )
                 )
             )
+            .progress("crouch")
             .name(Component.translatable("bingo.goal.crouch_distance", 0), subber -> subber.sub("with.0", "distance"))
             .antisynergy("crouch_distance")
             .infrequency(2)

@@ -38,6 +38,7 @@
     "MixinServerPlayer",
     "MixinServerPlayer_2",
     "MixinServerScoreboard",
+    "MixinServerStatsCounter",
     "PlayerAdvancementsAccessor",
     "StatsCounterAccessor"
   ],

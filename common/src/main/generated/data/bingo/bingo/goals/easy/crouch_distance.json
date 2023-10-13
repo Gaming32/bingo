@@ -15,41 +15,30 @@
   "criteria": {
     "crouch": {
       "conditions": {
-        "player": [
+        "stats": [
           {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type_specific": {
-                "type": "bingo:player",
-                "relative_stats": [
+            "type": "minecraft:custom",
+            "stat": "minecraft:crouch_one_cm",
+            "value": {
+              "min": {
+                "bingo_type": "bingo:compound",
+                "factors": [
                   {
-                    "type": "minecraft:custom",
-                    "stat": "minecraft:crouch_one_cm",
-                    "value": {
-                      "min": {
-                        "bingo_type": "bingo:compound",
-                        "factors": [
-                          {
-                            "type": "bingo:sub",
-                            "value": "distance"
-                          },
-                          {
-                            "type": "bingo:int",
-                            "value": 100
-                          }
-                        ],
-                        "operator": "mul"
-                      }
-                    }
+                    "type": "bingo:sub",
+                    "value": "distance"
+                  },
+                  {
+                    "type": "bingo:int",
+                    "value": 100
                   }
-                ]
+                ],
+                "operator": "mul"
               }
             }
           }
         ]
       },
-      "trigger": "minecraft:tick"
+      "trigger": "bingo:relative_stats"
     }
   },
   "difficulty": 1,
@@ -76,6 +65,7 @@
       }
     ]
   },
+  "progress": "crouch",
   "requirements": [
     [
       "crouch"

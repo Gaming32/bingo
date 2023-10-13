@@ -43,6 +43,7 @@ public class BingoTriggers {
     public static final EntityTrigger STUN_RAVAGER = register("bingo:stun_ravager", new EntityTrigger());
     public static final ConsumeMilkBucketTrigger CONSUME_MILK_BUCKET = register("bingo:consume_milk_bucket", new ConsumeMilkBucketTrigger());
     public static final KeyPressedTrigger KEY_PRESSED = register("bingo:key_pressed", new KeyPressedTrigger());
+    public static final RelativeStatsTrigger RELATIVE_STATS = register("bingo:relative_stats", new RelativeStatsTrigger());
 
     public static void load() {
     }
@@ -57,6 +58,7 @@ public class BingoTriggers {
         return BOUNCE_ON_BED.createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty()));
     }
 
+    @Deprecated // use RelativeStatsTrigger instead
     public static <T> Criterion<PlayerTrigger.TriggerInstance> statChanged(StatType<T> type, Holder.Reference<T> holder, MinMaxBounds.Ints range) {
         return CriteriaTriggers.TICK.createCriterion(
             new PlayerTrigger.TriggerInstance(Optional.of(
