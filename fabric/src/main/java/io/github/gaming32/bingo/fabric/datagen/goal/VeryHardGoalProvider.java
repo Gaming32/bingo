@@ -4,23 +4,33 @@ import com.google.common.collect.ImmutableList;
 import io.github.gaming32.bingo.conditions.EndermanHasOnlyBeenDamagedByEndermiteCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.ProgressTracker;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
+import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
+import net.minecraft.Util;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Instrument;
+import net.minecraft.world.item.InstrumentItem;
+import net.minecraft.world.item.Instruments;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -32,6 +42,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -293,6 +304,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .reactant("pacifist"));
         addGoal(obtainSomeItemsFromTag(id("armor_trims"), ItemTags.TRIM_TEMPLATES, "bingo.goal.armor_trims", 5, 5)
             .antisynergy("armor_trims"));
+        addGoal(obtainAllGoatHorns());
 
         EntityType<?>[] tamableAnimals = {
             EntityType.ALLAY,
@@ -311,5 +323,30 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             EntityType.TRADER_LLAMA,
             EntityType.WOLF,
         };
+    }
+
+    private BingoGoal.Builder obtainAllGoatHorns() {
+        List<ResourceKey<Instrument>> goatHornInstruments = List.of(Instruments.PONDER_GOAT_HORN, Instruments.SING_GOAT_HORN, Instruments.SEEK_GOAT_HORN, Instruments.FEEL_GOAT_HORN, Instruments.ADMIRE_GOAT_HORN, Instruments.CALL_GOAT_HORN, Instruments.YEARN_GOAT_HORN, Instruments.DREAM_GOAT_HORN);
+        List<ItemStack> goatHorns = goatHornInstruments.stream().map(instrument -> InstrumentItem.create(Items.GOAT_HORN, Holder.Reference.createStandAlone(BuiltInRegistries.INSTRUMENT.holderOwner(), instrument))).toList();
+        MutableComponent tooltip = Component.translatable(Util.makeDescriptionId("instrument", goatHornInstruments.get(0).location()));
+        for (int i = 1; i < goatHornInstruments.size(); i++) {
+            tooltip.append(", ").append(Component.translatable(Util.makeDescriptionId("instrument", goatHornInstruments.get(i).location())));
+        }
+        BingoGoal.Builder builder = BingoGoal.builder(id("all_goat_horns"));
+        for (int i = 0; i < goatHornInstruments.size(); i++) {
+            ResourceKey<Instrument> instrument = goatHornInstruments.get(i);
+            ItemStack goatHorn = goatHorns.get(i);
+            builder.criterion(
+                "obtain_" + instrument.location().getNamespace() + "_" + instrument.location().getPath(),
+                InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(goatHorn.getItem()).hasNbt(goatHorn.getTag()).build())
+            );
+        }
+        return builder
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.all_goat_horns"))
+            .tooltip(tooltip)
+            .progress(new ProgressTracker.AchievedRequirements())
+            .icon(new CycleIcon(goatHorns.stream().map(ItemIcon::new).toArray(GoalIcon[]::new)))
+            .antisynergy("goat_horn");
     }
 }

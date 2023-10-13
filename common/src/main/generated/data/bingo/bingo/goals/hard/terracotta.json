@@ -44,6 +44,7 @@
     ]
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "obtain"
   },
   "reactant": "use_furnace",
