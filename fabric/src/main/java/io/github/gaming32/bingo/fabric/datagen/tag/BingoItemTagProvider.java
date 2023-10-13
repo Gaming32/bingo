@@ -184,6 +184,8 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .add(Items.MILK_BUCKET);
         var diamondInNameBuilder = getOrCreateTagBuilder(BingoItemTags.DIAMOND_IN_NAME);
         var foodBuilder = getOrCreateTagBuilder(BingoItemTags.FOOD);
+        var meatBuilder = getOrCreateTagBuilder(BingoItemTags.MEAT);
+        var notMeatBuilder = getOrCreateTagBuilder(BingoItemTags.NOT_MEAT);
         Pattern diamondPattern = Pattern.compile("Diamond\\b");
         for (Item item : BuiltInRegistries.ITEM) {
             if (item instanceof BucketItem) {
@@ -193,7 +195,13 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 diamondInNameBuilder.add(item);
             }
             if (item.isEdible()) {
+                assert item.getFoodProperties() != null;
                 foodBuilder.add(item);
+                if (item.getFoodProperties().isMeat()) {
+                    meatBuilder.add(item);
+                } else {
+                    notMeatBuilder.add(item);
+                }
             }
         }
 

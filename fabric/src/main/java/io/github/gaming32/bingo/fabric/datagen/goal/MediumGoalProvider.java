@@ -111,7 +111,6 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER, BingoTags.COMBAT));
         addGoal(obtainItemGoal(id("magma_cream"), Items.MAGMA_CREAM, 2, 3)
             .tags(BingoTags.NETHER, BingoTags.COMBAT));
-        // TODO: create iron golem
         addGoal(BingoGoal.builder(id("create_iron_golem"))
             .criterion("summon", SummonedEntityTrigger.TriggerInstance.summonedEntity(
                 EntityPredicate.Builder.entity().of(EntityType.IRON_GOLEM)
@@ -164,7 +163,18 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tooltip(Component.translatable("advancements.adventure.fall_from_world_height.description"))
             .icon(Items.WATER_BUCKET)
         );
-        // TODO: vegetarian
+        addGoal(BingoGoal.builder(id("vegetarian"))
+            .criterion("meat", ConsumeItemTrigger.TriggerInstance.usedItem(
+                ItemPredicate.Builder.item()
+                    .of(BingoItemTags.MEAT)
+            ))
+            .tags(BingoTags.NEVER, BingoTags.ACTION)
+            .antisynergy("food")
+            .catalyst("eat_meat")
+            .name(Component.translatable("bingo.goal.vegetarian"))
+            .tooltip(Component.translatable("bingo.goal.vegetarian.tooltip"))
+            .icon(new ItemTagCycleIcon(BingoItemTags.NOT_MEAT))
+        );
         addGoal(BingoGoal.builder(id("kill_self_with_arrow"))
             .criterion("kill", KillSelfTrigger.TriggerInstance.killSelf(
                 DamageSourcePredicate.Builder.damageType()

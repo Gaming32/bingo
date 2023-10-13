@@ -414,7 +414,18 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         // TODO: enchanted item
         // TODO: remove enchantment with grindstone
         // TODO: never use sword
-        // TODO: carnivore
+        addGoal(BingoGoal.builder(id("carnivore"))
+            .criterion("not_meat", ConsumeItemTrigger.TriggerInstance.usedItem(
+                ItemPredicate.Builder.item()
+                    .of(BingoItemTags.NOT_MEAT)
+            ))
+            .tags(BingoTags.NEVER, BingoTags.ACTION)
+            .antisynergy("food")
+            .catalyst("eat_non_meat")
+            .name(Component.translatable("bingo.goal.carnivore"))
+            .tooltip(Component.translatable("bingo.goal.carnivore.tooltip"))
+            .icon(new ItemTagCycleIcon(BingoItemTags.MEAT))
+        );
         // TODO: clean banner
         // TODO: 5-7 different gold items
         addGoal(obtainItemGoal(id("sand"), Items.SAND, 33, 64)

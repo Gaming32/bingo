@@ -9,14 +9,8 @@
   },
   "difficulty": 4,
   "icon": {
-    "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:conduit",
-      "Properties": {
-        "waterlogged": "true"
-      }
-    },
-    "item": {
+    "type": "bingo:item",
+    "value": {
       "Count": 1,
       "id": "minecraft:conduit"
     }

@@ -32,6 +32,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -158,7 +159,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .criterion("power", PowerConduitTrigger.TriggerInstance.powerConduit(MinMaxBounds.Ints.exactly(6)))
             .tags(BingoTags.BUILD, BingoTags.OCEAN, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.full_power_conduit"))
-            .icon(Blocks.CONDUIT));
+            .icon(Items.CONDUIT));
         addGoal(BingoGoal.builder(id("all_diamond_craftables"))
             .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
                 Items.DIAMOND_BLOCK, Items.DIAMOND_AXE, Items.DIAMOND_BOOTS,
@@ -316,7 +317,10 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
     }
 
     private BingoGoal.Builder obtainAllGoatHorns() {
-        List<ResourceKey<Instrument>> goatHornInstruments = List.copyOf(BuiltInRegistries.INSTRUMENT.registryKeySet());
+        List<ResourceKey<Instrument>> goatHornInstruments = BuiltInRegistries.INSTRUMENT.registryKeySet()
+            .stream()
+            .sorted(Comparator.comparing(ResourceKey::location))
+            .toList();
         List<ItemStack> goatHorns = goatHornInstruments.stream().map(instrument -> InstrumentItem.create(Items.GOAT_HORN, Holder.Reference.createStandAlone(BuiltInRegistries.INSTRUMENT.holderOwner(), instrument))).toList();
         MutableComponent tooltip = Component.translatable(Util.makeDescriptionId("instrument", goatHornInstruments.get(0).location()));
         for (int i = 1; i < goatHornInstruments.size(); i++) {
