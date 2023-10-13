@@ -9,7 +9,7 @@ dependencies {
 
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:13.0.655")
     modCompileOnly("mezz.jei:jei-1.20.2-common-api:16.0.0.28")
-//    modCompileOnly("dev.emi:emi-xplat-intermediary:1.0.19+1.20.1") // Unfortunately, although the API does what I need, it does in a way that's wholly different from the other recipe viewers
+    modCompileOnly("dev.emi:emi-xplat-intermediary:1.0.22+1.20.2") // Unfortunately, although the API does what I need, it does in a way that's wholly different from the other recipe viewers
 
     modImplementation("me.shedaniel.cloth:cloth-config:12.0.109")
 }
