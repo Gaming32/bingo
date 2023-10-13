@@ -66,6 +66,7 @@
     ]
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "crouch",
     "scale": 0.01
   },

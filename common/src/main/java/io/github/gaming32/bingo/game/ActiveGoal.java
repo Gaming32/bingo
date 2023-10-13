@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
-import io.github.gaming32.bingo.triggers.AbstractProgressibleTriggerInstance;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -47,17 +46,7 @@ public final class ActiveGoal {
     }
 
     public boolean hasProgress() {
-        String progress = goal.getProgress();
-        if (progress == null) {
-            return false;
-        }
-
-        Criterion<?> criterion = criteria.get(progress);
-        if (criterion == null) {
-            return false;
-        }
-
-        return criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance;
+        return goal.getProgress() != null;
     }
 
     @Override

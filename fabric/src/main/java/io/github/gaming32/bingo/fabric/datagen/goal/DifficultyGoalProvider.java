@@ -6,6 +6,7 @@ import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.ProgressTracker;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
@@ -196,8 +197,7 @@ public abstract class DifficultyGoalProvider {
                     )
                 )
             )
-            .progress("crouch")
-            .progressScale(0.01f)
+            .progress(new ProgressTracker.Criterion("crouch", 0.01f))
             .name(Component.translatable("bingo.goal.crouch_distance", 0), subber -> subber.sub("with.0", "distance"))
             .antisynergy("crouch_distance")
             .infrequency(2)

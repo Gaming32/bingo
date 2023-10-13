@@ -298,6 +298,7 @@
     ]
   },
   "progress": {
+    "type": "bingo:criterion",
     "criterion": "potions"
   },
   "reactant": "pacifist",

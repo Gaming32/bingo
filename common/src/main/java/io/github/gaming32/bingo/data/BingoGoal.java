@@ -49,8 +49,7 @@ public class BingoGoal {
     private final Map<String, JsonObject> criteria;
     private final AdvancementRequirements requirements;
     @Nullable
-    private final String progress;
-    private final float progressScale;
+    private final ProgressTracker progress;
     private final List<BingoTag> tags;
     private final JsonElement name;
     @Nullable
@@ -75,8 +74,7 @@ public class BingoGoal {
         Map<String, BingoSub> subs,
         Map<String, JsonObject> criteria,
         AdvancementRequirements requirements,
-        @Nullable String progress,
-        float progressScale,
+        @Nullable ProgressTracker progress,
         List<BingoTag> tags,
         JsonElement name,
         @Nullable JsonElement tooltip,
@@ -93,7 +91,6 @@ public class BingoGoal {
         this.criteria = ImmutableMap.copyOf(criteria);
         this.requirements = requirements;
         this.progress = progress;
-        this.progressScale = progressScale;
         this.tags = ImmutableList.copyOf(tags);
         this.name = name;
         this.tooltip = tooltip;
@@ -136,11 +133,8 @@ public class BingoGoal {
         }
         this.requiredOnClient = requiresClient;
 
-        if (progress != null && !criteria.containsKey(progress)) {
-            throw new IllegalArgumentException("Specified progress criterion '" + progress + "' does not exist");
-        }
-        if (progressScale != 1f && progress == null) {
-            throw new IllegalArgumentException("Cannot specify progress_scale without progress");
+        if (progress != null) {
+            progress.validate(this);
         }
     }
 
@@ -170,14 +164,6 @@ public class BingoGoal {
             ? AdvancementRequirements.allOf(criteria.keySet())
             : AdvancementRequirements.fromJson(reqArray, criteria.keySet());
 
-        String progress = null;
-        float progressScale = 1f;
-        if (json.has("progress")) {
-            final JsonObject progressObj = GsonHelper.getAsJsonObject(json, "progress");
-            progress = GsonHelper.getAsString(progressObj, "criterion");
-            progressScale = GsonHelper.getAsFloat(progressObj, "scale", 1f);
-        }
-
         return new BingoGoal(
             id,
             GsonHelper.getAsJsonObject(json, "bingo_subs", new JsonObject())
@@ -185,7 +171,7 @@ public class BingoGoal {
                 .stream()
                 .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> BingoSub.deserialize(e.getValue()))),
             criteria, requirements,
-            progress, progressScale,
+            json.has("progress") ? ProgressTracker.deserialize(GsonHelper.getAsJsonObject(json, "progress")) : null,
             GsonHelper.getAsJsonArray(json, "tags", new JsonArray())
                 .asList()
                 .stream()
@@ -243,12 +229,7 @@ public class BingoGoal {
         result.add("requirements", requirements.toJson());
 
         if (progress != null) {
-            final JsonObject progressObj = new JsonObject();
-            progressObj.addProperty("criterion", progress);
-            if (progressScale != 1) {
-                progressObj.addProperty("scale", progressScale);
-            }
-            result.add("progress", progressObj);
+            result.add("progress", progress.serialize());
         }
 
         if (!tags.isEmpty()) {
@@ -317,12 +298,8 @@ public class BingoGoal {
     }
 
     @Nullable
-    public String getProgress() {
+    public ProgressTracker getProgress() {
         return progress;
-    }
-
-    public float getProgressScale() {
-        return progressScale;
     }
 
     public List<BingoTag> getTags() {
@@ -485,8 +462,7 @@ public class BingoGoal {
         private final ImmutableMap.Builder<String, JsonObject> criteria = ImmutableMap.builder();
         private Optional<AdvancementRequirements> requirements = Optional.empty();
         @Nullable
-        private String progress;
-        private float progressScale = 1;
+        private ProgressTracker progress;
         private AdvancementRequirements.Strategy requirementsStrategy = AdvancementRequirements.Strategy.AND;
         private final ImmutableList.Builder<BingoTag> tags = ImmutableList.builder();
         private Optional<JsonElement> name = Optional.empty();
@@ -533,14 +509,13 @@ public class BingoGoal {
             return this;
         }
 
-        public Builder progress(String progress) {
+        public Builder progress(ProgressTracker progress) {
             this.progress = progress;
             return this;
         }
 
-        public Builder progressScale(float progressScale) {
-            this.progressScale = progressScale;
-            return this;
+        public Builder progress(String criterion) {
+            return progress(new ProgressTracker.Criterion(criterion, 1));
         }
 
         public Builder tags(ResourceLocation... tags) {
@@ -642,7 +617,6 @@ public class BingoGoal {
                 criteria,
                 requirements.orElseGet(() -> requirementsStrategy.create(criteria.keySet())),
                 progress,
-                progressScale,
                 tags.build(),
                 name.orElseThrow(() -> new IllegalStateException("Bingo goal name has not been set")),
                 tooltip,
