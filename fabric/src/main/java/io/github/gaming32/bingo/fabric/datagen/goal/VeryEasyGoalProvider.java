@@ -87,6 +87,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                     .sub("conditions.items.0.count.min", "poppies_count")
                     .sub("conditions.items.1.count.min", "dandelions_count")
             )
+            .progress("flowers")
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.and",
                     Component.translatable("bingo.count", 0, Items.POPPY.getDescription()),

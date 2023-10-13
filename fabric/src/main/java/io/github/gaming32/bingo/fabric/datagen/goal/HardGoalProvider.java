@@ -27,7 +27,9 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.raid.Raid;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -560,6 +562,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 .build(),
                 subber -> subber.multiSub("conditions.items.*.count.min", "count")
             )
+            .progress("items")
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD, BingoTags.NETHER, BingoTags.END)
             .name(
                 Component.translatable(

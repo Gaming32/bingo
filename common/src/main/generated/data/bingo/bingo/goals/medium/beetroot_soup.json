@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.beetroot_soup"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

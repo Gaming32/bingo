@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.emerald"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

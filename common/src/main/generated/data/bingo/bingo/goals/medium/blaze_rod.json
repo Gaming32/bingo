@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.blaze_rod"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "reactant": "pacifist",
   "requirements": [
     [

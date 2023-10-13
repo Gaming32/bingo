@@ -28,6 +28,9 @@
   "name": {
     "translate": "item.minecraft.trident"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

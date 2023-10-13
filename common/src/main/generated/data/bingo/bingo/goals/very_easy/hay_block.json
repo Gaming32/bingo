@@ -26,6 +26,9 @@
   "name": {
     "translate": "block.minecraft.hay_block"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

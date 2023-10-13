@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.heart_of_the_sea"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.cookie"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

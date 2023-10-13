@@ -26,6 +26,9 @@
   "name": {
     "translate": "item.minecraft.honey_bottle"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

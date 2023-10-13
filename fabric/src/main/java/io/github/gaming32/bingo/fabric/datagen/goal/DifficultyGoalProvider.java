@@ -86,7 +86,8 @@ public abstract class DifficultyGoalProvider {
     protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, GoalIcon icon, ItemPredicate.Builder... oneOfThese) {
         BingoGoal.Builder builder = BingoGoal.builder(id);
         if (oneOfThese.length == 1) {
-            builder.criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(oneOfThese[0].build()).build());
+            builder.criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(oneOfThese[0].build()).build())
+                .progress("obtain");
         } else {
             for (int i = 0; i < oneOfThese.length; i++) {
                 builder.criterion("obtain_" + i, TotalCountInventoryChangeTrigger.builder().items(oneOfThese[i].build()).build());
@@ -114,6 +115,7 @@ public abstract class DifficultyGoalProvider {
         if (minCount == maxCount) {
             return BingoGoal.builder(id)
                 .criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(item.withCount(MinMaxBounds.Ints.exactly(minCount)).build()).build())
+                .progress("obtain")
                 .tags(BingoTags.ITEM)
                 .icon(new ItemStack(icon, minCount));
         }
@@ -122,6 +124,7 @@ public abstract class DifficultyGoalProvider {
             .criterion("obtain",
                 TotalCountInventoryChangeTrigger.builder().items(item.withCount(MinMaxBounds.Ints.atLeast(0)).build()).build(),
                 subber -> subber.sub("conditions.items.0.count.min", "count"))
+            .progress("obtain")
             .tags(BingoTags.ITEM)
             .icon(icon, subber -> subber.sub("value.Count", "count"));
     }

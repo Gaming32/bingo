@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.diamond"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

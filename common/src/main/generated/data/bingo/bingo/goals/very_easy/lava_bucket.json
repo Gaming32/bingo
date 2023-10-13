@@ -26,6 +26,9 @@
   "name": {
     "translate": "item.minecraft.lava_bucket"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "reactant": "use_buckets",
   "requirements": [
     [

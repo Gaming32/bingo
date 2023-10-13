@@ -30,14 +30,23 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
+    public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
         private static final Codec<List<ItemPredicate>> ITEMS_CODEC = ItemPredicate.CODEC.listOf();
 
         private final List<ItemPredicate> items;
 
+        private final Integer minCount;
+
         public TriggerInstance(Optional<ContextAwarePredicate> player, List<ItemPredicate> items) {
             super(player);
             this.items = items;
+
+            final boolean allMin = items.stream().allMatch(p -> p.count().max().isEmpty());
+            if (allMin) {
+                minCount = items.stream().mapToInt(p -> p.count().min().orElse(1)).sum();
+            } else {
+                minCount = null;
+            }
         }
 
         @NotNull
@@ -72,15 +81,32 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
                 }
             }
 
+            int validCount = 0;
+
             // now check the counts after they have been totaled up
             for (int predicateIndex = 0; predicateIndex < counts.length; predicateIndex++) {
                 if (counts[predicateIndex] == 0) {
-                    return false;
+                    if (minCount == null) {
+                        return false;
+                    } else {
+                        continue;
+                    }
                 }
 
-                if (!items.get(predicateIndex).count().matches(counts[predicateIndex])) {
-                    return false;
+                final MinMaxBounds.Ints countPredicate = items.get(predicateIndex).count();
+                final boolean matched = countPredicate.matches(counts[predicateIndex]);
+                if (minCount == null) {
+                    if (!matched) {
+                        return false;
+                    }
+                } else {
+                    validCount += matched ? countPredicate.min().orElse(1) : counts[predicateIndex];
                 }
+            }
+
+            if (minCount != null) {
+                setProgress(validCount, minCount);
+                return validCount >= minCount;
             }
 
             return true;

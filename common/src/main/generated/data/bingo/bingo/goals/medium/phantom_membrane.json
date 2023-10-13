@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.phantom_membrane"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "reactant": "pacifist",
   "requirements": [
     [

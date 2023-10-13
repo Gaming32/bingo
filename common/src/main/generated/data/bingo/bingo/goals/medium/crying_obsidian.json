@@ -25,6 +25,9 @@
   "name": {
     "translate": "block.minecraft.crying_obsidian"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

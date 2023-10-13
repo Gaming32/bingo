@@ -26,6 +26,9 @@
   "name": {
     "translate": "block.minecraft.honey_block"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

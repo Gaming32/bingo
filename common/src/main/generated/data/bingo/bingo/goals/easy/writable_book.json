@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.writable_book"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

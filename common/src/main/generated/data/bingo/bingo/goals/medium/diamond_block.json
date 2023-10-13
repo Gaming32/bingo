@@ -26,6 +26,9 @@
   "name": {
     "translate": "block.minecraft.diamond_block"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

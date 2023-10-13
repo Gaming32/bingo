@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.pumpkin_pie"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

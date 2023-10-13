@@ -25,6 +25,9 @@
   "name": {
     "translate": "block.minecraft.gilded_blackstone"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

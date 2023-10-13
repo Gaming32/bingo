@@ -26,6 +26,9 @@
   "name": {
     "translate": "item.minecraft.cyan_dye"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

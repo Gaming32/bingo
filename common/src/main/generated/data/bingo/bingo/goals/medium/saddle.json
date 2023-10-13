@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.saddle"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

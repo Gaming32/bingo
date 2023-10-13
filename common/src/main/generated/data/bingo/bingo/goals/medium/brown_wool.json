@@ -25,6 +25,9 @@
   "name": {
     "translate": "block.minecraft.brown_wool"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

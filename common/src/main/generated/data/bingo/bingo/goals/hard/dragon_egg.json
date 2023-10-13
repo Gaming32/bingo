@@ -25,6 +25,9 @@
   "name": {
     "translate": "block.minecraft.dragon_egg"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

@@ -64,6 +64,9 @@
   "name": {
     "translate": "block.minecraft.ominous_banner"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "reactant": "pacifist",
   "requirements": [
     [

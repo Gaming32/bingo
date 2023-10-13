@@ -107,6 +107,9 @@
       }
     ]
   },
+  "progress": {
+    "criterion": "flowers"
+  },
   "requirements": [
     [
       "flowers"

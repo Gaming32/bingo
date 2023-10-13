@@ -25,6 +25,9 @@
   "name": {
     "translate": "block.minecraft.sniffer_egg"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

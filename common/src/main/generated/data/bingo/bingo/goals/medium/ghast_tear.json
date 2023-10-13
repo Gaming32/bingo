@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.ghast_tear"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "reactant": "pacifist",
   "requirements": [
     [

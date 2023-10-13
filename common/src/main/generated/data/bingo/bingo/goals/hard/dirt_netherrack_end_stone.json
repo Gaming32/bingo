@@ -116,6 +116,9 @@
       }
     ]
   },
+  "progress": {
+    "criterion": "items"
+  },
   "requirements": [
     [
       "items"

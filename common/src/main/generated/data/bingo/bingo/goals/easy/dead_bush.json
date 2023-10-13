@@ -25,6 +25,9 @@
   "name": {
     "translate": "block.minecraft.dead_bush"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

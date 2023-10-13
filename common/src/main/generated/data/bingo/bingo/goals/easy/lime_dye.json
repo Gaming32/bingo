@@ -26,6 +26,9 @@
   "name": {
     "translate": "item.minecraft.lime_dye"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

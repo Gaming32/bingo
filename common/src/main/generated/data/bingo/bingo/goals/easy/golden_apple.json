@@ -25,6 +25,9 @@
   "name": {
     "translate": "item.minecraft.golden_apple"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

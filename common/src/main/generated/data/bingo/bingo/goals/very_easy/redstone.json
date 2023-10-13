@@ -26,6 +26,9 @@
   "name": {
     "translate": "item.minecraft.redstone"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

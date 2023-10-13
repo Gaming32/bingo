@@ -55,6 +55,9 @@
       }
     ]
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "reactant": "use_furnace",
   "requirements": [
     [

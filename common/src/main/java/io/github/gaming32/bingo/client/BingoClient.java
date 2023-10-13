@@ -169,7 +169,7 @@ public class BingoClient {
                 }
 
                 GoalProgress progress = clientBoard.getProgress(sx, sy);
-                if (progress != null && !isGoalCompleted) {
+                if (progress != null && !isGoalCompleted && progress.progress() > 0) {
                     graphics.pose().pushPose();
                     graphics.pose().translate(0, 0, 200);
 
@@ -202,7 +202,7 @@ public class BingoClient {
             final GoalProgress progress = clientBoard.getProgress(mousePos.slotIdX(), mousePos.slotIdY());
             final List<Component> lines = new ArrayList<>(3);
             lines.add(goal.name());
-            if (progress != null) {
+            if (progress != null && (progress.maxProgress() > 1 || minecraft.options.advancedItemTooltips)) {
                 lines.add(Component.translatable("bingo.progress", progress.progress(), progress.maxProgress()));
             }
             if (minecraft.options.advancedItemTooltips) {

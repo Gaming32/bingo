@@ -29,6 +29,9 @@
   "name": {
     "translate": "bingo.goal.any_head"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

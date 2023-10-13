@@ -25,6 +25,9 @@
   "name": {
     "translate": "block.minecraft.wither_skeleton_skull"
   },
+  "progress": {
+    "criterion": "obtain"
+  },
   "reactant": "pacifist",
   "requirements": [
     [
