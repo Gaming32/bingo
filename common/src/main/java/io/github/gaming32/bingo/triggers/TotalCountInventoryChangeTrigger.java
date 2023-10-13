@@ -23,7 +23,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
-        trigger(player, triggerInstance -> triggerInstance.matches(inventory));
+        trigger(player, triggerInstance -> triggerInstance.matches(player, inventory));
     }
 
     public static Builder builder() {
@@ -57,7 +57,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
             return result;
         }
 
-        public boolean matches(Inventory inventory) {
+        public boolean matches(ServerPlayer player, Inventory inventory) {
             int[] counts = new int[items.size()];
 
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
@@ -105,7 +105,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
             }
 
             if (minCount != null) {
-                setProgress(validCount, minCount);
+                setProgress(player, validCount, minCount);
                 return validCount >= minCount;
             }
 

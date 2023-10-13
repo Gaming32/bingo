@@ -190,7 +190,7 @@ public class BingoGame {
     ) {
         criterion.trigger().addPlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
         if (criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance progressibleTrigger) {
-            progressibleTrigger.addProgressListener(new BingoGameProgressListener(this, player, goal, criterionId));
+            progressibleTrigger.addProgressListener(player, new BingoGameProgressListener(this, goal, criterionId));
         }
     }
 
@@ -199,7 +199,7 @@ public class BingoGame {
     ) {
         criterion.trigger().removePlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
         if (criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance progressibleTrigger) {
-            progressibleTrigger.removeProgressListener(new BingoGameProgressListener(this, player, goal, criterionId));
+            progressibleTrigger.removeProgressListener(player, new BingoGameProgressListener(this, goal, criterionId));
         }
     }
 
@@ -462,9 +462,9 @@ public class BingoGame {
         return gameMode.getWinners(board, teams.length, tryHarder);
     }
 
-    private record BingoGameProgressListener(BingoGame game, ServerPlayer player, ActiveGoal goal, String criterionId) implements AbstractProgressibleTriggerInstance.ProgressListener {
+    private record BingoGameProgressListener(BingoGame game, ActiveGoal goal, String criterionId) implements AbstractProgressibleTriggerInstance.ProgressListener {
         @Override
-        public void update(int progress, int maxProgress) {
+        public void update(ServerPlayer player, int progress, int maxProgress) {
             game.onProgress(player, goal, criterionId, progress, maxProgress);
         }
     }

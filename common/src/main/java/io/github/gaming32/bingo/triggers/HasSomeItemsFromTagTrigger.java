@@ -35,7 +35,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
-        trigger(player, triggerInstance -> triggerInstance.matches(inventory));
+        trigger(player, triggerInstance -> triggerInstance.matches(player, inventory));
     }
 
     public static Builder builder() {
@@ -61,7 +61,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
             return result;
         }
 
-        public boolean matches(Inventory inventory) {
+        public boolean matches(ServerPlayer player, Inventory inventory) {
             int requiredCount = this.requiredCount;
             if (requiredCount == ALL) {
                 var tag = BuiltInRegistries.ITEM.getTag(this.tag);
@@ -75,12 +75,12 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
                 if (item.is(tag) && foundItems.add(item.getItem()) && foundItems.size() >= requiredCount) {
-                    setProgress(requiredCount, requiredCount);
+                    setProgress(player, requiredCount, requiredCount);
                     return true;
                 }
             }
 
-            setProgress(foundItems.size(), requiredCount);
+            setProgress(player, foundItems.size(), requiredCount);
             return false;
         }
     }

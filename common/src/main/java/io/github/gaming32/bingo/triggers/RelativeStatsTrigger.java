@@ -62,13 +62,13 @@ public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTr
                         final Stat<?> stat = matcher.stat().get();
                         final int value = currentStats.getValue(stat) - baseStats.getInt(stat);
                         if (!matcher.range().matches(value)) {
-                            matcher.range().min().ifPresent(min -> setProgress(Math.min(value, min), min));
+                            matcher.range().min().ifPresent(min -> setProgress(player, Math.min(value, min), min));
                             return false;
                         }
                     }
 
                     if (!stats.isEmpty()) {
-                        stats.get(0).range().min().ifPresent(min -> setProgress(min, min));
+                        stats.get(0).range().min().ifPresent(min -> setProgress(player, min, min));
                     }
                 }
             }

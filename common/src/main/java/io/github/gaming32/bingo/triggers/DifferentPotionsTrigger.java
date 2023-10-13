@@ -27,7 +27,7 @@ public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPot
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
-        trigger(player, instance -> instance.matches(inventory));
+        trigger(player, instance -> instance.matches(player, inventory));
     }
 
     public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
@@ -52,19 +52,19 @@ public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPot
             return result;
         }
 
-        public boolean matches(Inventory inventory) {
+        public boolean matches(ServerPlayer player, Inventory inventory) {
             final Set<String> discovered = new HashSet<>();
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
                 if (item.getItem() instanceof PotionItem) {
                     final Potion potion = PotionUtils.getPotion(item);
                     if (potion != Potions.EMPTY && discovered.add(potion.getName("")) && discovered.size() >= minCount) {
-                        setProgress(minCount, minCount);
+                        setProgress(player, minCount, minCount);
                         return true;
                     }
                 }
             }
-            setProgress(discovered.size(), minCount);
+            setProgress(player, discovered.size(), minCount);
             return false;
         }
     }
