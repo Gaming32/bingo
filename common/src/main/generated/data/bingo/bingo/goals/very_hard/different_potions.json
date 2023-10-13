@@ -297,7 +297,9 @@
       }
     ]
   },
-  "progress": "potions",
+  "progress": {
+    "criterion": "potions"
+  },
   "reactant": "pacifist",
   "requirements": [
     [

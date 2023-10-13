@@ -65,8 +65,10 @@
       }
     ]
   },
-  "progress": "crouch",
-  "progressScale": 0.01,
+  "progress": {
+    "criterion": "crouch",
+    "scale": 0.01
+  },
   "requirements": [
     [
       "crouch"

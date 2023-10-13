@@ -20,7 +20,9 @@
       "5"
     ]
   },
-  "progress": "obtain",
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"

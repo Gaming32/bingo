@@ -139,6 +139,9 @@ public class BingoGoal {
         if (progress != null && !criteria.containsKey(progress)) {
             throw new IllegalArgumentException("Specified progress criterion '" + progress + "' does not exist");
         }
+        if (progressScale != 1f && progress == null) {
+            throw new IllegalArgumentException("Cannot specify progress_scale without progress");
+        }
     }
 
     public static Set<ResourceLocation> getGoalIds() {
@@ -167,6 +170,14 @@ public class BingoGoal {
             ? AdvancementRequirements.allOf(criteria.keySet())
             : AdvancementRequirements.fromJson(reqArray, criteria.keySet());
 
+        String progress = null;
+        float progressScale = 1f;
+        if (json.has("progress")) {
+            final JsonObject progressObj = GsonHelper.getAsJsonObject(json, "progress");
+            progress = GsonHelper.getAsString(progressObj, "criterion");
+            progressScale = GsonHelper.getAsFloat(progressObj, "scale", 1f);
+        }
+
         return new BingoGoal(
             id,
             GsonHelper.getAsJsonObject(json, "bingo_subs", new JsonObject())
@@ -174,8 +185,7 @@ public class BingoGoal {
                 .stream()
                 .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> BingoSub.deserialize(e.getValue()))),
             criteria, requirements,
-            json.has("progress") ? GsonHelper.getAsString(json, "progress") : null,
-            GsonHelper.getAsFloat(json, "progressScale", 1),
+            progress, progressScale,
             GsonHelper.getAsJsonArray(json, "tags", new JsonArray())
                 .asList()
                 .stream()
@@ -232,9 +242,13 @@ public class BingoGoal {
 
         result.add("requirements", requirements.toJson());
 
-        result.addProperty("progress", progress);
-        if (progressScale != 1) {
-            result.addProperty("progressScale", progressScale);
+        if (progress != null) {
+            final JsonObject progressObj = new JsonObject();
+            progressObj.addProperty("criterion", progress);
+            if (progressScale != 1) {
+                progressObj.addProperty("scale", progressScale);
+            }
+            result.add("progress", progressObj);
         }
 
         if (!tags.isEmpty()) {

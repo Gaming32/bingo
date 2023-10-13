@@ -42,7 +42,9 @@
       }
     ]
   },
-  "progress": "obtain",
+  "progress": {
+    "criterion": "obtain"
+  },
   "requirements": [
     [
       "obtain"
