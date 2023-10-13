@@ -179,8 +179,8 @@ public class BingoClient {
                     );
                     final int pX = slotX + 2;
                     final int pY = slotY + 13;
-                    graphics.fill(RenderType.guiOverlay(), pX, pY, pX + 13, pY + 2, 0xff000000);
-                    graphics.fill(RenderType.guiOverlay(), pX, pY, pX + pWidth, pY + 1, pColor | 0xff000000);
+                    graphics.fill(RenderType.gui(), pX, pY, pX + 13, pY + 2, 0xff000000);
+                    graphics.fill(RenderType.gui(), pX, pY, pX + pWidth, pY + 1, pColor | 0xff000000);
 
                     graphics.pose().popPose();
                 }
