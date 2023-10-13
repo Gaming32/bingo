@@ -171,7 +171,7 @@ public class BingoClient {
                 GoalProgress progress = clientBoard.getProgress(sx, sy);
                 if (progress != null && !isGoalCompleted) {
                     graphics.pose().pushPose();
-                    graphics.pose().translate(0, 0, 200);
+                    graphics.pose().translate(0, 0, 199);
 
                     final int pWidth = Math.round(progress.progress() * 13f / progress.maxProgress());
                     final int pColor = Mth.hsvToRgb(
