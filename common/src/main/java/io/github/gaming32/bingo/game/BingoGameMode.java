@@ -161,6 +161,11 @@ public interface BingoGameMode {
         public RenderMode getRenderMode() {
             return RenderMode.ALL_TEAMS;
         }
+
+        @Override
+        public boolean isLockout() {
+            return true;
+        }
     };
 
     BingoGameMode BLACKOUT = new BingoGameMode() {
@@ -219,6 +224,10 @@ public interface BingoGameMode {
 
     default RenderMode getRenderMode() {
         return RenderMode.FANCY;
+    }
+
+    default boolean isLockout() {
+        return false;
     }
 
     record GameConfig(BingoGameMode gameMode, int size, Collection<PlayerTeam> teams) {
