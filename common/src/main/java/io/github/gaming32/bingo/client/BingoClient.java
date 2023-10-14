@@ -46,7 +46,7 @@ public class BingoClient {
     public static final int BOARD_OFFSET = 3;
 
     public static BingoBoard.Teams clientTeam = BingoBoard.Teams.NONE;
-    public static ClientBoard clientBoard;
+    public static ClientGame clientGame;
 
     private static BingoClientConfig config;
     private static RecipeViewerPlugin recipeViewerPlugin;
@@ -62,7 +62,7 @@ public class BingoClient {
         }
 
         ClientGuiEvent.RENDER_HUD.register((graphics, tickDelta) -> {
-            if (clientBoard == null) return;
+            if (clientGame == null) return;
             final Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.getDebugOverlay().showDebugScreen() || minecraft.screen instanceof BoardScreen) return;
             final float scale = config.board.scale;
@@ -72,7 +72,7 @@ public class BingoClient {
         });
 
         ClientScreenInputEvent.KEY_RELEASED_PRE.register((client, screen, keyCode, scanCode, modifiers) -> {
-            if (clientBoard == null || !(screen instanceof ChatScreen)) {
+            if (clientGame == null || !(screen instanceof ChatScreen)) {
                 return EventResult.pass();
             }
             final float scale = config.board.scale;
@@ -82,7 +82,7 @@ public class BingoClient {
         });
 
         ClientScreenInputEvent.MOUSE_RELEASED_PRE.register((client, screen, mouseX, mouseY, button) -> {
-            if (clientBoard == null || !(screen instanceof ChatScreen)) {
+            if (clientGame == null || !(screen instanceof ChatScreen)) {
                 return EventResult.pass();
             }
             final float scale = config.board.scale;
@@ -93,7 +93,7 @@ public class BingoClient {
 
         ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> {
             clientTeam = BingoBoard.Teams.NONE;
-            clientBoard = null;
+            clientGame = null;
         });
 
         // Mark as able to receive this in PLAY, for mod presence checks
@@ -106,7 +106,7 @@ public class BingoClient {
         KeyMappingRegistry.register(boardKey);
         ClientTickEvent.CLIENT_PRE.register(instance -> {
             while (boardKey.consumeClick()) {
-                if (clientBoard != null) {
+                if (clientGame != null) {
                     instance.setScreen(new BoardScreen());
                 }
             }
@@ -125,16 +125,16 @@ public class BingoClient {
     }
 
     public static int getBoardWidth() {
-        return 14 + 18 * clientBoard.size();
+        return 14 + 18 * clientGame.size();
     }
 
     public static int getBoardHeight() {
-        return 24 + 18 * clientBoard.size();
+        return 24 + 18 * clientGame.size();
     }
 
     public static void renderBingo(GuiGraphics graphics, boolean mouseHover, float x, float y, float scale) {
-        if (clientBoard == null) {
-            Bingo.LOGGER.warn("BingoClient.renderBingo() called when Bingo.clientBoard == null!");
+        if (clientGame == null) {
+            Bingo.LOGGER.warn("BingoClient.renderBingo() called when Bingo.clientGame == null!");
             return;
         }
         final Minecraft minecraft = Minecraft.getInstance();
@@ -143,32 +143,43 @@ public class BingoClient {
         graphics.pose().scale(scale, scale, 1);
         graphics.pose().translate(x, y, 0);
 
-        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientBoard.size(), x, y, scale) : null;
+        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientGame.size(), x, y, scale) : null;
 
         graphics.blitSprite(
             BOARD_TEXTURE, 0, 0,
-            7 + 18 * clientBoard.size() + 7,
-            17 + 18 * clientBoard.size() + 7
+            7 + 18 * clientGame.size() + 7,
+            17 + 18 * clientGame.size() + 7
         );
         graphics.drawString(minecraft.font, BOARD_TITLE, 8, 6, 0x404040, false);
 
-        for (int sx = 0; sx < clientBoard.size(); sx++) {
-            for (int sy = 0; sy < clientBoard.size(); sy++) {
-                final ClientGoal goal = clientBoard.getGoal(sx, sy);
+        for (int sx = 0; sx < clientGame.size(); sx++) {
+            for (int sy = 0; sy < clientGame.size(); sy++) {
+                final ClientGoal goal = clientGame.getGoal(sx, sy);
                 final int slotX = sx * 18 + 8;
                 final int slotY = sy * 18 + 18;
                 final GoalIcon icon = goal.icon();
                 final IconRenderer<? super GoalIcon> renderer = IconRenderers.getRenderer(icon);
                 renderer.render(icon, graphics, slotX, slotY);
                 renderer.renderDecorations(icon, minecraft.font, graphics, slotX, slotY);
-                final BingoBoard.Teams state = clientBoard.getState(sx, sy);
+                final BingoBoard.Teams state = clientGame.getState(sx, sy);
                 boolean isGoalCompleted = state.and(clientTeam);
-                final int color = isGoalCompleted ? 0x55ff55 : goal.specialType().incompleteColor;
+
+                final int color = switch (clientGame.renderMode()) {
+                    case FANCY -> isGoalCompleted ? 0x55ff55 : goal.specialType().incompleteColor;
+                    case ALL_TEAMS -> {
+                        if (!state.any()) {
+                            yield 0;
+                        }
+                        final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
+                        final Integer maybeColor = clientGame.teams()[team.getFirstIndex()].getColor().getColor();
+                        yield maybeColor != null ? maybeColor : 0x55ff55;
+                    }
+                };
                 if (color != 0) {
                     graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
                 }
 
-                GoalProgress progress = clientBoard.getProgress(sx, sy);
+                GoalProgress progress = clientGame.getProgress(sx, sy);
                 if (progress != null && !isGoalCompleted && progress.progress() > 0) {
                     graphics.pose().pushPose();
                     graphics.pose().translate(0, 0, 200);
@@ -198,8 +209,8 @@ public class BingoClient {
 
         graphics.pose().popPose();
         if (BingoMousePos.hasSlotPos(mousePos)) {
-            final ClientGoal goal = clientBoard.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
-            final GoalProgress progress = clientBoard.getProgress(mousePos.slotIdX(), mousePos.slotIdY());
+            final ClientGoal goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
+            final GoalProgress progress = clientGame.getProgress(mousePos.slotIdX(), mousePos.slotIdY());
             final List<Component> lines = new ArrayList<>(3);
             lines.add(goal.name());
             if (progress != null && (progress.maxProgress() > 1 || minecraft.options.advancedItemTooltips)) {
@@ -230,16 +241,16 @@ public class BingoClient {
     }
 
     public static boolean detectClickOrPress(InputConstants.Key key, float x, float y, float scale) {
-        if (clientBoard == null) {
+        if (clientGame == null) {
             return false;
         }
 
-        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), clientBoard.size(), x, y, scale);
+        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), clientGame.size(), x, y, scale);
         if (!mousePos.hasSlotPos()) {
             return false;
         }
 
-        final ClientGoal goal = clientBoard.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
+        final ClientGoal goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
 
         final RecipeViewerPlugin plugin = getRecipeViewerPlugin();
         if (plugin.isViewRecipe(key)) {

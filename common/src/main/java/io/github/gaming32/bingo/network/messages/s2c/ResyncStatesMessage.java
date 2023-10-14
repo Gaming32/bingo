@@ -33,10 +33,10 @@ public class ResyncStatesMessage extends BaseS2CMessage {
 
     @Override
     public void handle(NetworkManager.PacketContext context) {
-        if (BingoClient.clientBoard == null) {
-            Bingo.LOGGER.warn("BingoClient.clientBoard == null while handling " + getType().getId() + "!");
+        if (BingoClient.clientGame == null) {
+            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling " + getType().getId() + "!");
             return;
         }
-        System.arraycopy(states, 0, BingoClient.clientBoard.states(), 0, BingoClient.clientBoard.size() * BingoClient.clientBoard.size());
+        System.arraycopy(states, 0, BingoClient.clientGame.states(), 0, BingoClient.clientGame.size() * BingoClient.clientGame.size());
     }
 }

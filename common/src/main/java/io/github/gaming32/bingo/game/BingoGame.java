@@ -85,7 +85,7 @@ public class BingoGame {
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamMessage(team).sendTo(player);
 
-        new InitBoardMessage(board.getSize(), board.getGoals(), obfuscateTeam(team, board.getStates())).sendTo(player);
+        new InitBoardMessage(this, obfuscateTeam(team)).sendTo(player);
         player.connection.send(new ClientboundUpdateAdvancementsPacket(
             false,
             VanillaNetworking.generateAdvancements(board.getSize(), board.getGoals()),
@@ -105,8 +105,9 @@ public class BingoGame {
         }
     }
 
-    public static BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam, BingoBoard.Teams[] states) {
-        if (Bingo.showOtherTeam) {
+    public BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam) {
+        final BingoBoard.Teams[] states = board.getStates();
+        if (Bingo.showOtherTeam || gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
             return states;
         }
         if (!playerTeam.any()) {
@@ -136,7 +137,7 @@ public class BingoGame {
         clearListeners(playerList);
         final Component message;
         if (winner.any()) {
-            if (!winner.one() && winner.all(teams.length)) {
+            if (!winner.one()) {
                 message = Bingo.translatable("bingo.ended.tie");
             } else {
                 final PlayerTeam playerTeam = getTeam(winner);
@@ -450,6 +451,10 @@ public class BingoGame {
             throw new IllegalArgumentException("BingoGame.getTeam() called with a team it doesn't have");
         }
         return teams[index];
+    }
+
+    public PlayerTeam[] getTeams() {
+        return teams;
     }
 
     public void checkForWin(PlayerList playerList) {

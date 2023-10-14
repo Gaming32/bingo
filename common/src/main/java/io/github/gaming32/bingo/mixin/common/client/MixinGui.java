@@ -21,7 +21,7 @@ public class MixinGui {
     )
     private int moveEffectContainersDown(int original) {
         final BingoClientConfig.BoardConfig boardConfig = BingoClient.getConfig().board;
-        if (BingoClient.clientBoard != null && boardConfig.corner == BoardCorner.UPPER_RIGHT) {
+        if (BingoClient.clientGame != null && boardConfig.corner == BoardCorner.UPPER_RIGHT) {
             return original + (int)(BingoClient.getBoardHeight() * boardConfig.scale) + BingoClient.BOARD_OFFSET;
         }
         return original;
@@ -30,7 +30,7 @@ public class MixinGui {
     @ModifyVariable(method = "method_18620", at = @At("HEAD"), index = 3, argsOnly = true)
     private static int moveEffectsDown(int original) {
         final BingoClientConfig.BoardConfig boardConfig = BingoClient.getConfig().board;
-        if (BingoClient.clientBoard != null && boardConfig.corner == BoardCorner.UPPER_RIGHT) {
+        if (BingoClient.clientGame != null && boardConfig.corner == BoardCorner.UPPER_RIGHT) {
             return original + (int)(BingoClient.getBoardHeight() * boardConfig.scale) + BingoClient.BOARD_OFFSET;
         }
         return original;

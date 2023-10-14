@@ -1,8 +1,15 @@
 package io.github.gaming32.bingo.game;
 
+import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
 
 public interface BingoGameMode {
     BingoGameMode STANDARD = new BingoGameMode() {
@@ -67,41 +74,76 @@ public interface BingoGameMode {
         public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever) {
             return !board.getStates()[index].and(team) ^ isNever;
         }
-
-        @Override
-        public boolean isGoalAllowed(BingoGoal goal) {
-            return true;
-        }
     };
 
     BingoGameMode LOCKOUT = new BingoGameMode() {
+        @Override
+        public Component checkAllowedConfig(GameConfig config) {
+            if (config.teams.size() < 2) {
+                return Bingo.translatable("bingo.lockout.too_few_teams");
+            }
+            if (config.size % config.teams.size() == 0) {
+                return Bingo.translatable("bingo.lockout.even_board_size");
+            }
+
+            final Set<ChatFormatting> uniqueColors = EnumSet.noneOf(ChatFormatting.class);
+            for (final PlayerTeam team : config.teams) {
+                if (team.getColor().getColor() == null) {
+                    return Bingo.translatable("bingo.team_missing_color");
+                }
+                uniqueColors.add(team.getColor());
+            }
+            if (uniqueColors.size() < config.teams.size()) {
+                return Bingo.translatable("bingo.duplicate_team_color");
+            }
+
+            return null;
+        }
+
         @NotNull
         @Override
         public BingoBoard.Teams getWinners(BingoBoard board, int teamCount, boolean tryHarder) {
-            if (teamCount != 2) {
-                // TODO
-                throw new UnsupportedOperationException("Lockout not supported on teamCount != 2 yet");
+            class TeamValue {
+                final BingoBoard.Teams team;
+                int goalsHeld;
+
+                TeamValue(BingoBoard.Teams team) {
+                    this.team = team;
+                }
             }
-            final int size = board.getSize();
-            int count1 = 0;
-            int count2 = 0;
+
+            final TeamValue[] teams = new TeamValue[teamCount];
+            for (int i = 0; i < teamCount; i++) {
+                teams[i] = new TeamValue(BingoBoard.Teams.fromOne(i));
+            }
+
+            int totalHeld = 0;
             for (final BingoBoard.Teams state : board.getStates()) {
-                if (state.and(BingoBoard.Teams.TEAM1)) {
-                    count1++;
-                    if (count1 >= size * size / 2 + 1) {
-                        return BingoBoard.Teams.TEAM1;
-                    }
-                }
-                if (state.and(BingoBoard.Teams.TEAM2)) {
-                    count2++;
-                    if (count2 >= size * size / 2 + 1) {
-                        return BingoBoard.Teams.TEAM1;
-                    }
+                if (state.any()) {
+                    totalHeld++;
+                    teams[state.getFirstIndex()].goalsHeld++;
                 }
             }
+
+            Arrays.sort(teams, Comparator.comparing(v -> -v.goalsHeld)); // Sort in reverse
+
             if (tryHarder) {
-                return count1 == count2 ? BingoBoard.Teams.fromAll(2)
-                    : count1 > count2 ? BingoBoard.Teams.TEAM1 : BingoBoard.Teams.TEAM2;
+                if (totalHeld == 0) {
+                    return BingoBoard.Teams.NONE;
+                }
+                BingoBoard.Teams tied = BingoBoard.Teams.NONE;
+                int held = teams[0].goalsHeld;
+                for (final TeamValue team : teams) {
+                    if (team.goalsHeld != held) break;
+                    tied = tied.or(team.team);
+                }
+                return tied;
+            }
+
+            final int totalGoals = board.getSize() * board.getSize();
+            final int goalsRemaining = totalGoals - totalHeld;
+            if (goalsRemaining - teams[0].goalsHeld < teams[0].goalsHeld - teams[1].goalsHeld) {
+                return teams[0].team;
             }
             return BingoBoard.Teams.NONE;
         }
@@ -114,6 +156,11 @@ public interface BingoGameMode {
         @Override
         public boolean isGoalAllowed(BingoGoal goal) {
             return goal.getTags().stream().allMatch(g -> g.specialType() == BingoTag.SpecialType.NONE);
+        }
+
+        @Override
+        public RenderMode getRenderMode() {
+            return RenderMode.ALL_TEAMS;
         }
     };
 
@@ -151,10 +198,34 @@ public interface BingoGameMode {
         }
     };
 
+    Map<String, BingoGameMode> GAME_MODES = new HashMap<>(Map.of(
+        "standard", STANDARD,
+        "lockout", LOCKOUT,
+        "blackout", BLACKOUT
+    ));
+
+    @Nullable
+    default Component checkAllowedConfig(GameConfig config) {
+        return null;
+    }
+
     @NotNull
     BingoBoard.Teams getWinners(BingoBoard board, int teamCount, boolean tryHarder);
 
     boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever);
 
-    boolean isGoalAllowed(BingoGoal goal);
+    default boolean isGoalAllowed(BingoGoal goal) {
+        return true;
+    }
+
+    default RenderMode getRenderMode() {
+        return RenderMode.FANCY;
+    }
+
+    record GameConfig(BingoGameMode gameMode, int size, Collection<PlayerTeam> teams) {
+    }
+
+    enum RenderMode {
+        FANCY, ALL_TEAMS
+    }
 }

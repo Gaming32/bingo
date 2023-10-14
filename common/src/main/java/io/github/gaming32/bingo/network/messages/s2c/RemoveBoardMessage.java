@@ -23,6 +23,6 @@ public class RemoveBoardMessage extends BaseS2CMessage {
 
     @Override
     public void handle(NetworkManager.PacketContext context) {
-        BingoClient.clientBoard = null;
+        BingoClient.clientGame = null;
     }
 }

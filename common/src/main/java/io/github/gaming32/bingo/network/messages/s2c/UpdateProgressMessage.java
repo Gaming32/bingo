@@ -37,10 +37,10 @@ public class UpdateProgressMessage extends BaseS2CMessage {
 
     @Override
     public void handle(NetworkManager.PacketContext context) {
-        if (BingoClient.clientBoard == null) {
-            Bingo.LOGGER.warn("BingoClient.clientBoard == null while handling " + getType().getId() + "!");
+        if (BingoClient.clientGame == null) {
+            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling " + getType().getId() + "!");
             return;
         }
-        BingoClient.clientBoard.progress()[index] = new GoalProgress(progress, maxProgress);
+        BingoClient.clientGame.progress()[index] = new GoalProgress(progress, maxProgress);
     }
 }

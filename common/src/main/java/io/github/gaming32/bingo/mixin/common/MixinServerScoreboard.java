@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.mixin.common;
 
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.BingoBoard;
-import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesMessage;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamMessage;
@@ -61,16 +60,12 @@ public class MixinServerScoreboard {
                 if (team.any()) {
                     Bingo.activeGame.flushQueuedGoals(player);
                 }
-                final BingoBoard.Teams[] states = Bingo.activeGame.getBoard().getStates();
-                if (!Bingo.showOtherTeam) {
-                    new ResyncStatesMessage(BingoGame.obfuscateTeam(team, Bingo.activeGame.getBoard().getStates()))
-                        .sendTo(player);
-                }
+                new ResyncStatesMessage(Bingo.activeGame.obfuscateTeam(team)).sendTo(player);
                 player.connection.send(new ClientboundUpdateAdvancementsPacket(
                     false,
                     List.of(),
                     Set.of(),
-                    VanillaNetworking.generateProgressMap(states, team)
+                    VanillaNetworking.generateProgressMap(Bingo.activeGame.getBoard().getStates(), team)
                 ));
             }
         }

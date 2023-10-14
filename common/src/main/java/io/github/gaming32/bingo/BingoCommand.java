@@ -5,6 +5,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -253,6 +254,14 @@ public class BingoCommand {
                             .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                         )
                     )
+                    .then(literal("--gamemode")
+                        .then(argument("gamemode", StringArgumentType.word())
+                            .suggests((context, builder) -> SharedSuggestionProvider.suggest(
+                                BingoGameMode.GAME_MODES.keySet(), builder
+                            ))
+                            .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+                        )
+                    )
                     .then(literal("--require-client")
                         .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                     )
@@ -278,6 +287,8 @@ public class BingoCommand {
         final long seed = getArg(context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong);
         final ResourceLocation requiredGoalId = getArg(context, "required_goal", () -> null, ResourceLocationArgument::getId);
         final int size = getArg(context, "size", () -> BingoBoard.DEFAULT_SIZE, IntegerArgumentType::getInteger);
+        final String gamemodeId = getArg(context, "gamemode", () -> "standard", StringArgumentType::getString);
+        final boolean requireClient = hasNode(context, "--require-client");
 
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
         for (int i = 1; i <= 32; i++) {
@@ -298,7 +309,17 @@ public class BingoCommand {
             requiredGoal = null;
         }
 
-        final boolean requireClient = hasNode(context, "--require-client");
+        final BingoGameMode gamemode = BingoGameMode.GAME_MODES.get(gamemodeId);
+        if (gamemode == null) {
+            throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_gamemode", gamemodeId));
+        }
+
+        final Component configError = gamemode.checkAllowedConfig(
+            new BingoGameMode.GameConfig(gamemode, size, teams)
+        );
+        if (configError != null) {
+            throw new CommandRuntimeException(configError);
+        }
 
         final MinecraftServer server = context.getSource().getServer();
         final PlayerList playerList = server.getPlayerList();
@@ -311,7 +332,7 @@ public class BingoCommand {
                 teams.size(),
                 RandomSource.create(seed),
                 server.getLootData(),
-                BingoGameMode.STANDARD::isGoalAllowed,
+                gamemode::isGoalAllowed,
                 requiredGoal,
                 requireClient
             );
@@ -325,7 +346,7 @@ public class BingoCommand {
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        Bingo.activeGame = new BingoGame(board, BingoGameMode.STANDARD, requireClient, teams.toArray(PlayerTeam[]::new)); // TODO: Implement gamemode choosing
+        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, teams.toArray(PlayerTeam[]::new));
         Bingo.updateCommandTree(playerList);
         playerList.getPlayers().forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(Bingo.translatable(

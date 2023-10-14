@@ -19,7 +19,7 @@ public class MixinGameRenderer {
     )
     private void moveToastsDown(ToastComponent instance, GuiGraphics guiGraphics, Operation<Void> original) {
         final BingoClientConfig.BoardConfig boardConfig = BingoClient.getConfig().board;
-        if (BingoClient.clientBoard == null || boardConfig.corner != BoardCorner.UPPER_RIGHT) {
+        if (BingoClient.clientGame == null || boardConfig.corner != BoardCorner.UPPER_RIGHT) {
             original.call(instance, guiGraphics);
             return;
         }

@@ -47,7 +47,7 @@ public class BoardScreen extends Screen {
 
     @Override
     public void tick() {
-        if (BingoClient.clientBoard == null && minecraft != null) {
+        if (BingoClient.clientGame == null && minecraft != null) {
             minecraft.setScreen(null);
         }
     }
