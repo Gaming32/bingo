@@ -181,6 +181,7 @@
   "bingo.ended.tie": "The bingo game has ended with a tie!",
   "bingo.goal_obtained": "%s got the goal %s for your team.",
   "bingo.goal_lost": "%s lost the goal %s for your team.",
+  "bingo.goal_lost.lockout": "%s got the goal %s, preventing others from getting it.",
   "bingo.duplicate_teams": "Cannot start a bingo with the same team twice!",
   "bingo.unknown_goal": "Unknown goal %s",
   "bingo.unknown_gamemode": "Unknown gamemode %s",

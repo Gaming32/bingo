@@ -430,9 +430,15 @@ public class BingoGame {
         if (showOtherTeam) {
             new UpdateStateMessage(boardIndex, boardState).sendTo(playerList.getPlayers());
             if (gameMode.isLockout()) {
+                final Component lockoutMessage = Bingo.translatable(
+                    "bingo.goal_lost.lockout",
+                    playerTeam.getDisplayName(),
+                    goal.getName().copy().withStyle(ChatFormatting.GOLD)
+                );
                 for (final ServerPlayer player : playerList.getPlayers()) {
                     if (player.isAlliedTo(playerTeam)) continue;
                     player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.MASTER, 0.5f, 1f);
+                    player.sendSystemMessage(lockoutMessage);
                 }
             }
         }
