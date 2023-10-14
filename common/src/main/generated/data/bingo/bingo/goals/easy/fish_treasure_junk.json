@@ -24,7 +24,10 @@
       "Count": 1,
       "id": "minecraft:fishing_rod",
       "tag": {
-        "Damage": 0
+        "Damage": 0,
+        "Enchantments": [
+          {}
+        ]
       }
     }
   },

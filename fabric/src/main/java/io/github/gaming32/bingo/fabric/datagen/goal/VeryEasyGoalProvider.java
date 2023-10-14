@@ -106,7 +106,12 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.leaves", 0), subber -> subber.sub("with.0", "count"))
             .icon(new ItemTagCycleIcon(ItemTags.LEAVES), subber -> subber.sub("count", "count"))
         );
-        addGoal(blockCubeGoal(id("leaf_cube"), Blocks.OAK_LEAVES, BlockTags.LEAVES, Component.translatable("bingo.goal.cube.leaf")));
+        addGoal(blockCubeGoal(
+            id("leaf_cube"),
+            makeItemWithGlint(Blocks.OAK_LEAVES),
+            BlockTags.LEAVES,
+            Component.translatable("bingo.goal.cube.leaf")
+        ));
         // TODO: colors of wool
         addGoal(obtainItemGoal(id("snowball"), Items.SNOWBALL, 8, 16)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));

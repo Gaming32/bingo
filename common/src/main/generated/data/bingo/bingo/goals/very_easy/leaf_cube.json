@@ -108,18 +108,15 @@
   },
   "difficulty": 0,
   "icon": {
-    "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:oak_leaves",
-      "Properties": {
-        "distance": "7",
-        "persistent": "false",
-        "waterlogged": "false"
-      }
-    },
-    "item": {
+    "type": "bingo:item",
+    "value": {
       "Count": 1,
-      "id": "minecraft:oak_leaves"
+      "id": "minecraft:oak_leaves",
+      "tag": {
+        "Enchantments": [
+          {}
+        ]
+      }
     }
   },
   "name": {

@@ -88,8 +88,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.fish_treasure_junk"))
             .tooltip(Component.translatable("bingo.goal.fish_treasure_junk.tooltip"))
-            .icon(Items.FISHING_ROD)
-            .reactant("fishing"));
+            .icon(makeItemWithGlint(Items.FISHING_ROD))
+            .reactant("fishing")
+        );
         addGoal(obtainItemGoal(id("coarse_dirt"), Items.COARSE_DIRT, 16, 64)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("clock"), Items.CLOCK, 2, 3)

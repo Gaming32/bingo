@@ -44,7 +44,7 @@ e095bf50c6ae5fb86a321af748b92d89669702e5 data/bingo/bingo/goals/easy/ender_pearl
 03087ebb7f9557c8dac696fc871dc6eabd7df635 data/bingo/bingo/goals/easy/feather.json
 3dc88abe30ca10d1e627bf53a68e5c430fb159bd data/bingo/bingo/goals/easy/fermented_spider_eye.json
 bd1bfad3c720fa8542788090218b1c6e45e0e8cc data/bingo/bingo/goals/easy/finish_at_spawn.json
-5ce7fe6e783bba8d89b655a6e172e564e3d77ce3 data/bingo/bingo/goals/easy/fish_treasure_junk.json
+8780d47ec09d5ae813e7e7a2b2eb884e7ee8e23e data/bingo/bingo/goals/easy/fish_treasure_junk.json
 eb8efc3f8c8ecca62476477c9c652134b941a15c data/bingo/bingo/goals/easy/flint.json
 f0abc11eb47ef465f09443de7f4c7fd72c4a1eee data/bingo/bingo/goals/easy/full_iron_armor.json
 7ef6a87d1b347bef189a1700f22eff5b1e4c61ba data/bingo/bingo/goals/easy/full_leather_armor.json
@@ -164,7 +164,7 @@ f5bb42c1d22a79395a2f5cff84fc8e6439c4e655 data/bingo/bingo/goals/hard/hero_of_the
 aad63f06ad476447b049da42b2c6c9f842c53588 data/bingo/bingo/goals/hard/honey_block.json
 2fa826bb363607e5912d18ec613fb289cf64e556 data/bingo/bingo/goals/hard/honeycomb_block.json
 0a444e26f55842837d220a4192d7470a8c931e00 data/bingo/bingo/goals/hard/huge_fungus_in_overworld.json
-9d81feed6665998f3e1308d58777638fab89f25f data/bingo/bingo/goals/hard/ice_cube.json
+e3a8f4c9b190a9f1528b2203a92e229e1019c6c4 data/bingo/bingo/goals/hard/ice_cube.json
 9443a0d89f12ef3240c95083bf0b955d29dd8765 data/bingo/bingo/goals/hard/ice_on_magma.json
 0366b2b9622c16aef003ab7db6deeb2c0eb17dff data/bingo/bingo/goals/hard/jungle_log.json
 e5523d635410de10a20d449740518e63446020d8 data/bingo/bingo/goals/hard/jungle_wood.json
@@ -335,7 +335,7 @@ ce24266987e6d8e49ca8b9dc4322f74c0bdf15b1 data/bingo/bingo/goals/very_easy/granit
 5befa7cf9a56e15ab4b92b617602db7cc542922e data/bingo/bingo/goals/very_easy/iron_block.json
 71101c9550098434d6c5d8488198bfc1dc4d7fd5 data/bingo/bingo/goals/very_easy/kelp.json
 24c00abadb24a28cc2a023ff2844559eec00a5f2 data/bingo/bingo/goals/very_easy/lava_bucket.json
-4c460ca5bb28a5c5ad4af9fa4315e5c67857e6f5 data/bingo/bingo/goals/very_easy/leaf_cube.json
+06b6e5cf9f1c4f4b8b0b8daf24f364c77bdd4576 data/bingo/bingo/goals/very_easy/leaf_cube.json
 d5117ff1639e246d96b2afc7857c5bd9728aa149 data/bingo/bingo/goals/very_easy/leaves.json
 f5f9780361f6ab4c6cd81ff811fcac54866fa099 data/bingo/bingo/goals/very_easy/levels.json
 383cc813c25dccae4f01d3d67b8a7c586b8a7977 data/bingo/bingo/goals/very_easy/milk_bucket.json

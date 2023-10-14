@@ -231,7 +231,7 @@ public abstract class DifficultyGoalProvider {
             .tags(BingoTags.BUILD);
     }
 
-    protected static BingoGoal.Builder blockCubeGoal(ResourceLocation id, Block icon, TagKey<Block> blockTag, Component tagName) {
+    protected static BingoGoal.Builder blockCubeGoal(ResourceLocation id, Object icon, TagKey<Block> blockTag, Component tagName) {
         return BingoGoal.builder(id)
             .sub("width", BingoSub.random(2, 4))
             .sub("height", BingoSub.random(2, 4))

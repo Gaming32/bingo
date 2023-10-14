@@ -177,7 +177,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.ice_on_magma"))
             .icon(Items.BASALT));
         addGoal(obtainLevelsGoal(id("levels"), 27, 37));
-        addGoal(blockCubeGoal(id("ice_cube"), Blocks.ICE, BlockTags.ICE, Blocks.ICE.getName()));
+        addGoal(blockCubeGoal(id("ice_cube"), Items.ICE, BlockTags.ICE, Blocks.ICE.getName()));
         addGoal(BingoGoal.builder(id("stairway_to_heaven"))
             .criterion("stairway", CriteriaTriggers.LOCATION.createCriterion(
                 new PlayerTrigger.TriggerInstance(

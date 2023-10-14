@@ -108,11 +108,8 @@
   },
   "difficulty": 3,
   "icon": {
-    "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:ice"
-    },
-    "item": {
+    "type": "bingo:item",
+    "value": {
       "Count": 1,
       "id": "minecraft:ice"
     }
