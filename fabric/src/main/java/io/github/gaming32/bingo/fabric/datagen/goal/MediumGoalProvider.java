@@ -309,7 +309,6 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("phantom_membrane"), Items.PHANTOM_MEMBRANE)
             .reactant("pacifist")
             .tags(BingoTags.COMBAT, BingoTags.OVERWORLD));
-        // TODO: add marker to map
         addGoal(BingoGoal.builder(id("marker_on_map"))
             .criterion("use", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location(),
