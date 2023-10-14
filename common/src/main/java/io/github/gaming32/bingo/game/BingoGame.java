@@ -401,7 +401,8 @@ public class BingoGame {
             goal.getName().copy().withStyle(isLoss ? ChatFormatting.GOLD : ChatFormatting.GREEN)
         );
         final BingoBoard.Teams boardState = board.getStates()[boardIndex];
-        final UpdateStateMessage stateMessage = !Bingo.showOtherTeam
+        final boolean showOtherTeam = Bingo.showOtherTeam || gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS;
+        final UpdateStateMessage stateMessage = !showOtherTeam
             ? new UpdateStateMessage(boardIndex, obfuscateTeam(team, boardState)) : null;
         final ClientboundUpdateAdvancementsPacket vanillaPacket = new ClientboundUpdateAdvancementsPacket(
             false,
@@ -420,14 +421,13 @@ public class BingoGame {
                 SoundSource.MASTER,
                 isLoss ? 1f : 0.5f, 1f
             );
-            if (!Bingo.showOtherTeam) {
-                assert stateMessage != null;
+            if (!showOtherTeam) {
                 stateMessage.sendTo(player);
             }
             player.connection.send(vanillaPacket);
             player.sendSystemMessage(message);
         }
-        if (Bingo.showOtherTeam) {
+        if (showOtherTeam) {
             new UpdateStateMessage(boardIndex, boardState).sendTo(playerList.getPlayers());
         }
     }
