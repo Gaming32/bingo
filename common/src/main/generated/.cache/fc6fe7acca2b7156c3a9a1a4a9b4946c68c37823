@@ -253,6 +253,7 @@ d0875e93a8c94a0828c915315c874a47625eef51 data/bingo/bingo/goals/medium/kill_self
 74bc9ef4733d82198a7f2948c40ba8faa0514a21 data/bingo/bingo/goals/medium/levels.json
 a5beca7218ff32fdd21f2b48c3b86746f87ea9de data/bingo/bingo/goals/medium/magma_block.json
 7b498fc136d074d038848a983ec25758caf1d1f4 data/bingo/bingo/goals/medium/magma_cream.json
+02f4a11acc61947292e4ac58f5168c043171d8ed data/bingo/bingo/goals/medium/marker_on_map.json
 af1fa1d2dbc99716327989292ac8a3dd77f10210 data/bingo/bingo/goals/medium/melon_slice.json
 ffba2dc84ba2f7b29d2d4f29500a15882c8c91be data/bingo/bingo/goals/medium/never_craft_sticks.json
 cc6bc5c2a38df1f7bac0af46073574770ec5d44c data/bingo/bingo/goals/medium/never_place_torches.json

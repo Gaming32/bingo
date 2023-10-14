@@ -310,6 +310,16 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .reactant("pacifist")
             .tags(BingoTags.COMBAT, BingoTags.OVERWORLD));
         // TODO: add marker to map
+        addGoal(BingoGoal.builder(id("marker_on_map"))
+            .criterion("use", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+                LocationPredicate.Builder.location(),
+                ItemPredicate.Builder.item()
+                    .of(Items.FILLED_MAP)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.marker_on_map"))
+            .icon(Items.BLUE_BANNER)
+        );
         // TODO: water, lava, milk, fish bucket
         // TODO: leash dolphin to fence
         addGoal(obtainItemGoal(id("dried_kelp_block"), Items.DRIED_KELP_BLOCK, 21, 32)
