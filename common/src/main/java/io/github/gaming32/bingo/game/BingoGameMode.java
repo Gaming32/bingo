@@ -141,8 +141,7 @@ public interface BingoGameMode {
             }
 
             final int totalGoals = board.getSize() * board.getSize();
-            final int goalsRemaining = totalGoals - totalHeld;
-            if (goalsRemaining - teams[0].goalsHeld < teams[0].goalsHeld - teams[1].goalsHeld) {
+            if (totalGoals - totalHeld < teams[0].goalsHeld - teams[1].goalsHeld) {
                 return teams[0].team;
             }
             return BingoBoard.Teams.NONE;
