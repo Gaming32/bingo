@@ -110,10 +110,7 @@ public class Bingo {
 
     public static MutableComponent ensureHasFallback(MutableComponent component) {
         if (component.getContents() instanceof TranslatableContents translatable && translatable.getFallback() == null) {
-            final String fallbackText = Language.getInstance().getOrDefault(translatable.getKey());
-            if (fallbackText.equals(translatable.getKey())) {
-                return component;
-            }
+            final String fallbackText = Language.getInstance().getOrDefault(translatable.getKey(), null);
 
             Object[] args = translatable.getArgs();
             if (args.length > 0) {
