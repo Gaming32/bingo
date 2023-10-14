@@ -19,6 +19,7 @@ import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.network.BingoNetwork;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -27,6 +28,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.players.PlayerList;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -108,10 +110,35 @@ public class Bingo {
 
     public static MutableComponent ensureHasFallback(MutableComponent component) {
         if (component.getContents() instanceof TranslatableContents translatable && translatable.getFallback() == null) {
+            final String fallbackText = Language.getInstance().getOrDefault(translatable.getKey());
+            if (fallbackText.equals(translatable.getKey())) {
+                return component;
+            }
+
+            Object[] args = translatable.getArgs();
+            if (args.length > 0) {
+                args = args.clone();
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i] instanceof MutableComponent subComponent) {
+                        args[i] = ensureHasFallback(subComponent);
+                    }
+                }
+            }
+
+            List<Component> siblings = component.getSiblings();
+            if (!siblings.isEmpty()) {
+                siblings = new ArrayList<>(siblings);
+                for (int i = 0; i < siblings.size(); i++) {
+                    if (siblings.get(i) instanceof MutableComponent subComponent) {
+                        siblings.set(i, ensureHasFallback(subComponent));
+                    }
+                }
+            }
+
             final MutableComponent result = Component.translatableWithFallback(
-                translatable.getKey(), component.getString(), translatable.getArgs()
+                translatable.getKey(), fallbackText, args
             ).setStyle(component.getStyle());
-            result.getSiblings().addAll(component.getSiblings());
+            result.getSiblings().addAll(siblings);
             return result;
         }
         return component;

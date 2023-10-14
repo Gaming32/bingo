@@ -430,10 +430,13 @@ public class BingoGame {
         if (showOtherTeam) {
             new UpdateStateMessage(boardIndex, boardState).sendTo(playerList.getPlayers());
             if (gameMode.isLockout()) {
+                Component teamComponent = playerTeam.getDisplayName();
+                if (playerTeam.getColor() != ChatFormatting.RESET) {
+                    teamComponent = teamComponent.copy().withStyle(playerTeam.getColor());
+                }
                 final Component lockoutMessage = Bingo.translatable(
                     "bingo.goal_lost.lockout",
-                    playerTeam.getDisplayName(),
-                    goal.getName().copy().withStyle(ChatFormatting.GOLD)
+                    teamComponent, goal.getName().copy().withStyle(ChatFormatting.GOLD)
                 );
                 for (final ServerPlayer player : playerList.getPlayers()) {
                     if (player.isAlliedTo(playerTeam)) continue;
