@@ -11,6 +11,7 @@ import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.ClientGoal;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
@@ -63,7 +64,7 @@ public class InitBoardMessage extends BaseS2CMessage {
 
     @Override
     public void handle(NetworkManager.PacketContext context) {
-        final Scoreboard scoreboard = context.getPlayer().getScoreboard();
+        final Scoreboard scoreboard = Minecraft.getInstance().level.getScoreboard();
         final PlayerTeam[] playerTeams = new PlayerTeam[teams.length];
         for (int i = 0; i < teams.length; i++) {
             final PlayerTeam team = scoreboard.getPlayerTeam(teams[i]);
