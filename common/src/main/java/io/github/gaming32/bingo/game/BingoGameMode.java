@@ -127,7 +127,11 @@ public interface BingoGameMode {
 
             Arrays.sort(teams, Comparator.comparing(v -> -v.goalsHeld)); // Sort in reverse
 
-            if (tryHarder) {
+            final int totalGoals = board.getSize() * board.getSize();
+            if (totalGoals - totalHeld < teams[0].goalsHeld - teams[1].goalsHeld) {
+                return teams[0].team;
+            }
+            if (totalHeld == totalGoals || tryHarder) {
                 if (totalHeld == 0) {
                     return BingoBoard.Teams.NONE;
                 }
@@ -138,11 +142,6 @@ public interface BingoGameMode {
                     tied = tied.or(team.team);
                 }
                 return tied;
-            }
-
-            final int totalGoals = board.getSize() * board.getSize();
-            if (totalGoals - totalHeld < teams[0].goalsHeld - teams[1].goalsHeld) {
-                return teams[0].team;
             }
             return BingoBoard.Teams.NONE;
         }
