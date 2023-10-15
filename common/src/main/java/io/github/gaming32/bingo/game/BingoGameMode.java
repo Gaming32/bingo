@@ -82,9 +82,6 @@ public interface BingoGameMode {
             if (config.teams.size() < 2) {
                 return Bingo.translatable("bingo.lockout.too_few_teams");
             }
-            if ((config.size * config.size) % config.teams.size() == 0) {
-                return Bingo.translatable("bingo.lockout.even_board_size");
-            }
 
             final Set<ChatFormatting> uniqueColors = EnumSet.noneOf(ChatFormatting.class);
             for (final PlayerTeam team : config.teams) {
