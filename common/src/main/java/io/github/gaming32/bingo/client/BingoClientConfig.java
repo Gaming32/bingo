@@ -15,5 +15,8 @@ public class BingoClientConfig implements ConfigData {
         public BoardCorner corner = BoardCorner.UPPER_RIGHT;
 
         public float scale = 1f;
+
+        @ConfigEntry.Gui.Tooltip
+        public boolean showScoreCounter = true;
     }
 }

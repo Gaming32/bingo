@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 
 public enum BoardCorner implements SelectionListEntry.Translatable {
-    UPPER_LEFT {
+    UPPER_LEFT(false, false) {
         @Override
         public float getX(float guiWidth, float scale) {
             return BingoClient.BOARD_OFFSET;
@@ -18,7 +18,7 @@ public enum BoardCorner implements SelectionListEntry.Translatable {
             return BingoClient.BOARD_OFFSET;
         }
     },
-    UPPER_RIGHT {
+    UPPER_RIGHT(false, true) {
         @Override
         public float getX(float guiWidth, float scale) {
             return guiWidth / scale - BingoClient.BOARD_OFFSET - BingoClient.getBoardWidth();
@@ -34,7 +34,7 @@ public enum BoardCorner implements SelectionListEntry.Translatable {
             return result;
         }
     },
-    LOWER_LEFT {
+    LOWER_LEFT(true, false) {
         @Override
         public float getX(float guiWidth, float scale) {
             return BingoClient.BOARD_OFFSET;
@@ -45,7 +45,7 @@ public enum BoardCorner implements SelectionListEntry.Translatable {
             return guiHeight / scale - BingoClient.BOARD_OFFSET - BingoClient.getBoardHeight();
         }
     },
-    LOWER_RIGHT {
+    LOWER_RIGHT(true, true) {
         @Override
         public float getX(float guiWidth, float scale) {
             return guiWidth / scale - BingoClient.BOARD_OFFSET - BingoClient.getBoardWidth();
@@ -56,6 +56,13 @@ public enum BoardCorner implements SelectionListEntry.Translatable {
             return guiHeight / scale - BingoClient.BOARD_OFFSET - BingoClient.getBoardHeight();
         }
     };
+
+    public final boolean isOnBottom, isOnRight;
+
+    BoardCorner(boolean isOnBottom, boolean isOnRight) {
+        this.isOnBottom = isOnBottom;
+        this.isOnRight = isOnRight;
+    }
 
     public abstract float getX(float guiWidth, float scale);
 

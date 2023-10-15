@@ -16,6 +16,7 @@ import io.github.gaming32.bingo.client.icons.IconRenderers;
 import io.github.gaming32.bingo.client.recipeviewer.RecipeViewerPlugin;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.game.BingoBoard;
+import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.BingoNetwork;
 import io.github.gaming32.bingo.network.ClientGoal;
@@ -26,13 +27,16 @@ import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.scores.PlayerTeam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +73,36 @@ public class BingoClient {
             final float x = config.board.corner.getX(graphics.guiWidth(), scale);
             final float y = config.board.corner.getY(graphics.guiHeight(), scale);
             renderBingo(graphics, minecraft.screen instanceof ChatScreen, x, y, scale);
+
+            if (config.board.showScoreCounter && clientGame.renderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
+                final int[] scores = new int[clientGame.teams().length];
+                for (final BingoBoard.Teams state : clientGame.states()) {
+                    if (state.any()) {
+                        scores[state.getFirstIndex()]++;
+                    }
+                }
+
+                final Font font = minecraft.font;
+                final int scoreX = (int)(x + getBoardWidth() * scale / 2);
+                int scoreY;
+                if (config.board.corner.isOnBottom) {
+                    scoreY = (int)(y - scores.length * 12);
+                } else {
+                    scoreY = (int)(y + getBoardHeight() * scale + BOARD_OFFSET);
+                }
+                for (int i = 0; i < scores.length; i++) {
+                    final PlayerTeam team = clientGame.teams()[i];
+                    final MutableComponent leftText = team.getDisplayName().copy();
+                    final MutableComponent rightText = Component.literal(" - " + scores[i]);
+                    if (team.getColor() != ChatFormatting.RESET) {
+                        leftText.withStyle(team.getColor());
+                        rightText.withStyle(team.getColor());
+                    }
+                    graphics.drawString(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
+                    graphics.drawString(font, rightText, scoreX, scoreY, 0xffffffff);
+                    scoreY += 12;
+                }
+            }
         });
 
         ClientScreenInputEvent.KEY_RELEASED_PRE.register((client, screen, keyCode, scanCode, modifiers) -> {

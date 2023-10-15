@@ -205,6 +205,8 @@
   "text.autoconfig.bingo-client.option.board": "Board",
   "text.autoconfig.bingo-client.option.board.corner": "Corner",
   "text.autoconfig.bingo-client.option.board.scale": "Scale",
+  "text.autoconfig.bingo-client.option.board.showScoreCounter": "Show Score Counter",
+  "text.autoconfig.bingo-client.option.board.showScoreCounter.@Tooltip": "This toggles the display of the score counter during lockout matches.",
   "bingo.board_corner.upper_left": "Upper-left",
   "bingo.board_corner.upper_right": "Upper-right",
   "bingo.board_corner.lower_left": "Lower-left",
