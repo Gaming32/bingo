@@ -17,16 +17,25 @@ public class MixinGameRenderer {
         method = "render",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/toasts/ToastComponent;render(Lnet/minecraft/client/gui/GuiGraphics;)V")
     )
-    private void moveToastsDown(ToastComponent instance, GuiGraphics guiGraphics, Operation<Void> original) {
+    private void moveToasts(ToastComponent instance, GuiGraphics guiGraphics, Operation<Void> original) {
         final BingoClientConfig.BoardConfig boardConfig = BingoClient.getConfig().board;
         if (BingoClient.clientGame == null || boardConfig.corner != BoardCorner.UPPER_RIGHT) {
             original.call(instance, guiGraphics);
             return;
         }
 
+        guiGraphics.enableScissor(
+            0, 0,
+            (int)(guiGraphics.guiWidth() - (BingoClient.getBoardWidth() + BingoClient.BOARD_OFFSET) * boardConfig.scale),
+            guiGraphics.guiHeight()
+        );
         guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(0, BingoClient.getBoardHeight() * boardConfig.scale + 2 * BingoClient.BOARD_OFFSET, 0);
+        guiGraphics.pose().translate(
+            (-BingoClient.getBoardWidth() - BingoClient.BOARD_OFFSET) * boardConfig.scale,
+            BingoClient.BOARD_OFFSET * boardConfig.scale, 0f
+        );
         original.call(instance, guiGraphics);
         guiGraphics.pose().popPose();
+        guiGraphics.disableScissor();
     }
 }
