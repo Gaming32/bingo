@@ -38,9 +38,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.scores.PlayerTeam;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class BingoClient {
@@ -75,25 +73,43 @@ public class BingoClient {
             renderBingo(graphics, minecraft.screen instanceof ChatScreen, x, y, scale);
 
             if (config.board.showScoreCounter && clientGame.renderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
-                final int[] scores = new int[clientGame.teams().length];
-                for (final BingoBoard.Teams state : clientGame.states()) {
-                    if (state.any()) {
-                        scores[state.getFirstIndex()]++;
+                class TeamValue {
+                    final BingoBoard.Teams team;
+                    int score;
+
+                    TeamValue(BingoBoard.Teams team) {
+                        this.team = team;
                     }
                 }
+
+                final TeamValue[] teams = new TeamValue[clientGame.teams().length];
+                for (int i = 0; i < teams.length; i++) {
+                    teams[i] = new TeamValue(BingoBoard.Teams.fromOne(i));
+                }
+
+                int totalScore = 0;
+                for (final BingoBoard.Teams state : clientGame.states()) {
+                    if (state.any()) {
+                        totalScore++;
+                        teams[state.getFirstIndex()].score++;
+                    }
+                }
+
+                Arrays.sort(teams, Comparator.comparing(v -> -v.score)); // Sort in reverse
 
                 final Font font = minecraft.font;
                 final int scoreX = (int)(x + getBoardWidth() * scale / 2);
                 int scoreY;
                 if (config.board.corner.isOnBottom) {
-                    scoreY = (int)(y - scores.length * 12);
+                    scoreY = (int)(y - teams.length * 12);
                 } else {
                     scoreY = (int)(y + getBoardHeight() * scale + BOARD_OFFSET);
                 }
-                for (int i = 0; i < scores.length; i++) {
+                for (int i = 0; i < teams.length; i++) {
+                    if (teams[i].score == 0) break;
                     final PlayerTeam team = clientGame.teams()[i];
                     final MutableComponent leftText = team.getDisplayName().copy();
-                    final MutableComponent rightText = Component.literal(" - " + scores[i]);
+                    final MutableComponent rightText = Component.literal(" - " + teams[i].score);
                     if (team.getColor() != ChatFormatting.RESET) {
                         leftText.withStyle(team.getColor());
                         rightText.withStyle(team.getColor());
@@ -102,6 +118,11 @@ public class BingoClient {
                     graphics.drawString(font, rightText, scoreX, scoreY, 0xffffffff);
                     scoreY += 12;
                 }
+
+                final MutableComponent leftText = Component.translatable("bingo.unclaimed");
+                final MutableComponent rightText = Component.literal(" - " + (clientGame.states().length - totalScore));
+                graphics.drawString(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
+                graphics.drawString(font, rightText, scoreX, scoreY, 0xffffffff);
             }
         });
 

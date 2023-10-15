@@ -194,6 +194,7 @@
   "bingo.key.board": "Show Bingo Board",
   "bingo.key.category": "Bingo",
   "bingo.sixteen_bang": "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, and %s!",
+  "bingo.unclaimed": "Unclaimed",
   "bingo.three": "%s, %s, and %s",
   "bingo.spawner": "%s %s",
   "bingo.no_game_running": "No Bingo game is running!",
