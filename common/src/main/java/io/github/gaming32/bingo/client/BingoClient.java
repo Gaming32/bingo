@@ -105,11 +105,11 @@ public class BingoClient {
                 } else {
                     scoreY = (int)(y + getBoardHeight() * scale + BOARD_OFFSET);
                 }
-                for (int i = 0; i < teams.length; i++) {
-                    if (teams[i].score == 0) break;
-                    final PlayerTeam team = clientGame.teams()[i];
+                for (final TeamValue teamValue : teams) {
+                    if (teamValue.score == 0) break;
+                    final PlayerTeam team = clientGame.teams()[teamValue.team.getFirstIndex()];
                     final MutableComponent leftText = team.getDisplayName().copy();
-                    final MutableComponent rightText = Component.literal(" - " + teams[i].score);
+                    final MutableComponent rightText = Component.literal(" - " + teamValue.score);
                     if (team.getColor() != ChatFormatting.RESET) {
                         leftText.withStyle(team.getColor());
                         rightText.withStyle(team.getColor());
