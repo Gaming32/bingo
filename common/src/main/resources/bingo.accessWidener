@@ -1,2 +1,3 @@
 accessWidener	v2	named
-accessible class net/minecraft/advancements/critereon/PlayerPredicate$StatMatcher
+accessible	class	net/minecraft/advancements/critereon/PlayerPredicate$StatMatcher
+accessible	method	net/minecraft/client/gui/GuiGraphics	renderTooltipInternal	(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V

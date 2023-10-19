@@ -31,14 +31,15 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.scores.PlayerTeam;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
 
 @Environment(EnvType.CLIENT)
 public class BingoClient {
@@ -266,24 +267,23 @@ public class BingoClient {
         if (BingoMousePos.hasSlotPos(mousePos)) {
             final ClientGoal goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
             final GoalProgress progress = clientGame.getProgress(mousePos.slotIdX(), mousePos.slotIdY());
-            final List<Component> lines = new ArrayList<>(3);
-            lines.add(goal.name());
+            final TooltipBuilder tooltip = new TooltipBuilder();
+            tooltip.add(goal.name());
             if (progress != null && (progress.maxProgress() > 1 || minecraft.options.advancedItemTooltips)) {
-                lines.add(Component.translatable("bingo.progress", progress.progress(), progress.maxProgress()));
+                tooltip.add(Component.translatable("bingo.progress", progress.progress(), progress.maxProgress()));
             }
             if (minecraft.options.advancedItemTooltips) {
-                lines.add(Component.literal(goal.id().toString()).withStyle(ChatFormatting.DARK_GRAY));
+                tooltip.add(Component.literal(goal.id().toString()).withStyle(ChatFormatting.DARK_GRAY));
             }
             if (goal.tooltip() != null) {
-                lines.add(CommonComponents.EMPTY);
-                lines.add(goal.tooltip());
+                final int width = Math.max(300, minecraft.font.width(goal.name()));
+                tooltip.add(FormattedCharSequence.EMPTY);
+                minecraft.font.split(goal.tooltip(), width).forEach(tooltip::add);
             }
-            graphics.renderTooltip(
-                minecraft.font, lines,
-                Optional.ofNullable(goal.tooltipIcon()).map(IconTooltip::new),
-                (int)mousePos.mouseX(), (int)mousePos.mouseY()
-            );
-            graphics.flush();
+            if (goal.tooltipIcon() != null) {
+                tooltip.add(new IconTooltip(goal.tooltipIcon()));
+            }
+            tooltip.draw(minecraft.font, graphics, (int)mousePos.mouseX(), (int)mousePos.mouseY());
         }
     }
 
