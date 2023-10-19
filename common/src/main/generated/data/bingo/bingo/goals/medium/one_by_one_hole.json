@@ -1,0 +1,48 @@
+{
+  "criteria": {
+    "hole": {
+      "conditions": {
+        "player": [
+          {
+            "bottom": -59,
+            "condition": "bingo:one_by_one_hole",
+            "predicate": {
+              "type": "minecraft:not",
+              "predicate": {
+                "type": "minecraft:solid"
+              }
+            },
+            "top": 63
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:diamond_pickaxe",
+      "tag": {
+        "Damage": 0
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.one_by_one_hole"
+  },
+  "requirements": [
+    [
+      "hole"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.one_by_one_hole.tooltip"
+  }
+}

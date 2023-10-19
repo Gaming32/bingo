@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
+import io.github.gaming32.bingo.conditions.OneByOneHoleCondition;
 import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
@@ -300,7 +301,22 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("prismarine_crystals"), Items.PRISMARINE_CRYSTALS, 2, 4)
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
-        // TODO: dig straight down to bedrock from sea level (1x1 hole)
+        addGoal(BingoGoal.builder(id("one_by_one_hole"))
+            .criterion("hole", CriteriaTriggers.LOCATION.createCriterion(
+                new PlayerTrigger.TriggerInstance(Optional.of(
+                    ContextAwarePredicate.create(new OneByOneHoleCondition(
+                        -59, 63,
+                        net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate.not(
+                            net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate.solid()
+                        )
+                    ))
+                ))
+            ))
+            .name(Component.translatable("bingo.goal.one_by_one_hole"))
+            .tooltip(Component.translatable("bingo.goal.one_by_one_hole.tooltip"))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .icon(Items.DIAMOND_PICKAXE)
+        );
         // TODO: deplete diamond sword
         addGoal(obtainItemGoal(id("saddle"), Items.SADDLE));
         // TODO: give mob hat
