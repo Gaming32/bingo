@@ -21,7 +21,9 @@ import io.github.gaming32.bingo.network.BingoNetwork;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
@@ -122,6 +124,25 @@ public class Bingo {
                 }
             }
 
+            Style style = component.getStyle();
+            if (style.getHoverEvent() != null) {
+                if (style.getHoverEvent().getAction() == HoverEvent.Action.SHOW_TEXT) {
+                    final Component hoverText = style.getHoverEvent().getValue(HoverEvent.Action.SHOW_TEXT);
+                    if (hoverText instanceof MutableComponent mutableComponent) {
+                        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, mutableComponent));
+                    }
+                } else if (style.getHoverEvent().getAction() == HoverEvent.Action.SHOW_ENTITY) {
+                    final HoverEvent.EntityTooltipInfo info = style.getHoverEvent().getValue(HoverEvent.Action.SHOW_ENTITY);
+                    assert info != null;
+                    if (info.name instanceof MutableComponent mutableComponent) {
+                        style = style.withHoverEvent(new HoverEvent(
+                            HoverEvent.Action.SHOW_ENTITY,
+                            new HoverEvent.EntityTooltipInfo(info.type, info.id, ensureHasFallback(mutableComponent))
+                        ));
+                    }
+                }
+            }
+
             List<Component> siblings = component.getSiblings();
             if (!siblings.isEmpty()) {
                 siblings = new ArrayList<>(siblings);
@@ -134,7 +155,7 @@ public class Bingo {
 
             final MutableComponent result = Component.translatableWithFallback(
                 translatable.getKey(), fallbackText, args
-            ).setStyle(component.getStyle());
+            ).setStyle(style);
             result.getSiblings().addAll(siblings);
             return result;
         }
