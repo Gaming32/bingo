@@ -5,21 +5,31 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.client.BingoClientConfig;
 import io.github.gaming32.bingo.client.BoardCorner;
+import io.github.gaming32.bingo.client.BoardScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.client.renderer.GameRenderer;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(GameRenderer.class)
 public class MixinGameRenderer {
+    @Shadow @Final
+    Minecraft minecraft;
+
     @WrapOperation(
         method = "render",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/toasts/ToastComponent;render(Lnet/minecraft/client/gui/GuiGraphics;)V")
     )
     private void moveToasts(ToastComponent instance, GuiGraphics guiGraphics, Operation<Void> original) {
         final BingoClientConfig.BoardConfig boardConfig = BingoClient.getConfig().board;
-        if (BingoClient.clientGame == null || boardConfig.corner != BoardCorner.UPPER_RIGHT) {
+        if (
+            BingoClient.clientGame == null || boardConfig.corner != BoardCorner.UPPER_RIGHT ||
+                minecraft.getDebugOverlay().showDebugScreen() || minecraft.screen instanceof BoardScreen
+        ) {
             original.call(instance, guiGraphics);
             return;
         }
