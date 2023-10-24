@@ -489,6 +489,19 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         // TODO: bounce on slime block
         // TODO: full gold armor
+        addGoal(BingoGoal.builder(id("full_gold_armor"))
+            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
+                Items.GOLDEN_BOOTS, Items.GOLDEN_LEGGINGS, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_HELMET
+            ))
+            .name(Component.translatable("bingo.goal.full_gold_armor"))
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.GOLDEN_BOOTS),
+                ItemIcon.ofItem(Items.GOLDEN_LEGGINGS),
+                ItemIcon.ofItem(Items.GOLDEN_CHESTPLATE),
+                ItemIcon.ofItem(Items.GOLDEN_HELMET)
+            ))
+            .tags(BingoTags.ITEM)
+        );
         addGoal(obtainItemGoal(id("brown_wool"), Items.BROWN_WOOL)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("grow_nether_fungus"))
