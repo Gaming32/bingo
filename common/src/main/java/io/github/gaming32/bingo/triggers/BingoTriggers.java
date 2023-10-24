@@ -44,6 +44,7 @@ public class BingoTriggers {
     public static final ConsumeMilkBucketTrigger CONSUME_MILK_BUCKET = register("bingo:consume_milk_bucket", new ConsumeMilkBucketTrigger());
     public static final KeyPressedTrigger KEY_PRESSED = register("bingo:key_pressed", new KeyPressedTrigger());
     public static final RelativeStatsTrigger RELATIVE_STATS = register("bingo:relative_stats", new RelativeStatsTrigger());
+    public static final GrowBeeNestTreeTrigger GROW_BEE_NEST_TREE = register("bingo:grow_bee_nest_tree", new GrowBeeNestTreeTrigger());
 
     public static void load() {
     }

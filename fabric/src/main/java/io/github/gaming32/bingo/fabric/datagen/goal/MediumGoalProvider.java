@@ -428,7 +428,12 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             ))))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.VILLAGE)
         );
-        // TODO: grow tree with benis attached
+        addGoal(BingoGoal.builder(id("grow_tree_with_bee_nest"))
+            .criterion("grow", GrowBeeNestTreeTrigger.TriggerInstance.grew())
+            .name(Component.translatable("bingo.goal.grow_tree_with_bee_nest", Blocks.BEE_NEST.getName()))
+            .icon(Items.BEE_NEST)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
 
         for (String woodType : List.of("warped", "crimson")) {
             Item stemItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_stem"));

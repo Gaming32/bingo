@@ -1,27 +1,47 @@
 package io.github.gaming32.bingo.ext;
 
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Deque;
 import java.util.LinkedList;
 
 public final class GlobalVars {
-    private static final ThreadLocal<Deque<Player>> currentPlayer = ThreadLocal.withInitial(LinkedList::new);
+    public static final ThreadLocalStack<Player> CURRENT_PLAYER = new ThreadLocalStack<>();
+    public static final ThreadLocalStack<ItemStack> CURRENT_ITEM = new ThreadLocalStack<>();
 
     private GlobalVars() {
     }
 
-    public static void pushCurrentPlayer(@Nullable Player currentPlayer) {
-        GlobalVars.currentPlayer.get().addLast(currentPlayer);
-    }
+    public static final class ThreadLocalStack<E> {
+        private final ThreadLocal<Deque<E>> stack = ThreadLocal.withInitial(LinkedList::new);
+        private final PushContext pushContext = new PushContext();
 
-    public static void popCurrentPlayer() {
-        GlobalVars.currentPlayer.get().removeLast();
-    }
+        public void push(E value) {
+            stack.get().addLast(value);
+        }
 
-    @Nullable
-    public static Player getCurrentPlayer() {
-        return GlobalVars.currentPlayer.get().peekLast();
+        public PushContext pushed(E value) {
+            push(value);
+            return pushContext;
+        }
+
+        public E pop() {
+            return stack.get().removeLast();
+        }
+
+        public E peek() {
+            return stack.get().peekLast();
+        }
+
+        public class PushContext implements AutoCloseable {
+            private PushContext() {
+            }
+
+            @Override
+            public void close() {
+                pop();
+            }
+        }
     }
 }

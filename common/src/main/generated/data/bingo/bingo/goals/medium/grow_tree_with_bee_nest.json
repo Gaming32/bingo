@@ -1,0 +1,32 @@
+{
+  "criteria": {
+    "grow": {
+      "trigger": "bingo:grow_bee_nest_tree"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:bee_nest"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.grow_tree_with_bee_nest",
+    "with": [
+      {
+        "translate": "block.minecraft.bee_nest"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "grow"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

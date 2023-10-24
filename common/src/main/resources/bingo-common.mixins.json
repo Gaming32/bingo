@@ -10,6 +10,7 @@
     "MixinBasePressurePlateBlock",
     "MixinBeaconBlockEntity",
     "MixinBedBlock",
+    "MixinBeehiveDecorator",
     "MixinBlock",
     "MixinBlockItem",
     "MixinButtonBlock",
