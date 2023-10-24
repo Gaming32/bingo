@@ -1,0 +1,44 @@
+{
+  "criteria": {
+    "use": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:rabbit"
+            }
+          }
+        ],
+        "item": {
+          "items": [
+            "minecraft:lead"
+          ]
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:lead"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.lead_on_rabbit"
+  },
+  "requirements": [
+    [
+      "use"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}

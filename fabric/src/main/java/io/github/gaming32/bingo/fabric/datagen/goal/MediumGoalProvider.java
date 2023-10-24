@@ -281,7 +281,15 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("slime_ball"), Items.SLIME_BALL, 5, 9)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
-        // TODO: lead on rabbit
+        addGoal(BingoGoal.builder(id("lead_on_rabbit"))
+            .criterion("use", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                ItemPredicate.Builder.item().of(Items.LEAD),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.RABBIT)))
+            ))
+            .name(Component.translatable("bingo.goal.lead_on_rabbit"))
+            .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .icon(Items.LEAD)
+        );
         addGoal(obtainItemGoal(id("firework_star"), Items.FIREWORK_STAR)
             .tags(BingoTags.OVERWORLD));
         // TODO: hang mob with lead
