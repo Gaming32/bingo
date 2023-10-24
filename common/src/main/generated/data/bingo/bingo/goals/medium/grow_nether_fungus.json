@@ -1,0 +1,48 @@
+{
+  "antisynergy": "grow_fungus",
+  "criteria": {
+    "grow": {
+      "conditions": {
+        "tags": [
+          {
+            "expected": true,
+            "id": "bingo:huge_fungi"
+          }
+        ]
+      },
+      "trigger": "bingo:grow_feature"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:crimson_fungus"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:warped_fungus"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.grow_nether_fungus"
+  },
+  "requirements": [
+    [
+      "grow"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:nether"
+  ]
+}

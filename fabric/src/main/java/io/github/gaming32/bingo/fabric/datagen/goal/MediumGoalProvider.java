@@ -5,12 +5,15 @@ import io.github.gaming32.bingo.conditions.OneByOneHoleCondition;
 import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
+import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
+import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BingoUtil;
@@ -488,7 +491,13 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         // TODO: full gold armor
         addGoal(obtainItemGoal(id("brown_wool"), Items.BROWN_WOOL)
             .tags(BingoTags.OVERWORLD));
-        // TODO: grow huge nether fungus
+        addGoal(BingoGoal.builder(id("grow_nether_fungus"))
+            .criterion("grow", GrowFeatureTrigger.builder().feature(BingoFeatureTags.HUGE_FUNGI).build())
+            .name(Component.translatable("bingo.goal.grow_nether_fungus"))
+            .icon(new CycleIcon(ItemIcon.ofItem(Items.CRIMSON_FUNGUS), ItemIcon.ofItem(Items.WARPED_FUNGUS)))
+            .antisynergy("grow_fungus")
+            .tags(BingoTags.ACTION, BingoTags.NETHER)
+        );
         // TODO: put chest on donkey
         addGoal(BingoGoal.builder(id("never_place_torches"))
             .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(Blocks.TORCH))
