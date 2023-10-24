@@ -1,14 +1,14 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Table;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.OneByOneHoleCondition;
 import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
-import io.github.gaming32.bingo.data.icons.CycleIcon;
-import io.github.gaming32.bingo.data.icons.EntityIcon;
-import io.github.gaming32.bingo.data.icons.ItemIcon;
-import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
+import io.github.gaming32.bingo.data.icons.*;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
@@ -29,9 +29,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.raid.Raid;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
@@ -41,11 +39,9 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class MediumGoalProvider extends DifficultyGoalProvider {
@@ -538,7 +534,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .reactant("wear_armor")
             .name(Component.translatable("bingo.goal.all_different_armor", 4))
-            .icon(makeItemWithGlint(Items.GOLDEN_CHESTPLATE))
+            .icon(createAllDifferentMaterialsIcon())
         );
     }
 
@@ -556,5 +552,59 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             builder.reactant("pacifist");
         }
         return builder;
+    }
+
+    private static GoalIcon createAllDifferentMaterialsIcon() {
+        final int iterations = 4;
+        final var armors = getArmors();
+        final List<ArmorMaterials> materials = ImmutableList.copyOf(armors.columnKeySet());
+        final ImmutableList.Builder<GoalIcon> icons = ImmutableList.builderWithExpectedSize(iterations * armors.rowMap().size());
+        int materialIndex = 0;
+        for (int iteration = 0; iteration < iterations; iteration++) {
+            for (final ArmorItem.Type type : armors.rowKeySet()) {
+                ArmorItem item;
+                do {
+                    item = armors.get(type, materials.get(materialIndex++ % materials.size()));
+                } while (item == null);
+                icons.add(ItemIcon.ofItem(item));
+            }
+        }
+        return new CycleIcon(icons.build());
+    }
+
+    private static Table<ArmorItem.Type, ArmorMaterials, ArmorItem> getArmors() {
+        final ImmutableTable.Builder<ArmorItem.Type, ArmorMaterials, ArmorItem> armors = ImmutableTable.builder();
+        armors.orderRowsBy(Comparator.reverseOrder());
+        armors.orderColumnsBy(Comparator.naturalOrder());
+        for (final Item item : BuiltInRegistries.ITEM) {
+            if (!(item instanceof ArmorItem armorItem)) continue;
+            if (!(armorItem.getMaterial() instanceof ArmorMaterials vanillaMaterial)) continue;
+            armors.put(armorItem.getType(), vanillaMaterial, armorItem);
+        }
+        return armors.build();
+    }
+
+    private static GoalIcon createAllDifferentMaterialsIconOld() {
+        final Map<ArmorItem.Type, Map<ArmorMaterial, ArmorItem>> armors = new EnumMap<>(ArmorItem.Type.class);
+        for (final Item item : BuiltInRegistries.ITEM) {
+            if (!(item instanceof ArmorItem armorItem)) continue;
+            armors.computeIfAbsent(armorItem.getType(), k -> new HashMap<>())
+                .put(armorItem.getMaterial(), armorItem);
+        }
+
+        final List<GoalIcon> icons = new ArrayList<>();
+
+        final ArmorItem.Type[] types = ArmorItem.Type.values();
+        ArrayUtils.reverse(types);
+        for (final ArmorItem.Type type : types) {
+            final var items = armors.get(type);
+            if (items == null) continue;
+            for (final ArmorMaterial material : ArmorMaterials.values()) {
+                final ArmorItem item = items.get(material);
+                if (item == null) continue;
+                icons.add(ItemIcon.ofItem(item));
+            }
+        }
+        return new CycleIcon(icons);
     }
 }
