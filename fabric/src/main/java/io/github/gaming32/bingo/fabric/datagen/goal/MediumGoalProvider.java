@@ -13,9 +13,11 @@ import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.FloatTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
@@ -39,6 +41,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyC
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -286,7 +289,10 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 ItemPredicate.Builder.item().of(Items.LEAD),
                 Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.RABBIT)))
             ))
-            .name(Component.translatable("bingo.goal.lead_on_rabbit"))
+            .name(Component.translatable(
+                "bingo.goal.lead_on_rabbit",
+                Items.LEAD.getDescription(), EntityType.RABBIT.getDescription()
+            ))
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .icon(Items.LEAD)
         );
@@ -411,7 +417,17 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .setAntisynergy("honeycomb")
             .infrequency(2)
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
-        // TODO: repair iron golem
+        addGoal(BingoGoal.builder(id("repair_iron_golem"))
+            .criterion("repair", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                ItemPredicate.Builder.item().of(Items.IRON_INGOT),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.IRON_GOLEM)))
+            ))
+            .name(Component.translatable("bingo.goal.repair_iron_golem", EntityType.IRON_GOLEM.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.IRON_GOLEM, BingoUtil.compound(Map.of(
+                "Health", FloatTag.valueOf(40f)
+            ))))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.VILLAGE)
+        );
         // TODO: grow tree with benis attached
 
         for (String woodType : List.of("warped", "crimson")) {

@@ -1,19 +1,19 @@
 {
   "criteria": {
-    "use": {
+    "repair": {
       "conditions": {
         "entity": [
           {
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:rabbit"
+              "type": "minecraft:iron_golem"
             }
           }
         ],
         "item": {
           "items": [
-            "minecraft:lead"
+            "minecraft:iron_ingot"
           ]
         }
       },
@@ -22,31 +22,32 @@
   },
   "difficulty": 2,
   "icon": {
-    "type": "bingo:item",
-    "value": {
+    "type": "bingo:entity",
+    "data": {
+      "Health": 40.0
+    },
+    "entity": "minecraft:iron_golem",
+    "item": {
       "Count": 1,
-      "id": "minecraft:lead"
+      "id": "minecraft:iron_golem_spawn_egg"
     }
   },
   "name": {
-    "translate": "bingo.goal.lead_on_rabbit",
+    "translate": "bingo.goal.repair_iron_golem",
     "with": [
       {
-        "translate": "item.minecraft.lead"
-      },
-      {
-        "translate": "entity.minecraft.rabbit"
+        "translate": "entity.minecraft.iron_golem"
       }
     ]
   },
   "requirements": [
     [
-      "use"
+      "repair"
     ]
   ],
   "tags": [
     "bingo:action",
-    "bingo:rare_biome",
-    "bingo:overworld"
+    "bingo:overworld",
+    "bingo:village"
   ]
 }
