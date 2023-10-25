@@ -227,7 +227,9 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.break_hoe"))
             .icon(Items.STONE_HOE));
         addGoal(BingoGoal.builder(id("bounce_on_bed"))
-            .criterion("bounce", BingoTriggers.bounceOnBed())
+            .criterion("bounce", BounceOnBlockTrigger.TriggerInstance.bounceOnBlock(
+                BlockPredicate.Builder.block().of(BlockTags.BEDS)
+            ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.bounce_on_bed"))
             .icon(Items.WHITE_BED)

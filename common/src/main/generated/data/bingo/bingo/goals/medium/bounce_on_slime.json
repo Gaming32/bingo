@@ -4,23 +4,30 @@
       "conditions": {
         "block": {
           "block": {
-            "tag": "minecraft:beds"
+            "blocks": [
+              "minecraft:slime_block"
+            ]
           }
         }
       },
       "trigger": "bingo:bounce_on_block"
     }
   },
-  "difficulty": 0,
+  "difficulty": 2,
   "icon": {
     "type": "bingo:item",
     "value": {
       "Count": 1,
-      "id": "minecraft:white_bed"
+      "id": "minecraft:slime_block"
     }
   },
   "name": {
-    "translate": "bingo.goal.bounce_on_bed"
+    "translate": "bingo.goal.bounce_on_slime",
+    "with": [
+      {
+        "translate": "block.minecraft.slime_block"
+      }
+    ]
   },
   "requirements": [
     [

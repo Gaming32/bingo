@@ -39,7 +39,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -483,8 +482,14 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("grass_block"), Items.GRASS_BLOCK)
             .tooltip(Component.translatable("bingo.goal.grass_block.tooltip"))
             .tags(BingoTags.OVERWORLD));
-        // TODO: bounce on slime block
-        // TODO: full gold armor
+        addGoal(BingoGoal.builder(id("bounce_on_slime"))
+            .criterion("bounce", BounceOnBlockTrigger.TriggerInstance.bounceOnBlock(
+                BlockPredicate.Builder.block().of(Blocks.SLIME_BLOCK)
+            ))
+            .name(Component.translatable("bingo.goal.bounce_on_slime", Blocks.SLIME_BLOCK.getName()))
+            .icon(Items.SLIME_BLOCK)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
         addGoal(BingoGoal.builder(id("full_gold_armor"))
             .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
                 Items.GOLDEN_BOOTS, Items.GOLDEN_LEGGINGS, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_HELMET
@@ -582,29 +587,5 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             armors.put(armorItem.getType(), vanillaMaterial, armorItem);
         }
         return armors.build();
-    }
-
-    private static GoalIcon createAllDifferentMaterialsIconOld() {
-        final Map<ArmorItem.Type, Map<ArmorMaterial, ArmorItem>> armors = new EnumMap<>(ArmorItem.Type.class);
-        for (final Item item : BuiltInRegistries.ITEM) {
-            if (!(item instanceof ArmorItem armorItem)) continue;
-            armors.computeIfAbsent(armorItem.getType(), k -> new HashMap<>())
-                .put(armorItem.getMaterial(), armorItem);
-        }
-
-        final List<GoalIcon> icons = new ArrayList<>();
-
-        final ArmorItem.Type[] types = ArmorItem.Type.values();
-        ArrayUtils.reverse(types);
-        for (final ArmorItem.Type type : types) {
-            final var items = armors.get(type);
-            if (items == null) continue;
-            for (final ArmorMaterial material : ArmorMaterials.values()) {
-                final ArmorItem item = items.get(material);
-                if (item == null) continue;
-                icons.add(ItemIcon.ofItem(item));
-            }
-        }
-        return new CycleIcon(icons);
     }
 }

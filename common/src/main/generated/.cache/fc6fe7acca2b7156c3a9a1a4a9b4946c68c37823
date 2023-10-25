@@ -214,6 +214,7 @@ bae2009116c3cb7af0434dbf5dbffb5c3a3c9a01 data/bingo/bingo/goals/medium/bamboo.js
 6e90063fa84e5a957e3d9dfc88a249ea94fc60f4 data/bingo/bingo/goals/medium/bed_row.json
 ec76d7ff30d174c1eacf5a854374aa0177ed66e1 data/bingo/bingo/goals/medium/beetroot_soup.json
 db3062c2272897a7b8af5ef6efa3d307e203e54d data/bingo/bingo/goals/medium/blaze_rod.json
+c03152a99cd8ca37721f59e5e38a81b5b17bb877 data/bingo/bingo/goals/medium/bounce_on_slime.json
 d8a66f7b21438e9956e44f6255372f3f31f727fb data/bingo/bingo/goals/medium/brown_wool.json
 5abadbac68c4beba2a759594fb5c38e089405320 data/bingo/bingo/goals/medium/create_iron_golem.json
 ff0a404bc4e2e7e622e96590a7fbe1b7b029ad8b data/bingo/bingo/goals/medium/crimson_hyphae.json
@@ -310,7 +311,7 @@ c162acc9ca23f07788db151a505b1c4709e81f3a data/bingo/bingo/goals/very_easy/acacia
 df38a3c6facd0ce81657433ef0ca5b19d7c04345 data/bingo/bingo/goals/very_easy/birch_log.json
 92fede958420164e82e42c2b1d67bcfebf270621 data/bingo/bingo/goals/very_easy/birch_planks.json
 c8ab5499118b7a05a93da26d3c7a4ee6a8136840 data/bingo/bingo/goals/very_easy/birch_wood.json
-b8fd8b79232f4d10f9d8aeccd7e172b2089c470a data/bingo/bingo/goals/very_easy/bounce_on_bed.json
+326c67db294a4a3ead5fd753716304900d6fc921 data/bingo/bingo/goals/very_easy/bounce_on_bed.json
 9cf4026e1e78ba9027f16bdd0e8416a963892341 data/bingo/bingo/goals/very_easy/bread.json
 cad3e73772ecd0c2edbb2280e778a24a55901e0e data/bingo/bingo/goals/very_easy/break_hoe.json
 d4821e9eaf0222b7d621da46ad2bd662ec4cba72 data/bingo/bingo/goals/very_easy/breed_mobs.json

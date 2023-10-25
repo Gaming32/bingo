@@ -19,7 +19,6 @@ public class BingoTriggers {
     public static final EquipItemTrigger EQUIP_ITEM = register("bingo:equip_item", new EquipItemTrigger());
     public static final DistanceTrigger CROUCH = register("bingo:crouch", new DistanceTrigger());
     public static final ItemBrokenTrigger ITEM_BROKEN = register("bingo:item_broken", new ItemBrokenTrigger());
-    public static final PlayerTrigger BOUNCE_ON_BED = register("bingo:bounce_on_bed", new PlayerTrigger());
     public static final CompleteMapTrigger COMPLETED_MAP = register("bingo:completed_map", new CompleteMapTrigger());
     public static final BeaconEffectTrigger BEACON_EFFECT = register("bingo:beacon_effect", new BeaconEffectTrigger());
     public static final TotalCountInventoryChangeTrigger TOTAL_COUNT_INVENTORY_CHANGED = register("bingo:total_count_inventory_changed", new TotalCountInventoryChangeTrigger());
@@ -45,6 +44,7 @@ public class BingoTriggers {
     public static final KeyPressedTrigger KEY_PRESSED = register("bingo:key_pressed", new KeyPressedTrigger());
     public static final RelativeStatsTrigger RELATIVE_STATS = register("bingo:relative_stats", new RelativeStatsTrigger());
     public static final GrowBeeNestTreeTrigger GROW_BEE_NEST_TREE = register("bingo:grow_bee_nest_tree", new GrowBeeNestTreeTrigger());
+    public static final BounceOnBlockTrigger BOUNCE_ON_BLOCK = register("bingo:bounce_on_block", new BounceOnBlockTrigger());
 
     public static void load() {
     }
@@ -55,11 +55,10 @@ public class BingoTriggers {
         );
     }
 
-    public static Criterion<PlayerTrigger.TriggerInstance> bounceOnBed() {
-        return BOUNCE_ON_BED.createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty()));
-    }
-
-    @Deprecated // use RelativeStatsTrigger instead
+    /**
+     * @deprecated Use {@link RelativeStatsTrigger} instead
+     */
+    @Deprecated
     public static <T> Criterion<PlayerTrigger.TriggerInstance> statChanged(StatType<T> type, Holder.Reference<T> holder, MinMaxBounds.Ints range) {
         return CriteriaTriggers.TICK.createCriterion(
             new PlayerTrigger.TriggerInstance(Optional.of(
