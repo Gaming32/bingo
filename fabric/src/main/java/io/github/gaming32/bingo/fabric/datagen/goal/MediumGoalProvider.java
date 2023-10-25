@@ -406,7 +406,14 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("block.minecraft.ominous_banner"))
             .reactant("pacifist")
             .tags(BingoTags.COMBAT, BingoTags.OVERWORLD));
-        // TODO: gain a fox's trust
+        addGoal(BingoGoal.builder(id("gain_fox_trust"))
+            .criterion("breed", BredAnimalsTrigger.TriggerInstance.bredAnimals(
+                EntityPredicate.Builder.entity().of(EntityType.FOX)
+            ))
+            .name(Component.translatable("bingo.goal.gain_fox_trust", EntityType.FOX.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.FOX))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+        );
         addGoal(obtainItemGoal(id("honey_block"), Items.HONEY_BLOCK)
             .setAntisynergy("honey")
             .infrequency(2)

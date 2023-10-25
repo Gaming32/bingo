@@ -1,0 +1,45 @@
+{
+  "criteria": {
+    "breed": {
+      "conditions": {
+        "child": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:fox"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:bred_animals"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:entity",
+    "entity": "minecraft:fox",
+    "item": {
+      "Count": 1,
+      "id": "minecraft:fox_spawn_egg"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.gain_fox_trust",
+    "with": [
+      {
+        "translate": "entity.minecraft.fox"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "breed"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}
