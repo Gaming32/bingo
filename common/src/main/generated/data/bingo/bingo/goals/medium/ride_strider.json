@@ -1,0 +1,46 @@
+{
+  "criteria": {
+    "ride": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "vehicle": {
+                "type": "minecraft:strider"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:started_riding"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:entity",
+    "entity": "minecraft:strider",
+    "item": {
+      "Count": 1,
+      "id": "minecraft:strider_spawn_egg"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.ride_strider",
+    "with": [
+      {
+        "translate": "entity.minecraft.strider"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "ride"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:nether"
+  ]
+}

@@ -473,7 +473,14 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("warped_fungus_on_a_stick"), Items.WARPED_FUNGUS_ON_A_STICK)
             .tags(BingoTags.NETHER));
         // TODO: convert hoglin into zoglin
-        // TODO: ride strider
+        addGoal(BingoGoal.builder(id("ride_strider"))
+            .criterion("ride", StartRidingTrigger.TriggerInstance.playerStartsRiding(
+                EntityPredicate.Builder.entity().vehicle(EntityPredicate.Builder.entity().of(EntityType.STRIDER))
+            ))
+            .name(Component.translatable("bingo.goal.ride_strider", EntityType.STRIDER.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.STRIDER))
+            .tags(BingoTags.ACTION, BingoTags.NETHER)
+        );
         // TODO: damage strider with water
         addGoal(obtainItemGoal(id("bamboo"), Items.BAMBOO, 6, 15)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
