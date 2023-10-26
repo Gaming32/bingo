@@ -20,7 +20,6 @@ import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -177,16 +176,11 @@ public abstract class DifficultyGoalProvider {
     }
 
     protected static BingoGoal.Builder crouchDistanceGoal(ResourceLocation id, int minDistance, int maxDistance) {
+        RelativeStatsTrigger.Builder builder = RelativeStatsTrigger.builder();
         return BingoGoal.builder(id)
             .sub("distance", BingoSub.random(minDistance, maxDistance))
             .criterion("crouch",
-                RelativeStatsTrigger.builder().stat(
-                    Stats.CUSTOM,
-                    BuiltInRegistries.CUSTOM_STAT.getHolderOrThrow(ResourceKey.create(
-                        Registries.CUSTOM_STAT, Stats.CROUCH_ONE_CM
-                    )),
-                    0
-                ).build(),
+                builder.stat(Stats.CROUCH_ONE_CM, MinMaxBounds.Ints.atLeast(0)).build(),
                 subber -> subber.sub(
                     "conditions.stats.0.value.min",
                     new CompoundBingoSub(

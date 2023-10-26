@@ -23,11 +23,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
@@ -371,7 +373,32 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         );
         // TODO: breed mobs
         addGoal(crouchDistanceGoal(id("crouch_distance"), 200, 400));
-        // TODO: kill n mobs
+        addGoal(BingoGoal.builder(id("kill_mobs"))
+            .sub("count", BingoSub.random(75, 100))
+            .criterion(
+                "kill",
+                RelativeStatsTrigger.builder()
+                    .stat(Stats.MOB_KILLS, MinMaxBounds.Ints.atLeast(0))
+                    .build(),
+                subber -> subber.sub("conditions.stats.0.value.min", "count")
+            )
+            .progress("kill")
+            .name(
+                Component.translatable("bingo.goal.kill_mobs", 0),
+                subber -> subber.sub("with.0", "count")
+            )
+            .icon(new CycleIcon(
+                BuiltInRegistries.ENTITY_TYPE.stream()
+                    .filter(t -> t.getCategory() != MobCategory.MISC)
+                    .filter(t -> SpawnEggItem.byId(t) != null)
+                    .map(EntityIcon::ofSpawnEgg)
+                    .map(i -> (GoalIcon)i)
+                    .collect(ImmutableList.toImmutableList())
+            ))
+            .reactant("pacifist")
+            .antisynergy("mob_kills")
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.STAT)
+        );
         addGoal(obtainItemGoal(id("seagrass"), Items.SEAGRASS, 33, 64)
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));

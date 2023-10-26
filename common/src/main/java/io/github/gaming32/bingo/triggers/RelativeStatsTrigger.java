@@ -8,9 +8,14 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
+import net.minecraft.stats.Stats;
 import net.minecraft.stats.StatsCounter;
 import org.jetbrains.annotations.NotNull;
 
@@ -93,8 +98,14 @@ public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTr
             return this;
         }
 
-        public <T> Builder stat(StatType<T> statType, Holder.Reference<T> stat, int minValue) {
-            return stat(statType, stat, MinMaxBounds.Ints.atLeast(minValue));
+        public Builder stat(ResourceLocation customStat, MinMaxBounds.Ints range) {
+            return stat(
+                Stats.CUSTOM,
+                BuiltInRegistries.CUSTOM_STAT.getHolderOrThrow(ResourceKey.create(
+                    Registries.CUSTOM_STAT, customStat
+                )),
+                range
+            );
         }
 
         public Criterion<TriggerInstance> build() {
