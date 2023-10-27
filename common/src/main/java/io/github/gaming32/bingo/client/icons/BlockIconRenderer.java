@@ -2,24 +2,20 @@ package io.github.gaming32.bingo.client.icons;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.github.gaming32.bingo.data.icons.BlockIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-
-import java.util.List;
 
 public class BlockIconRenderer implements IconRenderer<BlockIcon> {
     private static final ItemTransform DEFAULT_TRANSFORM = new ItemTransform(
@@ -56,25 +52,28 @@ public class BlockIconRenderer implements IconRenderer<BlockIcon> {
         }
         transform.apply(false, poseStack);
         poseStack.translate(-0.5f, -0.5f, -0.5f);
-        renderModelLists(model, state, poseStack, buffer.getBuffer(ItemBlockRenderTypes.getRenderType(state, true)));
+        renderModel(state, poseStack, buffer, model);
         poseStack.popPose();
     }
 
-    private static void renderModelLists(BakedModel model, BlockState state, PoseStack poseStack, VertexConsumer buffer) {
-        final RandomSource random = RandomSource.create();
-        final long seed = 42;
-        for (final Direction direction : Direction.values()) {
-            random.setSeed(seed);
-            renderQuadList(poseStack, buffer, model.getQuads(state, direction, random));
+    private static void renderModel(BlockState state, PoseStack poseStack, MultiBufferSource buffer, BakedModel model) {
+        final Minecraft minecraft = Minecraft.getInstance();
+        if (state.getRenderShape() != RenderShape.MODEL) {
+            minecraft.getBlockRenderer().renderSingleBlock(
+                state, poseStack, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY
+            );
+            return;
         }
-        random.setSeed(seed);
-        renderQuadList(poseStack, buffer, model.getQuads(state, null, random));
-    }
 
-    private static void renderQuadList(PoseStack poseStack, VertexConsumer buffer, List<BakedQuad> quads) {
-        final PoseStack.Pose pose = poseStack.last();
-        for (final BakedQuad quad : quads) {
-            buffer.putBulkData(pose, quad, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-        }
+        assert minecraft.level != null;
+        final int color = minecraft.getBlockColors().getColor(state, minecraft.level, BlockPos.ZERO, 0);
+        final float r = (color >> 16 & 0xff) / 255f;
+        final float g = (color >> 8 & 0xff) / 255f;
+        final float b = (color & 0xff) / 255f;
+        minecraft.getBlockRenderer().getModelRenderer().renderModel(
+            poseStack.last(),
+            buffer.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)),
+            state, model, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY
+        );
     }
 }
