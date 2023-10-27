@@ -20,7 +20,10 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
@@ -37,6 +40,9 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatterns;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -364,7 +370,39 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.COMBAT));
         // TODO: never use axe
         // TODO: enchant an item
-        // TODO: blue shield with white flower charge pattern
+        {
+            final ItemStack shieldItem = new ItemStack(Items.SHIELD);
+            final ListTag patternsTag = new BannerPattern.Builder()
+                .addPattern(BannerPatterns.FLOWER, DyeColor.WHITE)
+                .toListTag();
+            BlockItem.setBlockEntityData(
+                shieldItem, BlockEntityType.BANNER,
+                BingoUtil.compound(Map.of(
+                    "Patterns", patternsTag,
+                    "Base", IntTag.valueOf(11)
+                ))
+            );
+            assert shieldItem.getTag() != null;
+            final CompoundTag itemNbt = shieldItem.getTag().copy();
+            itemNbt.remove("Damage");
+            addGoal(
+                obtainItemGoal(
+                    id("blue_shield_with_white_flower_charge"), shieldItem,
+                    ItemPredicate.Builder.item()
+                        .of(Items.SHIELD)
+                        .hasNbt(itemNbt)
+                ).name(Component.translatable(
+                    "bingo.goal.item_with_pattern",
+                    Component.translatable(Items.SHIELD.getDescriptionId() + "." + DyeColor.BLUE.getName()),
+                    Component.translatable(
+                        "block.minecraft.banner." +
+                            BannerPatterns.FLOWER.location().toShortLanguageKey() + "." +
+                            DyeColor.WHITE.getName()
+                    )
+                ))
+                .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+            );
+        }
         addGoal(BingoGoal.builder(id("tame_cat"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.CAT)))
             .name(Component.translatable("bingo.goal.tame_cat"))
@@ -422,7 +460,6 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         // TODO: kill iron golem
-        // TODO: kill mob with end crystal
         addGoal(BingoGoal.builder(id("kill_with_crystal"))
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
                 Optional.empty(),

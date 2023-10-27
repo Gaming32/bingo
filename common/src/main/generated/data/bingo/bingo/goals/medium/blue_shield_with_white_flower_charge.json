@@ -1,0 +1,63 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:shield"
+            ],
+            "nbt": "{BlockEntityTag:{Base:11,Patterns:[{Color:0,Pattern:\"flo\"}],id:\"minecraft:banner\"}}"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:shield",
+      "tag": {
+        "BlockEntityTag": {
+          "Base": 11,
+          "Patterns": [
+            {
+              "Color": 0,
+              "Pattern": "flo"
+            }
+          ],
+          "id": "minecraft:banner"
+        },
+        "Damage": 0
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.item_with_pattern",
+    "with": [
+      {
+        "translate": "item.minecraft.shield.blue"
+      },
+      {
+        "translate": "block.minecraft.banner.flower.white"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

@@ -8,6 +8,7 @@ import net.minecraft.Util;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
@@ -48,6 +49,12 @@ public class BingoUtil {
     public static CompoundTag compound(Map<String, Tag> nbt) {
         final CompoundTag result = new CompoundTag();
         nbt.forEach(result::put);
+        return result;
+    }
+
+    public static ListTag list(List<Tag> nbt) {
+        final ListTag result = new ListTag();
+        result.addAll(nbt);
         return result;
     }
 
