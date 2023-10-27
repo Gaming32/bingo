@@ -423,6 +423,17 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         // TODO: kill iron golem
         // TODO: kill mob with end crystal
+        addGoal(BingoGoal.builder(id("kill_with_crystal"))
+            .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
+                Optional.empty(),
+                DamageSourcePredicate.Builder.damageType()
+                    .direct(EntityPredicate.Builder.entity().of(EntityType.END_CRYSTAL))
+            ))
+            .name(Component.translatable("bingo.goal.kill_with_crystal", EntityType.END_CRYSTAL.getDescription()))
+            .icon(Items.END_CRYSTAL)
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.NETHER, BingoTags.COMBAT)
+        );
         addGoal(BingoGoal.builder(id("never_craft_sticks"))
             .criterion("craft", RecipeCraftedTrigger.TriggerInstance.craftedItem(new ResourceLocation("stick")))
             .tags(BingoTags.NEVER, BingoTags.OVERWORLD)

@@ -255,6 +255,7 @@ ddeb6f8ed7fb58650b90855c6745959849ea9553 data/bingo/bingo/goals/medium/gold_bloc
 983435d5baca0328b381187427b232ba3597c052 data/bingo/bingo/goals/medium/item_frame.json
 024f899855002637e59bdfeafa151c34e7fe04c5 data/bingo/bingo/goals/medium/kill_mobs.json
 d0875e93a8c94a0828c915315c874a47625eef51 data/bingo/bingo/goals/medium/kill_self_with_arrow.json
+7bceb4ada9652625202dd4d42f9f001e8e5790e9 data/bingo/bingo/goals/medium/kill_with_crystal.json
 42fb333281e08d04be9c113ab5ae40df592ea155 data/bingo/bingo/goals/medium/lapis_block.json
 4b64a510abd38c8a7198953693735829de812ce9 data/bingo/bingo/goals/medium/lead_on_rabbit.json
 155c24206a21785ead71f67cd3d0f5a94f5e067c data/bingo/bingo/goals/medium/leaping_potion.json

@@ -1,0 +1,42 @@
+{
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "killing_blow": {
+          "direct_entity": {
+            "type": "minecraft:end_crystal"
+          }
+        }
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:end_crystal"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.kill_with_crystal",
+    "with": [
+      {
+        "translate": "entity.minecraft.end_crystal"
+      }
+    ]
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:nether",
+    "bingo:combat"
+  ]
+}
