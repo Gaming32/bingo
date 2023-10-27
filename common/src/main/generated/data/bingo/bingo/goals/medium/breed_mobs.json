@@ -1,0 +1,65 @@
+{
+  "antisynergy": "breed_animals",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 7,
+          "min_inclusive": 5
+        }
+      }
+    }
+  },
+  "criteria": {
+    "breed": {
+      "conditions": {
+        "stats": [
+          {
+            "type": "minecraft:custom",
+            "stat": "minecraft:animals_bred",
+            "value": {
+              "min": {
+                "bingo_type": "bingo:sub",
+                "value": "count"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "bingo:relative_stats"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:wheat_seeds"
+    }
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.breed_mobs",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "breed"
+  },
+  "requirements": [
+    [
+      "breed"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:stat"
+  ]
+}

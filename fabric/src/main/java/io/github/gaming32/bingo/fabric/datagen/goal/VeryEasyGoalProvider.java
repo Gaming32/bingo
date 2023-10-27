@@ -159,10 +159,9 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         // TODO: different edible items
-        addGoal(BingoGoal.builder(id("breed_mobs"))
+        addGoal(BingoGoal.builder(id("breed_mob_pair"))
             .criterion("breed", BredAnimalsTrigger.TriggerInstance.bredAnimals())
-            .name(Component.translatable("bingo.goal.breed_mobs"))
-            .tooltip(Component.translatable("bingo.goal.breed_mobs.tooltip"))
+            .name(Component.translatable("bingo.goal.breed_mob_pair"))
             .antisynergy("breed_animals")
             .infrequency(2)
             .tags(BingoTags.ACTION, BingoTags.STAT)

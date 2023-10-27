@@ -15,7 +15,7 @@
   },
   "infrequency": 2,
   "name": {
-    "translate": "bingo.goal.breed_mobs"
+    "translate": "bingo.goal.breed_mob_pair"
   },
   "requirements": [
     [
@@ -25,8 +25,5 @@
   "tags": [
     "bingo:action",
     "bingo:stat"
-  ],
-  "tooltip": {
-    "translate": "bingo.goal.breed_mobs.tooltip"
-  }
+  ]
 }

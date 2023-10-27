@@ -372,6 +372,25 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .icon(EntityIcon.ofSpawnEgg(EntityType.CAT))
         );
         // TODO: breed mobs
+        addGoal(BingoGoal.builder(id("breed_mobs"))
+            .sub("count", BingoSub.random(5, 7))
+            .criterion(
+                "breed",
+                RelativeStatsTrigger.builder()
+                    .stat(Stats.ANIMALS_BRED, MinMaxBounds.Ints.atLeast(0))
+                    .build(),
+                subber -> subber.sub("conditions.stats.0.value.min", "count")
+            )
+            .progress("breed")
+            .name(
+                Component.translatable("bingo.goal.breed_mobs", 0),
+                subber -> subber.sub("with.0", "count")
+            )
+            .icon(Items.WHEAT_SEEDS)
+            .antisynergy("breed_animals")
+            .infrequency(2)
+            .tags(BingoTags.ACTION, BingoTags.STAT)
+        );
         addGoal(crouchDistanceGoal(id("crouch_distance"), 200, 400));
         addGoal(BingoGoal.builder(id("kill_mobs"))
             .sub("count", BingoSub.random(75, 100))
