@@ -1,0 +1,93 @@
+{
+  "criteria": {
+    "build": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:any_of",
+            "terms": [
+              {
+                "block": "minecraft:glass",
+                "condition": "minecraft:block_state_property"
+              },
+              {
+                "block": "minecraft:lava",
+                "condition": "minecraft:block_state_property"
+              }
+            ]
+          },
+          {
+            "aisles": [
+              [
+                "###",
+                "###",
+                "###"
+              ],
+              [
+                "###",
+                "#+#",
+                "###"
+              ],
+              [
+                "###",
+                "###",
+                "###"
+              ]
+            ],
+            "condition": "bingo:block_pattern",
+            "rotations": "none",
+            "where": {
+              "#": {
+                "block": {
+                  "blocks": [
+                    "minecraft:glass"
+                  ]
+                }
+              },
+              "+": {
+                "block": {
+                  "blocks": [
+                    "minecraft:lava"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:glass"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:lava_bucket"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.3x3x3_glass_cube"
+  },
+  "requirements": [
+    [
+      "build"
+    ]
+  ],
+  "tags": [
+    "bingo:build",
+    "bingo:overworld"
+  ]
+}

@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
+import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
 import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
@@ -11,6 +12,7 @@ import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.client.KeyMapping;
@@ -126,6 +128,25 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(Items.SHIELD));
         addGoal(obtainItemGoal(id("jukebox"), Items.JUKEBOX));
         // TODO: 3x3x3 cube of glass with lava in middle
+        addGoal(BingoGoal.builder(id("3x3x3_glass_cube"))
+            .criterion("build", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
+                LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.GLASS)
+                    .or(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.LAVA)),
+                BlockPatternCondition.builder()
+                    .aisle("###", "###", "###")
+                    .aisle("###", "#+#", "###")
+                    .aisle("###", "###", "###")
+                    .where('#', BlockPredicate.Builder.block().of(Blocks.GLASS))
+                    .where('+', BlockPredicate.Builder.block().of(Blocks.LAVA))
+                    .rotations(BlockPattern.Rotations.NONE)
+            ))
+            .name(Component.translatable("bingo.goal.3x3x3_glass_cube"))
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.GLASS),
+                ItemIcon.ofItem(Items.LAVA_BUCKET)
+            ))
+            .tags(BingoTags.BUILD, BingoTags.OVERWORLD)
+        );
         addGoal(obtainItemGoal(id("mossy_cobblestone"), Items.MOSSY_COBBLESTONE, 16, 32)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("cactus"), Items.CACTUS, 5, 15)
