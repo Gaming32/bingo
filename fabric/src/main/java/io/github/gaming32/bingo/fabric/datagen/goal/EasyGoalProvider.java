@@ -127,7 +127,6 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tooltip(Component.translatable("bingo.goal.never_use_shields.tooltip"))
             .icon(Items.SHIELD));
         addGoal(obtainItemGoal(id("jukebox"), Items.JUKEBOX));
-        // TODO: 3x3x3 cube of glass with lava in middle
         addGoal(BingoGoal.builder(id("3x3x3_glass_cube"))
             .criterion("build", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
                 LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.GLASS)
