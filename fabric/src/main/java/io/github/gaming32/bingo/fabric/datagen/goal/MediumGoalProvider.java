@@ -370,7 +370,6 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .infrequency(2)
             .tags(BingoTags.COMBAT));
         // TODO: never use axe
-        // TODO: enchant an item
         addGoal(BingoGoal.builder(id("enchant_item"))
             .criterion("enchant", EnchantedItemTrigger.TriggerInstance.enchantedItem())
             .name(Component.translatable("bingo.goal.enchant_item"))
