@@ -18,6 +18,7 @@ import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.critereon.EnchantedItemTrigger;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -370,6 +371,13 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.COMBAT));
         // TODO: never use axe
         // TODO: enchant an item
+        addGoal(BingoGoal.builder(id("enchant_item"))
+            .criterion("enchant", EnchantedItemTrigger.TriggerInstance.enchantedItem())
+            .name(Component.translatable("bingo.goal.enchant_item"))
+            .icon(makeItemWithGlint(Items.IRON_SWORD))
+            .antisynergy("enchant")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
         {
             final ItemStack shieldItem = new ItemStack(Items.SHIELD);
             final ListTag patternsTag = new BannerPattern.Builder()

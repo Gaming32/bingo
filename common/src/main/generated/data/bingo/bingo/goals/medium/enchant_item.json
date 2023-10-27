@@ -1,0 +1,35 @@
+{
+  "antisynergy": "enchant",
+  "criteria": {
+    "enchant": {
+      "conditions": {},
+      "trigger": "minecraft:enchanted_item"
+    }
+  },
+  "difficulty": 2,
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:iron_sword",
+      "tag": {
+        "Damage": 0,
+        "Enchantments": [
+          {}
+        ]
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.enchant_item"
+  },
+  "requirements": [
+    [
+      "enchant"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}
