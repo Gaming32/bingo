@@ -5,10 +5,7 @@ import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
 import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
-import io.github.gaming32.bingo.data.icons.CycleIcon;
-import io.github.gaming32.bingo.data.icons.EntityIcon;
-import io.github.gaming32.bingo.data.icons.ItemIcon;
-import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
+import io.github.gaming32.bingo.data.icons.*;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
@@ -29,6 +26,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -205,7 +203,28 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 ItemIcon.ofItem(Items.LEATHER_BOOTS)
             ))
         );
-        // TODO: fill cauldron with water
+        addGoal(BingoGoal.builder(id("fill_water_cauldron"))
+            .criterion("fill", CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
+                new ItemUsedOnLocationTrigger.TriggerInstance(
+                    Optional.empty(),
+                    Optional.of(ContextAwarePredicate.create(
+                        LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.WATER_CAULDRON)
+                            .setProperties(StatePropertiesPredicate.Builder.properties()
+                                .hasProperty(LayeredCauldronBlock.LEVEL, 3)
+                            )
+                            .build()
+                    ))
+                )
+            ))
+            .name(Component.translatable(
+                "bingo.goal.fill_water_cauldron",
+                Blocks.CAULDRON.getName(), Blocks.WATER.getName()
+            ))
+            .icon(BlockIcon.ofBlock(Blocks.WATER_CAULDRON.defaultBlockState()
+                .setValue(LayeredCauldronBlock.LEVEL, 3)
+            ))
+            .tags(BingoTags.OVERWORLD)
+        );
         addGoal(BingoGoal.builder(id("complete_map"))
             .criterion("complete", CompleteMapTrigger.TriggerInstance.completeMap())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
