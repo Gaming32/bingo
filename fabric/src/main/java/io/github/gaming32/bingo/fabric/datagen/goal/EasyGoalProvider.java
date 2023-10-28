@@ -31,9 +31,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -433,7 +431,19 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.never_use_boat"))
             .icon(Items.OAK_BOAT));
-        // TODO: get a fish into the nether // TODO: Next
+        addGoal(BingoGoal.builder(id("place_fish_in_nether"))
+            .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
+                MatchTool.toolMatches(ItemPredicate.Builder.item().of(BingoItemTags.FISH_BUCKETS)),
+                LocationCheck.checkLocation(LocationPredicate.Builder.location().setDimension(Level.NETHER))
+            ))
+            .name(Component.translatable("bingo.goal.place_fish_in_nether"))
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.NETHERRACK),
+                ItemIcon.ofItem(Items.TROPICAL_FISH_BUCKET)
+            ))
+            .antisynergy("pacifist")
+            .tags(BingoTags.NETHER, BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
         addGoal(obtainItemGoal(id("dried_kelp_block"), Items.DRIED_KELP_BLOCK, 11, 20)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         // TODO: drown a zombie

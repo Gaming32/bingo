@@ -1,0 +1,57 @@
+{
+  "antisynergy": "pacifist",
+  "criteria": {
+    "place": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "tag": "bingo:fish_buckets"
+            }
+          },
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "dimension": "minecraft:the_nether"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:netherrack"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:tropical_fish_bucket"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.place_fish_in_nether"
+  },
+  "requirements": [
+    [
+      "place"
+    ]
+  ],
+  "tags": [
+    "bingo:nether",
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}
