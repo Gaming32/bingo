@@ -461,7 +461,6 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("sweet_berries"), Items.SWEET_BERRIES, 2, 6)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
         // TODO: banner pattern
-        // TODO: drink sussy stew
         addGoal(BingoGoal.builder(id("drink_sus_stew"))
             .criterion("drink", ConsumeItemTrigger.TriggerInstance.usedItem(Items.SUSPICIOUS_STEW))
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
