@@ -45,6 +45,7 @@ public class BingoTriggers {
     public static final RelativeStatsTrigger RELATIVE_STATS = register("bingo:relative_stats", new RelativeStatsTrigger());
     public static final GrowBeeNestTreeTrigger GROW_BEE_NEST_TREE = register("bingo:grow_bee_nest_tree", new GrowBeeNestTreeTrigger());
     public static final BounceOnBlockTrigger BOUNCE_ON_BLOCK = register("bingo:bounce_on_block", new BounceOnBlockTrigger());
+    public static final DestroyVehicleTrigger DESTROY_VEHICLE = register("bingo:destroy_vehicle", new DestroyVehicleTrigger());
 
     public static void load() {
     }

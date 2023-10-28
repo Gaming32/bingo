@@ -70,7 +70,7 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         renderDispatcher.setRenderShadow(false);
 
         final MultiBufferSource.BufferSource bufferSource = minecraft.renderBuffers().bufferSource();
-        renderDispatcher.render(entity, 0, 0, 0, 0f, 1f, pose, bufferSource, LightTexture.FULL_BRIGHT);
+        renderDispatcher.render(entity, 0, 0, 0, -150f, 1f, pose, bufferSource, LightTexture.FULL_BRIGHT);
         bufferSource.endBatch();
 
         renderDispatcher.setRenderShadow(true);

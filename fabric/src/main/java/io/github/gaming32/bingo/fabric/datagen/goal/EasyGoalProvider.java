@@ -3,18 +3,21 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
 import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
+import io.github.gaming32.bingo.conditions.PassengersCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.*;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -23,6 +26,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -31,8 +35,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -267,7 +273,30 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("egg"), Items.EGG, 16, 16));
         // TODO: hang 3 different 4x4 paintings
         addGoal(obtainItemGoal(id("bone_block"), Items.BONE_BLOCK, 5, 10));
-        // TODO: 2 creepers in the same boat
+        addGoal(BingoGoal.builder(id("double_creeper_boat"))
+            .criterion("break", BingoTriggers.DESTROY_VEHICLE.createCriterion(new DestroyVehicleTrigger.TriggerInstance(
+                Optional.empty(),
+                Optional.of(ContextAwarePredicate.create(
+                    LootItemEntityPropertyCondition.hasProperties(
+                        LootContext.EntityTarget.THIS,
+                        EntityPredicate.Builder.entity()
+                            .of(EntityType.BOAT)
+                            .build()
+                    ).build(),
+                    new PassengersCondition(List.of(
+                        EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.CREEPER)),
+                        EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.CREEPER))
+                    ), false)
+                )),
+                Optional.empty()
+            )))
+            .name(Component.translatable("bingo.goal.double_creeper_boat"))
+            .icon(new CycleIcon(
+                EntityIcon.of(EntityType.BOAT, new ItemStack(Items.OAK_BOAT)),
+                EntityIcon.ofSpawnEgg(EntityType.CREEPER)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD)
+        );
         // TODO: trade with a villager
         // TODO: different colored shields
         addGoal(obtainItemGoal(id("dead_bush"), Items.DEAD_BUSH)
@@ -546,5 +575,21 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.eat_entire_cake"))
             .icon(Items.CAKE)
             .reactant("eat_non_meat");
+    }
+
+    private static GoalIcon twoCreepersInBoat() {
+        final StringTag creeperId = StringTag.valueOf(
+            BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.CREEPER).toString()
+        );
+        return new EntityIcon(
+            EntityType.BOAT,
+            BingoUtil.compound(Map.of(
+                "Passengers", BingoUtil.list(List.of(
+                    BingoUtil.compound(Map.of("id", creeperId)),
+                    BingoUtil.compound(Map.of("id", creeperId))
+                ))
+            )),
+            new ItemStack(Items.OAK_BOAT)
+        );
     }
 }

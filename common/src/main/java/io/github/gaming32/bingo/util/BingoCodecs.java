@@ -5,9 +5,12 @@ import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import dev.architectury.registry.registries.Registrar;
+import io.github.gaming32.bingo.mixin.common.ContextAwarePredicateAccessor;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditions;
 
 import java.util.Optional;
 
@@ -16,6 +19,8 @@ public final class BingoCodecs {
         s -> s.length() == 1 ? DataResult.success(s.charAt(0)) : DataResult.error(() -> "String must be exactly one char, not " + s.length()),
         c -> Character.toString(c)
     );
+    public static final Codec<ContextAwarePredicate> CONTEXT_AWARE_PREDICATE = LootItemConditions.CODEC
+        .listOf().xmap(ContextAwarePredicateAccessor::create, p -> ((ContextAwarePredicateAccessor)p).getConditions());
 
     private BingoCodecs() {
     }
