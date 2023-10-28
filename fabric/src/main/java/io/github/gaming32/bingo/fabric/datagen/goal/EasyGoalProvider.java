@@ -10,14 +10,12 @@ import io.github.gaming32.bingo.data.icons.*;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
-import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -38,7 +36,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -293,7 +290,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.double_creeper_boat"))
             .icon(new CycleIcon(
                 EntityIcon.of(EntityType.BOAT, new ItemStack(Items.OAK_BOAT)),
-                EntityIcon.ofSpawnEgg(EntityType.CREEPER)
+                EntityIcon.ofSpawnEgg(EntityType.CREEPER, 2)
             ))
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD)
         );
@@ -436,7 +433,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.never_use_boat"))
             .icon(Items.OAK_BOAT));
-        // TODO: get a fish into the nether
+        // TODO: get a fish into the nether // TODO: Next
         addGoal(obtainItemGoal(id("dried_kelp_block"), Items.DRIED_KELP_BLOCK, 11, 20)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         // TODO: drown a zombie
@@ -575,21 +572,5 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.eat_entire_cake"))
             .icon(Items.CAKE)
             .reactant("eat_non_meat");
-    }
-
-    private static GoalIcon twoCreepersInBoat() {
-        final StringTag creeperId = StringTag.valueOf(
-            BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.CREEPER).toString()
-        );
-        return new EntityIcon(
-            EntityType.BOAT,
-            BingoUtil.compound(Map.of(
-                "Passengers", BingoUtil.list(List.of(
-                    BingoUtil.compound(Map.of("id", creeperId)),
-                    BingoUtil.compound(Map.of("id", creeperId))
-                ))
-            )),
-            new ItemStack(Items.OAK_BOAT)
-        );
     }
 }
