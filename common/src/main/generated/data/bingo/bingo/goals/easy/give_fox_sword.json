@@ -1,0 +1,63 @@
+{
+  "criteria": {
+    "pickup": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:fox"
+            }
+          }
+        ],
+        "item": {
+          "tag": "minecraft:swords"
+        }
+      },
+      "trigger": "minecraft:thrown_item_picked_up_by_entity"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:entity",
+        "entity": "minecraft:fox",
+        "item": {
+          "Count": 1,
+          "id": "minecraft:fox_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:iron_sword",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.give_fox_sword",
+    "with": [
+      {
+        "translate": "entity.minecraft.fox"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "pickup"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}

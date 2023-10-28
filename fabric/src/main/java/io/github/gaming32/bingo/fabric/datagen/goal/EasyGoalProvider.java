@@ -468,6 +468,26 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.drink_sus_stew", Items.SUSPICIOUS_STEW.getDescription()))
             .icon(Items.SUSPICIOUS_STEW));
         // TODO: give fox sword
+        addGoal(BingoGoal.builder(id("give_fox_sword"))
+            .criterion("pickup", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(
+                new PickedUpItemTrigger.TriggerInstance(
+                    Optional.empty(),
+                    Optional.of(ItemPredicate.Builder.item().of(ItemTags.SWORDS).build()),
+                    Optional.of(ContextAwarePredicate.create(
+                        LootItemEntityPropertyCondition.hasProperties(
+                            LootContext.EntityTarget.THIS,
+                            EntityPredicate.Builder.entity().of(EntityType.FOX)
+                        ).build()
+                    ))
+                )
+            ))
+            .name(Component.translatable("bingo.goal.give_fox_sword", EntityType.FOX.getDescription()))
+            .icon(new CycleIcon(
+                EntityIcon.ofSpawnEgg(EntityType.FOX),
+                ItemIcon.ofItem(Items.IRON_SWORD)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+        );
         addGoal(obtainItemGoal(id("honey_bottle"), Items.HONEY_BOTTLE)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
