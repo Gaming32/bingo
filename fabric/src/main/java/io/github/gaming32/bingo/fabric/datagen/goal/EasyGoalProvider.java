@@ -140,7 +140,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .name(Component.translatable("bingo.goal.3x3x3_glass_cube"))
             .icon(new CycleIcon(
-                ItemIcon.ofItem(Items.GLASS),
+                new ItemIcon(new ItemStack(Items.GLASS, 26)),
                 ItemIcon.ofItem(Items.LAVA_BUCKET)
             ))
             .tags(BingoTags.BUILD, BingoTags.OVERWORLD)
@@ -460,14 +460,21 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         // TODO: repair item with grindstone
         addGoal(obtainItemGoal(id("sweet_berries"), Items.SWEET_BERRIES, 2, 6)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
-        // TODO: banner pattern
+        addGoal(
+            obtainItemGoal(
+                id("banner_pattern"),
+                new ItemTagCycleIcon(BingoItemTags.BANNER_PATTERNS),
+                ItemPredicate.Builder.item().of(BingoItemTags.BANNER_PATTERNS)
+            )
+                .name(Component.translatable("bingo.goal.banner_pattern"))
+                .tags(BingoTags.OVERWORLD)
+        );
         addGoal(BingoGoal.builder(id("drink_sus_stew"))
             .criterion("drink", ConsumeItemTrigger.TriggerInstance.usedItem(Items.SUSPICIOUS_STEW))
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .reactant("eat_non_meat")
             .name(Component.translatable("bingo.goal.drink_sus_stew", Items.SUSPICIOUS_STEW.getDescription()))
             .icon(Items.SUSPICIOUS_STEW));
-        // TODO: give fox sword
         addGoal(BingoGoal.builder(id("give_fox_sword"))
             .criterion("pickup", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(
                 new PickedUpItemTrigger.TriggerInstance(

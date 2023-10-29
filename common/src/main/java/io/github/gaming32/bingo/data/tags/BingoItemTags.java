@@ -35,6 +35,7 @@ public final class BingoItemTags {
     public static final TagKey<Item> FOOD = create("food");
     public static final TagKey<Item> MEAT = create("meat");
     public static final TagKey<Item> NOT_MEAT = create("not_meat");
+    public static final TagKey<Item> BANNER_PATTERNS = create("banner_patterns");
 
     private static TagKey<Item> create(String name) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(Bingo.MOD_ID, name));

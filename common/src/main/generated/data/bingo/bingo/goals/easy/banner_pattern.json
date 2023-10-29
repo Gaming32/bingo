@@ -1,0 +1,35 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "tag": "bingo:banner_patterns"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "tag": "bingo:banner_patterns"
+  },
+  "name": {
+    "translate": "bingo.goal.banner_pattern"
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

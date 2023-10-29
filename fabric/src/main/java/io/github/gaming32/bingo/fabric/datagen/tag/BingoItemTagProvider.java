@@ -8,10 +8,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
@@ -186,6 +183,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         var foodBuilder = getOrCreateTagBuilder(BingoItemTags.FOOD);
         var meatBuilder = getOrCreateTagBuilder(BingoItemTags.MEAT);
         var notMeatBuilder = getOrCreateTagBuilder(BingoItemTags.NOT_MEAT);
+        var bannerPatternsBuilder = getOrCreateTagBuilder(BingoItemTags.BANNER_PATTERNS);
         Pattern diamondPattern = Pattern.compile("Diamond\\b");
         for (Item item : BuiltInRegistries.ITEM) {
             if (item instanceof BucketItem) {
@@ -202,6 +200,9 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 } else {
                     notMeatBuilder.add(item);
                 }
+            }
+            if (item instanceof BannerPatternItem) {
+                bannerPatternsBuilder.add(item);
             }
         }
 
