@@ -1,0 +1,69 @@
+{
+  "criteria": {
+    "place": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:soul_campfire"
+                ],
+                "nbt": "{Items:[{Slot:0b,id:\"minecraft:porkchop\"},{Slot:1b,id:\"minecraft:porkchop\"},{Slot:2b,id:\"minecraft:porkchop\"},{Slot:3b,id:\"minecraft:porkchop\"}]}"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "minecraft:porkchop"
+              ]
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:soul_campfire"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 4,
+          "id": "minecraft:porkchop"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.porkchops_in_soul_campfire",
+    "with": [
+      {
+        "translate": "block.minecraft.soul_campfire"
+      }
+    ]
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "place"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:nether",
+    "bingo:combat"
+  ]
+}

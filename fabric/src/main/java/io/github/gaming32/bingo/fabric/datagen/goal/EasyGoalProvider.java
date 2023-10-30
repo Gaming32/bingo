@@ -10,12 +10,16 @@ import io.github.gaming32.bingo.data.icons.*;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -33,7 +37,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -505,7 +511,37 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER));
         addGoal(obtainItemGoal(id("blackstone"), Items.BLACKSTONE, 2, 6)
             .tags(BingoTags.NETHER));
-        // TODO: fill 4 slots of soul campfire with porkchops
+        {
+            final List<Tag> slots = new ArrayList<>(4);
+            for (byte slot = 0; slot < 4; slot++) {
+                slots.add(BingoUtil.compound(Map.of(
+                    "id", StringTag.valueOf(BuiltInRegistries.ITEM.getKey(Items.PORKCHOP).toString()),
+                    "Slot", ByteTag.valueOf(slot)
+                )));
+            }
+            addGoal(BingoGoal.builder(id("porkchops_in_soul_campfire"))
+                .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+                    LocationPredicate.Builder.location().setBlock(
+                        BlockPredicate.Builder.block()
+                            .of(Blocks.SOUL_CAMPFIRE)
+                            .hasNbt(BingoUtil.compound(Map.of(
+                                "Items", BingoUtil.list(slots)
+                            )))
+                    ),
+                    ItemPredicate.Builder.item().of(Items.PORKCHOP)
+                ))
+                .name(Component.translatable(
+                    "bingo.goal.porkchops_in_soul_campfire",
+                    Blocks.SOUL_CAMPFIRE.getName()
+                ))
+                .icon(new CycleIcon(
+                    ItemIcon.ofItem(Items.SOUL_CAMPFIRE),
+                    new ItemIcon(new ItemStack(Items.PORKCHOP, 4))
+                ))
+                .reactant("pacifist")
+                .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.COMBAT)
+            );
+        }
         addGoal(obtainItemGoal(id("soul_lantern"), Items.SOUL_LANTERN)
             .tags(BingoTags.NETHER));
         // TODO: open door with target block from 10 blocks away
