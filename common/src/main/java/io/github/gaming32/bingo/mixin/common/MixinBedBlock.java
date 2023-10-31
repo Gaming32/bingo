@@ -1,8 +1,13 @@
 package io.github.gaming32.bingo.mixin.common;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.datafixers.util.Either;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,5 +44,25 @@ public class MixinBedBlock {
         if (player instanceof ServerPlayer serverPlayer) {
             BingoTriggers.INTENTIONAL_GAME_DESIGN.trigger(serverPlayer, pos);
         }
+    }
+
+    @WrapOperation(
+        method = "use",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/player/Player;startSleepInBed(Lnet/minecraft/core/BlockPos;)Lcom/mojang/datafixers/util/Either;"
+        )
+    )
+    private Either<Player.BedSleepingProblem, Unit> sleptTrigger(
+        Player instance, BlockPos bedPos, Operation<Either<Player.BedSleepingProblem, Unit>> original,
+        @Local BlockState state, @Local InteractionHand hand
+    ) {
+        final var result = original.call(instance, bedPos);
+        if (!(instance instanceof ServerPlayer serverPlayer)) {
+            return result;
+        }
+        return result.ifRight(unit -> BingoTriggers.SLEPT.trigger(
+            serverPlayer, bedPos, instance.getItemInHand(hand)
+        ));
     }
 }

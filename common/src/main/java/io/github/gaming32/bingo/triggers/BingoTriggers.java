@@ -1,11 +1,11 @@
 package io.github.gaming32.bingo.triggers;
 
-import io.github.gaming32.bingo.subpredicates.BingoPlayerPredicate;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
-import net.minecraft.core.Holder;
-import net.minecraft.stats.StatType;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DistancePredicate;
+import net.minecraft.advancements.critereon.DistanceTrigger;
+import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -46,6 +46,7 @@ public class BingoTriggers {
     public static final GrowBeeNestTreeTrigger GROW_BEE_NEST_TREE = register("bingo:grow_bee_nest_tree", new GrowBeeNestTreeTrigger());
     public static final BounceOnBlockTrigger BOUNCE_ON_BLOCK = register("bingo:bounce_on_block", new BounceOnBlockTrigger());
     public static final DestroyVehicleTrigger DESTROY_VEHICLE = register("bingo:destroy_vehicle", new DestroyVehicleTrigger());
+    public static final ItemUsedOnLocationTrigger SLEPT = register("bingo:slept", new ItemUsedOnLocationTrigger());
 
     public static void load() {
     }
@@ -56,21 +57,9 @@ public class BingoTriggers {
         );
     }
 
-    /**
-     * @deprecated Use {@link RelativeStatsTrigger} instead
-     */
-    @Deprecated
-    public static <T> Criterion<PlayerTrigger.TriggerInstance> statChanged(StatType<T> type, Holder.Reference<T> holder, MinMaxBounds.Ints range) {
-        return CriteriaTriggers.TICK.createCriterion(
-            new PlayerTrigger.TriggerInstance(Optional.of(
-                EntityPredicate.wrap(
-                    EntityPredicate.Builder.entity().subPredicate(
-                        BingoPlayerPredicate.Builder.player()
-                            .addRelativeStat(type, holder, range)
-                            .build()
-                    )
-                )
-            ))
-        );
+    public static Criterion<ItemUsedOnLocationTrigger.TriggerInstance> slept(LootItemCondition... bedLocation) {
+        return SLEPT.createCriterion(new ItemUsedOnLocationTrigger.TriggerInstance(
+            Optional.empty(), Optional.of(ContextAwarePredicate.create(bedLocation))
+        ));
     }
 }

@@ -26,6 +26,7 @@ public final class BingoConditions {
     public static final RegistrySupplier<LootItemConditionType> WEARING_DIFFERENT_ARMOR = register("wearing_different_armor", () -> WearingDifferentArmorCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> ONE_BY_ONE_HOLE = register("one_by_one_hole", () -> OneByOneHoleCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> PASSENGERS = register("passengers", () -> PassengersCondition.CODEC);
+    public static final RegistrySupplier<LootItemConditionType> VILLAGER_OWNERSHIP = register("villager_ownership", () -> VillagerOwnershipCondition.CODEC);
 
     public static void load() {
     }

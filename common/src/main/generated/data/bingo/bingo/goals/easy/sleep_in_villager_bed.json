@@ -1,0 +1,55 @@
+{
+  "criteria": {
+    "sleep": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "bingo:villager_ownership",
+            "occupancy": "is_occupied"
+          }
+        ]
+      },
+      "trigger": "bingo:slept"
+    }
+  },
+  "difficulty": 1,
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:red_bed"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "entity": "minecraft:villager",
+        "item": {
+          "Count": 1,
+          "id": "minecraft:villager_spawn_egg"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.sleep_in_villager_bed",
+    "with": [
+      {
+        "translate": "entity.minecraft.villager"
+      }
+    ]
+  },
+  "reactant": "sleep",
+  "requirements": [
+    [
+      "sleep"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:village",
+    "bingo:overworld"
+  ]
+}

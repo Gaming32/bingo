@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
@@ -33,10 +32,9 @@ public record DistanceFromSpawnCondition(Optional<DistancePredicate> distance) i
 
     @Override
     public boolean test(LootContext lootContext) {
-        final Entity entity = lootContext.getParam(LootContextParams.THIS_ENTITY);
         final Vec3 origin = lootContext.getParam(LootContextParams.ORIGIN);
-        final GlobalPos spawnPoint = CompassItem.getSpawnPosition(entity.level());
-        if (spawnPoint == null || spawnPoint.dimension() != entity.level().dimension()) { // Maybe some mod does something interesting?
+        final GlobalPos spawnPoint = CompassItem.getSpawnPosition(lootContext.getLevel());
+        if (spawnPoint == null || spawnPoint.dimension() != lootContext.getLevel().dimension()) { // Maybe some mod does something interesting?
             return false;
         }
         final Vec3 spawnVec = Vec3.atCenterOf(spawnPoint.pos());
@@ -49,6 +47,6 @@ public record DistanceFromSpawnCondition(Optional<DistancePredicate> distance) i
     @NotNull
     @Override
     public Set<LootContextParam<?>> getReferencedContextParams() {
-        return Set.of(LootContextParams.THIS_ENTITY, LootContextParams.ORIGIN);
+        return Set.of(LootContextParams.ORIGIN);
     }
 }

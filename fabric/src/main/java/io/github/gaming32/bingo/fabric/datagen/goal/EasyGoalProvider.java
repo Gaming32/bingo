@@ -1,9 +1,6 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
-import io.github.gaming32.bingo.conditions.BlockPatternCondition;
-import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
-import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
-import io.github.gaming32.bingo.conditions.PassengersCondition;
+import io.github.gaming32.bingo.conditions.*;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.*;
@@ -27,6 +24,7 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -594,6 +592,21 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         // TODO: hatch chicken from egg
         // TODO: empty cauldron without buckets or bottles
         // TODO: sleep in villager's bed
+        addGoal(BingoGoal.builder(id("sleep_in_villager_bed"))
+            .criterion("sleep", BingoTriggers.slept(
+                new VillagerOwnershipCondition(PoiManager.Occupancy.IS_OCCUPIED, Optional.empty())
+            ))
+            .name(Component.translatable(
+                "bingo.goal.sleep_in_villager_bed",
+                EntityType.VILLAGER.getDescription()
+            ))
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.RED_BED),
+                EntityIcon.ofSpawnEgg(EntityType.VILLAGER)
+            ))
+            .reactant("sleep")
+            .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD)
+        );
         // TODO: set fire to villager's house
         addGoal(obtainItemGoal(id("emerald"), Items.EMERALD)
             .tags(BingoTags.OVERWORLD));
