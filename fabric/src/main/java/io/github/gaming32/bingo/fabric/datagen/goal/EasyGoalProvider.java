@@ -591,7 +591,6 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         );
         // TODO: hatch chicken from egg
         // TODO: empty cauldron without buckets or bottles
-        // TODO: sleep in villager's bed
         addGoal(BingoGoal.builder(id("sleep_in_villager_bed"))
             .criterion("sleep", BingoTriggers.slept(
                 new VillagerOwnershipCondition(PoiManager.Occupancy.IS_OCCUPIED, Optional.empty())
