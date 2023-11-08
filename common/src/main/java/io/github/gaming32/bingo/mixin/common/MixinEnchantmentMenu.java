@@ -19,7 +19,7 @@ public class MixinEnchantmentMenu {
     @Shadow @Final public int[] costs;
 
     @Inject(
-        method = "method_17410",
+        method = "lambda$clickMenuButton$1",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/advancements/critereon/EnchantedItemTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/ItemStack;I)V",
