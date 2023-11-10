@@ -40,7 +40,6 @@ public class BingoTriggers {
     public static final GrowFeatureTrigger GROW_FEATURE = register("bingo:grow_feature", new GrowFeatureTrigger());
     public static final EntityTrigger MOB_BROKE_CROSSBOW = register("bingo:mob_broke_crossbow", new EntityTrigger());
     public static final EntityTrigger STUN_RAVAGER = register("bingo:stun_ravager", new EntityTrigger());
-    public static final ConsumeMilkBucketTrigger CONSUME_MILK_BUCKET = register("bingo:consume_milk_bucket", new ConsumeMilkBucketTrigger());
     public static final KeyPressedTrigger KEY_PRESSED = register("bingo:key_pressed", new KeyPressedTrigger());
     public static final RelativeStatsTrigger RELATIVE_STATS = register("bingo:relative_stats", new RelativeStatsTrigger());
     public static final GrowBeeNestTreeTrigger GROW_BEE_NEST_TREE = register("bingo:grow_bee_nest_tree", new GrowBeeNestTreeTrigger());

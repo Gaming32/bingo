@@ -2,6 +2,11 @@
   "criteria": {
     "cure": {
       "conditions": {
+        "item": {
+          "items": [
+            "minecraft:milk_bucket"
+          ]
+        },
         "player": [
           {
             "condition": "bingo:has_any_effect",
@@ -9,7 +14,7 @@
           }
         ]
       },
-      "trigger": "bingo:consume_milk_bucket"
+      "trigger": "minecraft:consume_item"
     }
   },
   "difficulty": 1,

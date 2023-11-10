@@ -31,7 +31,6 @@
     "MixinItemStack",
     "MixinLivingEntity",
     "MixinMapItem",
-    "MixinMilkBucketItem",
     "MixinMushroomBlock",
     "MixinOcelot",
     "MixinPig",

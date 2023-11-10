@@ -610,12 +610,15 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("emerald"), Items.EMERALD)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("milk_cure"))
-            .criterion("cure", BingoTriggers.CONSUME_MILK_BUCKET.createCriterion(
-                new ConsumeMilkBucketTrigger.TriggerInstance(
+            .criterion("cure", CriteriaTriggers.CONSUME_ITEM.createCriterion(
+                new ConsumeItemTrigger.TriggerInstance(
                     Optional.of(ContextAwarePredicate.create(
                         new HasAnyEffectCondition(LootContext.EntityTarget.THIS)
                     )),
-                    Optional.empty()
+                    Optional.of(ItemPredicate.Builder.item()
+                        .of(Items.MILK_BUCKET)
+                        .build()
+                    )
                 )
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
