@@ -71,6 +71,22 @@ public class BingoCommand {
         Commands.CommandSelection selection
     ) {
         final CommandNode<CommandSourceStack> bingoCommand = dispatcher.register(literal("bingo")
+//            .then(literal("test")
+//                .executes(ctx -> {
+//                    final BlockPos pos = BlockPos.containing(ctx.getSource().getPosition());
+//                    ctx.getSource().getLevel()
+//                        .structureManager()
+//                        .getStructureWithPieceAt(pos, StructureTags.VILLAGE)
+//                        .getPieces()
+//                        .stream()
+//                        .filter(p -> p.getBoundingBox().isInside(pos))
+//                        .filter(p -> p.getType() == StructurePieceType.JIGSAW)
+//                        .map(p -> (PoolElementStructurePiece)p)
+//                        .forEach(System.out::println);
+//                    System.out.println();
+//                    return 1;
+//                })
+//            )
             .then(literal("start")
                 .requires(source -> source.hasPermission(2))
             )

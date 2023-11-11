@@ -42,8 +42,11 @@ public enum StairwayToHeavenCondition implements LootItemCondition {
         }
 
         final BlockState originState = level.getBlockState(origin);
-        if (originState.is(BlockTags.STAIRS)) {
-            return scan(level, origin, originState.getValue(StairBlock.FACING));
+        if (
+            originState.is(BlockTags.STAIRS) &&
+                scan(level, origin, originState.getValue(StairBlock.FACING).getOpposite())
+        ) {
+            return true;
         }
 
         return scan(level, origin.north(), Direction.NORTH)

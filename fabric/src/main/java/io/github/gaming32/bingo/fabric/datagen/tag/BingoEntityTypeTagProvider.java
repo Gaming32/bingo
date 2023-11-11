@@ -32,5 +32,10 @@ public class BingoEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
             EntityType.TRADER_LLAMA,
             EntityType.WOLF
         );
+
+        getOrCreateTagBuilder(BingoEntityTypeTags.BOATS).add(
+            EntityType.BOAT,
+            EntityType.CHEST_BOAT
+        );
     }
 }

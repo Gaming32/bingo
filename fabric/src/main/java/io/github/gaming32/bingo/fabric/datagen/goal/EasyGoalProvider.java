@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.conditions.*;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.*;
+import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
@@ -427,8 +428,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .criterion("use", CriteriaTriggers.PLAYER_INTERACTED_WITH_ENTITY.createCriterion(
                 new PlayerInteractTrigger.TriggerInstance(
                     Optional.empty(), Optional.empty(),
-                    Optional.of(EntityPredicate.wrap(
-                        EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(EntityType.BOAT)).build()
+                    Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity()
+                        .entityType(EntityTypePredicate.of(BingoEntityTypeTags.BOATS))
+                        .build()
                     ))
                 )
             ))

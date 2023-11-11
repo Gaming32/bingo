@@ -11,6 +11,7 @@ public final class BingoEntityTypeTags {
     }
 
     public static final TagKey<EntityType<?>> TAMABLE = create("tamable");
+    public static final TagKey<EntityType<?>> BOATS = create("boats");
 
     private static TagKey<EntityType<?>> create(String name) {
         return TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(Bingo.MOD_ID, name));
