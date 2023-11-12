@@ -23,8 +23,8 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0-rc.5"))
-    implementation(include("io.github.llamalad7:mixinextras-forge:0.2.0-rc.5"))
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.2.0"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:0.2.0"))
 
 //    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-forge:12.0.652")
 //    modRuntimeOnly("mezz.jei:jei-1.20.1-forge:15.2.0.27")
