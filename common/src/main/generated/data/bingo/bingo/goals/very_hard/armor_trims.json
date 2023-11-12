@@ -12,10 +12,7 @@
   "difficulty": 4,
   "icon": {
     "type": "bingo:item_tag_cycle",
-    "count": {
-      "bingo_type": "bingo:sub",
-      "value": "count"
-    },
+    "count": 5,
     "tag": "minecraft:trim_templates"
   },
   "name": {

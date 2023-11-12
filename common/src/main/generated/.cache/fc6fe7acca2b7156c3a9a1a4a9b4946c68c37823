@@ -139,7 +139,7 @@ d249bcff0ad35ccb803f77921a24db7f51a13236 data/bingo/bingo/goals/easy/vine.json
 f9382bd438c6f770bd0a54bd24d683b10325a47e data/bingo/bingo/goals/hard/6x6scaffolding.json
 d49bec36b256f18c038a5811ecc450d19cafddde data/bingo/bingo/goals/hard/all_pickaxes.json
 9fcc3e4a652536d9c8c1d6871d717de11077d4dc data/bingo/bingo/goals/hard/all_swords.json
-b8c6bbbf58617ba55f215b32162ae61c32b67f4b data/bingo/bingo/goals/hard/armor_trims.json
+759cca784b676ac490cf853d3244b347500365e4 data/bingo/bingo/goals/hard/armor_trims.json
 77ff2b99fd3da982616a06f138e7f48483aecdbf data/bingo/bingo/goals/hard/bed_row.json
 bca33bdd68ab09a5a0506fb18c1527801451fc7f data/bingo/bingo/goals/hard/bonemealable_blocks.json
 100ed94e55bb5ab2d964730796145c8410ba33b0 data/bingo/bingo/goals/hard/breed_pandas.json
@@ -400,7 +400,7 @@ b2aac44e6dc123676a76bc399ea2891cf0f8811e data/bingo/bingo/goals/very_hard/all_dy
 82ae043dd7df5a7273dc97b1380a770e86eb1378 data/bingo/bingo/goals/very_hard/all_goat_horns.json
 03c0fba139270cda9173a08045316a2b4ca936bc data/bingo/bingo/goals/very_hard/all_mineral_blocks.json
 cccc860b6a6cd15e375fb2f57998cca9cb26eb43 data/bingo/bingo/goals/very_hard/any_head.json
-32b900b33b94e1e41e285c080454daa403582c1c data/bingo/bingo/goals/very_hard/armor_trims.json
+c965c4ede6a1a62d6b6460b13e781065a3e326c6 data/bingo/bingo/goals/very_hard/armor_trims.json
 ddddfbb1b13d934a3180b771b17ecc46a7106a17 data/bingo/bingo/goals/very_hard/beacon_regen.json
 c5b3714e66440c7b7575e238f2d3046b40762c1a data/bingo/bingo/goals/very_hard/bed_row.json
 09cafef548d2ac85e3ab22a5172494b4606f7c24 data/bingo/bingo/goals/very_hard/blue_ice.json

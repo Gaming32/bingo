@@ -139,7 +139,7 @@ public abstract class DifficultyGoalProvider {
                 .progress("obtain")
                 .tags(BingoTags.ITEM)
                 .name(Component.translatable(translationKey, minCount))
-                .icon(new ItemTagCycleIcon(tag), subber -> subber.sub("count", "count"));
+                .icon(new ItemTagCycleIcon(tag, minCount));
         }
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minCount, maxCount))
