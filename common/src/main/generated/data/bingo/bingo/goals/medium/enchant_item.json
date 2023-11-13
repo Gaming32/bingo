@@ -6,7 +6,7 @@
       "trigger": "minecraft:enchanted_item"
     }
   },
-  "difficulty": 2,
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
     "value": {

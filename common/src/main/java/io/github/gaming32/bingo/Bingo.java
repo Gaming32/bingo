@@ -12,6 +12,7 @@ import dev.architectury.registry.registries.RegistrarManager;
 import dev.architectury.utils.Env;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.conditions.BingoConditions;
+import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.icons.GoalIconType;
@@ -88,9 +89,14 @@ public class Bingo {
         );
         ReloadListenerRegistry.register(
             PackType.SERVER_DATA,
+            new BingoDifficulty.ReloadListener(),
+            BingoDifficulty.ReloadListener.ID
+        );
+        ReloadListenerRegistry.register(
+            PackType.SERVER_DATA,
             new BingoGoal.ReloadListener(),
             BingoGoal.ReloadListener.ID,
-            List.of(BingoTag.ReloadListener.ID)
+            List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
         );
 
         BingoNetwork.load();

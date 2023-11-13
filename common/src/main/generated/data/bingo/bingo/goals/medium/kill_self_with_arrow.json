@@ -17,7 +17,7 @@
       "trigger": "bingo:kill_self"
     }
   },
-  "difficulty": 2,
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
     "value": {

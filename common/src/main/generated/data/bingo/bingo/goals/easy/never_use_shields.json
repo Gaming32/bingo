@@ -9,7 +9,7 @@
       "trigger": "minecraft:using_item"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
     "value": {

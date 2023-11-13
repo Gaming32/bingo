@@ -52,7 +52,7 @@
       "trigger": "bingo:total_count_inventory_changed"
     }
   },
-  "difficulty": 0,
+  "difficulty": "bingo:very_easy",
   "icon": {
     "type": "bingo:cycle",
     "value": [

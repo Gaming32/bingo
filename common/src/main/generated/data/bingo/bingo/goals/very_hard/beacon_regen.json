@@ -9,7 +9,7 @@
       "trigger": "bingo:beacon_effect"
     }
   },
-  "difficulty": 4,
+  "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:block",
     "block": {

@@ -6,6 +6,7 @@ import com.google.common.collect.Table;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.OneByOneHoleCondition;
 import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
+import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.*;
@@ -54,7 +55,7 @@ import java.util.function.Consumer;
 
 public class MediumGoalProvider extends DifficultyGoalProvider {
     public MediumGoalProvider(Consumer<BingoGoal> goalAdder) {
-        super(2, "medium/", goalAdder);
+        super(BingoDifficulties.MEDIUM, goalAdder);
     }
 
     @Override

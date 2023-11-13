@@ -20,7 +20,7 @@
       "trigger": "minecraft:player_interacted_with_entity"
     }
   },
-  "difficulty": 3,
+  "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:item",
     "value": {

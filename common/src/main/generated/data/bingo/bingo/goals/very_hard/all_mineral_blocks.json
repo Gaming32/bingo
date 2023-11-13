@@ -7,7 +7,7 @@
       "trigger": "bingo:mineral_pillar"
     }
   },
-  "difficulty": 4,
+  "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:item_tag_cycle",
     "tag": "bingo:all_mineral_blocks"

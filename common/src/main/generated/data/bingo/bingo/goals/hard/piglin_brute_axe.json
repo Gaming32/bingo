@@ -25,7 +25,7 @@
       "trigger": "minecraft:thrown_item_picked_up_by_entity"
     }
   },
-  "difficulty": 3,
+  "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:item",
     "value": {

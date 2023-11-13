@@ -31,7 +31,7 @@
       "trigger": "bingo:relative_stats"
     }
   },
-  "difficulty": 2,
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
     "value": {

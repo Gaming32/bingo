@@ -28,7 +28,7 @@
       "trigger": "minecraft:inventory_changed"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
     "value": [

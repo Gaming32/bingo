@@ -4,7 +4,7 @@
       "trigger": "bingo:grow_bee_nest_tree"
     }
   },
-  "difficulty": 2,
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
     "value": {

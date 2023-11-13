@@ -23,7 +23,7 @@
       "trigger": "bingo:entity_die_near_player"
     }
   },
-  "difficulty": 4,
+  "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:entity",
     "entity": "minecraft:endermite",

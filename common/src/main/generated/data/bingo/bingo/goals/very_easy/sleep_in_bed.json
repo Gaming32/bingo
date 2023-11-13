@@ -4,7 +4,7 @@
       "trigger": "minecraft:slept_in_bed"
     }
   },
-  "difficulty": 0,
+  "difficulty": "bingo:very_easy",
   "icon": {
     "type": "bingo:item",
     "value": {

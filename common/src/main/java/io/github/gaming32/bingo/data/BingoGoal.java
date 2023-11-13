@@ -35,14 +35,8 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class BingoGoal {
-    private static Map<ResourceLocation, BingoGoal> goals = Collections.emptyMap();
-    private static List<? extends List<BingoGoal>> goalsByDifficulty = List.of(
-        Collections.emptyList(),
-        Collections.emptyList(),
-        Collections.emptyList(),
-        Collections.emptyList(),
-        Collections.emptyList()
-    );
+    private static Map<ResourceLocation, BingoGoal> goals = Map.of();
+    private static Map<Integer, List<BingoGoal>> goalsByDifficulty = Map.of();
 
     private final ResourceLocation id;
     private final Map<String, BingoSub> subs;
@@ -63,7 +57,7 @@ public class BingoGoal {
     private final List<String> antisynergy;
     private final List<String> catalyst;
     private final List<String> reactant;
-    private final int difficulty;
+    private final BingoDifficulty.Holder difficulty;
 
     private final Set<ResourceLocation> tagIds;
     private final BingoTag.SpecialType specialType;
@@ -84,7 +78,7 @@ public class BingoGoal {
         List<String> antisynergy,
         List<String> catalyst,
         List<String> reactant,
-        int difficulty
+        BingoDifficulty.Holder difficulty
     ) {
         this.id = id;
         this.subs = ImmutableMap.copyOf(subs);
@@ -147,7 +141,10 @@ public class BingoGoal {
     }
 
     public static List<BingoGoal> getGoalsByDifficulty(int difficulty) {
-        return goalsByDifficulty.get(difficulty);
+        if (difficulty < 0) {
+            throw new IllegalArgumentException("Difficulties < 0 aren't allowed");
+        }
+        return goalsByDifficulty.getOrDefault(difficulty, List.of());
     }
 
     public static BingoGoal deserialize(ResourceLocation id, JsonObject json) {
@@ -163,6 +160,13 @@ public class BingoGoal {
         final AdvancementRequirements requirements = reqArray.isEmpty()
             ? AdvancementRequirements.allOf(criteria.keySet())
             : AdvancementRequirements.fromJson(reqArray, criteria.keySet());
+
+        final ResourceLocation difficultyId = new ResourceLocation(GsonHelper.getAsString(json, "difficulty"));
+        final BingoDifficulty.Holder difficulty = BingoDifficulty.byId(difficultyId);
+        if (difficulty == null) {
+            // TODO: Use JsonParseException
+            throw new JsonSyntaxException("Unknown difficulty: " + difficultyId);
+        }
 
         return new BingoGoal(
             id,
@@ -193,7 +197,7 @@ public class BingoGoal {
             getListString(json, "antisynergy"),
             getListString(json, "catalyst"),
             getListString(json, "reactant"),
-            GsonHelper.getAsInt(json, "difficulty")
+            difficulty
         );
     }
 
@@ -262,7 +266,7 @@ public class BingoGoal {
         serializeListString(result, "catalyst", catalyst);
         serializeListString(result, "reactant", reactant);
 
-        result.addProperty("difficulty", difficulty);
+        result.addProperty("difficulty", difficulty.id().toString());
 
         return result;
     }
@@ -342,7 +346,7 @@ public class BingoGoal {
         return reactant;
     }
 
-    public int getDifficulty() {
+    public BingoDifficulty.Holder getDifficulty() {
         return difficulty;
     }
 
@@ -474,7 +478,7 @@ public class BingoGoal {
         private ImmutableList.Builder<String> antisynergy = ImmutableList.builder();
         private final ImmutableList.Builder<String> catalyst = ImmutableList.builder();
         private final ImmutableList.Builder<String> reactant = ImmutableList.builder();
-        private OptionalInt difficulty;
+        private Optional<BingoDifficulty.Holder> difficulty;
 
         private Builder(ResourceLocation id) {
             this.id = id;
@@ -517,7 +521,9 @@ public class BingoGoal {
 
         public Builder tags(ResourceLocation... tags) {
             for (ResourceLocation tag : tags) {
-                this.tags.add(BingoTag.builder(tag).build());
+                this.tags.add(Optional.ofNullable(BingoTag.getTag(tag))
+                    .orElseGet(() -> BingoTag.builder(tag).build())
+                );
             }
             return this;
         }
@@ -601,8 +607,9 @@ public class BingoGoal {
             return this;
         }
 
-        public Builder difficulty(int difficulty) {
-            this.difficulty = OptionalInt.of(difficulty);
+        public Builder difficulty(ResourceLocation difficulty) {
+            this.difficulty = Optional.ofNullable(BingoDifficulty.byId(difficulty))
+                .or(() -> Optional.of(BingoDifficulty.builder(difficulty).number(0).build()));
             return this;
         }
 
@@ -646,27 +653,24 @@ public class BingoGoal {
         @Override
         protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
             final ImmutableMap.Builder<ResourceLocation, BingoGoal> result = ImmutableMap.builder();
-            final List<ImmutableList.Builder<BingoGoal>> byDifficulty = List.of(
-                ImmutableList.builder(),
-                ImmutableList.builder(),
-                ImmutableList.builder(),
-                ImmutableList.builder(),
-                ImmutableList.builder()
-            );
+            final Map<Integer, ImmutableList.Builder<BingoGoal>> byDifficulty = new HashMap<>();
             for (final var entry : jsons.entrySet()) {
                 try {
                     final JsonObject json = GsonHelper.convertToJsonObject(entry.getValue(), "bingo goal");
                     final BingoGoal goal = deserialize(entry.getKey(), json);
                     result.put(entry.getKey(), goal);
-                    byDifficulty.get(goal.difficulty).add(goal);
+                    byDifficulty.computeIfAbsent(goal.difficulty.difficulty().number(), k -> ImmutableList.builder()).add(goal);
                 } catch (Exception e) {
                     Bingo.LOGGER.error("Parsing error in bingo goal {}: {}", entry.getKey(), e.getMessage());
                 }
             }
             goals = result.build();
-            goalsByDifficulty = byDifficulty.stream()
-                .map(ImmutableList.Builder::build)
-                .toList();
+            goalsByDifficulty = byDifficulty.entrySet()
+                .stream()
+                .collect(ImmutableMap.toImmutableMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().build()
+                ));
             Bingo.LOGGER.info("Loaded {} bingo goals", goals.size());
         }
     }

@@ -45,13 +45,13 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public abstract class DifficultyGoalProvider {
-    private final int difficulty;
+    private final ResourceLocation difficulty;
     private final String prefix;
     private final Consumer<BingoGoal> goalAdder;
 
-    protected DifficultyGoalProvider(int difficulty, String prefix, Consumer<BingoGoal> goalAdder) {
+    protected DifficultyGoalProvider(ResourceLocation difficulty, Consumer<BingoGoal> goalAdder) {
         this.difficulty = difficulty;
-        this.prefix = prefix;
+        this.prefix = difficulty.getPath() + '/';
         this.goalAdder = goalAdder;
     }
 

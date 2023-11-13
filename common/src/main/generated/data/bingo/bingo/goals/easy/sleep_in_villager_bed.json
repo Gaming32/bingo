@@ -12,7 +12,7 @@
       "trigger": "bingo:slept"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
     "value": [

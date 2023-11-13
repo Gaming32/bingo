@@ -8,7 +8,7 @@
       "trigger": "bingo:has_some_items_from_tag"
     }
   },
-  "difficulty": 4,
+  "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:item_tag_cycle",
     "tag": "bingo:armor/chestplates"

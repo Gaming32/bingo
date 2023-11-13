@@ -14,7 +14,7 @@
       "trigger": "bingo:equip_item"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
     "value": {

@@ -11,7 +11,7 @@
       "trigger": "minecraft:consume_item"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item_tag_cycle",
     "tag": "bingo:meat"

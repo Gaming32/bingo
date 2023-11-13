@@ -11,7 +11,7 @@
       "trigger": "bingo:bed_row"
     }
   },
-  "difficulty": 4,
+  "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:item",
     "value": {

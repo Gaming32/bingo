@@ -5,7 +5,7 @@
       "trigger": "minecraft:bred_animals"
     }
   },
-  "difficulty": 0,
+  "difficulty": "bingo:very_easy",
   "icon": {
     "type": "bingo:item",
     "value": {

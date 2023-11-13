@@ -9,7 +9,7 @@
       "trigger": "bingo:intentional_game_design"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
     "value": {

@@ -15,7 +15,7 @@
       "trigger": "minecraft:summoned_entity"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:entity",
     "entity": "minecraft:snow_golem",

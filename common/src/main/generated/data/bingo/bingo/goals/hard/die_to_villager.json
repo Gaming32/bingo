@@ -15,7 +15,7 @@
       "trigger": "bingo:entity_killed_player"
     }
   },
-  "difficulty": 3,
+  "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:entity",
     "entity": "minecraft:villager",

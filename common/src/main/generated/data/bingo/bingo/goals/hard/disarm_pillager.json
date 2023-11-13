@@ -15,7 +15,7 @@
       "trigger": "bingo:mob_broke_crossbow"
     }
   },
-  "difficulty": 3,
+  "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:item",
     "value": {

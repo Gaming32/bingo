@@ -16,7 +16,7 @@
       "trigger": "minecraft:location"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
     "value": {

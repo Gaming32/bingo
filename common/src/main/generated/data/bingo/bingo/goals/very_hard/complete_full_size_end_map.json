@@ -13,7 +13,7 @@
       "trigger": "bingo:completed_map"
     }
   },
-  "difficulty": 4,
+  "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:item",
     "value": {

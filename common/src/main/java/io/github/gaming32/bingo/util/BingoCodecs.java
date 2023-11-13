@@ -50,4 +50,13 @@ public final class BingoCodecs {
             value -> value.<Either<Unit, T>>map(Either::right).orElseGet(() -> Either.left(Unit.INSTANCE))
         );
     }
+
+    public static Codec<Integer> atLeast(int minInclusive) {
+        return ExtraCodecs.validate(
+            Codec.INT,
+            value -> value >= minInclusive
+                ? DataResult.success(value)
+                : DataResult.error(() -> "Value must be greater than " + minInclusive + ": " + value)
+        );
+    }
 }

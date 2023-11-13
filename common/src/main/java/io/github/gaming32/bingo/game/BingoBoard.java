@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.game;
 
+import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.util.BingoUtil;
@@ -80,7 +81,14 @@ public class BingoBoard {
         final Set<String> catalysts = new HashSet<>();
 
         for (int i = 0; i < size * size; i++) {
-            List<BingoGoal> possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i]);
+            final Iterator<Integer> difficultiesToTry = BingoDifficulty.getNumbers()
+                .headSet(difficultyLayout[i], true)
+                .descendingIterator();
+            if (!difficultiesToTry.hasNext()) {
+                throw new IllegalArgumentException("No goals with difficulty " + difficultyLayout[i] + " or easier");
+            }
+
+            List<BingoGoal> possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
 
             int failSafe = 0;
             BingoGoal goal;
@@ -95,12 +103,12 @@ public class BingoBoard {
 
                 failSafe++;
 
-                if (failSafe >= 500) {
-                    if (difficultyLayout[i] == 0) {
+                while (failSafe >= 500 || possibleGoals.isEmpty()) {
+                    if (!difficultiesToTry.hasNext()) {
                         throw new IllegalArgumentException("No valid board layout was found for the specified size and difficulty");
                     }
 
-                    possibleGoals = BingoGoal.getGoalsByDifficulty(--difficultyLayout[i]);
+                    possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
                     failSafe = 1;
                 }
 
@@ -208,66 +216,25 @@ public class BingoBoard {
     private static int[] generateDifficulty(int size, int difficulty, RandomSource rand) {
         final int[] layout = new int[size * size];
 
-        final int amountOfVeryHard, amountOfHard, amountOfMedium, amountOfEasy;
-        switch (difficulty) {
-            case 1 -> {
-                amountOfVeryHard = 0;
-                amountOfHard = 0;
-                amountOfMedium = 0;
-                amountOfEasy = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
-            }
-            case 2 -> {
-                amountOfVeryHard = 0;
-                amountOfHard = 0;
-                amountOfMedium = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
-                amountOfEasy = size * size - amountOfMedium;
-            }
-            case 3 -> {
-                amountOfVeryHard = 0;
-                amountOfHard = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
-                amountOfMedium = size * size - amountOfHard;
-                amountOfEasy = size * size - amountOfHard - amountOfMedium;
-            }
-            case 4 -> {
-                amountOfVeryHard = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
-                amountOfHard = size * size - amountOfVeryHard;
-                amountOfMedium = size * size - amountOfHard - amountOfVeryHard;
-                amountOfEasy = size * size - amountOfHard - amountOfMedium - amountOfVeryHard;
-            }
-            default -> {
-                amountOfVeryHard = 0;
-                amountOfHard = 0;
-                amountOfMedium = 0;
-                amountOfEasy = 0;
+        final Iterator<Integer> available = BingoDifficulty.getNumbers()
+            .headSet(difficulty, true)
+            .descendingIterator();
+        if (!available.hasNext()) {
+            throw new IllegalArgumentException("No difficulty exists with number " + difficulty);
+        }
+        final int difficulty1 = available.next();
+        if (!available.hasNext()) {
+            Arrays.fill(layout, difficulty1);
+        } else {
+            final int difficulty2 = available.next();
+            final int amountOf1 = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
+            final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(size * size), rand);
+            Arrays.fill(layout, difficulty2);
+            for (int i = 0; i < amountOf1; i++) {
+                layout[indices[i]] = difficulty1;
             }
         }
-
-        distributeDifficulty(size, layout, amountOfVeryHard, 4, rand);
-        distributeDifficulty(size, layout, amountOfHard, 3, rand);
-        distributeDifficulty(size, layout, amountOfMedium, 2, rand);
-        distributeDifficulty(size, layout, amountOfEasy, 1, rand);
-
         return layout;
-    }
-
-    private static void distributeDifficulty(int size, int[] layout, int amount, int difficulty, RandomSource rand) {
-        for (int i = 0; i < amount; i++) {
-            boolean cont;
-            int failSafe = 0;
-
-            do {
-                cont = true;
-                failSafe++;
-
-                final int rng = rand.nextInt(size * size);
-                if (layout[rng] == 0) {
-                    layout[rng] = difficulty;
-                } else {
-                    cont = false;
-                    if (failSafe >= 500) break;
-                }
-            } while (!cont);
-        }
     }
 
     public int getSize() {

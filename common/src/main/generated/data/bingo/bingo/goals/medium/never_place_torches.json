@@ -12,7 +12,7 @@
       "trigger": "minecraft:placed_block"
     }
   },
-  "difficulty": 2,
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
     "value": {
