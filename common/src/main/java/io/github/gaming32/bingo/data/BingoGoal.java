@@ -422,9 +422,6 @@ public class BingoGoal {
         Map<String, JsonElement> referable,
         RandomSource rand
     ) {
-        if (referable.isEmpty()) {
-            return value;
-        }
         if (value.isJsonArray()) {
             final JsonArray array = value.getAsJsonArray();
             final JsonArray result = new JsonArray();
