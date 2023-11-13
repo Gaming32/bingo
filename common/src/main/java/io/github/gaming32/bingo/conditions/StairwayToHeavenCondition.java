@@ -63,23 +63,15 @@ public enum StairwayToHeavenCondition implements LootItemCondition {
         final Direction stairDirection = direction.getOpposite();
         final BlockPos.MutableBlockPos currentPos = startPos.mutable();
         while (true) {
-            if (!level.isInWorldBounds(currentPos)) {
-                return false;
-            }
-            if (
-                generator.getFirstFreeHeight(
-                    currentPos.getX(), currentPos.getZ(), Heightmap.Types.WORLD_SURFACE_WG, level, randomState
-                ) >= currentPos.getY()
-            ) {
-                return true;
-            }
             final BlockState state = level.getBlockState(currentPos);
             if (
                 !state.is(BlockTags.STAIRS) ||
                     state.getValue(StairBlock.FACING) != stairDirection ||
                     state.getValue(StairBlock.HALF) != Half.BOTTOM
             ) {
-                return false;
+                return generator.getFirstOccupiedHeight(
+                    currentPos.getX(), currentPos.getZ(), Heightmap.Types.WORLD_SURFACE_WG, level, randomState
+                ) >= currentPos.getY();
             }
             currentPos.move(direction.getStepX(), -1, direction.getStepZ());
         }
