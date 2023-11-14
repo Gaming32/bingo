@@ -164,8 +164,7 @@ public class BingoGoal {
         final ResourceLocation difficultyId = new ResourceLocation(GsonHelper.getAsString(json, "difficulty"));
         final BingoDifficulty.Holder difficulty = BingoDifficulty.byId(difficultyId);
         if (difficulty == null) {
-            // TODO: Use JsonParseException
-            throw new JsonSyntaxException("Unknown difficulty: " + difficultyId);
+            throw new JsonParseException("Unknown difficulty: " + difficultyId);
         }
 
         return new BingoGoal(
@@ -183,7 +182,7 @@ public class BingoGoal {
                     final ResourceLocation key = new ResourceLocation(GsonHelper.convertToString(e, "tag"));
                     final BingoTag tag = BingoTag.getTag(key);
                     if (tag == null) {
-                        throw new JsonSyntaxException("Unknown bingo tag: " + key);
+                        throw new JsonParseException("Unknown bingo tag: " + key);
                     }
                     return tag;
                 })

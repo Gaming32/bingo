@@ -1,7 +1,10 @@
 package io.github.gaming32.bingo.util;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.Util;
@@ -67,7 +70,7 @@ public class BingoUtil {
     }
 
     public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) {
-        return Util.getOrThrow(codec.parse(JsonOps.INSTANCE, element), JsonSyntaxException::new);
+        return Util.getOrThrow(codec.parse(JsonOps.INSTANCE, element), JsonParseException::new);
     }
 
     public static <T> List<T> addToList(List<T> a, T b) {

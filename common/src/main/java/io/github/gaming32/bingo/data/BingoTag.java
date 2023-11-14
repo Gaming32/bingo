@@ -2,11 +2,10 @@ package io.github.gaming32.bingo.data;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
-import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.floats.FloatList;
-import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -45,7 +44,7 @@ public record BingoTag(
             FloatList.of(difficultyMax),
             GsonHelper.getAsBoolean(json, "allowed_on_same_line", true),
             json.has("special_type")
-                ? Util.getOrThrow(SpecialType.CODEC.parse(JsonOps.INSTANCE, json.get("special_type")), JsonSyntaxException::new)
+                ? BingoUtil.fromJsonElement(SpecialType.CODEC, json.get("special_type"))
                 : SpecialType.NONE
         );
     }

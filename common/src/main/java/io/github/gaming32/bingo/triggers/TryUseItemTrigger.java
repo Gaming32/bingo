@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.triggers;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonParseException;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,7 +28,7 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
             final String stringHand = GsonHelper.getAsString(json, "hand");
             hand = Optional.ofNullable(HANDS.get(stringHand));
             if (hand.isEmpty()) {
-                throw new JsonSyntaxException("Unknown hand \"" + stringHand + "\"");
+                throw new JsonParseException("Unknown hand \"" + stringHand + "\"");
             }
         } else {
             hand = Optional.empty();

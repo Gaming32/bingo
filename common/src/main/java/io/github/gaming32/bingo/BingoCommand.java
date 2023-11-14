@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo;
 
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonParseException;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -365,7 +365,7 @@ public class BingoCommand {
         } catch (Exception e) {
             Bingo.LOGGER.error("Error generating bingo board", e);
             throw new CommandRuntimeException(Bingo.translatable(
-                e instanceof JsonSyntaxException ? "bingo.start.invalid_goal" : "bingo.start.failed"
+                e instanceof JsonParseException ? "bingo.start.invalid_goal" : "bingo.start.failed"
             ).withStyle(s -> s.withHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT, Component.literal(e.getMessage())
             ))));

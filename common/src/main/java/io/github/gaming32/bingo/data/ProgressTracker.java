@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.data;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonParseException;
 import io.github.gaming32.bingo.Bingo;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -23,7 +23,7 @@ public sealed abstract class ProgressTracker {
         } else if (type.equals(AchievedRequirements.ID)) {
             return new AchievedRequirements();
         } else {
-            throw new JsonSyntaxException("Unknown progress tracker type '" + type + "'");
+            throw new JsonParseException("Unknown progress tracker type '" + type + "'");
         }
     }
 
