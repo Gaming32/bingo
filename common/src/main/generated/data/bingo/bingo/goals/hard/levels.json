@@ -25,7 +25,7 @@
       "trigger": "bingo:experience_changed"
     }
   },
-  "difficulty": 3,
+  "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:item",
     "value": {

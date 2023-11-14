@@ -23,7 +23,7 @@
       "trigger": "bingo:bed_row"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
     "value": {

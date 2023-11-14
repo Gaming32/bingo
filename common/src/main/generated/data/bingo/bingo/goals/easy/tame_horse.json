@@ -15,7 +15,7 @@
       "trigger": "minecraft:tame_animal"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:entity",
     "entity": "minecraft:horse",

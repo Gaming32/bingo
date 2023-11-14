@@ -24,7 +24,7 @@
       "trigger": "bingo:has_some_items_from_tag"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item_tag_cycle",
     "count": {

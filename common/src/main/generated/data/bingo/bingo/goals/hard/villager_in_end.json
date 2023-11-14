@@ -18,7 +18,7 @@
       "trigger": "minecraft:player_killed_entity"
     }
   },
-  "difficulty": 3,
+  "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:block",
     "block": {

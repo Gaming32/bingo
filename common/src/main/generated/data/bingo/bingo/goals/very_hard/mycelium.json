@@ -32,7 +32,7 @@
       "trigger": "bingo:total_count_inventory_changed"
     }
   },
-  "difficulty": 4,
+  "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:item",
     "value": {

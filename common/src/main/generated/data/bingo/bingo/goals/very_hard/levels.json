@@ -10,7 +10,7 @@
       "trigger": "bingo:experience_changed"
     }
   },
-  "difficulty": 4,
+  "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:item",
     "value": {

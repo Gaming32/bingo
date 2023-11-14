@@ -11,7 +11,7 @@
       "trigger": "bingo:total_count_inventory_changed"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item_tag_cycle",
     "tag": "minecraft:decorated_pot_sherds"

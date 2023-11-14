@@ -18,7 +18,7 @@
       "trigger": "minecraft:thrown_item_picked_up_by_entity"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
     "value": [

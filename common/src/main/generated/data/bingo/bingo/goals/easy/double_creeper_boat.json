@@ -38,7 +38,7 @@
       "trigger": "bingo:destroy_vehicle"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
     "value": [

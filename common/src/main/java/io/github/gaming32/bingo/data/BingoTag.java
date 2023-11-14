@@ -11,9 +11,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Locale;
@@ -27,16 +29,14 @@ public record BingoTag(
 ) {
     private static Map<ResourceLocation, BingoTag> tags = Collections.emptyMap();
 
+    @Nullable
     public static BingoTag getTag(ResourceLocation id) {
         return tags.get(id);
     }
 
     public static BingoTag deserialize(ResourceLocation id, JsonObject json) {
         final JsonArray difficultyMaxArray = GsonHelper.getAsJsonArray(json, "difficulty_max");
-        final float[] difficultyMax = new float[5];
-        if (difficultyMaxArray.size() != difficultyMax.length) {
-            throw new JsonSyntaxException("difficulty_max must be exactly 5 elements long");
-        }
+        final float[] difficultyMax = new float[difficultyMaxArray.size()];
         for (int i = 0; i < difficultyMax.length; i++) {
             difficultyMax[i] = GsonHelper.convertToFloat(difficultyMaxArray.get(i), "difficulty_max[" + i + "]");
         }
@@ -70,6 +70,18 @@ public record BingoTag(
         return result;
     }
 
+    public float getUnscaledMaxForDifficulty(int difficulty) {
+        if (difficulty < 0) {
+            throw new IllegalArgumentException("difficulty < 0 is invalid");
+        }
+        final int size = difficultyMax.size();
+        return difficulty < size ? difficultyMax.getFloat(difficulty) : difficultyMax.getFloat(size - 1);
+    }
+
+    public int getMaxForDifficulty(int difficulty, int boardSize) {
+        return Mth.ceil(getUnscaledMaxForDifficulty(difficulty) * boardSize * boardSize);
+    }
+
     public static Builder builder(ResourceLocation id) {
         return new Builder(id);
     }
@@ -84,12 +96,16 @@ public record BingoTag(
             this.id = id;
         }
 
-        public Builder difficultyMax(int veryEasy, int easy, int medium, int hard, int veryHard) {
-            return this.difficultyMax(veryEasy / 25f, easy / 25f, medium / 25f, hard / 25f, veryHard / 25f);
+        public Builder difficultyMax(int... scaledBy5x5) {
+            final float[] unscaled = new float[scaledBy5x5.length];
+            for (int i = 0; i < scaledBy5x5.length; i++) {
+                unscaled[i] = scaledBy5x5[i] / 25f;
+            }
+            return this.difficultyMax(unscaled);
         }
 
-        public Builder difficultyMax(float veryEasy, float easy, float medium, float hard, float veryHard) {
-            this.difficultyMax = FloatList.of(veryEasy, easy, medium, hard, veryHard);
+        public Builder difficultyMax(float... unscaledMaxes) {
+            this.difficultyMax = FloatList.of(unscaledMaxes);
             return this;
         }
 

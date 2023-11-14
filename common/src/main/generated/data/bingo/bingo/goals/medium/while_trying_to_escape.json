@@ -20,7 +20,7 @@
       "trigger": "bingo:entity_killed_player"
     }
   },
-  "difficulty": 2,
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
     "value": {

@@ -22,7 +22,7 @@
       "trigger": "bingo:item_picked_up"
     }
   },
-  "difficulty": 0,
+  "difficulty": "bingo:very_easy",
   "icon": {
     "type": "bingo:item",
     "value": {

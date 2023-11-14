@@ -12,7 +12,7 @@
       "trigger": "bingo:try_use_item"
     }
   },
-  "difficulty": 0,
+  "difficulty": "bingo:very_easy",
   "icon": {
     "type": "bingo:item",
     "value": {

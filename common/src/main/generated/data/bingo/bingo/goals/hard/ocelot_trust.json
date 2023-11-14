@@ -15,7 +15,7 @@
       "trigger": "minecraft:tame_animal"
     }
   },
-  "difficulty": 3,
+  "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:item",
     "value": {

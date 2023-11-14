@@ -26,7 +26,7 @@
       "trigger": "minecraft:item_used_on_block"
     }
   },
-  "difficulty": 3,
+  "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:block",
     "block": {

@@ -13,7 +13,7 @@
       "trigger": "bingo:bounce_on_block"
     }
   },
-  "difficulty": 2,
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
     "value": {

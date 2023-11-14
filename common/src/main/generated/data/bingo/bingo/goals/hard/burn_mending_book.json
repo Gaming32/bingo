@@ -37,7 +37,7 @@
       "trigger": "bingo:kill_item"
     }
   },
-  "difficulty": 3,
+  "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:block",
     "block": {

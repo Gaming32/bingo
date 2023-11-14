@@ -7,7 +7,7 @@
       "trigger": "bingo:key_pressed"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
     "value": {

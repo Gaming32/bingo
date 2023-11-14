@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.conditions.*;
+import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.*;
@@ -44,7 +45,7 @@ import java.util.function.Consumer;
 
 public class EasyGoalProvider extends DifficultyGoalProvider {
     public EasyGoalProvider(Consumer<BingoGoal> goalAdder) {
-        super(1, "easy/", goalAdder);
+        super(BingoDifficulties.EASY, goalAdder);
     }
 
     @Override

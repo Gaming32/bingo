@@ -6,7 +6,7 @@
       "trigger": "bingo:completed_map"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
     "value": {

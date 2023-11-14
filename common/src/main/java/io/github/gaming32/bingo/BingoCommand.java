@@ -12,6 +12,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
+import io.github.gaming32.bingo.data.BingoDifficulties;
+import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.ext.CommandContextExt;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
@@ -253,7 +255,10 @@ public class BingoCommand {
                         )
                     )
                     .then(literal("--difficulty")
-                        .then(argument("difficulty", IntegerArgumentType.integer(0, 4))
+                        .then(argument("difficulty", ResourceLocationArgument.id())
+                            .suggests((context, builder) -> SharedSuggestionProvider.suggestResource(
+                                BingoDifficulty.getIds(), builder
+                            ))
                             .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                         )
                     )
@@ -299,7 +304,7 @@ public class BingoCommand {
             Bingo.activeGame.endGame(context.getSource().getServer().getPlayerList(), Bingo.activeGame.getWinner(true));
         }
 
-        final int difficulty = getArg(context, "difficulty", () -> 2, IntegerArgumentType::getInteger);
+        final ResourceLocation difficultyId = getArg(context, "difficulty", () -> BingoDifficulties.MEDIUM, ResourceLocationArgument::getId);
         final long seed = getArg(context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong);
         final ResourceLocation requiredGoalId = getArg(context, "required_goal", () -> null, ResourceLocationArgument::getId);
         final int size = getArg(context, "size", () -> BingoBoard.DEFAULT_SIZE, IntegerArgumentType::getInteger);
@@ -313,6 +318,11 @@ public class BingoCommand {
                 // Should probably be a CommandSyntaxException?
                 throw new CommandRuntimeException(Bingo.translatable("bingo.duplicate_teams"));
             }
+        }
+
+        final BingoDifficulty.Holder difficulty = BingoDifficulty.byId(difficultyId);
+        if (difficulty == null) {
+            throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_difficulty", difficultyId));
         }
 
         final BingoGoal requiredGoal;
@@ -344,7 +354,7 @@ public class BingoCommand {
         try {
             board = BingoBoard.generate(
                 size,
-                difficulty,
+                difficulty.difficulty().number(),
                 teams.size(),
                 RandomSource.create(seed),
                 server.getLootData(),
@@ -365,9 +375,7 @@ public class BingoCommand {
         Bingo.activeGame = new BingoGame(board, gamemode, requireClient, teams.toArray(PlayerTeam[]::new));
         Bingo.updateCommandTree(playerList);
         playerList.getPlayers().forEach(Bingo.activeGame::addPlayer);
-        playerList.broadcastSystemMessage(Bingo.translatable(
-            "bingo.started", Bingo.translatable("bingo.difficulty." + difficulty)
-        ), false);
+        playerList.broadcastSystemMessage(Bingo.translatable("bingo.started", difficulty.getDescription()), false);
         return Command.SINGLE_SUCCESS;
     }
 

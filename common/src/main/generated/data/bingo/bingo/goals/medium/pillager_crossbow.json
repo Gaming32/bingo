@@ -25,7 +25,7 @@
       "trigger": "bingo:item_picked_up"
     }
   },
-  "difficulty": 2,
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
     "value": {

@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import com.google.common.collect.ImmutableList;
 import io.github.gaming32.bingo.conditions.EndermanHasOnlyBeenDamagedByEndermiteCondition;
+import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.ProgressTracker;
@@ -39,7 +40,7 @@ import java.util.function.Consumer;
 
 public class VeryHardGoalProvider extends DifficultyGoalProvider {
     public VeryHardGoalProvider(Consumer<BingoGoal> goalAdder) {
-        super(4, "very_hard/", goalAdder);
+        super(BingoDifficulties.VERY_HARD, goalAdder);
     }
 
     @Override

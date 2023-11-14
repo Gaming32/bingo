@@ -17,7 +17,7 @@
       "trigger": "minecraft:fishing_rod_hooked"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
     "value": {

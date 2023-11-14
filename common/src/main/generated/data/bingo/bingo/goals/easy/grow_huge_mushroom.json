@@ -12,7 +12,7 @@
       "trigger": "bingo:grow_feature"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:block",
     "block": {

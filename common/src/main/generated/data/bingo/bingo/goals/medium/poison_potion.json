@@ -41,7 +41,7 @@
       "trigger": "bingo:total_count_inventory_changed"
     }
   },
-  "difficulty": 2,
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
     "value": {

@@ -33,7 +33,7 @@
       "trigger": "minecraft:fall_from_height"
     }
   },
-  "difficulty": 2,
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
     "value": {

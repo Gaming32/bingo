@@ -18,7 +18,7 @@
       "trigger": "bingo:arrow_press"
     }
   },
-  "difficulty": 1,
+  "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
     "value": {

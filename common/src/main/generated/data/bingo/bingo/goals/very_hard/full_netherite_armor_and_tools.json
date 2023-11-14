@@ -53,7 +53,7 @@
       "trigger": "minecraft:inventory_changed"
     }
   },
-  "difficulty": 4,
+  "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:cycle",
     "value": [
