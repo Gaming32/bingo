@@ -171,7 +171,7 @@ public class BingoCommand {
                         final StringBuilder line = new StringBuilder(board.getSize());
                         for (int y = 0; y < board.getSize(); y++) {
                             for (int x = 0; x < board.getSize(); x++) {
-                                line.append(board.getGoal(x, y).getGoal().getDifficulty());
+                                line.append(board.getGoal(x, y).getGoal().getDifficulty().difficulty().number());
                             }
                             ctx.getSource().sendSuccess(() -> Component.literal(line.toString()), false);
                             line.setLength(0);
@@ -275,6 +275,10 @@ public class BingoCommand {
                             .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                         )
                     )
+                    .then(literal("--exclude-tag")
+                        .then(argument("tag", ResourceLocationArgument.id())
+                        )
+                    )
                     .then(literal("--gamemode")
                         .then(argument("gamemode", StringArgumentType.word())
                             .suggests((context, builder) -> SharedSuggestionProvider.suggest(
@@ -306,7 +310,7 @@ public class BingoCommand {
 
         final ResourceLocation difficultyId = getArg(context, "difficulty", () -> BingoDifficulties.MEDIUM, ResourceLocationArgument::getId);
         final long seed = getArg(context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong);
-        final ResourceLocation requiredGoalId = getArg(context, "required_goal", () -> null, ResourceLocationArgument::getId);
+        final List<ResourceLocation> requiredGoalIds = getArgs(context, "required_goal", ResourceLocationArgument::getId);
         final int size = getArg(context, "size", () -> BingoBoard.DEFAULT_SIZE, IntegerArgumentType::getInteger);
         final String gamemodeId = getArg(context, "gamemode", () -> "standard", StringArgumentType::getString);
         final boolean requireClient = hasNode(context, "--require-client");
@@ -325,15 +329,16 @@ public class BingoCommand {
             throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_difficulty", difficultyId));
         }
 
-        final BingoGoal requiredGoal;
-        if (requiredGoalId != null) {
-            requiredGoal = BingoGoal.getGoal(requiredGoalId);
-            if (requiredGoal == null) {
-                throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_goal", requiredGoalId));
-            }
-        } else {
-            requiredGoal = null;
-        }
+        final List<BingoGoal> requiredGoals = requiredGoalIds.stream()
+            .distinct()
+            .map(id -> {
+                final BingoGoal goal = BingoGoal.getGoal(id);
+                if (goal == null) {
+                    throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_goal", id));
+                }
+                return goal;
+            })
+            .toList();
 
         final BingoGameMode gamemode = BingoGameMode.GAME_MODES.get(gamemodeId);
         if (gamemode == null) {
@@ -359,7 +364,7 @@ public class BingoCommand {
                 RandomSource.create(seed),
                 server.getLootData(),
                 gamemode::isGoalAllowed,
-                requiredGoal,
+                requiredGoals,
                 requireClient
             );
         } catch (Exception e) {
@@ -367,7 +372,7 @@ public class BingoCommand {
             throw new CommandRuntimeException(Bingo.translatable(
                 e instanceof JsonParseException ? "bingo.start.invalid_goal" : "bingo.start.failed"
             ).withStyle(s -> s.withHoverEvent(new HoverEvent(
-                HoverEvent.Action.SHOW_TEXT, Component.literal(e.getMessage())
+                HoverEvent.Action.SHOW_TEXT, Component.nullToEmpty(e.getMessage())
             ))));
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
@@ -403,6 +408,33 @@ public class BingoCommand {
         }
 
         return defaultValue.get();
+    }
+
+    private static <T> List<T> getArgs(
+        CommandContext<CommandSourceStack> context, String arg,
+        BiFunction<CommandContext<CommandSourceStack>, String, T> argGetter
+    ) {
+        final List<T> result = new ArrayList<>();
+
+        final Set<CommandContext<?>> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+        final Queue<CommandContext<CommandSourceStack>> toVisit = new ArrayDeque<>();
+        toVisit.add(context);
+
+        while (!toVisit.isEmpty()) {
+            final CommandContext<CommandSourceStack> check = toVisit.remove();
+            if (hasArg(check, arg)) {
+                result.add(argGetter.apply(check, arg));
+            }
+            if (check.getSource() instanceof CommandSourceStackExt ext) {
+                for (final CommandContext<CommandSourceStack> extra : ext.bingo$getExtraContexts()) {
+                    if (visited.add(extra)) {
+                        toVisit.add(extra);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     public static boolean hasArg(CommandContext<?> context, String name) {

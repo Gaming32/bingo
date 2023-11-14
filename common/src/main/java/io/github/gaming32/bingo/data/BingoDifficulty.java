@@ -66,6 +66,21 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
         public Component getDescription() {
             return BingoDifficulty.getDescription(id, difficulty.fallbackName);
         }
+
+        @Override
+        public String toString() {
+            return id.toString();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof Holder h && id.equals(h.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return id.hashCode();
+        }
     }
 
     public static final class Builder {
