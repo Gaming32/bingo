@@ -23,6 +23,7 @@ public class BingoTriggers {
     public static final BeaconEffectTrigger BEACON_EFFECT = register("bingo:beacon_effect", new BeaconEffectTrigger());
     public static final TotalCountInventoryChangeTrigger TOTAL_COUNT_INVENTORY_CHANGED = register("bingo:total_count_inventory_changed", new TotalCountInventoryChangeTrigger());
     public static final HasSomeItemsFromTagTrigger HAS_SOME_ITEMS_FROM_TAG = register("bingo:has_some_items_from_tag", new HasSomeItemsFromTagTrigger());
+    public static final HasSomeFoodItemsTrigger HAS_SOME_FOOD_ITEMS = register("bingo:has_some_food_items", new HasSomeFoodItemsTrigger());
     public static final BedRowTrigger BED_ROW = register("bingo:bed_row", new BedRowTrigger());
     public static final MineralPillarTrigger MINERAL_PILLAR = register("bingo:mineral_pillar", new MineralPillarTrigger());
     public static final ItemPickedUpTrigger ITEM_PICKED_UP = register("bingo:item_picked_up", new ItemPickedUpTrigger());

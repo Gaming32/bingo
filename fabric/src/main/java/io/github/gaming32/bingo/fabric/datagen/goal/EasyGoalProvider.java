@@ -462,7 +462,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("spider_eye"), Items.SPIDER_EYE, 2, 5)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        // TODO: different edible items
+        addGoal(obtainSomeEdibleItems(id("edible_items"), 4, 5).tags(BingoTags.OVERWORLD));
         // TODO: breed 2-4 sets of mobs
         addGoal(crouchDistanceGoal(id("crouch_distance"), 100, 200));
         // TODO: never use debug

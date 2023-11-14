@@ -166,7 +166,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("salmon"), Items.SALMON, 2, 5)
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
-        // TODO: different edible items
+        addGoal(obtainSomeEdibleItems(id("edible_items"), 2, 3));
         addGoal(BingoGoal.builder(id("breed_mob_pair"))
             .criterion("breed", BredAnimalsTrigger.TriggerInstance.bredAnimals())
             .name(Component.translatable("bingo.goal.breed_mob_pair"))

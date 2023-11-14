@@ -41,6 +41,7 @@ fa8972087435845a76278a7267dca4b106e3d5bb data/bingo/bingo/goals/easy/dark_oak_pl
 242e5afff9ceb67913efce3bdcc46d83712ced94 data/bingo/bingo/goals/easy/dried_kelp_block.json
 ddd1f4be8502c439b7b5b122c5341f4a06480819 data/bingo/bingo/goals/easy/drink_sus_stew.json
 15acd9e75c33cd326b4858f6b5a5d00f572c5544 data/bingo/bingo/goals/easy/eat_entire_cake.json
+de4bb32600e947ced0b6a0b4727c7a3b9e76f40c data/bingo/bingo/goals/easy/edible_items.json
 7080bdde28f4fbb14100213dec24447746f188c1 data/bingo/bingo/goals/easy/egg.json
 b1cab9e8780e130ecf0196a5c63d4c8e49a015b4 data/bingo/bingo/goals/easy/emerald.json
 df6984e9ae1198c3d4644179a9bd7f05ed8f3d7b data/bingo/bingo/goals/easy/ender_pearl.json
@@ -239,6 +240,7 @@ d3286d082b910867e92626fff98c69da5507c41b data/bingo/bingo/goals/medium/diamond_b
 d1165e98f4e1cb2ec1fbf376a2b6a72da5ea0abe data/bingo/bingo/goals/medium/diamond_in_name.json
 5abe4ddb0c06e2e5e73b466b94ef13413ef2c9bc data/bingo/bingo/goals/medium/different_saplings.json
 be437b45db81342a990202c76c8c78fe857150fe data/bingo/bingo/goals/medium/dried_kelp_block.json
+083c868413e89444f7a9e29627f9916fc6fd85e8 data/bingo/bingo/goals/medium/edible_items.json
 eae132e293972f8b8688fa451adf4abf526eb80e data/bingo/bingo/goals/medium/enchant_item.json
 b8ce00dff3525b30f7e5e54967d33ad107036ac7 data/bingo/bingo/goals/medium/ender_eye.json
 24c86aa8fe21a617face23fe548b5b3ebc4941ae data/bingo/bingo/goals/medium/ender_pearl.json
@@ -350,6 +352,7 @@ a363d7a8a7022983e6b180fb432ec0458ed4faf3 data/bingo/bingo/goals/very_easy/differ
 3559e28965c27bf4f8a69d53bbc8ad8ff41babee data/bingo/bingo/goals/very_easy/diorite.json
 ed8ac76db85459e244d72e49e87e183d35837b26 data/bingo/bingo/goals/very_easy/dirt.json
 e813c437db7a5a323aabdb24c79163d319273ca3 data/bingo/bingo/goals/very_easy/dye_sign.json
+169b64c40da2fbbd83eac9182502e5f3c3ef34e6 data/bingo/bingo/goals/very_easy/edible_items.json
 5af5749b4f0afbdc435608d786179dddf5823562 data/bingo/bingo/goals/very_easy/extinguish_campfire.json
 a26c6d71bd3c256a93896c9bd80ee21abdb5588b data/bingo/bingo/goals/very_easy/feather.json
 df28dea5359ccff3c09b6c684a7135880f17c26e data/bingo/bingo/goals/very_easy/fill_composter.json

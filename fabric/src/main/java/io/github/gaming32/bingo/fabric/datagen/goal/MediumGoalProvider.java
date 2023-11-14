@@ -60,7 +60,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
 
     @Override
     public void addGoals() {
-        // TODO: different edible items
+        addGoal(obtainSomeEdibleItems(id("edible_items"), 6, 7).tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("beetroot_soup"), Items.BEETROOT_SOUP)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("potted_cactus"))

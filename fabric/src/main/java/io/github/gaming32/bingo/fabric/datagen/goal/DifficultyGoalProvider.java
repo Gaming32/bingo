@@ -14,6 +14,7 @@ import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
+import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
@@ -161,6 +162,32 @@ public abstract class DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .name(Component.translatable("bingo.goal.all_somethings", Component.translatable("bingo.goal.all_somethings." + what)))
             .icon(new ItemTagCycleIcon(tag));
+    }
+
+    protected static BingoGoal.Builder obtainSomeEdibleItems(ResourceLocation id, int minCount, int maxCount) {
+        if (minCount == maxCount) {
+            return BingoGoal.builder(id)
+                .criterion("obtain", HasSomeFoodItemsTrigger.builder().requiredCount(minCount).build())
+                .progress("obtain")
+                .tags(BingoTags.ITEM)
+                .name(Component.translatable("bingo.goal.edible_items", minCount))
+                .tooltip(Component.translatable("bingo.goal.edible_items.tooltip"))
+                .tooltipIcon(new ResourceLocation("bingo:textures/gui/tooltips/raw_and_cooked.png"))
+                .antisynergy("edible_items")
+                .infrequency(2)
+                .icon(new ItemTagCycleIcon(BingoItemTags.FOOD, minCount));
+        }
+        return BingoGoal.builder(id)
+            .sub("count", BingoSub.random(minCount, maxCount))
+            .criterion("obtain", HasSomeFoodItemsTrigger.builder().requiredCount(0).build(), subber -> subber.sub("conditions.required_count", "count"))
+            .progress("obtain")
+            .tags(BingoTags.ITEM)
+            .name(Component.translatable("bingo.goal.edible_items", 0), subber -> subber.sub("with.0", "count"))
+            .tooltip(Component.translatable("bingo.goal.edible_items.tooltip"))
+            .tooltipIcon(new ResourceLocation("bingo:textures/gui/tooltips/raw_and_cooked.png"))
+            .antisynergy("edible_items")
+            .infrequency(2)
+            .icon(new ItemTagCycleIcon(BingoItemTags.FOOD), subber -> subber.sub("count", "count"));
     }
 
     protected static BingoGoal.Builder obtainLevelsGoal(ResourceLocation id, int minLevels, int maxLevels) {
