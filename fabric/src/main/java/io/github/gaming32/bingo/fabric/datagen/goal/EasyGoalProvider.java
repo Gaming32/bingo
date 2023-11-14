@@ -177,7 +177,10 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("hay_block"), Items.HAY_BLOCK, 2, 3)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        // TODO: colors of wool
+        addGoal(obtainSomeItemsFromTag(id("wool_colors"), ItemTags.WOOL, "bingo.goal.wool_colors", 5, 8)
+            .antisynergy("wool_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("piston"), Items.PISTON)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("full_iron_armor"))

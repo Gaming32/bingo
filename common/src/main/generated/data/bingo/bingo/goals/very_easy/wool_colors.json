@@ -1,0 +1,60 @@
+{
+  "antisynergy": "wool_color",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 4,
+          "min_inclusive": 2
+        }
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": {
+          "bingo_type": "bingo:sub",
+          "value": "count"
+        },
+        "tag": "minecraft:wool"
+      },
+      "trigger": "bingo:has_some_items_from_tag"
+    }
+  },
+  "difficulty": 0,
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "count": {
+      "bingo_type": "bingo:sub",
+      "value": "count"
+    },
+    "tag": "minecraft:wool"
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "bingo.goal.wool_colors",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:color",
+    "bingo:overworld"
+  ]
+}

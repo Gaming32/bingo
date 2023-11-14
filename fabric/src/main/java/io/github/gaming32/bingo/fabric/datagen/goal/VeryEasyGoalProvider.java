@@ -112,11 +112,18 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             BlockTags.LEAVES,
             Component.translatable("bingo.goal.cube.leaf")
         ));
-        // TODO: colors of wool
+        addGoal(obtainSomeItemsFromTag(id("wool_colors"), ItemTags.WOOL, "bingo.goal.wool_colors", 2, 4)
+            .antisynergy("wool_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("snowball"), Items.SNOWBALL, 8, 16)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
-        // TODO: slabs
-        // TODO: stairs
+        addGoal(obtainSomeItemsFromTag(id("different_slabs"), BingoItemTags.SLABS, "bingo.goal.different_slabs", 2, 4)
+            .antisynergy("slabs")
+            .infrequency(2));
+        addGoal(obtainSomeItemsFromTag(id("different_stairs"), BingoItemTags.STAIRS, "bingo.goal.different_stairs", 2, 4)
+            .antisynergy("stairs")
+            .infrequency(2));
         addGoal(obtainItemGoal(id("diamond"), Items.DIAMOND));
         addGoal(obtainItemGoal(id("rotten_flesh"), Items.ROTTEN_FLESH, 5, 15)
             .infrequency(2));
@@ -197,7 +204,9 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.never_pickup_crafting_tables"))
             .tooltip(Component.translatable("bingo.goal.never_pickup_crafting_tables.tooltip"))
             .icon(Items.CRAFTING_TABLE));
-        // TODO: gold items
+        addGoal(obtainSomeItemsFromTag(id("gold_in_name"), BingoItemTags.GOLD_IN_NAME, "bingo.goal.gold_in_name", 2, 4)
+            .tooltip(Component.translatable("bingo.goal.gold_in_name.tooltip"))
+            .antisynergy("gold_items"));
         addGoal(obtainItemGoal(id("sand"), Items.SAND, 10, 32)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
