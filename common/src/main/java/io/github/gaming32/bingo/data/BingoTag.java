@@ -16,9 +16,9 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public record BingoTag(
     ResourceLocation id,
@@ -26,11 +26,15 @@ public record BingoTag(
     boolean allowedOnSameLine,
     SpecialType specialType
 ) {
-    private static Map<ResourceLocation, BingoTag> tags = Collections.emptyMap();
+    private static Map<ResourceLocation, BingoTag> tags = Map.of();
 
     @Nullable
     public static BingoTag getTag(ResourceLocation id) {
         return tags.get(id);
+    }
+
+    public static Set<ResourceLocation> getTags() {
+        return tags.keySet();
     }
 
     public static BingoTag deserialize(ResourceLocation id, JsonObject json) {

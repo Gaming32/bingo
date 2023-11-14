@@ -15,6 +15,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.ext.CommandContextExt;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
 import io.github.gaming32.bingo.game.ActiveGoal;
@@ -50,6 +51,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -276,7 +278,11 @@ public class BingoCommand {
                         )
                     )
                     .then(literal("--exclude-tag")
-                        .then(argument("tag", ResourceLocationArgument.id())
+                        .then(argument("excluded_tag", ResourceLocationArgument.id())
+                            .suggests((context, builder) -> SharedSuggestionProvider.suggestResource(
+                                BingoTag.getTags(), builder
+                            ))
+                            .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                         )
                     )
                     .then(literal("--gamemode")
@@ -311,6 +317,7 @@ public class BingoCommand {
         final ResourceLocation difficultyId = getArg(context, "difficulty", () -> BingoDifficulties.MEDIUM, ResourceLocationArgument::getId);
         final long seed = getArg(context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong);
         final List<ResourceLocation> requiredGoalIds = getArgs(context, "required_goal", ResourceLocationArgument::getId);
+        final List<ResourceLocation> excludedTagIds = getArgs(context, "excluded_tag", ResourceLocationArgument::getId);
         final int size = getArg(context, "size", () -> BingoBoard.DEFAULT_SIZE, IntegerArgumentType::getInteger);
         final String gamemodeId = getArg(context, "gamemode", () -> "standard", StringArgumentType::getString);
         final boolean requireClient = hasNode(context, "--require-client");
@@ -340,6 +347,17 @@ public class BingoCommand {
             })
             .toList();
 
+        final Set<BingoTag> excludedTags = excludedTagIds.stream()
+            .distinct()
+            .map(id -> {
+                final BingoTag tag = BingoTag.getTag(id);
+                if (tag == null) {
+                    throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_tag", id));
+                }
+                return tag;
+            })
+            .collect(Collectors.toUnmodifiableSet());
+
         final BingoGameMode gamemode = BingoGameMode.GAME_MODES.get(gamemodeId);
         if (gamemode == null) {
             throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_gamemode", gamemodeId));
@@ -365,6 +383,7 @@ public class BingoCommand {
                 server.getLootData(),
                 gamemode::isGoalAllowed,
                 requiredGoals,
+                excludedTags,
                 requireClient
             );
         } catch (Exception e) {

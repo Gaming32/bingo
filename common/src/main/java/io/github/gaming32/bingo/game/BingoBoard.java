@@ -7,7 +7,6 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.text.WordUtils;
@@ -46,10 +45,13 @@ public class BingoBoard {
         LootDataManager lootData,
         Predicate<BingoGoal> isAllowedGoal,
         List<BingoGoal> requiredGoals,
+        Set<BingoTag> excludedTags,
         boolean allowsClientRequired
     ) {
         final BingoBoard board = new BingoBoard(size);
-        final BingoGoal[] generatedSheet = generateGoals(size, difficulty, rand, isAllowedGoal, requiredGoals, allowsClientRequired);
+        final BingoGoal[] generatedSheet = generateGoals(
+            size, difficulty, rand, isAllowedGoal, requiredGoals, excludedTags, allowsClientRequired
+        );
         for (int i = 0; i < size * size; i++) {
             final ActiveGoal goal = board.goals[i] = generatedSheet[i].build(rand, lootData);
             if (generatedSheet[i].getSpecialType() == BingoTag.SpecialType.NEVER) {
@@ -67,6 +69,7 @@ public class BingoBoard {
         RandomSource rand,
         Predicate<BingoGoal> isAllowedGoal,
         List<BingoGoal> requiredGoals,
+        Set<BingoTag> excludedTags,
         boolean allowsClientRequired
     ) {
         final Queue<BingoGoal> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
@@ -81,6 +84,10 @@ public class BingoBoard {
         final Set<String> antisynergys = new HashSet<>();
         final Set<String> reactants = new HashSet<>();
         final Set<String> catalysts = new HashSet<>();
+
+        for (final BingoTag tag : excludedTags) {
+            tagCount.put(tag.id(), tag.getMaxForDifficulty(difficulty, size));
+        }
 
         for (int i = 0; i < size * size; i++) {
             final Iterator<Integer> difficultiesToTry = BingoDifficulty.getNumbers()
@@ -135,7 +142,7 @@ public class BingoBoard {
 
                 if (!goalCandidate.getTags().isEmpty()) {
                     for (final BingoTag tag : goalCandidate.getTags()) {
-                        if (tagCount.getInt(tag.id()) >= Mth.ceil(tag.difficultyMax().getFloat(difficulty) * size * size)) {
+                        if (tagCount.getInt(tag.id()) >= tag.getMaxForDifficulty(difficulty, size)) {
                             continue goalGen;
                         }
                     }
