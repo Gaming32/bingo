@@ -9,6 +9,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
@@ -179,17 +182,22 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .addOptionalTag(new ResourceLocation("c:milk_buckets"))
             .addOptionalTag(new ResourceLocation("c:empty_buckets"))
             .add(Items.MILK_BUCKET);
+        var goldInNameBuilder = getOrCreateTagBuilder(BingoItemTags.GOLD_IN_NAME);
         var diamondInNameBuilder = getOrCreateTagBuilder(BingoItemTags.DIAMOND_IN_NAME);
         var foodBuilder = getOrCreateTagBuilder(BingoItemTags.FOOD);
         var meatBuilder = getOrCreateTagBuilder(BingoItemTags.MEAT);
         var notMeatBuilder = getOrCreateTagBuilder(BingoItemTags.NOT_MEAT);
         var bannerPatternsBuilder = getOrCreateTagBuilder(BingoItemTags.BANNER_PATTERNS);
-        Pattern diamondPattern = Pattern.compile("Diamond\\b");
+        var slabBuilder = getOrCreateTagBuilder(BingoItemTags.SLABS);
+        var stairsBuilder = getOrCreateTagBuilder(BingoItemTags.STAIRS);
+        Pattern goldPattern = Pattern.compile("\\bGold(?:en)?\\b");
+        Pattern diamondPattern = Pattern.compile("\\bDiamond\\b");
         for (Item item : BuiltInRegistries.ITEM) {
-            if (item instanceof BucketItem) {
-                bucketsBuilder.add(item);
+            String itemName = item.getDescription().getString();
+            if (goldPattern.matcher(itemName).find()) {
+                goldInNameBuilder.add(item);
             }
-            if (diamondPattern.matcher(item.getDescription().getString()).find()) {
+            if (diamondPattern.matcher(itemName).find()) {
                 diamondInNameBuilder.add(item);
             }
             if (item.isEdible()) {
@@ -201,8 +209,17 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
                     notMeatBuilder.add(item);
                 }
             }
-            if (item instanceof BannerPatternItem) {
+            if (item instanceof BucketItem) {
+                bucketsBuilder.add(item);
+            } else if (item instanceof BannerPatternItem) {
                 bannerPatternsBuilder.add(item);
+            } else if (item instanceof BlockItem blockItem) {
+                Block block = blockItem.getBlock();
+                if (block instanceof SlabBlock) {
+                    slabBuilder.add(item);
+                } else if (block instanceof StairBlock) {
+                    stairsBuilder.add(item);
+                }
             }
         }
 

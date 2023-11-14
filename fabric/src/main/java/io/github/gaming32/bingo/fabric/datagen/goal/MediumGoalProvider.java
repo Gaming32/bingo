@@ -261,7 +261,10 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("daylight_detector"), Items.DAYLIGHT_DETECTOR)
             .tags(BingoTags.OVERWORLD, BingoTags.NETHER));
         // TODO: enchanted golden sword
-        // TODO: colors of wool
+        addGoal(obtainSomeItemsFromTag(id("wool_colors"), ItemTags.WOOL, "bingo.goal.wool_colors", 8, 11)
+            .antisynergy("wool_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         // TODO: colors of terracotta
         // TODO: colors of glazed terracotta
         // TODO: colors of concrete
