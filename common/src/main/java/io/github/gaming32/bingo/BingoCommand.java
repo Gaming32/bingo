@@ -457,7 +457,7 @@ public class BingoCommand {
     }
 
     public static boolean hasArg(CommandContext<?> context, String name) {
-        if (context instanceof CommandContextExt ext) { // false on Forge
+        if (context instanceof CommandContextExt ext) { // false on NeoForge (for now?)
             return ext.bingo$hasArg(name);
         }
         for (final ParsedCommandNode<?> node : context.getNodes()) {

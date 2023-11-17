@@ -51,12 +51,15 @@ public class BingoClient {
     public static BingoBoard.Teams clientTeam = BingoBoard.Teams.NONE;
     public static ClientGame clientGame;
 
-    private static BingoClientConfig config;
+    private static BingoClientConfig config = new BingoClientConfig(); // Temp default config until config gets loaded
     private static RecipeViewerPlugin recipeViewerPlugin;
 
     public static void init() {
-        AutoConfig.register(BingoClientConfig.class, Toml4jConfigSerializer::new);
-        config = AutoConfig.getConfigHolder(BingoClientConfig.class).getConfig();
+        if (!Platform.isNeoForge()) {
+            // TODO: Remove this if when NeoForge in Cloth is fixed
+            AutoConfig.register(BingoClientConfig.class, Toml4jConfigSerializer::new);
+            config = AutoConfig.getConfigHolder(BingoClientConfig.class).getConfig();
+        }
 
         if (!Platform.isFabric()) {
             Platform.getMod(Bingo.MOD_ID).registerConfigurationScreen(
@@ -157,7 +160,6 @@ public class BingoClient {
 
         DefaultIconRenderers.setup();
 
-        // TODO: Maybe figure out warning on Forge? Priority: Low
         final KeyMapping boardKey = new KeyMapping("bingo.key.board", InputConstants.KEY_B, "bingo.key.category");
         KeyMappingRegistry.register(boardKey);
         ClientTickEvent.CLIENT_PRE.register(instance -> {

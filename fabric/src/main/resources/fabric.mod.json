@@ -18,6 +18,9 @@
     "main": [
       "io.github.gaming32.bingo.fabric.BingoFabric"
     ],
+    "client": [
+      "io.github.gaming32.bingo.client.BingoClient::init"
+    ],
     "fabric-datagen": [
       "io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric"
     ],

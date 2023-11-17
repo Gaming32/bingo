@@ -3,14 +3,10 @@ package io.github.gaming32.bingo;
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.CompoundEventResult;
-import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.common.*;
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
-import dev.architectury.utils.Env;
-import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
@@ -101,9 +97,10 @@ public class Bingo {
 
         BingoNetwork.load();
 
-        if (Platform.getEnvironment() == Env.CLIENT) {
-            ClientLifecycleEvent.CLIENT_SETUP.register(mc -> BingoClient.init());
-        }
+//        ExplosionEvent.PRE.register((level, explosion) -> {
+//            LOGGER.info("Explosion: {}", explosion.radius);
+//            return EventResult.pass();
+//        });
 
         LOGGER.info("I got the diagonal!");
     }

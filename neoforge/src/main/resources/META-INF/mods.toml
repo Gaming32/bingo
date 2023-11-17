@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[47,)"
+loaderVersion="[1,)"
 license="MIT"
 issueTrackerURL="https://github.com/Gaming32/bingo/issues"
 
@@ -14,23 +14,29 @@ description='''
 A mod for playing bingo! Works best if on both client and server, but also has compat for Vanilla clients.
 '''
 
+[[mixins]]
+config = "bingo-common.mixins.json"
+
+[[mixins]]
+config = "bingo.mixins.json"
+
 [[dependencies.bingo]]
-   modId="forge"
+   modId="neoforge"
    mandatory=true
-   versionRange="[47,)"
+   versionRange="[20.2,20.3)"
    ordering="NONE"
    side="BOTH"
 
 [[dependencies.bingo]]
    modId="minecraft"
    mandatory=true
-   versionRange="[1.20.1,1.21)"
+   versionRange="[1.20.2,1.20.3)"
    ordering="NONE"
    side="BOTH"
 
 [[dependencies.bingo]]
    modId="architectury"
    mandatory=true
-   versionRange="[9.1.12,)"
+   versionRange="[10.0.0,)"
    ordering="NONE"
    side="BOTH"
