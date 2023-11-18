@@ -16,10 +16,10 @@ public interface BingoSubType<S extends BingoSub> {
         .<BingoSubType<?>>builder(REGISTRY_KEY.location())
         .build();
 
-    RegistrySupplier<BingoSubType<SubBingoSub>> SUB = register("sub", SubBingoSub.CODEC);
-    RegistrySupplier<BingoSubType<IntBingoSub>> INT = register("int", IntBingoSub.CODEC);
-    RegistrySupplier<BingoSubType<WrapBingoSub>> WRAP = register("wrap", WrapBingoSub.CODEC);
     RegistrySupplier<BingoSubType<CompoundBingoSub>> COMPOUND = register("compound", CompoundBingoSub.CODEC);
+    RegistrySupplier<BingoSubType<IntBingoSub>> INT = register("int", IntBingoSub.CODEC);
+    RegistrySupplier<BingoSubType<SubBingoSub>> SUB = register("sub", SubBingoSub.CODEC);
+    RegistrySupplier<BingoSubType<WrapBingoSub>> WRAP = register("wrap", WrapBingoSub.CODEC);
 
     Codec<S> codec();
 

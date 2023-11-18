@@ -17,11 +17,11 @@ public interface GoalIconType<I extends GoalIcon> {
         .syncToClients()
         .build();
 
-    RegistrySupplier<GoalIconType<EmptyIcon>> EMPTY = register("empty", EmptyIcon.CODEC);
-    RegistrySupplier<GoalIconType<ItemIcon>> ITEM = register("item", ItemIcon.CODEC);
     RegistrySupplier<GoalIconType<BlockIcon>> BLOCK = register("block", BlockIcon.CODEC);
-    RegistrySupplier<GoalIconType<EntityIcon>> ENTITY = register("entity", EntityIcon.CODEC);
     RegistrySupplier<GoalIconType<CycleIcon>> CYCLE = register("cycle", CycleIcon.CODEC);
+    RegistrySupplier<GoalIconType<EmptyIcon>> EMPTY = register("empty", EmptyIcon.CODEC);
+    RegistrySupplier<GoalIconType<EntityIcon>> ENTITY = register("entity", EntityIcon.CODEC);
+    RegistrySupplier<GoalIconType<ItemIcon>> ITEM = register("item", ItemIcon.CODEC);
     RegistrySupplier<GoalIconType<ItemTagCycleIcon>> ITEM_TAG_CYCLE = register("item_tag_cycle", ItemTagCycleIcon.CODEC);
 
     Codec<I> codec();

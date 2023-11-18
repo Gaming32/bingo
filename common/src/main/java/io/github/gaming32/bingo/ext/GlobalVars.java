@@ -7,8 +7,8 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 public final class GlobalVars {
-    public static final ThreadLocalStack<Player> CURRENT_PLAYER = new ThreadLocalStack<>();
     public static final ThreadLocalStack<ItemStack> CURRENT_ITEM = new ThreadLocalStack<>();
+    public static final ThreadLocalStack<Player> CURRENT_PLAYER = new ThreadLocalStack<>();
 
     private GlobalVars() {
     }
