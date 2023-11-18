@@ -1,7 +1,12 @@
 package io.github.gaming32.bingo.data;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
@@ -9,7 +14,7 @@ import it.unimi.dsi.fastutil.floats.FloatList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -18,59 +23,35 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
-public record BingoTag(
-    ResourceLocation id,
-    FloatList difficultyMax,
-    boolean allowedOnSameLine,
-    SpecialType specialType
-) {
-    private static Map<ResourceLocation, BingoTag> tags = Map.of();
+public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, SpecialType specialType) {
+    private static final Codec<FloatList> DIFFICULTY_MAX_CODEC = ExtraCodecs.nonEmptyList(
+        ExtraCodecs.validate(
+            Codec.FLOAT, f -> f >= 0f && f <= 1f
+                ? DataResult.success(f)
+                : DataResult.error(() -> "Value in difficulty_max must be in range [0,1]")
+        ).listOf()
+    ).xmap(FloatArrayList::new, l -> l.doubleStream().mapToObj(d -> (float)d).toList());
+
+    public static final Codec<BingoTag> CODEC = RecordCodecBuilder.create(instance ->
+        instance.group(
+            DIFFICULTY_MAX_CODEC.fieldOf("difficulty_max").forGetter(BingoTag::difficultyMax),
+            ExtraCodecs.strictOptionalField(Codec.BOOL, "allowed_on_same_line", true).forGetter(BingoTag::allowedOnSameLine),
+            ExtraCodecs.strictOptionalField(SpecialType.CODEC, "special_type", SpecialType.NONE).forGetter(BingoTag::specialType)
+        ).apply(instance, BingoTag::new)
+    );
+
+    private static Map<ResourceLocation, Holder> tags = Map.of();
 
     @Nullable
-    public static BingoTag getTag(ResourceLocation id) {
+    public static Holder getTag(ResourceLocation id) {
         return tags.get(id);
     }
 
     public static Set<ResourceLocation> getTags() {
         return tags.keySet();
-    }
-
-    public static BingoTag deserialize(ResourceLocation id, JsonObject json) {
-        final JsonArray difficultyMaxArray = GsonHelper.getAsJsonArray(json, "difficulty_max");
-        final float[] difficultyMax = new float[difficultyMaxArray.size()];
-        for (int i = 0; i < difficultyMax.length; i++) {
-            difficultyMax[i] = GsonHelper.convertToFloat(difficultyMaxArray.get(i), "difficulty_max[" + i + "]");
-        }
-        return new BingoTag(
-            id,
-            FloatList.of(difficultyMax),
-            GsonHelper.getAsBoolean(json, "allowed_on_same_line", true),
-            json.has("special_type")
-                ? BingoUtil.fromJsonElement(SpecialType.CODEC, json.get("special_type"))
-                : SpecialType.NONE
-        );
-    }
-
-    public JsonObject serialize() {
-        final JsonObject result = new JsonObject();
-
-        final JsonArray difficultyMaxArray = new JsonArray(difficultyMax.size());
-        for (final Float max : difficultyMax) {
-            difficultyMaxArray.add(new JsonPrimitive(max));
-        }
-        result.add("difficulty_max", difficultyMaxArray);
-
-        if (!allowedOnSameLine) {
-            result.addProperty("allowed_on_same_line", false);
-        }
-
-        if (specialType != SpecialType.NONE) {
-            result.addProperty("special_type", specialType.getSerializedName());
-        }
-
-        return result;
     }
 
     public float getUnscaledMaxForDifficulty(int difficulty) {
@@ -87,6 +68,23 @@ public record BingoTag(
 
     public static Builder builder(ResourceLocation id) {
         return new Builder(id);
+    }
+
+    public record Holder(ResourceLocation id, BingoTag tag) {
+        @Override
+        public String toString() {
+            return id.toString();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof Holder h && id.equals(h.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return id.hashCode();
+        }
     }
 
     public static final class Builder {
@@ -118,12 +116,12 @@ public record BingoTag(
         }
 
         public Builder specialType(SpecialType specialType) {
-            this.specialType = specialType;
+            this.specialType = Objects.requireNonNull(specialType, "specialType");
             return this;
         }
 
-        public BingoTag build() {
-            return new BingoTag(id, difficultyMax, allowedOnSameLine, specialType);
+        public Holder build() {
+            return new Holder(id, new BingoTag(difficultyMax, allowedOnSameLine, specialType));
         }
     }
 
@@ -143,11 +141,12 @@ public record BingoTag(
 
         @Override
         protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
-            final ImmutableMap.Builder<ResourceLocation, BingoTag> result = ImmutableMap.builder();
+            final ImmutableMap.Builder<ResourceLocation, Holder> result = ImmutableMap.builder();
             for (final var entry : jsons.entrySet()) {
                 try {
-                    final JsonObject json = GsonHelper.convertToJsonObject(entry.getValue(), "bingo tag");
-                    result.put(entry.getKey(), deserialize(entry.getKey(), json));
+                    final BingoTag tag = BingoUtil.fromJsonElement(CODEC, entry.getValue());
+                    final Holder holder = new Holder(entry.getKey(), tag);
+                    result.put(holder.id, holder);
                 } catch (Exception e) {
                     Bingo.LOGGER.error("Parsing error in bingo tag {}: {}", entry.getKey(), e.getMessage());
                 }

@@ -45,7 +45,7 @@ public class BingoBoard {
         LootDataManager lootData,
         Predicate<BingoGoal> isAllowedGoal,
         List<BingoGoal> requiredGoals,
-        Set<BingoTag> excludedTags,
+        Set<BingoTag.Holder> excludedTags,
         boolean allowsClientRequired
     ) {
         final BingoBoard board = new BingoBoard(size);
@@ -69,7 +69,7 @@ public class BingoBoard {
         RandomSource rand,
         Predicate<BingoGoal> isAllowedGoal,
         List<BingoGoal> requiredGoals,
-        Set<BingoTag> excludedTags,
+        Set<BingoTag.Holder> excludedTags,
         boolean allowsClientRequired
     ) {
         final Queue<BingoGoal> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
@@ -85,8 +85,8 @@ public class BingoBoard {
         final Set<String> reactants = new HashSet<>();
         final Set<String> catalysts = new HashSet<>();
 
-        for (final BingoTag tag : excludedTags) {
-            tagCount.put(tag.id(), tag.getMaxForDifficulty(difficulty, size));
+        for (final BingoTag.Holder tag : excludedTags) {
+            tagCount.put(tag.id(), tag.tag().getMaxForDifficulty(difficulty, size));
         }
 
         for (int i = 0; i < size * size; i++) {
@@ -141,18 +141,18 @@ public class BingoBoard {
                 }
 
                 if (!goalCandidate.getTags().isEmpty()) {
-                    for (final BingoTag tag : goalCandidate.getTags()) {
-                        if (tagCount.getInt(tag.id()) >= tag.getMaxForDifficulty(difficulty, size)) {
+                    for (final BingoTag.Holder tag : goalCandidate.getTags()) {
+                        if (tagCount.getInt(tag.id()) >= tag.tag().getMaxForDifficulty(difficulty, size)) {
                             continue goalGen;
                         }
                     }
 
-                    if (goalCandidate.getTags().stream().anyMatch(t -> !t.allowedOnSameLine())) {
+                    if (goalCandidate.getTags().stream().anyMatch(t -> !t.tag().allowedOnSameLine())) {
                         for (int z = 0; z < i; z++) {
-                            final List<BingoTag> tags = generatedSheet[indices[z]].getTags();
+                            final Set<BingoTag.Holder> tags = generatedSheet[indices[z]].getTags();
                             if (!tags.isEmpty() && isOnSameLine(size, indices[i], indices[z])) {
                                 if (tags.stream().anyMatch(t ->
-                                    !t.allowedOnSameLine() &&
+                                    !t.tag().allowedOnSameLine() &&
                                         goalCandidate.getTags().stream().anyMatch(t2 -> t.id().equals(t2.id()))
                                 )) {
                                     continue goalGen;
@@ -182,7 +182,7 @@ public class BingoBoard {
                 break;
             }
 
-            for (final BingoTag tag : goal.getTags()) {
+            for (final BingoTag.Holder tag : goal.getTags()) {
                 tagCount.addTo(tag.id(), 1);
             }
             antisynergys.addAll(goal.getAntisynergy());

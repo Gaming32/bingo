@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,17 +23,17 @@ import java.util.*;
 public record BingoDifficulty(int number, @Nullable String fallbackName) {
     public static final Codec<BingoDifficulty> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
-            BingoCodecs.atLeast(0).fieldOf("number").forGetter(BingoDifficulty::number),
+            ExtraCodecs.NON_NEGATIVE_INT.fieldOf("number").forGetter(BingoDifficulty::number),
             ExtraCodecs.strictOptionalField(Codec.STRING, "fallback_name").forGetter(d -> Optional.ofNullable(d.fallbackName))
         ).apply(instance, BingoDifficulty::new)
     );
 
+    private static Map<ResourceLocation, Holder> byId = Map.of();
+    private static NavigableMap<Integer, Holder> byNumber = ImmutableSortedMap.of();
+
     private BingoDifficulty(int number, Optional<String> fallbackName) {
         this(number, fallbackName.orElse(null));
     }
-
-    private static Map<ResourceLocation, Holder> byId = Map.of();
-    private static NavigableMap<Integer, Holder> byNumber = ImmutableSortedMap.of();
 
     public static Builder builder(ResourceLocation id) {
         return new Builder(id);

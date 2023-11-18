@@ -150,7 +150,7 @@ public interface BingoGameMode {
 
         @Override
         public boolean isGoalAllowed(BingoGoal goal) {
-            return goal.getTags().stream().allMatch(g -> g.specialType() == BingoTag.SpecialType.NONE);
+            return goal.getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
         }
 
         @Override
@@ -194,7 +194,7 @@ public interface BingoGameMode {
 
         @Override
         public boolean isGoalAllowed(BingoGoal goal) {
-            return goal.getTags().stream().allMatch(g -> g.specialType() == BingoTag.SpecialType.NONE);
+            return goal.getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
         }
     };
 

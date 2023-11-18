@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.fabric.datagen;
 
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -30,12 +31,14 @@ public class BingoTagProvider implements DataProvider {
         Set<ResourceLocation> existingTags = new HashSet<>();
         List<CompletableFuture<?>> generators = new ArrayList<>();
 
-        Consumer<BingoTag> tagAdder = tag -> {
+        Consumer<BingoTag.Holder> tagAdder = tag -> {
             if (!existingTags.add(tag.id())) {
                 throw new IllegalArgumentException("Duplicate tag " + tag.id());
             } else {
                 Path path = pathProvider.json(tag.id());
-                generators.add(DataProvider.saveStable(output, tag.serialize(), path));
+                generators.add(DataProvider.saveStable(
+                    output, BingoUtil.toJsonElement(BingoTag.CODEC, tag.tag()), path
+                ));
             }
         };
 
@@ -50,7 +53,7 @@ public class BingoTagProvider implements DataProvider {
         return "Bingo tags";
     }
 
-    private void addTags(Consumer<BingoTag> tagAdder) {
+    private void addTags(Consumer<BingoTag.Holder> tagAdder) {
         tagAdder.accept(BingoTag.builder(BingoTags.ACTION).difficultyMax(20, 20, 20, 20, 20).build());
         tagAdder.accept(BingoTag.builder(BingoTags.BUILD).difficultyMax(20, 20, 20, 20, 20).build());
         tagAdder.accept(BingoTag.builder(BingoTags.COLOR).difficultyMax(2, 2, 2, 2, 2).build());

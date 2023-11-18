@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonParseException;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -51,7 +52,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -347,16 +347,16 @@ public class BingoCommand {
             })
             .toList();
 
-        final Set<BingoTag> excludedTags = excludedTagIds.stream()
+        final Set<BingoTag.Holder> excludedTags = excludedTagIds.stream()
             .distinct()
             .map(id -> {
-                final BingoTag tag = BingoTag.getTag(id);
+                final BingoTag.Holder tag = BingoTag.getTag(id);
                 if (tag == null) {
                     throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_tag", id));
                 }
                 return tag;
             })
-            .collect(Collectors.toUnmodifiableSet());
+            .collect(ImmutableSet.toImmutableSet());
 
         final BingoGameMode gamemode = BingoGameMode.GAME_MODES.get(gamemodeId);
         if (gamemode == null) {
