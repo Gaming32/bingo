@@ -17,8 +17,8 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -37,11 +37,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 public class EasyGoalProvider extends DifficultyGoalProvider {
     public EasyGoalProvider(Consumer<BingoGoal> goalAdder) {
@@ -516,13 +516,10 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("blackstone"), Items.BLACKSTONE, 2, 6)
             .tags(BingoTags.NETHER));
         {
-            final List<Tag> slots = new ArrayList<>(4);
-            for (byte slot = 0; slot < 4; slot++) {
-                slots.add(BingoUtil.compound(Map.of(
-                    "id", StringTag.valueOf(BuiltInRegistries.ITEM.getKey(Items.PORKCHOP).toString()),
-                    "Slot", ByteTag.valueOf(slot)
-                )));
-            }
+            final List<CompoundTag> slots = IntStream.range(0, 4).mapToObj(slot -> BingoUtil.compound(Map.of(
+                "id", StringTag.valueOf(BuiltInRegistries.ITEM.getKey(Items.PORKCHOP).toString()),
+                "Slot", ByteTag.valueOf((byte) slot)
+            ))).toList();
             addGoal(BingoGoal.builder(id("porkchops_in_soul_campfire"))
                 .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                     LocationPredicate.Builder.location().setBlock(
