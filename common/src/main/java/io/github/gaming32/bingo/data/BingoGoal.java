@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.data;
 
+import com.demonwav.mcdev.annotations.Translatable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -529,6 +530,10 @@ public class BingoGoal {
             return this;
         }
 
+        public Builder name(@Translatable(prefix = "bingo.goal.") String name) {
+            return this.name(Component.translatable("bingo.goal." + name));
+        }
+
         public Builder name(Component name) {
             return this.name(name, subber -> {});
         }
@@ -538,6 +543,10 @@ public class BingoGoal {
             subber.accept(json);
             this.name = Optional.of(json.json());
             return this;
+        }
+
+        public Builder tooltip(@Translatable(prefix = "bingo.goal.", suffix = ".tooltip") String tooltip) {
+            return this.tooltip(Component.translatable("bingo.goal." + tooltip + ".tooltip"));
         }
 
         public Builder tooltip(Component tooltip) {

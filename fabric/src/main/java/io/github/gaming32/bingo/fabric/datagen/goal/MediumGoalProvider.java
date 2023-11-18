@@ -73,7 +73,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 ))
             )
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
-            .name(Component.translatable("bingo.goal.potted_cactus"))
+            .name("potted_cactus")
             .icon(Blocks.POTTED_CACTUS, Blocks.CACTUS)
         );
         // TODO: detonate TNT minecart
@@ -88,7 +88,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 .build()
             )
             .tags(BingoTags.NEVER)
-            .name(Component.translatable("bingo.goal.never_wear_armor"))
+            .name("never_wear_armor")
             .icon(Items.DIAMOND_CHESTPLATE)
             .antisynergy("never_wear_armor")
             .catalyst("wear_armor"));
@@ -99,7 +99,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             ))
             .reactant("pacifist")
             .tags(BingoTags.ITEM, BingoTags.COMBAT)
-            .name(Component.translatable("bingo.goal.skeleton_bow"))
+            .name("skeleton_bow")
             .icon(Items.BOW));
         addGoal(obtainItemGoal(id("diamond_block"), Items.DIAMOND_BLOCK)
             .infrequency(2));
@@ -117,7 +117,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("tame_wolf"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.WOLF)))
             .tags(BingoTags.STAT, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
-            .name(Component.translatable("bingo.goal.tame_wolf"))
+            .name("tame_wolf")
             .icon(Items.BONE));
         addGoal(obtainItemGoal(id("fire_charge"), Items.FIRE_CHARGE, 6, 6)
             .tags(BingoTags.NETHER, BingoTags.COMBAT));
@@ -171,7 +171,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atLeast(319))
             ))
             .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.OVERWORLD, BingoTags.FINISH)
-            .name(Component.translatable("bingo.goal.finish_by_free_falling"))
+            .name("finish_by_free_falling")
             .tooltip(Component.translatable("advancements.adventure.fall_from_world_height.description"))
             .icon(Items.WATER_BUCKET)
         );
@@ -183,8 +183,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NEVER, BingoTags.ACTION)
             .antisynergy("food")
             .catalyst("eat_meat")
-            .name(Component.translatable("bingo.goal.vegetarian"))
-            .tooltip(Component.translatable("bingo.goal.vegetarian.tooltip"))
+            .name("vegetarian")
+            .tooltip("vegetarian")
             .icon(new ItemTagCycleIcon(BingoItemTags.NOT_MEAT))
         );
         addGoal(BingoGoal.builder(id("kill_self_with_arrow"))
@@ -195,7 +195,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                     .build()
             ))
             .tags(BingoTags.ACTION)
-            .name(Component.translatable("bingo.goal.kill_self_with_arrow"))
+            .name("kill_self_with_arrow")
             .icon(Items.ARROW));
         addGoal(BingoGoal.builder(id("while_trying_to_escape"))
             .criterion("die", EntityKilledPlayerTrigger.builder()
@@ -208,8 +208,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 .build()
             )
             .tags(BingoTags.ACTION)
-            .name(Component.translatable("bingo.goal.while_trying_to_escape"))
-            .tooltip(Component.translatable("bingo.goal.while_trying_to_escape.tooltip"))
+            .name("while_trying_to_escape")
+            .tooltip("while_trying_to_escape")
             .icon(Items.ZOMBIE_HEAD)
         );
         addGoal(BingoGoal.builder(id("finish_on_top"))
@@ -217,8 +217,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atLeast(319))
             ))
             .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.FINISH)
-            .name(Component.translatable("bingo.goal.finish_on_top"))
-            .tooltip(Component.translatable("bingo.goal.finish_on_top.tooltip"))
+            .name("finish_on_top")
+            .tooltip("finish_on_top")
             .icon(new ItemStack(Items.DIRT, 320))
         );
         // TODO: kill hostile mob with gravel
@@ -273,7 +273,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         // TODO: different flowers
         // TODO: put zombified piglin in water
         addGoal(mineralPillarGoal(id("basic_mineral_blocks"), BingoBlockTags.BASIC_MINERAL_BLOCKS)
-            .name(Component.translatable("bingo.goal.basic_mineral_blocks"))
+            .name("basic_mineral_blocks")
             .tags(BingoTags.OVERWORLD)
             .icon(new ItemTagCycleIcon(BingoItemTags.BASIC_MINERAL_BLOCKS))
         );
@@ -322,7 +322,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("item_frame"), Items.ITEM_FRAME, 10, 32));
         addGoal(obtainSomeItemsFromTag(id("diamond_in_name"), BingoItemTags.DIAMOND_IN_NAME, "bingo.goal.diamond_in_name", 3, 4)
             .antisynergy("diamond_items")
-            .tooltip(Component.translatable("bingo.goal.diamond_in_name.tooltip")));
+            .tooltip("diamond_in_name"));
         addGoal(obtainItemGoal(id("prismarine_crystals"), Items.PRISMARINE_CRYSTALS, 2, 4)
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
@@ -337,8 +337,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                     ))
                 ))
             ))
-            .name(Component.translatable("bingo.goal.one_by_one_hole"))
-            .tooltip(Component.translatable("bingo.goal.one_by_one_hole.tooltip"))
+            .name("one_by_one_hole")
+            .tooltip("one_by_one_hole")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .icon(Items.DIAMOND_PICKAXE)
         );
@@ -357,7 +357,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                     .of(Items.FILLED_MAP)
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
-            .name(Component.translatable("bingo.goal.marker_on_map"))
+            .name("marker_on_map")
             .icon(Items.BLUE_BANNER)
         );
         // TODO: water, lava, milk, fish bucket
@@ -376,7 +376,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         // TODO: never use axe
         addGoal(BingoGoal.builder(id("enchant_item"))
             .criterion("enchant", EnchantedItemTrigger.TriggerInstance.enchantedItem())
-            .name(Component.translatable("bingo.goal.enchant_item"))
+            .name("enchant_item")
             .icon(makeItemWithGlint(Items.IRON_SWORD))
             .antisynergy("enchant")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
@@ -416,7 +416,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         }
         addGoal(BingoGoal.builder(id("tame_cat"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(EntityType.CAT)))
-            .name(Component.translatable("bingo.goal.tame_cat"))
+            .name("tame_cat")
             .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD)
             .icon(EntityIcon.ofSpawnEgg(EntityType.CAT))
         );
@@ -485,7 +485,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("never_craft_sticks"))
             .criterion("craft", RecipeCraftedTrigger.TriggerInstance.craftedItem(new ResourceLocation("stick")))
             .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
-            .name(Component.translatable("bingo.goal.never_craft_sticks"))
+            .name("never_craft_sticks")
             .icon(Items.STICK));
         // TODO: light campfire from 10 blocks away
         // TODO: max scale map
@@ -498,7 +498,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             ))
             .reactant("pacifist")
             .tags(BingoTags.ITEM, BingoTags.COMBAT, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
-            .name(Component.translatable("bingo.goal.pillager_crossbow"))
+            .name("pillager_crossbow")
             .icon(Items.CROSSBOW));
         final ItemStack ominousBanner = simplifyBlockEntityStackData(Raid.getLeaderBannerInstance());
         addGoal(
@@ -599,7 +599,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("crying_obsidian"), Items.CRYING_OBSIDIAN));
         // TODO: kill self with ender pearl
         addGoal(obtainItemGoal(id("grass_block"), Items.GRASS_BLOCK)
-            .tooltip(Component.translatable("bingo.goal.grass_block.tooltip"))
+            .tooltip("grass_block")
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("bounce_on_slime"))
             .criterion("bounce", BounceOnBlockTrigger.TriggerInstance.bounceOnBlock(
@@ -613,7 +613,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
                 Items.GOLDEN_BOOTS, Items.GOLDEN_LEGGINGS, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_HELMET
             ))
-            .name(Component.translatable("bingo.goal.full_gold_armor"))
+            .name("full_gold_armor")
             .icon(new CycleIcon(
                 ItemIcon.ofItem(Items.GOLDEN_BOOTS),
                 ItemIcon.ofItem(Items.GOLDEN_LEGGINGS),
@@ -626,7 +626,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("grow_nether_fungus"))
             .criterion("grow", GrowFeatureTrigger.builder().feature(BingoFeatureTags.HUGE_FUNGI).build())
-            .name(Component.translatable("bingo.goal.grow_nether_fungus"))
+            .name("grow_nether_fungus")
             .icon(new CycleIcon(ItemIcon.ofItem(Items.CRIMSON_FUNGUS), ItemIcon.ofItem(Items.WARPED_FUNGUS)))
             .antisynergy("grow_fungus")
             .tags(BingoTags.ACTION, BingoTags.NETHER)
@@ -635,8 +635,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("never_place_torches"))
             .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(Blocks.TORCH))
             .tags(BingoTags.NEVER)
-            .name(Component.translatable("bingo.goal.never_place_torches"))
-            .tooltip(Component.translatable("bingo.goal.never_place_torches.tooltip"))
+            .name("never_place_torches")
+            .tooltip("never_place_torches")
             .icon(Items.TORCH));
         addGoal(obtainItemGoal(id("scute"), Items.SCUTE)
             .setAntisynergy("turtle_helmet")

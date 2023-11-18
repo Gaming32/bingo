@@ -172,7 +172,7 @@ public abstract class DifficultyGoalProvider {
                 .progress("obtain")
                 .tags(BingoTags.ITEM)
                 .name(Component.translatable("bingo.goal.edible_items", minCount))
-                .tooltip(Component.translatable("bingo.goal.edible_items.tooltip"))
+                .tooltip("edible_items")
                 .tooltipIcon(new ResourceLocation("bingo:textures/gui/tooltips/raw_and_cooked.png"))
                 .antisynergy("edible_items")
                 .infrequency(2)
@@ -184,7 +184,7 @@ public abstract class DifficultyGoalProvider {
             .progress("obtain")
             .tags(BingoTags.ITEM)
             .name(Component.translatable("bingo.goal.edible_items", 0), subber -> subber.sub("with.0", "count"))
-            .tooltip(Component.translatable("bingo.goal.edible_items.tooltip"))
+            .tooltip("edible_items")
             .tooltipIcon(new ResourceLocation("bingo:textures/gui/tooltips/raw_and_cooked.png"))
             .antisynergy("edible_items")
             .infrequency(2)
@@ -291,7 +291,7 @@ public abstract class DifficultyGoalProvider {
                 Component.translatable("bingo.goal.cube", 0, 0, 0, tagName),
                 subber -> subber.sub("with.0", "width").sub("with.1", "height").sub("with.2", "depth")
             )
-            .tooltip(Component.translatable("bingo.goal.cube.tooltip"))
+            .tooltip("cube")
             .icon(icon);
     }
 

@@ -62,7 +62,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                 new ItemTagCycleIcon(BingoItemTags.FISH_BUCKETS),
                 ItemPredicate.Builder.item().of(BingoItemTags.FISH_BUCKETS)
             )
-            .name(Component.translatable("bingo.goal.fish_bucket"))
+            .name("fish_bucket")
             .tooltip(Component.translatable("bingo.goal.fish_bucket.tooltip", Component.translatable("advancements.husbandry.tactical_fishing.title")))
             .antisynergy("fish_bucket")
             .reactant("use_buckets")
@@ -134,7 +134,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("rotten_flesh"), Items.ROTTEN_FLESH, 5, 15)
             .infrequency(2));
         addGoal(obtainItemGoal(id("stone"), Items.STONE, 10, 32)
-            .tooltip(Component.translatable("bingo.goal.stone.tooltip"))
+            .tooltip("stone")
             .infrequency(2)
             .reactant("use_furnace")
             .tags(BingoTags.OVERWORLD));
@@ -151,7 +151,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("sleep_in_bed"))
             .criterion("sleep", PlayerTrigger.TriggerInstance.sleptInBed())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
-            .name(Component.translatable("bingo.goal.sleep_in_bed"))
+            .name("sleep_in_bed")
             .icon(Items.RED_BED)
             .reactant("sleep"));
         addGoal(obtainItemGoal(id("charcoal"), Items.CHARCOAL)
@@ -174,7 +174,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainSomeEdibleItems(id("edible_items"), 2, 3));
         addGoal(BingoGoal.builder(id("breed_mob_pair"))
             .criterion("breed", BredAnimalsTrigger.TriggerInstance.bredAnimals())
-            .name(Component.translatable("bingo.goal.breed_mob_pair"))
+            .name("breed_mob_pair")
             .antisynergy("breed_animals")
             .infrequency(2)
             .tags(BingoTags.ACTION, BingoTags.STAT)
@@ -204,7 +204,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                 LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.ALL_SIGNS)),
                 ItemPredicate.Builder.item().of(BingoItemTags.DYES)
             ))
-            .name(Component.translatable("bingo.goal.dye_sign"))
+            .name("dye_sign")
             .tags(BingoTags.ACTION)
             .icon(Items.OAK_SIGN)
         );
@@ -213,7 +213,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                 LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(Blocks.CAMPFIRE)),
                 ItemPredicate.Builder.item().of(ItemTags.SHOVELS)
             ))
-            .name(Component.translatable("bingo.goal.extinguish_campfire"))
+            .name("extinguish_campfire")
             .tags(BingoTags.ACTION)
             .icon(Items.CAMPFIRE)
         );
@@ -223,12 +223,11 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                     ItemEntityPredicate.item(ItemPredicate.Builder.item().of(Items.CRAFTING_TABLE).build())
                 ).build()
             ))
-            .tags(BingoTags.NEVER)
-            .name(Component.translatable("bingo.goal.never_pickup_crafting_tables"))
-            .tooltip(Component.translatable("bingo.goal.never_pickup_crafting_tables.tooltip"))
+            .tags(BingoTags.NEVER).name("never_pickup_crafting_tables")
+            .tooltip("never_pickup_crafting_tables")
             .icon(Items.CRAFTING_TABLE));
         addGoal(obtainSomeItemsFromTag(id("gold_in_name"), BingoItemTags.GOLD_IN_NAME, "bingo.goal.gold_in_name", 2, 4)
-            .tooltip(Component.translatable("bingo.goal.gold_in_name.tooltip"))
+            .tooltip("gold_in_name")
             .antisynergy("gold_items"));
         addGoal(obtainItemGoal(id("sand"), Items.SAND, 10, 32)
             .infrequency(2)
@@ -246,8 +245,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("never_fish"))
             .criterion("use", TryUseItemTrigger.builder().item(ItemPredicate.Builder.item().of(Items.FISHING_ROD).build()).build())
             .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
-            .name(Component.translatable("bingo.goal.never_fish"))
-            .tooltip(Component.translatable("bingo.goal.never_fish.tooltip"))
+            .name("never_fish").tooltip("never_fish")
             .icon(Items.FISHING_ROD)
             .catalyst("fishing"));
         addGoal(BingoGoal.builder(id("break_hoe"))
@@ -255,14 +253,14 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                 ItemPredicate.Builder.item().of(ItemTags.HOES).build()
             ))
             .tags(BingoTags.ACTION, BingoTags.STAT)
-            .name(Component.translatable("bingo.goal.break_hoe"))
+            .name("break_hoe")
             .icon(Items.STONE_HOE));
         addGoal(BingoGoal.builder(id("bounce_on_bed"))
             .criterion("bounce", BounceOnBlockTrigger.TriggerInstance.bounceOnBlock(
                 BlockPredicate.Builder.block().of(BlockTags.BEDS)
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
-            .name(Component.translatable("bingo.goal.bounce_on_bed"))
+            .name("bounce_on_bed")
             .icon(Items.WHITE_BED)
         );
         addGoal(BingoGoal.builder(id("fill_composter"))
@@ -277,8 +275,8 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                     )
                 )
             ))
-            .name(Component.translatable("bingo.goal.fill_composter"))
-            .tooltip(Component.translatable("bingo.goal.fill_composter.tooltip"))
+            .name("fill_composter")
+            .tooltip("fill_composter")
             .tags(BingoTags.ACTION)
             .icon(Blocks.COMPOSTER.defaultBlockState().setValue(ComposterBlock.LEVEL, 8))
         );
