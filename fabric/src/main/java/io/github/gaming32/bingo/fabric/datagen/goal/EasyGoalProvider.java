@@ -5,6 +5,7 @@ import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.*;
+import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
@@ -50,7 +51,16 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
 
     @Override
     public void addGoals() {
-        // TODO: different fish
+        addGoal(BingoGoal.builder(id("different_fish"))
+            .sub("count", BingoSub.random(2, 4))
+            .criterion("obtain",
+                HasSomeFoodItemsTrigger.builder().requiredCount(0).tag(ItemTags.FISHES).build(),
+                subber -> subber.sub("conditions.required_count", "count"))
+            .progress("obtain")
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.different_fish", 0), subber -> subber.sub("with.0", "count"))
+            .tooltip(Component.translatable("bingo.goal.different_fish.tooltip"))
+            .icon(new ItemTagCycleIcon(ItemTags.FISHES), subber -> subber.sub("count", "count")));
         addGoal(BingoGoal.builder(id("grow_tree_in_nether"))
             .criterion("grow", GrowFeatureTrigger.builder()
                 .feature(BingoFeatureTags.TREES)

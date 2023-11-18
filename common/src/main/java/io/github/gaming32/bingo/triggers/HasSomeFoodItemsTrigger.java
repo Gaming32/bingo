@@ -2,11 +2,16 @@ package io.github.gaming32.bingo.triggers;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -32,7 +37,8 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
     protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
         return new TriggerInstance(
             player,
-            GsonHelper.getAsInt(json, "required_count")
+            GsonHelper.getAsInt(json, "required_count"),
+            BingoUtil.fromOptionalJsonElement(TagPredicate.codec(Registries.ITEM), json.get("tag"))
         );
     }
 
@@ -46,10 +52,12 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
 
     public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
         private final int requiredCount;
+        private final Optional<TagPredicate<Item>> tag;
 
-        public TriggerInstance(Optional<ContextAwarePredicate> player, int requiredCount) {
+        public TriggerInstance(Optional<ContextAwarePredicate> player, int requiredCount, Optional<TagPredicate<Item>> tag) {
             super(player);
             this.requiredCount = requiredCount;
+            this.tag = tag;
         }
 
         @NotNull
@@ -57,6 +65,7 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
         public JsonObject serializeToJson() {
             final JsonObject result = super.serializeToJson();
             result.addProperty("required_count", requiredCount);
+            tag.ifPresent(tag -> result.add("tag", BingoUtil.toJsonElement(TagPredicate.codec(Registries.ITEM), tag)));
             return result;
         }
 
@@ -70,6 +79,9 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
             Set<Item> foundItems = Sets.newIdentityHashSet();
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 ItemStack item = inventory.getItem(i);
+                if (tag.isPresent() && !tag.get().matches(item.getItemHolder())) {
+                    continue;
+                }
                 final FoodProperties food = item.getItem().getFoodProperties();
                 if (food != null) {
                     // attempt to smelt the item
@@ -95,6 +107,7 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
         private Optional<ContextAwarePredicate> player = Optional.empty();
         @Nullable
         private Integer requiredCount = null;
+        private Optional<TagPredicate<Item>> tag = Optional.empty();
 
         private Builder() {
         }
@@ -109,12 +122,21 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
             return this;
         }
 
+        public Builder tag(TagKey<Item> tag) {
+            return tag(TagPredicate.is(tag));
+        }
+
+        public Builder tag(TagPredicate<Item> tag) {
+            this.tag = Optional.of(tag);
+            return this;
+        }
+
         public Criterion<HasSomeFoodItemsTrigger.TriggerInstance> build() {
             if (requiredCount == null) {
                 throw new IllegalStateException("Did not specify requiredCount");
             }
             return BingoTriggers.HAS_SOME_FOOD_ITEMS.createCriterion(
-                new HasSomeFoodItemsTrigger.TriggerInstance(player, requiredCount)
+                new HasSomeFoodItemsTrigger.TriggerInstance(player, requiredCount, tag)
             );
         }
     }

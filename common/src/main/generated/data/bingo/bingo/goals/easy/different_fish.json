@@ -1,0 +1,63 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 4,
+          "min_inclusive": 2
+        }
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": {
+          "bingo_type": "bingo:sub",
+          "value": "count"
+        },
+        "tag": {
+          "expected": true,
+          "id": "minecraft:fishes"
+        }
+      },
+      "trigger": "bingo:has_some_food_items"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "count": {
+      "bingo_type": "bingo:sub",
+      "value": "count"
+    },
+    "tag": "minecraft:fishes"
+  },
+  "name": {
+    "translate": "bingo.goal.different_fish",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.different_fish.tooltip"
+  }
+}
