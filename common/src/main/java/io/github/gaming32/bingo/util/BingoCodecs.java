@@ -1,9 +1,12 @@
 package io.github.gaming32.bingo.util;
 
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Decoder;
+import com.mojang.serialization.DynamicOps;
 import dev.architectury.registry.registries.Registrar;
 import io.github.gaming32.bingo.mixin.common.ContextAwarePredicateAccessor;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -58,5 +61,18 @@ public final class BingoCodecs {
                 ? DataResult.success(value)
                 : DataResult.error(() -> "Value must be greater than " + minInclusive + ": " + value)
         );
+    }
+
+    public static <A> Codec<A> catchIAE(Codec<A> codec) {
+        return Codec.of(codec, new Decoder<>() {
+            @Override
+            public <T> DataResult<Pair<A, T>> decode(DynamicOps<T> ops, T input) {
+                try {
+                    return codec.decode(ops, input);
+                } catch (IllegalArgumentException e) {
+                    return DataResult.error(e::getMessage);
+                }
+            }
+        });
     }
 }

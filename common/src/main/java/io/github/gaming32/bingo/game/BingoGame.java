@@ -2,8 +2,6 @@ package io.github.gaming32.bingo.game;
 
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
-import io.github.gaming32.bingo.data.ProgressTracker;
-import io.github.gaming32.bingo.mixin.common.AdvancementProgressAccessor;
 import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.*;
@@ -237,20 +235,7 @@ public class BingoGame {
         return progress;
     }
 
-    private void onProgress(ServerPlayer player, ActiveGoal goal, String criterionId, int progress, int maxProgress) {
-        if (!(goal.getGoal().getProgress() instanceof ProgressTracker.Criterion progressTracker)) {
-            return;
-        }
-
-        progress = (int) (progress * progressTracker.scale);
-        maxProgress = (int) (maxProgress * progressTracker.scale);
-
-        if (criterionId.equals(progressTracker.criterion)) {
-            updateProgress(player, goal, progress, maxProgress);
-        }
-    }
-
-    private void updateProgress(ServerPlayer player, ActiveGoal goal, int progress, int maxProgress) {
+    public void updateProgress(ServerPlayer player, ActiveGoal goal, int progress, int maxProgress) {
         int goalIndex = getBoardIndex(player, goal);
         if (goalIndex == -1) {
             return;
@@ -292,7 +277,7 @@ public class BingoGame {
         if (!wasDone && progress.isDone()) {
             updateTeamBoard(player, goal, false);
         }
-        onCriteriaChange(player, goal);
+        goal.getGoal().getProgress().criterionChanged(this, player, goal, criterion, true);
         return awarded;
     }
 
@@ -319,7 +304,7 @@ public class BingoGame {
         if (wasDone && !progress.isDone()) {
             updateTeamBoard(player, goal, true);
         }
-        onCriteriaChange(player, goal);
+        goal.getGoal().getProgress().criterionChanged(this, player, goal, criterion, false);
         return revoked;
     }
 
@@ -333,16 +318,6 @@ public class BingoGame {
             success |= revoke(player, goal, criterion);
         }
         return success;
-    }
-
-    private void onCriteriaChange(ServerPlayer player, ActiveGoal goal) {
-        if (goal.getGoal().getProgress() instanceof ProgressTracker.AchievedRequirements) {
-            AdvancementProgress progress = getOrStartProgress(player, goal);
-
-            int amount = ((AdvancementProgressAccessor) progress).callCountCompletedRequirements();
-            int max = goal.getGoal().getRequirements().size();
-            updateProgress(player, goal, amount, max);
-        }
     }
 
     public void flushQueuedGoals(ServerPlayer player) {
@@ -485,7 +460,7 @@ public class BingoGame {
     private record BingoGameProgressListener(BingoGame game, ActiveGoal goal, String criterionId) implements AbstractProgressibleTriggerInstance.ProgressListener {
         @Override
         public void update(ServerPlayer player, int progress, int maxProgress) {
-            game.onProgress(player, goal, criterionId, progress, maxProgress);
+            goal.getGoal().getProgress().goalProgressChanged(game, player, goal, criterionId, progress, maxProgress);
         }
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.ApiStatus;
 
 public interface GoalIcon {
     Codec<GoalIcon> CODEC = BingoCodecs.registrarByName(GoalIconType.REGISTRAR)
@@ -21,6 +22,7 @@ public interface GoalIcon {
 
     GoalIconType<?> type();
 
+    @ApiStatus.NonExtendable
     default JsonObject serializeToJson() {
         return BingoUtil.toJsonObject(CODEC, this);
     }

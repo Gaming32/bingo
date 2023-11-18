@@ -8,6 +8,9 @@ import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.icons.BlockIcon;
 import io.github.gaming32.bingo.data.icons.EmptyIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
+import io.github.gaming32.bingo.data.progresstrackers.CriterionProgressTracker;
+import io.github.gaming32.bingo.data.progresstrackers.EmptyProgressTracker;
+import io.github.gaming32.bingo.data.progresstrackers.ProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -42,7 +45,6 @@ public class BingoGoal {
     private final Map<String, BingoSub> subs;
     private final Map<String, JsonObject> criteria;
     private final AdvancementRequirements requirements;
-    @Nullable
     private final ProgressTracker progress;
     private final Set<BingoTag.Holder> tags;
     private final JsonElement name;
@@ -68,7 +70,7 @@ public class BingoGoal {
         Map<String, BingoSub> subs,
         Map<String, JsonObject> criteria,
         AdvancementRequirements requirements,
-        @Nullable ProgressTracker progress,
+        ProgressTracker progress,
         Collection<BingoTag.Holder> tags,
         JsonElement name,
         @Nullable JsonElement tooltip,
@@ -174,7 +176,9 @@ public class BingoGoal {
                 .stream()
                 .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> BingoSub.deserialize(e.getValue()))),
             criteria, requirements,
-            json.has("progress") ? ProgressTracker.deserialize(GsonHelper.getAsJsonObject(json, "progress")) : null,
+            json.has("progress")
+                ? ProgressTracker.deserialize(GsonHelper.getAsJsonObject(json, "progress"))
+                : EmptyProgressTracker.INSTANCE,
             GsonHelper.getAsJsonArray(json, "tags", new JsonArray())
                 .asList()
                 .stream()
@@ -231,8 +235,8 @@ public class BingoGoal {
 
         result.add("requirements", requirements.toJson());
 
-        if (progress != null) {
-            result.add("progress", progress.serialize());
+        if (progress != EmptyProgressTracker.INSTANCE) {
+            result.add("progress", progress.serializeToJson());
         }
 
         if (!tags.isEmpty()) {
@@ -300,7 +304,6 @@ public class BingoGoal {
         return requirements;
     }
 
-    @Nullable
     public ProgressTracker getProgress() {
         return progress;
     }
@@ -461,8 +464,7 @@ public class BingoGoal {
         private final ImmutableMap.Builder<String, BingoSub> subs = ImmutableMap.builder();
         private final ImmutableMap.Builder<String, JsonObject> criteria = ImmutableMap.builder();
         private Optional<AdvancementRequirements> requirements = Optional.empty();
-        @Nullable
-        private ProgressTracker progress;
+        private ProgressTracker progress = EmptyProgressTracker.INSTANCE;
         private AdvancementRequirements.Strategy requirementsStrategy = AdvancementRequirements.Strategy.AND;
         private final ImmutableSet.Builder<BingoTag.Holder> tags = ImmutableSet.builder();
         private Optional<JsonElement> name = Optional.empty();
@@ -515,7 +517,7 @@ public class BingoGoal {
         }
 
         public Builder progress(String criterion) {
-            return progress(new ProgressTracker.Criterion(criterion, 1));
+            return progress(CriterionProgressTracker.unscaled(criterion));
         }
 
         public Builder tags(ResourceLocation... tags) {

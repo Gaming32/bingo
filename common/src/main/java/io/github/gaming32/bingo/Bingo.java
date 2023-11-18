@@ -12,6 +12,7 @@ import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.icons.GoalIconType;
+import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.network.BingoNetwork;
@@ -76,6 +77,7 @@ public class Bingo {
         BingoConditions.load();
         GoalIconType.load();
         BingoSubType.load();
+        ProgressTrackerType.load();
         BingoTriggers.load();
 
         ReloadListenerRegistry.register(

@@ -12,7 +12,8 @@ public interface GoalIconType<I extends GoalIcon> {
     ResourceKey<Registry<GoalIconType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(
         new ResourceLocation("bingo:goal_icon_type")
     );
-    Registrar<GoalIconType<?>> REGISTRAR = Bingo.REGISTRAR_MANAGER.<GoalIconType<?>>builder(REGISTRY_KEY.location())
+    Registrar<GoalIconType<?>> REGISTRAR = Bingo.REGISTRAR_MANAGER
+        .<GoalIconType<?>>builder(REGISTRY_KEY.location())
         .syncToClients()
         .build();
 

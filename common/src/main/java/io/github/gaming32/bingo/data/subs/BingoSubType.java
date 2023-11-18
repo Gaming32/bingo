@@ -12,7 +12,9 @@ public interface BingoSubType<S extends BingoSub> {
     ResourceKey<Registry<BingoSubType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(
         new ResourceLocation("bingo:bingo_sub_type")
     );
-    Registrar<BingoSubType<?>> REGISTRAR = Bingo.REGISTRAR_MANAGER.<BingoSubType<?>>builder(REGISTRY_KEY.location()).build();
+    Registrar<BingoSubType<?>> REGISTRAR = Bingo.REGISTRAR_MANAGER
+        .<BingoSubType<?>>builder(REGISTRY_KEY.location())
+        .build();
 
     RegistrySupplier<BingoSubType<SubBingoSub>> SUB = register("sub", SubBingoSub.CODEC);
     RegistrySupplier<BingoSubType<IntBingoSub>> INT = register("int", IntBingoSub.CODEC);

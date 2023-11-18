@@ -10,6 +10,7 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
 
@@ -23,10 +24,12 @@ public interface BingoSub {
 
     BingoSubType<?> type();
 
+    @ApiStatus.NonExtendable
     default JsonObject serializeToJson() {
         return BingoUtil.toJsonObject(CODEC, this);
     }
 
+    @ApiStatus.NonExtendable
     default JsonObject serializeInnerToJson() {
         return BingoUtil.toJsonObject(INNER_CODEC, this);
     }

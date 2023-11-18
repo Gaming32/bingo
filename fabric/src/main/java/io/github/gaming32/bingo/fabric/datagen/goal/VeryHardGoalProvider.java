@@ -5,8 +5,8 @@ import io.github.gaming32.bingo.conditions.EndermanHasOnlyBeenDamagedByEndermite
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
-import io.github.gaming32.bingo.data.ProgressTracker;
 import io.github.gaming32.bingo.data.icons.*;
+import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
@@ -340,7 +340,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.all_goat_horns"))
             .tooltip(tooltip)
-            .progress(new ProgressTracker.AchievedRequirements())
+            .progress(AchievedRequirementsProgressTracker.INSTANCE)
             .icon(new CycleIcon(goatHorns.stream().map(ItemIcon::new).toArray(GoalIcon[]::new)))
             .antisynergy("goat_horn");
     }
