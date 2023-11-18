@@ -55,11 +55,8 @@ public class BingoClient {
     private static RecipeViewerPlugin recipeViewerPlugin;
 
     public static void init() {
-        if (!Platform.isNeoForge()) {
-            // TODO: Remove this if when NeoForge in Cloth is fixed
-            AutoConfig.register(BingoClientConfig.class, Toml4jConfigSerializer::new);
-            config = AutoConfig.getConfigHolder(BingoClientConfig.class).getConfig();
-        }
+        AutoConfig.register(BingoClientConfig.class, Toml4jConfigSerializer::new);
+        config = AutoConfig.getConfigHolder(BingoClientConfig.class).getConfig();
 
         if (!Platform.isFabric()) {
             Platform.getMod(Bingo.MOD_ID).registerConfigurationScreen(
