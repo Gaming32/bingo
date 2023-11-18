@@ -161,6 +161,7 @@ public abstract class DifficultyGoalProvider {
             .progress("obtain")
             .tags(BingoTags.ITEM)
             .name(Component.translatable("bingo.goal.all_somethings", Component.translatable("bingo.goal.all_somethings." + what)))
+            .antisynergy("all_" + tag.location().getPath())
             .icon(new ItemTagCycleIcon(tag));
     }
 

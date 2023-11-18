@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Arrays;
 import java.util.List;
 
 public record CycleIcon(List<GoalIcon> icons) implements GoalIcon {
@@ -15,6 +16,10 @@ public record CycleIcon(List<GoalIcon> icons) implements GoalIcon {
 
     public CycleIcon(GoalIcon... icons) {
         this(ImmutableList.copyOf(icons));
+    }
+
+    public static CycleIcon infer(Object... icons) {
+        return new CycleIcon(Arrays.stream(icons).map(GoalIcon::infer).toArray(GoalIcon[]::new));
     }
 
     @Override

@@ -16,6 +16,8 @@
   "bingo.goal.all_somethings.pickaxes": "Pickaxe",
   "bingo.goal.all_somethings.swords": "Sword",
   "bingo.goal.all_somethings.tooltip": "Leather, Gold, Chainmail, Iron, Diamond, and, yes, even Netherite.",
+  "bingo.goal.almost_every_pickaxe": "Wooden, Stone, Gold, Iron and Diamond Pickaxe",
+  "bingo.goal.almost_every_sword": "Wooden, Stone, Gold, Iron and Diamond Sword",
   "bingo.goal.anchor_in_overworld": "(Try to) use a %s in the Overworld",
   "bingo.goal.any_head": "Any mob head OTHER than a Wither Skeleton's",
   "bingo.goal.any_head.tooltip": "Dragon, Skeleton, Zombie, or a Creeper Head. Wither Skeleton skulls do NOT count.",

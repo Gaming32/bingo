@@ -1,4 +1,5 @@
 {
+  "antisynergy": "all_pickaxes",
   "criteria": {
     "obtain": {
       "conditions": {

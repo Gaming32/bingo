@@ -5,6 +5,7 @@ import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.*;
+import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
@@ -261,9 +262,33 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("vine"), Items.VINE, 10, 30)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
-        // TODO: different slabs
-        // TODO: every sword
-        // TODO: every pickaxe
+        addGoal(obtainSomeItemsFromTag(id("different_slabs"), BingoItemTags.SLABS, "bingo.goal.different_slabs", 5, 7)
+            .antisynergy("slabs")
+            .infrequency(2));
+        addGoal(BingoGoal.builder(id("almost_every_sword"))
+            .criterion("wood", InventoryChangeTrigger.TriggerInstance.hasItems(Items.WOODEN_SWORD))
+            .criterion("stone", InventoryChangeTrigger.TriggerInstance.hasItems(Items.STONE_SWORD))
+            .criterion("gold", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GOLDEN_SWORD))
+            .criterion("iron", InventoryChangeTrigger.TriggerInstance.hasItems(Items.IRON_SWORD))
+            .criterion("diamond", InventoryChangeTrigger.TriggerInstance.hasItems(Items.DIAMOND_SWORD))
+            .progress(AchievedRequirementsProgressTracker.INSTANCE)
+            .name(Component.translatable("bingo.goal.almost_every_sword"))
+            .icon(CycleIcon.infer(Items.WOODEN_SWORD, Items.STONE_SWORD, Items.GOLDEN_SWORD, Items.IRON_SWORD, Items.DIAMOND_SWORD))
+            .antisynergy("all_swords")
+            .infrequency(2)
+            .tags(BingoTags.ITEM));
+        addGoal(BingoGoal.builder(id("almost_every_pickaxe"))
+            .criterion("wood", InventoryChangeTrigger.TriggerInstance.hasItems(Items.WOODEN_PICKAXE))
+            .criterion("stone", InventoryChangeTrigger.TriggerInstance.hasItems(Items.STONE_PICKAXE))
+            .criterion("gold", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GOLDEN_PICKAXE))
+            .criterion("iron", InventoryChangeTrigger.TriggerInstance.hasItems(Items.IRON_PICKAXE))
+            .criterion("diamond", InventoryChangeTrigger.TriggerInstance.hasItems(Items.DIAMOND_PICKAXE))
+            .progress(AchievedRequirementsProgressTracker.INSTANCE)
+            .name(Component.translatable("bingo.goal.almost_every_pickaxe"))
+            .icon(CycleIcon.infer(Items.WOODEN_PICKAXE, Items.STONE_PICKAXE, Items.GOLDEN_PICKAXE, Items.IRON_PICKAXE, Items.DIAMOND_PICKAXE))
+            .antisynergy("all_pickaxes")
+            .infrequency(2)
+            .tags(BingoTags.ITEM));
         addGoal(obtainItemGoal(id("bricks"), Items.BRICKS, 16, 64)
             .reactant("use_furnace")
             .tags(BingoTags.OVERWORLD));
@@ -281,7 +306,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(obtainItemGoal(id("fermented_spider_eye"), Items.FERMENTED_SPIDER_EYE)
             .tags(BingoTags.OVERWORLD));
-        // TODO: different stairs
+        addGoal(obtainSomeItemsFromTag(id("different_stairs"), BingoItemTags.STAIRS, "bingo.goal.different_stairs", 5, 7)
+            .antisynergy("stairs")
+            .infrequency(2));
         addGoal(obtainItemGoal(id("ender_pearl"), Items.ENDER_PEARL, 2, 3)
             .infrequency(2));
         addGoal(obtainItemGoal(id("egg"), Items.EGG, 16, 16));
