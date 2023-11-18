@@ -355,6 +355,7 @@ e813c437db7a5a323aabdb24c79163d319273ca3 data/bingo/bingo/goals/very_easy/dye_si
 169b64c40da2fbbd83eac9182502e5f3c3ef34e6 data/bingo/bingo/goals/very_easy/edible_items.json
 5af5749b4f0afbdc435608d786179dddf5823562 data/bingo/bingo/goals/very_easy/extinguish_campfire.json
 a26c6d71bd3c256a93896c9bd80ee21abdb5588b data/bingo/bingo/goals/very_easy/feather.json
+ac99edf188853ce2cfb7ef8eafb7ee316cccacec data/bingo/bingo/goals/very_easy/fill_all_campfire_slots.json
 df28dea5359ccff3c09b6c684a7135880f17c26e data/bingo/bingo/goals/very_easy/fill_composter.json
 26a22fc244e32b4cf874a7b57e0e0aae379a5114 data/bingo/bingo/goals/very_easy/fish_bucket.json
 674ad3b776e112e749f67cf7f5a74358e6d0879e data/bingo/bingo/goals/very_easy/fishing_rod.json

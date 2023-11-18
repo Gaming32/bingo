@@ -49,13 +49,13 @@ public class BingoUtil {
         });
     }
 
-    public static CompoundTag compound(Map<String, Tag> nbt) {
+    public static CompoundTag compound(Map<String, ? extends Tag> nbt) {
         final CompoundTag result = new CompoundTag();
         nbt.forEach(result::put);
         return result;
     }
 
-    public static ListTag list(List<Tag> nbt) {
+    public static ListTag list(List<? extends Tag> nbt) {
         final ListTag result = new ListTag();
         result.addAll(nbt);
         return result;

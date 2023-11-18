@@ -10,9 +10,12 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
 import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -24,8 +27,10 @@ import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 public class VeryEasyGoalProvider extends DifficultyGoalProvider {
     public VeryEasyGoalProvider(Consumer<BingoGoal> goalAdder) {
@@ -176,7 +181,24 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .icon(Items.WHEAT_SEEDS)
         );
         addGoal(crouchDistanceGoal(id("crouch_distance"), 50, 100));
-        // TODO: fill all slots of campfire
+        {
+            final List<CompoundTag> slots = IntStream.range(0, 4).mapToObj(slot -> BingoUtil.compound(Map.of("Slot", ByteTag.valueOf((byte) slot)))).toList();
+            addGoal(BingoGoal.builder(id("fill_all_campfire_slots"))
+                .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+                    LocationPredicate.Builder.location().setBlock(
+                        BlockPredicate.Builder.block()
+                            .of(Blocks.CAMPFIRE)
+                            .hasNbt(BingoUtil.compound(Map.of(
+                                "Items",
+                                BingoUtil.list(slots)
+                            )))
+                    ),
+                    ItemPredicate.Builder.item()
+                ))
+                .name(Component.translatable("bingo.goal.fill_all_campfire_slots", Blocks.CAMPFIRE.getName()))
+                .icon(makeItemWithGlint(Items.CAMPFIRE))
+                .tags(BingoTags.ACTION));
+        }
         addGoal(BingoGoal.builder(id("dye_sign"))
             .criterion("dye", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.ALL_SIGNS)),
