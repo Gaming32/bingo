@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -13,12 +12,12 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 
 public record EffectIcon(MobEffect effect, Potion potion) implements GoalIcon {
-    public static final Codec<EffectIcon> CODEC = BingoCodecs.catchIAE(RecordCodecBuilder.create(instance ->
+    public static final Codec<EffectIcon> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             BuiltInRegistries.MOB_EFFECT.byNameCodec().fieldOf("effect").forGetter(EffectIcon::effect)
         ).apply(instance, EffectIcon::of)
-    ));
-    
+    );
+
     public static EffectIcon of(MobEffect effect) {
         Potion potion = Potions.EMPTY;
         outer: for (Potion p : BuiltInRegistries.POTION) {
