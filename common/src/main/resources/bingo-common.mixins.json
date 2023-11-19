@@ -43,6 +43,7 @@
     "MixinServerPlayer_2",
     "MixinServerScoreboard",
     "MixinServerStatsCounter",
+    "MixinThrownEgg",
     "PlayerAdvancementsAccessor",
     "StatsCounterAccessor"
   ],

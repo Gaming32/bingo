@@ -1,0 +1,41 @@
+{
+  "criteria": {
+    "hatch": {
+      "conditions": {},
+      "trigger": "bingo:chicken_hatch"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "entity": "minecraft:chicken",
+        "item": {
+          "Count": 1,
+          "id": "minecraft:chicken_spawn_egg"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.hatch_chicken"
+  },
+  "requirements": [
+    [
+      "hatch"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

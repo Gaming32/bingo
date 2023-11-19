@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -49,6 +50,9 @@ public interface GoalIcon {
         }
         if (obj instanceof ItemLike item) {
             return ItemIcon.ofItem(item);
+        }
+        if (obj instanceof EntityType<?> entityType) {
+            return EntityIcon.ofSpawnEgg(entityType);
         }
         throw new IllegalArgumentException("Couldn't infer GoalIcon from " + obj);
     }
