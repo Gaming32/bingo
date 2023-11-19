@@ -64,6 +64,7 @@ a3ff350949b8832f1a72ede50ee01c41714c0947 data/bingo/bingo/goals/easy/full_leathe
 e16eb658ce6b7c0cdf72f7816efc7c3bc2ccce3c data/bingo/bingo/goals/easy/give_fox_sword.json
 5eef690cfda42e64caaa31dcc417e92f54f41d3f data/bingo/bingo/goals/easy/glazed_terracotta.json
 234e77f8c7e4433e90b0c9b80d20593e8b2d0201 data/bingo/bingo/goals/easy/gold_block.json
+1d75572482bc3ae4501335ac10011fe89572d71d data/bingo/bingo/goals/easy/gold_in_name.json
 8e6bfd28cf3aca13d55cff324dc94f273a7039a1 data/bingo/bingo/goals/easy/gold_nugget.json
 c29ca6e7caafca347a148e5f9f810369d3eed7cd data/bingo/bingo/goals/easy/golden_apple.json
 05fbd2220ea9604c0c764ce1ef004aaf296792a9 data/bingo/bingo/goals/easy/golden_carrot.json
@@ -86,6 +87,7 @@ e22759ab04cdd0cddb492ca1e036c157629a525e data/bingo/bingo/goals/easy/honeycomb.j
 da7dcad472019f4dd3aa5b181db93994c8b963d8 data/bingo/bingo/goals/easy/milk_cure.json
 b91607835b8590b4fc3a1a5c0f46f7a9d8f3ccad data/bingo/bingo/goals/easy/mossy_cobblestone.json
 22c973a7a55ba64044d99a494c27314187e26315 data/bingo/bingo/goals/easy/mushroom_stew.json
+b9dcbab4e7c1173c7d1f4f7732f94e530f77a50a data/bingo/bingo/goals/easy/nausea.json
 d12f3cd12530deb385f22e3a5027c778be30d8f4 data/bingo/bingo/goals/easy/nether_bricks.json
 6ade61cf7e5d2cb27d16ca2609101555163e4e95 data/bingo/bingo/goals/easy/never_sleep.json
 74478c6f1f5832907aa86559ff856037dfdc12dc data/bingo/bingo/goals/easy/never_use_boat.json
@@ -96,6 +98,7 @@ edb281afdbce025a6e9be25bebef491e9e869c19 data/bingo/bingo/goals/easy/note_block.
 ae3abd8ee032f0dcb4115f2fc61e3ab0375f7431 data/bingo/bingo/goals/easy/oak_log.json
 789239953fb72b99a214b56f8b4395e64e64eb42 data/bingo/bingo/goals/easy/oak_planks.json
 d082b483cad6d6f6841a7ca493ff39b7508a5760 data/bingo/bingo/goals/easy/oak_wood.json
+9157f21b46426df2791356ec1239fafecba5632f data/bingo/bingo/goals/easy/obtain_enchanted_item.json
 a9775cc0ceb17defe62ef51c46a3e47758022269 data/bingo/bingo/goals/easy/orange_dye.json
 3aa2c477ed201a9bba13c2e1d199e4b2719f5e66 data/bingo/bingo/goals/easy/paper.json
 67ae81d5b433fe477269c465ba6d1ad5adfaedbe data/bingo/bingo/goals/easy/pink_dye.json

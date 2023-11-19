@@ -7,6 +7,7 @@ public class DefaultIconRenderers {
         IconRenderers.register(GoalIconType.EMPTY, (icon, graphics, x, y) -> {});
         IconRenderers.register(GoalIconType.ITEM, (icon, graphics, x, y) -> graphics.renderFakeItem(icon.item(), x, y));
         IconRenderers.register(GoalIconType.BLOCK, new BlockIconRenderer());
+        IconRenderers.register(GoalIconType.EFFECT, new EffectIconRenderer());
         IconRenderers.register(GoalIconType.ENTITY, new EntityIconRenderer());
         IconRenderers.register(GoalIconType.CYCLE, new CycleIconRenderer());
         IconRenderers.register(GoalIconType.ITEM_TAG_CYCLE, new ItemTagCycleIconRenderer());

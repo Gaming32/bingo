@@ -27,6 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
@@ -626,8 +627,22 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("barter_with_piglin")
             .icon(EntityIcon.ofSpawnEgg(EntityType.PIGLIN))
             .tags(BingoTags.ACTION, BingoTags.NETHER));
-        // TODO: become nauseous
-        // TODO: enchanted item
+        addGoal(BingoGoal.builder(id("nausea"))
+            .criterion("obtain", EffectsChangedTrigger.TriggerInstance.hasEffects(MobEffectsPredicate.Builder.effects().and(MobEffects.CONFUSION)))
+            .name("nausea")
+            .icon(EffectIcon.of(MobEffects.CONFUSION))
+            .reactant("eat_meat")
+            .tags(BingoTags.ITEM, BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(
+                id("obtain_enchanted_item"),
+                Items.ENCHANTED_BOOK,
+                ItemPredicate.Builder.item().hasNbt(BingoUtil.compound(Map.of("Enchantments", BingoUtil.list(List.of(new CompoundTag()))))),
+                ItemPredicate.Builder.item().hasNbt(BingoUtil.compound(Map.of("StoredEnchantments", BingoUtil.list(List.of(new CompoundTag())))))
+            )
+            .name("obtain_enchanted_item")
+            .tooltip("obtain_enchanted_item")
+            .antisynergy("enchant")
+        );
         // TODO: remove enchantment with grindstone
         // TODO: never use sword
         addGoal(BingoGoal.builder(id("carnivore"))
@@ -643,7 +658,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(new ItemTagCycleIcon(BingoItemTags.MEAT))
         );
         // TODO: clean banner
-        // TODO: 5-7 different gold items
+        addGoal(obtainSomeItemsFromTag(id("gold_in_name"), BingoItemTags.GOLD_IN_NAME, "bingo.goal.gold_in_name", 5, 7)
+            .tooltip("gold_in_name")
+            .antisynergy("gold_items"));
         addGoal(obtainItemGoal(id("sand"), Items.SAND, 33, 64)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));

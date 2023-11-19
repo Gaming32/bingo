@@ -1,0 +1,33 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "effects": {
+          "minecraft:nausea": {}
+        }
+      },
+      "trigger": "minecraft:effects_changed"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:effect",
+    "value": {
+      "effect": "minecraft:nausea"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.nausea"
+  },
+  "reactant": "eat_meat",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:ocean",
+    "bingo:overworld"
+  ]
+}
