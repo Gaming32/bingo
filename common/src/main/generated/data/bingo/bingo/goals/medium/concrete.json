@@ -6,8 +6,8 @@
       "value": {
         "type": "minecraft:uniform",
         "value": {
-          "max_inclusive": 14,
-          "min_inclusive": 11
+          "max_inclusive": 10,
+          "min_inclusive": 7
         }
       }
     }
@@ -24,7 +24,7 @@
       "trigger": "bingo:has_some_items_from_tag"
     }
   },
-  "difficulty": "bingo:hard",
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item_tag_cycle",
     "count": {

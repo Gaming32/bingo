@@ -1,13 +1,13 @@
 {
-  "antisynergy": "concrete_color",
+  "antisynergy": "flowers",
   "bingo_subs": {
     "count": {
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
-          "max_inclusive": 14,
-          "min_inclusive": 11
+          "max_inclusive": 10,
+          "min_inclusive": 8
         }
       }
     }
@@ -19,23 +19,23 @@
           "bingo_type": "bingo:sub",
           "value": "count"
         },
-        "tag": "bingo:concrete"
+        "tag": "minecraft:flowers"
       },
       "trigger": "bingo:has_some_items_from_tag"
     }
   },
-  "difficulty": "bingo:hard",
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item_tag_cycle",
     "count": {
       "bingo_type": "bingo:sub",
       "value": "count"
     },
-    "tag": "bingo:concrete"
+    "tag": "minecraft:flowers"
   },
-  "infrequency": 4,
+  "infrequency": 2,
   "name": {
-    "translate": "bingo.goal.concrete",
+    "translate": "bingo.goal.different_flowers",
     "with": [
       {
         "bingo_type": "bingo:sub",
@@ -54,7 +54,6 @@
   ],
   "tags": [
     "bingo:item",
-    "bingo:color",
     "bingo:overworld"
   ]
 }

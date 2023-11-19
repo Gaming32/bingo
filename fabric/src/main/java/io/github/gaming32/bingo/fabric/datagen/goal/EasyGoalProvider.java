@@ -13,6 +13,7 @@ import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
+import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.client.KeyMapping;
@@ -29,6 +30,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -72,7 +74,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("grow_tree_in_nether")
             .tooltip("grow_tree_in_nether")
             .icon(Items.BONE_MEAL));
-        addGoal(obtainSomeItemsFromTag(id("colors_of_terracotta"), ItemTags.TERRACOTTA, "bingo.goal.colors_of_terracotta", 4, 7)
+        addGoal(obtainSomeItemsFromTag(id("terracotta"), ItemTags.TERRACOTTA, "bingo.goal.colors_of_terracotta", 4, 7)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD)
             .reactant("use_furnace")
             .antisynergy("terracotta_color")
@@ -337,7 +339,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD)
         );
-        // TODO: trade with a villager
+        addGoal(BingoGoal.builder(id("villager_trade"))
+            .criterion("obtain", TradeTrigger.TriggerInstance.tradedWithVillager())
+            .name("villager_trade")
+            .icon(EntityIcon.ofSpawnEgg(EntityType.VILLAGER))
+            .tags(BingoTags.VILLAGE, BingoTags.ACTION, BingoTags.OVERWORLD));
         // TODO: different colored shields
         addGoal(obtainItemGoal(id("dead_bush"), Items.DEAD_BUSH)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
@@ -380,9 +386,19 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .antisynergy("bucket_types", "water_bucket", "lava_bucket", "milk_bucket")
             .reactant("use_buckets"));
-        // TODO: different flowers
-        // TODO: colors of concrete
-        // TODO: colors of glazed terracotta
+        addGoal(obtainSomeItemsFromTag(id("different_flowers"), ItemTags.FLOWERS, "bingo.goal.different_flowers", 5, 7)
+            .antisynergy("flowers")
+            .infrequency(2)
+            .tags(BingoTags.OVERWORLD));
+        addGoal(obtainSomeItemsFromTag(id("concrete"), BingoItemTags.CONCRETE, "bingo.goal.concrete", 3, 6)
+            .antisynergy("concrete_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
+        addGoal(obtainSomeItemsFromTag(id("glazed_terracotta"), BingoItemTags.GLAZED_TERRACOTTA, "bingo.goal.glazed_terracotta", 3, 6)
+            .reactant("use_furnace")
+            .antisynergy("glazed_terracotta_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(bedRowGoal(id("bed_row"), 3, 6));
         addGoal(BingoGoal.builder(id("finish_at_spawn"))
             .criterion("nearby", CriteriaTriggers.LOCATION.createCriterion(
@@ -413,7 +429,21 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("golden_carrot"), Items.GOLDEN_CARROT)
             .tags(BingoTags.OVERWORLD));
-        // TODO: rotten flesh, spider eye, bone, gunpowder and ender pearl
+        addGoal(BingoGoal.builder(id("common_mob_drops"))
+            .criterion("rotten_flesh", InventoryChangeTrigger.TriggerInstance.hasItems(Items.ROTTEN_FLESH))
+            .criterion("spider_eye", InventoryChangeTrigger.TriggerInstance.hasItems(Items.SPIDER_EYE))
+            .criterion("bone", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BONE))
+            .criterion("gunpowder", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GUNPOWDER))
+            .criterion("ender_pearl", InventoryChangeTrigger.TriggerInstance.hasItems(Items.ENDER_PEARL))
+            .progress(AchievedRequirementsProgressTracker.INSTANCE)
+            .name(Component.translatable("bingo.goal.common_mob_drops",
+                Items.ROTTEN_FLESH.getDescription(),
+                Items.SPIDER_EYE.getDescription(),
+                Items.BONE.getDescription(),
+                Items.GUNPOWDER.getDescription(),
+                Items.ENDER_PEARL.getDescription()))
+            .icon(CycleIcon.infer(Items.ROTTEN_FLESH, Items.SPIDER_EYE, Items.BONE, Items.GUNPOWDER, Items.ENDER_PEARL))
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("feather"), Items.FEATHER, 32, 64)
             .infrequency(2));
         addGoal(obtainItemGoal(id("lily_pad"), Items.LILY_PAD, 2, 10)
@@ -584,7 +614,18 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         // TODO: open door with target block from 10 blocks away
         addGoal(obtainItemGoal(id("carrot_on_a_stick"), Items.CARROT_ON_A_STICK)
             .tags(BingoTags.OVERWORLD));
-        // TODO: barter with piglin
+        addGoal(BingoGoal.builder(id("barter_with_piglin"))
+            .criterion("barter", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(new PickedUpItemTrigger.TriggerInstance(
+                Optional.empty(),
+                Optional.of(ItemPredicate.Builder.item().of(PiglinAi.BARTERING_ITEM).build()),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.PIGLIN).flags(EntityFlagsPredicate.Builder.flags().setIsBaby(false)))))))
+            .criterion("barter_directly", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                ItemPredicate.Builder.item().of(PiglinAi.BARTERING_ITEM),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.PIGLIN).flags(EntityFlagsPredicate.Builder.flags().setIsBaby(false))))))
+            .requirements(AdvancementRequirements.Strategy.OR)
+            .name("barter_with_piglin")
+            .icon(EntityIcon.ofSpawnEgg(EntityType.PIGLIN))
+            .tags(BingoTags.ACTION, BingoTags.NETHER));
         // TODO: become nauseous
         // TODO: enchanted item
         // TODO: remove enchantment with grindstone

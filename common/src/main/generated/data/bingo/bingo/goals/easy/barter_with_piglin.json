@@ -1,0 +1,70 @@
+{
+  "criteria": {
+    "barter": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:piglin",
+              "flags": {
+                "is_baby": false
+              }
+            }
+          }
+        ],
+        "item": {
+          "items": [
+            "minecraft:gold_ingot"
+          ]
+        }
+      },
+      "trigger": "minecraft:thrown_item_picked_up_by_entity"
+    },
+    "barter_directly": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:piglin",
+              "flags": {
+                "is_baby": false
+              }
+            }
+          }
+        ],
+        "item": {
+          "items": [
+            "minecraft:gold_ingot"
+          ]
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:entity",
+    "entity": "minecraft:piglin",
+    "item": {
+      "Count": 1,
+      "id": "minecraft:piglin_spawn_egg"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.barter_with_piglin"
+  },
+  "requirements": [
+    [
+      "barter",
+      "barter_directly"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:nether"
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "antisynergy": "concrete_color",
+  "antisynergy": "flowers",
   "bingo_subs": {
     "count": {
       "type": "bingo:int",
@@ -19,7 +19,7 @@
           "bingo_type": "bingo:sub",
           "value": "count"
         },
-        "tag": "bingo:concrete"
+        "tag": "bingo:flowers"
       },
       "trigger": "bingo:has_some_items_from_tag"
     }
@@ -31,11 +31,11 @@
       "bingo_type": "bingo:sub",
       "value": "count"
     },
-    "tag": "bingo:concrete"
+    "tag": "bingo:flowers"
   },
-  "infrequency": 4,
+  "infrequency": 3,
   "name": {
-    "translate": "bingo.goal.concrete",
+    "translate": "bingo.goal.different_flowers",
     "with": [
       {
         "bingo_type": "bingo:sub",
@@ -54,7 +54,7 @@
   ],
   "tags": [
     "bingo:item",
-    "bingo:color",
+    "bingo:rare_biome",
     "bingo:overworld"
   ]
 }

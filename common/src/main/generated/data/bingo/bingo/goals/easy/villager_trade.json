@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "obtain": {
+      "trigger": "minecraft:villager_trade"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:entity",
+    "entity": "minecraft:villager",
+    "item": {
+      "Count": 1,
+      "id": "minecraft:villager_spawn_egg"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.villager_trade"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:village",
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

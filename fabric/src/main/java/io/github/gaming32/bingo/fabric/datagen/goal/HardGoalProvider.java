@@ -87,7 +87,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .name("listen_to_music")
             .icon(Items.JUKEBOX));
-        addGoal(obtainSomeItemsFromTag(id("flowers"), BingoItemTags.FLOWERS, "bingo.goal.flowers", 11, 14)
+        addGoal(obtainSomeItemsFromTag(id("different_flowers"), BingoItemTags.FLOWERS, "bingo.goal.different_flowers", 11, 14)
             .antisynergy("flowers")
             .infrequency(3)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
@@ -142,7 +142,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .antisynergy("glazed_terracotta_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("concrete"), BingoItemTags.CONCRETE, "bingo.goal.concrete", 12, 14)
+        addGoal(obtainSomeItemsFromTag(id("concrete"), BingoItemTags.CONCRETE, "bingo.goal.concrete", 11, 14)
             .antisynergy("concrete_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));

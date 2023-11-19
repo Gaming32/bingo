@@ -265,12 +265,27 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .antisynergy("wool_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
-        // TODO: colors of terracotta
-        // TODO: colors of glazed terracotta
-        // TODO: colors of concrete
+        addGoal(obtainSomeItemsFromTag(id("terracotta"), ItemTags.TERRACOTTA, "bingo.goal.colors_of_terracotta", 8, 11)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD)
+            .reactant("use_furnace")
+            .antisynergy("terracotta_color")
+            .infrequency(4)
+        );
+        addGoal(obtainSomeItemsFromTag(id("glazed_terracotta"), BingoItemTags.GLAZED_TERRACOTTA, "bingo.goal.glazed_terracotta", 7, 10)
+            .reactant("use_furnace")
+            .antisynergy("glazed_terracotta_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
+        addGoal(obtainSomeItemsFromTag(id("concrete"), BingoItemTags.CONCRETE, "bingo.goal.concrete", 7, 10)
+            .antisynergy("concrete_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(bedRowGoal(id("bed_row"), 7, 10));
         // TODO: power redstone lamp
-        // TODO: different flowers
+        addGoal(obtainSomeItemsFromTag(id("different_flowers"), ItemTags.FLOWERS, "bingo.goal.different_flowers", 8, 10)
+            .antisynergy("flowers")
+            .infrequency(2)
+            .tags(BingoTags.OVERWORLD));
         // TODO: put zombified piglin in water
         addGoal(mineralPillarGoal(id("basic_mineral_blocks"), BingoBlockTags.BASIC_MINERAL_BLOCKS)
             .name("basic_mineral_blocks")

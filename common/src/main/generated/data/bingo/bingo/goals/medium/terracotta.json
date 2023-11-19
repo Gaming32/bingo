@@ -1,13 +1,13 @@
 {
-  "antisynergy": "concrete_color",
+  "antisynergy": "terracotta_color",
   "bingo_subs": {
     "count": {
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
         "value": {
-          "max_inclusive": 14,
-          "min_inclusive": 11
+          "max_inclusive": 11,
+          "min_inclusive": 8
         }
       }
     }
@@ -19,23 +19,23 @@
           "bingo_type": "bingo:sub",
           "value": "count"
         },
-        "tag": "bingo:concrete"
+        "tag": "minecraft:terracotta"
       },
       "trigger": "bingo:has_some_items_from_tag"
     }
   },
-  "difficulty": "bingo:hard",
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item_tag_cycle",
     "count": {
       "bingo_type": "bingo:sub",
       "value": "count"
     },
-    "tag": "bingo:concrete"
+    "tag": "minecraft:terracotta"
   },
   "infrequency": 4,
   "name": {
-    "translate": "bingo.goal.concrete",
+    "translate": "bingo.goal.colors_of_terracotta",
     "with": [
       {
         "bingo_type": "bingo:sub",
@@ -47,6 +47,7 @@
     "type": "bingo:criterion",
     "criterion": "obtain"
   },
+  "reactant": "use_furnace",
   "requirements": [
     [
       "obtain"
