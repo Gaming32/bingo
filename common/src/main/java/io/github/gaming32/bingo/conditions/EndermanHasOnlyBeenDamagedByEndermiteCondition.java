@@ -4,10 +4,13 @@ import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.ext.EnderManExt;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 // TODO: Maybe make this condition more general?
 public enum EndermanHasOnlyBeenDamagedByEndermiteCondition implements LootItemCondition {
@@ -25,5 +28,11 @@ public enum EndermanHasOnlyBeenDamagedByEndermiteCondition implements LootItemCo
     public boolean test(LootContext lootContext) {
         Entity entity = lootContext.getParam(LootContextParams.THIS_ENTITY);
         return entity instanceof EnderManExt enderman && enderman.bingo$hasOnlyBeenDamagedByEndermite();
+    }
+
+    @NotNull
+    @Override
+    public Set<LootContextParam<?>> getReferencedContextParams() {
+        return Set.of(LootContextParams.THIS_ENTITY);
     }
 }
