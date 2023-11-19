@@ -12,9 +12,7 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:effect",
-    "value": {
-      "effect": "minecraft:nausea"
-    }
+    "effect": "minecraft:nausea"
   },
   "name": {
     "translate": "bingo.goal.nausea"

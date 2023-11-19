@@ -5,6 +5,7 @@ import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.DistanceTrigger;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class BingoTriggers {
     public static final BedRowTrigger BED_ROW = register("bingo:bed_row", new BedRowTrigger());
     public static final BounceOnBlockTrigger BOUNCE_ON_BLOCK = register("bingo:bounce_on_block", new BounceOnBlockTrigger());
     public static final BreakBlockTrigger BREAK_BLOCK = register("bingo:break_block", new BreakBlockTrigger());
+    public static final ChickenHatchTrigger CHICKEN_HATCH = register("bingo:chicken_hatch", new ChickenHatchTrigger());
     public static final CompleteMapTrigger COMPLETED_MAP = register("bingo:completed_map", new CompleteMapTrigger());
     public static final DeathTrigger DEATH = register("bingo:death", new DeathTrigger());
     public static final DestroyVehicleTrigger DESTROY_VEHICLE = register("bingo:destroy_vehicle", new DestroyVehicleTrigger());

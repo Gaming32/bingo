@@ -686,7 +686,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .icon(EntityIcon.ofSpawnEgg(EntityType.HORSE))
         );
-        // TODO: hatch chicken from egg
+        addGoal(BingoGoal.builder(id("hatch_chicken"))
+            .criterion("hatch", ChickenHatchTrigger.builder().build())
+            .name("hatch_chicken")
+            .icon(CycleIcon.infer(Items.EGG, EntityType.CHICKEN))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
         // TODO: empty cauldron without buckets or bottles
         addGoal(BingoGoal.builder(id("sleep_in_villager_bed"))
             .criterion("sleep", BingoTriggers.slept(

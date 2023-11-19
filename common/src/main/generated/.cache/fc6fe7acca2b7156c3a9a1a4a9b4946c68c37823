@@ -73,6 +73,7 @@ d790d5afd286e09d73df651e515fe18b5f78ce99 data/bingo/bingo/goals/easy/grass.json
 c4bb82330ac59eee13d36ecb18089b4ad714aba6 data/bingo/bingo/goals/easy/grow_huge_mushroom.json
 c8f7a26f46e6518167d66c25504970976aea7222 data/bingo/bingo/goals/easy/grow_tree_in_nether.json
 1a97df8ef8a3a0decfa5697660d683103f48bf90 data/bingo/bingo/goals/easy/gunpowder.json
+144a362aa0a7cfdd64a8d6d271cd3fb1d03fe81b data/bingo/bingo/goals/easy/hatch_chicken.json
 ad7809f152ba15756e4e736d9c514974264ba861 data/bingo/bingo/goals/easy/hay_block.json
 4e4d0fef95689be406704044336f61599f5cb674 data/bingo/bingo/goals/easy/honey_bottle.json
 e22759ab04cdd0cddb492ca1e036c157629a525e data/bingo/bingo/goals/easy/honeycomb.json
@@ -87,7 +88,7 @@ e22759ab04cdd0cddb492ca1e036c157629a525e data/bingo/bingo/goals/easy/honeycomb.j
 da7dcad472019f4dd3aa5b181db93994c8b963d8 data/bingo/bingo/goals/easy/milk_cure.json
 b91607835b8590b4fc3a1a5c0f46f7a9d8f3ccad data/bingo/bingo/goals/easy/mossy_cobblestone.json
 22c973a7a55ba64044d99a494c27314187e26315 data/bingo/bingo/goals/easy/mushroom_stew.json
-b9dcbab4e7c1173c7d1f4f7732f94e530f77a50a data/bingo/bingo/goals/easy/nausea.json
+0badf47479468328fe88c6fe8c5536de9a1ec89e data/bingo/bingo/goals/easy/nausea.json
 d12f3cd12530deb385f22e3a5027c778be30d8f4 data/bingo/bingo/goals/easy/nether_bricks.json
 6ade61cf7e5d2cb27d16ca2609101555163e4e95 data/bingo/bingo/goals/easy/never_sleep.json
 74478c6f1f5832907aa86559ff856037dfdc12dc data/bingo/bingo/goals/easy/never_use_boat.json
