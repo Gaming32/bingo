@@ -2,14 +2,16 @@ package io.github.gaming32.bingo.fabric.client;
 
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.network.BingoNetwork;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.concurrent.CompletableFuture;
 
-public class BingoFabricClient {
-    public static void init() {
+public class BingoFabricClient implements ClientModInitializer {
+    @Override
+    public void onInitializeClient() {
         ClientLoginNetworking.registerGlobalReceiver(BingoNetwork.PROTOCOL_VERSION_PACKET, (client, handler, buf, listenerAdder) -> {
             final int serverVersion = buf.readVarInt();
             if (serverVersion != BingoNetwork.PROTOCOL_VERSION) {
