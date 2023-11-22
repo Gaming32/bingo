@@ -25,6 +25,7 @@ import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BingoGameMode;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.*;
+import net.minecraft.commands.arguments.ColorArgument;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.TeamArgument;
@@ -34,6 +35,7 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
@@ -98,7 +100,7 @@ public class BingoCommand {
                 .requires(source -> source.hasPermission(2) && Bingo.activeGame != null)
                 .executes(ctx -> {
                     if (Bingo.activeGame == null) {
-                        throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                        throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
                     }
                     Bingo.activeGame.endGame(ctx.getSource().getServer().getPlayerList(), Bingo.activeGame.getWinner(true));
                     return Command.SINGLE_SUCCESS;
@@ -108,7 +110,7 @@ public class BingoCommand {
                 .requires(source -> Bingo.activeGame != null)
                 .executes(ctx -> {
                     if (Bingo.activeGame == null) {
-                        throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                        throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
                     }
                     int size = Bingo.activeGame.getBoard().getSize();
 
@@ -151,7 +153,7 @@ public class BingoCommand {
                 .then(literal("copy")
                     .executes(ctx -> {
                         if (Bingo.activeGame == null) {
-                            throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                            throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
                         }
                         ctx.getSource().sendSuccess(() -> ComponentUtils.wrapInSquareBrackets(
                             Bingo.translatable("bingo.board.copy")
@@ -167,7 +169,7 @@ public class BingoCommand {
                     .requires(source -> source.hasPermission(2))
                     .executes(ctx -> {
                         if (Bingo.activeGame == null) {
-                            throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                            throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
                         }
                         final BingoBoard board = Bingo.activeGame.getBoard();
                         final StringBuilder line = new StringBuilder(board.getSize());
@@ -190,7 +192,7 @@ public class BingoCommand {
                             .suggests(ACTIVE_GOAL_SUGGESTOR)
                             .executes(context -> {
                                 if (Bingo.activeGame == null) {
-                                    throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                                    throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
                                 }
                                 final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
                                 final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
@@ -219,7 +221,7 @@ public class BingoCommand {
                             .suggests(ACTIVE_GOAL_SUGGESTOR)
                             .executes(context -> {
                                 if (Bingo.activeGame == null) {
-                                    throw new CommandRuntimeException(Component.translatable("bingo.no_game_running"));
+                                    throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
                                 }
                                 final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
                                 final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
@@ -242,6 +244,59 @@ public class BingoCommand {
                                 return success;
                             })
                         )
+                    )
+                )
+            )
+            .then(literal("teams")
+                .requires(source -> source.hasPermission(2))
+                .then(literal("create")
+                    .then(argument("color", ColorArgument.color())
+                        .suggests((context, builder) -> {
+                            final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
+                            return SharedSuggestionProvider.suggest(
+                                ChatFormatting.getNames(true, false)
+                                    .stream()
+                                    .filter(n -> scoreboard.getPlayerTeam(n) == null),
+                                builder
+                            );
+                        })
+                        .executes(context -> {
+                            final ChatFormatting color = ColorArgument.getColor(context, "color");
+                            final String name = color.getName();
+
+                            final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
+                            final PlayerTeam existing = scoreboard.getPlayerTeam(name);
+                            if (existing != null) {
+                                throw new CommandRuntimeException(Bingo.translatable(
+                                    "bingo.team_already_exists", existing.getFormattedDisplayName()
+                                ));
+                            }
+
+                            final PlayerTeam team = scoreboard.addPlayerTeam(name);
+                            team.setColor(color);
+                            team.setDisplayName(Bingo.translatable("bingo.formatting." + name));
+
+                            context.getSource().sendSuccess(
+                                () -> Bingo.translatable("bingo.created_team", team.getFormattedDisplayName()),
+                                true
+                            );
+                            return 1;
+                        })
+                    )
+                )
+                .then(literal("randomize")
+                    .executes(context -> randomizeTeams(
+                        context,
+                        context.getSource()
+                            .getServer()
+                            .getPlayerList()
+                            .getPlayers()
+                            .stream()
+                            .filter(p -> !p.isSpectator())
+                            .toList()
+                    ))
+                    .then(argument("players", EntityArgument.players())
+                        .executes(context -> randomizeTeams(context, EntityArgument.getPlayers(context, "players")))
                     )
                 )
             )
@@ -401,6 +456,27 @@ public class BingoCommand {
         playerList.getPlayers().forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(Bingo.translatable("bingo.started", difficulty.getDescription()), false);
         return Command.SINGLE_SUCCESS;
+    }
+
+    private static int randomizeTeams(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) {
+        final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
+        final List<PlayerTeam> teams = new ArrayList<>(scoreboard.getPlayerTeams());
+        if (teams.isEmpty()) {
+            throw new CommandRuntimeException(Bingo.translatable("bingo.no_teams"));
+        }
+
+        final List<ServerPlayer> playerList = new ArrayList<>(players);
+        Collections.shuffle(playerList);
+        Collections.shuffle(teams);
+        for (int i = 0; i < playerList.size(); i++) {
+            scoreboard.addPlayerToTeam(playerList.get(i).getScoreboardName(), teams.get(i % teams.size()));
+        }
+
+        context.getSource().sendSuccess(
+            () -> Bingo.translatable("bingo.added_to_teams", players.size(), Math.min(players.size(), teams.size())),
+            true
+        );
+        return players.size();
     }
 
     private static <T> T getArg(
