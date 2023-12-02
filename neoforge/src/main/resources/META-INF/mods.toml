@@ -23,7 +23,7 @@ config = "bingo.mixins.json"
 [[dependencies.bingo]]
    modId="neoforge"
    mandatory=true
-   versionRange="[20.2.59-beta,)"
+   versionRange="[20.2.84-beta,)"
    ordering="NONE"
    side="BOTH"
 
