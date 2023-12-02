@@ -48,6 +48,10 @@ Here is a more complicated example with a smaller board and easier goals: `/bing
 
 The Bingo mod's goals, difficulties, and tags (used in board generation) are entirely data-driven and can be modified with datapacks. For examples of the formats of these, check the mod's [default data folder](common/src/main/generated/data).
 
+## Credits
+
+Many of the goals this Bingo mod adds originally come from v4 the [mcbingo](https://minecraftbingo.com/) website.
+
 ## Contributing
 
 The process of contributing is the same as for any other Minecraft mod. Please ask before making any large changes.
