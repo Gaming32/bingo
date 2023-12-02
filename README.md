@@ -8,19 +8,19 @@ A Bingo mod that displays the bingo board on players' screens and tracks progres
 
 - A bingo board rendered in the corner of the screen: 
 
-  ![board.png](images/board.png)
+  ![Bingo board](images/board.png)
 
 - Different gamemodes:
 
-  ![board.png](images/gamemodes.png)
+  ![Gamemode choices in command](images/gamemodes.png)
 
 - Tracking the progress of goals:
 
-  ![board.png](images/progress.png)
+  ![Progress display of a goal](images/progress.png)
 
 - Vanilla friendly:
 
-  ![board.png](images/vanilla.png)
+  ![Shows bingo board in Advancements](images/vanilla.png)
 
 ## Installation
 
