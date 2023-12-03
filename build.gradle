@@ -7,6 +7,8 @@ architectury {
     minecraft = rootProject.minecraft_version
 }
 
+version = rootProject.mod_version
+
 subprojects {
     apply plugin: "dev.architectury.loom"
 
@@ -24,6 +26,8 @@ subprojects {
 
         compileOnly 'com.demonwav.mcdev:annotations:2.0.0'
     }
+
+    version = "${rootProject.version}+$name"
 }
 
 allprojects {
@@ -32,7 +36,6 @@ allprojects {
     apply plugin: "maven-publish"
 
     archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
     group = rootProject.maven_group
 
     repositories {

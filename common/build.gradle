@@ -20,7 +20,6 @@ architectury {
 
 loom {
     accessWidenerPath = file("src/main/resources/bingo.accessWidener")
-    println(files.defaultLog4jConfigFile)
 }
 
 sourceSets {
