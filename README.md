@@ -50,7 +50,7 @@ The Bingo mod's goals, difficulties, and tags (used in board generation) are ent
 
 ## Credits
 
-Many of the goals this Bingo mod adds originally come from v4 the [mcbingo](https://minecraftbingo.com/) website.
+Many of the goals this Bingo mod adds originally come from v4 of the [mcbingo](https://minecraftbingo.com/) website.
 
 ## Contributing
 
