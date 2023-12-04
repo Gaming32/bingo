@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerStatsCounter.class)
 public class MixinServerStatsCounter {
-    @Inject(method = "setValue", at = @At("HEAD"))
+    @Inject(method = "setValue", at = @At("RETURN"))
     private void onSetValue(Player player, Stat<?> stat, int value, CallbackInfo ci) {
         if (player instanceof ServerPlayer serverPlayer) {
             BingoTriggers.RELATIVE_STATS.trigger(serverPlayer);
