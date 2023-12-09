@@ -1,12 +1,13 @@
-package io.github.gaming32.bingo.client;
+package io.github.gaming32.bingo.client.config;
 
-import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry;
+import io.github.gaming32.bingo.client.BingoClient;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public enum BoardCorner implements SelectionListEntry.Translatable {
+public enum BoardCorner {
     UPPER_LEFT(false, false) {
         @Override
         public float getX(float guiWidth, float scale) {
@@ -69,8 +70,7 @@ public enum BoardCorner implements SelectionListEntry.Translatable {
     public abstract float getY(float guiHeight, float scale);
 
     @NotNull
-    @Override
-    public String getKey() {
-        return "bingo.board_corner." + name().toLowerCase(Locale.ROOT);
+    public Component getDescription() {
+        return Component.translatable("bingo.board_corner." + name().toLowerCase(Locale.ROOT));
     }
 }

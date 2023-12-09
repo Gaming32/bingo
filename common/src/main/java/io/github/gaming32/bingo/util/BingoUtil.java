@@ -16,6 +16,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -91,5 +92,13 @@ public class BingoUtil {
         }
         return ContextAwarePredicate.fromElement(name, context, json, LootContextParamSets.ADVANCEMENT_LOCATION)
             .orElseThrow(() -> new JsonParseException("Unable to parse advancement_location at " + name + ". Value was " + GsonHelper.getType(json)));
+    }
+
+    public static <T extends Enum<T>> T valueOf(String name, @NotNull T defaultValue) {
+        try {
+            return Enum.valueOf(defaultValue.getDeclaringClass(), name);
+        } catch (IllegalArgumentException e) {
+            return defaultValue;
+        }
     }
 }
