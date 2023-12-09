@@ -3,9 +3,9 @@ package io.github.gaming32.bingo.mixin.common.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.gaming32.bingo.client.BingoClient;
-import io.github.gaming32.bingo.client.BingoClientConfig;
-import io.github.gaming32.bingo.client.BoardCorner;
 import io.github.gaming32.bingo.client.BoardScreen;
+import io.github.gaming32.bingo.client.config.BingoClientConfig;
+import io.github.gaming32.bingo.client.config.BoardCorner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
@@ -25,24 +25,25 @@ public class MixinGameRenderer {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/toasts/ToastComponent;render(Lnet/minecraft/client/gui/GuiGraphics;)V")
     )
     private void moveToasts(ToastComponent instance, GuiGraphics guiGraphics, Operation<Void> original) {
-        final BingoClientConfig.BoardConfig boardConfig = BingoClient.getConfig().board;
+        final BingoClientConfig config = BingoClient.CONFIG;
         if (
-            BingoClient.clientGame == null || boardConfig.corner != BoardCorner.UPPER_RIGHT ||
+            BingoClient.clientGame == null || config.getBoardCorner() != BoardCorner.UPPER_RIGHT ||
                 minecraft.getDebugOverlay().showDebugScreen() || minecraft.screen instanceof BoardScreen
         ) {
             original.call(instance, guiGraphics);
             return;
         }
 
+        final float scale = config.getBoardScale();
         guiGraphics.enableScissor(
             0, 0,
-            (int)(guiGraphics.guiWidth() - (BingoClient.getBoardWidth() + BingoClient.BOARD_OFFSET) * boardConfig.scale),
+            (int)(guiGraphics.guiWidth() - (BingoClient.getBoardWidth() + BingoClient.BOARD_OFFSET) * scale),
             guiGraphics.guiHeight()
         );
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(
-            (-BingoClient.getBoardWidth() - BingoClient.BOARD_OFFSET) * boardConfig.scale,
-            BingoClient.BOARD_OFFSET * boardConfig.scale, 0f
+            (-BingoClient.getBoardWidth() - BingoClient.BOARD_OFFSET) * scale,
+            BingoClient.BOARD_OFFSET * scale, 0f
         );
         original.call(instance, guiGraphics);
         guiGraphics.pose().popPose();
