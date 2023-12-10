@@ -1,11 +1,11 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
-import io.github.gaming32.bingo.util.BingoUtil;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +18,8 @@ import java.util.Optional;
 public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<TotalCountInventoryChangeTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player, BingoUtil.fromJsonElement(TriggerInstance.ITEMS_CODEC, json.get("items")));
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
@@ -30,32 +30,16 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
-        private static final Codec<List<ItemPredicate>> ITEMS_CODEC = ItemPredicate.CODEC.listOf();
-
-        private final List<ItemPredicate> items;
-
-        private final Integer minCount;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, List<ItemPredicate> items) {
-            super(player);
-            this.items = items;
-
-            final boolean allMin = items.stream().allMatch(p -> p.count().max().isEmpty());
-            if (allMin) {
-                minCount = items.stream().mapToInt(p -> p.count().min().orElse(1)).sum();
-            } else {
-                minCount = null;
-            }
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.add("items", BingoUtil.toJsonElement(ITEMS_CODEC, items));
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        List<ItemPredicate> items
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ItemPredicate.CODEC.listOf().fieldOf("items").forGetter(TriggerInstance::items)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(ServerPlayer player, Inventory inventory) {
             int[] counts = new int[items.size()];
@@ -84,6 +68,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
             int validCount = 0;
 
             // now check the counts after they have been totaled up
+            final Integer minCount = getMinCount();
             for (int predicateIndex = 0; predicateIndex < counts.length; predicateIndex++) {
                 if (counts[predicateIndex] == 0) {
                     if (minCount == null) {
@@ -105,11 +90,19 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
             }
 
             if (minCount != null) {
-                setProgress(player, validCount, minCount);
+//                setProgress(player, validCount, minCount);
                 return validCount >= minCount;
             }
 
             return true;
+        }
+
+        private Integer getMinCount() {
+            final boolean allMin = items.stream().allMatch(p -> p.count().max().isEmpty());
+            if (!allMin) {
+                return null;
+            }
+            return items.stream().mapToInt(p -> p.count().min().orElse(1)).sum();
         }
     }
 

@@ -1,10 +1,9 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.ext.GlobalVars;
-import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
@@ -14,6 +13,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -27,12 +27,8 @@ import java.util.Optional;
 public class GrowFeatureTrigger extends SimpleCriterionTrigger<GrowFeatureTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            LocationPredicate.fromJson(json.get("location")),
-            json.has("tags") ? BingoUtil.fromJsonElement(TriggerInstance.TAGS_CODEC, json.get("tags")) : List.of()
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public static boolean wrapPlaceOperation(
@@ -60,33 +56,20 @@ public class GrowFeatureTrigger extends SimpleCriterionTrigger<GrowFeatureTrigge
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<LocationPredicate> location,
+        List<TagPredicate<ConfiguredFeature<?, ?>>> tags
+    ) implements SimpleInstance {
         private static final Codec<List<TagPredicate<ConfiguredFeature<?, ?>>>> TAGS_CODEC =
             TagPredicate.codec(Registries.CONFIGURED_FEATURE).listOf();
-
-        private final Optional<LocationPredicate> location;
-        private final List<TagPredicate<ConfiguredFeature<?, ?>>> tags;
-
-        public TriggerInstance(
-            Optional<ContextAwarePredicate> player,
-            Optional<LocationPredicate> location,
-            List<TagPredicate<ConfiguredFeature<?, ?>>> tags
-        ) {
-            super(player);
-            this.location = location;
-            this.tags = tags;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            location.ifPresent(p -> result.add("location", p.serializeToJson()));
-            if (!tags.isEmpty()) {
-                result.add("tags", BingoUtil.toJsonElement(TAGS_CODEC, tags));
-            }
-            return result;
-        }
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "location").forGetter(TriggerInstance::location),
+                ExtraCodecs.strictOptionalField(TAGS_CODEC, "tags", List.of()).forGetter(TriggerInstance::tags)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(ServerLevel level, BlockPos pos, Holder<ConfiguredFeature<?, ?>> feature) {
             if (location.isPresent() && !location.get().matches(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)) {

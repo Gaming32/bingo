@@ -1,9 +1,9 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.BingoGame;
-import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
@@ -17,6 +17,7 @@ import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
 import net.minecraft.stats.Stats;
 import net.minecraft.stats.StatsCounter;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,11 +27,8 @@ import java.util.Optional;
 public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            BingoUtil.fromJsonElement(PlayerPredicate.StatMatcher.CODEC.listOf(), json.get("stats"))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player) {
@@ -41,21 +39,16 @@ public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTr
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
-        private final List<PlayerPredicate.StatMatcher<?>> stats;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, List<PlayerPredicate.StatMatcher<?>> stats) {
-            super(player);
-            this.stats = stats;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.add("stats", BingoUtil.toJsonElement(PlayerPredicate.StatMatcher.CODEC.listOf(), stats));
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        List<PlayerPredicate.StatMatcher<?>> stats
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                PlayerPredicate.StatMatcher.CODEC.listOf().fieldOf("stats").forGetter(TriggerInstance::stats)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(ServerPlayer player) {
             final BingoGame game = Bingo.activeGame;
@@ -67,13 +60,13 @@ public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTr
                         final Stat<?> stat = matcher.stat().get();
                         final int value = currentStats.getValue(stat) - baseStats.getInt(stat);
                         if (!matcher.range().matches(value)) {
-                            matcher.range().min().ifPresent(min -> setProgress(player, Math.min(value, min), min));
+//                            matcher.range().min().ifPresent(min -> setProgress(player, Math.min(value, min), min));
                             return false;
                         }
                     }
 
                     if (!stats.isEmpty()) {
-                        stats.get(0).range().min().ifPresent(min -> setProgress(player, min, min));
+//                        stats.get(0).range().min().ifPresent(min -> setProgress(player, min, min));
                     }
                 }
             }

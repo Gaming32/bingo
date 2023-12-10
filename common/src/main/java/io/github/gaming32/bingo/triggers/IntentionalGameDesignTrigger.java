@@ -1,11 +1,16 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,8 +19,8 @@ import java.util.Optional;
 public class IntentionalGameDesignTrigger extends SimpleCriterionTrigger<IntentionalGameDesignTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player, LocationPredicate.fromJson(json.get("respawn")));
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, BlockPos pos) {
@@ -23,26 +28,21 @@ public class IntentionalGameDesignTrigger extends SimpleCriterionTrigger<Intenti
         trigger(player, instance -> instance.matches(player.serverLevel(), posD));
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<LocationPredicate> respawn;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<LocationPredicate> respawn) {
-            super(player);
-            this.respawn = respawn;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<LocationPredicate> respawn
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "respawn").forGetter(TriggerInstance::respawn)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public static Criterion<TriggerInstance> clicked(LocationPredicate respawn) {
             return BingoTriggers.INTENTIONAL_GAME_DESIGN.createCriterion(new TriggerInstance(
                 Optional.empty(), Optional.ofNullable(respawn)
             ));
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            respawn.ifPresent(p -> result.add("respawn", p.serializeToJson()));
-            return result;
         }
 
         public boolean matches(ServerLevel level, Vec3 pos) {

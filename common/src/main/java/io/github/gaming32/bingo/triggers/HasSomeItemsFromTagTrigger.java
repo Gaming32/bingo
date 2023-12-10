@@ -1,17 +1,18 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.common.collect.Sets;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,16 +23,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeItemsFromTagTrigger.TriggerInstance> {
-    private static final int ALL = -1;
-
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            TagKey.create(Registries.ITEM, new ResourceLocation(GsonHelper.getAsString(json, "tag"))),
-            GsonHelper.getAsInt(json, "required_count")
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
@@ -42,24 +37,20 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
-        private final TagKey<Item> tag;
-        private final int requiredCount;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, TagKey<Item> tag, int requiredCount) {
-            super(player);
-            this.tag = tag;
-            this.requiredCount = requiredCount;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.addProperty("tag", tag.location().toString());
-            result.addProperty("required_count", requiredCount);
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        TagKey<Item> tag,
+        int requiredCount
+    ) implements SimpleInstance {
+        private static final int ALL = -1;
+        private static final Codec<Integer> REQUIRED_COUNT_CODEC = BingoCodecs.firstValid(ExtraCodecs.POSITIVE_INT, BingoCodecs.exactly(ALL));
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(TriggerInstance::tag),
+                REQUIRED_COUNT_CODEC.fieldOf("required_count").forGetter(TriggerInstance::requiredCount)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(ServerPlayer player, Inventory inventory) {
             int requiredCount = this.requiredCount;
@@ -75,12 +66,12 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
                 if (item.is(tag) && foundItems.add(item.getItem()) && foundItems.size() >= requiredCount) {
-                    setProgress(player, requiredCount, requiredCount);
+//                    setProgress(player, requiredCount, requiredCount);
                     return true;
                 }
             }
 
-            setProgress(player, foundItems.size(), requiredCount);
+//            setProgress(player, foundItems.size(), requiredCount);
             return false;
         }
     }
@@ -110,7 +101,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
         }
 
         public Builder requiresAll() {
-            return requiredCount(ALL);
+            return requiredCount(TriggerInstance.ALL);
         }
 
         public Criterion<TriggerInstance> build() {

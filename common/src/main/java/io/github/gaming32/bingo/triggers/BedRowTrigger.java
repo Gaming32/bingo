@@ -46,7 +46,7 @@ public class BedRowTrigger extends SimpleCriterionTrigger<BedRowTrigger.TriggerI
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                 ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                Codec.INT.fieldOf("count").forGetter(TriggerInstance::count)
+                ExtraCodecs.POSITIVE_INT.fieldOf("count").forGetter(TriggerInstance::count)
             ).apply(instance, TriggerInstance::new)
         );
 

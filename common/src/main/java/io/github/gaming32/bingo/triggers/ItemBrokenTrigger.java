@@ -1,9 +1,14 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,34 +17,29 @@ import java.util.Optional;
 public class ItemBrokenTrigger extends SimpleCriterionTrigger<ItemBrokenTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player, ItemPredicate.fromJson(json.get("item")));
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, ItemStack item) {
         trigger(player, instance -> instance.matches(item));
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ItemPredicate> item;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ItemPredicate> item) {
-            super(player);
-            this.item = item;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ItemPredicate> item
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(ItemPredicate.CODEC, "item").forGetter(TriggerInstance::item)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public static Criterion<TriggerInstance> itemBroken(ItemPredicate predicate) {
             return BingoTriggers.ITEM_BROKEN.createCriterion(
                 new TriggerInstance(Optional.empty(), Optional.ofNullable(predicate))
             );
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            item.ifPresent(p -> result.add("item", p.serializeToJson()));
-            return result;
         }
 
         public boolean matches(ItemStack item) {

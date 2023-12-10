@@ -15,8 +15,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 public final class BingoCodecs {
     public static final Codec<Character> CHAR = Codec.STRING.comapFlatMap(
@@ -81,5 +83,80 @@ public final class BingoCodecs {
 
     public static <A extends Enum<A>> Codec<Set<A>> enumSetOf(Codec<A> elementCodec) {
         return elementCodec.listOf().xmap(Sets::immutableEnumSet, ImmutableList::copyOf);
+    }
+
+    public static <A> Codec<A> exactly(A value, Codec<A> codec) {
+        return ExtraCodecs.validate(
+            codec,
+            a -> Objects.equals(a, value)
+                ? DataResult.success(a)
+                : DataResult.error(() -> "Value must equal " + value + ". Got " + a));
+    }
+
+    public static Codec<Integer> exactly(int value) {
+        return exactly(value, Codec.INT);
+    }
+
+    /**
+     * {@link ExtraCodecs#withAlternative(Codec, Codec)} will always encode with {@code first}, which will trip any
+     * {@link ExtraCodecs#validate(Codec, Function)}. This codec will try to encode with both, and will return the
+     * first successful encoding.
+     */
+    public static <A> Codec<A> firstValid(Codec<A> first, Codec<A> second) {
+        return new FirstValidCodec<>(first, second);
+    }
+
+    public static final class FirstValidCodec<A> implements Codec<A> {
+        private final Codec<A> first;
+        private final Codec<A> second;
+
+        public FirstValidCodec(Codec<A> first, Codec<A> second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        @Override
+        public <T> DataResult<Pair<A, T>> decode(DynamicOps<T> ops, T input) {
+            final DataResult<Pair<A, T>> firstResult = first.decode(ops, input);
+            if (firstResult.error().isEmpty()) {
+                return firstResult;
+            }
+            final DataResult<Pair<A, T>> secondResult = second.decode(ops, input);
+            if (secondResult.error().isEmpty()) {
+                return secondResult;
+            }
+            return firstResult.apply2((a, b) -> b, secondResult);
+        }
+
+        @Override
+        public <T> DataResult<T> encode(A input, DynamicOps<T> ops, T prefix) {
+            final DataResult<T> firstResult = first.encode(input, ops, prefix);
+            if (firstResult.error().isEmpty()) {
+                return firstResult;
+            }
+            final DataResult<T> secondResult = second.encode(input, ops, prefix);
+            if (secondResult.error().isEmpty()) {
+                return secondResult;
+            }
+            return firstResult.apply2((a, b) -> b, secondResult);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            FirstValidCodec<?> that = (FirstValidCodec<?>)o;
+            return Objects.equals(first, that.first) && Objects.equals(second, that.second);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(first, second);
+        }
+
+        @Override
+        public String toString() {
+            return "FirstValid[" + first + ", " + second + "]";
+        }
     }
 }

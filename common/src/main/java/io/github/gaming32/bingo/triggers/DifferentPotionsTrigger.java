@@ -38,7 +38,7 @@ public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPot
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                 ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                Codec.INT.fieldOf("min_count").forGetter(TriggerInstance::minCount)
+                ExtraCodecs.POSITIVE_INT.fieldOf("min_count").forGetter(TriggerInstance::minCount)
             ).apply(instance, TriggerInstance::new)
         );
 

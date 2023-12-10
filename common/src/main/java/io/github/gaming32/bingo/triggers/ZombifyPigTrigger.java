@@ -1,10 +1,13 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -15,13 +18,8 @@ import java.util.Optional;
 public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            EntityPredicate.fromJson(json, "pig", context),
-            EntityPredicate.fromJson(json, "zombified_piglin", context),
-            json.has("direct") ? Optional.of(GsonHelper.getAsBoolean(json, "direct")) : Optional.empty()
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, Pig pig, Entity zombifiedPiglin, boolean direct) {
@@ -34,32 +32,20 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ContextAwarePredicate> pig;
-        private final Optional<ContextAwarePredicate> zombifiedPiglin;
-        private final Optional<Boolean> direct;
-
-        public TriggerInstance(
-            Optional<ContextAwarePredicate> player,
-            Optional<ContextAwarePredicate> pig,
-            Optional<ContextAwarePredicate> zombifiedPiglin,
-            Optional<Boolean> direct
-        ) {
-            super(player);
-            this.pig = pig;
-            this.zombifiedPiglin = zombifiedPiglin;
-            this.direct = direct;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            pig.ifPresent(p -> result.add("pig", p.toJson()));
-            zombifiedPiglin.ifPresent(p -> result.add("zombified_piglin", p.toJson()));
-            direct.ifPresent(p -> result.addProperty("direct", p));
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ContextAwarePredicate> pig,
+        Optional<ContextAwarePredicate> zombifiedPiglin,
+        Optional<Boolean> direct
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "pig").forGetter(TriggerInstance::pig),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "zombified_piglin").forGetter(TriggerInstance::zombifiedPiglin),
+                ExtraCodecs.strictOptionalField(Codec.BOOL, "direct").forGetter(TriggerInstance::direct)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(LootContext pig, LootContext zombifiedPiglin, boolean direct) {
             if (this.pig.isPresent() && !this.pig.get().matches(pig)) {

@@ -1,10 +1,12 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -15,12 +17,8 @@ import java.util.Optional;
 public class KillItemTrigger extends SimpleCriterionTrigger<KillItemTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            EntityPredicate.fromJson(json, "item", context),
-            DamagePredicate.fromJson(json.get("damage"))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ItemEntity item, DamageSource source, float amount) {
@@ -34,28 +32,18 @@ public class KillItemTrigger extends SimpleCriterionTrigger<KillItemTrigger.Trig
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ContextAwarePredicate> item;
-        private final Optional<DamagePredicate> damage;
-
-        public TriggerInstance(
-            Optional<ContextAwarePredicate> player,
-            Optional<ContextAwarePredicate> item,
-            Optional<DamagePredicate> damage
-        ) {
-            super(player);
-            this.item = item;
-            this.damage = damage;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            item.ifPresent(p -> result.add("item", p.toJson()));
-            damage.ifPresent(p -> result.add("damage", p.serializeToJson()));
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ContextAwarePredicate> item,
+        Optional<DamagePredicate> damage
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "item").forGetter(TriggerInstance::item),
+                ExtraCodecs.strictOptionalField(DamagePredicate.CODEC, "damage").forGetter(TriggerInstance::damage)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(ServerPlayer player, LootContext item, DamageSource source, float amount) {
             if (this.item.isPresent() && !this.item.get().matches(item)) {
@@ -65,6 +53,12 @@ public class KillItemTrigger extends SimpleCriterionTrigger<KillItemTrigger.Trig
                 return false;
             }
             return true;
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(item, ".item");
         }
     }
 
