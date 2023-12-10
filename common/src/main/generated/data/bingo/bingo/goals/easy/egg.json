@@ -26,7 +26,7 @@
   "name": {
     "translate": "bingo.count",
     "with": [
-      "16",
+      16,
       {
         "translate": "item.minecraft.egg"
       }

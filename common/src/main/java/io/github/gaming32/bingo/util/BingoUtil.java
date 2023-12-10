@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -69,6 +70,14 @@ public class BingoUtil {
 
     public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) throws JsonParseException {
         return Util.getOrThrow(codec.parse(JsonOps.INSTANCE, element), JsonParseException::new);
+    }
+
+    public static <T> Dynamic<?> toDynamic(Codec<T> codec, T obj) {
+        return toDynamic(codec, obj, BingoCodecs.DEFAULT_OPS);
+    }
+
+    public static <T, O> Dynamic<O> toDynamic(Codec<T> codec, T obj, DynamicOps<O> ops) {
+        return new Dynamic<>(ops, Util.getOrThrow(codec.encodeStart(ops, obj), IllegalStateException::new));
     }
 
     public static <T> T fromDynamic(Codec<T> codec, Dynamic<?> dynamic) throws IllegalArgumentException {

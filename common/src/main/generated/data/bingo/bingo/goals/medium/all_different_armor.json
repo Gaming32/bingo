@@ -186,7 +186,7 @@
   "name": {
     "translate": "bingo.goal.all_different_armor",
     "with": [
-      "4"
+      4
     ]
   },
   "reactant": "wear_armor",

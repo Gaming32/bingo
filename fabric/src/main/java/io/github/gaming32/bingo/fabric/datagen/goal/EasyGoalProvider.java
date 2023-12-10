@@ -58,7 +58,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("different_fish"))
             .sub("count", BingoSub.random(2, 4))
             .criterion("obtain",
-                HasSomeFoodItemsTrigger.builder().requiredCount(0).tag(ItemTags.FISHES).build(),
+                HasSomeFoodItemsTrigger.builder().requiredCount(1).tag(ItemTags.FISHES).build(),
                 subber -> subber.sub("conditions.required_count", "count"))
             .progress("obtain")
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)

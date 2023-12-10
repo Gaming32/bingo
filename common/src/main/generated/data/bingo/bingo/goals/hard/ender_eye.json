@@ -26,7 +26,7 @@
   "name": {
     "translate": "bingo.count",
     "with": [
-      "12",
+      12,
       {
         "translate": "item.minecraft.ender_eye"
       }

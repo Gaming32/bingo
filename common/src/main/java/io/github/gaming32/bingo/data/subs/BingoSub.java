@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.data.subs;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.util.RandomSource;
@@ -10,6 +9,7 @@ import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 public interface BingoSub {
     Codec<BingoSub> CODEC = BingoCodecs.registrarByName(BingoSubType.REGISTRAR)
@@ -30,10 +30,10 @@ public interface BingoSub {
     }
 
     static BingoSub literal(String value) {
-        return new WrapBingoSub(new Dynamic<>(JsonOps.INSTANCE).createString(value));
+        return new WrapBingoSub(BingoCodecs.DEFAULT_DYNAMIC.createString(value));
     }
 
     static BingoSub wrapInArray(BingoSub sub) {
-        return new WrapBingoSub(new Dynamic<>(JsonOps.INSTANCE, BingoUtil.toJsonElement(INNER_CODEC, sub)));
+        return new WrapBingoSub(BingoCodecs.DEFAULT_DYNAMIC.createList(Stream.of(BingoUtil.toDynamic(INNER_CODEC, sub))));
     }
 }

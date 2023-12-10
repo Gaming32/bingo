@@ -77,6 +77,14 @@
       },
       {
         "type": "bingo:entity",
+        "entity": "minecraft:breeze",
+        "item": {
+          "Count": 1,
+          "id": "minecraft:breeze_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
         "entity": "minecraft:camel",
         "item": {
           "Count": 1,

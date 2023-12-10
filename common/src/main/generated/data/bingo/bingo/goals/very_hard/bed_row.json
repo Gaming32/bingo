@@ -23,7 +23,7 @@
   "name": {
     "translate": "bingo.goal.bed_row",
     "with": [
-      "16"
+      16
     ]
   },
   "reactant": "use_furnace",

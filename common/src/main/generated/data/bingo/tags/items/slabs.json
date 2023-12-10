@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
+    "minecraft:tuff_slab",
+    "minecraft:polished_tuff_slab",
+    "minecraft:tuff_brick_slab",
     "minecraft:cut_copper_slab",
     "minecraft:exposed_cut_copper_slab",
     "minecraft:weathered_cut_copper_slab",
