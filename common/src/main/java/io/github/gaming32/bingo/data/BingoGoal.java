@@ -78,9 +78,9 @@ public class BingoGoal {
             ExtraCodecs.strictOptionalField(ProgressTracker.CODEC, "progress", EmptyProgressTracker.INSTANCE).forGetter(BingoGoal::getProgress),
             ExtraCodecs.strictOptionalField(TAGS_CODEC, "tags", Set.of()).forGetter(BingoGoal::getTags),
             Codec.PASSTHROUGH.fieldOf("name").forGetter(BingoGoal::getName),
-            ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, "tooltip", BingoCodecs.DEFAULT_DYNAMIC).forGetter(BingoGoal::getTooltip),
+            ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, "tooltip", BingoCodecs.EMPTY_DYNAMIC).forGetter(BingoGoal::getTooltip),
             ExtraCodecs.strictOptionalField(ResourceLocation.CODEC, "tooltip_icon").forGetter(BingoGoal::getTooltipIcon),
-            ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, "icon", BingoCodecs.DEFAULT_DYNAMIC).forGetter(BingoGoal::getIcon),
+            ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, "icon", BingoCodecs.EMPTY_DYNAMIC).forGetter(BingoGoal::getIcon),
             BingoCodecs.optionalInt("infrequency").forGetter(BingoGoal::getInfrequency),
             BingoCodecs.minifiedSetField(Codec.STRING, "antisynergy").forGetter(BingoGoal::getAntisynergy),
             BingoCodecs.minifiedSetField(Codec.STRING, "catalyst").forGetter(BingoGoal::getCatalyst),
@@ -394,9 +394,9 @@ public class BingoGoal {
         private AdvancementRequirements.Strategy requirementsStrategy = AdvancementRequirements.Strategy.AND;
         private final ImmutableSet.Builder<BingoTag.Holder> tags = ImmutableSet.builder();
         private Optional<Dynamic<?>> name = Optional.empty();
-        private Dynamic<?> tooltip = BingoCodecs.DEFAULT_DYNAMIC;
+        private Dynamic<?> tooltip = BingoCodecs.EMPTY_DYNAMIC;
         private Optional<ResourceLocation> tooltipIcon = Optional.empty();
-        private Dynamic<?> icon = BingoCodecs.DEFAULT_DYNAMIC;
+        private Dynamic<?> icon = BingoCodecs.EMPTY_DYNAMIC;
         private OptionalInt infrequency = OptionalInt.empty();
         private ImmutableList.Builder<String> antisynergy = ImmutableList.builder();
         private final ImmutableList.Builder<String> catalyst = ImmutableList.builder();

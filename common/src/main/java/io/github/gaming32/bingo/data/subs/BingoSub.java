@@ -30,10 +30,10 @@ public interface BingoSub {
     }
 
     static BingoSub literal(String value) {
-        return new WrapBingoSub(BingoCodecs.DEFAULT_DYNAMIC.createString(value));
+        return new WrapBingoSub(BingoCodecs.EMPTY_DYNAMIC.createString(value));
     }
 
     static BingoSub wrapInArray(BingoSub sub) {
-        return new WrapBingoSub(BingoCodecs.DEFAULT_DYNAMIC.createList(Stream.of(BingoUtil.toDynamic(INNER_CODEC, sub))));
+        return new WrapBingoSub(BingoCodecs.EMPTY_DYNAMIC.createList(Stream.of(BingoUtil.toDynamic(INNER_CODEC, sub))));
     }
 }

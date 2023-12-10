@@ -26,7 +26,7 @@ public final class BingoCodecs {
     /**
      * Empty {@link Dynamic} to use when you don't care about the ops
      */
-    public static final Dynamic<?> DEFAULT_DYNAMIC = new Dynamic<>(DEFAULT_OPS);
+    public static final Dynamic<?> EMPTY_DYNAMIC = new Dynamic<>(DEFAULT_OPS);
     public static final Codec<Character> CHAR = Codec.STRING.comapFlatMap(
         s -> s.length() == 1 ? DataResult.success(s.charAt(0)) : DataResult.error(() -> "String must be exactly one char, not " + s.length()),
         c -> Character.toString(c)
