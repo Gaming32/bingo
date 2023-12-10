@@ -26,7 +26,7 @@ public class MixinRespawnAnchorBlock {
     )
     private void intentionalGameDesignTrigger(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
         if (player instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.INTENTIONAL_GAME_DESIGN.trigger(serverPlayer, pos);
+            BingoTriggers.INTENTIONAL_GAME_DESIGN.get().trigger(serverPlayer, pos);
         }
     }
 }

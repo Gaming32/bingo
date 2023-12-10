@@ -1,15 +1,18 @@
 package io.github.gaming32.bingo;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonParseException;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ImmutableStringReader;
+import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
@@ -24,7 +27,10 @@ import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BingoGameMode;
 import net.minecraft.ChatFormatting;
-import net.minecraft.commands.*;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ColorArgument;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
@@ -50,6 +56,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -59,14 +66,41 @@ import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
 public class BingoCommand {
-    public static final SuggestionProvider<CommandSourceStack> ACTIVE_GOAL_SUGGESTOR = (context, builder) -> {
+    private static final SimpleCommandExceptionType NO_GAME_RUNNING =
+        new SimpleCommandExceptionType(Bingo.translatable("bingo.no_game_running"));
+    private static final DynamicCommandExceptionType CANNOT_SHOW_BOARD =
+        new DynamicCommandExceptionType(size -> Bingo.translatable("bingo.cannot_show_board", size));
+    private static final DynamicCommandExceptionType TEAM_ALREADY_EXISTS =
+        new DynamicCommandExceptionType(team -> Bingo.translatable(
+            "bingo.team_already_exists", ((PlayerTeam)team).getFormattedDisplayName()
+        ));
+    private static final DynamicCommandExceptionType DUPLICATE_TEAMS =
+        new DynamicCommandExceptionType(team -> Bingo.translatable("bingo.duplicate_teams", ((PlayerTeam)team).getFormattedDisplayName()));
+    private static final DynamicCommandExceptionType UNKNOWN_DIFFICULTY =
+        new DynamicCommandExceptionType(difficultyId -> Bingo.translatable("bingo.unknown_difficulty", difficultyId));
+    private static final DynamicCommandExceptionType UNKNOWN_GOAL =
+        new DynamicCommandExceptionType(goalId -> Bingo.translatable("bingo.unknown_goal", goalId));
+    private static final DynamicCommandExceptionType UNKNOWN_TAG =
+        new DynamicCommandExceptionType(tagId -> Bingo.translatable("bingo.unknown_tag", tagId));
+    private static final DynamicCommandExceptionType UNKNOWN_GAMEMODE =
+        new DynamicCommandExceptionType(gamemodeId -> Bingo.translatable("bingo.unknown_gamemode", gamemodeId));
+    private static final DynamicCommandExceptionType FAILED_TO_START =
+        new DynamicCommandExceptionType(e ->
+            Bingo.translatable(e instanceof IllegalArgumentException ? "bingo.start.invalid_goal" : "bingo.start.failed")
+                .withStyle(s -> s.withHoverEvent(new HoverEvent(
+                    HoverEvent.Action.SHOW_TEXT, Component.nullToEmpty(((Throwable)e).getMessage())
+                )))
+        );
+    private static final SimpleCommandExceptionType NO_TEAMS =
+        new SimpleCommandExceptionType(Bingo.translatable("bingo.no_teams"));
+    private static final SuggestionProvider<CommandSourceStack> ACTIVE_GOAL_SUGGESTOR = (context, builder) -> {
         if (Bingo.activeGame == null) {
             return builder.buildFuture();
         }
         return SharedSuggestionProvider.suggestResource(
             Arrays.stream(Bingo.activeGame.getBoard().getGoals())
-                .map(ActiveGoal::getGoal)
-                .map(BingoGoal::getId),
+                .map(ActiveGoal::goal)
+                .map(BingoGoal.Holder::id),
             builder
         );
     };
@@ -100,7 +134,7 @@ public class BingoCommand {
                 .requires(source -> source.hasPermission(2) && Bingo.activeGame != null)
                 .executes(ctx -> {
                     if (Bingo.activeGame == null) {
-                        throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
+                        throw NO_GAME_RUNNING.create();
                     }
                     Bingo.activeGame.endGame(ctx.getSource().getServer().getPlayerList(), Bingo.activeGame.getWinner(true));
                     return Command.SINGLE_SUCCESS;
@@ -110,7 +144,7 @@ public class BingoCommand {
                 .requires(source -> Bingo.activeGame != null)
                 .executes(ctx -> {
                     if (Bingo.activeGame == null) {
-                        throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
+                        throw NO_GAME_RUNNING.create();
                     }
                     int size = Bingo.activeGame.getBoard().getSize();
 
@@ -121,7 +155,7 @@ public class BingoCommand {
                         case 4 -> MenuType.GENERIC_9x4;
                         case 5 -> MenuType.GENERIC_9x5;
                         case 6 -> MenuType.GENERIC_9x6;
-                        default -> throw new CommandRuntimeException(Bingo.translatable("bingo.cannot_show_board", size));
+                        default -> throw CANNOT_SHOW_BOARD.create(size);
                     };
 
                     ctx.getSource().getPlayerOrException().openMenu(new MenuProvider() {
@@ -153,7 +187,7 @@ public class BingoCommand {
                 .then(literal("copy")
                     .executes(ctx -> {
                         if (Bingo.activeGame == null) {
-                            throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
+                            throw NO_GAME_RUNNING.create();
                         }
                         ctx.getSource().sendSuccess(() -> ComponentUtils.wrapInSquareBrackets(
                             Bingo.translatable("bingo.board.copy")
@@ -169,13 +203,13 @@ public class BingoCommand {
                     .requires(source -> source.hasPermission(2))
                     .executes(ctx -> {
                         if (Bingo.activeGame == null) {
-                            throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
+                            throw NO_GAME_RUNNING.create();
                         }
                         final BingoBoard board = Bingo.activeGame.getBoard();
                         final StringBuilder line = new StringBuilder(board.getSize());
                         for (int y = 0; y < board.getSize(); y++) {
                             for (int x = 0; x < board.getSize(); x++) {
-                                line.append(board.getGoal(x, y).getGoal().getDifficulty().difficulty().number());
+                                line.append(board.getGoal(x, y).goal().goal().getDifficulty().difficulty().number());
                             }
                             ctx.getSource().sendSuccess(() -> Component.literal(line.toString()), false);
                             line.setLength(0);
@@ -192,14 +226,14 @@ public class BingoCommand {
                             .suggests(ACTIVE_GOAL_SUGGESTOR)
                             .executes(context -> {
                                 if (Bingo.activeGame == null) {
-                                    throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
+                                    throw NO_GAME_RUNNING.create();
                                 }
                                 final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
                                 final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
 
                                 int success = 0;
                                 for (final ActiveGoal goal : Bingo.activeGame.getBoard().getGoals()) {
-                                    if (goal.getGoal().getId().equals(goalId)) {
+                                    if (goal.goal().id().equals(goalId)) {
                                         for (final ServerPlayer player : players) {
                                             if (Bingo.activeGame.award(player, goal)) {
                                                 success++;
@@ -221,14 +255,14 @@ public class BingoCommand {
                             .suggests(ACTIVE_GOAL_SUGGESTOR)
                             .executes(context -> {
                                 if (Bingo.activeGame == null) {
-                                    throw new CommandRuntimeException(Bingo.translatable("bingo.no_game_running"));
+                                    throw NO_GAME_RUNNING.create();
                                 }
                                 final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
                                 final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
 
                                 int success = 0;
                                 for (final ActiveGoal goal : Bingo.activeGame.getBoard().getGoals()) {
-                                    if (goal.getGoal().getId().equals(goalId)) {
+                                    if (goal.goal().id().equals(goalId)) {
                                         for (final ServerPlayer player : players) {
                                             if (Bingo.activeGame.revoke(player, goal)) {
                                                 success++;
@@ -267,9 +301,7 @@ public class BingoCommand {
                             final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
                             final PlayerTeam existing = scoreboard.getPlayerTeam(name);
                             if (existing != null) {
-                                throw new CommandRuntimeException(Bingo.translatable(
-                                    "bingo.team_already_exists", existing.getFormattedDisplayName()
-                                ));
+                                throw TEAM_ALREADY_EXISTS.create(existing);
                             }
 
                             final PlayerTeam team = scoreboard.addPlayerTeam(name);
@@ -379,24 +411,24 @@ public class BingoCommand {
 
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
         for (int i = 1; i <= 32; i++) {
-            if (!hasArg(context, "team" + i)) break;
-            if (!teams.add(TeamArgument.getTeam(context, "team" + i))) {
-                // Should probably be a CommandSyntaxException?
-                throw new CommandRuntimeException(Bingo.translatable("bingo.duplicate_teams"));
+            final String argName = "team" + i;
+            if (!hasArg(context, argName)) break;
+            if (!teams.add(TeamArgument.getTeam(context, argName))) {
+                throw invalidArg(DUPLICATE_TEAMS, context, argName);
             }
         }
 
         final BingoDifficulty.Holder difficulty = BingoDifficulty.byId(difficultyId);
         if (difficulty == null) {
-            throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_difficulty", difficultyId));
+            throw invalidArg(UNKNOWN_DIFFICULTY, context, "difficulty");
         }
 
-        final List<BingoGoal> requiredGoals = requiredGoalIds.stream()
+        final List<BingoGoal.Holder> requiredGoals = requiredGoalIds.stream()
             .distinct()
             .map(id -> {
-                final BingoGoal goal = BingoGoal.getGoal(id);
+                final BingoGoal.Holder goal = BingoGoal.getGoal(id);
                 if (goal == null) {
-                    throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_goal", id));
+                    throwInBlock(UNKNOWN_GOAL.create(id));
                 }
                 return goal;
             })
@@ -407,7 +439,7 @@ public class BingoCommand {
             .map(id -> {
                 final BingoTag.Holder tag = BingoTag.getTag(id);
                 if (tag == null) {
-                    throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_tag", id));
+                    throwInBlock(UNKNOWN_TAG.create(id));
                 }
                 return tag;
             })
@@ -415,14 +447,14 @@ public class BingoCommand {
 
         final BingoGameMode gamemode = BingoGameMode.GAME_MODES.get(gamemodeId);
         if (gamemode == null) {
-            throw new CommandRuntimeException(Bingo.translatable("bingo.unknown_gamemode", gamemodeId));
+            throw UNKNOWN_GAMEMODE.create(gamemodeId);
         }
 
-        final Component configError = gamemode.checkAllowedConfig(
+        final CommandSyntaxException configError = gamemode.checkAllowedConfig(
             new BingoGameMode.GameConfig(gamemode, size, teams)
         );
         if (configError != null) {
-            throw new CommandRuntimeException(configError);
+            throw configError;
         }
 
         final MinecraftServer server = context.getSource().getServer();
@@ -435,7 +467,6 @@ public class BingoCommand {
                 difficulty.difficulty().number(),
                 teams.size(),
                 RandomSource.create(seed),
-                server.getLootData(),
                 gamemode::isGoalAllowed,
                 requiredGoals,
                 excludedTags,
@@ -443,11 +474,7 @@ public class BingoCommand {
             );
         } catch (Exception e) {
             Bingo.LOGGER.error("Error generating bingo board", e);
-            throw new CommandRuntimeException(Bingo.translatable(
-                e instanceof JsonParseException ? "bingo.start.invalid_goal" : "bingo.start.failed"
-            ).withStyle(s -> s.withHoverEvent(new HoverEvent(
-                HoverEvent.Action.SHOW_TEXT, Component.nullToEmpty(e.getMessage())
-            ))));
+            throw FAILED_TO_START.create(e);
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
@@ -458,11 +485,11 @@ public class BingoCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int randomizeTeams(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) {
+    private static int randomizeTeams(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) throws CommandSyntaxException {
         final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
         final List<PlayerTeam> teams = new ArrayList<>(scoreboard.getPlayerTeams());
         if (teams.isEmpty()) {
-            throw new CommandRuntimeException(Bingo.translatable("bingo.no_teams"));
+            throw NO_TEAMS.create();
         }
 
         final List<ServerPlayer> playerList = new ArrayList<>(players);
@@ -545,6 +572,11 @@ public class BingoCommand {
     }
 
     public static boolean hasNode(CommandContext<?> context, String name) {
+        return getNode(context, name) != null;
+    }
+
+    @Nullable
+    public static ParsedCommandNode<?> getNode(CommandContext<?> context, String name) {
         final Set<CommandContext<?>> visited = Collections.newSetFromMap(new IdentityHashMap<>());
         final Queue<CommandContext<?>> toVisit = new ArrayDeque<>();
         toVisit.add(context);
@@ -553,7 +585,7 @@ public class BingoCommand {
             final CommandContext<?> check = toVisit.remove();
             for (final ParsedCommandNode<?> node : check.getNodes()) {
                 if (node.getNode().getName().equals(name)) {
-                    return true;
+                    return node;
                 }
             }
             if (check.getSource() instanceof CommandSourceStackExt ext) {
@@ -565,6 +597,28 @@ public class BingoCommand {
             }
         }
 
-        return false;
+        return null;
+    }
+
+    @Nullable
+    private static ImmutableStringReader context(CommandContext<?> context, String arg) {
+        final ParsedCommandNode<?> node = getNode(context, arg);
+        if (node == null) {
+            return null;
+        }
+        final StringReader reader = new StringReader(context.getInput());
+        reader.setCursor(node.getRange().getEnd());
+        return reader;
+    }
+
+    private static CommandSyntaxException invalidArg(DynamicCommandExceptionType type, CommandContext<?> context, String arg) {
+        final ImmutableStringReader reader = context(context, arg);
+        final Object argValue = context.getArgument(arg, Object.class);
+        return reader != null ? type.createWithContext(reader, argValue) : type.create(argValue);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void throwInBlock(Throwable t) throws T {
+        throw (T)t;
     }
 }

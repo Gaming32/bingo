@@ -6,16 +6,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.Util;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -70,8 +68,20 @@ public class BingoUtil {
         return toJsonElement(codec, obj).getAsJsonObject();
     }
 
-    public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) {
+    public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) throws JsonParseException {
         return Util.getOrThrow(codec.parse(JsonOps.INSTANCE, element), JsonParseException::new);
+    }
+
+    public static <T> Dynamic<?> toDynamic(Codec<T> codec, T obj) {
+        return toDynamic(codec, obj, BingoCodecs.DEFAULT_OPS);
+    }
+
+    public static <T, O> Dynamic<O> toDynamic(Codec<T> codec, T obj, DynamicOps<O> ops) {
+        return new Dynamic<>(ops, Util.getOrThrow(codec.encodeStart(ops, obj), IllegalStateException::new));
+    }
+
+    public static <T> T fromDynamic(Codec<T> codec, Dynamic<?> dynamic) throws IllegalArgumentException {
+        return Util.getOrThrow(codec.parse(dynamic), IllegalArgumentException::new);
     }
 
     public static <T> List<T> addToList(List<T> a, T b) {
@@ -80,18 +90,6 @@ public class BingoUtil {
 
     public static <T> Optional<T> fromOptionalJsonElement(Codec<T> codec, JsonElement element) {
         return element == null || element.isJsonNull() ? Optional.empty() : Optional.of(fromJsonElement(codec, element));
-    }
-
-    public static Optional<ContextAwarePredicate> getAdvancementLocation(JsonObject json, String key, DeserializationContext context) {
-        return parseAdvancementLocation(key, json.get(key), context);
-    }
-
-    public static Optional<ContextAwarePredicate> parseAdvancementLocation(String name, JsonElement json, DeserializationContext context) {
-        if (json == null) {
-            return Optional.empty();
-        }
-        return ContextAwarePredicate.fromElement(name, context, json, LootContextParamSets.ADVANCEMENT_LOCATION)
-            .orElseThrow(() -> new JsonParseException("Unable to parse advancement_location at " + name + ". Value was " + GsonHelper.getType(json)));
     }
 
     public static <T extends Enum<T>> T valueOf(String name, @NotNull T defaultValue) {

@@ -6,10 +6,6 @@
   "mixins": [
     "AdvancementProgressAccessor",
     "BounceOnBlockMixin",
-    "ContextAwarePredicateAccessor",
-    "DestroyVehicleMixin",
-    "MixinAbstractMegaTreeGrower",
-    "MixinAbstractTreeGrower",
     "MixinBasePressurePlateBlock",
     "MixinBeaconBlockEntity",
     "MixinBedBlock",
@@ -44,6 +40,8 @@
     "MixinServerScoreboard",
     "MixinServerStatsCounter",
     "MixinThrownEgg",
+    "MixinTreeGrower",
+    "MixinVehicleEntity",
     "PlayerAdvancementsAccessor",
     "StatsCounterAccessor"
   ],

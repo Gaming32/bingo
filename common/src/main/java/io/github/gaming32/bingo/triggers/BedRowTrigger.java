@@ -1,15 +1,15 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
@@ -25,8 +25,8 @@ import java.util.Optional;
 public class BedRowTrigger extends SimpleCriterionTrigger<BedRowTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player, GsonHelper.getAsInt(json, "count"));
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, Level level, BlockPos pos) {
@@ -34,26 +34,21 @@ public class BedRowTrigger extends SimpleCriterionTrigger<BedRowTrigger.TriggerI
     }
 
     public static Criterion<TriggerInstance> create(int count) {
-        return BingoTriggers.BED_ROW.createCriterion(
+        return BingoTriggers.BED_ROW.get().createCriterion(
             new TriggerInstance(Optional.empty(), count)
         );
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final int count;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, int count) {
-            super(player);
-            this.count = count;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.addProperty("count", count);
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        int count
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.POSITIVE_INT.fieldOf("count").forGetter(TriggerInstance::count)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(Level level, BlockPos pos) {
             BlockState state = level.getBlockState(pos);

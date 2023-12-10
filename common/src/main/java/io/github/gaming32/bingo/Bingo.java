@@ -3,7 +3,11 @@ package io.github.gaming32.bingo;
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.CompoundEventResult;
-import dev.architectury.event.events.common.*;
+import dev.architectury.event.events.common.CommandRegistrationEvent;
+import dev.architectury.event.events.common.InteractionEvent;
+import dev.architectury.event.events.common.LifecycleEvent;
+import dev.architectury.event.events.common.PlayerEvent;
+import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
@@ -59,7 +63,7 @@ public class Bingo {
 
         InteractionEvent.RIGHT_CLICK_ITEM.register((player, hand) -> {
             if (player instanceof ServerPlayer serverPlayer) {
-                BingoTriggers.TRY_USE_ITEM.trigger(serverPlayer, hand);
+                BingoTriggers.TRY_USE_ITEM.get().trigger(serverPlayer, hand);
             }
             return CompoundEventResult.pass();
         });
@@ -112,7 +116,7 @@ public class Bingo {
     }
 
     public static MutableComponent translatable(@Translatable String key, Object... args) {
-        return ensureHasFallback(Component.translatable(key, args));
+        return ensureHasFallback(Component.translatableEscape(key, args));
     }
 
     public static MutableComponent ensureHasFallback(MutableComponent component) {
@@ -139,7 +143,7 @@ public class Bingo {
                 } else if (style.getHoverEvent().getAction() == HoverEvent.Action.SHOW_ENTITY) {
                     final HoverEvent.EntityTooltipInfo info = style.getHoverEvent().getValue(HoverEvent.Action.SHOW_ENTITY);
                     assert info != null;
-                    if (info.name instanceof MutableComponent mutableComponent) {
+                    if (info.name.orElse(null) instanceof MutableComponent mutableComponent) {
                         style = style.withHoverEvent(new HoverEvent(
                             HoverEvent.Action.SHOW_ENTITY,
                             new HoverEvent.EntityTooltipInfo(info.type, info.id, ensureHasFallback(mutableComponent))

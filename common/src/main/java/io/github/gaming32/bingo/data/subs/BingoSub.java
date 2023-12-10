@@ -1,18 +1,15 @@
 package io.github.gaming32.bingo.data.subs;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.Dynamic;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 public interface BingoSub {
     Codec<BingoSub> CODEC = BingoCodecs.registrarByName(BingoSubType.REGISTRAR)
@@ -20,27 +17,9 @@ public interface BingoSub {
     Codec<BingoSub> INNER_CODEC = BingoCodecs.registrarByName(BingoSubType.REGISTRAR)
         .dispatch("bingo_type", BingoSub::type, BingoSubType::codec);
 
-    JsonElement substitute(Map<String, JsonElement> referable, RandomSource rand);
+    Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand);
 
     BingoSubType<?> type();
-
-    @ApiStatus.NonExtendable
-    default JsonObject serializeToJson() {
-        return BingoUtil.toJsonObject(CODEC, this);
-    }
-
-    @ApiStatus.NonExtendable
-    default JsonObject serializeInnerToJson() {
-        return BingoUtil.toJsonObject(INNER_CODEC, this);
-    }
-
-    static BingoSub deserialize(JsonElement element) {
-        return BingoUtil.fromJsonElement(CODEC, element);
-    }
-
-    static BingoSub deserializeInner(JsonElement element) {
-        return BingoUtil.fromJsonElement(INNER_CODEC, element);
-    }
 
     static BingoSub random(int min, int max) {
         return new IntBingoSub(UniformInt.of(min, max));
@@ -51,12 +30,10 @@ public interface BingoSub {
     }
 
     static BingoSub literal(String value) {
-        return new WrapBingoSub(new JsonPrimitive(value));
+        return new WrapBingoSub(BingoCodecs.EMPTY_DYNAMIC.createString(value));
     }
 
     static BingoSub wrapInArray(BingoSub sub) {
-        final JsonArray array = new JsonArray(1);
-        array.add(sub.serializeInnerToJson());
-        return new WrapBingoSub(array);
+        return new WrapBingoSub(BingoCodecs.EMPTY_DYNAMIC.createList(Stream.of(BingoUtil.toDynamic(INNER_CODEC, sub))));
     }
 }

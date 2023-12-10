@@ -1,14 +1,15 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.projectile.ThrownEgg;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
@@ -18,12 +19,8 @@ import java.util.Optional;
 public class ChickenHatchTrigger extends SimpleCriterionTrigger<ChickenHatchTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            EntityPredicate.fromJson(json, "projectile", context),
-            MinMaxBounds.Ints.fromJson(json.get("num_chickens"))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, ThrownEgg projectile, int numChickens) {
@@ -35,30 +32,30 @@ public class ChickenHatchTrigger extends SimpleCriterionTrigger<ChickenHatchTrig
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ContextAwarePredicate> projectile;
-        private final MinMaxBounds.Ints numChickens;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> projectile, MinMaxBounds.Ints numChickens) {
-            super(player);
-            this.projectile = projectile;
-            this.numChickens = numChickens;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            projectile.ifPresent(projectile -> result.add("projectile", projectile.toJson()));
-            result.add("num_chickens", numChickens.serializeToJson());
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ContextAwarePredicate> projectile,
+        MinMaxBounds.Ints numChickens
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "projectile").forGetter(TriggerInstance::projectile),
+                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "num_chickens", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::numChickens)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(LootContext projectileContext, int numChickens) {
             if (this.projectile.isPresent() && !this.projectile.get().matches(projectileContext)) {
                 return false;
             }
             return this.numChickens.matches(numChickens);
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(projectile, ".projectile");
         }
     }
 
@@ -90,7 +87,7 @@ public class ChickenHatchTrigger extends SimpleCriterionTrigger<ChickenHatchTrig
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.CHICKEN_HATCH.createCriterion(new TriggerInstance(player, projectile, numChickens));
+            return BingoTriggers.CHICKEN_HATCH.get().createCriterion(new TriggerInstance(player, projectile, numChickens));
         }
     }
 }

@@ -230,45 +230,31 @@
   ],
   "tooltip": {
     "extra": [
-      {
-        "text": ", "
-      },
+      ", ",
       {
         "translate": "instrument.minecraft.call_goat_horn"
       },
-      {
-        "text": ", "
-      },
+      ", ",
       {
         "translate": "instrument.minecraft.dream_goat_horn"
       },
-      {
-        "text": ", "
-      },
+      ", ",
       {
         "translate": "instrument.minecraft.feel_goat_horn"
       },
-      {
-        "text": ", "
-      },
+      ", ",
       {
         "translate": "instrument.minecraft.ponder_goat_horn"
       },
-      {
-        "text": ", "
-      },
+      ", ",
       {
         "translate": "instrument.minecraft.seek_goat_horn"
       },
-      {
-        "text": ", "
-      },
+      ", ",
       {
         "translate": "instrument.minecraft.sing_goat_horn"
       },
-      {
-        "text": ", "
-      },
+      ", ",
       {
         "translate": "instrument.minecraft.yearn_goat_horn"
       }

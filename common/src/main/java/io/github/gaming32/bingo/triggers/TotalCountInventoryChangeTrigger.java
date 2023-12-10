@@ -1,11 +1,15 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
-import io.github.gaming32.bingo.util.BingoUtil;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -15,49 +19,34 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<TotalCountInventoryChangeTrigger.TriggerInstance> {
+public class TotalCountInventoryChangeTrigger extends SimpleProgressibleCriterionTrigger<TotalCountInventoryChangeTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player, BingoUtil.fromJsonElement(TriggerInstance.ITEMS_CODEC, json.get("items")));
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
-        trigger(player, triggerInstance -> triggerInstance.matches(player, inventory));
+        final ProgressListener<TriggerInstance> progressListener = getProgressListener(player);
+        trigger(player, triggerInstance -> triggerInstance.matches(inventory, progressListener));
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
-        private static final Codec<List<ItemPredicate>> ITEMS_CODEC = ItemPredicate.CODEC.listOf();
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        List<ItemPredicate> items
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ItemPredicate.CODEC.listOf().fieldOf("items").forGetter(TriggerInstance::items)
+            ).apply(instance, TriggerInstance::new)
+        );
 
-        private final List<ItemPredicate> items;
-
-        private final Integer minCount;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, List<ItemPredicate> items) {
-            super(player);
-            this.items = items;
-
-            final boolean allMin = items.stream().allMatch(p -> p.count().max().isEmpty());
-            if (allMin) {
-                minCount = items.stream().mapToInt(p -> p.count().min().orElse(1)).sum();
-            } else {
-                minCount = null;
-            }
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.add("items", BingoUtil.toJsonElement(ITEMS_CODEC, items));
-            return result;
-        }
-
-        public boolean matches(ServerPlayer player, Inventory inventory) {
+        public boolean matches(Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
             int[] counts = new int[items.size()];
 
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
@@ -84,6 +73,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
             int validCount = 0;
 
             // now check the counts after they have been totaled up
+            final Integer minCount = getMinCount();
             for (int predicateIndex = 0; predicateIndex < counts.length; predicateIndex++) {
                 if (counts[predicateIndex] == 0) {
                     if (minCount == null) {
@@ -105,11 +95,19 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
             }
 
             if (minCount != null) {
-                setProgress(player, validCount, minCount);
+                progressListener.update(this, validCount, minCount);
                 return validCount >= minCount;
             }
 
             return true;
+        }
+
+        private Integer getMinCount() {
+            final boolean allMin = items.stream().allMatch(p -> p.count().max().isEmpty());
+            if (!allMin) {
+                return null;
+            }
+            return items.stream().mapToInt(p -> p.count().min().orElse(1)).sum();
         }
     }
 
@@ -131,7 +129,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGED.createCriterion(
+            return BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGED.get().createCriterion(
                 new TriggerInstance(player, List.copyOf(items))
             );
         }

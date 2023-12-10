@@ -1,13 +1,16 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import io.github.gaming32.bingo.util.BingoUtil;
+import com.google.common.collect.ImmutableSet;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -17,23 +20,8 @@ import java.util.*;
 public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        final Set<EquipmentSlot> slots;
-        if (json.has("slots")) {
-            slots = EnumSet.noneOf(EquipmentSlot.class);
-            final JsonArray slotArray = GsonHelper.getAsJsonArray(json, "slots");
-            for (int i = 0; i < slotArray.size(); i++) {
-                slots.add(EquipmentSlot.byName(GsonHelper.convertToString(slotArray.get(i), "slots[" + i + "]")));
-            }
-        } else {
-            slots = EnumSet.allOf(EquipmentSlot.class);
-        }
-        return new TriggerInstance(
-            player,
-            ItemPredicate.fromJson(json.get("old_item")),
-            ItemPredicate.fromJson(json.get("new_item")),
-            slots
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, ItemStack oldItem, ItemStack newItem, EquipmentSlot slot) {
@@ -44,38 +32,22 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ItemPredicate> oldItem;
-        private final Optional<ItemPredicate> newItem;
-        private final Set<EquipmentSlot> slots;
-
-        public TriggerInstance(
-            Optional<ContextAwarePredicate> player,
-            Optional<ItemPredicate> oldItem,
-            Optional<ItemPredicate> newItem,
-            Set<EquipmentSlot> slots
-        ) {
-            super(player);
-            this.oldItem = oldItem;
-            this.newItem = newItem;
-            this.slots = slots;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            oldItem.ifPresent(p -> result.add("old_item", p.serializeToJson()));
-            newItem.ifPresent(p -> result.add("new_item", p.serializeToJson()));
-            if (slots.size() != EquipmentSlot.values().length) {
-                result.add("slots", slots.stream()
-                    .map(EquipmentSlot::getName)
-                    .map(JsonPrimitive::new)
-                    .collect(BingoUtil.toJsonArray())
-                );
-            }
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ItemPredicate> oldItem,
+        Optional<ItemPredicate> newItem,
+        Set<EquipmentSlot> slots
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(ItemPredicate.CODEC, "old_item").forGetter(TriggerInstance::oldItem),
+                ExtraCodecs.strictOptionalField(ItemPredicate.CODEC, "new_item").forGetter(TriggerInstance::newItem),
+                ExtraCodecs.strictOptionalField(
+                    BingoCodecs.enumSetOf(EquipmentSlot.CODEC), "slots", ImmutableSet.copyOf(EnumSet.allOf(EquipmentSlot.class))
+                ).forGetter(TriggerInstance::slots)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(ItemStack oldItem, ItemStack newItem, EquipmentSlot slot) {
             if (this.oldItem.isPresent() && !this.oldItem.get().matches(oldItem)) {
@@ -128,7 +100,7 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.EQUIP_ITEM.createCriterion(
+            return BingoTriggers.EQUIP_ITEM.get().createCriterion(
                 new TriggerInstance(player, oldItem, newItem, slots)
             );
         }

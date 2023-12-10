@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -29,12 +30,12 @@ public class BingoGoalProvider implements DataProvider {
         Set<ResourceLocation> existingGoals = new HashSet<>();
         List<CompletableFuture<?>> generators = new ArrayList<>();
 
-        Consumer<BingoGoal> goalAdder = goal -> {
-            if (!existingGoals.add(goal.getId())) {
-                throw new IllegalArgumentException("Duplicate goal " + goal.getId());
+        Consumer<BingoGoal.Holder> goalAdder = goal -> {
+            if (!existingGoals.add(goal.id())) {
+                throw new IllegalArgumentException("Duplicate goal " + goal.id());
             } else {
-                Path path = pathProvider.json(goal.getId());
-                generators.add(DataProvider.saveStable(output, goal.serialize(), path));
+                Path path = pathProvider.json(goal.id());
+                generators.add(DataProvider.saveStable(output, BingoUtil.toJsonElement(BingoGoal.CODEC, goal.goal()), path));
             }
         };
 
@@ -49,7 +50,7 @@ public class BingoGoalProvider implements DataProvider {
         return "Bingo goals";
     }
 
-    private void addGoals(Consumer<BingoGoal> goalAdder) {
+    private void addGoals(Consumer<BingoGoal.Holder> goalAdder) {
         new VeryEasyGoalProvider(goalAdder).addGoals();
         new EasyGoalProvider(goalAdder).addGoals();
         new MediumGoalProvider(goalAdder).addGoals();

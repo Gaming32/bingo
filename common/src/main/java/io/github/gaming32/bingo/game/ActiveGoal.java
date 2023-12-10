@@ -9,63 +9,37 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
+import java.util.Optional;
 
-public final class ActiveGoal {
-    private final BingoGoal goal;
-    private final Component name;
-    private final Component tooltip;
-    private final GoalIcon icon;
-    private final Map<String, Criterion<?>> criteria;
-
-    public ActiveGoal(BingoGoal goal, Component name, Component tooltip, GoalIcon icon, Map<String, Criterion<?>> criteria) {
-        this.goal = goal;
-        this.name = name;
-        this.tooltip = tooltip;
-        this.icon = icon;
-        this.criteria = criteria;
-    }
-
-    public BingoGoal getGoal() {
-        return goal;
-    }
-
-    public Component getName() {
-        return name;
-    }
-
-    public Component getTooltip() {
-        return tooltip;
-    }
-
-    public GoalIcon getIcon() {
-        return icon;
-    }
-
-    public Map<String, Criterion<?>> getCriteria() {
-        return criteria;
-    }
-
+public record ActiveGoal(
+    BingoGoal.Holder goal,
+    Component name,
+    Optional<Component> tooltip,
+    GoalIcon icon,
+    Map<String, Criterion<?>> criteria
+) {
     public boolean hasProgress() {
-        return goal.getProgress() != null;
-    }
-
-    @Override
-    public String toString() {
-        return "ActiveGoal[" +
-            "goal=" + goal + ", " +
-            "name=" + name + ", " +
-            "tooltip=" + tooltip + ", " +
-            "criteria=" + criteria + ']';
+        return goal.goal().getProgress() != null;
     }
 
     public ItemStack toSingleStack() {
         final ItemStack result = icon.item().copy();
         result.setHoverName(name);
-        if (tooltip != null) {
+        tooltip.ifPresent(component -> {
             final ListTag lore = new ListTag();
-            lore.add(StringTag.valueOf(Component.Serializer.toJson(tooltip)));
+            lore.add(StringTag.valueOf(Component.Serializer.toJson(component)));
             result.getOrCreateTagElement("display").put("Lore", lore);
-        }
+        });
         return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof ActiveGoal g && goal.equals(g.goal);
+    }
+
+    @Override
+    public int hashCode() {
+        return goal.hashCode();
     }
 }

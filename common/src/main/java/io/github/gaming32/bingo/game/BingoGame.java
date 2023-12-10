@@ -5,7 +5,7 @@ import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.*;
-import io.github.gaming32.bingo.triggers.AbstractProgressibleTriggerInstance;
+import io.github.gaming32.bingo.triggers.progress.ProgressibleTrigger;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
@@ -188,8 +188,11 @@ public class BingoGame {
         Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
     ) {
         criterion.trigger().addPlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
-        if (criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance progressibleTrigger) {
-            progressibleTrigger.addProgressListener(player, new BingoGameProgressListener(this, goal, criterionId));
+        if (criterion.trigger() instanceof ProgressibleTrigger<T> progressibleTrigger) {
+            progressibleTrigger.addProgressListener(
+                player,
+                new BingoGameProgressListener<>(this, goal, player, criterionId, criterion.triggerInstance())
+            );
         }
     }
 
@@ -197,15 +200,18 @@ public class BingoGame {
         Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
     ) {
         criterion.trigger().removePlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
-        if (criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance progressibleTrigger) {
-            progressibleTrigger.removeProgressListener(player, new BingoGameProgressListener(this, goal, criterionId));
+        if (criterion.trigger() instanceof ProgressibleTrigger<T> progressibleTrigger) {
+            progressibleTrigger.removeProgressListener(
+                player,
+                new BingoGameProgressListener<>(this, goal, player, criterionId, criterion.triggerInstance())
+            );
         }
     }
 
     private void registerListeners(ServerPlayer player, ActiveGoal goal) {
         final AdvancementProgress progress = getOrStartProgress(player, goal);
         if (!progress.isDone()) {
-            for (final var entry : goal.getCriteria().entrySet()) {
+            for (final var entry : goal.criteria().entrySet()) {
                 final CriterionProgress criterionProgress = progress.getCriterion(entry.getKey());
                 if (criterionProgress != null && !criterionProgress.isDone()) {
                     addListener(entry.getValue(), entry.getKey(), player, goal);
@@ -216,7 +222,7 @@ public class BingoGame {
 
     private void unregisterListeners(ServerPlayer player, ActiveGoal goal, boolean force) {
         final AdvancementProgress progress = getOrStartProgress(player, goal);
-        for (final var entry : goal.getCriteria().entrySet()) {
+        for (final var entry : goal.criteria().entrySet()) {
             final CriterionProgress criterionProgress = progress.getCriterion(entry.getKey());
             if (criterionProgress != null && (force || criterionProgress.isDone() || progress.isDone())) {
                 removeListener(entry.getValue(), entry.getKey(), player, goal);
@@ -229,7 +235,7 @@ public class BingoGame {
         AdvancementProgress progress = map.get(goal);
         if (progress == null) {
             progress = new AdvancementProgress();
-            progress.update(goal.getGoal().getRequirements());
+            progress.update(goal.goal().goal().getRequirements());
             map.put(goal, progress);
         }
         return progress;
@@ -252,7 +258,7 @@ public class BingoGame {
     }
 
     public boolean award(ServerPlayer player, ActiveGoal goal, String criterion) {
-        if (goal.getGoal().getSpecialType() == BingoTag.SpecialType.FINISH) {
+        if (goal.goal().goal().getSpecialType() == BingoTag.SpecialType.FINISH) {
             final BingoBoard.Teams team = getTeam(player);
             final BingoBoard.Teams[] board = this.board.getStates();
             final int index = getBoardIndex(player, goal);
@@ -277,7 +283,7 @@ public class BingoGame {
         if (!wasDone && progress.isDone()) {
             updateTeamBoard(player, goal, false);
         }
-        goal.getGoal().getProgress().criterionChanged(this, player, goal, criterion, true);
+        goal.goal().goal().getProgress().criterionChanged(this, player, goal, criterion, true);
         return awarded;
     }
 
@@ -304,7 +310,7 @@ public class BingoGame {
         if (wasDone && !progress.isDone()) {
             updateTeamBoard(player, goal, true);
         }
-        goal.getGoal().getProgress().criterionChanged(this, player, goal, criterion, false);
+        goal.goal().goal().getProgress().criterionChanged(this, player, goal, criterion, false);
         return revoked;
     }
 
@@ -339,7 +345,7 @@ public class BingoGame {
         final BingoBoard.Teams[] board = this.board.getStates();
         final int index = getBoardIndex(player, goal);
         if (index == -1) return;
-        final boolean isNever = goal.getGoal().getSpecialType() == BingoTag.SpecialType.NEVER;
+        final boolean isNever = goal.goal().goal().getSpecialType() == BingoTag.SpecialType.NEVER;
         if (revoke || gameMode.canGetGoal(this.board, index, team, isNever)) {
             final boolean isLoss = isNever ^ revoke;
             board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);
@@ -355,7 +361,7 @@ public class BingoGame {
         if (index == -1) {
             Bingo.LOGGER.warn(
                 "Player {} got a goal ({}) from a previous game! This should not happen.",
-                player.getScoreboardName(), goal.getGoal().getId()
+                player.getScoreboardName(), goal.goal().id()
             );
         }
         return index;
@@ -373,7 +379,7 @@ public class BingoGame {
         final Component message = Bingo.translatable(
             isLoss ? "bingo.goal_lost" : "bingo.goal_obtained",
             obtainer.getDisplayName(),
-            goal.getName().copy().withStyle(isLoss ? ChatFormatting.GOLD : ChatFormatting.GREEN)
+            goal.name().copy().withStyle(isLoss ? ChatFormatting.GOLD : ChatFormatting.GREEN)
         );
         final BingoBoard.Teams boardState = board.getStates()[boardIndex];
         final boolean showOtherTeam = Bingo.showOtherTeam || gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS;
@@ -411,7 +417,7 @@ public class BingoGame {
                 }
                 final Component lockoutMessage = Bingo.translatable(
                     "bingo.goal_lost.lockout",
-                    teamComponent, goal.getName().copy().withStyle(ChatFormatting.GOLD)
+                    teamComponent, goal.name().copy().withStyle(ChatFormatting.GOLD)
                 );
                 for (final ServerPlayer player : playerList.getPlayers()) {
                     if (player.isAlliedTo(playerTeam)) continue;
@@ -457,10 +463,14 @@ public class BingoGame {
         return gameMode.getWinners(board, teams.length, tryHarder);
     }
 
-    private record BingoGameProgressListener(BingoGame game, ActiveGoal goal, String criterionId) implements AbstractProgressibleTriggerInstance.ProgressListener {
+    private record BingoGameProgressListener<T extends CriterionTriggerInstance>(
+        BingoGame game, ActiveGoal goal, ServerPlayer player, String criterionId, T triggerInstance
+    ) implements ProgressibleTrigger.ProgressListener<T> {
         @Override
-        public void update(ServerPlayer player, int progress, int maxProgress) {
-            goal.getGoal().getProgress().goalProgressChanged(game, player, goal, criterionId, progress, maxProgress);
+        public void update(T triggerInstance, int progress, int maxProgress) {
+            if (triggerInstance == this.triggerInstance) {
+                goal.goal().goal().getProgress().goalProgressChanged(game, player, goal, criterionId, progress, maxProgress);
+            }
         }
     }
 }

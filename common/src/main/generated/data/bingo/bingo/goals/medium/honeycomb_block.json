@@ -27,7 +27,7 @@
   "name": {
     "translate": "bingo.count",
     "with": [
-      "3",
+      3,
       {
         "translate": "block.minecraft.honeycomb_block"
       }

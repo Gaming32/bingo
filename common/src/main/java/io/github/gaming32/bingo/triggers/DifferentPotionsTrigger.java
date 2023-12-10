@@ -1,12 +1,13 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
@@ -19,52 +20,48 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPotionsTrigger.TriggerInstance> {
+public class DifferentPotionsTrigger extends SimpleProgressibleCriterionTrigger<DifferentPotionsTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player, GsonHelper.getAsInt(json, "min_count"));
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
-        trigger(player, instance -> instance.matches(player, inventory));
+        final ProgressListener<TriggerInstance> progressListener = getProgressListener(player);
+        trigger(player, instance -> instance.matches(inventory, progressListener));
     }
 
-    public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
-        private final int minCount;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, int minCount) {
-            super(player);
-            this.minCount = minCount;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        int minCount
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.POSITIVE_INT.fieldOf("min_count").forGetter(TriggerInstance::minCount)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public static Criterion<TriggerInstance> differentPotions(int minCount) {
-            return BingoTriggers.DIFFERENT_POTIONS.createCriterion(
+            return BingoTriggers.DIFFERENT_POTIONS.get().createCriterion(
                 new TriggerInstance(Optional.empty(), minCount)
             );
         }
 
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.addProperty("min_count", minCount);
-            return result;
-        }
-
-        public boolean matches(ServerPlayer player, Inventory inventory) {
+        public boolean matches(Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
             final Set<String> discovered = new HashSet<>();
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
                 if (item.getItem() instanceof PotionItem) {
                     final Potion potion = PotionUtils.getPotion(item);
                     if (potion != Potions.EMPTY && discovered.add(potion.getName("")) && discovered.size() >= minCount) {
-                        setProgress(player, minCount, minCount);
+                        progressListener.update(this, minCount, minCount);
                         return true;
                     }
                 }
             }
-            setProgress(player, discovered.size(), minCount);
+            progressListener.update(this, discovered.size(), minCount);
             return false;
         }
     }

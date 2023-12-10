@@ -21,7 +21,7 @@ public class MixinBeaconBlockEntity {
     )
     private static boolean beaconEffectTrigger(Player instance, MobEffectInstance effectInstance, Operation<Boolean> original) {
         if (instance instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.BEACON_EFFECT.trigger(serverPlayer, effectInstance);
+            BingoTriggers.BEACON_EFFECT.get().trigger(serverPlayer, effectInstance);
         }
         return original.call(instance, effectInstance);
     }

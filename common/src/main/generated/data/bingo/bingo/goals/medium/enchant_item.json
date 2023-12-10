@@ -2,7 +2,6 @@
   "antisynergy": "enchant",
   "criteria": {
     "enchant": {
-      "conditions": {},
       "trigger": "minecraft:enchanted_item"
     }
   },

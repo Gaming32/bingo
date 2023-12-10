@@ -16,7 +16,7 @@ public record JsonSubber(JsonElement json) {
     }
 
     public JsonSubber sub(String path, BingoSub sub) {
-        return sub(path, sub.serializeInnerToJson());
+        return sub(path, BingoUtil.toJsonElement(BingoSub.INNER_CODEC, sub));
     }
 
     public JsonSubber sub(String path, JsonElement newValue) {
@@ -37,7 +37,7 @@ public record JsonSubber(JsonElement json) {
     }
 
     public JsonSubber multiSub(String path, BingoSub sub) {
-        return multiSub(path, sub.serializeInnerToJson());
+        return multiSub(path, BingoUtil.toJsonElement(BingoSub.INNER_CODEC, sub));
     }
 
     public JsonSubber multiSub(String path, JsonElement newValue) {

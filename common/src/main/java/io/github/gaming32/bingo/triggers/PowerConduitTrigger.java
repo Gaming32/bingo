@@ -1,9 +1,14 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -11,40 +16,35 @@ import java.util.Optional;
 public class PowerConduitTrigger extends SimpleCriterionTrigger<PowerConduitTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player, MinMaxBounds.Ints.fromJson(json.get("level")));
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, int level) {
         trigger(player, instance -> instance.matches(level));
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final MinMaxBounds.Ints level;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> predicate, MinMaxBounds.Ints level) {
-            super(predicate);
-            this.level = level;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        MinMaxBounds.Ints level
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "level", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::level)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public static Criterion<TriggerInstance> powerConduit() {
-            return BingoTriggers.POWER_CONDUIT.createCriterion(
+            return BingoTriggers.POWER_CONDUIT.get().createCriterion(
                 new TriggerInstance(Optional.empty(), MinMaxBounds.Ints.ANY)
             );
         }
 
         public static Criterion<TriggerInstance> powerConduit(MinMaxBounds.Ints level) {
-            return BingoTriggers.POWER_CONDUIT.createCriterion(
+            return BingoTriggers.POWER_CONDUIT.get().createCriterion(
                 new TriggerInstance(Optional.empty(), level)
             );
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.add("level", level.serializeToJson());
-            return result;
         }
 
         public boolean matches(int level) {

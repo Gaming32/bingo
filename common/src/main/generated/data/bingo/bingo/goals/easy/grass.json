@@ -1,5 +1,5 @@
 {
-  "antisynergy": "grass",
+  "antisynergy": "short_grass",
   "bingo_subs": {
     "count": {
       "type": "bingo:int",
@@ -24,7 +24,7 @@
               }
             },
             "items": [
-              "minecraft:grass"
+              "minecraft:short_grass"
             ]
           }
         ]
@@ -40,7 +40,7 @@
         "bingo_type": "bingo:sub",
         "value": "count"
       },
-      "id": "minecraft:grass"
+      "id": "minecraft:short_grass"
     }
   },
   "name": {
@@ -51,7 +51,7 @@
         "value": "count"
       },
       {
-        "translate": "block.minecraft.grass"
+        "translate": "block.minecraft.short_grass"
       }
     ]
   },

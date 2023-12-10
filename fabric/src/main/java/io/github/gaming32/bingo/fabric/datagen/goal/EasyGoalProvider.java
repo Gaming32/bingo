@@ -49,7 +49,7 @@ import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class EasyGoalProvider extends DifficultyGoalProvider {
-    public EasyGoalProvider(Consumer<BingoGoal> goalAdder) {
+    public EasyGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
         super(BingoDifficulties.EASY, goalAdder);
     }
 
@@ -58,7 +58,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("different_fish"))
             .sub("count", BingoSub.random(2, 4))
             .criterion("obtain",
-                HasSomeFoodItemsTrigger.builder().requiredCount(0).tag(ItemTags.FISHES).build(),
+                HasSomeFoodItemsTrigger.builder().requiredCount(1).tag(ItemTags.FISHES).build(),
                 subber -> subber.sub("conditions.required_count", "count"))
             .progress("obtain")
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
@@ -317,7 +317,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         // TODO: hang 3 different 4x4 paintings
         addGoal(obtainItemGoal(id("bone_block"), Items.BONE_BLOCK, 5, 10));
         addGoal(BingoGoal.builder(id("double_creeper_boat"))
-            .criterion("break", BingoTriggers.DESTROY_VEHICLE.createCriterion(new DestroyVehicleTrigger.TriggerInstance(
+            .criterion("break", BingoTriggers.DESTROY_VEHICLE.get().createCriterion(new DestroyVehicleTrigger.TriggerInstance(
                 Optional.empty(),
                 Optional.of(ContextAwarePredicate.create(
                     LootItemEntityPropertyCondition.hasProperties(
@@ -348,7 +348,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         // TODO: different colored shields
         addGoal(obtainItemGoal(id("dead_bush"), Items.DEAD_BUSH)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
-        addGoal(obtainItemGoal(id("grass"), Items.GRASS, 15, 32)
+        addGoal(obtainItemGoal(id("grass"), Items.SHORT_GRASS, 15, 32) // FIXME: Support TALL_GRASS too
             .tooltip("grass"));
 
         for (String dyeColor : List.of("cyan", "magenta", "red", "orange", "yellow", "green", "pink", "purple", "lime")) {

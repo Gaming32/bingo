@@ -2,7 +2,6 @@
   "antisynergy": "complete_map",
   "criteria": {
     "complete": {
-      "conditions": {},
       "trigger": "bingo:completed_map"
     }
   },

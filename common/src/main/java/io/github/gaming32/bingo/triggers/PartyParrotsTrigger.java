@@ -1,12 +1,13 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.phys.AABB;
@@ -19,21 +20,25 @@ import java.util.Set;
 public class PartyParrotsTrigger extends SimpleCriterionTrigger<PartyParrotsTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player);
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, JukeboxBlockEntity blockEntity) {
         trigger(player, instance -> instance.matches(blockEntity));
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        public TriggerInstance(Optional<ContextAwarePredicate> predicate) {
-            super(predicate);
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public static Criterion<TriggerInstance> partyParrots() {
-            return BingoTriggers.PARTY_PARROTS.createCriterion(
+            return BingoTriggers.PARTY_PARROTS.get().createCriterion(
                 new TriggerInstance(Optional.empty())
             );
         }

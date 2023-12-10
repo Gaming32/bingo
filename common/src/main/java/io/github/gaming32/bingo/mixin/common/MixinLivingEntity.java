@@ -24,7 +24,7 @@ public abstract class MixinLivingEntity {
     )
     private void onEquipItem(EquipmentSlot slot, ItemStack oldItem, ItemStack newItem, CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer player) {
-            BingoTriggers.EQUIP_ITEM.trigger(player, oldItem, newItem, slot);
+            BingoTriggers.EQUIP_ITEM.get().trigger(player, oldItem, newItem, slot);
         }
     }
 
@@ -37,6 +37,6 @@ public abstract class MixinLivingEntity {
         locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void onDeathFromDamageSource(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, float originalAmount, boolean blocked) {
-        BingoTriggers.ENTITY_DIE_NEAR_PLAYER.trigger((LivingEntity) (Object) this, source, originalAmount, amount, blocked);
+        BingoTriggers.ENTITY_DIE_NEAR_PLAYER.get().trigger((LivingEntity) (Object) this, source, originalAmount, amount, blocked);
     }
 }

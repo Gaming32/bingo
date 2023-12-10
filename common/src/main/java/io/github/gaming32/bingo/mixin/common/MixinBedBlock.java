@@ -29,7 +29,7 @@ public class MixinBedBlock {
     @Inject(method = "setPlacedBy", at = @At("RETURN"))
     private void onPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack, CallbackInfo ci) {
         if (placer instanceof ServerPlayer player) {
-            BingoTriggers.BED_ROW.trigger(player, level, pos);
+            BingoTriggers.BED_ROW.get().trigger(player, level, pos);
         }
     }
 
@@ -42,7 +42,7 @@ public class MixinBedBlock {
     )
     private void intentionalGameDesignTrigger(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
         if (player instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.INTENTIONAL_GAME_DESIGN.trigger(serverPlayer, pos);
+            BingoTriggers.INTENTIONAL_GAME_DESIGN.get().trigger(serverPlayer, pos);
         }
     }
 
@@ -61,7 +61,7 @@ public class MixinBedBlock {
         if (!(instance instanceof ServerPlayer serverPlayer)) {
             return result;
         }
-        return result.ifRight(unit -> BingoTriggers.SLEPT.trigger(
+        return result.ifRight(unit -> BingoTriggers.SLEPT.get().trigger(
             serverPlayer, bedPos, instance.getItemInHand(hand)
         ));
     }

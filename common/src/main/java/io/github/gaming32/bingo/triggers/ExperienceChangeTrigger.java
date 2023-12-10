@@ -1,9 +1,14 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -11,13 +16,8 @@ import java.util.Optional;
 public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceChangeTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            MinMaxBounds.Ints.fromJson(json.get("levels")),
-            MinMaxBounds.Doubles.fromJson(json.get("progress")),
-            MinMaxBounds.Ints.fromJson(json.get("total_experience"))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player) {
@@ -28,32 +28,20 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final MinMaxBounds.Ints levels;
-        private final MinMaxBounds.Doubles progress;
-        private final MinMaxBounds.Ints totalExperience;
-
-        public TriggerInstance(
-            Optional<ContextAwarePredicate> player,
-            MinMaxBounds.Ints levels,
-            MinMaxBounds.Doubles progress,
-            MinMaxBounds.Ints totalExperience
-        ) {
-            super(player);
-            this.levels = levels;
-            this.progress = progress;
-            this.totalExperience = totalExperience;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.add("levels", levels.serializeToJson());
-            result.add("progress", progress.serializeToJson());
-            result.add("total_experience", totalExperience.serializeToJson());
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        MinMaxBounds.Ints levels,
+        MinMaxBounds.Doubles progress,
+        MinMaxBounds.Ints totalExperience
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "levels", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::levels),
+                ExtraCodecs.strictOptionalField(MinMaxBounds.Doubles.CODEC, "progress", MinMaxBounds.Doubles.ANY).forGetter(TriggerInstance::progress),
+                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "total_experience", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::totalExperience)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(ServerPlayer player) {
             if (!levels.matches(player.experienceLevel)) {
@@ -99,7 +87,7 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.EXPERIENCE_CHANGED.createCriterion(
+            return BingoTriggers.EXPERIENCE_CHANGED.get().createCriterion(
                 new TriggerInstance(player, levels, progress, totalExperience)
             );
         }

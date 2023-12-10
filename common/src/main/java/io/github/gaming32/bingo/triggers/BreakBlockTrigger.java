@@ -1,13 +1,14 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.util.BingoUtil;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,8 +25,8 @@ import java.util.Optional;
 public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player, BingoUtil.getAdvancementLocation(json, "location", context));
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, BlockPos pos, ItemStack tool) {
@@ -45,24 +46,25 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ContextAwarePredicate> location;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> location) {
-            super(player);
-            this.location = location;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            location.ifPresent(p -> result.add("location", p.toJson()));
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ContextAwarePredicate> location
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(ContextAwarePredicate.CODEC, "location").forGetter(TriggerInstance::location)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(LootContext location) {
             return this.location.isEmpty() || this.location.get().matches(location);
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            location.ifPresent(p -> criterionValidator.validate(p, LootContextParamSets.ADVANCEMENT_LOCATION, ".location"));
         }
     }
 
@@ -104,7 +106,7 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.BREAK_BLOCK.createCriterion(new TriggerInstance(player, location));
+            return BingoTriggers.BREAK_BLOCK.get().createCriterion(new TriggerInstance(player, location));
         }
     }
 }

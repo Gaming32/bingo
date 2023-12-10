@@ -48,17 +48,17 @@ import java.util.function.Consumer;
 public abstract class DifficultyGoalProvider {
     private final ResourceLocation difficulty;
     private final String prefix;
-    private final Consumer<BingoGoal> goalAdder;
+    private final Consumer<BingoGoal.Holder> goalAdder;
 
-    protected DifficultyGoalProvider(ResourceLocation difficulty, Consumer<BingoGoal> goalAdder) {
+    protected DifficultyGoalProvider(ResourceLocation difficulty, Consumer<BingoGoal.Holder> goalAdder) {
         this.difficulty = difficulty;
         this.prefix = difficulty.getPath() + '/';
         this.goalAdder = goalAdder;
     }
 
     protected final void addGoal(BingoGoal.Builder goal) {
-        BingoGoal builtGoal = goal.difficulty(difficulty).build();
-        if (!builtGoal.getId().getPath().startsWith(prefix)) {
+        BingoGoal.Holder builtGoal = goal.difficulty(difficulty).build();
+        if (!builtGoal.id().getPath().startsWith(prefix)) {
             throw new IllegalArgumentException("Goal ID does not start with " + prefix);
         }
         goalAdder.accept(builtGoal);
@@ -146,7 +146,7 @@ public abstract class DifficultyGoalProvider {
             .sub("count", BingoSub.random(minCount, maxCount))
             .criterion(
                 "obtain",
-                HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(0).build(),
+                HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(1).build(),
                 subber -> subber.sub("conditions.required_count", "count")
             )
             .progress("obtain")
@@ -180,7 +180,7 @@ public abstract class DifficultyGoalProvider {
         }
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minCount, maxCount))
-            .criterion("obtain", HasSomeFoodItemsTrigger.builder().requiredCount(0).build(), subber -> subber.sub("conditions.required_count", "count"))
+            .criterion("obtain", HasSomeFoodItemsTrigger.builder().requiredCount(1).build(), subber -> subber.sub("conditions.required_count", "count"))
             .progress("obtain")
             .tags(BingoTags.ITEM)
             .name(Component.translatable("bingo.goal.edible_items", 0), subber -> subber.sub("with.0", "count"))
@@ -239,7 +239,7 @@ public abstract class DifficultyGoalProvider {
         }
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minCount, maxCount))
-            .criterion("obtain", BedRowTrigger.create(0), subber -> subber.sub("conditions.count", "count"))
+            .criterion("obtain", BedRowTrigger.create(1), subber -> subber.sub("conditions.count", "count"))
             .name(Component.translatable("bingo.goal.bed_row", 0), subber -> subber.sub("with.0", "count"))
             .antisynergy("bed_color")
             .infrequency(4)

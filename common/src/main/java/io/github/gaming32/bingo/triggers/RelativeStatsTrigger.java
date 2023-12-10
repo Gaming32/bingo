@@ -1,12 +1,16 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.BingoGame;
-import io.github.gaming32.bingo.util.BingoUtil;
+import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.PlayerPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -17,47 +21,41 @@ import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
 import net.minecraft.stats.Stats;
 import net.minecraft.stats.StatsCounter;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTrigger.TriggerInstance> {
+public class RelativeStatsTrigger extends SimpleProgressibleCriterionTrigger<RelativeStatsTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            BingoUtil.fromJsonElement(PlayerPredicate.StatMatcher.CODEC.listOf(), json.get("stats"))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player) {
-        trigger(player, instance -> instance.matches(player));
+        final ProgressListener<TriggerInstance> progressListener = getProgressListener(player);
+        trigger(player, instance -> instance.matches(player, progressListener));
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
-        private final List<PlayerPredicate.StatMatcher<?>> stats;
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        List<PlayerPredicate.StatMatcher<?>> stats
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                PlayerPredicate.StatMatcher.CODEC.listOf().fieldOf("stats").forGetter(TriggerInstance::stats)
+            ).apply(instance, TriggerInstance::new)
+        );
 
-        public TriggerInstance(Optional<ContextAwarePredicate> player, List<PlayerPredicate.StatMatcher<?>> stats) {
-            super(player);
-            this.stats = stats;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.add("stats", BingoUtil.toJsonElement(PlayerPredicate.StatMatcher.CODEC.listOf(), stats));
-            return result;
-        }
-
-        public boolean matches(ServerPlayer player) {
+        public boolean matches(ServerPlayer player, ProgressListener<TriggerInstance> progressListener) {
             final BingoGame game = Bingo.activeGame;
             if (game != null) {
                 final Object2IntMap<Stat<?>> baseStats = game.getBaseStats(player);
@@ -67,13 +65,13 @@ public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTr
                         final Stat<?> stat = matcher.stat().get();
                         final int value = currentStats.getValue(stat) - baseStats.getInt(stat);
                         if (!matcher.range().matches(value)) {
-                            matcher.range().min().ifPresent(min -> setProgress(player, Math.min(value, min), min));
+                            matcher.range().min().ifPresent(min -> progressListener.update(this, Math.min(value, min), min));
                             return false;
                         }
                     }
 
                     if (!stats.isEmpty()) {
-                        stats.get(0).range().min().ifPresent(min -> setProgress(player, min, min));
+                        stats.get(0).range().min().ifPresent(min -> progressListener.update(this, min, min));
                     }
                 }
             }
@@ -109,7 +107,7 @@ public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTr
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.RELATIVE_STATS.createCriterion(new TriggerInstance(player, stats));
+            return BingoTriggers.RELATIVE_STATS.get().createCriterion(new TriggerInstance(player, stats));
         }
     }
 }

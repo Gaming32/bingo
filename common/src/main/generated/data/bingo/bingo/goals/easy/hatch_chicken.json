@@ -1,7 +1,6 @@
 {
   "criteria": {
     "hatch": {
-      "conditions": {},
       "trigger": "bingo:chicken_hatch"
     }
   },

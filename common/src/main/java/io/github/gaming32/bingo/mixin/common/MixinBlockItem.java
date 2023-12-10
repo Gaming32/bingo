@@ -26,7 +26,7 @@ public class MixinBlockItem {
     private void mineralPillar(Block instance, Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack, Operation<Void> original) {
         original.call(instance, level, pos, state, placer, stack);
         if (placer instanceof ServerPlayer player) {
-            BingoTriggers.MINERAL_PILLAR.trigger(player, level, pos);
+            BingoTriggers.MINERAL_PILLAR.get().trigger(player, level, pos);
         }
     }
 }

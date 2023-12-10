@@ -28,7 +28,7 @@ public class MixinConduitBlockEntity {
         final int newLevel = positions.size() / 7;
         if (result && newLevel != oldLevel) {
             for (ServerPlayer serverplayer : level.getEntitiesOfClass(ServerPlayer.class, new AABB(pos).inflate(10))) {
-                BingoTriggers.POWER_CONDUIT.trigger(serverplayer, newLevel);
+                BingoTriggers.POWER_CONDUIT.get().trigger(serverplayer, newLevel);
             }
         }
         return result;

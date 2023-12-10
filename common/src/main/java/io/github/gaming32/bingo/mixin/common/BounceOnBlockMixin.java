@@ -24,7 +24,7 @@ public class BounceOnBlockMixin {
     @SuppressWarnings("deprecation")
     private void bounceUpTrigger(Entity entity, CallbackInfo ci) {
         if (entity instanceof ServerPlayer player && player.getDeltaMovement().y <= -0.1) {
-            BingoTriggers.BOUNCE_ON_BLOCK.trigger(player, player.getOnPosLegacy());
+            BingoTriggers.BOUNCE_ON_BLOCK.get().trigger(player, player.getOnPosLegacy());
         }
     }
 }

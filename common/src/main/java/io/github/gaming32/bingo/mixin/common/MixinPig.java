@@ -32,11 +32,11 @@ public abstract class MixinPig extends Animal {
         final boolean result = original.call(instance, entity);
         if (result) {
             if (lightning.getCause() != null) {
-                BingoTriggers.ZOMBIFY_PIG.trigger(lightning.getCause(), (Pig)(Object)this, entity, true);
+                BingoTriggers.ZOMBIFY_PIG.get().trigger(lightning.getCause(), (Pig)(Object)this, entity, true);
             } else {
                 for (ServerPlayer player : instance.players()) {
                     if (player.distanceTo(lightning) < 256f) {
-                        BingoTriggers.ZOMBIFY_PIG.trigger(player, (Pig)(Object)this, entity, false);
+                        BingoTriggers.ZOMBIFY_PIG.get().trigger(player, (Pig)(Object)this, entity, false);
                     }
                 }
             }

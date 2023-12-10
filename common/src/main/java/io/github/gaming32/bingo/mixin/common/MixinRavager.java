@@ -21,7 +21,7 @@ public class MixinRavager {
     )
     private void stunnedRavager(LivingEntity defender, CallbackInfo ci) {
         if (defender instanceof ServerPlayer player) {
-            BingoTriggers.STUN_RAVAGER.trigger(player, (Entity)(Object)this);
+            BingoTriggers.STUN_RAVAGER.get().trigger(player, (Entity)(Object)this);
         }
     }
 }

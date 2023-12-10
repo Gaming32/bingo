@@ -1,18 +1,17 @@
 package io.github.gaming32.bingo.triggers;
 
 import com.google.common.collect.Sets;
-import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.util.BingoUtil;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.TagPredicate;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,45 +30,36 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.Set;
 
-public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodItemsTrigger.TriggerInstance> {
+public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<HasSomeFoodItemsTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            GsonHelper.getAsInt(json, "required_count"),
-            BingoUtil.fromOptionalJsonElement(TagPredicate.codec(Registries.ITEM), json.get("tag"))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
-        trigger(player, instance -> instance.matches(player, inventory));
+        final ProgressListener<TriggerInstance> progressListener = getProgressListener(player);
+        trigger(player, instance -> instance.matches(player, inventory, progressListener));
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractProgressibleTriggerInstance {
-        private final int requiredCount;
-        private final Optional<TagPredicate<Item>> tag;
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        int requiredCount,
+        Optional<TagPredicate<Item>> tag
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.POSITIVE_INT.fieldOf("required_count").forGetter(TriggerInstance::requiredCount),
+                ExtraCodecs.strictOptionalField(TagPredicate.codec(Registries.ITEM), "tag").forGetter(TriggerInstance::tag)
+            ).apply(instance, TriggerInstance::new)
+        );
 
-        public TriggerInstance(Optional<ContextAwarePredicate> player, int requiredCount, Optional<TagPredicate<Item>> tag) {
-            super(player);
-            this.requiredCount = requiredCount;
-            this.tag = tag;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.addProperty("required_count", requiredCount);
-            tag.ifPresent(tag -> result.add("tag", BingoUtil.toJsonElement(TagPredicate.codec(Registries.ITEM), tag)));
-            return result;
-        }
-
-        public boolean matches(ServerPlayer player, Inventory inventory) {
+        public boolean matches(ServerPlayer player, Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
             final Container fakeFurnace = new SimpleContainer(3);
             fakeFurnace.setItem(1, new ItemStack(Items.COAL));
 
@@ -92,13 +82,13 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
                     }
 
                     if (foundItems.add(item.getItem()) && foundItems.size() >= requiredCount) {
-                        setProgress(player, requiredCount, requiredCount);
+                        progressListener.update(this, requiredCount, requiredCount);
                         return true;
                     }
                 }
             }
 
-            setProgress(player, foundItems.size(), requiredCount);
+            progressListener.update(this, foundItems.size(), requiredCount);
             return false;
         }
     }
@@ -135,7 +125,7 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
             if (requiredCount == null) {
                 throw new IllegalStateException("Did not specify requiredCount");
             }
-            return BingoTriggers.HAS_SOME_FOOD_ITEMS.createCriterion(
+            return BingoTriggers.HAS_SOME_FOOD_ITEMS.get().createCriterion(
                 new HasSomeFoodItemsTrigger.TriggerInstance(player, requiredCount, tag)
             );
         }

@@ -1,9 +1,14 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.CriterionValidator;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +18,8 @@ import java.util.Optional;
 public class EntityTrigger extends SimpleCriterionTrigger<EntityTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player, EntityPredicate.fromJson(json, "entity", context));
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, Entity entity) {
@@ -22,34 +27,35 @@ public class EntityTrigger extends SimpleCriterionTrigger<EntityTrigger.TriggerI
         trigger(player, instance -> instance.matches(mobContext));
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ContextAwarePredicate> entity;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> entity) {
-            super(player);
-            this.entity = entity;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ContextAwarePredicate> entity
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "entity").forGetter(TriggerInstance::entity)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public static Criterion<TriggerInstance> brokeCrossbow(EntityPredicate mob) {
-            return BingoTriggers.MOB_BROKE_CROSSBOW.createCriterion(new TriggerInstance(
+            return BingoTriggers.MOB_BROKE_CROSSBOW.get().createCriterion(new TriggerInstance(
                 Optional.empty(), EntityPredicate.wrap(Optional.ofNullable(mob))
             ));
         }
 
         public static Criterion<TriggerInstance> stunnedRavager() {
-            return BingoTriggers.STUN_RAVAGER.createCriterion(new TriggerInstance(Optional.empty(), Optional.empty()));
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            entity.ifPresent(p -> result.add("entity", p.toJson()));
-            return result;
+            return BingoTriggers.STUN_RAVAGER.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.empty()));
         }
 
         public boolean matches(LootContext mob) {
             return this.entity.isEmpty() || this.entity.get().matches(mob);
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(entity, ".entity");
         }
     }
 }

@@ -1,13 +1,15 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.ImmutableBiMap;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.util.CustomEnumCodec;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -15,26 +17,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.TriggerInstance> {
-    private static final BiMap<String, InteractionHand> HANDS = ImmutableBiMap.of(
-        "main_hand", InteractionHand.MAIN_HAND,
-        "off_hand", InteractionHand.OFF_HAND
-    );
-
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        final Optional<InteractionHand> hand;
-        if (json.has("hand")) {
-            final String stringHand = GsonHelper.getAsString(json, "hand");
-            hand = Optional.ofNullable(HANDS.get(stringHand));
-            if (hand.isEmpty()) {
-                throw new JsonParseException("Unknown hand \"" + stringHand + "\"");
-            }
-        } else {
-            hand = Optional.empty();
-        }
-
-        return new TriggerInstance(player, ItemPredicate.fromJson(json.get("item")), hand);
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, InteractionHand hand) {
@@ -46,24 +32,19 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ItemPredicate> item;
-        private final Optional<InteractionHand> hand;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ItemPredicate> item, Optional<InteractionHand> hand) {
-            super(player);
-            this.item = item;
-            this.hand = hand;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            item.ifPresent(p -> result.add("item", p.serializeToJson()));
-            hand.ifPresent(p -> result.addProperty("hand", HANDS.inverse().get(p)));
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ItemPredicate> item,
+        Optional<InteractionHand> hand
+    ) implements SimpleInstance {
+        private static final CustomEnumCodec<InteractionHand> INTERACTION_HAND_CODEC = CustomEnumCodec.of(InteractionHand.class);
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(ItemPredicate.CODEC, "item").forGetter(TriggerInstance::item),
+                ExtraCodecs.strictOptionalField(INTERACTION_HAND_CODEC.codec(), "hand").forGetter(TriggerInstance::hand)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(ItemStack item, InteractionHand hand) {
             if (this.item.isPresent() && !this.item.get().matches(item)) {
@@ -100,7 +81,7 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.TRY_USE_ITEM.createCriterion(new TriggerInstance(player, item, hand));
+            return BingoTriggers.TRY_USE_ITEM.get().createCriterion(new TriggerInstance(player, item, hand));
         }
     }
 }

@@ -1,10 +1,11 @@
 package io.github.gaming32.bingo.game;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,21 +78,28 @@ public interface BingoGameMode {
     };
 
     BingoGameMode LOCKOUT = new BingoGameMode() {
+        private static final SimpleCommandExceptionType TOO_FEW_TEAMS =
+            new SimpleCommandExceptionType(Bingo.translatable("bingo.lockout.too_few_teams"));
+        private static final SimpleCommandExceptionType TEAM_MISSING_COLOR =
+            new SimpleCommandExceptionType(Bingo.translatable("bingo.team_missing_color"));
+        private static final SimpleCommandExceptionType DUPLICATE_TEAM_COLOR =
+            new SimpleCommandExceptionType(Bingo.translatable("bingo.duplicate_team_color"));
+
         @Override
-        public Component checkAllowedConfig(GameConfig config) {
+        public CommandSyntaxException checkAllowedConfig(GameConfig config) {
             if (config.teams.size() < 2) {
-                return Bingo.translatable("bingo.lockout.too_few_teams");
+                return TOO_FEW_TEAMS.create();
             }
 
             final Set<ChatFormatting> uniqueColors = EnumSet.noneOf(ChatFormatting.class);
             for (final PlayerTeam team : config.teams) {
                 if (team.getColor().getColor() == null) {
-                    return Bingo.translatable("bingo.team_missing_color");
+                    return TEAM_MISSING_COLOR.create();
                 }
                 uniqueColors.add(team.getColor());
             }
             if (uniqueColors.size() < config.teams.size()) {
-                return Bingo.translatable("bingo.duplicate_team_color");
+                return DUPLICATE_TEAM_COLOR.create();
             }
 
             return null;
@@ -149,8 +157,8 @@ public interface BingoGameMode {
         }
 
         @Override
-        public boolean isGoalAllowed(BingoGoal goal) {
-            return goal.getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
+        public boolean isGoalAllowed(BingoGoal.Holder goal) {
+            return goal.goal().getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
         }
 
         @Override
@@ -193,8 +201,8 @@ public interface BingoGameMode {
         }
 
         @Override
-        public boolean isGoalAllowed(BingoGoal goal) {
-            return goal.getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
+        public boolean isGoalAllowed(BingoGoal.Holder goal) {
+            return goal.goal().getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
         }
     };
 
@@ -205,7 +213,7 @@ public interface BingoGameMode {
     ));
 
     @Nullable
-    default Component checkAllowedConfig(GameConfig config) {
+    default CommandSyntaxException checkAllowedConfig(GameConfig config) {
         return null;
     }
 
@@ -214,7 +222,7 @@ public interface BingoGameMode {
 
     boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever);
 
-    default boolean isGoalAllowed(BingoGoal goal) {
+    default boolean isGoalAllowed(BingoGoal.Holder goal) {
         return true;
     }
 

@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class VeryHardGoalProvider extends DifficultyGoalProvider {
-    public VeryHardGoalProvider(Consumer<BingoGoal> goalAdder) {
+    public VeryHardGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
         super(BingoDifficulties.VERY_HARD, goalAdder);
     }
 
@@ -51,7 +51,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("different_potions"))
             .sub("count", BingoSub.random(12, 15))
             .criterion("potions",
-                DifferentPotionsTrigger.TriggerInstance.differentPotions(0),
+                DifferentPotionsTrigger.TriggerInstance.differentPotions(1),
                 subber -> subber.sub("conditions.min_count", "count")
             )
             .progress("potions")

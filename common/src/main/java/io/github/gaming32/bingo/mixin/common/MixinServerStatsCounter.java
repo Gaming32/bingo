@@ -15,7 +15,7 @@ public class MixinServerStatsCounter {
     @Inject(method = "setValue", at = @At("RETURN"))
     private void onSetValue(Player player, Stat<?> stat, int value, CallbackInfo ci) {
         if (player instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.RELATIVE_STATS.trigger(serverPlayer);
+            BingoTriggers.RELATIVE_STATS.get().trigger(serverPlayer);
         }
     }
 }

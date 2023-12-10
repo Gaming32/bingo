@@ -18,13 +18,13 @@ public class MixinRecordItem {
         method = "useOn",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/level/block/entity/JukeboxBlockEntity;setFirstItem(Lnet/minecraft/world/item/ItemStack;)V",
+            target = "Lnet/minecraft/world/level/block/entity/JukeboxBlockEntity;setTheItem(Lnet/minecraft/world/item/ItemStack;)V",
             shift = At.Shift.AFTER
         )
     )
     private void partyParrotsTrigger(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, @Local JukeboxBlockEntity jukeboxBlockEntity) {
         if (context.getPlayer() instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.PARTY_PARROTS.trigger(serverPlayer, jukeboxBlockEntity);
+            BingoTriggers.PARTY_PARROTS.get().trigger(serverPlayer, jukeboxBlockEntity);
         }
     }
 }

@@ -1,10 +1,12 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
@@ -14,8 +16,8 @@ import java.util.Optional;
 public class ItemPickedUpTrigger extends SimpleCriterionTrigger<ItemPickedUpTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(player, EntityPredicate.fromJson(json, "item_entity", context));
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, ItemEntity itemEntity) {
@@ -23,16 +25,19 @@ public class ItemPickedUpTrigger extends SimpleCriterionTrigger<ItemPickedUpTrig
         trigger(player, instance -> instance.matches(itemEntityContext));
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ContextAwarePredicate> itemEntity;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ContextAwarePredicate> itemEntity) {
-            super(player);
-            this.itemEntity = itemEntity;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ContextAwarePredicate> itemEntity
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "item_entity").forGetter(TriggerInstance::itemEntity)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public static Criterion<TriggerInstance> pickedUp(EntityPredicate itemEntity) {
-            return BingoTriggers.ITEM_PICKED_UP.createCriterion(new TriggerInstance(
+            return BingoTriggers.ITEM_PICKED_UP.get().createCriterion(new TriggerInstance(
                 Optional.empty(), EntityPredicate.wrap(Optional.ofNullable(itemEntity))
             ));
         }
@@ -48,16 +53,14 @@ public class ItemPickedUpTrigger extends SimpleCriterionTrigger<ItemPickedUpTrig
             );
         }
 
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            itemEntity.ifPresent(p -> result.add("item_entity", p.toJson()));
-            return result;
-        }
-
         public boolean matches(LootContext itemEntity) {
             return this.itemEntity.isEmpty() || this.itemEntity.get().matches(itemEntity);
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(itemEntity, ".item_entity");
         }
     }
 }

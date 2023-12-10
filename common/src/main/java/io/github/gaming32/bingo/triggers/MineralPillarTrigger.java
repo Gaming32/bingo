@@ -1,20 +1,19 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -28,11 +27,8 @@ import java.util.Set;
 public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            TagKey.create(Registries.BLOCK, new ResourceLocation(GsonHelper.getAsString(json, "tag")))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, BlockGetter level, BlockPos pos) {
@@ -40,26 +36,21 @@ public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTr
     }
 
     public static Criterion<TriggerInstance> pillar(TagKey<Block> tag) {
-        return BingoTriggers.MINERAL_PILLAR.createCriterion(
+        return BingoTriggers.MINERAL_PILLAR.get().createCriterion(
             new TriggerInstance(Optional.empty(), tag)
         );
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final TagKey<Block> tag;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> predicate, TagKey<Block> tag) {
-            super(predicate);
-            this.tag = tag;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.addProperty("tag", tag.location().toString());
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        TagKey<Block> tag
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                TagKey.codec(Registries.BLOCK).fieldOf("tag").forGetter(TriggerInstance::tag)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(BlockGetter level, BlockPos pos) {
             final int required = BuiltInRegistries.BLOCK.getTag(tag).map(HolderSet::size).orElse(0);

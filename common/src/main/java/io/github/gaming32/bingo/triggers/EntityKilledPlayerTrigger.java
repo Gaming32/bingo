@@ -1,9 +1,11 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -14,14 +16,8 @@ import java.util.Optional;
 public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKilledPlayerTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            EntityPredicate.fromJson(json, "credited_entity", context),
-            EntityPredicate.fromJson(json, "direct_entity", context),
-            EntityPredicate.fromJson(json, "source_entity", context),
-            DamageSourcePredicate.fromJson(json.get("source"))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(
@@ -39,36 +35,22 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ContextAwarePredicate> creditedEntity;
-        private final Optional<ContextAwarePredicate> directEntity;
-        private final Optional<ContextAwarePredicate> sourceEntity;
-        private final Optional<DamageSourcePredicate> source;
-
-        public TriggerInstance(
-            Optional<ContextAwarePredicate> player,
-            Optional<ContextAwarePredicate> creditedEntity,
-            Optional<ContextAwarePredicate> directEntity,
-            Optional<ContextAwarePredicate> sourceEntity,
-            Optional<DamageSourcePredicate> source
-        ) {
-            super(player);
-            this.creditedEntity = creditedEntity;
-            this.directEntity = directEntity;
-            this.sourceEntity = sourceEntity;
-            this.source = source;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            creditedEntity.ifPresent(p -> result.add("credited_entity", p.toJson()));
-            directEntity.ifPresent(p -> result.add("direct_entity", p.toJson()));
-            sourceEntity.ifPresent(p -> result.add("source_entity", p.toJson()));
-            source.ifPresent(p -> result.add("source", p.serializeToJson()));
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ContextAwarePredicate> creditedEntity,
+        Optional<ContextAwarePredicate> directEntity,
+        Optional<ContextAwarePredicate> sourceEntity,
+        Optional<DamageSourcePredicate> source
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "credited_entity").forGetter(TriggerInstance::creditedEntity),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "direct_entity").forGetter(TriggerInstance::directEntity),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "source_entity").forGetter(TriggerInstance::sourceEntity),
+                ExtraCodecs.strictOptionalField(DamageSourcePredicate.CODEC, "source").forGetter(TriggerInstance::source)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(
             ServerPlayer player,
@@ -90,6 +72,14 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
                 return false;
             }
             return true;
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(creditedEntity, ".credited_entity");
+            criterionValidator.validateEntity(directEntity, ".direct_entity");
+            criterionValidator.validateEntity(sourceEntity, ".source_entity");
         }
     }
 
@@ -145,7 +135,7 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.ENTITY_KILLED_PLAYER.createCriterion(
+            return BingoTriggers.ENTITY_KILLED_PLAYER.get().createCriterion(
                 new TriggerInstance(player, creditedEntity, directEntity, sourceEntity, source)
             );
         }

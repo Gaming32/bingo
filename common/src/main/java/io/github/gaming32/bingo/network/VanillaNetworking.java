@@ -22,8 +22,8 @@ public class VanillaNetworking {
                 new ItemStack(Items.PLAYER_HEAD),
                 Bingo.translatable("bingo.board.title"),
                 CommonComponents.EMPTY,
-                new ResourceLocation("minecraft:textures/gui/advancements/backgrounds/stone.png"),
-                FrameType.TASK,
+                Optional.of(new ResourceLocation("minecraft:textures/gui/advancements/backgrounds/stone.png")),
+                AdvancementType.TASK,
                 false,
                 false,
                 true
@@ -36,7 +36,6 @@ public class VanillaNetworking {
     );
 
     public static final String CRITERION = "criterion";
-//    public static final String[][] REQUIREMENTS = {{CRITERION}};
     public static final AdvancementRequirements REQUIREMENTS = AdvancementRequirements.allOf(List.of(CRITERION));
 
     public static List<AdvancementHolder> generateAdvancements(int size, ActiveGoal[] goals) {
@@ -50,11 +49,11 @@ public class VanillaNetworking {
 
     public static AdvancementHolder generateAdvancement(int index, ActiveGoal goal, int x, int y) {
         final DisplayInfo displayInfo = new DisplayInfo(
-            goal.getIcon().item(),
-            goal.getName(),
-            Objects.requireNonNullElse(goal.getTooltip(), CommonComponents.EMPTY),
+            goal.icon().item(),
+            goal.name(),
+            goal.tooltip().orElse(CommonComponents.EMPTY),
             null,
-            FrameType.TASK,
+            AdvancementType.TASK,
             false,
             false,
             false

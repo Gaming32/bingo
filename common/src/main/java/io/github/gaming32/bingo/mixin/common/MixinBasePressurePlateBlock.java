@@ -24,7 +24,7 @@ public class MixinBasePressurePlateBlock {
     )
     private void arrowPressTrigger(Entity entity, Level level, BlockPos pos, BlockState state, int currentSignal, CallbackInfo ci) {
         if (entity instanceof AbstractArrow arrow) {
-            BingoTriggers.ARROW_PRESS.trigger(arrow, pos);
+            BingoTriggers.ARROW_PRESS.get().trigger(arrow, pos);
         }
     }
 }

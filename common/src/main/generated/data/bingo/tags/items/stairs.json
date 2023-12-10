@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
+    "minecraft:tuff_stairs",
+    "minecraft:polished_tuff_stairs",
+    "minecraft:tuff_brick_stairs",
     "minecraft:cut_copper_stairs",
     "minecraft:exposed_cut_copper_stairs",
     "minecraft:weathered_cut_copper_stairs",

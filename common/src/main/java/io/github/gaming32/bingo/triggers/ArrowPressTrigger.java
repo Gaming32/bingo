@@ -1,11 +1,12 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
-import io.github.gaming32.bingo.util.BingoUtil;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
@@ -15,13 +16,8 @@ import java.util.Optional;
 public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            EntityPredicate.fromJson(json, "arrow", context),
-            BingoUtil.fromOptionalJsonElement(BlockPredicate.CODEC, json.get("button_or_plate")),
-            LocationPredicate.fromJson(json.get("location"))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(AbstractArrow arrow, BlockPos pos) {
@@ -34,32 +30,20 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ContextAwarePredicate> arrow;
-        private final Optional<BlockPredicate> buttonOrPlate;
-        private final Optional<LocationPredicate> location;
-
-        public TriggerInstance(
-            Optional<ContextAwarePredicate> player,
-            Optional<ContextAwarePredicate> arrow,
-            Optional<BlockPredicate> buttonOrPlate,
-            Optional<LocationPredicate> location
-        ) {
-            super(player);
-            this.arrow = arrow;
-            this.buttonOrPlate = buttonOrPlate;
-            this.location = location;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            arrow.ifPresent(p -> result.add("arrow", p.toJson()));
-            buttonOrPlate.ifPresent(p -> result.add("button_or_plate", BingoUtil.toJsonObject(BlockPredicate.CODEC, p)));
-            location.ifPresent(p -> result.add("location", p.serializeToJson()));
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ContextAwarePredicate> arrow,
+        Optional<BlockPredicate> buttonOrPlate,
+        Optional<LocationPredicate> location
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "arrow").forGetter(TriggerInstance::arrow),
+                ExtraCodecs.strictOptionalField(BlockPredicate.CODEC, "button_or_plate").forGetter(TriggerInstance::buttonOrPlate),
+                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "location").forGetter(TriggerInstance::location)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(LootContext arrow, BlockPos pos) {
             if (this.arrow.isPresent() && !this.arrow.get().matches(arrow)) {
@@ -75,6 +59,12 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
                 return false;
             }
             return true;
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(arrow, ".arrow");
         }
     }
 
@@ -113,7 +103,7 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.ARROW_PRESS.createCriterion(
+            return BingoTriggers.ARROW_PRESS.get().createCriterion(
                 new TriggerInstance(player, arrow, buttonOrPlate, location)
             );
         }

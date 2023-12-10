@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.data.progresstrackers;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.game.ActiveGoal;
@@ -21,10 +22,11 @@ public record CriterionProgressTracker(String criterion, float scale) implements
     }
 
     @Override
-    public void validate(BingoGoal goal) throws IllegalArgumentException {
+    public DataResult<ProgressTracker> validate(BingoGoal goal) {
         if (!goal.getCriteria().containsKey(criterion)) {
-            throw new IllegalArgumentException("Specified progress criterion '" + criterion + "' does not exist");
+            return DataResult.error(() -> "Specified progress criterion '" + criterion + "' does not exist");
         }
+        return DataResult.success(this);
     }
 
     @Override
