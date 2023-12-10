@@ -1,9 +1,14 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -11,12 +16,8 @@ import java.util.Optional;
 public class EnchantedItemTrigger extends SimpleCriterionTrigger<EnchantedItemTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            MinMaxBounds.Ints.fromJson(json.get("levels_spent")),
-            MinMaxBounds.Ints.fromJson(json.get("required_levels"))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player, int levelsSpent, int levelsRequired) {
@@ -27,24 +28,18 @@ public class EnchantedItemTrigger extends SimpleCriterionTrigger<EnchantedItemTr
         return new Builder();
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final MinMaxBounds.Ints levelsSpent;
-        private final MinMaxBounds.Ints requiredLevels;
-
-        public TriggerInstance(Optional<ContextAwarePredicate> player, MinMaxBounds.Ints levelsSpent, MinMaxBounds.Ints requiredLevels) {
-            super(player);
-            this.levelsSpent = levelsSpent;
-            this.requiredLevels = requiredLevels;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            result.add("levels_spent", levelsSpent.serializeToJson());
-            result.add("required_levels", requiredLevels.serializeToJson());
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        MinMaxBounds.Ints levelsSpent,
+        MinMaxBounds.Ints requiredLevels
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "levels_spent", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::levelsSpent),
+                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "required_levels", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::requiredLevels)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(int levelsSpent, int levelsRequired) {
             if (!this.levelsSpent.matches(levelsSpent)) {

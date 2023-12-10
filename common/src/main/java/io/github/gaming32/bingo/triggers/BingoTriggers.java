@@ -5,7 +5,6 @@ import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.DistanceTrigger;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;

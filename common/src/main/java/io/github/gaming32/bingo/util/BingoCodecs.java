@@ -1,5 +1,8 @@
 package io.github.gaming32.bingo.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.datafixers.util.Unit;
@@ -8,22 +11,18 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Decoder;
 import com.mojang.serialization.DynamicOps;
 import dev.architectury.registry.registries.Registrar;
-import io.github.gaming32.bingo.mixin.common.ContextAwarePredicateAccessor;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditions;
 
 import java.util.Optional;
+import java.util.Set;
 
 public final class BingoCodecs {
     public static final Codec<Character> CHAR = Codec.STRING.comapFlatMap(
         s -> s.length() == 1 ? DataResult.success(s.charAt(0)) : DataResult.error(() -> "String must be exactly one char, not " + s.length()),
         c -> Character.toString(c)
     );
-    public static final Codec<ContextAwarePredicate> CONTEXT_AWARE_PREDICATE = LootItemConditions.CODEC
-        .listOf().xmap(ContextAwarePredicateAccessor::create, p -> ((ContextAwarePredicateAccessor)p).getConditions());
 
     private BingoCodecs() {
     }
@@ -74,5 +73,13 @@ public final class BingoCodecs {
                 }
             }
         });
+    }
+
+    public static <A> Codec<Set<A>> setOf(Codec<A> elementCodec) {
+        return elementCodec.listOf().xmap(ImmutableSet::copyOf, ImmutableList::copyOf);
+    }
+
+    public static <A extends Enum<A>> Codec<Set<A>> enumSetOf(Codec<A> elementCodec) {
+        return elementCodec.listOf().xmap(Sets::immutableEnumSet, ImmutableList::copyOf);
     }
 }

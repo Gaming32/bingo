@@ -1,9 +1,11 @@
 package io.github.gaming32.bingo.triggers;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -15,13 +17,8 @@ import java.util.Optional;
 public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDieNearPlayerTrigger.TriggerInstance> {
     @NotNull
     @Override
-    protected TriggerInstance createInstance(JsonObject json, Optional<ContextAwarePredicate> player, DeserializationContext context) {
-        return new TriggerInstance(
-            player,
-            EntityPredicate.fromJson(json, "entity", context),
-            DamagePredicate.fromJson(json.get("killing_blow")),
-            DistancePredicate.fromJson(json.get("distance"))
-        );
+    public Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
     }
 
     public static Builder builder() {
@@ -37,32 +34,20 @@ public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDie
         }
     }
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final Optional<ContextAwarePredicate> entity;
-        private final Optional<DamagePredicate> killingBlow;
-        private final Optional<DistancePredicate> distance;
-
-        public TriggerInstance(
-            Optional<ContextAwarePredicate> player,
-            Optional<ContextAwarePredicate> entity,
-            Optional<DamagePredicate> killingBlow,
-            Optional<DistancePredicate> distance
-        ) {
-            super(player);
-            this.entity = entity;
-            this.killingBlow = killingBlow;
-            this.distance = distance;
-        }
-
-        @NotNull
-        @Override
-        public JsonObject serializeToJson() {
-            final JsonObject result = super.serializeToJson();
-            entity.ifPresent(p -> result.add("entity", p.toJson()));
-            killingBlow.ifPresent(p -> result.add("killing_blow", p.serializeToJson()));
-            distance.ifPresent(p -> result.add("distance", p.serializeToJson()));
-            return result;
-        }
+    public record TriggerInstance(
+        Optional<ContextAwarePredicate> player,
+        Optional<ContextAwarePredicate> entity,
+        Optional<DamagePredicate> killingBlow,
+        Optional<DistancePredicate> distance
+    ) implements SimpleInstance {
+        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "entity").forGetter(TriggerInstance::entity),
+                ExtraCodecs.strictOptionalField(DamagePredicate.CODEC, "killing_blow").forGetter(TriggerInstance::killingBlow),
+                ExtraCodecs.strictOptionalField(DistancePredicate.CODEC, "distance").forGetter(TriggerInstance::distance)
+            ).apply(instance, TriggerInstance::new)
+        );
 
         public boolean matches(ServerPlayer player, LivingEntity entity, DamageSource source, float damageDealt, float damageTaken, boolean blocked) {
             if (this.entity.isPresent() && !this.entity.get().matches(EntityPredicate.createContext(player, entity))) {
@@ -75,6 +60,12 @@ public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDie
                 return false;
             }
             return true;
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(entity, ".entity");
         }
     }
 
