@@ -3,11 +3,11 @@ package io.github.gaming32.bingo.triggers;
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.Set;
 
-public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeItemsFromTagTrigger.TriggerInstance> {
+public class HasSomeItemsFromTagTrigger extends SimpleProgressibleCriterionTrigger<HasSomeItemsFromTagTrigger.TriggerInstance> {
     @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
@@ -30,7 +30,8 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
-        trigger(player, triggerInstance -> triggerInstance.matches(player, inventory));
+        final ProgressListener<TriggerInstance> progressListener = getProgressListener(player);
+        trigger(player, triggerInstance -> triggerInstance.matches(inventory, progressListener));
     }
 
     public static Builder builder() {
@@ -52,7 +53,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
             ).apply(instance, TriggerInstance::new)
         );
 
-        public boolean matches(ServerPlayer player, Inventory inventory) {
+        public boolean matches(Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
             int requiredCount = this.requiredCount;
             if (requiredCount == ALL) {
                 var tag = BuiltInRegistries.ITEM.getTag(this.tag);
@@ -66,12 +67,12 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
                 if (item.is(tag) && foundItems.add(item.getItem()) && foundItems.size() >= requiredCount) {
-//                    setProgress(player, requiredCount, requiredCount);
+                    progressListener.update(this, requiredCount, requiredCount);
                     return true;
                 }
             }
 
-//            setProgress(player, foundItems.size(), requiredCount);
+            progressListener.update(this, foundItems.size(), requiredCount);
             return false;
         }
     }

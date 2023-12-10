@@ -2,8 +2,12 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<TotalCountInventoryChangeTrigger.TriggerInstance> {
+public class TotalCountInventoryChangeTrigger extends SimpleProgressibleCriterionTrigger<TotalCountInventoryChangeTrigger.TriggerInstance> {
     @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
@@ -23,7 +27,8 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
-        trigger(player, triggerInstance -> triggerInstance.matches(player, inventory));
+        final ProgressListener<TriggerInstance> progressListener = getProgressListener(player);
+        trigger(player, triggerInstance -> triggerInstance.matches(inventory, progressListener));
     }
 
     public static Builder builder() {
@@ -41,7 +46,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
             ).apply(instance, TriggerInstance::new)
         );
 
-        public boolean matches(ServerPlayer player, Inventory inventory) {
+        public boolean matches(Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
             int[] counts = new int[items.size()];
 
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
@@ -90,7 +95,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
             }
 
             if (minCount != null) {
-//                setProgress(player, validCount, minCount);
+                progressListener.update(this, validCount, minCount);
                 return validCount >= minCount;
             }
 

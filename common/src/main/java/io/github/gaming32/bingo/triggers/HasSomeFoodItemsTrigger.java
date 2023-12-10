@@ -3,10 +3,10 @@ package io.github.gaming32.bingo.triggers;
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.Set;
 
-public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodItemsTrigger.TriggerInstance> {
+public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<HasSomeFoodItemsTrigger.TriggerInstance> {
     @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
@@ -38,7 +38,8 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
     }
 
     public void trigger(ServerPlayer player, Inventory inventory) {
-        trigger(player, instance -> instance.matches(player, inventory));
+        final ProgressListener<TriggerInstance> progressListener = getProgressListener(player);
+        trigger(player, instance -> instance.matches(player, inventory, progressListener));
     }
 
     public static Builder builder() {
@@ -58,7 +59,7 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
             ).apply(instance, TriggerInstance::new)
         );
 
-        public boolean matches(ServerPlayer player, Inventory inventory) {
+        public boolean matches(ServerPlayer player, Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
             final Container fakeFurnace = new SimpleContainer(3);
             fakeFurnace.setItem(1, new ItemStack(Items.COAL));
 
@@ -81,13 +82,13 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
                     }
 
                     if (foundItems.add(item.getItem()) && foundItems.size() >= requiredCount) {
-//                        setProgress(player, requiredCount, requiredCount);
+                        progressListener.update(this, requiredCount, requiredCount);
                         return true;
                     }
                 }
             }
 
-//            setProgress(player, foundItems.size(), requiredCount);
+            progressListener.update(this, foundItems.size(), requiredCount);
             return false;
         }
     }

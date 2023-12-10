@@ -46,7 +46,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
-// TODO: Move this class to a Codec
 public class BingoGoal {
     private static final Codec<Map<String, BingoSub>> SUBS_CODEC = Codec.unboundedMap(Codec.STRING, BingoSub.CODEC);
     private static final Codec<Set<BingoTag.Holder>> TAGS_CODEC = ResourceLocation.CODEC

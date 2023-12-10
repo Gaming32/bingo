@@ -36,7 +36,6 @@ public class VanillaNetworking {
     );
 
     public static final String CRITERION = "criterion";
-//    public static final String[][] REQUIREMENTS = {{CRITERION}};
     public static final AdvancementRequirements REQUIREMENTS = AdvancementRequirements.allOf(List.of(CRITERION));
 
     public static List<AdvancementHolder> generateAdvancements(int size, ActiveGoal[] goals) {
