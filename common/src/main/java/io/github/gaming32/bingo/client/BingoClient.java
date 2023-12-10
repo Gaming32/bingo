@@ -271,14 +271,12 @@ public class BingoClient {
             if (minecraft.options.advancedItemTooltips) {
                 tooltip.add(Component.literal(goal.id().toString()).withStyle(ChatFormatting.DARK_GRAY));
             }
-            if (goal.tooltip().isPresent()) {
+            goal.tooltip().ifPresent(component -> {
                 final int width = Math.max(300, minecraft.font.width(goal.name()));
                 tooltip.add(FormattedCharSequence.EMPTY);
-                minecraft.font.split(goal.tooltip().get(), width).forEach(tooltip::add);
-            }
-            if (goal.tooltipIcon().isPresent()) {
-                tooltip.add(new IconTooltip(goal.tooltipIcon().get()));
-            }
+                minecraft.font.split(component, width).forEach(tooltip::add);
+            });
+            goal.tooltipIcon().map(IconTooltip::new).ifPresent(tooltip::add);
             tooltip.draw(minecraft.font, graphics, (int)mousePos.mouseX(), (int)mousePos.mouseY());
         }
     }

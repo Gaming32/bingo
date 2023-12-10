@@ -25,11 +25,11 @@ public record ActiveGoal(
     public ItemStack toSingleStack() {
         final ItemStack result = icon.item().copy();
         result.setHoverName(name);
-        if (tooltip.isPresent()) {
+        tooltip.ifPresent(component -> {
             final ListTag lore = new ListTag();
-            lore.add(StringTag.valueOf(Component.Serializer.toJson(tooltip.get())));
+            lore.add(StringTag.valueOf(Component.Serializer.toJson(component)));
             result.getOrCreateTagElement("display").put("Lore", lore);
-        }
+        });
         return result;
     }
 
