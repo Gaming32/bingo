@@ -6,7 +6,6 @@
   "mixins": [
     "AdvancementProgressAccessor",
     "BounceOnBlockMixin",
-    "ContextAwarePredicateAccessor",
     "MixinBasePressurePlateBlock",
     "MixinBeaconBlockEntity",
     "MixinBedBlock",
