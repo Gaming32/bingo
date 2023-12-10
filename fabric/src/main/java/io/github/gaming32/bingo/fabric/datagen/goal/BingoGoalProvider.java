@@ -29,12 +29,12 @@ public class BingoGoalProvider implements DataProvider {
         Set<ResourceLocation> existingGoals = new HashSet<>();
         List<CompletableFuture<?>> generators = new ArrayList<>();
 
-        Consumer<BingoGoal> goalAdder = goal -> {
-            if (!existingGoals.add(goal.getId())) {
-                throw new IllegalArgumentException("Duplicate goal " + goal.getId());
+        Consumer<BingoGoal.Holder> goalAdder = goal -> {
+            if (!existingGoals.add(goal.id())) {
+                throw new IllegalArgumentException("Duplicate goal " + goal.id());
             } else {
-                Path path = pathProvider.json(goal.getId());
-                generators.add(DataProvider.saveStable(output, goal.serialize(), path));
+                Path path = pathProvider.json(goal.id());
+                generators.add(DataProvider.saveStable(output, goal.goal().serialize(), path));
             }
         };
 
@@ -49,7 +49,7 @@ public class BingoGoalProvider implements DataProvider {
         return "Bingo goals";
     }
 
-    private void addGoals(Consumer<BingoGoal> goalAdder) {
+    private void addGoals(Consumer<BingoGoal.Holder> goalAdder) {
         new VeryEasyGoalProvider(goalAdder).addGoals();
         new EasyGoalProvider(goalAdder).addGoals();
         new MediumGoalProvider(goalAdder).addGoals();

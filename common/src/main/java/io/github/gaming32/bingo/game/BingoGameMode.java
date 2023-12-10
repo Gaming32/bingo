@@ -94,12 +94,12 @@ public interface BingoGameMode {
             final Set<ChatFormatting> uniqueColors = EnumSet.noneOf(ChatFormatting.class);
             for (final PlayerTeam team : config.teams) {
                 if (team.getColor().getColor() == null) {
-                    return TOO_FEW_TEAMS.create();
+                    return TEAM_MISSING_COLOR.create();
                 }
                 uniqueColors.add(team.getColor());
             }
             if (uniqueColors.size() < config.teams.size()) {
-                return TOO_FEW_TEAMS.create();
+                return DUPLICATE_TEAM_COLOR.create();
             }
 
             return null;
@@ -157,8 +157,8 @@ public interface BingoGameMode {
         }
 
         @Override
-        public boolean isGoalAllowed(BingoGoal goal) {
-            return goal.getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
+        public boolean isGoalAllowed(BingoGoal.Holder goal) {
+            return goal.goal().getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
         }
 
         @Override
@@ -201,8 +201,8 @@ public interface BingoGameMode {
         }
 
         @Override
-        public boolean isGoalAllowed(BingoGoal goal) {
-            return goal.getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
+        public boolean isGoalAllowed(BingoGoal.Holder goal) {
+            return goal.goal().getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
         }
     };
 
@@ -222,7 +222,7 @@ public interface BingoGameMode {
 
     boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever);
 
-    default boolean isGoalAllowed(BingoGoal goal) {
+    default boolean isGoalAllowed(BingoGoal.Holder goal) {
         return true;
     }
 

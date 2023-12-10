@@ -49,7 +49,7 @@ import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class EasyGoalProvider extends DifficultyGoalProvider {
-    public EasyGoalProvider(Consumer<BingoGoal> goalAdder) {
+    public EasyGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
         super(BingoDifficulties.EASY, goalAdder);
     }
 

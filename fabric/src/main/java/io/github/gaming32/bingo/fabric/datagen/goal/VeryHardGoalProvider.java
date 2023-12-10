@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class VeryHardGoalProvider extends DifficultyGoalProvider {
-    public VeryHardGoalProvider(Consumer<BingoGoal> goalAdder) {
+    public VeryHardGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
         super(BingoDifficulties.VERY_HARD, goalAdder);
     }
 

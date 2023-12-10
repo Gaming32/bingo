@@ -54,7 +54,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class MediumGoalProvider extends DifficultyGoalProvider {
-    public MediumGoalProvider(Consumer<BingoGoal> goalAdder) {
+    public MediumGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
         super(BingoDifficulties.MEDIUM, goalAdder);
     }
 

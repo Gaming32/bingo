@@ -8,7 +8,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,19 +41,18 @@ public class BingoBoard {
         int difficulty,
         int teamCount,
         RandomSource rand,
-        LootDataManager lootData,
-        Predicate<BingoGoal> isAllowedGoal,
-        List<BingoGoal> requiredGoals,
+        Predicate<BingoGoal.Holder> isAllowedGoal,
+        List<BingoGoal.Holder> requiredGoals,
         Set<BingoTag.Holder> excludedTags,
         boolean allowsClientRequired
     ) {
         final BingoBoard board = new BingoBoard(size);
-        final BingoGoal[] generatedSheet = generateGoals(
+        final BingoGoal.Holder[] generatedSheet = generateGoals(
             size, difficulty, rand, isAllowedGoal, requiredGoals, excludedTags, allowsClientRequired
         );
         for (int i = 0; i < size * size; i++) {
             final ActiveGoal goal = board.goals[i] = generatedSheet[i].build(rand);
-            if (generatedSheet[i].getSpecialType() == BingoTag.SpecialType.NEVER) {
+            if (generatedSheet[i].goal().getSpecialType() == BingoTag.SpecialType.NEVER) {
                 board.states[i] = Teams.fromAll(teamCount);
             }
             board.byVanillaId.put(generateVanillaId(i), goal);
@@ -63,18 +61,18 @@ public class BingoBoard {
         return board;
     }
 
-    public static BingoGoal[] generateGoals(
+    public static BingoGoal.Holder[] generateGoals(
         int size,
         int difficulty,
         RandomSource rand,
-        Predicate<BingoGoal> isAllowedGoal,
-        List<BingoGoal> requiredGoals,
+        Predicate<BingoGoal.Holder> isAllowedGoal,
+        List<BingoGoal.Holder> requiredGoals,
         Set<BingoTag.Holder> excludedTags,
         boolean allowsClientRequired
     ) {
-        final Queue<BingoGoal> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
+        final Queue<BingoGoal.Holder> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
 
-        final BingoGoal[] generatedSheet = new BingoGoal[size * size];
+        final BingoGoal.Holder[] generatedSheet = new BingoGoal.Holder[size * size];
 
         final int[] difficultyLayout = generateDifficulty(size, difficulty, rand);
         final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(size * size), rand);
@@ -97,10 +95,10 @@ public class BingoBoard {
                 throw new IllegalArgumentException("No goals with difficulty " + difficultyLayout[i] + " or easier");
             }
 
-            List<BingoGoal> possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
+            List<BingoGoal.Holder> possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
 
             int failSafe = 0;
-            BingoGoal goal;
+            BingoGoal.Holder goal;
 
             goalGen:
             while (true) {
@@ -120,40 +118,40 @@ public class BingoBoard {
                     failSafe = 1;
                 }
 
-                final BingoGoal goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
+                final BingoGoal.Holder goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
 
                 if (!isAllowedGoal.test(goalCandidate)) {
                     continue;
                 }
 
-                if (!allowsClientRequired && goalCandidate.isRequiredOnClient()) {
+                if (!allowsClientRequired && goalCandidate.goal().isRequiredOnClient()) {
                     continue;
                 }
 
-                if (goalCandidate.getInfrequency() != null) {
-                    if (rand.nextInt(goalCandidate.getInfrequency()) + 1 < goalCandidate.getInfrequency()) {
+                if (goalCandidate.goal().getInfrequency().isPresent()) {
+                    if (rand.nextInt(goalCandidate.goal().getInfrequency().get()) + 1 < goalCandidate.goal().getInfrequency().get()) {
                         continue;
                     }
                 }
 
-                if (usedGoals.contains(goalCandidate.getId())) {
+                if (usedGoals.contains(goalCandidate.id())) {
                     continue;
                 }
 
-                if (!goalCandidate.getTags().isEmpty()) {
-                    for (final BingoTag.Holder tag : goalCandidate.getTags()) {
+                if (!goalCandidate.goal().getTags().isEmpty()) {
+                    for (final BingoTag.Holder tag : goalCandidate.goal().getTags()) {
                         if (tagCount.getInt(tag.id()) >= tag.tag().getMaxForDifficulty(difficulty, size)) {
                             continue goalGen;
                         }
                     }
 
-                    if (goalCandidate.getTags().stream().anyMatch(t -> !t.tag().allowedOnSameLine())) {
+                    if (goalCandidate.goal().getTags().stream().anyMatch(t -> !t.tag().allowedOnSameLine())) {
                         for (int z = 0; z < i; z++) {
-                            final Set<BingoTag.Holder> tags = generatedSheet[indices[z]].getTags();
+                            final Set<BingoTag.Holder> tags = generatedSheet[indices[z]].goal().getTags();
                             if (!tags.isEmpty() && isOnSameLine(size, indices[i], indices[z])) {
                                 if (tags.stream().anyMatch(t ->
                                     !t.tag().allowedOnSameLine() &&
-                                        goalCandidate.getTags().stream().anyMatch(t2 -> t.id().equals(t2.id()))
+                                        goalCandidate.goal().getTags().stream().anyMatch(t2 -> t.id().equals(t2.id()))
                                 )) {
                                     continue goalGen;
                                 }
@@ -162,18 +160,18 @@ public class BingoBoard {
                     }
                 }
 
-                if (!goalCandidate.getAntisynergy().isEmpty()) {
-                    if (goalCandidate.getAntisynergy().stream().anyMatch(antisynergys::contains)) {
+                if (!goalCandidate.goal().getAntisynergy().isEmpty()) {
+                    if (goalCandidate.goal().getAntisynergy().stream().anyMatch(antisynergys::contains)) {
                         continue;
                     }
                 }
-                if (!goalCandidate.getCatalyst().isEmpty()) {
-                    if (goalCandidate.getCatalyst().stream().anyMatch(reactants::contains)) {
+                if (!goalCandidate.goal().getCatalyst().isEmpty()) {
+                    if (goalCandidate.goal().getCatalyst().stream().anyMatch(reactants::contains)) {
                         continue;
                     }
                 }
-                if (!goalCandidate.getReactant().isEmpty()) {
-                    if (goalCandidate.getReactant().stream().anyMatch(catalysts::contains)) {
+                if (!goalCandidate.goal().getReactant().isEmpty()) {
+                    if (goalCandidate.goal().getReactant().stream().anyMatch(catalysts::contains)) {
                         continue;
                     }
                 }
@@ -182,14 +180,14 @@ public class BingoBoard {
                 break;
             }
 
-            for (final BingoTag.Holder tag : goal.getTags()) {
+            for (final BingoTag.Holder tag : goal.goal().getTags()) {
                 tagCount.addTo(tag.id(), 1);
             }
-            antisynergys.addAll(goal.getAntisynergy());
-            catalysts.addAll(goal.getCatalyst());
-            reactants.addAll(goal.getReactant());
+            antisynergys.addAll(goal.goal().getAntisynergy());
+            catalysts.addAll(goal.goal().getCatalyst());
+            reactants.addAll(goal.goal().getReactant());
 
-            usedGoals.add(goal.getId());
+            usedGoals.add(goal.id());
             generatedSheet[indices[i]] = goal;
         }
 
@@ -295,7 +293,7 @@ public class BingoBoard {
 
             final String[][] texts = new String[size][];
             for (int x = 0; x < size; x++) {
-                texts[x] = WordUtils.wrap(getGoal(x, y).getName().getString(), boxWidth - 3, "\n", true).split("\n");
+                texts[x] = WordUtils.wrap(getGoal(x, y).name().getString(), boxWidth - 3, "\n", true).split("\n");
             }
 
             for (int line = 0; line < boxHeight - 1; line++) {

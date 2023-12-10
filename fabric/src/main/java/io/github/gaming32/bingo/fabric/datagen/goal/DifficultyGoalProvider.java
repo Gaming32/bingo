@@ -48,17 +48,17 @@ import java.util.function.Consumer;
 public abstract class DifficultyGoalProvider {
     private final ResourceLocation difficulty;
     private final String prefix;
-    private final Consumer<BingoGoal> goalAdder;
+    private final Consumer<BingoGoal.Holder> goalAdder;
 
-    protected DifficultyGoalProvider(ResourceLocation difficulty, Consumer<BingoGoal> goalAdder) {
+    protected DifficultyGoalProvider(ResourceLocation difficulty, Consumer<BingoGoal.Holder> goalAdder) {
         this.difficulty = difficulty;
         this.prefix = difficulty.getPath() + '/';
         this.goalAdder = goalAdder;
     }
 
     protected final void addGoal(BingoGoal.Builder goal) {
-        BingoGoal builtGoal = goal.difficulty(difficulty).build();
-        if (!builtGoal.getId().getPath().startsWith(prefix)) {
+        BingoGoal.Holder builtGoal = goal.difficulty(difficulty).build();
+        if (!builtGoal.id().getPath().startsWith(prefix)) {
             throw new IllegalArgumentException("Goal ID does not start with " + prefix);
         }
         goalAdder.accept(builtGoal);

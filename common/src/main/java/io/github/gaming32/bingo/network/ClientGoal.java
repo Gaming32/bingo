@@ -7,25 +7,26 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public record ClientGoal(
     ResourceLocation id, // Used for advanced tooltips
     Component name,
-    @Nullable Component tooltip,
-    @Nullable ResourceLocation tooltipIcon,
+    Optional<Component> tooltip,
+    Optional<ResourceLocation> tooltipIcon,
     GoalIcon icon,
     BingoTag.SpecialType specialType,
     boolean hasProgress
 ) {
     public ClientGoal(ActiveGoal goal) {
         this(
-            goal.getGoal().getId(),
-            goal.getName(),
-            goal.getTooltip(),
-            goal.getGoal().getTooltipIcon(),
-            goal.getIcon(),
-            goal.getGoal().getSpecialType(),
+            goal.goal().id(),
+            goal.name(),
+            goal.tooltip(),
+            goal.goal().goal().getTooltipIcon(),
+            goal.icon(),
+            goal.goal().goal().getSpecialType(),
             goal.hasProgress()
         );
     }
@@ -35,8 +36,8 @@ public record ClientGoal(
         this(
             buf.readResourceLocation(),
             buf.readComponent(),
-            buf.readNullable(FriendlyByteBuf::readComponent),
-            buf.readNullable(FriendlyByteBuf::readResourceLocation),
+            buf.readOptional(FriendlyByteBuf::readComponent),
+            buf.readOptional(FriendlyByteBuf::readResourceLocation),
             buf.readWithCodecTrusted(NbtOps.INSTANCE, GoalIcon.CODEC),
             buf.readEnum(BingoTag.SpecialType.class),
             buf.readBoolean()
@@ -47,8 +48,8 @@ public record ClientGoal(
     public void serialize(FriendlyByteBuf buf) {
         buf.writeResourceLocation(id);
         buf.writeComponent(name);
-        buf.writeNullable(tooltip, FriendlyByteBuf::writeComponent);
-        buf.writeNullable(tooltipIcon, FriendlyByteBuf::writeResourceLocation);
+        buf.writeOptional(tooltip, FriendlyByteBuf::writeComponent);
+        buf.writeOptional(tooltipIcon, FriendlyByteBuf::writeResourceLocation);
         buf.writeWithCodec(NbtOps.INSTANCE, GoalIcon.CODEC, icon);
         buf.writeEnum(specialType);
         buf.writeBoolean(hasProgress);

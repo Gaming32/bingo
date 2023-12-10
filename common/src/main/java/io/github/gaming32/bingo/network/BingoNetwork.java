@@ -6,7 +6,7 @@ import io.github.gaming32.bingo.network.messages.s2c.BingoS2C;
 import net.minecraft.resources.ResourceLocation;
 
 public class BingoNetwork {
-    public static final int PROTOCOL_VERSION = 7;
+    public static final int PROTOCOL_VERSION = 8;
     public static final ResourceLocation PROTOCOL_VERSION_PACKET = new ResourceLocation("bingo:protocol_version");
 
     public static final SimpleNetworkManager NETWORK_MANAGER = SimpleNetworkManager.create("bingo");

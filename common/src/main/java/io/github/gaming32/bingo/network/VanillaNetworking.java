@@ -50,9 +50,9 @@ public class VanillaNetworking {
 
     public static AdvancementHolder generateAdvancement(int index, ActiveGoal goal, int x, int y) {
         final DisplayInfo displayInfo = new DisplayInfo(
-            goal.getIcon().item(),
-            goal.getName(),
-            Objects.requireNonNullElse(goal.getTooltip(), CommonComponents.EMPTY),
+            goal.icon().item(),
+            goal.name(),
+            goal.tooltip().orElse(CommonComponents.EMPTY),
             null,
             AdvancementType.TASK,
             false,

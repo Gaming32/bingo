@@ -99,8 +99,8 @@ public class BingoCommand {
         }
         return SharedSuggestionProvider.suggestResource(
             Arrays.stream(Bingo.activeGame.getBoard().getGoals())
-                .map(ActiveGoal::getGoal)
-                .map(BingoGoal::getId),
+                .map(ActiveGoal::goal)
+                .map(BingoGoal.Holder::id),
             builder
         );
     };
@@ -209,7 +209,7 @@ public class BingoCommand {
                         final StringBuilder line = new StringBuilder(board.getSize());
                         for (int y = 0; y < board.getSize(); y++) {
                             for (int x = 0; x < board.getSize(); x++) {
-                                line.append(board.getGoal(x, y).getGoal().getDifficulty().difficulty().number());
+                                line.append(board.getGoal(x, y).goal().goal().getDifficulty().difficulty().number());
                             }
                             ctx.getSource().sendSuccess(() -> Component.literal(line.toString()), false);
                             line.setLength(0);
@@ -233,7 +233,7 @@ public class BingoCommand {
 
                                 int success = 0;
                                 for (final ActiveGoal goal : Bingo.activeGame.getBoard().getGoals()) {
-                                    if (goal.getGoal().getId().equals(goalId)) {
+                                    if (goal.goal().id().equals(goalId)) {
                                         for (final ServerPlayer player : players) {
                                             if (Bingo.activeGame.award(player, goal)) {
                                                 success++;
@@ -262,7 +262,7 @@ public class BingoCommand {
 
                                 int success = 0;
                                 for (final ActiveGoal goal : Bingo.activeGame.getBoard().getGoals()) {
-                                    if (goal.getGoal().getId().equals(goalId)) {
+                                    if (goal.goal().id().equals(goalId)) {
                                         for (final ServerPlayer player : players) {
                                             if (Bingo.activeGame.revoke(player, goal)) {
                                                 success++;
@@ -423,10 +423,10 @@ public class BingoCommand {
             throw invalidArg(UNKNOWN_DIFFICULTY, context, "difficulty");
         }
 
-        final List<BingoGoal> requiredGoals = requiredGoalIds.stream()
+        final List<BingoGoal.Holder> requiredGoals = requiredGoalIds.stream()
             .distinct()
             .map(id -> {
-                final BingoGoal goal = BingoGoal.getGoal(id);
+                final BingoGoal.Holder goal = BingoGoal.getGoal(id);
                 if (goal == null) {
                     throwInBlock(UNKNOWN_GOAL.create(id));
                 }
@@ -467,7 +467,6 @@ public class BingoCommand {
                 difficulty.difficulty().number(),
                 teams.size(),
                 RandomSource.create(seed),
-                server.getLootData(),
                 gamemode::isGoalAllowed,
                 requiredGoals,
                 excludedTags,

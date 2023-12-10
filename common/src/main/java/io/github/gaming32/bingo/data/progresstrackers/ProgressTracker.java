@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.data.progresstrackers;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoGame;
@@ -15,7 +16,8 @@ public interface ProgressTracker {
     Codec<ProgressTracker> CODEC = BingoCodecs.registrarByName(ProgressTrackerType.REGISTRAR)
         .dispatch(ProgressTracker::type, ProgressTrackerType::codec);
 
-    default void validate(BingoGoal goal) throws IllegalArgumentException {
+    default DataResult<ProgressTracker> validate(BingoGoal goal) {
+        return DataResult.success(this);
     }
 
     default void goalProgressChanged(BingoGame game, ServerPlayer player, ActiveGoal goal, String criterion, int progress, int maxProgress) {
