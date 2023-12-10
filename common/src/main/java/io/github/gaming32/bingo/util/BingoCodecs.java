@@ -14,6 +14,7 @@ import net.minecraft.util.ExtraCodecs;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -120,6 +121,13 @@ public final class BingoCodecs {
 
     public static <A> MapCodec<Set<A>> minifiedSetField(Codec<A> elementCodec, String name) {
         return ExtraCodecs.strictOptionalField(minifiedSet(elementCodec), name, ImmutableSet.of());
+    }
+
+    public static MapCodec<OptionalInt> optionalInt(String name) {
+        return ExtraCodecs.strictOptionalField(Codec.INT, name).xmap(
+            opt -> opt.map(OptionalInt::of).orElseGet(OptionalInt::empty),
+            opt -> opt.isPresent() ? Optional.of(opt.getAsInt()) : Optional.empty()
+        );
     }
 
     public static final class FirstValidCodec<A> implements Codec<A> {

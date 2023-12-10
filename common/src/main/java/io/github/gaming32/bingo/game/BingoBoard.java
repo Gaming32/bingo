@@ -129,7 +129,8 @@ public class BingoBoard {
                 }
 
                 if (goalCandidate.goal().getInfrequency().isPresent()) {
-                    if (rand.nextInt(goalCandidate.goal().getInfrequency().get()) + 1 < goalCandidate.goal().getInfrequency().get()) {
+                    final int infrequency = goalCandidate.goal().getInfrequency().getAsInt();
+                    if (rand.nextInt(infrequency) + 1 < infrequency) {
                         continue;
                     }
                 }

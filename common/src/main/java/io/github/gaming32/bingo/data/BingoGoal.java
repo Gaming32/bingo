@@ -81,7 +81,7 @@ public class BingoGoal {
             ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, "tooltip", BingoCodecs.DEFAULT_DYNAMIC).forGetter(BingoGoal::getTooltip),
             ExtraCodecs.strictOptionalField(ResourceLocation.CODEC, "tooltip_icon").forGetter(BingoGoal::getTooltipIcon),
             ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, "icon", BingoCodecs.DEFAULT_DYNAMIC).forGetter(BingoGoal::getIcon),
-            ExtraCodecs.strictOptionalField(Codec.INT, "infrequency").forGetter(BingoGoal::getInfrequency),
+            BingoCodecs.optionalInt("infrequency").forGetter(BingoGoal::getInfrequency),
             BingoCodecs.minifiedSetField(Codec.STRING, "antisynergy").forGetter(BingoGoal::getAntisynergy),
             BingoCodecs.minifiedSetField(Codec.STRING, "catalyst").forGetter(BingoGoal::getCatalyst),
             BingoCodecs.minifiedSetField(Codec.STRING, "reactant").forGetter(BingoGoal::getReactant),
@@ -101,7 +101,7 @@ public class BingoGoal {
     private final Dynamic<?> tooltip;
     private final Optional<ResourceLocation> tooltipIcon;
     private final Dynamic<?> icon;
-    private final Optional<Integer> infrequency;
+    private final OptionalInt infrequency;
     private final Set<String> antisynergy;
     private final Set<String> catalyst;
     private final Set<String> reactant;
@@ -121,7 +121,7 @@ public class BingoGoal {
         Dynamic<?> tooltip,
         Optional<ResourceLocation> tooltipIcon,
         Dynamic<?> icon,
-        Optional<Integer> infrequency,
+        OptionalInt infrequency,
         Collection<String> antisynergy,
         Collection<String> catalyst,
         Collection<String> reactant,
@@ -241,7 +241,7 @@ public class BingoGoal {
         return icon;
     }
 
-    public Optional<Integer> getInfrequency() {
+    public OptionalInt getInfrequency() {
         return infrequency;
     }
 
@@ -397,7 +397,7 @@ public class BingoGoal {
         private Dynamic<?> tooltip = BingoCodecs.DEFAULT_DYNAMIC;
         private Optional<ResourceLocation> tooltipIcon = Optional.empty();
         private Dynamic<?> icon = BingoCodecs.DEFAULT_DYNAMIC;
-        private Optional<Integer> infrequency = Optional.empty();
+        private OptionalInt infrequency = OptionalInt.empty();
         private ImmutableList.Builder<String> antisynergy = ImmutableList.builder();
         private final ImmutableList.Builder<String> catalyst = ImmutableList.builder();
         private final ImmutableList.Builder<String> reactant = ImmutableList.builder();
@@ -514,7 +514,7 @@ public class BingoGoal {
         }
 
         public Builder infrequency(int infrequency) {
-            this.infrequency = Optional.of(infrequency);
+            this.infrequency = OptionalInt.of(infrequency);
             return this;
         }
 
