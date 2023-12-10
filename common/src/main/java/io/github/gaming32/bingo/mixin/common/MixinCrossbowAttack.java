@@ -28,7 +28,7 @@ public class MixinCrossbowAttack {
         final boolean wasEmpty = stack.isEmpty();
         original.call(instance, target, velocity);
         if (!wasEmpty && stack.isEmpty() && target instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.MOB_BROKE_CROSSBOW.trigger(serverPlayer, mobEntity);
+            BingoTriggers.MOB_BROKE_CROSSBOW.get().trigger(serverPlayer, mobEntity);
         }
     }
 }

@@ -39,13 +39,13 @@ public class EntityTrigger extends SimpleCriterionTrigger<EntityTrigger.TriggerI
         );
 
         public static Criterion<TriggerInstance> brokeCrossbow(EntityPredicate mob) {
-            return BingoTriggers.MOB_BROKE_CROSSBOW.createCriterion(new TriggerInstance(
+            return BingoTriggers.MOB_BROKE_CROSSBOW.get().createCriterion(new TriggerInstance(
                 Optional.empty(), EntityPredicate.wrap(Optional.ofNullable(mob))
             ));
         }
 
         public static Criterion<TriggerInstance> stunnedRavager() {
-            return BingoTriggers.STUN_RAVAGER.createCriterion(new TriggerInstance(Optional.empty(), Optional.empty()));
+            return BingoTriggers.STUN_RAVAGER.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.empty()));
         }
 
         public boolean matches(LootContext mob) {

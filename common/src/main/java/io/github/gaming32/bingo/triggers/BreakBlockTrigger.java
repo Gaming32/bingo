@@ -106,7 +106,7 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.BREAK_BLOCK.createCriterion(new TriggerInstance(player, location));
+            return BingoTriggers.BREAK_BLOCK.get().createCriterion(new TriggerInstance(player, location));
         }
     }
 }

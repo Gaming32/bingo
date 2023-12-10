@@ -124,7 +124,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleCriterionTrigger<Tot
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGED.createCriterion(
+            return BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGED.get().createCriterion(
                 new TriggerInstance(player, List.copyOf(items))
             );
         }

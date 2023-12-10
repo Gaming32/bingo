@@ -50,7 +50,7 @@ public class GrowBeeNestTreeTrigger extends SimpleCriterionTrigger<GrowBeeNestTr
         );
 
         public static Criterion<TriggerInstance> grew() {
-            return BingoTriggers.GROW_BEE_NEST_TREE.createCriterion(
+            return BingoTriggers.GROW_BEE_NEST_TREE.get().createCriterion(
                 new TriggerInstance(Optional.empty(), Optional.empty())
             );
         }

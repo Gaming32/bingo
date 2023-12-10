@@ -76,7 +76,7 @@ public class EnchantedItemTrigger extends SimpleCriterionTrigger<EnchantedItemTr
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.ENCHANTED_ITEM.createCriterion(
+            return BingoTriggers.ENCHANTED_ITEM.get().createCriterion(
                 new TriggerInstance(player, levelsSpent, requiredLevels)
             );
         }

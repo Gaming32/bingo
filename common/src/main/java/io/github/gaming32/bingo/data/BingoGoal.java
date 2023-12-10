@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.*;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.icons.BlockIcon;
 import io.github.gaming32.bingo.data.icons.EmptyIcon;
@@ -14,12 +16,13 @@ import io.github.gaming32.bingo.data.progresstrackers.EmptyProgressTracker;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.game.ActiveGoal;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -31,30 +34,30 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootDataManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
 
+// TODO: Move this class to a Codec
 public class BingoGoal {
+    private static final Dynamic<?> EMPTY_JSON = new Dynamic<>(JsonOps.INSTANCE);
+
     private static Map<ResourceLocation, BingoGoal> goals = Map.of();
     private static Map<Integer, List<BingoGoal>> goalsByDifficulty = Map.of();
 
     private final ResourceLocation id;
     private final Map<String, BingoSub> subs;
-    private final Map<String, JsonObject> criteria;
+    private final Map<String, Dynamic<?>> criteria;
     private final AdvancementRequirements requirements;
     private final ProgressTracker progress;
     private final Set<BingoTag.Holder> tags;
-    private final JsonElement name;
-    @Nullable
-    private final JsonElement tooltip;
+    private final Dynamic<?> name;
+    private final Dynamic<?> tooltip;
     @Nullable
     private final ResourceLocation tooltipIcon;
-    @Nullable
-    private final JsonObject icon;
+    private final Dynamic<?> icon;
     @Nullable
     private final Integer infrequency;
     private final Set<String> antisynergy;
@@ -69,14 +72,14 @@ public class BingoGoal {
     public BingoGoal(
         ResourceLocation id,
         Map<String, BingoSub> subs,
-        Map<String, JsonObject> criteria,
+        Map<String, Dynamic<?>> criteria,
         AdvancementRequirements requirements,
         ProgressTracker progress,
         Collection<BingoTag.Holder> tags,
-        JsonElement name,
-        @Nullable JsonElement tooltip,
+        Dynamic<?> name,
+        Dynamic<?> tooltip,
         @Nullable ResourceLocation tooltipIcon,
-        @Nullable JsonObject icon,
+        Dynamic<?> icon,
         @Nullable Integer infrequency,
         Collection<String> antisynergy,
         Collection<String> catalyst,
@@ -118,9 +121,9 @@ public class BingoGoal {
         this.specialType = specialType;
 
         boolean requiresClient = false;
-        for (final JsonObject criterion : criteria.values()) {
-            final ResourceLocation triggerId = new ResourceLocation(GsonHelper.getAsString(criterion, "trigger"));
-            final CriterionTrigger<?> trigger = CriteriaTriggers.getCriterion(triggerId);
+        for (final Dynamic<?> criterion : criteria.values()) {
+            final ResourceLocation triggerId = new ResourceLocation(criterion.get("trigger").asString("no_trigger_present"));
+            final CriterionTrigger<?> trigger = BuiltInRegistries.TRIGGER_TYPES.get(triggerId);
             if (trigger == null) {
                 throw new IllegalArgumentException("Unknown criterion trigger " + triggerId);
             }
@@ -151,18 +154,23 @@ public class BingoGoal {
     }
 
     public static BingoGoal deserialize(ResourceLocation id, JsonObject json) {
-        final Map<String, JsonObject> criteria = GsonHelper.getAsJsonObject(json, "criteria")
+        final Map<String, Dynamic<?>> criteria = GsonHelper.getAsJsonObject(json, "criteria")
             .entrySet()
             .stream()
             .collect(ImmutableMap.toImmutableMap(
                 Map.Entry::getKey,
-                e -> GsonHelper.convertToJsonObject(e.getValue(), "criterion")
+                e -> new Dynamic<>(JsonOps.INSTANCE, e.getValue())
             ));
 
         final JsonArray reqArray = GsonHelper.getAsJsonArray(json, "requirements", new JsonArray());
         final AdvancementRequirements requirements = reqArray.isEmpty()
             ? AdvancementRequirements.allOf(criteria.keySet())
-            : AdvancementRequirements.fromJson(reqArray, criteria.keySet());
+            : BingoUtil.fromJsonElement(AdvancementRequirements.CODEC, reqArray);
+        requirements.validate(criteria.keySet())
+            .error()
+            .ifPresent(p -> {
+                throw new JsonParseException(p.message());
+            });
 
         final ResourceLocation difficultyId = new ResourceLocation(GsonHelper.getAsString(json, "difficulty"));
         final BingoDifficulty.Holder difficulty = BingoDifficulty.byId(difficultyId);
@@ -175,7 +183,10 @@ public class BingoGoal {
             GsonHelper.getAsJsonObject(json, "bingo_subs", new JsonObject())
                 .entrySet()
                 .stream()
-                .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> BingoSub.deserialize(e.getValue()))),
+                .collect(ImmutableMap.toImmutableMap(
+                    Map.Entry::getKey,
+                    e -> BingoUtil.fromJsonElement(BingoSub.CODEC, e.getValue())
+                )),
             criteria, requirements,
             json.has("progress")
                 ? ProgressTracker.deserialize(GsonHelper.getAsJsonObject(json, "progress"))
@@ -192,11 +203,11 @@ public class BingoGoal {
                     return tag;
                 })
                 .collect(ImmutableSet.toImmutableSet()),
-            GsonHelper.getNonNull(json, "name"),
-            json.get("tooltip"),
+            new Dynamic<>(JsonOps.INSTANCE, GsonHelper.getNonNull(json, "name")),
+            json.has("tooltip") ? new Dynamic<>(JsonOps.INSTANCE, json.get("tooltip")) : EMPTY_JSON,
             json.has("tooltip_icon")
                 ? new ResourceLocation(GsonHelper.getAsString(json, "tooltip_icon")) : null,
-            GsonHelper.getAsJsonObject(json, "icon", null),
+            json.has("icon") ? new Dynamic<>(JsonOps.INSTANCE, json.get("icon")) : EMPTY_JSON,
             json.has("infrequency") ? GsonHelper.getAsInt(json, "infrequency") : null,
             getSetString(json, "antisynergy"),
             getSetString(json, "catalyst"),
@@ -223,18 +234,18 @@ public class BingoGoal {
         if (!subs.isEmpty()) {
             final JsonObject subsObj = new JsonObject();
             for (final var entry : subs.entrySet()) {
-                subsObj.add(entry.getKey(), entry.getValue().serializeToJson());
+                subsObj.add(entry.getKey(), BingoUtil.toJsonElement(BingoSub.CODEC, entry.getValue()));
             }
             result.add("bingo_subs", subsObj);
         }
 
         final JsonObject criteriaObj = new JsonObject();
         for (final var entry : criteria.entrySet()) {
-            criteriaObj.add(entry.getKey(), entry.getValue());
+            criteriaObj.add(entry.getKey(), entry.getValue().convert(JsonOps.INSTANCE).getValue());
         }
         result.add("criteria", criteriaObj);
 
-        result.add("requirements", requirements.toJson());
+        result.add("requirements", BingoUtil.toJsonElement(AdvancementRequirements.CODEC, requirements));
 
         if (progress != EmptyProgressTracker.INSTANCE) {
             result.add("progress", progress.serializeToJson());
@@ -248,18 +259,18 @@ public class BingoGoal {
             result.add("tags", array);
         }
 
-        result.add("name", name);
+        result.add("name", name.convert(JsonOps.INSTANCE).getValue());
 
-        if (tooltip != null) {
-            result.add("tooltip", tooltip);
+        if (tooltip.getValue() != tooltip.getOps().empty()) {
+            result.add("tooltip", tooltip.convert(JsonOps.INSTANCE).getValue());
         }
 
         if (tooltipIcon != null) {
             result.addProperty("tooltip_icon", tooltipIcon.toString());
         }
 
-        if (icon != null) {
-            result.add("icon", icon);
+        if (icon.getValue() != icon.getOps().empty()) {
+            result.add("icon", icon.convert(JsonOps.INSTANCE).getValue());
         }
 
         if (infrequency != null) {
@@ -297,7 +308,7 @@ public class BingoGoal {
         return subs;
     }
 
-    public Map<String, JsonObject> getCriteria() {
+    public Map<String, Dynamic<?>> getCriteria() {
         return criteria;
     }
 
@@ -313,12 +324,11 @@ public class BingoGoal {
         return tags;
     }
 
-    public JsonElement getName() {
+    public Dynamic<?> getName() {
         return name;
     }
 
-    @Nullable
-    public JsonElement getTooltip() {
+    public Dynamic<?> getTooltip() {
         return tooltip;
     }
 
@@ -327,8 +337,7 @@ public class BingoGoal {
         return tooltipIcon;
     }
 
-    @Nullable
-    public JsonObject getIcon() {
+    public Dynamic<?> getIcon() {
         return icon;
     }
 
@@ -365,8 +374,8 @@ public class BingoGoal {
         return requiredOnClient;
     }
 
-    public ActiveGoal build(RandomSource rand, LootDataManager lootData) {
-        final Map<String, JsonElement> subs = buildSubs(rand);
+    public ActiveGoal build(RandomSource rand) {
+        final Map<String, Dynamic<?>> subs = buildSubs(rand);
         final Component tooltip = buildTooltip(subs, rand);
         final MutableComponent name = buildName(subs, rand);
         if (tooltip != null) {
@@ -377,77 +386,83 @@ public class BingoGoal {
         return new ActiveGoal(
             this, name, tooltip,
             buildIcon(subs, rand),
-            buildCriteria(subs, rand, lootData)
+            buildCriteria(subs, rand)
         );
     }
 
-    public Map<String, JsonElement> buildSubs(RandomSource rand) {
-        final Map<String, JsonElement> result = new LinkedHashMap<>();
+    public Map<String, Dynamic<?>> buildSubs(RandomSource rand) {
+        final Map<String, Dynamic<?>> result = new LinkedHashMap<>();
         for (final var entry : subs.entrySet()) {
             result.put(entry.getKey(), entry.getValue().substitute(result, rand));
         }
         return ImmutableMap.copyOf(result);
     }
 
-    public MutableComponent buildName(Map<String, JsonElement> referable, RandomSource rand) {
-        MutableComponent component = Component.Serializer.fromJson(performSubstitutions(name, referable, rand));
-        return component == null ? Component.empty() : Bingo.ensureHasFallback(component);
+    public MutableComponent buildName(Map<String, Dynamic<?>> referable, RandomSource rand) {
+        return Bingo.ensureHasFallback(BingoUtil.fromDynamic(
+            ComponentSerialization.CODEC,
+            performSubstitutions(name, referable, rand)
+        ).copy());
     }
 
-    public MutableComponent buildTooltip(Map<String, JsonElement> referable, RandomSource rand) {
-        if (tooltip == null) {
+    @Nullable
+    public MutableComponent buildTooltip(Map<String, Dynamic<?>> referable, RandomSource rand) {
+        if (tooltip.getValue() == tooltip.getOps().empty()) {
             return null;
         }
-        MutableComponent component = Component.Serializer.fromJson(performSubstitutions(tooltip, referable, rand));
-        return component == null ? Component.empty() : Bingo.ensureHasFallback(component);
+        return Bingo.ensureHasFallback(BingoUtil.fromDynamic(
+            ComponentSerialization.CODEC,
+            performSubstitutions(tooltip, referable, rand)
+        ).copy());
     }
 
-    public GoalIcon buildIcon(Map<String, JsonElement> referable, RandomSource rand) {
-        if (icon == null) {
+    public GoalIcon buildIcon(Map<String, Dynamic<?>> referable, RandomSource rand) {
+        if (icon.getValue() == icon.getOps().empty()) {
             return EmptyIcon.INSTANCE;
         }
-        return GoalIcon.deserialize(performSubstitutions(icon, referable, rand));
+        return BingoUtil.fromDynamic(GoalIcon.CODEC, performSubstitutions(icon, referable, rand));
     }
 
-    public Map<String, Criterion<?>> buildCriteria(
-        Map<String, JsonElement> referable,
-        RandomSource rand,
-        LootDataManager lootData
-    ) {
-        final DeserializationContext context = new DeserializationContext(id, lootData);
+    public Map<String, Criterion<?>> buildCriteria(Map<String, Dynamic<?>> referable, RandomSource rand) {
         final ImmutableMap.Builder<String, Criterion<?>> result = ImmutableMap.builderWithExpectedSize(criteria.size());
         for (final var entry : criteria.entrySet()) {
-            result.put(entry.getKey(), Criterion.criterionFromJson(GsonHelper.convertToJsonObject(
-                performSubstitutions(entry.getValue(), referable, rand), "criterion"
-            ), context));
+            result.put(entry.getKey(), BingoUtil.fromDynamic(Criterion.CODEC, performSubstitutions(entry.getValue(), referable, rand)));
         }
         return result.build();
     }
 
-    public static JsonElement performSubstitutions(
-        JsonElement value,
-        Map<String, JsonElement> referable,
+    public static Dynamic<?> performSubstitutions(
+        Dynamic<?> value,
+        Map<String, Dynamic<?>> referable,
         RandomSource rand
     ) {
-        if (value.isJsonArray()) {
-            final JsonArray array = value.getAsJsonArray();
-            final JsonArray result = new JsonArray();
-            for (final JsonElement subValue : array) {
-                result.add(performSubstitutions(subValue, referable, rand));
-            }
-            return result;
+        final var asList = value.asStreamOpt();
+        if (asList.error().isEmpty()) {
+            return value.createList(
+                asList.result()
+                    .orElseThrow()
+                    .map(d -> performSubstitutions(d, referable, rand))
+            );
         }
-        if (value.isJsonObject()) {
-            final JsonObject obj = value.getAsJsonObject();
-            if (obj.has("bingo_type")) {
-                return BingoSub.deserializeInner(obj).substitute(referable, rand);
-            }
-            final JsonObject result = new JsonObject();
-            for (final var entry : obj.entrySet()) {
-                result.add(entry.getKey(), performSubstitutions(entry.getValue(), referable, rand));
-            }
-            return result;
+
+        if (value.get("bingo_type").result().isPresent()) {
+            return BingoUtil.fromDynamic(BingoSub.INNER_CODEC, value).substitute(referable, rand);
         }
+
+        final var asMap = value.getMapValues();
+        if (asMap.error().isEmpty()) {
+            return value.createMap(
+                asMap.result()
+                    .orElseThrow()
+                    .entrySet()
+                    .stream()
+                    .collect(ImmutableMap.toImmutableMap(
+                        Map.Entry::getKey,
+                        e -> performSubstitutions(e.getValue(), referable, rand)
+                    ))
+            );
+        }
+
         return value;
     }
 
@@ -463,18 +478,16 @@ public class BingoGoal {
     public static final class Builder {
         private final ResourceLocation id;
         private final ImmutableMap.Builder<String, BingoSub> subs = ImmutableMap.builder();
-        private final ImmutableMap.Builder<String, JsonObject> criteria = ImmutableMap.builder();
+        private final ImmutableMap.Builder<String, Dynamic<?>> criteria = ImmutableMap.builder();
         private Optional<AdvancementRequirements> requirements = Optional.empty();
         private ProgressTracker progress = EmptyProgressTracker.INSTANCE;
         private AdvancementRequirements.Strategy requirementsStrategy = AdvancementRequirements.Strategy.AND;
         private final ImmutableSet.Builder<BingoTag.Holder> tags = ImmutableSet.builder();
-        private Optional<JsonElement> name = Optional.empty();
-        @Nullable
-        private JsonElement tooltip;
+        private Optional<Dynamic<?>> name = Optional.empty();
+        private Dynamic<?> tooltip = EMPTY_JSON;
         @Nullable
         private ResourceLocation tooltipIcon;
-        @Nullable
-        private JsonObject icon;
+        private Dynamic<?> icon = EMPTY_JSON;
         @Nullable
         private Integer infrequency;
         private ImmutableList.Builder<String> antisynergy = ImmutableList.builder();
@@ -496,9 +509,9 @@ public class BingoGoal {
         }
 
         public Builder criterion(String key, Criterion<?> criterion, Consumer<JsonSubber> subber) {
-            JsonSubber json = new JsonSubber(criterion.serializeToJson());
+            JsonSubber json = new JsonSubber(BingoUtil.toJsonElement(Criterion.CODEC, criterion));
             subber.accept(json);
-            this.criteria.put(key, json.json().getAsJsonObject());
+            this.criteria.put(key, new Dynamic<>(JsonOps.INSTANCE, json.json()));
             return this;
         }
 
@@ -541,7 +554,7 @@ public class BingoGoal {
         public Builder name(Component name, Consumer<JsonSubber> subber) {
             JsonSubber json = new JsonSubber(Component.Serializer.toJsonTree(name));
             subber.accept(json);
-            this.name = Optional.of(json.json());
+            this.name = Optional.of(new Dynamic<>(JsonOps.INSTANCE, json.json()));
             return this;
         }
 
@@ -556,7 +569,7 @@ public class BingoGoal {
         public Builder tooltip(Component tooltip, Consumer<JsonSubber> subber) {
             JsonSubber json = new JsonSubber(Component.Serializer.toJsonTree(tooltip));
             subber.accept(json);
-            this.tooltip = json.json();
+            this.tooltip = new Dynamic<>(JsonOps.INSTANCE, json.json());
             return this;
         }
 
@@ -586,9 +599,9 @@ public class BingoGoal {
         }
 
         public Builder icon(GoalIcon icon, Consumer<JsonSubber> subber) {
-            JsonSubber jsonSubber = new JsonSubber(icon.serializeToJson());
+            JsonSubber jsonSubber = new JsonSubber(BingoUtil.toJsonElement(GoalIcon.CODEC, icon));
             subber.accept(jsonSubber);
-            this.icon = jsonSubber.json().getAsJsonObject();
+            this.icon = new Dynamic<>(JsonOps.INSTANCE, jsonSubber.json());
             return this;
         }
 
@@ -624,7 +637,7 @@ public class BingoGoal {
         }
 
         public BingoGoal build() {
-            final Map<String, JsonObject> criteria = this.criteria.build();
+            final Map<String, Dynamic<?>> criteria = this.criteria.build();
             return new BingoGoal(
                 id,
                 subs.buildOrThrow(),

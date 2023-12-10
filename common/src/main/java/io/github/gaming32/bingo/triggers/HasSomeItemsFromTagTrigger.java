@@ -111,7 +111,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleCriterionTrigger<HasSomeIt
             if (requiredCount == null) {
                 throw new IllegalStateException("Did not specify requiredCount");
             }
-            return BingoTriggers.HAS_SOME_ITEMS_FROM_TAG.createCriterion(
+            return BingoTriggers.HAS_SOME_ITEMS_FROM_TAG.get().createCriterion(
                 new TriggerInstance(player, tag, requiredCount)
             );
         }

@@ -40,7 +40,7 @@ public class IntentionalGameDesignTrigger extends SimpleCriterionTrigger<Intenti
         );
 
         public static Criterion<TriggerInstance> clicked(LocationPredicate respawn) {
-            return BingoTriggers.INTENTIONAL_GAME_DESIGN.createCriterion(new TriggerInstance(
+            return BingoTriggers.INTENTIONAL_GAME_DESIGN.get().createCriterion(new TriggerInstance(
                 Optional.empty(), Optional.ofNullable(respawn)
             ));
         }

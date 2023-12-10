@@ -37,7 +37,7 @@ public class ItemBrokenTrigger extends SimpleCriterionTrigger<ItemBrokenTrigger.
         );
 
         public static Criterion<TriggerInstance> itemBroken(ItemPredicate predicate) {
-            return BingoTriggers.ITEM_BROKEN.createCriterion(
+            return BingoTriggers.ITEM_BROKEN.get().createCriterion(
                 new TriggerInstance(Optional.empty(), Optional.ofNullable(predicate))
             );
         }

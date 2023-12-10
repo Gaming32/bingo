@@ -36,7 +36,7 @@ public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTr
     }
 
     public static Criterion<TriggerInstance> pillar(TagKey<Block> tag) {
-        return BingoTriggers.MINERAL_PILLAR.createCriterion(
+        return BingoTriggers.MINERAL_PILLAR.get().createCriterion(
             new TriggerInstance(Optional.empty(), tag)
         );
     }

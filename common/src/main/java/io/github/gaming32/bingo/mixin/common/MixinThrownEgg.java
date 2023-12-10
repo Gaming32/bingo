@@ -20,7 +20,7 @@ public abstract class MixinThrownEgg extends ThrowableItemProjectile {
     @ModifyVariable(method = "onHit", at = @At(value = "STORE", ordinal = 0), ordinal = 1)
     private int triggerOnInitializeLoopVariable(int loopVar, @Local(ordinal = 0) int numChickens) {
         if (getOwner() instanceof ServerPlayer player) {
-            BingoTriggers.CHICKEN_HATCH.trigger(player, (ThrownEgg) (Object) this, numChickens);
+            BingoTriggers.CHICKEN_HATCH.get().trigger(player, (ThrownEgg) (Object) this, numChickens);
         }
         return loopVar;
     }

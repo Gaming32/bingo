@@ -22,8 +22,8 @@ public class VanillaNetworking {
                 new ItemStack(Items.PLAYER_HEAD),
                 Bingo.translatable("bingo.board.title"),
                 CommonComponents.EMPTY,
-                new ResourceLocation("minecraft:textures/gui/advancements/backgrounds/stone.png"),
-                FrameType.TASK,
+                Optional.of(new ResourceLocation("minecraft:textures/gui/advancements/backgrounds/stone.png")),
+                AdvancementType.TASK,
                 false,
                 false,
                 true
@@ -54,7 +54,7 @@ public class VanillaNetworking {
             goal.getName(),
             Objects.requireNonNullElse(goal.getTooltip(), CommonComponents.EMPTY),
             null,
-            FrameType.TASK,
+            AdvancementType.TASK,
             false,
             false,
             false

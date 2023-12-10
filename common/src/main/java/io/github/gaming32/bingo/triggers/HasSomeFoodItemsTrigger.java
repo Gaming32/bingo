@@ -124,7 +124,7 @@ public class HasSomeFoodItemsTrigger extends SimpleCriterionTrigger<HasSomeFoodI
             if (requiredCount == null) {
                 throw new IllegalStateException("Did not specify requiredCount");
             }
-            return BingoTriggers.HAS_SOME_FOOD_ITEMS.createCriterion(
+            return BingoTriggers.HAS_SOME_FOOD_ITEMS.get().createCriterion(
                 new HasSomeFoodItemsTrigger.TriggerInstance(player, requiredCount, tag)
             );
         }

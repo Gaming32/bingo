@@ -2,21 +2,21 @@ package io.github.gaming32.bingo.data.subs;
 
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multisets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public record CompoundBingoSub(ElementType elementType, Operator operator, List<BingoSub> factors) implements BingoSub {
     public static final Codec<CompoundBingoSub> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -36,9 +36,9 @@ public record CompoundBingoSub(ElementType elementType, Operator operator, List<
     }
 
     @Override
-    public JsonElement substitute(Map<String, JsonElement> referable, RandomSource rand) {
-        final BinaryOperator<JsonElement> op = elementType.accumulator.apply(operator);
-        JsonElement result = factors.get(0).substitute(referable, rand);
+    public Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand) {
+        final var op = elementType.accumulator.apply(operator);
+        Dynamic<?> result = factors.get(0).substitute(referable, rand);
         for (int i = 1; i < factors.size(); i++) {
             result = op.apply(result, factors.get(i).substitute(referable, rand));
         }
@@ -52,61 +52,42 @@ public record CompoundBingoSub(ElementType elementType, Operator operator, List<
 
     public enum ElementType implements StringRepresentable {
         INT(op -> switch (op) {
-            case SUM -> (a, b) -> new JsonPrimitive(a.getAsInt() + b.getAsInt());
-            case MUL -> (a, b) -> new JsonPrimitive(a.getAsInt() * b.getAsInt());
-            case SUB -> (a, b) -> new JsonPrimitive(a.getAsInt() - b.getAsInt());
-            case DIV -> (a, b) -> new JsonPrimitive(a.getAsInt() / b.getAsInt());
+            case SUM -> (a, b) -> a.createInt(a.asInt(0) + b.asInt(0));
+            case MUL -> (a, b) -> a.createInt(a.asInt(0) * b.asInt(1));
+            case SUB -> (a, b) -> a.createInt(a.asInt(0) - b.asInt(0));
+            case DIV -> (a, b) -> a.createInt(a.asInt(0) / b.asInt(1));
         }),
         DOUBLE(op -> switch (op) {
-            case SUM -> (a, b) -> new JsonPrimitive(a.getAsDouble() + b.getAsDouble());
-            case MUL -> (a, b) -> new JsonPrimitive(a.getAsDouble() * b.getAsDouble());
-            case SUB -> (a, b) -> new JsonPrimitive(a.getAsDouble() - b.getAsDouble());
-            case DIV -> (a, b) -> new JsonPrimitive(a.getAsDouble() / b.getAsDouble());
+            case SUM -> (a, b) -> a.createDouble(a.asDouble(0) + b.asDouble(0));
+            case MUL -> (a, b) -> a.createDouble(a.asDouble(0) * b.asDouble(1));
+            case SUB -> (a, b) -> a.createDouble(a.asDouble(0) - b.asDouble(0));
+            case DIV -> (a, b) -> a.createDouble(a.asDouble(0) / b.asDouble(1));
         }),
         STRING(op -> switch (op) {
-            case SUM -> (a, b) -> new JsonPrimitive(a.getAsString() + b.getAsString());
-            case MUL -> (a, b) -> new JsonPrimitive(a.getAsString().repeat(b.getAsInt()));
+            case SUM -> (a, b) -> a.createString(a.asString("") + b.asString(""));
+            case MUL -> (a, b) -> a.createString(a.asString("").repeat(b.asInt(1)));
             default -> throw new UnsupportedOperationException(op + " on STRING");
         }),
         ARRAY(op -> switch (op) {
-            case SUM -> (a, b) -> {
-                final JsonArray aa = a.getAsJsonArray();
-                final JsonArray ba = b.getAsJsonArray();
-                final JsonArray result = new JsonArray(aa.size() + ba.size());
-                result.addAll(aa);
-                result.addAll(ba);
-                return result;
-            };
-            case MUL -> (a, b) -> {
-                final JsonArray aa = a.getAsJsonArray();
-                final int count = b.getAsInt();
-                if (count < 0) {
-                    throw new IllegalArgumentException("count < 0");
-                }
-                final JsonArray result = new JsonArray(aa.size() * count);
-                for (int i = 0; i < count; i++) {
-                    result.addAll(aa);
-                }
-                return result;
-            };
-            case SUB -> (a, b) -> {
-                final JsonArray aa = a.getAsJsonArray();
-                final JsonArray ba = b.getAsJsonArray();
-                final JsonArray result = new JsonArray(aa.size() - ba.size());
-                result.asList().addAll(Multisets.difference(
-                    ImmutableMultiset.copyOf(aa), ImmutableMultiset.copyOf(ba)
-                ));
-                return result;
-            };
+            case SUM -> (a, b) -> a.createList(Stream.concat(a.asStream(), b.asStream()));
+            case MUL -> (a, b) -> a.createList(
+                Collections.nCopies(b.asInt(1), a.asList(Function.identity()))
+                    .stream()
+                    .flatMap(List::stream)
+            );
+            case SUB -> (a, b) -> a.createList(Multisets.difference(
+                ImmutableMultiset.copyOf(a.asStream().iterator()),
+                ImmutableMultiset.copyOf(b.asStream().iterator())
+            ).stream());
             default -> throw new UnsupportedOperationException(op + " on ARRAY");
         });
 
         @SuppressWarnings("deprecation")
         public static final EnumCodec<ElementType> CODEC = StringRepresentable.fromEnum(ElementType::values);
 
-        public final Function<Operator, BinaryOperator<JsonElement>> accumulator;
+        public final Function<Operator, BinaryOperator<Dynamic<?>>> accumulator;
 
-        ElementType(Function<Operator, BinaryOperator<JsonElement>> accumulator) {
+        ElementType(Function<Operator, BinaryOperator<Dynamic<?>>> accumulator) {
             this.accumulator = accumulator;
         }
 

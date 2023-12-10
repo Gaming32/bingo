@@ -34,7 +34,7 @@ public class BedRowTrigger extends SimpleCriterionTrigger<BedRowTrigger.TriggerI
     }
 
     public static Criterion<TriggerInstance> create(int count) {
-        return BingoTriggers.BED_ROW.createCriterion(
+        return BingoTriggers.BED_ROW.get().createCriterion(
             new TriggerInstance(Optional.empty(), count)
         );
     }

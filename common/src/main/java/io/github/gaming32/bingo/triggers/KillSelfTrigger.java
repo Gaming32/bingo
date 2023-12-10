@@ -37,13 +37,13 @@ public class KillSelfTrigger extends SimpleCriterionTrigger<KillSelfTrigger.Trig
         );
 
         public static Criterion<TriggerInstance> killSelf() {
-            return BingoTriggers.KILL_SELF.createCriterion(
+            return BingoTriggers.KILL_SELF.get().createCriterion(
                 new TriggerInstance(Optional.empty(), Optional.empty())
             );
         }
 
         public static Criterion<TriggerInstance> killSelf(DamageSourcePredicate killingBlow) {
-            return BingoTriggers.KILL_SELF.createCriterion(
+            return BingoTriggers.KILL_SELF.get().createCriterion(
                 new TriggerInstance(Optional.empty(), Optional.ofNullable(killingBlow))
             );
         }

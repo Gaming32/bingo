@@ -6,7 +6,7 @@ import net.minecraft.advancements.critereon.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,8 +19,7 @@ public class DestroyVehicleTrigger extends SimpleCriterionTrigger<DestroyVehicle
         return TriggerInstance.CODEC;
     }
 
-    // TODO: Use VehicleEntity
-    public void trigger(ServerPlayer player, Entity vehicle, DamageSource destroyingBlow) {
+    public void trigger(ServerPlayer player, VehicleEntity vehicle, DamageSource destroyingBlow) {
         final LootContext vehicleContext = EntityPredicate.createContext(player, vehicle);
         trigger(player, instance -> instance.matches(player, vehicleContext, destroyingBlow));
     }

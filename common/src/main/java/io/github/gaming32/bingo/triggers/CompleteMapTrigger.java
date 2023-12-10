@@ -39,19 +39,19 @@ public class CompleteMapTrigger extends SimpleCriterionTrigger<CompleteMapTrigge
         );
 
         public static Criterion<TriggerInstance> completeMap() {
-            return BingoTriggers.COMPLETED_MAP.createCriterion(
+            return BingoTriggers.COMPLETED_MAP.get().createCriterion(
                 new TriggerInstance(Optional.empty(), MinMaxBounds.Ints.ANY, Optional.empty(), Optional.empty())
             );
         }
 
         public static Criterion<TriggerInstance> completeMap(MinMaxBounds.Ints scale) {
-            return BingoTriggers.COMPLETED_MAP.createCriterion(
+            return BingoTriggers.COMPLETED_MAP.get().createCriterion(
                 new TriggerInstance(Optional.empty(), scale, Optional.empty(), Optional.empty())
             );
         }
 
         public static Criterion<TriggerInstance> completeMap(MinMaxBounds.Ints scale, LocationPredicate center) {
-            return BingoTriggers.COMPLETED_MAP.createCriterion(
+            return BingoTriggers.COMPLETED_MAP.get().createCriterion(
                 new TriggerInstance(Optional.empty(), scale, Optional.empty(), Optional.of(center))
             );
         }

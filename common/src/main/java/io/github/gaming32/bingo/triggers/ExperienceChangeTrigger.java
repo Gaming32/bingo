@@ -87,7 +87,7 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.EXPERIENCE_CHANGED.createCriterion(
+            return BingoTriggers.EXPERIENCE_CHANGED.get().createCriterion(
                 new TriggerInstance(player, levels, progress, totalExperience)
             );
         }

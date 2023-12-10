@@ -54,7 +54,7 @@ public abstract class MixinBeehiveDecorator {
         if (GlobalVars.CURRENT_PLAYER.peek() instanceof ServerPlayer player) {
             final ItemStack item = GlobalVars.CURRENT_ITEM.peek();
             if (item != null) {
-                BingoTriggers.GROW_BEE_NEST_TREE.trigger(player, location.get(), blockShare.get(), item);
+                BingoTriggers.GROW_BEE_NEST_TREE.get().trigger(player, location.get(), blockShare.get(), item);
             }
         }
     }

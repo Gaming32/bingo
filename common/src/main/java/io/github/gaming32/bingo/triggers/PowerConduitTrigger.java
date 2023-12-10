@@ -36,13 +36,13 @@ public class PowerConduitTrigger extends SimpleCriterionTrigger<PowerConduitTrig
         );
 
         public static Criterion<TriggerInstance> powerConduit() {
-            return BingoTriggers.POWER_CONDUIT.createCriterion(
+            return BingoTriggers.POWER_CONDUIT.get().createCriterion(
                 new TriggerInstance(Optional.empty(), MinMaxBounds.Ints.ANY)
             );
         }
 
         public static Criterion<TriggerInstance> powerConduit(MinMaxBounds.Ints level) {
-            return BingoTriggers.POWER_CONDUIT.createCriterion(
+            return BingoTriggers.POWER_CONDUIT.get().createCriterion(
                 new TriggerInstance(Optional.empty(), level)
             );
         }

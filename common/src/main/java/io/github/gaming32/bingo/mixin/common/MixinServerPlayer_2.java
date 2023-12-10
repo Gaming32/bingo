@@ -25,9 +25,9 @@ public class MixinServerPlayer_2 {
         )
     )
     private void onInventoryChanged(AbstractContainerMenu containerToSend, int dataSlotIndex, ItemStack stack, CallbackInfo ci) {
-        BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGED.trigger(this$0, this$0.getInventory());
-        BingoTriggers.HAS_SOME_ITEMS_FROM_TAG.trigger(this$0, this$0.getInventory());
-        BingoTriggers.HAS_SOME_FOOD_ITEMS.trigger(this$0, this$0.getInventory());
-        BingoTriggers.DIFFERENT_POTIONS.trigger(this$0, this$0.getInventory());
+        BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGED.get().trigger(this$0, this$0.getInventory());
+        BingoTriggers.HAS_SOME_ITEMS_FROM_TAG.get().trigger(this$0, this$0.getInventory());
+        BingoTriggers.HAS_SOME_FOOD_ITEMS.get().trigger(this$0, this$0.getInventory());
+        BingoTriggers.DIFFERENT_POTIONS.get().trigger(this$0, this$0.getInventory());
     }
 }

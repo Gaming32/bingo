@@ -22,7 +22,7 @@ public class MixinItemStack {
     )
     private void itemBrokenTrigger(int amount, LivingEntity entity, Consumer<? extends LivingEntity> onBroken, CallbackInfo ci) {
         if (entity instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.ITEM_BROKEN.trigger(serverPlayer, (ItemStack)(Object)this);
+            BingoTriggers.ITEM_BROKEN.get().trigger(serverPlayer, (ItemStack)(Object)this);
         }
     }
 }

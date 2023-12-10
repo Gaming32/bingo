@@ -43,13 +43,13 @@ public class KeyPressedTrigger extends SimpleCriterionTrigger<KeyPressedTrigger.
         );
 
         public static Criterion<TriggerInstance> keyPressed() {
-            return BingoTriggers.KEY_PRESSED.createCriterion(new TriggerInstance(
+            return BingoTriggers.KEY_PRESSED.get().createCriterion(new TriggerInstance(
                 Optional.empty(), Optional.empty()
             ));
         }
 
         public static Criterion<TriggerInstance> keyPressed(String key) {
-            return BingoTriggers.KEY_PRESSED.createCriterion(new TriggerInstance(
+            return BingoTriggers.KEY_PRESSED.get().createCriterion(new TriggerInstance(
                 Optional.empty(), Optional.of(key)
             ));
         }

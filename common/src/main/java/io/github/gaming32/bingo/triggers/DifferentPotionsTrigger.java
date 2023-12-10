@@ -43,7 +43,7 @@ public class DifferentPotionsTrigger extends SimpleCriterionTrigger<DifferentPot
         );
 
         public static Criterion<TriggerInstance> differentPotions(int minCount) {
-            return BingoTriggers.DIFFERENT_POTIONS.createCriterion(
+            return BingoTriggers.DIFFERENT_POTIONS.get().createCriterion(
                 new TriggerInstance(Optional.empty(), minCount)
             );
         }

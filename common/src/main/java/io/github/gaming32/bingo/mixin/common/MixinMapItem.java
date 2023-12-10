@@ -44,6 +44,6 @@ public class MixinMapItem {
         for (final byte b : data.colors) {
             if (b == 0) return;
         }
-        BingoTriggers.COMPLETED_MAP.trigger(player, data);
+        BingoTriggers.COMPLETED_MAP.get().trigger(player, data);
     }
 }

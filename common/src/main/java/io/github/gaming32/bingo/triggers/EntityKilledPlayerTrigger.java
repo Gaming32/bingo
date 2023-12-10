@@ -135,7 +135,7 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.ENTITY_KILLED_PLAYER.createCriterion(
+            return BingoTriggers.ENTITY_KILLED_PLAYER.get().createCriterion(
                 new TriggerInstance(player, creditedEntity, directEntity, sourceEntity, source)
             );
         }

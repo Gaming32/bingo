@@ -103,7 +103,7 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.ZOMBIFY_PIG.createCriterion(
+            return BingoTriggers.ZOMBIFY_PIG.get().createCriterion(
                 new TriggerInstance(player, pig, zombifiedPiglin, direct)
             );
         }

@@ -103,7 +103,7 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.ARROW_PRESS.createCriterion(
+            return BingoTriggers.ARROW_PRESS.get().createCriterion(
                 new TriggerInstance(player, arrow, buttonOrPlate, location)
             );
         }

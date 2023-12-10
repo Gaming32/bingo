@@ -1,16 +1,12 @@
 package io.github.gaming32.bingo.data.icons;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.util.BingoCodecs;
-import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.ApiStatus;
 
 public interface GoalIcon {
     Codec<GoalIcon> CODEC = BingoCodecs.registrarByName(GoalIconType.REGISTRAR)
@@ -22,15 +18,6 @@ public interface GoalIcon {
     ItemStack item();
 
     GoalIconType<?> type();
-
-    @ApiStatus.NonExtendable
-    default JsonObject serializeToJson() {
-        return BingoUtil.toJsonObject(CODEC, this);
-    }
-
-    static GoalIcon deserialize(JsonElement element) {
-        return BingoUtil.fromJsonElement(CODEC, element);
-    }
 
     static GoalIcon infer(Object obj) {
         if (obj == null) {

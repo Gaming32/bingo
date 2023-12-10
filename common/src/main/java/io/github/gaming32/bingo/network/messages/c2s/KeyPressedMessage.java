@@ -31,7 +31,7 @@ public class KeyPressedMessage extends BaseC2SMessage {
     @Override
     public void handle(NetworkManager.PacketContext context) {
         if (context.getPlayer() instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.KEY_PRESSED.trigger(serverPlayer, key);
+            BingoTriggers.KEY_PRESSED.get().trigger(serverPlayer, key);
         }
     }
 }

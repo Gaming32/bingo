@@ -35,7 +35,7 @@ public class BounceOnBlockTrigger extends SimpleCriterionTrigger<BounceOnBlockTr
         );
 
         public static Criterion<TriggerInstance> bounceOnBlock(BlockPredicate.Builder block) {
-            return BingoTriggers.BOUNCE_ON_BLOCK.createCriterion(new TriggerInstance(
+            return BingoTriggers.BOUNCE_ON_BLOCK.get().createCriterion(new TriggerInstance(
                 Optional.empty(), Optional.of(LocationPredicate.Builder.location().setBlock(block).build())
             ));
         }

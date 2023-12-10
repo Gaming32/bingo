@@ -100,7 +100,7 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.EQUIP_ITEM.createCriterion(
+            return BingoTriggers.EQUIP_ITEM.get().createCriterion(
                 new TriggerInstance(player, oldItem, newItem, slots)
             );
         }

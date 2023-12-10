@@ -81,7 +81,7 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.TRY_USE_ITEM.createCriterion(new TriggerInstance(player, item, hand));
+            return BingoTriggers.TRY_USE_ITEM.get().createCriterion(new TriggerInstance(player, item, hand));
         }
     }
 }

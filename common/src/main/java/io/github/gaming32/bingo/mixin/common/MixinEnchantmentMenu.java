@@ -27,6 +27,6 @@ public class MixinEnchantmentMenu {
         )
     )
     private void customEnchantTrigger(ItemStack itemStack, int i, Player player, int j, ItemStack itemStack2, Level level, BlockPos blockPos, CallbackInfo ci) {
-        BingoTriggers.ENCHANTED_ITEM.trigger((ServerPlayer)player, j, costs[i]);
+        BingoTriggers.ENCHANTED_ITEM.get().trigger((ServerPlayer)player, j, costs[i]);
     }
 }

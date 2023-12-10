@@ -103,7 +103,7 @@ public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDie
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.ENTITY_DIE_NEAR_PLAYER.createCriterion(
+            return BingoTriggers.ENTITY_DIE_NEAR_PLAYER.get().createCriterion(
                 new TriggerInstance(player, entity, killingBlow, distance)
             );
         }

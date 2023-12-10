@@ -37,7 +37,7 @@ public class ItemPickedUpTrigger extends SimpleCriterionTrigger<ItemPickedUpTrig
         );
 
         public static Criterion<TriggerInstance> pickedUp(EntityPredicate itemEntity) {
-            return BingoTriggers.ITEM_PICKED_UP.createCriterion(new TriggerInstance(
+            return BingoTriggers.ITEM_PICKED_UP.get().createCriterion(new TriggerInstance(
                 Optional.empty(), EntityPredicate.wrap(Optional.ofNullable(itemEntity))
             ));
         }

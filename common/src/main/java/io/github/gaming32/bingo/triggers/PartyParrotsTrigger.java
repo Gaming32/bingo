@@ -38,7 +38,7 @@ public class PartyParrotsTrigger extends SimpleCriterionTrigger<PartyParrotsTrig
         );
 
         public static Criterion<TriggerInstance> partyParrots() {
-            return BingoTriggers.PARTY_PARROTS.createCriterion(
+            return BingoTriggers.PARTY_PARROTS.get().createCriterion(
                 new TriggerInstance(Optional.empty())
             );
         }

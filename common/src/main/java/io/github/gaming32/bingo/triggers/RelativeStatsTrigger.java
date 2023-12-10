@@ -102,7 +102,7 @@ public class RelativeStatsTrigger extends SimpleCriterionTrigger<RelativeStatsTr
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.RELATIVE_STATS.createCriterion(new TriggerInstance(player, stats));
+            return BingoTriggers.RELATIVE_STATS.get().createCriterion(new TriggerInstance(player, stats));
         }
     }
 }

@@ -24,7 +24,7 @@ public class MixinRecordItem {
     )
     private void partyParrotsTrigger(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, @Local JukeboxBlockEntity jukeboxBlockEntity) {
         if (context.getPlayer() instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.PARTY_PARROTS.trigger(serverPlayer, jukeboxBlockEntity);
+            BingoTriggers.PARTY_PARROTS.get().trigger(serverPlayer, jukeboxBlockEntity);
         }
     }
 }

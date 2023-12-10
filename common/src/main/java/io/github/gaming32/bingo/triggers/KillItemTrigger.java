@@ -98,7 +98,7 @@ public class KillItemTrigger extends SimpleCriterionTrigger<KillItemTrigger.Trig
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.KILL_ITEM.createCriterion(new TriggerInstance(player, item, damage));
+            return BingoTriggers.KILL_ITEM.get().createCriterion(new TriggerInstance(player, item, damage));
         }
     }
 }

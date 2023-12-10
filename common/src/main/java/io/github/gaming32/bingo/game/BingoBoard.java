@@ -53,7 +53,7 @@ public class BingoBoard {
             size, difficulty, rand, isAllowedGoal, requiredGoals, excludedTags, allowsClientRequired
         );
         for (int i = 0; i < size * size; i++) {
-            final ActiveGoal goal = board.goals[i] = generatedSheet[i].build(rand, lootData);
+            final ActiveGoal goal = board.goals[i] = generatedSheet[i].build(rand);
             if (generatedSheet[i].getSpecialType() == BingoTag.SpecialType.NEVER) {
                 board.states[i] = Teams.fromAll(teamCount);
             }

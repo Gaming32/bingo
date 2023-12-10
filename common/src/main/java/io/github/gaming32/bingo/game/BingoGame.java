@@ -5,7 +5,6 @@ import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.*;
-import io.github.gaming32.bingo.triggers.AbstractProgressibleTriggerInstance;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
@@ -188,18 +187,18 @@ public class BingoGame {
         Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
     ) {
         criterion.trigger().addPlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
-        if (criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance progressibleTrigger) {
-            progressibleTrigger.addProgressListener(player, new BingoGameProgressListener(this, goal, criterionId));
-        }
+//        if (criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance progressibleTrigger) {
+//            progressibleTrigger.addProgressListener(player, new BingoGameProgressListener(this, goal, criterionId));
+//        }
     }
 
     private <T extends CriterionTriggerInstance> void removeListener(
         Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
     ) {
         criterion.trigger().removePlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
-        if (criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance progressibleTrigger) {
-            progressibleTrigger.removeProgressListener(player, new BingoGameProgressListener(this, goal, criterionId));
-        }
+//        if (criterion.triggerInstance() instanceof AbstractProgressibleTriggerInstance progressibleTrigger) {
+//            progressibleTrigger.removeProgressListener(player, new BingoGameProgressListener(this, goal, criterionId));
+//        }
     }
 
     private void registerListeners(ServerPlayer player, ActiveGoal goal) {
@@ -457,10 +456,10 @@ public class BingoGame {
         return gameMode.getWinners(board, teams.length, tryHarder);
     }
 
-    private record BingoGameProgressListener(BingoGame game, ActiveGoal goal, String criterionId) implements AbstractProgressibleTriggerInstance.ProgressListener {
-        @Override
-        public void update(ServerPlayer player, int progress, int maxProgress) {
-            goal.getGoal().getProgress().goalProgressChanged(game, player, goal, criterionId, progress, maxProgress);
-        }
-    }
+//    private record BingoGameProgressListener(BingoGame game, ActiveGoal goal, String criterionId) implements AbstractProgressibleTriggerInstance.ProgressListener {
+//        @Override
+//        public void update(ServerPlayer player, int progress, int maxProgress) {
+//            goal.getGoal().getProgress().goalProgressChanged(game, player, goal, criterionId, progress, maxProgress);
+//        }
+//    }
 }

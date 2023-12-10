@@ -41,7 +41,7 @@ public class BeaconEffectTrigger extends SimpleCriterionTrigger<BeaconEffectTrig
         );
 
         public static Criterion<TriggerInstance> effectApplied(MobEffect effect) {
-            return BingoTriggers.BEACON_EFFECT.createCriterion(
+            return BingoTriggers.BEACON_EFFECT.get().createCriterion(
                 new TriggerInstance(
                     Optional.empty(),
                     MobEffectsPredicate.Builder.effects().and(effect).build(),

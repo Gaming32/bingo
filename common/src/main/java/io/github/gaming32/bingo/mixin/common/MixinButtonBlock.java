@@ -24,7 +24,7 @@ public class MixinButtonBlock {
     )
     private void arrowPressTrigger(BlockState state, Level level, BlockPos pos, CallbackInfo ci, AbstractArrow arrow) {
         if (arrow != null) {
-            BingoTriggers.ARROW_PRESS.trigger(arrow, pos);
+            BingoTriggers.ARROW_PRESS.get().trigger(arrow, pos);
         }
     }
 }

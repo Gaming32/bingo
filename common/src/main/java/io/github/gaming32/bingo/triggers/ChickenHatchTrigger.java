@@ -83,7 +83,7 @@ public class ChickenHatchTrigger extends SimpleCriterionTrigger<ChickenHatchTrig
         }
 
         public Criterion<TriggerInstance> build() {
-            return BingoTriggers.CHICKEN_HATCH.createCriterion(new TriggerInstance(player, projectile, numChickens));
+            return BingoTriggers.CHICKEN_HATCH.get().createCriterion(new TriggerInstance(player, projectile, numChickens));
         }
     }
 }
