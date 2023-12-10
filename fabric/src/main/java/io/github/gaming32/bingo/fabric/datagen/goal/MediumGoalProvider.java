@@ -664,9 +664,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                             MinMaxBounds.Ints.atLeast(4), MinMaxBounds.Ints.atLeast(4)
                         ))
                     ),
-                    MinMaxBounds.Ints.ANY,
-                    MinMaxBounds.Ints.ANY,
-                    MinMaxBounds.Ints.ANY,
+                    InventoryChangeTrigger.TriggerInstance.Slots.ANY,
                     List.of()
                 )
             ))
