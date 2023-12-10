@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -34,7 +35,7 @@ public class BingoGoalProvider implements DataProvider {
                 throw new IllegalArgumentException("Duplicate goal " + goal.id());
             } else {
                 Path path = pathProvider.json(goal.id());
-                generators.add(DataProvider.saveStable(output, goal.goal().serialize(), path));
+                generators.add(DataProvider.saveStable(output, BingoUtil.toJsonElement(BingoGoal.CODEC, goal.goal()), path));
             }
         };
 

@@ -6,10 +6,7 @@ import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.datafixers.util.Unit;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.Decoder;
-import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.*;
 import dev.architectury.registry.registries.Registrar;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +18,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public final class BingoCodecs {
+    public static final Dynamic<?> EMPTY_DYNAMIC = new Dynamic<>(JsonOps.INSTANCE);
     public static final Codec<Character> CHAR = Codec.STRING.comapFlatMap(
         s -> s.length() == 1 ? DataResult.success(s.charAt(0)) : DataResult.error(() -> "String must be exactly one char, not " + s.length()),
         c -> Character.toString(c)
@@ -104,6 +102,17 @@ public final class BingoCodecs {
      */
     public static <A> Codec<A> firstValid(Codec<A> first, Codec<A> second) {
         return new FirstValidCodec<>(first, second);
+    }
+
+    public static <A> Codec<Set<A>> minifiedSet(Codec<A> elementCodec) {
+        return Codec.either(setOf(elementCodec), elementCodec).xmap(
+            either -> either.map(Function.identity(), ImmutableSet::of),
+            set -> set.size() == 1 ? Either.right(set.iterator().next()) : Either.left(set)
+        );
+    }
+
+    public static <A> MapCodec<Set<A>> minifiedSetField(Codec<A> elementCodec, String name) {
+        return ExtraCodecs.strictOptionalField(minifiedSet(elementCodec), name, ImmutableSet.of());
     }
 
     public static final class FirstValidCodec<A> implements Codec<A> {
