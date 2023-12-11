@@ -43,7 +43,14 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class BingoGoal {
@@ -66,7 +73,7 @@ public class BingoGoal {
                 final BingoDifficulty.Holder tag = BingoDifficulty.byId(id);
                 return tag != null
                     ? DataResult.success(tag)
-                    : DataResult.error(() -> "Unknown bingo tag " + id);
+                    : DataResult.error(() -> "Unknown bingo difficulty " + id);
             },
             BingoDifficulty.Holder::id
         );
@@ -169,6 +176,22 @@ public class BingoGoal {
         final DataResult<AdvancementRequirements> requirementsResult = requirements.validate(criteria.keySet());
         if (requirementsResult.error().isPresent()) {
             return DataResult.error(requirementsResult.error().get()::message);
+        }
+
+        for (final Dynamic<?> criterion : criteria.values()) {
+            final DataResult<String> triggerIdString = criterion.get("trigger").asString();
+            if (triggerIdString.error().isPresent()) {
+                return DataResult.error(triggerIdString.error().get()::message);
+            }
+            final DataResult<ResourceLocation> triggerIdResult = ResourceLocation.read(triggerIdString.result().orElseThrow());
+            if (triggerIdResult.error().isPresent()) {
+                return DataResult.error(triggerIdResult.error().get()::message);
+            }
+            final ResourceLocation triggerId = triggerIdResult.result().orElseThrow();
+            final CriterionTrigger<?> trigger = BuiltInRegistries.TRIGGER_TYPES.get(triggerId);
+            if (trigger == null) {
+                return DataResult.error(() -> "Unknown criterion trigger id " + triggerId);
+            }
         }
 
         for (final BingoTag.Holder tag : tags) {
