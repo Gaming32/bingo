@@ -3,8 +3,6 @@ package io.github.gaming32.bingo;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.ImmutableStringReader;
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -413,14 +411,15 @@ public class BingoCommand {
         for (int i = 1; i <= 32; i++) {
             final String argName = "team" + i;
             if (!hasArg(context, argName)) break;
-            if (!teams.add(TeamArgument.getTeam(context, argName))) {
-                throw invalidArg(DUPLICATE_TEAMS, context, argName);
+            final PlayerTeam team = TeamArgument.getTeam(context, argName);
+            if (!teams.add(team)) {
+                throw DUPLICATE_TEAMS.create(team);
             }
         }
 
         final BingoDifficulty.Holder difficulty = BingoDifficulty.byId(difficultyId);
         if (difficulty == null) {
-            throw invalidArg(UNKNOWN_DIFFICULTY, context, "difficulty");
+            throw UNKNOWN_DIFFICULTY.create(difficultyId);
         }
 
         final List<BingoGoal.Holder> requiredGoals = requiredGoalIds.stream()
@@ -598,23 +597,6 @@ public class BingoCommand {
         }
 
         return null;
-    }
-
-    @Nullable
-    private static ImmutableStringReader context(CommandContext<?> context, String arg) {
-        final ParsedCommandNode<?> node = getNode(context, arg);
-        if (node == null) {
-            return null;
-        }
-        final StringReader reader = new StringReader(context.getInput());
-        reader.setCursor(node.getRange().getEnd());
-        return reader;
-    }
-
-    private static CommandSyntaxException invalidArg(DynamicCommandExceptionType type, CommandContext<?> context, String arg) {
-        final ImmutableStringReader reader = context(context, arg);
-        final Object argValue = context.getArgument(arg, Object.class);
-        return reader != null ? type.createWithContext(reader, argValue) : type.create(argValue);
     }
 
     @SuppressWarnings("unchecked")
