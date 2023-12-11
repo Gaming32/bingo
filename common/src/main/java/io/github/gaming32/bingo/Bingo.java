@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class Bingo {
     public static final String MOD_ID = "bingo";
@@ -46,7 +47,7 @@ public class Bingo {
     public static boolean showOtherTeam;
 
     public static BingoGame activeGame;
-    public static final Set<ServerPlayer> needAdvancementsClear = new HashSet<>();
+    public static final Set<UUID> needAdvancementsClear = new HashSet<>();
 
     public static void init() {
         CommandRegistrationEvent.EVENT.register(BingoCommand::register);
@@ -57,7 +58,7 @@ public class Bingo {
             }
         });
 
-        PlayerEvent.PLAYER_QUIT.register(needAdvancementsClear::remove);
+        PlayerEvent.PLAYER_QUIT.register(player -> needAdvancementsClear.remove(player.getUUID()));
 
         LifecycleEvent.SERVER_STOPPED.register(instance -> activeGame = null);
 
@@ -102,11 +103,6 @@ public class Bingo {
         );
 
         BingoNetwork.load();
-
-//        ExplosionEvent.PRE.register((level, explosion) -> {
-//            LOGGER.info("Explosion: {}", explosion.radius);
-//            return EventResult.pass();
-//        });
 
         LOGGER.info("I got the diagonal!");
     }

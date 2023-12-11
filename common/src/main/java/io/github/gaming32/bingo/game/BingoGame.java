@@ -4,12 +4,22 @@ import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
-import io.github.gaming32.bingo.network.messages.s2c.*;
+import io.github.gaming32.bingo.network.messages.s2c.InitBoardMessage;
+import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardMessage;
+import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesMessage;
+import io.github.gaming32.bingo.network.messages.s2c.SyncTeamMessage;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressMessage;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateStateMessage;
 import io.github.gaming32.bingo.triggers.progress.ProgressibleTrigger;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.*;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.CriterionProgress;
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,7 +31,13 @@ import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class BingoGame {
     public static final Component REQUIRED_CLIENT_KICK = Component.literal(
@@ -66,11 +82,11 @@ public class BingoGame {
         }
 
         RemoveBoardMessage.INSTANCE.sendTo(player);
-        if (Bingo.needAdvancementsClear.remove(player)) {
+        if (Bingo.needAdvancementsClear.remove(player.getUUID())) {
             player.connection.send(new ClientboundUpdateAdvancementsPacket(
                 false,
                 List.of(),
-                VanillaNetworking.generateAdvancementIds(BingoBoard.MAX_SIZE),
+                VanillaNetworking.generateAdvancementIds(board.getGoals().length),
                 Map.of()
             ));
         }
@@ -90,7 +106,7 @@ public class BingoGame {
             Set.of(),
             VanillaNetworking.generateProgressMap(board.getStates(), team)
         ));
-        Bingo.needAdvancementsClear.add(player);
+        Bingo.needAdvancementsClear.add(player.getUUID());
 
         Map<ActiveGoal, GoalProgress> goalProgress = this.goalProgress.get(player.getUUID());
         if (goalProgress != null) {

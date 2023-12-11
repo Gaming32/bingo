@@ -348,7 +348,7 @@ public class BingoGoal {
             return value.createList(
                 asList.result()
                     .orElseThrow()
-                    .map(d -> performSubstitutions(d, referable, rand))
+                    .map(d -> performSubstitutions(d, referable, rand).convert(d.getOps()))
             );
         }
 
@@ -365,7 +365,7 @@ public class BingoGoal {
                     .stream()
                     .collect(ImmutableMap.toImmutableMap(
                         Map.Entry::getKey,
-                        e -> performSubstitutions(e.getValue(), referable, rand)
+                        e -> performSubstitutions(e.getValue(), referable, rand).convert(e.getValue().getOps())
                     ))
             );
         }
