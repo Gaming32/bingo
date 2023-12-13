@@ -16,8 +16,7 @@ public record ClientGoal(
     Optional<Component> tooltip,
     Optional<ResourceLocation> tooltipIcon,
     GoalIcon icon,
-    BingoTag.SpecialType specialType,
-    boolean hasProgress
+    BingoTag.SpecialType specialType
 ) {
     public ClientGoal(ActiveGoal goal) {
         this(
@@ -26,8 +25,7 @@ public record ClientGoal(
             goal.tooltip(),
             goal.goal().goal().getTooltipIcon(),
             goal.icon(),
-            goal.goal().goal().getSpecialType(),
-            goal.hasProgress()
+            goal.goal().goal().getSpecialType()
         );
     }
 
@@ -39,8 +37,7 @@ public record ClientGoal(
             buf.readOptional(FriendlyByteBuf::readComponent),
             buf.readOptional(FriendlyByteBuf::readResourceLocation),
             buf.readWithCodecTrusted(NbtOps.INSTANCE, GoalIcon.CODEC),
-            buf.readEnum(BingoTag.SpecialType.class),
-            buf.readBoolean()
+            buf.readEnum(BingoTag.SpecialType.class)
         );
     }
 
@@ -52,6 +49,5 @@ public record ClientGoal(
         buf.writeOptional(tooltipIcon, FriendlyByteBuf::writeResourceLocation);
         buf.writeWithCodec(NbtOps.INSTANCE, GoalIcon.CODEC, icon);
         buf.writeEnum(specialType);
-        buf.writeBoolean(hasProgress);
     }
 }
