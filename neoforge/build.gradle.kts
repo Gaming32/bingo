@@ -36,8 +36,7 @@ dependencies {
     shadowCommon(implementation("com.electronwill.night-config:core:3.6.0")!!)
     shadowCommon(implementation("com.electronwill.night-config:toml:3.6.0")!!)
 
-    // TODO: Verify dependencies
-//    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-neoforge:12.0.652")
+//    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-neoforge:14.0.680")
 //    modRuntimeOnly("mezz.jei:jei-1.20.1-neoforge:15.2.0.27")
 //    modRuntimeOnly("dev.emi:emi-neoforge:1.0.19+1.20.1")
 }

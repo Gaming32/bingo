@@ -11,7 +11,7 @@ dependencies {
 
     implementation("com.electronwill.night-config:toml:3.6.0")
 
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:13.0.655")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:14.0.680")
     modCompileOnly("mezz.jei:jei-1.20.2-common-api:16.0.0.28")
     modCompileOnly("dev.emi:emi-xplat-intermediary:1.0.22+1.20.2") // Unfortunately, although the API does what I need, it does in a way that's wholly different from the other recipe viewers
 }
