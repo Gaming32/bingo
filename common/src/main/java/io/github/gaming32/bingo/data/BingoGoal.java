@@ -162,7 +162,9 @@ public class BingoGoal {
 
         boolean requiresClient = false;
         for (final Dynamic<?> criterion : criteria.values()) {
-            final ResourceLocation triggerId = new ResourceLocation(criterion.get("trigger").asString("no_trigger_present"));
+            final DataResult<String> triggerKey = criterion.get("trigger").asString();
+            if (triggerKey.result().isEmpty()) continue;
+            final ResourceLocation triggerId = new ResourceLocation(triggerKey.result().get());
             final CriterionTrigger<?> trigger = BuiltInRegistries.TRIGGER_TYPES.get(triggerId);
             if (trigger != null && trigger.requiresClientCode()) {
                 requiresClient = true;
@@ -344,11 +346,9 @@ public class BingoGoal {
         RandomSource rand
     ) {
         final var asList = value.asStreamOpt();
-        if (asList.error().isEmpty()) {
+        if (asList.result().isPresent()) {
             return value.createList(
-                asList.result()
-                    .orElseThrow()
-                    .map(d -> performSubstitutions(d, referable, rand).convert(d.getOps()))
+                asList.result().get().map(d -> performSubstitutions(d, referable, rand).convert(d.getOps()))
             );
         }
 
@@ -357,10 +357,9 @@ public class BingoGoal {
         }
 
         final var asMap = value.getMapValues();
-        if (asMap.error().isEmpty()) {
+        if (asMap.result().isPresent()) {
             return value.createMap(
-                asMap.result()
-                    .orElseThrow()
+                asMap.result().get()
                     .entrySet()
                     .stream()
                     .collect(ImmutableMap.toImmutableMap(

@@ -10,6 +10,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
+import it.unimi.dsi.fastutil.floats.FloatImmutableList;
 import it.unimi.dsi.fastutil.floats.FloatList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -25,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 
 public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, SpecialType specialType) {
     private static final Codec<FloatList> DIFFICULTY_MAX_CODEC = ExtraCodecs.nonEmptyList(
@@ -33,7 +35,7 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
                 ? DataResult.success(f)
                 : DataResult.error(() -> "Value in difficulty_max must be in range [0,1]")
         ).listOf()
-    ).xmap(FloatArrayList::new, l -> l.doubleStream().mapToObj(d -> (float)d).toList());
+    ).xmap(FloatImmutableList::new, Function.identity());
 
     public static final Codec<BingoTag> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
@@ -121,7 +123,7 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
         }
 
         public Holder build() {
-            return new Holder(id, new BingoTag(difficultyMax, allowedOnSameLine, specialType));
+            return new Holder(id, new BingoTag(new FloatImmutableList(difficultyMax), allowedOnSameLine, specialType));
         }
     }
 
