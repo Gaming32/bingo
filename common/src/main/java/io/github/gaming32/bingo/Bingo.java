@@ -111,7 +111,7 @@ public class Bingo {
         playerList.getPlayers().forEach(playerList.getServer().getCommands()::sendCommands);
     }
 
-    public static MutableComponent translatable(@Translatable String key, Object... args) {
+    public static MutableComponent translatable(@Translatable(allowArbitraryArgs = true) String key, Object... args) {
         return ensureHasFallback(Component.translatableEscape(key, args));
     }
 

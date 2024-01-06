@@ -28,7 +28,7 @@ subprojects {
             parchment("org.parchmentmc.data:parchment-1.20.2:2023.10.22@zip")
         })
 
-        compileOnly("com.demonwav.mcdev:annotations:2.0.0")
+        compileOnly("com.demonwav.mcdev:annotations:2.1.0")
     }
 
     version = "${rootProject.version}+$name"
