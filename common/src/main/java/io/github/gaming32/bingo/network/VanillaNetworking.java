@@ -4,13 +4,25 @@ import com.google.common.collect.ImmutableMap;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
-import net.minecraft.advancements.*;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.advancements.AdvancementRequirements;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.AdvancementType;
+import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 public class VanillaNetworking {
@@ -52,7 +64,7 @@ public class VanillaNetworking {
             goal.icon().item(),
             goal.name(),
             goal.tooltip().orElse(CommonComponents.EMPTY),
-            null,
+            Optional.empty(),
             AdvancementType.TASK,
             false,
             false,
