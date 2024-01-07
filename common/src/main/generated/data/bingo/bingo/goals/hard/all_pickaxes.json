@@ -36,6 +36,6 @@
     "bingo:nether"
   ],
   "tooltip": {
-    "translate": "bingo.goal.all_somethings.tooltip"
+    "translate": "bingo.goal.all_somethings.tools.tooltip"
   }
 }

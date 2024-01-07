@@ -37,7 +37,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.*;
+import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
+import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -363,10 +367,12 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD));
         addGoal(obtainAllItemsFromTag(ItemTags.SWORDS, "swords")
             .tags(BingoTags.NETHER)
-            .tooltip("all_somethings"));
+            .tooltip("all_somethings.tools")
+        );
         addGoal(obtainAllItemsFromTag(ItemTags.PICKAXES, "pickaxes")
             .tags(BingoTags.NETHER)
-            .tooltip("all_somethings"));
+            .tooltip("all_somethings.tools")
+        );
         addGoal(BingoGoal.builder(id("pacifist"))
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity())
             .tags(BingoTags.NEVER, BingoTags.STAT)
