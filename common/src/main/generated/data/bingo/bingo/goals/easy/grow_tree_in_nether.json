@@ -17,11 +17,23 @@
   },
   "difficulty": "bingo:easy",
   "icon": {
-    "type": "bingo:item",
-    "value": {
-      "Count": 1,
-      "id": "minecraft:bone_meal"
-    }
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:bone_meal"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:oak_sapling"
+        }
+      }
+    ]
   },
   "name": {
     "translate": "bingo.goal.grow_tree_in_nether"

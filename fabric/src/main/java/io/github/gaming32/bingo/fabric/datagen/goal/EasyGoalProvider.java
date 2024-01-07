@@ -74,7 +74,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
             .name("grow_tree_in_nether")
             .tooltip("grow_tree_in_nether")
-            .icon(Items.BONE_MEAL));
+            .icon(CycleIcon.infer(Items.BONE_MEAL, Items.OAK_SAPLING)));
         addGoal(obtainSomeItemsFromTag(id("terracotta"), ItemTags.TERRACOTTA, "bingo.goal.colors_of_terracotta", 4, 7)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD)
             .reactant("use_furnace")
