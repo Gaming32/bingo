@@ -164,8 +164,9 @@ public class BingoGoal {
         for (final Dynamic<?> criterion : criteria.values()) {
             final DataResult<String> triggerKey = criterion.get("trigger").asString();
             if (triggerKey.result().isEmpty()) continue;
-            final ResourceLocation triggerId = new ResourceLocation(triggerKey.result().get());
-            final CriterionTrigger<?> trigger = BuiltInRegistries.TRIGGER_TYPES.get(triggerId);
+            final DataResult<ResourceLocation> triggerId = ResourceLocation.read(triggerKey.result().get());
+            if (triggerId.result().isEmpty()) continue;
+            final CriterionTrigger<?> trigger = BuiltInRegistries.TRIGGER_TYPES.get(triggerId.result().get());
             if (trigger != null && trigger.requiresClientCode()) {
                 requiresClient = true;
                 break;
@@ -420,9 +421,9 @@ public class BingoGoal {
         private Optional<ResourceLocation> tooltipIcon = Optional.empty();
         private Dynamic<?> icon = BingoCodecs.EMPTY_DYNAMIC;
         private OptionalInt infrequency = OptionalInt.empty();
-        private ImmutableList.Builder<String> antisynergy = ImmutableList.builder();
-        private final ImmutableList.Builder<String> catalyst = ImmutableList.builder();
-        private final ImmutableList.Builder<String> reactant = ImmutableList.builder();
+        private ImmutableSet.Builder<String> antisynergy = ImmutableSet.builder();
+        private final ImmutableSet.Builder<String> catalyst = ImmutableSet.builder();
+        private final ImmutableSet.Builder<String> reactant = ImmutableSet.builder();
         private Optional<BingoDifficulty.Holder> difficulty;
 
         private Builder(ResourceLocation id) {
@@ -541,7 +542,7 @@ public class BingoGoal {
         }
 
         public Builder setAntisynergy(String... antisynergy) {
-            this.antisynergy = ImmutableList.builderWithExpectedSize(antisynergy.length);
+            this.antisynergy = ImmutableSet.builderWithExpectedSize(antisynergy.length);
             return this.antisynergy(antisynergy);
         }
 
