@@ -523,7 +523,12 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(obtainItemGoal(id("dried_kelp_block"), Items.DRIED_KELP_BLOCK, 11, 20)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
-        // TODO: drown a zombie
+        addGoal(BingoGoal.builder(id("drown_zombie"))
+            .criterion("drown", ZombieDrownedTrigger.builder().build())
+            .name("drown_zombie")
+            .tooltip("drown_zombie")
+            .icon(CycleIcon.infer(EntityType.ZOMBIE, EntityType.DROWNED))
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("gunpowder"), Items.GUNPOWDER, 2, 5)
             .infrequency(2));
         addGoal(obtainItemGoal(id("spider_eye"), Items.SPIDER_EYE, 2, 5)

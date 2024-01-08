@@ -1,0 +1,45 @@
+{
+  "criteria": {
+    "drown": {
+      "trigger": "bingo:zombie_drowned"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:entity",
+        "entity": "minecraft:zombie",
+        "item": {
+          "Count": 1,
+          "id": "minecraft:zombie_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "entity": "minecraft:drowned",
+        "item": {
+          "Count": 1,
+          "id": "minecraft:drowned_spawn_egg"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.drown_zombie"
+  },
+  "requirements": [
+    [
+      "drown"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:combat",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.drown_zombie.tooltip"
+  }
+}

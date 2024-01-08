@@ -73,6 +73,8 @@
   "bingo.goal.disarm_pillager": "Disarm a %s",
   "bingo.goal.double_creeper_boat": "Destroy a boat holding two creepers",
   "bingo.goal.drink_sus_stew": "Drink a %s",
+  "bingo.goal.drown_zombie": "Drown a Zombie",
+  "bingo.goal.drown_zombie.tooltip": "The zombie must be tracking you when it converts.",
   "bingo.goal.dye_sign": "Dye a sign a different color",
   "bingo.goal.eat_entire_cake": "Eat an entire Cake",
   "bingo.goal.edible_items": "%s Different Edible Items",

@@ -54,6 +54,7 @@ public class BingoTriggers {
     public static final RegistrySupplier<RelativeStatsTrigger> RELATIVE_STATS = register("relative_stats", RelativeStatsTrigger::new);
     public static final RegistrySupplier<TotalCountInventoryChangeTrigger> TOTAL_COUNT_INVENTORY_CHANGED = register("total_count_inventory_changed", TotalCountInventoryChangeTrigger::new);
     public static final RegistrySupplier<TryUseItemTrigger> TRY_USE_ITEM = register("try_use_item", TryUseItemTrigger::new);
+    public static final RegistrySupplier<ZombieDrownedTrigger> ZOMBIE_DROWNED = register("zombie_drowned", ZombieDrownedTrigger::new);
     public static final RegistrySupplier<ZombifyPigTrigger> ZOMBIFY_PIG = register("zombify_pig", ZombifyPigTrigger::new);
 
     public static void load() {
