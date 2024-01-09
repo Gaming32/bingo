@@ -19,7 +19,7 @@ public record CycleIcon(List<GoalIcon> icons) implements GoalIcon {
     }
 
     public static CycleIcon infer(Object... icons) {
-        return new CycleIcon(Arrays.stream(icons).map(GoalIcon::infer).toArray(GoalIcon[]::new));
+        return new CycleIcon(Arrays.stream(icons).map(GoalIcon::infer).collect(ImmutableList.toImmutableList()));
     }
 
     @Override
