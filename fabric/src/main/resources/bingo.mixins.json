@@ -9,7 +9,6 @@
     "brigadier.MixinCommandContext"
   ],
   "client": [
-    "client.MixinClientTooltipComponent"
   ],
   "injectors": {
     "defaultRequire": 1
