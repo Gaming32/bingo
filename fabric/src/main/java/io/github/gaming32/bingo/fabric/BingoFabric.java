@@ -1,8 +1,11 @@
 package io.github.gaming32.bingo.fabric;
 
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.client.ClientIconTooltip;
+import io.github.gaming32.bingo.client.IconTooltip;
 import io.github.gaming32.bingo.network.BingoNetwork;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
@@ -28,6 +31,13 @@ public class BingoFabric implements ModInitializer {
             } else if (BingoNetwork.PROTOCOL_VERSION < clientVersion) {
                 handler.disconnect(Component.translatable("bingo.outdated_server", BingoNetwork.PROTOCOL_VERSION, clientVersion));
             }
+        });
+
+        TooltipComponentCallback.EVENT.register(data -> {
+            if (data instanceof IconTooltip iconTooltip) {
+                return new ClientIconTooltip(iconTooltip);
+            }
+            return null;
         });
     }
 }
