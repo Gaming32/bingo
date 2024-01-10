@@ -642,6 +642,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("open_door_with_target_from_ten_blocks"))
             .criterion("open_door", DoorOpenedByTargetTrigger.builder()
                 .projectile(EntityPredicate.Builder.entity().distance(DistancePredicate.horizontal(MinMaxBounds.Doubles.atLeast(10))))
+                .door(LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.DOORS)).build())
                 .build()
             )
             .name("open_door_with_target_from_ten_blocks")

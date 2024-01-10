@@ -43,6 +43,7 @@
     "MixinServerStatsCounter",
     "MixinTargetBlock",
     "MixinThrownEgg",
+    "MixinTrapDoorBlock",
     "MixinTreeGrower",
     "MixinVehicleEntity",
     "MixinZombie",

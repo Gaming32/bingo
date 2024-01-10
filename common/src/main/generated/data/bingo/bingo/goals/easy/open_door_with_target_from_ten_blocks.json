@@ -2,6 +2,11 @@
   "criteria": {
     "open_door": {
       "conditions": {
+        "door": {
+          "block": {
+            "tag": "minecraft:doors"
+          }
+        },
         "projectile": [
           {
             "condition": "minecraft:entity_properties",
