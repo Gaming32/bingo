@@ -263,6 +263,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .name("bounce_on_bed")
             .icon(Items.WHITE_BED)
         );
+        // TODO: hang a painting
         addGoal(BingoGoal.builder(id("fill_composter"))
             .criterion("fill", CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
                 new ItemUsedOnLocationTrigger.TriggerInstance(

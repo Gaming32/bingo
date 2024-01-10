@@ -23,6 +23,7 @@
     "MixinEntity",
     "MixinEntitySubPredicate_Types",
     "MixinFungusBlock",
+    "MixinHangingEntityItem",
     "MixinItemEntity",
     "MixinItemStack",
     "MixinLivingEntity",

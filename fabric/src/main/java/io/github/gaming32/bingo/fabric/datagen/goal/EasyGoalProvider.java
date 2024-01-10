@@ -10,6 +10,7 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.data.tags.BingoPaintingVariantTags;
 import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
@@ -314,7 +315,15 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("ender_pearl"), Items.ENDER_PEARL, 2, 3)
             .infrequency(2));
         addGoal(obtainItemGoal(id("egg"), Items.EGG, 16, 16));
-        // TODO: hang 3 different 4x4 paintings
+        addGoal(BingoGoal.builder(id("4x4_paintings"))
+            .criterion("paintings", AdjacentPaintingTrigger.builder()
+                .paintingVariant(BingoPaintingVariantTags.SIZE_4X4)
+                .count(MinMaxBounds.Ints.atLeast(3))
+                .build())
+            .name("4x4_paintings")
+            .icon(Items.PAINTING)
+            .antisynergy("painting")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("bone_block"), Items.BONE_BLOCK, 5, 10));
         addGoal(BingoGoal.builder(id("double_creeper_boat"))
             .criterion("break", BingoTriggers.DESTROY_VEHICLE.get().createCriterion(new DestroyVehicleTrigger.TriggerInstance(

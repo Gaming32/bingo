@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 public class BingoTriggers {
     private static final Registrar<CriterionTrigger<?>> REGISTRAR = Bingo.REGISTRAR_MANAGER.get(Registries.TRIGGER_TYPE);
 
+    public static final RegistrySupplier<AdjacentPaintingTrigger> ADJACENT_PAINTING = register("adjacent_painting", AdjacentPaintingTrigger::new);
     public static final RegistrySupplier<ArrowPressTrigger> ARROW_PRESS = register("arrow_press", ArrowPressTrigger::new);
     public static final RegistrySupplier<BeaconEffectTrigger> BEACON_EFFECT = register("beacon_effect", BeaconEffectTrigger::new);
     public static final RegistrySupplier<BedRowTrigger> BED_ROW = register("bed_row", BedRowTrigger::new);

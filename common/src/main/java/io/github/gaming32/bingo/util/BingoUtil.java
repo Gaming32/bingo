@@ -9,7 +9,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
+import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -22,6 +24,44 @@ import java.util.Optional;
 import java.util.stream.Collector;
 
 public class BingoUtil {
+    private static final Hash.Strategy<Holder<?>> HOLDER_STRATEGY = new Hash.Strategy<>() {
+        @Override
+        public int hashCode(Holder<?> holder) {
+            if (holder == null) {
+                return 0;
+            }
+
+            var key = holder.unwrapKey();
+            // use ternary here to avoid boxing Integer
+            //noinspection OptionalIsPresent
+            return key.isPresent() ? System.identityHashCode(key.get()) : holder.hashCode();
+        }
+
+        @Override
+        public boolean equals(Holder<?> a, Holder<?> b) {
+            if (a == b) {
+                return true;
+            }
+            if (a == null || b == null) {
+                return false;
+            }
+
+            if (a.getClass() != b.getClass()) {
+                return false;
+            }
+            var keyA = a.unwrapKey();
+            if (keyA.isPresent() && keyA.equals(b.unwrapKey())) {
+                return true;
+            }
+            return a.equals(b);
+        }
+    };
+
+    @SuppressWarnings("unchecked")
+    public static <T> Hash.Strategy<Holder<T>> holderStrategy() {
+        return (Hash.Strategy<Holder<T>>) (Hash.Strategy<?>) HOLDER_STRATEGY;
+    }
+
     public static int[] generateIntArray(int length) {
         final int[] result = new int[length];
         for (int i = 1; i < length; i++) {

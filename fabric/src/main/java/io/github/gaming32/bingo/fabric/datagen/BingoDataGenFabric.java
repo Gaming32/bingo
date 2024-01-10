@@ -20,6 +20,7 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
         pack.addProvider(BingoEntityTypeTagProvider::new);
         pack.addProvider(BingoFeatureTagProvider::new);
         pack.addProvider(BingoDamageTypeTagProvider::new);
+        pack.addProvider(BingoPaintingVariantTagProvider::new);
 
         if (DUMP_BINGO_COMMAND) {
             pack.addProvider(BingoCommandDumper::new);

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:match",
+    "minecraft:bust",
+    "minecraft:stage",
+    "minecraft:void",
+    "minecraft:skull_and_roses",
+    "minecraft:wither",
+    "minecraft:earth",
+    "minecraft:wind",
+    "minecraft:water",
+    "minecraft:fire"
+  ]
+}

@@ -2,6 +2,7 @@
   "bingo.count": "%s %s",
   "bingo.and": "%s & %s",
   "bingo.goal.3x3x3_glass_cube": "Build a 3x3x3 glass cube and fill the middle with lava",
+  "bingo.goal.4x4_paintings": "Hang up 3 Different 4x4 Paintings directly next to each other",
   "bingo.goal.6x6scaffolding": "Build a 6x6 Scaffolding n Shape (not counting corners)",
   "bingo.goal.6x6scaffolding.tooltip": "Width/height of the inside frame, disregarding corners.",
   "bingo.goal.all_diamond_craftables": "Every item Diamonds are used to Craft",
