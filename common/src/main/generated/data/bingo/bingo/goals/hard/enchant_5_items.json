@@ -1,0 +1,48 @@
+{
+  "antisynergy": "enchant",
+  "criteria": {
+    "enchant": {
+      "conditions": {
+        "stats": [
+          {
+            "type": "minecraft:custom",
+            "stat": "minecraft:enchant_item",
+            "value": {
+              "min": 5
+            }
+          }
+        ]
+      },
+      "trigger": "bingo:relative_stats"
+    }
+  },
+  "difficulty": "bingo:hard",
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 5,
+      "id": "minecraft:stick",
+      "tag": {
+        "Enchantments": [
+          {}
+        ]
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.enchant_5_items"
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "enchant"
+  },
+  "requirements": [
+    [
+      "enchant"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

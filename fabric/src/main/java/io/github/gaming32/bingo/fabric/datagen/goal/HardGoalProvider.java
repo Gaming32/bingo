@@ -22,6 +22,7 @@ import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
@@ -258,7 +259,17 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name("full_iron_mob")
             .icon(makeItemWithGlint(Items.IRON_SWORD))
         );
-        // TODO: enchant 5 items
+        addGoal(BingoGoal.builder(id("enchant_5_items"))
+            .criterion("enchant", RelativeStatsTrigger.builder()
+                .stat(Stats.ENCHANT_ITEM, MinMaxBounds.Ints.atLeast(5))
+                .build()
+            )
+            .progress("enchant")
+            .name("enchant_5_items")
+            .icon(makeItemWithGlint(new ItemStack(Items.STICK, 5)))
+            .antisynergy("enchant")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
         addGoal(BingoGoal.builder(id("never_use_buckets"))
             .criterion("filled_bucket", CriteriaTriggers.FILLED_BUCKET.createCriterion(
                 new FilledBucketTrigger.TriggerInstance(Optional.empty(), Optional.empty())

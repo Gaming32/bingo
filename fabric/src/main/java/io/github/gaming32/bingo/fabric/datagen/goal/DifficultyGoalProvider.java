@@ -15,11 +15,21 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.triggers.BedRowTrigger;
+import io.github.gaming32.bingo.triggers.ExperienceChangeTrigger;
+import io.github.gaming32.bingo.triggers.HasSomeFoodItemsTrigger;
+import io.github.gaming32.bingo.triggers.HasSomeItemsFromTagTrigger;
+import io.github.gaming32.bingo.triggers.MineralPillarTrigger;
+import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
+import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -30,7 +40,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
@@ -204,11 +218,13 @@ public abstract class DifficultyGoalProvider {
     }
 
     protected static BingoGoal.Builder crouchDistanceGoal(ResourceLocation id, int minDistance, int maxDistance) {
-        RelativeStatsTrigger.Builder builder = RelativeStatsTrigger.builder();
         return BingoGoal.builder(id)
             .sub("distance", BingoSub.random(minDistance, maxDistance))
-            .criterion("crouch",
-                builder.stat(Stats.CROUCH_ONE_CM, MinMaxBounds.Ints.atLeast(0)).build(),
+            .criterion(
+                "crouch",
+                RelativeStatsTrigger.builder()
+                    .stat(Stats.CROUCH_ONE_CM, MinMaxBounds.Ints.atLeast(0))
+                    .build(),
                 subber -> subber.sub(
                     "conditions.stats.0.value.min",
                     new CompoundBingoSub(
