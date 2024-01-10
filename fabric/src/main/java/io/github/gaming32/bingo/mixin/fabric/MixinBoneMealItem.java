@@ -3,7 +3,6 @@ package io.github.gaming32.bingo.mixin.fabric;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.gaming32.bingo.ext.GlobalVars;
-import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
@@ -20,7 +19,7 @@ public class MixinBoneMealItem {
         final Player player = context.getPlayer();
         // J25, and we'll be able to use "var _ ="
         try (
-            var ignored = GlobalVars.CURRENT_PLAYER.pushed(player instanceof FakePlayer ? null : player);
+            var ignored = GlobalVars.CURRENT_PLAYER.pushed(player);
             var ignored1 = GlobalVars.CURRENT_ITEM.pushed(boneMeal)
         ) {
             return operation.call(boneMeal, level, pos);

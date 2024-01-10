@@ -162,6 +162,8 @@
   "bingo.goal.ocelot_trust": "Gain the trust of an %s",
   "bingo.goal.one_by_one_hole": "Dig straight down to bedrock from sea-level (1x1 hole)",
   "bingo.goal.one_by_one_hole.tooltip": "Sea-level is Y=63, but starting from higher is fine.",
+  "bingo.goal.open_door_with_target_from_ten_blocks": "Open a door with a Target Block from 10 blocks away",
+  "bingo.goal.open_door_with_target_from_ten_blocks.tooltip": "YOU have to be 10 blocks away, not the Target Block from the door.",
   "bingo.goal.ores": "%s Different Ores",
   "bingo.goal.ores.tooltip": "Coal, Diamond, Emerald, Gold, Iron, Lapis Lazuli, Nether Quartz, Nether Gold and Redstone Ores (or deepslate variants) are your choices.",
   "bingo.goal.pacifist": "Pacifist",

@@ -1,10 +1,19 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
-import io.github.gaming32.bingo.conditions.*;
+import io.github.gaming32.bingo.conditions.BlockPatternCondition;
+import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
+import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
+import io.github.gaming32.bingo.conditions.PassengersCondition;
+import io.github.gaming32.bingo.conditions.VillagerOwnershipCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
-import io.github.gaming32.bingo.data.icons.*;
+import io.github.gaming32.bingo.data.icons.BlockIcon;
+import io.github.gaming32.bingo.data.icons.CycleIcon;
+import io.github.gaming32.bingo.data.icons.EffectIcon;
+import io.github.gaming32.bingo.data.icons.EntityIcon;
+import io.github.gaming32.bingo.data.icons.ItemIcon;
+import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
@@ -41,7 +50,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.*;
+import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
 import java.util.List;
 import java.util.Map;
@@ -626,7 +639,16 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         }
         addGoal(obtainItemGoal(id("soul_lantern"), Items.SOUL_LANTERN)
             .tags(BingoTags.NETHER));
-        // TODO: open door with target block from 10 blocks away
+        addGoal(BingoGoal.builder(id("open_door_with_target_from_ten_blocks"))
+            .criterion("open_door", DoorOpenedByTargetTrigger.builder()
+                .projectile(EntityPredicate.Builder.entity().distance(DistancePredicate.horizontal(MinMaxBounds.Doubles.atLeast(10))))
+                .build()
+            )
+            .name("open_door_with_target_from_ten_blocks")
+            .tooltip("open_door_with_target_from_ten_blocks")
+            .icon(CycleIcon.infer(Items.ARROW, new ItemStack(Items.TARGET, 10), Items.OAK_DOOR))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
         addGoal(obtainItemGoal(id("carrot_on_a_stick"), Items.CARROT_ON_A_STICK)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("barter_with_piglin"))

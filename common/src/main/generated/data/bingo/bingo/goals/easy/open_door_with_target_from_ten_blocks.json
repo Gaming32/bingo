@@ -1,0 +1,64 @@
+{
+  "criteria": {
+    "open_door": {
+      "conditions": {
+        "projectile": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "distance": {
+                "horizontal": {
+                  "min": 10.0
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "bingo:door_opened_by_target"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:arrow"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 10,
+          "id": "minecraft:target"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:oak_door"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.open_door_with_target_from_ten_blocks"
+  },
+  "requirements": [
+    [
+      "open_door"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.open_door_with_target_from_ten_blocks.tooltip"
+  }
+}
