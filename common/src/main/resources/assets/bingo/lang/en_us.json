@@ -62,6 +62,8 @@
   "bingo.goal.diamond_in_name.tooltip": "Any item with 'Diamond' in its name (yes, even itself).",
   "bingo.goal.die_to_villager": "Be killed by a %s",
   "bingo.goal.die_to_villager.tooltip": "Sometimes you need to DISPENSE some DEFENCE",
+  "bingo.goal.different_colored_shields": "%s Different Colored Shields",
+  "bingo.goal.different_colored_shields.tooltip": "Undecorated shields don't count.",
   "bingo.goal.different_fish": "%s Different Fish",
   "bingo.goal.different_fish.tooltip": "Raw and Cooked variants count as one (e.g. Raw Cod and Cooked Cod).",
   "bingo.goal.different_flowers": "%s Different Flowers",

@@ -32,6 +32,7 @@ import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
@@ -45,6 +46,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
@@ -53,6 +55,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -328,6 +331,15 @@ public abstract class DifficultyGoalProvider {
         compound.put("Patterns", new BannerPattern.Builder().addPattern(pattern, color).toListTag());
         BlockItem.setBlockEntityData(result, BlockEntityType.BANNER, compound);
         return result;
+    }
+
+    protected static ItemStack makeShieldWithColor(@Nullable DyeColor color) {
+        ItemStack stack = new ItemStack(Items.SHIELD);
+        if (color == null) {
+            return stack;
+        }
+        BlockItem.setBlockEntityData(stack, BlockEntityType.BANNER, BingoUtil.compound(Map.of(ShieldItem.TAG_BASE_COLOR, IntTag.valueOf(color.getId()))));
+        return stack;
     }
 
     protected static BlockPredicate.Builder spawnerPredicate(EntityType<?> entityType) {

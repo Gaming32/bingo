@@ -42,6 +42,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -56,6 +57,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -367,7 +369,18 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("villager_trade")
             .icon(EntityIcon.ofSpawnEgg(EntityType.VILLAGER))
             .tags(BingoTags.VILLAGE, BingoTags.ACTION, BingoTags.OVERWORLD));
-        // TODO: different colored shields
+        addGoal(BingoGoal.builder(id("different_colored_shields"))
+            .sub("count", BingoSub.random(2, 3))
+            .criterion("obtain", DifferentColoredShields.builder(1).build(), subber -> subber.sub("conditions.min_count", "count"))
+            .progress("obtain")
+            .name(Component.translatable("bingo.goal.different_colored_shields", 0), subber -> subber.sub("with.0", "count"))
+            .tooltip("different_colored_shields")
+            .icon(CycleIcon.infer(Arrays.stream(DyeColor.values()).map(DifficultyGoalProvider::makeShieldWithColor).toArray()), subber -> {
+                for (int i = 0; i < DyeColor.values().length; i++) {
+                    subber.sub("value." + i + ".value.Count", "count");
+                }
+            })
+            .tags(BingoTags.ITEM, BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("dead_bush"), Items.DEAD_BUSH)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
         addGoal(obtainItemGoal(id("grass"), Items.SHORT_GRASS, 15, 32) // FIXME: Support TALL_GRASS too
