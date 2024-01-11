@@ -36,8 +36,6 @@ public class BingoTriggers {
     public static final RegistrySupplier<EnchantedItemTrigger> ENCHANTED_ITEM = register("enchanted_item", EnchantedItemTrigger::new);
     public static final RegistrySupplier<EntityDieNearPlayerTrigger> ENTITY_DIE_NEAR_PLAYER = register("entity_die_near_player", EntityDieNearPlayerTrigger::new);
     public static final RegistrySupplier<EntityKilledPlayerTrigger> ENTITY_KILLED_PLAYER = register("entity_killed_player", EntityKilledPlayerTrigger::new);
-    public static final RegistrySupplier<EntityTrigger> MOB_BROKE_CROSSBOW = register("mob_broke_crossbow", EntityTrigger::new);
-    public static final RegistrySupplier<EntityTrigger> STUN_RAVAGER = register("stun_ravager", EntityTrigger::new);
     public static final RegistrySupplier<EquipItemTrigger> EQUIP_ITEM = register("equip_item", EquipItemTrigger::new);
     public static final RegistrySupplier<ExperienceChangeTrigger> EXPERIENCE_CHANGED = register("experience_changed", ExperienceChangeTrigger::new);
     public static final RegistrySupplier<GrowBeeNestTreeTrigger> GROW_BEE_NEST_TREE = register("grow_bee_nest_tree", GrowBeeNestTreeTrigger::new);
@@ -47,14 +45,16 @@ public class BingoTriggers {
     public static final RegistrySupplier<IntentionalGameDesignTrigger> INTENTIONAL_GAME_DESIGN = register("intentional_game_design", IntentionalGameDesignTrigger::new);
     public static final RegistrySupplier<ItemBrokenTrigger> ITEM_BROKEN = register("item_broken", ItemBrokenTrigger::new);
     public static final RegistrySupplier<ItemPickedUpTrigger> ITEM_PICKED_UP = register("item_picked_up", ItemPickedUpTrigger::new);
-    public static final RegistrySupplier<ItemUsedOnLocationTrigger> SLEPT = register("slept", ItemUsedOnLocationTrigger::new);
     public static final RegistrySupplier<KeyPressedTrigger> KEY_PRESSED = register("key_pressed", KeyPressedTrigger::new);
     public static final RegistrySupplier<KillItemTrigger> KILL_ITEM = register("kill_item", KillItemTrigger::new);
     public static final RegistrySupplier<KillSelfTrigger> KILL_SELF = register("kill_self", KillSelfTrigger::new);
     public static final RegistrySupplier<MineralPillarTrigger> MINERAL_PILLAR = register("mineral_pillar", MineralPillarTrigger::new);
+    public static final RegistrySupplier<EntityTrigger> MOB_BROKE_CROSSBOW = register("mob_broke_crossbow", EntityTrigger::new);
     public static final RegistrySupplier<PartyParrotsTrigger> PARTY_PARROTS = register("party_parrots", PartyParrotsTrigger::new);
     public static final RegistrySupplier<PowerConduitTrigger> POWER_CONDUIT = register("power_conduit", PowerConduitTrigger::new);
     public static final RegistrySupplier<RelativeStatsTrigger> RELATIVE_STATS = register("relative_stats", RelativeStatsTrigger::new);
+    public static final RegistrySupplier<ItemUsedOnLocationTrigger> SLEPT = register("slept", ItemUsedOnLocationTrigger::new);
+    public static final RegistrySupplier<EntityTrigger> STUN_RAVAGER = register("stun_ravager", EntityTrigger::new);
     public static final RegistrySupplier<TotalCountInventoryChangeTrigger> TOTAL_COUNT_INVENTORY_CHANGED = register("total_count_inventory_changed", TotalCountInventoryChangeTrigger::new);
     public static final RegistrySupplier<TryUseItemTrigger> TRY_USE_ITEM = register("try_use_item", TryUseItemTrigger::new);
     public static final RegistrySupplier<WearDifferentColoredArmorTrigger> WEAR_DIFFERENT_COLORED_ARMOR = register("wear_different_colored_armor", WearDifferentColoredArmorTrigger::new);
