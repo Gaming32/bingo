@@ -4,7 +4,9 @@ import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -37,5 +39,14 @@ public class BingoEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
             EntityType.BOAT,
             EntityType.CHEST_BOAT
         );
+
+        // find passive mobs
+        for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
+            if (entityType.getCategory() != MobCategory.MISC && entityType.getCategory().isFriendly()) {
+                getOrCreateTagBuilder(BingoEntityTypeTags.PASSIVE).add(entityType);
+            }
+        }
+        // odd exceptions
+        getOrCreateTagBuilder(BingoEntityTypeTags.PASSIVE).add(EntityType.VILLAGER);
     }
 }

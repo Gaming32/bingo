@@ -1,0 +1,81 @@
+{
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:creeper"
+            }
+          },
+          {
+            "condition": "bingo:has_only_been_damaged_by",
+            "damage_type_tag": {
+              "expected": true,
+              "id": "minecraft:is_fire"
+            }
+          }
+        ],
+        "killing_blow": {
+          "type": {
+            "tags": [
+              {
+                "expected": true,
+                "id": "minecraft:is_fire"
+              }
+            ]
+          }
+        }
+      },
+      "trigger": "bingo:entity_die_near_player"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:entity",
+        "entity": "minecraft:creeper",
+        "item": {
+          "Count": 1,
+          "id": "minecraft:creeper_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:block",
+        "block": {
+          "Name": "minecraft:fire",
+          "Properties": {
+            "age": "0",
+            "east": "false",
+            "north": "false",
+            "south": "false",
+            "up": "false",
+            "west": "false"
+          }
+        },
+        "item": {
+          "Count": 1,
+          "id": "minecraft:stone"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.kill_creeper_with_only_fire"
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:combat",
+    "bingo:overworld"
+  ]
+}

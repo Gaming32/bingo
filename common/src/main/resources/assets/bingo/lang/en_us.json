@@ -125,6 +125,7 @@
   "bingo.goal.huge_fungus_in_overworld": "Grow a Huge Nether Fungus in the Overworld",
   "bingo.goal.ice_on_magma": "Ice Block on top of a Magma Block",
   "bingo.goal.item_with_pattern": "%s with %s pattern",
+  "bingo.goal.kill_creeper_with_only_fire": "Kill a Creeper with only fire",
   "bingo.goal.kill_enderman_with_endermites": "Kill an Enderman with only Endermites",
   "bingo.goal.kill_enderman_with_endermites.tooltip": "Don't hurt the Enderman any other way, only with Endermites.",
   "bingo.goal.kill_ghast_in_overworld": "Kill a Ghast in the Overworld",

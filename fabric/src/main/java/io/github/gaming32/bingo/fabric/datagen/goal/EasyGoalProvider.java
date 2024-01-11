@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
 import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
+import io.github.gaming32.bingo.conditions.HasOnlyBeenDamagedByCondition;
 import io.github.gaming32.bingo.conditions.PassengersCondition;
 import io.github.gaming32.bingo.conditions.VillagerOwnershipCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
@@ -35,6 +36,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffects;
@@ -458,7 +460,19 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .reactant("use_furnace")
             .tags(BingoTags.OVERWORLD));
         // TODO: kill passive mobs with only fire
-        // TODO: kill creeper with only fire
+        addGoal(BingoGoal.builder(id("kill_creeper_with_only_fire"))
+            .criterion("kill", EntityDieNearPlayerTrigger.builder()
+                .entity(ContextAwarePredicate.create(
+                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(EntityType.CREEPER)).build(),
+                    HasOnlyBeenDamagedByCondition.builder().damageTypeTag(DamageTypeTags.IS_FIRE).build()
+                ))
+                .killingBlow(DamagePredicate.Builder.damageInstance().type(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_FIRE))).build())
+                .build()
+            )
+            .name("kill_creeper_with_only_fire")
+            .icon(CycleIcon.infer(EntityType.CREEPER, Blocks.FIRE))
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("iron_nugget"), Items.IRON_NUGGET, 32, 64));
         addGoal(obtainItemGoal(id("gold_nugget"), Items.GOLD_NUGGET, 32, 64));
         addGoal(obtainItemGoal(id("rotten_flesh"), Items.ROTTEN_FLESH, 16, 32)
