@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 public class BingoTriggers {
     private static final Registrar<CriterionTrigger<?>> REGISTRAR = Bingo.REGISTRAR_MANAGER.get(Registries.TRIGGER_TYPE);
 
+    // For Gaming: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
     public static final RegistrySupplier<AdjacentPaintingTrigger> ADJACENT_PAINTING = register("adjacent_painting", AdjacentPaintingTrigger::new);
     public static final RegistrySupplier<ArrowPressTrigger> ARROW_PRESS = register("arrow_press", ArrowPressTrigger::new);
     public static final RegistrySupplier<BeaconEffectTrigger> BEACON_EFFECT = register("beacon_effect", BeaconEffectTrigger::new);
@@ -32,6 +33,7 @@ public class BingoTriggers {
     public static final RegistrySupplier<DifferentColoredShieldsTrigger> DIFFERENT_COLORED_SHIELDS = register("different_colored_shields", DifferentColoredShieldsTrigger::new);
     public static final RegistrySupplier<DifferentPotionsTrigger> DIFFERENT_POTIONS = register("different_potions", DifferentPotionsTrigger::new);
     public static final RegistrySupplier<DistanceTrigger> CROUCH = register("crouch", DistanceTrigger::new);
+    public static final RegistrySupplier<DoorOpenedByTargetTrigger> DOOR_OPENED_BY_TARGET = register("door_opened_by_target", DoorOpenedByTargetTrigger::new);
     public static final RegistrySupplier<EnchantedItemTrigger> ENCHANTED_ITEM = register("enchanted_item", EnchantedItemTrigger::new);
     public static final RegistrySupplier<EntityDieNearPlayerTrigger> ENTITY_DIE_NEAR_PLAYER = register("entity_die_near_player", EntityDieNearPlayerTrigger::new);
     public static final RegistrySupplier<EntityKilledPlayerTrigger> ENTITY_KILLED_PLAYER = register("entity_killed_player", EntityKilledPlayerTrigger::new);
@@ -54,7 +56,6 @@ public class BingoTriggers {
     public static final RegistrySupplier<PartyParrotsTrigger> PARTY_PARROTS = register("party_parrots", PartyParrotsTrigger::new);
     public static final RegistrySupplier<PowerConduitTrigger> POWER_CONDUIT = register("power_conduit", PowerConduitTrigger::new);
     public static final RegistrySupplier<RelativeStatsTrigger> RELATIVE_STATS = register("relative_stats", RelativeStatsTrigger::new);
-    public static final RegistrySupplier<DoorOpenedByTargetTrigger> DOOR_OPENED_BY_TARGET = register("door_opened_by_target", DoorOpenedByTargetTrigger::new);
     public static final RegistrySupplier<TotalCountInventoryChangeTrigger> TOTAL_COUNT_INVENTORY_CHANGED = register("total_count_inventory_changed", TotalCountInventoryChangeTrigger::new);
     public static final RegistrySupplier<TryUseItemTrigger> TRY_USE_ITEM = register("try_use_item", TryUseItemTrigger::new);
     public static final RegistrySupplier<ZombieDrownedTrigger> ZOMBIE_DROWNED = register("zombie_drowned", ZombieDrownedTrigger::new);
