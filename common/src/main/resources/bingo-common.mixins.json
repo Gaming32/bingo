@@ -21,7 +21,6 @@
     "MixinCrossbowAttack",
     "MixinDoorBlock",
     "MixinEnchantmentMenu",
-    "MixinEnderMan",
     "MixinEntity",
     "MixinEntitySubPredicate_Types",
     "MixinFungusBlock",
