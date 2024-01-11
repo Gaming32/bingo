@@ -211,6 +211,7 @@
   "bingo.goal.villager_in_end": "Kill a %s in the End",
   "bingo.goal.villager_trade": "Trade with a Villager",
   "bingo.goal.void_death_to_entity": "Get a '... didn't want to live in the same world as ...' death message",
+  "bingo.goal.wear_different_colored_armor": "Wear %s different colors of Leather Armor at the same time",
   "bingo.goal.while_trying_to_escape": "Get a '... while trying to escape ...' Death message",
   "bingo.goal.while_trying_to_escape.tooltip": "Example: 'PLAYER' drowned while trying to escape Skeleton.",
   "bingo.goal.wool": "%s Colors of Wool",

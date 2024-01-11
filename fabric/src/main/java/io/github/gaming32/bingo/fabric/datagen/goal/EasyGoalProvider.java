@@ -43,6 +43,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -63,6 +65,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class EasyGoalProvider extends DifficultyGoalProvider {
     public EasyGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
@@ -486,7 +489,23 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
         addGoal(obtainItemGoal(id("stick"), Items.STICK, 65, 128)
             .infrequency(2));
-        // TODO: 4 different colors of leather armor at the same time
+        addGoal(BingoGoal.builder(id("wear_different_colored_armor"))
+            .criterion("obtain", WearDifferentColoredArmorTrigger.builder(4).build())
+            .progress("obtain")
+            .name(Component.translatable("bingo.goal.wear_different_colored_armor", 4))
+            .icon(CycleIcon.infer(Stream.concat(Stream.of((DyeColor) null), Arrays.stream(DyeColor.values()))
+                .flatMap(color -> Stream.of(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS)
+                    .map(item -> {
+                        if (color == null) {
+                            return new ItemStack(item, 4);
+                        }
+                        ItemStack stack = DyeableLeatherItem.dyeArmor(new ItemStack(item), List.of(DyeItem.byColor(color)));
+                        stack.setCount(4);
+                        return stack;
+                    }))
+                .toArray()))
+            .reactant("wear_armor")
+            .tags(BingoTags.ITEM, BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("seagrass"), Items.SEAGRASS, 15, 32)
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
