@@ -19,7 +19,6 @@ import java.util.function.Supplier;
 public class BingoTriggers {
     private static final Registrar<CriterionTrigger<?>> REGISTRAR = Bingo.REGISTRAR_MANAGER.get(Registries.TRIGGER_TYPE);
 
-    // For Gaming: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
     public static final RegistrySupplier<AdjacentPaintingTrigger> ADJACENT_PAINTING = register("adjacent_painting", AdjacentPaintingTrigger::new);
     public static final RegistrySupplier<ArrowPressTrigger> ARROW_PRESS = register("arrow_press", ArrowPressTrigger::new);
     public static final RegistrySupplier<BeaconEffectTrigger> BEACON_EFFECT = register("beacon_effect", BeaconEffectTrigger::new);
@@ -28,11 +27,11 @@ public class BingoTriggers {
     public static final RegistrySupplier<BreakBlockTrigger> BREAK_BLOCK = register("break_block", BreakBlockTrigger::new);
     public static final RegistrySupplier<ChickenHatchTrigger> CHICKEN_HATCH = register("chicken_hatch", ChickenHatchTrigger::new);
     public static final RegistrySupplier<CompleteMapTrigger> COMPLETED_MAP = register("completed_map", CompleteMapTrigger::new);
+    public static final RegistrySupplier<DistanceTrigger> CROUCH = register("crouch", DistanceTrigger::new);
     public static final RegistrySupplier<DeathTrigger> DEATH = register("death", DeathTrigger::new);
     public static final RegistrySupplier<DestroyVehicleTrigger> DESTROY_VEHICLE = register("destroy_vehicle", DestroyVehicleTrigger::new);
     public static final RegistrySupplier<DifferentColoredShieldsTrigger> DIFFERENT_COLORED_SHIELDS = register("different_colored_shields", DifferentColoredShieldsTrigger::new);
     public static final RegistrySupplier<DifferentPotionsTrigger> DIFFERENT_POTIONS = register("different_potions", DifferentPotionsTrigger::new);
-    public static final RegistrySupplier<DistanceTrigger> CROUCH = register("crouch", DistanceTrigger::new);
     public static final RegistrySupplier<DoorOpenedByTargetTrigger> DOOR_OPENED_BY_TARGET = register("door_opened_by_target", DoorOpenedByTargetTrigger::new);
     public static final RegistrySupplier<EnchantedItemTrigger> ENCHANTED_ITEM = register("enchanted_item", EnchantedItemTrigger::new);
     public static final RegistrySupplier<EntityDieNearPlayerTrigger> ENTITY_DIE_NEAR_PLAYER = register("entity_die_near_player", EntityDieNearPlayerTrigger::new);
