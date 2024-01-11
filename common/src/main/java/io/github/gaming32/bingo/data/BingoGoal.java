@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
@@ -167,7 +168,7 @@ public class BingoGoal {
             final DataResult<ResourceLocation> triggerId = ResourceLocation.read(triggerKey.result().get());
             if (triggerId.result().isEmpty()) continue;
             final CriterionTrigger<?> trigger = BuiltInRegistries.TRIGGER_TYPES.get(triggerId.result().get());
-            if (trigger != null && trigger.requiresClientCode()) {
+            if (trigger != null && trigger.bingo$requiresClientCode()) {
                 requiresClient = true;
                 break;
             }
@@ -357,16 +358,13 @@ public class BingoGoal {
             return BingoUtil.fromDynamic(BingoSub.INNER_CODEC, value).substitute(referable, rand);
         }
 
-        final var asMap = value.getMapValues();
+        final var asMap = value.asMapOpt();
         if (asMap.result().isPresent()) {
-            return value.createMap(
-                asMap.result().get()
-                    .entrySet()
-                    .stream()
-                    .collect(ImmutableMap.toImmutableMap(
-                        Map.Entry::getKey,
-                        e -> performSubstitutions(e.getValue(), referable, rand).convert(e.getValue().getOps())
-                    ))
+            return value.createMap(asMap.result().get()
+                .collect(ImmutableMap.toImmutableMap(
+                    Pair::getFirst,
+                    e -> performSubstitutions(e.getSecond(), referable, rand).convert(e.getSecond().getOps())
+                ))
             );
         }
 

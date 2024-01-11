@@ -84,10 +84,7 @@ public class BingoGame {
         RemoveBoardMessage.INSTANCE.sendTo(player);
         if (Bingo.needAdvancementsClear.remove(player.getUUID())) {
             player.connection.send(new ClientboundUpdateAdvancementsPacket(
-                false,
-                List.of(),
-                VanillaNetworking.generateAdvancementIds(board.getGoals().length),
-                Map.of()
+                false, List.of(), Set.of(VanillaNetworking.ROOT_ADVANCEMENT.id()), Map.of()
             ));
         }
 

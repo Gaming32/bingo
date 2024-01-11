@@ -27,7 +27,7 @@ public class KeyPressedTrigger extends SimpleCriterionTrigger<KeyPressedTrigger.
     }
 
     @Override
-    public boolean requiresClientCode() {
+    public boolean bingo$requiresClientCode() {
         return true;
     }
 
