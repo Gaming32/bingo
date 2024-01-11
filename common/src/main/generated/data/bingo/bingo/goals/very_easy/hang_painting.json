@@ -1,33 +1,29 @@
 {
   "antisynergy": "painting",
   "criteria": {
-    "paintings": {
+    "hang": {
       "conditions": {
         "count": {
-          "min": 3
-        },
-        "painting_variant": {
-          "expected": true,
-          "id": "bingo:size_4x4"
+          "min": 1
         }
       },
       "trigger": "bingo:adjacent_painting"
     }
   },
-  "difficulty": "bingo:easy",
+  "difficulty": "bingo:very_easy",
   "icon": {
     "type": "bingo:item",
     "value": {
-      "Count": 3,
+      "Count": 1,
       "id": "minecraft:painting"
     }
   },
   "name": {
-    "translate": "bingo.goal.4x4_paintings"
+    "translate": "bingo.goal.hang_painting"
   },
   "requirements": [
     [
-      "paintings"
+      "hang"
     ]
   ],
   "tags": [

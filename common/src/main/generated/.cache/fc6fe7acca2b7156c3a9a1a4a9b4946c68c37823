@@ -1,6 +1,6 @@
 // 1.20.4	
 5def25a27b889a25f1d11a8fbb88285b8d0b3b98 data/bingo/bingo/goals/easy/3x3x3_glass_cube.json
-88681f0b377394cd4334a50c3ad6ea98a6440401 data/bingo/bingo/goals/easy/4x4_paintings.json
+ce8b1018cbaf3fb24bb7a0f3abb099d37d65fca8 data/bingo/bingo/goals/easy/4x4_paintings.json
 dbcd67c4d22f454fc56f7902f9e6b9d3636d49ab data/bingo/bingo/goals/easy/acacia_log.json
 0014c33472ebd92070e1f606ca9d86ba068c1d2f data/bingo/bingo/goals/easy/acacia_planks.json
 f63c000777818eed47dcf2c8111b28796bf62bad data/bingo/bingo/goals/easy/acacia_wood.json
@@ -387,6 +387,7 @@ df28dea5359ccff3c09b6c684a7135880f17c26e data/bingo/bingo/goals/very_easy/fill_c
 e2a66428f1bc6f443a925ce2dc7dbce39a85d1bb data/bingo/bingo/goals/very_easy/flower_pot.json
 882cf31e20437a85869e347e18f8af16f4ab4dd0 data/bingo/bingo/goals/very_easy/gold_in_name.json
 c59c8c82786480d49eced09e0546dcc15b504562 data/bingo/bingo/goals/very_easy/granite.json
+2bef72caa4cc4003546bb35e4b76c61f0b3e030f data/bingo/bingo/goals/very_easy/hang_painting.json
 fcc10281085ed2b40f9a1420aee92599ae15db9b data/bingo/bingo/goals/very_easy/hay_block.json
 298ab77386e12f38baf65933e85778c8e9b3d026 data/bingo/bingo/goals/very_easy/iron_block.json
 461df3fdcf68cd3101503f5e5047bb93f9c5696e data/bingo/bingo/goals/very_easy/kelp.json

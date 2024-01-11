@@ -339,7 +339,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 .count(MinMaxBounds.Ints.atLeast(3))
                 .build())
             .name("4x4_paintings")
-            .icon(Items.PAINTING)
+            .icon(new ItemStack(Items.PAINTING, 3))
             .antisynergy("painting")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("bone_block"), Items.BONE_BLOCK, 5, 10));
