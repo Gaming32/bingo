@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity implements LivingEntityExt {
     @Unique
-    private final Set<DamageEntry> damageHistory = new HashSet<>();
+    private final Set<DamageEntry> bingo$damageHistory = new HashSet<>();
 
     public MixinLivingEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -63,9 +63,9 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
     private void onAddAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
-        if (!damageHistory.isEmpty()) {
+        if (!bingo$damageHistory.isEmpty()) {
             ListTag history = new ListTag();
-            for (DamageEntry entry : damageHistory) {
+            for (DamageEntry entry : bingo$damageHistory) {
                 CompoundTag entryTag = entry.toNbt();
                 if (entryTag != null) {
                     history.add(entryTag);
@@ -77,13 +77,13 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
 
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
     private void onReadAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
-        damageHistory.clear();
+        bingo$damageHistory.clear();
         if (compound.contains("bingo:damage_history", Tag.TAG_LIST)) {
             ListTag types = compound.getList("bingo:damage_history", Tag.TAG_COMPOUND);
             for (int i = 0; i < types.size(); i++) {
                 DamageEntry entry = DamageEntry.fromNbt(level().registryAccess(), types.getCompound(i));
                 if (entry != null) {
-                    damageHistory.add(entry);
+                    bingo$damageHistory.add(entry);
                 }
             }
         }
@@ -91,7 +91,7 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
 
     @Override
     public void bingo$recordDamage(DamageSource source) {
-        damageHistory.add(new DamageEntry(
+        bingo$damageHistory.add(new DamageEntry(
             Optionull.map(source.getEntity(), Entity::getType),
             Optionull.map(source.getDirectEntity(), Entity::getType),
             source.typeHolder()
@@ -100,6 +100,6 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
 
     @Override
     public boolean bingo$hasOnlyBeenDamagedBy(Predicate<DamageEntry> damageEntryPredicate) {
-        return damageHistory.stream().allMatch(damageEntryPredicate);
+        return bingo$damageHistory.stream().allMatch(damageEntryPredicate);
     }
 }
