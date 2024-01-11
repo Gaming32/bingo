@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.event.InventoryChangedEvent;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -20,6 +21,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class TotalCountInventoryChangeTrigger extends SimpleProgressibleCriterionTrigger<TotalCountInventoryChangeTrigger.TriggerInstance> {
+    static {
+        InventoryChangedEvent.EVENT.register((player, inventory) -> BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGED.get().trigger(player, inventory));
+    }
+
     @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
