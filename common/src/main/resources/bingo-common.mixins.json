@@ -13,6 +13,7 @@
     "MixinBlock",
     "MixinBlockItem",
     "MixinButtonBlock",
+    "MixinCombatTracker",
     "MixinCommandSourceStack",
     "MixinConduitBlockEntity",
     "MixinCriterionTrigger",

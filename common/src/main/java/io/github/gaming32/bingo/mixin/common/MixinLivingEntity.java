@@ -1,20 +1,41 @@
 package io.github.gaming32.bingo.mixin.common;
 
+import io.github.gaming32.bingo.ext.LivingEntityExt;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
+import io.github.gaming32.bingo.util.DamageEntry;
+import net.minecraft.Optionull;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Predicate;
+
 @Mixin(LivingEntity.class)
-public abstract class MixinLivingEntity {
+public abstract class MixinLivingEntity extends Entity implements LivingEntityExt {
+    @Unique
+    private final Set<DamageEntry> damageHistory = new HashSet<>();
+
+    public MixinLivingEntity(EntityType<?> entityType, Level level) {
+        super(entityType, level);
+    }
+
     @Inject(
         method = "onEquipItem",
         at = @At(
@@ -38,5 +59,47 @@ public abstract class MixinLivingEntity {
     )
     private void onDeathFromDamageSource(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, float originalAmount, boolean blocked) {
         BingoTriggers.ENTITY_DIE_NEAR_PLAYER.get().trigger((LivingEntity) (Object) this, source, originalAmount, amount, blocked);
+    }
+
+    @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
+    private void onAddAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+        if (!damageHistory.isEmpty()) {
+            ListTag history = new ListTag();
+            for (DamageEntry entry : damageHistory) {
+                CompoundTag entryTag = entry.toNbt();
+                if (entryTag != null) {
+                    history.add(entryTag);
+                }
+            }
+            compound.put("bingo:damage_history", history);
+        }
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
+    private void onReadAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+        damageHistory.clear();
+        if (compound.contains("bingo:damage_history", Tag.TAG_LIST)) {
+            ListTag types = compound.getList("bingo:damage_history", Tag.TAG_COMPOUND);
+            for (int i = 0; i < types.size(); i++) {
+                DamageEntry entry = DamageEntry.fromNbt(level().registryAccess(), types.getCompound(i));
+                if (entry != null) {
+                    damageHistory.add(entry);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void bingo$recordDamage(DamageSource source) {
+        damageHistory.add(new DamageEntry(
+            Optionull.map(source.getEntity(), Entity::getType),
+            Optionull.map(source.getDirectEntity(), Entity::getType),
+            source.typeHolder()
+        ));
+    }
+
+    @Override
+    public boolean bingo$hasOnlyBeenDamagedBy(Predicate<DamageEntry> damageEntryPredicate) {
+        return damageHistory.stream().allMatch(damageEntryPredicate);
     }
 }

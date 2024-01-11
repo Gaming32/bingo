@@ -11,7 +11,8 @@
             }
           },
           {
-            "condition": "bingo:enderman_has_only_been_damaged_by_endermite"
+            "condition": "bingo:has_only_been_damaged_by",
+            "entity_type": "minecraft:endermite"
           }
         ],
         "killing_blow": {

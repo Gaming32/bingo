@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import io.github.gaming32.bingo.conditions.EndermanHasOnlyBeenDamagedByEndermiteCondition;
+import io.github.gaming32.bingo.conditions.HasOnlyBeenDamagedByCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
@@ -294,7 +294,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .criterion("obtain", EntityDieNearPlayerTrigger.builder()
                 .entity(ContextAwarePredicate.create(
                     LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(EntityType.ENDERMAN)).build(),
-                    EndermanHasOnlyBeenDamagedByEndermiteCondition.INSTANCE
+                    HasOnlyBeenDamagedByCondition.builder().entityType(EntityType.ENDERMITE).build()
                 ))
                 .killingBlow(DamagePredicate.Builder.damageInstance().sourceEntity(EntityPredicate.Builder.entity().of(EntityType.ENDERMITE).build()).build())
                 .build()

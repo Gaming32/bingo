@@ -12,9 +12,11 @@ import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,6 +62,11 @@ public class BingoUtil {
     @SuppressWarnings("unchecked")
     public static <T> Hash.Strategy<Holder<T>> holderStrategy() {
         return (Hash.Strategy<Holder<T>>) (Hash.Strategy<?>) HOLDER_STRATEGY;
+    }
+
+    public static <T> Holder<T> getBuiltInHolder(Registry<T> registry, T value) {
+        ResourceKey<T> key = registry.getResourceKey(value).orElseThrow();
+        return registry.getHolderOrThrow(key);
     }
 
     public static int[] generateIntArray(int length) {

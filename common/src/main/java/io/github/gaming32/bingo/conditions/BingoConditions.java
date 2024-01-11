@@ -19,8 +19,8 @@ public final class BingoConditions {
 
     public static final RegistrySupplier<LootItemConditionType> BLOCK_PATTERN = register("block_pattern", () -> BlockPatternCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> DISTANCE_FROM_SPAWN = register("distance_from_spawn", () -> DistanceFromSpawnCondition.CODEC);
-    public static final RegistrySupplier<LootItemConditionType> ENDERMAN_HAS_ONLY_BEEN_DAMAGED_BY_ENDERMITE = register("enderman_has_only_been_damaged_by_endermite", () -> EndermanHasOnlyBeenDamagedByEndermiteCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> HAS_ANY_EFFECT = register("has_any_effect", () -> HasAnyEffectCondition.CODEC);
+    public static final RegistrySupplier<LootItemConditionType> HAS_ONLY_BEEN_DAMAGED_BY = register("has_only_been_damaged_by", () -> HasOnlyBeenDamagedByCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> ONE_BY_ONE_HOLE = register("one_by_one_hole", () -> OneByOneHoleCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> PASSENGERS = register("passengers", () -> PassengersCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> PILLAR = register("pillar", () -> PillarCondition.CODEC);
