@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class DifferentColoredShields extends SimpleProgressibleCriterionTrigger<DifferentColoredShields.TriggerInstance> {
+public class DifferentColoredShieldsTrigger extends SimpleProgressibleCriterionTrigger<DifferentColoredShieldsTrigger.TriggerInstance> {
     static {
         InventoryChangedEvent.EVENT.register((player, inventory) -> BingoTriggers.DIFFERENT_COLORED_SHIELDS.get().trigger(player, inventory));
     }

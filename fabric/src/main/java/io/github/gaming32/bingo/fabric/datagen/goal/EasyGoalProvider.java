@@ -371,7 +371,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.VILLAGE, BingoTags.ACTION, BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("different_colored_shields"))
             .sub("count", BingoSub.random(2, 3))
-            .criterion("obtain", DifferentColoredShields.builder(1).build(), subber -> subber.sub("conditions.min_count", "count"))
+            .criterion("obtain", DifferentColoredShieldsTrigger.builder(1).build(), subber -> subber.sub("conditions.min_count", "count"))
             .progress("obtain")
             .name(Component.translatable("bingo.goal.different_colored_shields", 0), subber -> subber.sub("with.0", "count"))
             .tooltip("different_colored_shields")

@@ -29,7 +29,7 @@ public class BingoTriggers {
     public static final RegistrySupplier<CompleteMapTrigger> COMPLETED_MAP = register("completed_map", CompleteMapTrigger::new);
     public static final RegistrySupplier<DeathTrigger> DEATH = register("death", DeathTrigger::new);
     public static final RegistrySupplier<DestroyVehicleTrigger> DESTROY_VEHICLE = register("destroy_vehicle", DestroyVehicleTrigger::new);
-    public static final RegistrySupplier<DifferentColoredShields> DIFFERENT_COLORED_SHIELDS = register("different_colored_shields", DifferentColoredShields::new);
+    public static final RegistrySupplier<DifferentColoredShieldsTrigger> DIFFERENT_COLORED_SHIELDS = register("different_colored_shields", DifferentColoredShieldsTrigger::new);
     public static final RegistrySupplier<DifferentPotionsTrigger> DIFFERENT_POTIONS = register("different_potions", DifferentPotionsTrigger::new);
     public static final RegistrySupplier<DistanceTrigger> CROUCH = register("crouch", DistanceTrigger::new);
     public static final RegistrySupplier<EnchantedItemTrigger> ENCHANTED_ITEM = register("enchanted_item", EnchantedItemTrigger::new);
