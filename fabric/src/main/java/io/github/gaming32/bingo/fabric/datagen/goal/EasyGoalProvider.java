@@ -38,6 +38,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
@@ -623,7 +624,26 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainSomeEdibleItems(id("edible_items"), 4, 5).tags(BingoTags.OVERWORLD));
-        // TODO: breed 2-4 sets of mobs
+        addGoal(BingoGoal.builder(id("breed_mobs"))
+            .sub("count", BingoSub.random(2, 4))
+            .criterion(
+                "breed",
+                RelativeStatsTrigger.builder()
+                    .stat(Stats.ANIMALS_BRED, MinMaxBounds.Ints.atLeast(0))
+                    .build(),
+                subber -> subber.sub("conditions.stats.0.value.min", "count")
+            )
+            .progress("breed")
+            .name(
+                Component.translatable("bingo.goal.breed_mobs", 0),
+                subber -> subber.sub("with.0", "count")
+            )
+            .tooltip("breed_mobs")
+            .icon(Items.WHEAT_SEEDS)
+            .antisynergy("breed_animals")
+            .infrequency(2)
+            .tags(BingoTags.ACTION, BingoTags.STAT)
+        );
         addGoal(crouchDistanceGoal(id("crouch_distance"), 100, 200));
         // TODO: never use debug
         // TODO: ring bell from 10 blocks away

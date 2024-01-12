@@ -36,6 +36,7 @@
   "bingo.goal.break_hoe": "Break a hoe",
   "bingo.goal.breed_mob_pair": "Breed a pair of mobs",
   "bingo.goal.breed_mobs": "Breed %s mobs",
+  "bingo.goal.breed_mobs.tooltip": "Check the 'General' statistics screen!",
   "bingo.goal.breed_pandas": "Make two Pandas breed",
   "bingo.goal.burn_mending_book": "Burn a Mending Book",
   "bingo.goal.carnivore": "Carnivore",

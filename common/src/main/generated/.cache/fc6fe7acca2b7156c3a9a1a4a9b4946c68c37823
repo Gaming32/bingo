@@ -19,6 +19,7 @@ b65bdb1db1f669d76aa3d0ab4b83553f8a7ae04a data/bingo/bingo/goals/easy/birch_wood.
 8a6a65de067c1f6b7d29cf15262ff15904b04250 data/bingo/bingo/goals/easy/bone_block.json
 2581d00923c21cc06f2d89e7a08504c353e12c4a data/bingo/bingo/goals/easy/bookshelf.json
 138f3f203810b851d175fd20404f50d1f3c69012 data/bingo/bingo/goals/easy/bread.json
+d052842decaecc14c4e7db41aaba0df850ab7347 data/bingo/bingo/goals/easy/breed_mobs.json
 f38636f8b6826a82b0776e47122854bf8fb85c9c data/bingo/bingo/goals/easy/bricks.json
 5542b2309484e2405767f76ceb0d1db0e3610a90 data/bingo/bingo/goals/easy/cactus.json
 af7187b5a34fb68a58e4517a5574cf6e25717bbe data/bingo/bingo/goals/easy/carnivore.json
@@ -249,7 +250,7 @@ cf11da9df2a1217edb8e9b24fb0f83bac88a49b2 data/bingo/bingo/goals/medium/bed_row.j
 37b9b45e629c018ea4873167b2f3f332a22cb59a data/bingo/bingo/goals/medium/blaze_rod.json
 6d08f0af49bcbcceda89cf809c2021016a133043 data/bingo/bingo/goals/medium/blue_shield_with_white_flower_charge.json
 7bdbdc63457f4a0ea323e5580a536dc8c09b8a64 data/bingo/bingo/goals/medium/bounce_on_slime.json
-e0c460a746ca08e5ce9cc58084684d56e050e90a data/bingo/bingo/goals/medium/breed_mobs.json
+57ad6fa7646b64e5971a0e1e0b0a6816035ce24a data/bingo/bingo/goals/medium/breed_mobs.json
 114377ada3872d085c974e76d4ca1e1118581ade data/bingo/bingo/goals/medium/brown_wool.json
 b0d70fefd306813d6c518bc7dce674020ce13a46 data/bingo/bingo/goals/medium/concrete.json
 89f4782d4bad52cd8e8fc8f7bee00ff64e9993ec data/bingo/bingo/goals/medium/create_iron_golem.json
@@ -360,7 +361,7 @@ e27563403649be140a1a0b94baa38495abf025ce data/bingo/bingo/goals/very_easy/birch_
 3d2b1426d8d19533ce975066355aed46a32e1055 data/bingo/bingo/goals/very_easy/bounce_on_bed.json
 d8e61972962f8eca3abd71e26270b852097967b6 data/bingo/bingo/goals/very_easy/bread.json
 c39e6a1e6b316cc7a391257bc75dfe774649452b data/bingo/bingo/goals/very_easy/break_hoe.json
-cca83908bceae549e1e51edd99db9705ece9252e data/bingo/bingo/goals/very_easy/breed_mob_pair.json
+b406efb5497b41593c69e6a6a4588e851fe99347 data/bingo/bingo/goals/very_easy/breed_mob_pair.json
 4551a11ce6f55629a9428180c53fd9e34fd7f59c data/bingo/bingo/goals/very_easy/charcoal.json
 2d81b3ec0988182e8f67768ba60783fca8c5a5f4 data/bingo/bingo/goals/very_easy/cherry_log.json
 02cbf0784f8d34708de9662336c0476783eeb2a7 data/bingo/bingo/goals/very_easy/cherry_planks.json

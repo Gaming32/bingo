@@ -175,6 +175,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("breed_mob_pair"))
             .criterion("breed", BredAnimalsTrigger.TriggerInstance.bredAnimals())
             .name("breed_mob_pair")
+            .tooltip("breed_mobs")
             .antisynergy("breed_animals")
             .infrequency(2)
             .tags(BingoTags.ACTION, BingoTags.STAT)

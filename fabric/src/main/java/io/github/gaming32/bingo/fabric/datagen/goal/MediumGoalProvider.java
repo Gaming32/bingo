@@ -435,7 +435,6 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD)
             .icon(EntityIcon.ofSpawnEgg(EntityType.CAT))
         );
-        // TODO: breed mobs
         addGoal(BingoGoal.builder(id("breed_mobs"))
             .sub("count", BingoSub.random(5, 7))
             .criterion(
@@ -450,6 +449,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 Component.translatable("bingo.goal.breed_mobs", 0),
                 subber -> subber.sub("with.0", "count")
             )
+            .tooltip("breed_mobs")
             .icon(Items.WHEAT_SEEDS)
             .antisynergy("breed_animals")
             .infrequency(2)

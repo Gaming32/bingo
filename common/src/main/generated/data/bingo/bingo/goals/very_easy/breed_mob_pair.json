@@ -25,5 +25,8 @@
   "tags": [
     "bingo:action",
     "bingo:stat"
-  ]
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.breed_mobs.tooltip"
+  }
 }
