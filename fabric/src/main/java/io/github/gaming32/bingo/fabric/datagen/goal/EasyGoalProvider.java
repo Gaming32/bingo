@@ -383,7 +383,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .progress("obtain")
             .name(Component.translatable("bingo.goal.different_colored_shields", 0), subber -> subber.sub("with.0", "count"))
             .tooltip("different_colored_shields")
-            .icon(CycleIcon.infer(Arrays.stream(DyeColor.values()).map(DifficultyGoalProvider::makeShieldWithColor).toArray()), subber -> {
+            .icon(CycleIcon.infer(Arrays.stream(DyeColor.values()).map(DifficultyGoalProvider::makeShieldWithColor)), subber -> {
                 for (int i = 0; i < DyeColor.values().length; i++) {
                     subber.sub("value." + i + ".value.Count", "count");
                 }
@@ -537,8 +537,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                         ItemStack stack = DyeableLeatherItem.dyeArmor(new ItemStack(item), List.of(DyeItem.byColor(color)));
                         stack.setCount(4);
                         return stack;
-                    }))
-                .toArray()))
+                    }))))
             .reactant("wear_armor")
             .tags(BingoTags.ITEM, BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("seagrass"), Items.SEAGRASS, 15, 32)
