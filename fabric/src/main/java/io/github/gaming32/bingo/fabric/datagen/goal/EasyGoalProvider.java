@@ -13,10 +13,13 @@ import io.github.gaming32.bingo.data.icons.BlockIcon;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EffectIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
+import io.github.gaming32.bingo.data.icons.EntityTypeTagCycleIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgressTracker;
+import io.github.gaming32.bingo.data.progresstrackers.GoalAchievedCountProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
+import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
@@ -459,7 +462,25 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .infrequency(2)
             .reactant("use_furnace")
             .tags(BingoTags.OVERWORLD));
-        // TODO: kill passive mobs with only fire
+        addGoal(BingoGoal.builder(id("kill_passive_mobs_with_only_fire"))
+            .sub("count", BingoSub.random(4, 8))
+            .criterion("kill", EntityDieNearPlayerTrigger.builder()
+                .entity(ContextAwarePredicate.create(
+                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(BingoEntityTypeTags.PASSIVE)).build(),
+                    HasOnlyBeenDamagedByCondition.builder().damageTypeTag(DamageTypeTags.IS_FIRE).build()
+                ))
+                .killingBlow(DamagePredicate.Builder.damageInstance().type(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_FIRE))).build())
+                .build())
+            .requiredCount(new SubBingoSub("count"))
+            .progress(GoalAchievedCountProgressTracker.INSTANCE)
+            .name(Component.translatable("bingo.goal.kill_passive_mobs_with_only_fire", 0), subber -> subber.sub("with.0", "count"))
+            .tooltip("kill_passive_mobs_with_only_fire")
+            .icon(new CycleIcon(
+                new EntityTypeTagCycleIcon(BingoEntityTypeTags.PASSIVE, 0),
+                new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStack(Items.FLINT_AND_STEEL, 1))
+            ), subber -> subber.sub("value.0.count", "count").sub("value.1.item.Count", "count"))
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.COMBAT));
         addGoal(BingoGoal.builder(id("kill_creeper_with_only_fire"))
             .criterion("kill", EntityDieNearPlayerTrigger.builder()
                 .entity(ContextAwarePredicate.create(

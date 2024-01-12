@@ -42,11 +42,16 @@ public class BingoEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
 
         // find passive mobs
         for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
-            if (entityType.getCategory() != MobCategory.MISC && entityType.getCategory().isFriendly()) {
+            if (isPassive(entityType)) {
                 getOrCreateTagBuilder(BingoEntityTypeTags.PASSIVE).add(entityType);
             }
         }
-        // odd exceptions
-        getOrCreateTagBuilder(BingoEntityTypeTags.PASSIVE).add(EntityType.VILLAGER);
+    }
+
+    public static boolean isPassive(EntityType<?> entityType) {
+        if (entityType == EntityType.VILLAGER) {
+            return true;
+        }
+        return entityType.getCategory() != MobCategory.MISC && entityType.getCategory().isFriendly();
     }
 }

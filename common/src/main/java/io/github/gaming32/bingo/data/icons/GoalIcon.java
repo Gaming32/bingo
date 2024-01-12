@@ -2,7 +2,10 @@ package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.util.BingoCodecs;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +22,7 @@ public interface GoalIcon {
 
     GoalIconType<?> type();
 
+    @SuppressWarnings("unchecked")
     static GoalIcon infer(Object obj) {
         if (obj == null) {
             return EmptyIcon.INSTANCE;
@@ -40,6 +44,14 @@ public interface GoalIcon {
         }
         if (obj instanceof EntityType<?> entityType) {
             return EntityIcon.ofSpawnEgg(entityType);
+        }
+        if (obj instanceof TagKey<?> tagKey) {
+            if (tagKey.registry() == Registries.ITEM) {
+                return new ItemTagCycleIcon((TagKey<Item>) tagKey);
+            }
+            if (tagKey.registry() == Registries.ENTITY_TYPE) {
+                return new EntityTypeTagCycleIcon((TagKey<EntityType<?>>) tagKey);
+            }
         }
         throw new IllegalArgumentException("Couldn't infer GoalIcon from " + obj);
     }

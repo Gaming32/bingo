@@ -12,25 +12,20 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public class ItemTagCycleIconRenderer implements IconRenderer<ItemTagCycleIcon> {
+public class ItemTagCycleIconRenderer implements AbstractCycleIconRenderer<ItemTagCycleIcon> {
     @Override
-    public void render(ItemTagCycleIcon icon, GuiGraphics graphics, int x, int y) {
+    public void renderWithParentPeriod(int parentPeriod, ItemTagCycleIcon icon, GuiGraphics graphics, int x, int y) {
         final Optional<HolderSet.Named<Item>> items = BuiltInRegistries.ITEM.getTag(icon.tag());
-        if (items.isEmpty()) return;
-        graphics.renderFakeItem(new ItemStack(getIcon(items.get())), x, y);
+        if (items.isEmpty() || items.get().size() == 0) return;
+        graphics.renderFakeItem(new ItemStack(getIcon(items.get(), parentPeriod)), x, y);
     }
 
     @Override
-    public void renderDecorations(ItemTagCycleIcon icon, Font font, GuiGraphics graphics, int x, int y) {
-        if (icon.count() == 1) return;
-        final String text = Integer.toString(icon.count());
-        graphics.pose().pushPose();
-        graphics.pose().translate(0f, 0f, 200f);
-        graphics.drawString(font, text, x + 19 - 2 - font.width(text), y + 6 + 3, 0xffffff, true);
-        graphics.pose().popPose();
+    public void renderDecorationsWithParentPeriod(int parentPeriod, ItemTagCycleIcon icon, Font font, GuiGraphics graphics, int x, int y) {
+        IconRenderer.renderCount(icon.count(), font, graphics, x, y);
     }
 
-    private static Holder<Item> getIcon(HolderSet.Named<Item> icons) {
-        return icons.get((int)((Util.getMillis() / CycleIconRenderer.TIME_PER_ICON) % icons.size()));
+    private static Holder<Item> getIcon(HolderSet.Named<Item> icons, int parentPeriod) {
+        return icons.get((int)((Util.getMillis() / (CycleIconRenderer.TIME_PER_ICON * parentPeriod)) % icons.size()));
     }
 }

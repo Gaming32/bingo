@@ -9,6 +9,7 @@ public class DefaultIconRenderers {
         IconRenderers.register(GoalIconType.BLOCK, new BlockIconRenderer());
         IconRenderers.register(GoalIconType.EFFECT, new EffectIconRenderer());
         IconRenderers.register(GoalIconType.ENTITY, new EntityIconRenderer());
+        IconRenderers.register(GoalIconType.ENTITY_TYPE_TAG_CYCLE, new EntityTypeTagCycleIconRenderer());
         IconRenderers.register(GoalIconType.CYCLE, new CycleIconRenderer());
         IconRenderers.register(GoalIconType.ITEM_TAG_CYCLE, new ItemTagCycleIconRenderer());
     }

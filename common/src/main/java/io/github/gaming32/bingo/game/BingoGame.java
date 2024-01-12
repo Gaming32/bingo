@@ -30,6 +30,7 @@ import net.minecraft.stats.Stat;
 import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +51,7 @@ public class BingoGame {
     private final PlayerTeam[] teams;
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> advancementProgress = new HashMap<>();
     private final Map<UUID, Map<ActiveGoal, GoalProgress>> goalProgress = new HashMap<>();
+    private final Map<UUID, Object2IntOpenHashMap<ActiveGoal>> goalAchievedCount = new HashMap<>();
     private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
     private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
 
@@ -254,6 +256,12 @@ public class BingoGame {
         return progress;
     }
 
+    @Nullable
+    public GoalProgress getGoalProgress(ServerPlayer player, ActiveGoal goal) {
+        var progress = goalProgress.get(player.getUUID());
+        return progress == null ? null : progress.get(goal);
+    }
+
     public void updateProgress(ServerPlayer player, ActiveGoal goal, int progress, int maxProgress) {
         int goalIndex = getBoardIndex(player, goal);
         if (goalIndex == -1) {
@@ -271,6 +279,10 @@ public class BingoGame {
     }
 
     public boolean award(ServerPlayer player, ActiveGoal goal, String criterion) {
+        return award(player, goal, criterion, 1);
+    }
+
+    public boolean award(ServerPlayer player, ActiveGoal goal, String criterion, int count) {
         if (goal.goal().goal().getSpecialType() == BingoTag.SpecialType.FINISH) {
             final BingoBoard.Teams team = getTeam(player);
             final BingoBoard.Teams[] board = this.board.getStates();
@@ -294,7 +306,20 @@ public class BingoGame {
             awarded = true;
         }
         if (!wasDone && progress.isDone()) {
-            updateTeamBoard(player, goal, false);
+            int completedCount = goalAchievedCount.computeIfAbsent(player.getUUID(), k -> new Object2IntOpenHashMap<>()).addTo(goal, count) + count;
+            if (completedCount > goal.requiredCount()) {
+                completedCount = goal.requiredCount();
+            }
+            goal.goal().goal().getProgress().onGoalCompleted(this, player, goal, completedCount);
+            if (completedCount == goal.requiredCount()) {
+                updateTeamBoard(player, goal, false);
+            } else {
+                for (String completedCriterion : progress.getCompletedCriteria()) {
+                    progress.revokeProgress(completedCriterion);
+                }
+                unregisterListeners(player, goal, true);
+                registerListeners(player, goal);
+            }
         }
         goal.goal().goal().getProgress().criterionChanged(this, player, goal, criterion, true);
         return awarded;
@@ -307,7 +332,7 @@ public class BingoGame {
         }
         boolean success = false;
         for (final String criterion : progress.getRemainingCriteria()) {
-            success |= award(player, goal, criterion);
+            success |= award(player, goal, criterion, goal.requiredCount());
         }
         return success;
     }
@@ -335,6 +360,10 @@ public class BingoGame {
         boolean success = false;
         for (final String criterion : progress.getCompletedCriteria()) {
             success |= revoke(player, goal, criterion);
+        }
+        var achievedCount = goalAchievedCount.get(player.getUUID());
+        if (achievedCount != null) {
+            achievedCount.removeInt(goal);
         }
         return success;
     }

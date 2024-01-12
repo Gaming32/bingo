@@ -24,6 +24,7 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
+import net.minecraft.Util;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
@@ -84,6 +85,7 @@ public class BingoGoal {
             Codec.unboundedMap(Codec.STRING, Codec.PASSTHROUGH).fieldOf("criteria").forGetter(BingoGoal::getCriteria),
             ExtraCodecs.strictOptionalField(AdvancementRequirements.CODEC, "requirements").forGetter(g -> Optional.of(g.requirements)),
             ExtraCodecs.strictOptionalField(ProgressTracker.CODEC, "progress", EmptyProgressTracker.INSTANCE).forGetter(BingoGoal::getProgress),
+            ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, "required_count", BingoCodecs.EMPTY_DYNAMIC.createInt(1)).forGetter(BingoGoal::getRequiredCount),
             ExtraCodecs.strictOptionalField(TAGS_CODEC, "tags", Set.of()).forGetter(BingoGoal::getTags),
             Codec.PASSTHROUGH.fieldOf("name").forGetter(BingoGoal::getName),
             ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, "tooltip", BingoCodecs.EMPTY_DYNAMIC).forGetter(BingoGoal::getTooltip),
@@ -104,6 +106,7 @@ public class BingoGoal {
     private final Map<String, Dynamic<?>> criteria;
     private final AdvancementRequirements requirements;
     private final ProgressTracker progress;
+    private final Dynamic<?> requiredCount;
     private final Set<BingoTag.Holder> tags;
     private final Dynamic<?> name;
     private final Dynamic<?> tooltip;
@@ -124,6 +127,7 @@ public class BingoGoal {
         Map<String, Dynamic<?>> criteria,
         Optional<AdvancementRequirements> requirements,
         ProgressTracker progress,
+        Dynamic<?> requiredCount,
         Collection<BingoTag.Holder> tags,
         Dynamic<?> name,
         Dynamic<?> tooltip,
@@ -139,6 +143,7 @@ public class BingoGoal {
         this.criteria = ImmutableMap.copyOf(criteria);
         this.requirements = requirements.orElseGet(() -> AdvancementRequirements.allOf(criteria.keySet()));
         this.progress = progress;
+        this.requiredCount = requiredCount;
         this.tags = ImmutableSet.copyOf(tags);
         this.name = name;
         this.tooltip = tooltip;
@@ -248,6 +253,10 @@ public class BingoGoal {
         return progress;
     }
 
+    public Dynamic<?> getRequiredCount() {
+        return requiredCount;
+    }
+
     public Set<BingoTag.Holder> getTags() {
         return tags;
     }
@@ -342,6 +351,10 @@ public class BingoGoal {
         return result.build();
     }
 
+    public int buildRequiredCount(Map<String, Dynamic<?>> referable, RandomSource rand) {
+        return BingoUtil.fromDynamic(ExtraCodecs.POSITIVE_INT, performSubstitutions(requiredCount, referable, rand));
+    }
+
     public static Dynamic<?> performSubstitutions(
         Dynamic<?> value,
         Map<String, Dynamic<?>> referable,
@@ -386,7 +399,8 @@ public class BingoGoal {
             return new ActiveGoal(
                 this, name, tooltip,
                 goal.buildIcon(subs, rand),
-                goal.buildCriteria(subs, rand)
+                goal.buildCriteria(subs, rand),
+                goal.buildRequiredCount(subs, rand)
             );
         }
 
@@ -412,6 +426,7 @@ public class BingoGoal {
         private final ImmutableMap.Builder<String, Dynamic<?>> criteria = ImmutableMap.builder();
         private Optional<AdvancementRequirements> requirements = Optional.empty();
         private ProgressTracker progress = EmptyProgressTracker.INSTANCE;
+        private Dynamic<?> requiredCount = BingoCodecs.EMPTY_DYNAMIC.createInt(1);
         private AdvancementRequirements.Strategy requirementsStrategy = AdvancementRequirements.Strategy.AND;
         private final ImmutableSet.Builder<BingoTag.Holder> tags = ImmutableSet.builder();
         private Optional<Dynamic<?>> name = Optional.empty();
@@ -461,6 +476,16 @@ public class BingoGoal {
 
         public Builder progress(String criterion) {
             return progress(CriterionProgressTracker.unscaled(criterion));
+        }
+
+        public Builder requiredCount(int requiredCount) {
+            this.requiredCount = BingoCodecs.EMPTY_DYNAMIC.createInt(requiredCount);
+            return this;
+        }
+
+        public Builder requiredCount(BingoSub requiredCountSub) {
+            this.requiredCount = BingoUtil.toDynamic(BingoSub.INNER_CODEC, requiredCountSub);
+            return this;
         }
 
         public Builder tags(ResourceLocation... tags) {
@@ -572,6 +597,7 @@ public class BingoGoal {
                 criteria,
                 requirements.or(() -> Optional.of(requirementsStrategy.create(criteria.keySet()))),
                 progress,
+                requiredCount,
                 tags.build(),
                 name.orElseThrow(() -> new IllegalStateException("Bingo goal name has not been set")),
                 tooltip,

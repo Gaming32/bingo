@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 import java.util.Map;
@@ -23,11 +24,14 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
 
     @Override
     public void render(EntityIcon icon, GuiGraphics graphics, int x, int y) {
-        final Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player == null) return;
-
         final Entity entity = getEntity(icon);
         if (entity == null) return;
+        renderEntity(entity, graphics, x, y);
+    }
+
+    public static void renderEntity(Entity entity, GuiGraphics graphics, int x, int y) {
+        final Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player == null) return;
 
         Lighting.setupForFlatItems();
 
@@ -79,7 +83,8 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         Lighting.setupFor3DItems();
     }
 
-    public static Entity getEntity(EntityIcon icon) {
+    @Nullable
+    private static Entity getEntity(EntityIcon icon) {
         final ClientLevel level = Minecraft.getInstance().level;
         if (level == null) {
             return null;
@@ -88,8 +93,12 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
             .computeIfAbsent(icon, EntityIconRenderer::createEntity);
     }
 
+    @Nullable
     private static Entity createEntity(EntityIcon icon) {
         final ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) {
+            return null;
+        }
         final Entity entity = icon.entity().create(level);
         if (entity != null) {
             entity.load(icon.data());

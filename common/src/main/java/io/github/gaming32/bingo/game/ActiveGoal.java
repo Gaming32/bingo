@@ -16,7 +16,8 @@ public record ActiveGoal(
     Component name,
     Optional<Component> tooltip,
     GoalIcon icon,
-    Map<String, Criterion<?>> criteria
+    Map<String, Criterion<?>> criteria,
+    int requiredCount
 ) {
     public boolean hasProgress() {
         return goal.goal().getProgress() != null;

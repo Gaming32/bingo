@@ -130,6 +130,8 @@
   "bingo.goal.kill_enderman_with_endermites.tooltip": "Don't hurt the Enderman any other way, only with Endermites.",
   "bingo.goal.kill_ghast_in_overworld": "Kill a Ghast in the Overworld",
   "bingo.goal.kill_mobs": "Kill %s mobs",
+  "bingo.goal.kill_passive_mobs_with_only_fire": "Kill %s passive mobs with only fire",
+  "bingo.goal.kill_passive_mobs_with_only_fire.tooltip": "Don't hurt the passive mob any other way, only with Fire.",
   "bingo.goal.kill_self_with_arrow": "Kill yourself with your own arrow",
   "bingo.goal.kill_wandering_trader": "Kill a Wandering Trader",
   "bingo.goal.kill_with_crystal": "Kill a mob with an %s",

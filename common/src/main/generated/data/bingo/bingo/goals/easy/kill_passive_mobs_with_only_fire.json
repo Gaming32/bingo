@@ -1,0 +1,114 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 8,
+          "min_inclusive": 4
+        }
+      }
+    }
+  },
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#bingo:passive"
+            }
+          },
+          {
+            "condition": "bingo:has_only_been_damaged_by",
+            "damage_type_tag": {
+              "expected": true,
+              "id": "minecraft:is_fire"
+            }
+          }
+        ],
+        "killing_blow": {
+          "type": {
+            "tags": [
+              {
+                "expected": true,
+                "id": "minecraft:is_fire"
+              }
+            ]
+          }
+        }
+      },
+      "trigger": "bingo:entity_die_near_player"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:entity_type_tag_cycle",
+        "count": {
+          "bingo_type": "bingo:sub",
+          "value": "count"
+        },
+        "tag": "bingo:passive"
+      },
+      {
+        "type": "bingo:block",
+        "block": {
+          "Name": "minecraft:fire",
+          "Properties": {
+            "age": "0",
+            "east": "false",
+            "north": "false",
+            "south": "false",
+            "up": "false",
+            "west": "false"
+          }
+        },
+        "item": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "value": "count"
+          },
+          "id": "minecraft:flint_and_steel",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.kill_passive_mobs_with_only_fire",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "value": "count"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:goal_achieved_type"
+  },
+  "reactant": "pacifist",
+  "required_count": {
+    "bingo_type": "bingo:sub",
+    "value": "count"
+  },
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:combat"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.kill_passive_mobs_with_only_fire.tooltip"
+  }
+}

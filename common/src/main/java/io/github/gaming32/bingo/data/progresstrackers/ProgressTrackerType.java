@@ -19,6 +19,7 @@ public interface ProgressTrackerType<P extends ProgressTracker> {
     RegistrySupplier<ProgressTrackerType<EmptyProgressTracker>> EMPTY = register("empty", EmptyProgressTracker.CODEC);
     RegistrySupplier<ProgressTrackerType<AchievedRequirementsProgressTracker>> ACHIEVED_REQUIREMENTS = register("achieved_requirements", AchievedRequirementsProgressTracker.CODEC);
     RegistrySupplier<ProgressTrackerType<CriterionProgressTracker>> CRITERION = register("criterion", CriterionProgressTracker.CODEC);
+    RegistrySupplier<ProgressTrackerType<GoalAchievedCountProgressTracker>> GOAL_ACHIEVED_COUNT = register("goal_achieved_type", GoalAchievedCountProgressTracker.CODEC);
 
     Codec<P> codec();
 
