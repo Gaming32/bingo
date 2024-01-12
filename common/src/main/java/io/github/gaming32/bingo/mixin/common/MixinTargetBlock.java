@@ -32,10 +32,10 @@ public class MixinTargetBlock {
             return;
         }
         try (
-            final var ignored = GlobalVars.CURRENT_PLAYER.pushed(player);
-            final var ignored1 = GlobalVars.CURRENT_PROJECTILE.pushed(projectile);
-            final var ignored2 = GlobalVars.CURRENT_BLOCK_POS.pushed(pos);
-            final var ignored3 = GlobalVars.CURRENT_REDSTONE_OUTPUT.pushed(power)
+            final var ignored = GlobalVars.CURRENT_PLAYER.push(player);
+            final var ignored1 = GlobalVars.CURRENT_PROJECTILE.push(projectile);
+            final var ignored2 = GlobalVars.CURRENT_BLOCK_POS.push(pos);
+            final var ignored3 = GlobalVars.CURRENT_REDSTONE_OUTPUT.push(power)
         ) {
             original.call(level, state, power, pos, waitTime);
         }

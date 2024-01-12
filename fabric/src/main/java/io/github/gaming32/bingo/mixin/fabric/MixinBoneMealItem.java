@@ -19,8 +19,8 @@ public class MixinBoneMealItem {
         final Player player = context.getPlayer();
         // J25, and we'll be able to use "var _ ="
         try (
-            var ignored = GlobalVars.CURRENT_PLAYER.pushed(player);
-            var ignored1 = GlobalVars.CURRENT_ITEM.pushed(boneMeal)
+            var ignored = GlobalVars.CURRENT_PLAYER.push(player);
+            var ignored1 = GlobalVars.CURRENT_ITEM.push(boneMeal)
         ) {
             return operation.call(boneMeal, level, pos);
         }

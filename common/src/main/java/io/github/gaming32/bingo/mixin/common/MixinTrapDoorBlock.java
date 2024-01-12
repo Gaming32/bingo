@@ -29,10 +29,10 @@ public class MixinTrapDoorBlock {
         )
     )
     private BlockState onDoorOpened(BlockState state, @Local Level level, @Local(ordinal = 0) BlockPos doorPos) {
-        if (state.getValue(OPEN) && GlobalVars.CURRENT_PLAYER.peek() instanceof ServerPlayer player) {
-            final Projectile projectile = GlobalVars.CURRENT_PROJECTILE.peek();
-            final BlockPos targetPos = GlobalVars.CURRENT_BLOCK_POS.peek();
-            final Integer targetPower = GlobalVars.CURRENT_REDSTONE_OUTPUT.peek();
+        if (state.getValue(OPEN) && GlobalVars.CURRENT_PLAYER.get() instanceof ServerPlayer player) {
+            final Projectile projectile = GlobalVars.CURRENT_PROJECTILE.get();
+            final BlockPos targetPos = GlobalVars.CURRENT_BLOCK_POS.get();
+            final Integer targetPower = GlobalVars.CURRENT_REDSTONE_OUTPUT.get();
             if (
                 projectile != null &&
                     targetPos != null &&
