@@ -14,6 +14,7 @@
   "bingo.goal.all_mineral_blocks.tooltip": "Coal, Copper, Iron, Gold, Diamond, Redstone, Lapis, Emerald, Quartz, and Netherite blocks.",
   "bingo.goal.all_somethings": "Every type of %s",
   "bingo.goal.all_somethings.chestplates": "Chestplate",
+  "bingo.goal.all_somethings.climbables": "Climbable Block",
   "bingo.goal.all_somethings.pickaxes": "Pickaxe",
   "bingo.goal.all_somethings.swords": "Sword",
   "bingo.goal.all_somethings.armor.tooltip": "Leather, Gold, Chainmail, Iron, Diamond, and, yes, even Netherite.",

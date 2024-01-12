@@ -1,0 +1,40 @@
+{
+  "antisynergy": "all_climbable",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": -1,
+        "tag": "bingo:climbable"
+      },
+      "trigger": "bingo:has_some_items_from_tag"
+    }
+  },
+  "difficulty": "bingo:hard",
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "tag": "bingo:climbable"
+  },
+  "name": {
+    "translate": "bingo.goal.all_somethings",
+    "with": [
+      {
+        "translate": "bingo.goal.all_somethings.climbables"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}
