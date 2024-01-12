@@ -7,6 +7,8 @@ import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
 import io.github.gaming32.bingo.conditions.HasOnlyBeenDamagedByCondition;
 import io.github.gaming32.bingo.conditions.InStructureCondition;
 import io.github.gaming32.bingo.conditions.PassengersCondition;
+import io.github.gaming32.bingo.conditions.ToolDamageCondition;
+import io.github.gaming32.bingo.conditions.ToolIsEnchantedCondition;
 import io.github.gaming32.bingo.conditions.VillagerOwnershipCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
@@ -42,6 +44,7 @@ import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
 import io.github.gaming32.bingo.triggers.KeyPressedTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.triggers.ShootBellTrigger;
+import io.github.gaming32.bingo.triggers.UseGrindstoneTrigger;
 import io.github.gaming32.bingo.triggers.WearDifferentColoredArmorTrigger;
 import io.github.gaming32.bingo.triggers.ZombieDrownedTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
@@ -699,7 +702,13 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tooltip("shoot_bell_from_10_blocks")
             .icon(CycleIcon.infer(Items.ARROW, Items.BELL))
             .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD));
-        // TODO: repair item with grindstone
+        addGoal(BingoGoal.builder(id("grindstone_repair"))
+            .criterion("repair1", UseGrindstoneTrigger.builder().firstItem(ContextAwarePredicate.create(new ToolDamageCondition(MinMaxBounds.Ints.atLeast(1)))).build())
+            .criterion("repair2", UseGrindstoneTrigger.builder().secondItem(ContextAwarePredicate.create(new ToolDamageCondition(MinMaxBounds.Ints.atLeast(1)))).build())
+            .requirements(AdvancementRequirements.Strategy.OR)
+            .name("grindstone_repair")
+            .icon(CycleIcon.infer(Items.GRINDSTONE, ItemTags.TOOLS))
+            .tags(BingoTags.ACTION));
         addGoal(obtainItemGoal(id("sweet_berries"), Items.SWEET_BERRIES, 2, 6)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
         addGoal(
@@ -818,7 +827,13 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tooltip("obtain_enchanted_item")
             .antisynergy("enchant")
         );
-        // TODO: remove enchantment with grindstone
+        addGoal(BingoGoal.builder(id("disenchant"))
+            .criterion("disenchant1", UseGrindstoneTrigger.builder().firstItem(ContextAwarePredicate.create(new ToolIsEnchantedCondition(true))).build())
+            .criterion("disenchant2", UseGrindstoneTrigger.builder().secondItem(ContextAwarePredicate.create(new ToolIsEnchantedCondition(true))).build())
+            .requirements(AdvancementRequirements.Strategy.OR)
+            .name("disenchant")
+            .icon(CycleIcon.infer(Items.GRINDSTONE, Items.ENCHANTED_BOOK))
+            .tags(BingoTags.ACTION));
         // TODO: never use sword
         addGoal(BingoGoal.builder(id("carnivore"))
             .criterion("not_meat", ConsumeItemTrigger.TriggerInstance.usedItem(

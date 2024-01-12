@@ -12,6 +12,7 @@ import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
 import io.github.gaming32.bingo.conditions.BingoConditions;
+import io.github.gaming32.bingo.conditions.BingoParamSets;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
@@ -80,6 +81,7 @@ public class Bingo {
         });
 
         BingoConditions.load();
+        BingoParamSets.load();
         GoalIconType.load();
         BingoSubType.load();
         ProgressTrackerType.load();

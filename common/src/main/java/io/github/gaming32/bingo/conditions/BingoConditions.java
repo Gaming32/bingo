@@ -27,6 +27,8 @@ public final class BingoConditions {
     public static final RegistrySupplier<LootItemConditionType> PASSENGERS = register("passengers", () -> PassengersCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> PILLAR = register("pillar", () -> PillarCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> STAIRWAY_TO_HEAVEN = register("stairway_to_heaven", () -> StairwayToHeavenCondition.CODEC);
+    public static final RegistrySupplier<LootItemConditionType> TOOL_DAMAGE = register("tool_damage", () -> ToolDamageCondition.CODEC);
+    public static final RegistrySupplier<LootItemConditionType> TOOL_IS_ENCHANTED = register("tool_is_enchanted", () -> ToolIsEnchantedCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> VILLAGER_OWNERSHIP = register("villager_ownership", () -> VillagerOwnershipCondition.CODEC);
     public static final RegistrySupplier<LootItemConditionType> WEARING_DIFFERENT_ARMOR = register("wearing_different_armor", () -> WearingDifferentArmorCondition.CODEC);
 

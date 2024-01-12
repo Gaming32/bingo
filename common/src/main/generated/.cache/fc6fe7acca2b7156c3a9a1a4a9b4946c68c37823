@@ -49,6 +49,7 @@ fa8972087435845a76278a7267dca4b106e3d5bb data/bingo/bingo/goals/easy/dark_oak_pl
 da9e9c9599a3c61f7b2ef9a245410690f853ee85 data/bingo/bingo/goals/easy/different_flowers.json
 b15ee2e80900ef4ea79a0ee1182e7425d67a8dd9 data/bingo/bingo/goals/easy/different_slabs.json
 f8c6ae93da8b33bf5a4b441e462b646b508b7094 data/bingo/bingo/goals/easy/different_stairs.json
+70a8fd6124ba41c242b994163203bf30f9eca00d data/bingo/bingo/goals/easy/disenchant.json
 96a53d198100db77f3e03fce83772e388fcdbbf3 data/bingo/bingo/goals/easy/double_creeper_boat.json
 242e5afff9ceb67913efce3bdcc46d83712ced94 data/bingo/bingo/goals/easy/dried_kelp_block.json
 ddd1f4be8502c439b7b5b122c5341f4a06480819 data/bingo/bingo/goals/easy/drink_sus_stew.json
@@ -75,6 +76,7 @@ c29ca6e7caafca347a148e5f9f810369d3eed7cd data/bingo/bingo/goals/easy/golden_appl
 05fbd2220ea9604c0c764ce1ef004aaf296792a9 data/bingo/bingo/goals/easy/golden_carrot.json
 8d091b3f07e98e5effa05d2d8acadeeb0b1a21c0 data/bingo/bingo/goals/easy/grass.json
 06453eb3bd312d5a8c99d91cf2aaad2a5ae044aa data/bingo/bingo/goals/easy/green_dye.json
+c9d4a280245453be4d2d594c548a1f927e0735e3 data/bingo/bingo/goals/easy/grindstone_repair.json
 c4bb82330ac59eee13d36ecb18089b4ad714aba6 data/bingo/bingo/goals/easy/grow_huge_mushroom.json
 0698a41c4a323be7a2c77afb6dd2c06157d2e122 data/bingo/bingo/goals/easy/grow_tree_in_nether.json
 1a97df8ef8a3a0decfa5697660d683103f48bf90 data/bingo/bingo/goals/easy/gunpowder.json

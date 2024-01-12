@@ -58,6 +58,7 @@ public class BingoTriggers {
     public static final RegistrySupplier<EntityTrigger> STUN_RAVAGER = register("stun_ravager", EntityTrigger::new);
     public static final RegistrySupplier<TotalCountInventoryChangeTrigger> TOTAL_COUNT_INVENTORY_CHANGED = register("total_count_inventory_changed", TotalCountInventoryChangeTrigger::new);
     public static final RegistrySupplier<TryUseItemTrigger> TRY_USE_ITEM = register("try_use_item", TryUseItemTrigger::new);
+    public static final RegistrySupplier<UseGrindstoneTrigger> USE_GRINDSTONE = register("use_grindstone", UseGrindstoneTrigger::new);
     public static final RegistrySupplier<WearDifferentColoredArmorTrigger> WEAR_DIFFERENT_COLORED_ARMOR = register("wear_different_colored_armor", WearDifferentColoredArmorTrigger::new);
     public static final RegistrySupplier<ZombieDrownedTrigger> ZOMBIE_DROWNED = register("zombie_drowned", ZombieDrownedTrigger::new);
     public static final RegistrySupplier<ZombifyPigTrigger> ZOMBIFY_PIG = register("zombify_pig", ZombifyPigTrigger::new);
