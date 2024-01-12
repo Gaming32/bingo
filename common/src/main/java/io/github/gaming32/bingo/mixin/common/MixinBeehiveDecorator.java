@@ -51,8 +51,8 @@ public abstract class MixinBeehiveDecorator {
         @Local Optional<BlockPos> location, @Share("block") LocalRef<BlockState> blockShare
     ) {
         assert location.isPresent();
-        if (GlobalVars.CURRENT_PLAYER.peek() instanceof ServerPlayer player) {
-            final ItemStack item = GlobalVars.CURRENT_ITEM.peek();
+        if (GlobalVars.CURRENT_PLAYER.get() instanceof ServerPlayer player) {
+            final ItemStack item = GlobalVars.CURRENT_ITEM.get();
             if (item != null) {
                 BingoTriggers.GROW_BEE_NEST_TREE.get().trigger(player, location.get(), blockShare.get(), item);
             }

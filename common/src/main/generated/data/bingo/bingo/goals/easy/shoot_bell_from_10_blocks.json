@@ -1,0 +1,50 @@
+{
+  "criteria": {
+    "shoot": {
+      "conditions": {
+        "distance": {
+          "absolute": {
+            "min": 10.0
+          }
+        }
+      },
+      "trigger": "bingo:bell_ring"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:arrow"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:bell"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.shoot_bell_from_10_blocks"
+  },
+  "requirements": [
+    [
+      "shoot"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:village",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.shoot_bell_from_10_blocks.tooltip"
+  }
+}

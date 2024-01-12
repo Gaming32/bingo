@@ -36,8 +36,8 @@ public class MixinBoneMealItem {
         @Local Player player
     ) {
         try (
-            var ignored = GlobalVars.CURRENT_PLAYER.pushed(player);
-            var ignored1 = GlobalVars.CURRENT_ITEM.pushed(boneMeal)
+            var ignored = GlobalVars.CURRENT_PLAYER.push(player);
+            var ignored1 = GlobalVars.CURRENT_ITEM.push(boneMeal)
         ) {
             operation.call(instance, level, random, pos, state);
         }

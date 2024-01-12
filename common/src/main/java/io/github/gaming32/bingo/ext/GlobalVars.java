@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -22,20 +23,13 @@ public final class GlobalVars {
         private final ThreadLocal<Deque<E>> stack = ThreadLocal.withInitial(LinkedList::new);
         private final PushContext pushContext = new PushContext();
 
-        public void push(E value) {
+        public PushContext push(E value) {
             stack.get().addLast(value);
-        }
-
-        public PushContext pushed(E value) {
-            push(value);
             return pushContext;
         }
 
-        public E pop() {
-            return stack.get().removeLast();
-        }
-
-        public E peek() {
+        @Nullable
+        public E get() {
             return stack.get().peekLast();
         }
 
@@ -45,7 +39,7 @@ public final class GlobalVars {
 
             @Override
             public void close() {
-                pop();
+                stack.get().removeLast();
             }
         }
     }
