@@ -21,6 +21,7 @@ public final class BingoItemTags {
     public static final TagKey<Item> BASIC_MINERAL_BLOCKS = create("basic_mineral_blocks");
     public static final TagKey<Item> BONEMEALABLE = create("bonemealable");
     public static final TagKey<Item> BUCKETS = create("buckets");
+    public static final TagKey<Item> CLIMBABLE = create("climbable");
     public static final TagKey<Item> CONCRETE = create("concrete");
     public static final TagKey<Item> DEAD_CORAL_BLOCKS = create("dead_coral_blocks");
     public static final TagKey<Item> DIAMOND_IN_NAME = create("diamond_in_name");

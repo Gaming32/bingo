@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:ladder",
+    "minecraft:scaffolding",
+    "minecraft:vine",
+    "minecraft:glow_berries",
+    "minecraft:weeping_vines",
+    "minecraft:twisting_vines"
+  ]
+}

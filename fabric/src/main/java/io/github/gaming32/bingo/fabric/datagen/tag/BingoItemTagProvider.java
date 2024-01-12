@@ -76,6 +76,15 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .addTag(BingoItemTags.ARMOR_LEGGINGS)
             .addTag(BingoItemTags.ARMOR_BOOTS);
 
+        getOrCreateTagBuilder(BingoItemTags.CLIMBABLE).add(
+            Items.LADDER,
+            Items.SCAFFOLDING,
+            Items.VINE,
+            Items.GLOW_BERRIES,
+            Items.WEEPING_VINES,
+            Items.TWISTING_VINES
+        );
+
         getOrCreateTagBuilder(BingoItemTags.FISH_BUCKETS).add(
             Items.COD_BUCKET,
             Items.PUFFERFISH_BUCKET,
