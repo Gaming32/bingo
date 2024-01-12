@@ -9,7 +9,7 @@
       "trigger": "bingo:has_some_items_from_tag"
     }
   },
-  "difficulty": "bingo:hard",
+  "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:item_tag_cycle",
     "tag": "bingo:climbable"
