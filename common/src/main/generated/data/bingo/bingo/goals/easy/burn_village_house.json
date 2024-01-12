@@ -1,0 +1,72 @@
+{
+  "criteria": {
+    "burn": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "tag": "minecraft:creeper_igniters"
+            }
+          },
+          {
+            "condition": "bingo:flammable"
+          },
+          {
+            "condition": "bingo:in_structure",
+            "structure": "#minecraft:village"
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:block",
+        "block": {
+          "Name": "minecraft:fire",
+          "Properties": {
+            "age": "0",
+            "east": "false",
+            "north": "false",
+            "south": "false",
+            "up": "false",
+            "west": "false"
+          }
+        },
+        "item": {
+          "Count": 1,
+          "id": "minecraft:flint_and_steel",
+          "tag": {
+            "Damage": 0
+          }
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "entity": "minecraft:villager",
+        "item": {
+          "Count": 1,
+          "id": "minecraft:villager_spawn_egg"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.burn_village_house"
+  },
+  "requirements": [
+    [
+      "burn"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:village",
+    "bingo:overworld"
+  ]
+}

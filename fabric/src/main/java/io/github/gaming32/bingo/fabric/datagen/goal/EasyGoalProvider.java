@@ -2,8 +2,10 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
+import io.github.gaming32.bingo.conditions.FlammableCondition;
 import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
 import io.github.gaming32.bingo.conditions.HasOnlyBeenDamagedByCondition;
+import io.github.gaming32.bingo.conditions.InStructureCondition;
 import io.github.gaming32.bingo.conditions.PassengersCondition;
 import io.github.gaming32.bingo.conditions.VillagerOwnershipCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
@@ -24,12 +26,53 @@ import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.data.tags.BingoPaintingVariantTags;
-import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.triggers.AdjacentPaintingTrigger;
+import io.github.gaming32.bingo.triggers.ArrowPressTrigger;
+import io.github.gaming32.bingo.triggers.BingoTriggers;
+import io.github.gaming32.bingo.triggers.ChickenHatchTrigger;
+import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
+import io.github.gaming32.bingo.triggers.DestroyVehicleTrigger;
+import io.github.gaming32.bingo.triggers.DifferentColoredShieldsTrigger;
+import io.github.gaming32.bingo.triggers.DoorOpenedByTargetTrigger;
+import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
+import io.github.gaming32.bingo.triggers.EquipItemTrigger;
+import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
+import io.github.gaming32.bingo.triggers.HasSomeFoodItemsTrigger;
+import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
+import io.github.gaming32.bingo.triggers.KeyPressedTrigger;
+import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
+import io.github.gaming32.bingo.triggers.WearDifferentColoredArmorTrigger;
+import io.github.gaming32.bingo.triggers.ZombieDrownedTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.critereon.ConsumeItemTrigger;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DamagePredicate;
+import net.minecraft.advancements.critereon.DamageSourcePredicate;
+import net.minecraft.advancements.critereon.DistancePredicate;
+import net.minecraft.advancements.critereon.EffectsChangedTrigger;
+import net.minecraft.advancements.critereon.EntityFlagsPredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.EntityTypePredicate;
+import net.minecraft.advancements.critereon.FishingRodHookedTrigger;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.MobEffectsPredicate;
+import net.minecraft.advancements.critereon.PickedUpItemTrigger;
+import net.minecraft.advancements.critereon.PlayerInteractTrigger;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.critereon.SummonedEntityTrigger;
+import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.critereon.TameAnimalTrigger;
+import net.minecraft.advancements.critereon.TradeTrigger;
+import net.minecraft.advancements.critereon.UsingItemTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,6 +86,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.StructureTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -830,7 +874,24 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .reactant("sleep")
             .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD)
         );
-        // TODO: set fire to villager's house
+        addGoal(BingoGoal.builder(id("burn_village_house"))
+            .criterion("burn", CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
+                new ItemUsedOnLocationTrigger.TriggerInstance(
+                    Optional.empty(),
+                    Optional.of(ContextAwarePredicate.create(
+                        MatchTool.toolMatches(ItemPredicate.Builder.item().of(ItemTags.CREEPER_IGNITERS)).build(),
+                        FlammableCondition.INSTANCE,
+                        new InStructureCondition(StructureTags.VILLAGE)
+                    ))
+                )
+            ))
+            .name("burn_village_house")
+            .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD)
+            .icon(CycleIcon.infer(
+                new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStack(Items.FLINT_AND_STEEL)),
+                EntityType.VILLAGER
+            ))
+        );
         addGoal(obtainItemGoal(id("emerald"), Items.EMERALD)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("milk_cure"))
