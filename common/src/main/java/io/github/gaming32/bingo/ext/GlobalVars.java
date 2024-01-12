@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -27,6 +28,7 @@ public final class GlobalVars {
             return pushContext;
         }
 
+        @Nullable
         public E get() {
             return stack.get().peekLast();
         }

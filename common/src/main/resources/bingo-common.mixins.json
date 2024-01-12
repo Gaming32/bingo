@@ -11,6 +11,7 @@
     "MixinBeaconBlockEntity",
     "MixinBedBlock",
     "MixinBeehiveDecorator",
+    "MixinBellBlock",
     "MixinBlock",
     "MixinBlockItem",
     "MixinButtonBlock",

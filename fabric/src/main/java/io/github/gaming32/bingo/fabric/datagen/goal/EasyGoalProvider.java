@@ -41,6 +41,7 @@ import io.github.gaming32.bingo.triggers.HasSomeFoodItemsTrigger;
 import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
 import io.github.gaming32.bingo.triggers.KeyPressedTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
+import io.github.gaming32.bingo.triggers.ShootBellTrigger;
 import io.github.gaming32.bingo.triggers.WearDifferentColoredArmorTrigger;
 import io.github.gaming32.bingo.triggers.ZombieDrownedTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
@@ -690,7 +691,14 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(crouchDistanceGoal(id("crouch_distance"), 100, 200));
         // TODO: never use debug
-        // TODO: ring bell from 10 blocks away
+        addGoal(BingoGoal.builder(id("shoot_bell_from_10_blocks"))
+            .criterion("shoot", ShootBellTrigger.builder()
+                .distance(DistancePredicate.absolute(MinMaxBounds.Doubles.atLeast(10)))
+                .build())
+            .name("shoot_bell_from_10_blocks")
+            .tooltip("shoot_bell_from_10_blocks")
+            .icon(CycleIcon.infer(Items.ARROW, Items.BELL))
+            .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD));
         // TODO: repair item with grindstone
         addGoal(obtainItemGoal(id("sweet_berries"), Items.SWEET_BERRIES, 2, 6)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));

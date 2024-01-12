@@ -53,6 +53,7 @@ public class BingoTriggers {
     public static final RegistrySupplier<PartyParrotsTrigger> PARTY_PARROTS = register("party_parrots", PartyParrotsTrigger::new);
     public static final RegistrySupplier<PowerConduitTrigger> POWER_CONDUIT = register("power_conduit", PowerConduitTrigger::new);
     public static final RegistrySupplier<RelativeStatsTrigger> RELATIVE_STATS = register("relative_stats", RelativeStatsTrigger::new);
+    public static final RegistrySupplier<ShootBellTrigger> SHOOT_BELL = register("bell_ring", ShootBellTrigger::new);
     public static final RegistrySupplier<ItemUsedOnLocationTrigger> SLEPT = register("slept", ItemUsedOnLocationTrigger::new);
     public static final RegistrySupplier<EntityTrigger> STUN_RAVAGER = register("stun_ravager", EntityTrigger::new);
     public static final RegistrySupplier<TotalCountInventoryChangeTrigger> TOTAL_COUNT_INVENTORY_CHANGED = register("total_count_inventory_changed", TotalCountInventoryChangeTrigger::new);
