@@ -18,7 +18,7 @@ public final class BingoPaintingVariantTags {
     public static final TagKey<PaintingVariant> SIZE_4X3 = create("size_4x3");
     public static final TagKey<PaintingVariant> SIZE_4X4 = create("size_4x4");
 
-    private static TagKey<PaintingVariant> create(String name) {
+    public static TagKey<PaintingVariant> create(String name) {
         return TagKey.create(Registries.PAINTING_VARIANT, new ResourceLocation(Bingo.MOD_ID, name));
     }
 }

@@ -20,21 +20,7 @@ public class BingoPaintingVariantTagProvider extends FabricTagProvider<PaintingV
         for (PaintingVariant paintingVariant : BuiltInRegistries.PAINTING_VARIANT) {
             int w = paintingVariant.getWidth();
             int h = paintingVariant.getHeight();
-            if (w == 16 && h == 16) {
-                getOrCreateTagBuilder(BingoPaintingVariantTags.SIZE_1X1).add(paintingVariant);
-            } else if (w == 32 && h == 16) {
-                getOrCreateTagBuilder(BingoPaintingVariantTags.SIZE_2X1).add(paintingVariant);
-            } else if (w == 16 && h == 32) {
-                getOrCreateTagBuilder(BingoPaintingVariantTags.SIZE_1X2).add(paintingVariant);
-            } else if (w == 32 && h == 32) {
-                getOrCreateTagBuilder(BingoPaintingVariantTags.SIZE_2X2).add(paintingVariant);
-            } else if (w == 64 && h == 32) {
-                getOrCreateTagBuilder(BingoPaintingVariantTags.SIZE_4X2).add(paintingVariant);
-            } else if (w == 64 && h == 48) {
-                getOrCreateTagBuilder(BingoPaintingVariantTags.SIZE_4X3).add(paintingVariant);
-            } else if (w == 64 && h == 64) {
-                getOrCreateTagBuilder(BingoPaintingVariantTags.SIZE_4X4).add(paintingVariant);
-            }
+            getOrCreateTagBuilder(BingoPaintingVariantTags.create("size_" + w / 16 + "x" + h / 16)).add(paintingVariant);
         }
     }
 }

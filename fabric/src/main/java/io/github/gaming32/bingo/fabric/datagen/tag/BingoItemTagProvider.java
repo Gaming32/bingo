@@ -8,7 +8,12 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BannerPatternItem;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
@@ -76,6 +81,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .addTag(BingoItemTags.ARMOR_LEGGINGS)
             .addTag(BingoItemTags.ARMOR_BOOTS);
 
+        // Cannot copy() because that can't copy from Vanilla's block tags, only our block tags
         getOrCreateTagBuilder(BingoItemTags.CLIMBABLE).add(
             Items.LADDER,
             Items.SCAFFOLDING,
