@@ -56,7 +56,16 @@ import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -469,7 +478,8 @@ public class BingoCommand {
                 gamemode::isGoalAllowed,
                 requiredGoals,
                 excludedTags,
-                requireClient
+                requireClient,
+                server.getLootData()
             );
         } catch (Exception e) {
             Bingo.LOGGER.error("Error generating bingo board", e);

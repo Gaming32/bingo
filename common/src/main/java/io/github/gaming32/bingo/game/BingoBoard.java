@@ -8,10 +8,19 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.storage.loot.LootDataResolver;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public class BingoBoard {
@@ -44,7 +53,8 @@ public class BingoBoard {
         Predicate<BingoGoal.Holder> isAllowedGoal,
         List<BingoGoal.Holder> requiredGoals,
         Set<BingoTag.Holder> excludedTags,
-        boolean allowsClientRequired
+        boolean allowsClientRequired,
+        @Nullable LootDataResolver lootData
     ) {
         final BingoBoard board = new BingoBoard(size);
         final BingoGoal.Holder[] generatedSheet = generateGoals(
@@ -52,6 +62,9 @@ public class BingoBoard {
         );
         for (int i = 0; i < size * size; i++) {
             final ActiveGoal goal = board.goals[i] = generatedSheet[i].build(rand);
+            if (lootData != null) {
+                goal.validateAndLog(lootData);
+            }
             if (generatedSheet[i].goal().getSpecialType() == BingoTag.SpecialType.NEVER) {
                 board.states[i] = Teams.fromAll(teamCount);
             }
