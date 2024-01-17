@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
@@ -73,6 +74,12 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
             }
 
             return count;
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(placedPainting, ".placed_painting");
         }
     }
 

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,6 +42,12 @@ public class ZombieDrownedTrigger extends SimpleCriterionTrigger<ZombieDrownedTr
 
         public boolean matches(ServerPlayer player, Zombie zombie) {
             return this.zombie.isEmpty() || this.zombie.get().matches(EntityPredicate.createContext(player, zombie));
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(zombie, ".zombie");
         }
     }
 

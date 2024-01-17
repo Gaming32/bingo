@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -75,6 +76,12 @@ public class DoorOpenedByTargetTrigger extends SimpleCriterionTrigger<DoorOpened
                 return false;
             }
             return true;
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(projectile, ".projectile");
         }
     }
 

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
@@ -58,6 +59,13 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
                 return false;
             }
             return true;
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(pig, ".pig");
+            criterionValidator.validateEntity(zombifiedPiglin, ".zombified_piglin");
         }
     }
 
