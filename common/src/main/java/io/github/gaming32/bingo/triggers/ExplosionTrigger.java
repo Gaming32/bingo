@@ -6,6 +6,7 @@ import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
 import io.github.gaming32.bingo.util.CustomEnumCodec;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -72,6 +73,12 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
                 return false;
             }
             return true;
+        }
+
+        @Override
+        public void validate(CriterionValidator criterionValidator) {
+            SimpleInstance.super.validate(criterionValidator);
+            criterionValidator.validateEntity(source, ".source");
         }
     }
 
