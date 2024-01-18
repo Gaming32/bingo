@@ -6,7 +6,13 @@ import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.datafixers.util.Unit;
-import com.mojang.serialization.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.Decoder;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.MapCodec;
 import dev.architectury.registry.registries.Registrar;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -127,6 +133,20 @@ public final class BingoCodecs {
         return ExtraCodecs.strictOptionalField(Codec.INT, name).xmap(
             opt -> opt.map(OptionalInt::of).orElseGet(OptionalInt::empty),
             opt -> opt.isPresent() ? Optional.of(opt.getAsInt()) : Optional.empty()
+        );
+    }
+
+    public static MapCodec<Dynamic<?>> optionalDynamicField(String name) {
+        return ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, name).xmap(
+            opt -> opt.orElse(EMPTY_DYNAMIC),
+            dyn -> dyn.getValue() == dyn.getOps().empty() ? Optional.empty() : Optional.of(dyn)
+        );
+    }
+
+    public static MapCodec<Dynamic<?>> optionalDynamicField(String name, Dynamic<?> defaultValue) {
+        return ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, name).xmap(
+            opt -> opt.orElse(defaultValue),
+            dyn -> dyn.convert(defaultValue.getOps()).getValue().equals(defaultValue.getValue()) ? Optional.empty() : Optional.of(dyn)
         );
     }
 
