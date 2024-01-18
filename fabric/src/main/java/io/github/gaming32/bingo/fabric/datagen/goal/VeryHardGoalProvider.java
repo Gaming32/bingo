@@ -26,7 +26,16 @@ import io.github.gaming32.bingo.triggers.ZombifyPigTrigger;
 import net.minecraft.Util;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DamagePredicate;
+import net.minecraft.advancements.critereon.DistancePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.KilledTrigger;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -291,7 +300,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             ))
         );
         addGoal(BingoGoal.builder(id("kill_enderman_with_endermites"))
-            .criterion("obtain", EntityDieNearPlayerTrigger.builder()
+            .criterion("kill", EntityDieNearPlayerTrigger.builder()
                 .entity(ContextAwarePredicate.create(
                     LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(EntityType.ENDERMAN)).build(),
                     HasOnlyBeenDamagedByCondition.builder().entityType(EntityType.ENDERMITE).build()

@@ -1,6 +1,6 @@
 {
   "criteria": {
-    "obtain": {
+    "kill": {
       "conditions": {
         "entity": [
           {
@@ -38,7 +38,7 @@
   },
   "requirements": [
     [
-      "obtain"
+      "kill"
     ]
   ],
   "tags": [
