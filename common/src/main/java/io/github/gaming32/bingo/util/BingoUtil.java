@@ -15,6 +15,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
@@ -117,6 +118,22 @@ public class BingoUtil {
 
     public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) throws JsonParseException {
         return Util.getOrThrow(codec.parse(JsonOps.INSTANCE, element), JsonParseException::new);
+    }
+
+    public static <T> Tag toTag(Codec<T> codec, T obj) {
+        return Util.getOrThrow(codec.encodeStart(NbtOps.INSTANCE, obj), IllegalStateException::new);
+    }
+
+    public static <T> CompoundTag toCompoundTag(Codec<T> codec, T obj) {
+        final Tag result = toTag(codec, obj);
+        if (!(result instanceof CompoundTag compound)) {
+            throw new IllegalStateException("Obj " + obj + " didn't serialize to CompoundTag");
+        }
+        return compound;
+    }
+
+    public static <T> T fromTag(Codec<T> codec, Tag tag) {
+        return Util.getOrThrow(codec.parse(NbtOps.INSTANCE, tag), IllegalArgumentException::new);
     }
 
     public static <T> Dynamic<?> toDynamic(Codec<T> codec, T obj) {

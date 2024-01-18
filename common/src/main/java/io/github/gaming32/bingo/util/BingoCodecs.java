@@ -14,10 +14,19 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import dev.architectury.registry.registries.Registrar;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntImmutableList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 
+import java.lang.reflect.Array;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -33,10 +42,24 @@ public final class BingoCodecs {
      * Empty {@link Dynamic} to use when you don't care about the ops
      */
     public static final Dynamic<?> EMPTY_DYNAMIC = new Dynamic<>(DEFAULT_OPS);
+
     public static final Codec<Character> CHAR = Codec.STRING.comapFlatMap(
         s -> s.length() == 1 ? DataResult.success(s.charAt(0)) : DataResult.error(() -> "String must be exactly one char, not " + s.length()),
         c -> Character.toString(c)
     );
+    public static final Codec<Integer> INT_AS_STRING = Codec.STRING.comapFlatMap(
+        s -> {
+            try {
+                return DataResult.success(Integer.valueOf(s));
+            } catch (NumberFormatException e) {
+                return DataResult.error(e::getMessage);
+            }
+        },
+        Object::toString
+    );
+    public static final Codec<Int2IntMap> INT_2_INT_MAP = Codec.unboundedMap(INT_AS_STRING, Codec.INT)
+        .xmap(Int2IntOpenHashMap::new, Function.identity());
+    public static final Codec<IntList> INT_LIST = Codec.INT.listOf().xmap(IntImmutableList::new, Function.identity());
 
     private BingoCodecs() {
     }
@@ -148,6 +171,22 @@ public final class BingoCodecs {
             opt -> opt.orElse(defaultValue),
             dyn -> dyn.convert(defaultValue.getOps()).getValue().equals(defaultValue.getValue()) ? Optional.empty() : Optional.of(dyn)
         );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A> Codec<A[]> array(Codec<A> elementCodec, Class<A> aClass) {
+        return elementCodec.listOf().xmap(
+            list -> list.toArray((A[])Array.newInstance(aClass, list.size())),
+            ImmutableList::copyOf
+        );
+    }
+
+    public static <V> Codec<Int2ObjectMap<V>> int2ObjectMap(Codec<V> valueCodec) {
+        return Codec.unboundedMap(INT_AS_STRING, valueCodec).xmap(Int2ObjectOpenHashMap::new, Function.identity());
+    }
+
+    public static <K> Codec<Object2IntMap<K>> object2IntMap(Codec<K> keyCodec) {
+        return Codec.unboundedMap(keyCodec, Codec.INT).xmap(Object2IntOpenHashMap::new, Function.identity());
     }
 
     public static final class FirstValidCodec<A> implements Codec<A> {

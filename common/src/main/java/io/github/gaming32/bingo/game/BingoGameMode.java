@@ -2,15 +2,23 @@ package io.github.gaming32.bingo.game;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import net.minecraft.ChatFormatting;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public interface BingoGameMode {
     BingoGameMode STANDARD = new BingoGameMode() {
@@ -74,6 +82,11 @@ public interface BingoGameMode {
         @Override
         public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever) {
             return !board.getStates()[index].and(team) ^ isNever;
+        }
+
+        @Override
+        public String getName() {
+            return "standard";
         }
     };
 
@@ -170,6 +183,11 @@ public interface BingoGameMode {
         public boolean isLockout() {
             return true;
         }
+
+        @Override
+        public String getName() {
+            return "lockout";
+        }
     };
 
     BingoGameMode BLACKOUT = new BingoGameMode() {
@@ -204,6 +222,11 @@ public interface BingoGameMode {
         public boolean isGoalAllowed(BingoGoal.Holder goal) {
             return goal.goal().getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
         }
+
+        @Override
+        public String getName() {
+            return "blackout";
+        }
     };
 
     Map<String, BingoGameMode> GAME_MODES = new HashMap<>(Map.of(
@@ -211,6 +234,8 @@ public interface BingoGameMode {
         "lockout", LOCKOUT,
         "blackout", BLACKOUT
     ));
+
+    Codec<BingoGameMode> PERSISTENCE_CODEC = ExtraCodecs.stringResolverCodec(BingoGameMode::getName, GAME_MODES::get);
 
     @Nullable
     default CommandSyntaxException checkAllowedConfig(GameConfig config) {
@@ -233,6 +258,8 @@ public interface BingoGameMode {
     default boolean isLockout() {
         return false;
     }
+
+    String getName();
 
     record GameConfig(BingoGameMode gameMode, int size, Collection<PlayerTeam> teams) {
     }

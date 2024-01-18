@@ -1,5 +1,8 @@
 package io.github.gaming32.bingo.game;
 
+import com.google.common.collect.Maps;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
@@ -11,6 +14,14 @@ import io.github.gaming32.bingo.network.messages.s2c.SyncTeamMessage;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressMessage;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStateMessage;
 import io.github.gaming32.bingo.triggers.progress.ProgressibleTrigger;
+import io.github.gaming32.bingo.util.BingoCodecs;
+import io.github.gaming32.bingo.util.StatCodecs;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
@@ -20,6 +31,7 @@ import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionProgress;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,6 +40,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stat;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,17 +61,20 @@ public class BingoGame {
     private final BingoBoard board;
     private final BingoGameMode gameMode;
     private final boolean requireClient;
+    private final boolean persistent;
     private final PlayerTeam[] teams;
+
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> advancementProgress = new HashMap<>();
     private final Map<UUID, Map<ActiveGoal, GoalProgress>> goalProgress = new HashMap<>();
     private final Map<UUID, Object2IntOpenHashMap<ActiveGoal>> goalAchievedCount = new HashMap<>();
     private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
     private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, PlayerTeam... teams) {
+    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean persistent, PlayerTeam... teams) {
         this.board = board;
         this.gameMode = gameMode;
         this.requireClient = requireClient;
+        this.persistent = persistent;
         this.teams = teams;
     }
 
@@ -72,6 +88,10 @@ public class BingoGame {
 
     public boolean isRequireClient() {
         return requireClient;
+    }
+
+    public boolean isPersistent() {
+        return persistent;
     }
 
     /**
@@ -505,6 +525,10 @@ public class BingoGame {
         return gameMode.getWinners(board, teams.length, tryHarder);
     }
 
+    public PersistenceData createPersistenceData() {
+        return PersistenceData.create(this);
+    }
+
     private record BingoGameProgressListener<T extends CriterionTriggerInstance>(
         BingoGame game, ActiveGoal goal, ServerPlayer player, String criterionId, T triggerInstance
     ) implements ProgressibleTrigger.ProgressListener<T> {
@@ -513,6 +537,135 @@ public class BingoGame {
             if (triggerInstance == this.triggerInstance) {
                 goal.goal().goal().getProgress().goalProgressChanged(game, player, goal, criterionId, progress, maxProgress);
             }
+        }
+    }
+
+    public record PersistenceData(
+        BingoBoard board,
+        BingoGameMode gameMode,
+        boolean requireClient,
+        List<String> teamNames,
+        Map<UUID, Int2ObjectMap<AdvancementProgress>> advancementProgress,
+        Map<UUID, Int2ObjectMap<GoalProgress>> goalProgress,
+        Map<UUID, Int2IntMap> goalAchievedCount,
+        Map<UUID, IntList> queuedGoals,
+        Map<UUID, Object2IntMap<Stat<?>>> baseStats
+    ) {
+        private static final Codec<Map<UUID, Int2ObjectMap<AdvancementProgress>>> ADVANCEMENT_PROGRESS_CODEC =
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.int2ObjectMap(AdvancementProgress.CODEC));
+        private static final Codec<Map<UUID, Int2ObjectMap<GoalProgress>>> GOAL_PROGRESS_CODEC =
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.int2ObjectMap(GoalProgress.PERSISTENCE_CODEC));
+        private static final Codec<Map<UUID, Int2IntMap>> GOAL_ACHIEVED_COUNT_CODEC =
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.INT_2_INT_MAP);
+        private static final Codec<Map<UUID, IntList>> QUEUED_GOALS_CODEC =
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.INT_LIST);
+        private static final Codec<Map<UUID, Object2IntMap<Stat<?>>>> BASE_STATS_CODEC =
+            Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.object2IntMap(StatCodecs.STRING_CODEC));
+
+        public static final Codec<PersistenceData> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                BingoBoard.PERSISTENCE_CODEC.fieldOf("board").forGetter(PersistenceData::board),
+                BingoGameMode.PERSISTENCE_CODEC.fieldOf("game_mode").forGetter(PersistenceData::gameMode),
+                Codec.BOOL.fieldOf("require_client").forGetter(PersistenceData::requireClient),
+                Codec.STRING.listOf().fieldOf("team_names").forGetter(PersistenceData::teamNames),
+                ADVANCEMENT_PROGRESS_CODEC.fieldOf("advancement_progress").forGetter(PersistenceData::advancementProgress),
+                GOAL_PROGRESS_CODEC.fieldOf("goal_progress").forGetter(PersistenceData::goalProgress),
+                GOAL_ACHIEVED_COUNT_CODEC.fieldOf("goal_achieved_count").forGetter(PersistenceData::goalAchievedCount),
+                QUEUED_GOALS_CODEC.fieldOf("queued_goals").forGetter(PersistenceData::queuedGoals),
+                BASE_STATS_CODEC.fieldOf("base_stats").forGetter(PersistenceData::baseStats)
+            ).apply(instance, PersistenceData::new)
+        );
+
+        public BingoGame createGame(Scoreboard scoreboard) throws IllegalStateException {
+            final PlayerTeam[] teams = new PlayerTeam[teamNames.size()];
+            for (int i = 0; i < teams.length; i++) {
+                teams[i] = scoreboard.getPlayerTeam(teamNames.get(i));
+                if (teams[i] == null) {
+                    throw new IllegalStateException("Team '" + teamNames.get(i) + "' no longer exists");
+                }
+            }
+            final BingoGame game = new BingoGame(board, gameMode, requireClient, true, teams);
+
+            merge(game.advancementProgress, advancementProgress);
+            merge(game.goalProgress, goalProgress);
+
+            for (final var entry : goalAchievedCount.entrySet()) {
+                final Object2IntOpenHashMap<ActiveGoal> subTarget = new Object2IntOpenHashMap<>(entry.getValue().size());
+                for (final var subEntry : entry.getValue().int2IntEntrySet()) {
+                    subTarget.put(getGoal(subEntry.getIntKey()), subEntry.getIntValue());
+                }
+                game.goalAchievedCount.put(entry.getKey(), subTarget);
+            }
+
+            for (final var entry : queuedGoals.entrySet()) {
+                final List<ActiveGoal> subTarget = new ArrayList<>(entry.getValue().size());
+                for (final int goal : entry.getValue()) {
+                    subTarget.add(getGoal(goal));
+                }
+                game.queuedGoals.put(entry.getKey(), subTarget);
+            }
+
+            game.baseStats.putAll(baseStats);
+
+            return game;
+        }
+
+        private <V> void merge(Map<UUID, Map<ActiveGoal, V>> target, Map<UUID, Int2ObjectMap<V>> source) {
+            for (final var entry : source.entrySet()) {
+                final Map<ActiveGoal, V> subTarget = Maps.newHashMapWithExpectedSize(entry.getValue().size());
+                for (final var subEntry : entry.getValue().int2ObjectEntrySet()) {
+                    subTarget.put(getGoal(subEntry.getIntKey()), subEntry.getValue());
+                }
+                target.put(entry.getKey(), subTarget);
+            }
+        }
+
+        private ActiveGoal getGoal(int goal) {
+            return board.getGoals()[goal];
+        }
+
+        private static PersistenceData create(BingoGame game) {
+            final Map<UUID, Int2IntMap> goalAchievedCount = Maps.newHashMapWithExpectedSize(game.goalAchievedCount.size());
+            for (final var entry : game.goalAchievedCount.entrySet()) {
+                final Int2IntMap subTarget = new Int2IntOpenHashMap(entry.getValue().size());
+                for (final var subEntry : entry.getValue().object2IntEntrySet()) {
+                    subTarget.put(getGoal(game, subEntry.getKey()), subEntry.getIntValue());
+                }
+                goalAchievedCount.put(entry.getKey(), subTarget);
+            }
+
+            final Map<UUID, IntList> queuedGoals = Maps.newHashMapWithExpectedSize(game.queuedGoals.size());
+            for (final var entry : game.queuedGoals.entrySet()) {
+                final IntList subTarget = new IntArrayList(entry.getValue().size());
+                for (final ActiveGoal value : entry.getValue()) {
+                    subTarget.add(getGoal(game, value));
+                }
+                queuedGoals.put(entry.getKey(), subTarget);
+            }
+
+            return new PersistenceData(
+                game.board, game.gameMode, game.requireClient,
+                Arrays.stream(game.teams).map(PlayerTeam::getName).toList(),
+                createMap(game, game.advancementProgress),
+                createMap(game, game.goalProgress),
+                goalAchievedCount, queuedGoals, game.baseStats
+            );
+        }
+
+        private static <V> Map<UUID, Int2ObjectMap<V>> createMap(BingoGame game, Map<UUID, Map<ActiveGoal, V>> source) {
+            final Map<UUID, Int2ObjectMap<V>> target = Maps.newHashMapWithExpectedSize(source.size());
+            for (final var entry : source.entrySet()) {
+                final Int2ObjectMap<V> subTarget = new Int2ObjectOpenHashMap<>(entry.getValue().size());
+                for (final var subEntry : entry.getValue().entrySet()) {
+                    subTarget.put(getGoal(game, subEntry.getKey()), subEntry.getValue());
+                }
+                target.put(entry.getKey(), subTarget);
+            }
+            return target;
+        }
+
+        private static int getGoal(BingoGame game, ActiveGoal goal) {
+            return game.board.getIndex(goal);
         }
     }
 }
