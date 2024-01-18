@@ -40,6 +40,7 @@ import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.DistanceTrigger;
 import net.minecraft.advancements.critereon.EnchantedItemTrigger;
+import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -312,7 +313,16 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .infrequency(2));
         addGoal(obtainItemGoal(id("daylight_detector"), Items.DAYLIGHT_DETECTOR)
             .tags(BingoTags.OVERWORLD, BingoTags.NETHER));
-        // TODO: enchanted golden sword
+        addGoal(
+            obtainItemGoal(
+                id("enchanted_golden_sword"),
+                new ItemIcon(makeItemWithGlint(Items.GOLDEN_SWORD)),
+                ItemPredicate.Builder.item()
+                    .of(Items.GOLDEN_SWORD)
+                    .hasEnchantment(new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1)))
+            )
+                .name("enchanted_golden_sword")
+        );
         addGoal(obtainSomeItemsFromTag(id("wool_colors"), ItemTags.WOOL, "bingo.goal.wool_colors", 8, 11)
             .antisynergy("wool_color")
             .infrequency(4)

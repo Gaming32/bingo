@@ -1,0 +1,52 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "enchantments": [
+              {
+                "levels": {
+                  "min": 1
+                }
+              }
+            ],
+            "items": [
+              "minecraft:golden_sword"
+            ]
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:item",
+    "value": {
+      "Count": 1,
+      "id": "minecraft:golden_sword",
+      "tag": {
+        "Damage": 0,
+        "Enchantments": [
+          {}
+        ]
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.enchanted_golden_sword"
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item"
+  ]
+}
