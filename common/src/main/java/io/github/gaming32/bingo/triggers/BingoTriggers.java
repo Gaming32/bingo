@@ -38,6 +38,7 @@ public class BingoTriggers {
     public static final RegistrySupplier<EntityKilledPlayerTrigger> ENTITY_KILLED_PLAYER = register("entity_killed_player", EntityKilledPlayerTrigger::new);
     public static final RegistrySupplier<EquipItemTrigger> EQUIP_ITEM = register("equip_item", EquipItemTrigger::new);
     public static final RegistrySupplier<ExperienceChangeTrigger> EXPERIENCE_CHANGED = register("experience_changed", ExperienceChangeTrigger::new);
+    public static final RegistrySupplier<ExplosionTrigger> EXPLOSION = register("explosion", ExplosionTrigger::new);
     public static final RegistrySupplier<GrowBeeNestTreeTrigger> GROW_BEE_NEST_TREE = register("grow_bee_nest_tree", GrowBeeNestTreeTrigger::new);
     public static final RegistrySupplier<GrowFeatureTrigger> GROW_FEATURE = register("grow_feature", GrowFeatureTrigger::new);
     public static final RegistrySupplier<HasSomeFoodItemsTrigger> HAS_SOME_FOOD_ITEMS = register("has_some_food_items", HasSomeFoodItemsTrigger::new);

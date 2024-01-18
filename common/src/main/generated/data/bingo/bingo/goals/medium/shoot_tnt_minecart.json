@@ -1,0 +1,68 @@
+{
+  "criteria": {
+    "explode": {
+      "conditions": {
+        "source": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:tnt_minecart"
+            }
+          }
+        ]
+      },
+      "trigger": "bingo:explosion"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:bow",
+          "tag": {
+            "Damage": 0,
+            "Enchantments": [
+              {}
+            ]
+          }
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:arrow"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:tnt_minecart"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.shoot_tnt_minecart",
+    "with": [
+      {
+        "translate": "entity.minecraft.tnt_minecart"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "explode"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

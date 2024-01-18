@@ -3,7 +3,9 @@ package io.github.gaming32.bingo;
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
 import dev.architectury.event.CompoundEventResult;
+import dev.architectury.event.EventResult;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
+import dev.architectury.event.events.common.ExplosionEvent;
 import dev.architectury.event.events.common.InteractionEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
@@ -20,6 +22,7 @@ import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
+import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
 import io.github.gaming32.bingo.network.BingoNetwork;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.locale.Language;
@@ -28,6 +31,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.players.PlayerList;
@@ -68,6 +72,23 @@ public class Bingo {
                 BingoTriggers.TRY_USE_ITEM.get().trigger(serverPlayer, hand);
             }
             return CompoundEventResult.pass();
+        });
+
+        ExplosionEvent.PRE.register((level, explosion) -> {
+            if (level instanceof ServerLevel serverLevel) {
+                final ServerPlayer player;
+                if (explosion.getIndirectSourceEntity() instanceof ServerPlayer thePlayer) {
+                    player = thePlayer;
+                } else if (((ExplosionAccessor)explosion).getDamageSource().getEntity() instanceof ServerPlayer thePlayer) {
+                    player = thePlayer;
+                } else {
+                    player = null;
+                }
+                if (player != null) {
+                    BingoTriggers.EXPLOSION.get().trigger(player, serverLevel, explosion);
+                }
+            }
+            return EventResult.pass();
         });
 
         TickEvent.SERVER_POST.register(instance -> {
