@@ -1,8 +1,11 @@
 package io.github.gaming32.bingo.game;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -28,6 +31,14 @@ public class BingoBoard {
     public static final int MAX_SIZE = 7;
     public static final int DEFAULT_SIZE = 5;
 
+    public static final Codec<BingoBoard> PERSISTENCE_CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            Codec.INT.fieldOf("size").forGetter(BingoBoard::getSize),
+            BingoCodecs.array(Teams.CODEC, Teams.class).fieldOf("states").forGetter(BingoBoard::getStates),
+            BingoCodecs.array(ActiveGoal.PERSISTENCE_CODEC, ActiveGoal.class).fieldOf("goals").forGetter(BingoBoard::getGoals)
+        ).apply(instance, BingoBoard::create)
+    );
+
     private final int size;
     private final Teams[] states;
     private final ActiveGoal[] goals;
@@ -43,6 +54,17 @@ public class BingoBoard {
 
         Arrays.fill(states, Teams.NONE);
         toGoalIndex.defaultReturnValue(-1);
+    }
+
+    private static BingoBoard create(int size, Teams[] states, ActiveGoal[] goals) {
+        final BingoBoard board = new BingoBoard(size);
+        System.arraycopy(states, 0, board.states, 0, size * size);
+        for (int i = 0; i < size * size; i++) {
+            final ActiveGoal goal = board.goals[i] = goals[i];
+            board.byVanillaId.put(generateVanillaId(i), goal);
+            board.toGoalIndex.put(goal, i);
+        }
+        return board;
     }
 
     public static BingoBoard generate(
@@ -337,6 +359,8 @@ public class BingoBoard {
         public static final Teams TEAM1 = new Teams(0b01);
         public static final Teams TEAM2 = new Teams(0b10);
         private static final Teams[] CACHE = {NONE, TEAM1, TEAM2, new Teams(0b11)};
+
+        public static final Codec<Teams> CODEC = Codec.INT.xmap(Teams::fromBits, Teams::toBits);
 
         private final int bits;
 

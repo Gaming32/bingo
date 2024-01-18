@@ -25,7 +25,11 @@ import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
 import io.github.gaming32.bingo.network.BingoNetwork;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.locale.Language;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -35,8 +39,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.level.storage.LevelResource;
 import org.slf4j.Logger;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -48,6 +55,8 @@ public class Bingo {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final RegistrarManager REGISTRAR_MANAGER = RegistrarManager.get(MOD_ID);
+
+    public static final LevelResource PERSISTED_BINGO_GAME = new LevelResource("persisted_bingo_game.dat");
 
     public static boolean showOtherTeam;
 
@@ -98,6 +107,33 @@ public class Bingo {
                         player.connection.disconnect(BingoGame.REQUIRED_CLIENT_KICK);
                     }
                 }
+            }
+        });
+
+        LifecycleEvent.SERVER_STARTED.register(instance -> {
+            final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
+            if (!Files.isRegularFile(path)) return;
+            LOGGER.info("Reading persisted Bingo game");
+            try {
+                final CompoundTag tag = NbtIo.readCompressed(path, NbtAccounter.unlimitedHeap());
+                final BingoGame.PersistenceData data = BingoUtil.fromTag(BingoGame.PersistenceData.CODEC, tag);
+                activeGame = data.createGame(instance.getScoreboard());
+                Files.deleteIfExists(path);
+            } catch (Exception e) {
+                LOGGER.error("Failed to load persisted Bingo game", e);
+            }
+        });
+
+        LifecycleEvent.SERVER_STOPPING.register(instance -> {
+            if (activeGame == null || !activeGame.isPersistent()) return;
+            LOGGER.info("Storing persistent Bingo game");
+            final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
+            try {
+                final BingoGame.PersistenceData data = activeGame.createPersistenceData();
+                final CompoundTag tag = BingoUtil.toCompoundTag(BingoGame.PersistenceData.CODEC, data);
+                NbtIo.writeCompressed(tag, path);
+            } catch (Exception e) {
+                LOGGER.error("Failed to store persistent Bingo game", e);
             }
         });
 

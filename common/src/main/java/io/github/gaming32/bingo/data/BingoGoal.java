@@ -388,6 +388,13 @@ public class BingoGoal {
     }
 
     public record Holder(ResourceLocation id, BingoGoal goal) {
+        public static final Codec<Holder> PERSISTENCE_CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                ResourceLocation.CODEC.fieldOf("id").forGetter(Holder::id),
+                BingoGoal.CODEC.fieldOf("goal").forGetter(Holder::goal)
+            ).apply(instance, Holder::new)
+        );
+
         public ActiveGoal build(RandomSource rand) {
             final Map<String, Dynamic<?>> subs = goal.buildSubs(rand);
             final Optional<Component> tooltip = goal.buildTooltip(subs, rand);
