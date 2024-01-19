@@ -1,0 +1,58 @@
+{
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:iron_golem"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:indicator",
+    "base": {
+      "type": "bingo:entity",
+      "entity": "minecraft:iron_golem",
+      "item": {
+        "Count": 1,
+        "id": "minecraft:iron_golem_spawn_egg"
+      }
+    },
+    "indicator": {
+      "type": "bingo:item",
+      "value": {
+        "Count": 1,
+        "id": "minecraft:diamond_sword",
+        "tag": {
+          "Damage": 0
+        }
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.kill_golem",
+    "with": [
+      {
+        "translate": "entity.minecraft.iron_golem"
+      }
+    ]
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

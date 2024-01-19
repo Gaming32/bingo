@@ -12,6 +12,7 @@ import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
+import io.github.gaming32.bingo.data.icons.IndicatorIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
@@ -559,7 +560,15 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("seagrass"), Items.SEAGRASS, 33, 64)
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
-        // TODO: kill iron golem
+        addGoal(BingoGoal.builder(id("kill_golem"))
+            .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
+                EntityPredicate.Builder.entity().of(EntityType.IRON_GOLEM)
+            ))
+            .name(Component.translatable("bingo.goal.kill_golem", EntityType.IRON_GOLEM.getDescription()))
+            .icon(IndicatorIcon.infer(EntityType.IRON_GOLEM, Items.DIAMOND_SWORD))
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
         addGoal(BingoGoal.builder(id("kill_with_crystal"))
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
                 Optional.empty(),
