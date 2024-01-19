@@ -545,13 +545,16 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 Component.translatable("bingo.goal.kill_mobs", 0),
                 subber -> subber.sub("with.0", "count")
             )
-            .icon(new CycleIcon(
-                BuiltInRegistries.ENTITY_TYPE.stream()
-                    .filter(t -> t.getCategory() != MobCategory.MISC)
-                    .filter(t -> SpawnEggItem.byId(t) != null)
-                    .map(EntityIcon::ofSpawnEgg)
-                    .map(i -> (GoalIcon)i)
-                    .collect(ImmutableList.toImmutableList())
+            .icon(IndicatorIcon.infer(
+                new CycleIcon(
+                    BuiltInRegistries.ENTITY_TYPE.stream()
+                        .filter(t -> t.getCategory() != MobCategory.MISC)
+                        .filter(t -> SpawnEggItem.byId(t) != null)
+                        .map(EntityIcon::ofSpawnEgg)
+                        .map(i -> (GoalIcon)i)
+                        .collect(ImmutableList.toImmutableList())
+                ),
+                Items.DIAMOND_SWORD
             ))
             .reactant("pacifist")
             .antisynergy("mob_kills")

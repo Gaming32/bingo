@@ -33,609 +33,622 @@
   },
   "difficulty": "bingo:medium",
   "icon": {
-    "type": "bingo:cycle",
-    "value": [
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:allay",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:allay_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:axolotl",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:axolotl_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:bat",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:bat_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:bee",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:bee_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:blaze",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:blaze_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:breeze",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:breeze_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:camel",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:camel_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:cat",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:cat_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:cave_spider",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:cave_spider_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:chicken",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:chicken_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:cod",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:cod_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:cow",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:cow_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:creeper",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:creeper_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:dolphin",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:dolphin_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:donkey",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:donkey_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:drowned",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:drowned_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:elder_guardian",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:elder_guardian_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:ender_dragon",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:ender_dragon_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:enderman",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:enderman_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:endermite",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:endermite_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:evoker",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:evoker_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:fox",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:fox_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:frog",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:frog_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:ghast",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:ghast_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:glow_squid",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:glow_squid_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:goat",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:goat_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:guardian",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:guardian_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:hoglin",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:hoglin_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:horse",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:horse_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:husk",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:husk_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:llama",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:llama_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:magma_cube",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:magma_cube_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:mooshroom",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:mooshroom_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:mule",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:mule_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:ocelot",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:ocelot_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:panda",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:panda_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:parrot",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:parrot_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:phantom",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:phantom_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:pig",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:pig_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:piglin",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:piglin_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:piglin_brute",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:piglin_brute_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:pillager",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:pillager_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:polar_bear",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:polar_bear_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:pufferfish",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:pufferfish_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:rabbit",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:rabbit_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:ravager",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:ravager_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:salmon",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:salmon_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:sheep",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:sheep_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:shulker",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:shulker_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:silverfish",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:silverfish_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:skeleton",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:skeleton_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:skeleton_horse",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:skeleton_horse_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:slime",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:slime_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:sniffer",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:sniffer_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:spider",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:spider_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:squid",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:squid_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:stray",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:stray_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:strider",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:strider_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:tadpole",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:tadpole_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:trader_llama",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:trader_llama_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:tropical_fish",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:tropical_fish_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:turtle",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:turtle_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:vex",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:vex_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:vindicator",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:vindicator_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:wandering_trader",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:wandering_trader_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:warden",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:warden_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:witch",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:witch_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:wither",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:wither_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:wither_skeleton",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:wither_skeleton_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:wolf",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:wolf_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:zoglin",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:zoglin_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:zombie",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:zombie_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:zombie_horse",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:zombie_horse_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:zombie_villager",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:zombie_villager_spawn_egg"
-        }
-      },
-      {
-        "type": "bingo:entity",
-        "entity": "minecraft:zombified_piglin",
-        "item": {
-          "Count": 1,
-          "id": "minecraft:zombified_piglin_spawn_egg"
+    "type": "bingo:indicator",
+    "base": {
+      "type": "bingo:cycle",
+      "value": [
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:allay",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:allay_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:axolotl",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:axolotl_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:bat",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:bat_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:bee",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:bee_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:blaze",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:blaze_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:breeze",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:breeze_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:camel",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:camel_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:cat",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:cat_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:cave_spider",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:cave_spider_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:chicken",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:chicken_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:cod",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:cod_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:cow",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:cow_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:creeper",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:creeper_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:dolphin",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:dolphin_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:donkey",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:donkey_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:drowned",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:drowned_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:elder_guardian",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:elder_guardian_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:ender_dragon",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:ender_dragon_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:enderman",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:enderman_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:endermite",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:endermite_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:evoker",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:evoker_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:fox",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:fox_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:frog",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:frog_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:ghast",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:ghast_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:glow_squid",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:glow_squid_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:goat",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:goat_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:guardian",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:guardian_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:hoglin",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:hoglin_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:horse",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:horse_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:husk",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:husk_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:llama",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:llama_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:magma_cube",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:magma_cube_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:mooshroom",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:mooshroom_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:mule",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:mule_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:ocelot",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:ocelot_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:panda",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:panda_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:parrot",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:parrot_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:phantom",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:phantom_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:pig",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:pig_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:piglin",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:piglin_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:piglin_brute",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:piglin_brute_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:pillager",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:pillager_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:polar_bear",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:polar_bear_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:pufferfish",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:pufferfish_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:rabbit",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:rabbit_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:ravager",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:ravager_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:salmon",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:salmon_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:sheep",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:sheep_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:shulker",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:shulker_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:silverfish",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:silverfish_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:skeleton",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:skeleton_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:skeleton_horse",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:skeleton_horse_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:slime",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:slime_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:sniffer",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:sniffer_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:spider",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:spider_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:squid",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:squid_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:stray",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:stray_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:strider",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:strider_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:tadpole",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:tadpole_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:trader_llama",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:trader_llama_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:tropical_fish",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:tropical_fish_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:turtle",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:turtle_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:vex",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:vex_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:vindicator",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:vindicator_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:wandering_trader",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:wandering_trader_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:warden",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:warden_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:witch",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:witch_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:wither",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:wither_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:wither_skeleton",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:wither_skeleton_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:wolf",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:wolf_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:zoglin",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:zoglin_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:zombie",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:zombie_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:zombie_horse",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:zombie_horse_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:zombie_villager",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:zombie_villager_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:zombified_piglin",
+          "item": {
+            "Count": 1,
+            "id": "minecraft:zombified_piglin_spawn_egg"
+          }
+        }
+      ]
+    },
+    "indicator": {
+      "type": "bingo:item",
+      "value": {
+        "Count": 1,
+        "id": "minecraft:diamond_sword",
+        "tag": {
+          "Damage": 0
         }
       }
-    ]
+    }
   },
   "name": {
     "translate": "bingo.goal.kill_mobs",
