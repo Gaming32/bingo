@@ -29,6 +29,7 @@ import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
 import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
 import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
 import io.github.gaming32.bingo.triggers.KillSelfTrigger;
+import io.github.gaming32.bingo.triggers.PulledByLeashTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -386,7 +387,18 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(obtainItemGoal(id("firework_star"), Items.FIREWORK_STAR)
             .tags(BingoTags.OVERWORLD));
-        // TODO: hang mob with lead
+        addGoal(BingoGoal.builder(id("hang_mob"))
+            .criterion("hang", PulledByLeashTrigger.builder()
+                .knotRequired(true)
+                .force(DistancePredicate.vertical(MinMaxBounds.Doubles.atLeast(0.1)))
+                .build()
+            )
+            .name("hang_mob")
+            .tooltip("hang_mob")
+            .icon(CycleIcon.infer(EntityType.PIG, Items.LEAD, Items.OAK_FENCE))
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+        );
         addGoal(obtainItemGoal(id("blaze_rod"), Items.BLAZE_ROD)
             .reactant("pacifist")
             .tags(BingoTags.NETHER, BingoTags.COMBAT));

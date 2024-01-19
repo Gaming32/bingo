@@ -1,0 +1,60 @@
+{
+  "criteria": {
+    "hang": {
+      "conditions": {
+        "force": {
+          "y": {
+            "min": 0.1
+          }
+        },
+        "knot_required": true
+      },
+      "trigger": "bingo:pulled_by_leash"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:cycle",
+    "value": [
+      {
+        "type": "bingo:entity",
+        "entity": "minecraft:pig",
+        "item": {
+          "Count": 1,
+          "id": "minecraft:pig_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:lead"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "value": {
+          "Count": 1,
+          "id": "minecraft:oak_fence"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.hang_mob"
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "hang"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.hang_mob.tooltip"
+  }
+}

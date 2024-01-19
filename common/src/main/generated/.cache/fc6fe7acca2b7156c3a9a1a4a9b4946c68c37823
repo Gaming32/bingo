@@ -290,6 +290,7 @@ c8c7aa0e09e9df97414a644922a359e78a4d3bda data/bingo/bingo/goals/medium/grass_blo
 312d41509914df4002f83f0bbe35def8e181f0fc data/bingo/bingo/goals/medium/grow_nether_fungus.json
 c94610e0e2865be2e357589107657b47ede1d608 data/bingo/bingo/goals/medium/grow_tree_with_bee_nest.json
 4ecfaffcac16cda686f2ae7454a9772160aaee01 data/bingo/bingo/goals/medium/gunpowder.json
+e37b8a11a91ff217d2f397b03cf9a444cde50a0e data/bingo/bingo/goals/medium/hang_mob.json
 fe7c70e793dbb52d190f16d8890c4965e63a308b data/bingo/bingo/goals/medium/harming_potion.json
 27f9caae311c8528ef53338aa35102905d2cb256 data/bingo/bingo/goals/medium/healing_potion.json
 0b94db79ad97fc9410bf2de466668fc7287463ae data/bingo/bingo/goals/medium/heart_of_the_sea.json

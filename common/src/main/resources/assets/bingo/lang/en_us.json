@@ -126,6 +126,8 @@
   "bingo.goal.grow_tree_in_nether": "Grow a tree in the Nether",
   "bingo.goal.grow_tree_in_nether.tooltip": "Huge Crimson/Warped Fungi don't count.",
   "bingo.goal.grow_tree_with_bee_nest": "Grow a tree with a %s attached",
+  "bingo.goal.hang_mob": "Hang a mob with a Lead",
+  "bingo.goal.hang_mob.tooltip": "Suspend a mob in mid air using Fences and a Lead.",
   "bingo.goal.hang_painting": "Hang up a Painting",
   "bingo.goal.hatch_chicken": "Hatch a Chicken from an Egg",
   "bingo.goal.huge_fungus_in_overworld": "Grow a Huge Nether Fungus in the Overworld",
