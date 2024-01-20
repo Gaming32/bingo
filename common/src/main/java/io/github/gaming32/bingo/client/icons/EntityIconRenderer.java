@@ -54,13 +54,6 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
 
         final Quaternionf xRot = Axis.XP.rotationDegrees(-10f);
         pose.mulPose(Axis.ZP.rotationDegrees(180f).mul(xRot));
-        if (minecraft.cameraEntity != null) {
-            entity.setPos(
-                minecraft.cameraEntity.getX(),
-                minecraft.cameraEntity.getY(),
-                minecraft.cameraEntity.getZ()
-            );
-        }
         entity.tickCount = minecraft.player.tickCount;
         entity.setYRot(-150f);
         entity.setYHeadRot(-150f);
