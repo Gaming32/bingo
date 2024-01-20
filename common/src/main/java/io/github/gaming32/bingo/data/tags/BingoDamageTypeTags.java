@@ -11,6 +11,7 @@ public final class BingoDamageTypeTags {
     }
 
     public static final TagKey<DamageType> VOID = create("void");
+    public static final TagKey<DamageType> BERRY_BUSH = create("berry_bush");
 
     private static TagKey<DamageType> create(String name) {
         return TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(Bingo.MOD_ID, name));

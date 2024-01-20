@@ -20,5 +20,8 @@ public class BingoDamageTypeTagProvider extends FabricTagProvider<DamageType> {
         getOrCreateTagBuilder(BingoDamageTypeTags.VOID).add(
             DamageTypes.FELL_OUT_OF_WORLD
         );
+        getOrCreateTagBuilder(BingoDamageTypeTags.BERRY_BUSH).add(
+            DamageTypes.SWEET_BERRY_BUSH
+        );
     }
 }

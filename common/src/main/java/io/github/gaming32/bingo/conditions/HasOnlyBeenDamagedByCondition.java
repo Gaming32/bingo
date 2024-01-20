@@ -85,7 +85,7 @@ public record HasOnlyBeenDamagedByCondition(
         return new Builder();
     }
 
-    public static final class Builder {
+    public static final class Builder implements LootItemCondition.Builder {
         private Optional<EntityType<?>> entityType = Optional.empty();
         private Optional<TagPredicate<EntityType<?>>> entityTypeTag = Optional.empty();
         private Optional<EntityType<?>> directEntityType = Optional.empty();
@@ -138,6 +138,8 @@ public record HasOnlyBeenDamagedByCondition(
             return this;
         }
 
+        @NotNull
+        @Override
         public HasOnlyBeenDamagedByCondition build() {
             return new HasOnlyBeenDamagedByCondition(entityType, entityTypeTag, directEntityType, directEntityTypeTag, damageType, damageTypeTag);
         }

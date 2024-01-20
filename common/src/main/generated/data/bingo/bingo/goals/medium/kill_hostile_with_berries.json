@@ -1,0 +1,63 @@
+{
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#bingo:hostile"
+            }
+          }
+        ],
+        "killing_blow": {
+          "type": {
+            "tags": [
+              {
+                "expected": true,
+                "id": "bingo:berry_bush"
+              }
+            ]
+          }
+        }
+      },
+      "trigger": "bingo:entity_die_near_player"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:indicator",
+    "base": {
+      "type": "bingo:entity_type_tag_cycle",
+      "tag": "bingo:hostile"
+    },
+    "indicator": {
+      "type": "bingo:item",
+      "value": {
+        "Count": 1,
+        "id": "minecraft:sweet_berries"
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.kill_hostile_with_berries",
+    "with": [
+      {
+        "translate": "block.minecraft.sweet_berry_bush"
+      }
+    ]
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:combat",
+    "bingo:rare_biome"
+  ]
+}

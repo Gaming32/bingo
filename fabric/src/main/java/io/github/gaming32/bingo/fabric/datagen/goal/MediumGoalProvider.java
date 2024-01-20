@@ -19,9 +19,12 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
+import io.github.gaming32.bingo.data.tags.BingoDamageTypeTags;
+import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.triggers.BounceOnBlockTrigger;
+import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
 import io.github.gaming32.bingo.triggers.EntityKilledPlayerTrigger;
 import io.github.gaming32.bingo.triggers.EquipItemTrigger;
 import io.github.gaming32.bingo.triggers.ExplosionTrigger;
@@ -38,6 +41,7 @@ import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.BredAnimalsTrigger;
 import net.minecraft.advancements.critereon.ConsumeItemTrigger;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DamagePredicate;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.DistanceTrigger;
@@ -591,7 +595,37 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         // TODO: light campfire from 10 blocks away
         // TODO: max scale map
         // TODO: ignite TNT with lectern
-        // TODO: kill hostile mob with berry bush
+        addGoal(BingoGoal.builder(id("kill_hostile_with_berries"))
+            .criterion("kill", EntityDieNearPlayerTrigger.builder()
+//                .entity(ContextAwarePredicate.create(
+//                    new LootItemEntityPropertyCondition(
+//                        Optional.of(EntityPredicate.Builder.entity()
+//                            .of(BingoEntityTypeTags.HOSTILE)
+//                            .build()
+//                        ),
+//                        LootContext.EntityTarget.THIS
+//                    ),
+//                    HasOnlyBeenDamagedByCondition.builder()
+//                        .damageTypeTag(BingoDamageTypeTags.BERRY_BUSH)
+//                        .build()
+//                ))
+                .entity(EntityPredicate.Builder.entity()
+                    .of(BingoEntityTypeTags.HOSTILE)
+                    .build()
+                )
+                .killingBlow(DamagePredicate.Builder.damageInstance()
+                    .type(DamageSourcePredicate.Builder.damageType()
+                        .tag(TagPredicate.is(BingoDamageTypeTags.BERRY_BUSH))
+                    )
+                    .build()
+                )
+                .build()
+            )
+            .name(Component.translatable("bingo.goal.kill_hostile_with_berries", Blocks.SWEET_BERRY_BUSH.getName()))
+            .icon(IndicatorIcon.infer(BingoEntityTypeTags.HOSTILE, Items.SWEET_BERRIES))
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT, BingoTags.RARE_BIOME)
+        );
         addGoal(BingoGoal.builder(id("pillager_crossbow"))
             .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
                 ItemPredicate.Builder.item().of(Items.CROSSBOW).build(),
