@@ -2,13 +2,16 @@ package io.github.gaming32.bingo.fabric;
 
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
@@ -59,17 +62,27 @@ public class BingoNetworkingImpl extends BingoNetworking {
         public <P extends CustomPacketPayload> void register(
             @Nullable PacketFlow flow, ResourceLocation id, FriendlyByteBuf.Reader<P> reader, BiConsumer<P, Context> handler
         ) {
-            if (flow == null || flow == PacketFlow.CLIENTBOUND) {
-                ClientPlayNetworking.registerGlobalReceiver(id, (client, listener, buf, responseSender) -> {
-                    final P packet = reader.apply(buf);
-                    client.execute(() -> handler.accept(packet, new Context(client.player, responseSender::sendPacket)));
-                });
+            if ((flow == null || flow == PacketFlow.CLIENTBOUND) && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+                ClientPlayNetworking.registerGlobalReceiver(id, ClientHandlerHolder.create(reader, handler));
             }
             if (flow == null || flow == PacketFlow.SERVERBOUND) {
                 ServerPlayNetworking.registerGlobalReceiver(id, (server, player, listener, buf, responseSender) -> {
                     final P packet = reader.apply(buf);
                     server.execute(() -> handler.accept(packet, new Context(player, responseSender::sendPacket)));
                 });
+            }
+        }
+
+        // Funny class loading issues
+        private static class ClientHandlerHolder {
+            @NotNull
+            private static <P extends CustomPacketPayload> ClientPlayNetworking.PlayChannelHandler create(
+                FriendlyByteBuf.Reader<P> reader, BiConsumer<P, Context> handler
+            ) {
+                return (client, listener, buf, responseSender) -> {
+                    final P packet = reader.apply(buf);
+                    client.execute(() -> handler.accept(packet, new Context(client.player, responseSender::sendPacket)));
+                };
             }
         }
     }
