@@ -31,8 +31,6 @@ dependencies {
         isTransitive = false
     }
 
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-neoforge:0.3.1")!!)
-
     shadowCommon(implementation("com.electronwill.night-config:core:3.6.0")!!)
     shadowCommon(implementation("com.electronwill.night-config:toml:3.6.0")!!)
 

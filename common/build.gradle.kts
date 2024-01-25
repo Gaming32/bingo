@@ -7,8 +7,6 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modApi("dev.architectury:architectury:${rootProject["architectury_version"]}")
 
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.1")!!)
-
     implementation("com.electronwill.night-config:toml:3.6.0")
 
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:14.0.680")

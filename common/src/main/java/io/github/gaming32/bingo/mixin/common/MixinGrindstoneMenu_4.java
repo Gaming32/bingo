@@ -15,14 +15,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(targets = "net.minecraft.world.inventory.GrindstoneMenu$4")
 public class MixinGrindstoneMenu_4 {
-    @Shadow(aliases = {"field_16780", "f_39618_"})
+    @Shadow(aliases = "field_16780")
     @Final
     GrindstoneMenu this$0;
-    @Shadow(aliases = {"field_16779", "f_39617_"})
+    @Shadow(aliases = {"field_16779", "val$p_39568_"})
     @Final
     ContainerLevelAccess val$access;
 
-    @Inject(method = "onTake", at = @At("HEAD"))
+    @Inject(
+        method = "onTake",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/inventory/ContainerLevelAccess;execute(Ljava/util/function/BiConsumer;)V"
+        )
+    )
     private void onUseGrindstone(Player player, ItemStack stack, CallbackInfo ci) {
         if (player instanceof ServerPlayer serverPlayer) {
             val$access.execute((level, blockPos) -> {

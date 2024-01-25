@@ -46,8 +46,6 @@ dependencies {
         isTransitive = false
     }
 
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.1")!!)
-
     include(implementation("com.electronwill.night-config:core:3.6.0")!!)
     include(implementation("com.electronwill.night-config:toml:3.6.0")!!)
 
