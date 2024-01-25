@@ -3,7 +3,7 @@ import net.fabricmc.loom.api.LoomGradleExtensionAPI
 plugins {
     java
     id("architectury-plugin") version "3.4.+"
-    id("dev.architectury.loom") version "1.4.+" apply false
+    id("dev.architectury.loom") version "1.5.+" apply false
 }
 
 operator fun Project.get(key: String) = properties[key] as String
