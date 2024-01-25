@@ -1,8 +1,5 @@
 package io.github.gaming32.bingo.network.messages.s2c;
 
-import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseS2CMessage;
-import dev.architectury.networking.simple.MessageType;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.client.ClientGame;
@@ -10,22 +7,27 @@ import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.game.GoalProgress;
+import io.github.gaming32.bingo.network.AbstractCustomPayload;
+import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.ClientGoal;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public class InitBoardMessage extends BaseS2CMessage {
+public class InitBoardPacket extends AbstractCustomPayload {
+    public static final ResourceLocation ID = id("init_board");
+
     private final int size;
     private final ClientGoal[] goals;
     private final BingoBoard.Teams[] states;
     private final String[] teams;
     private final BingoGameMode.RenderMode renderMode;
 
-    public InitBoardMessage(BingoGame game, BingoBoard.Teams[] states) {
+    public InitBoardPacket(BingoGame game, BingoBoard.Teams[] states) {
         final BingoBoard board = game.getBoard();
 
         this.size = board.getSize();
@@ -40,7 +42,7 @@ public class InitBoardMessage extends BaseS2CMessage {
         this.renderMode = game.getGameMode().getRenderMode();
     }
 
-    public InitBoardMessage(FriendlyByteBuf buf) {
+    public InitBoardPacket(FriendlyByteBuf buf) {
         size = buf.readVarInt();
         goals = buf.readList(ClientGoal::new).toArray(ClientGoal[]::new);
         states = buf.readList(b -> BingoBoard.Teams.fromBits(b.readVarInt())).toArray(BingoBoard.Teams[]::new);
@@ -48,9 +50,10 @@ public class InitBoardMessage extends BaseS2CMessage {
         renderMode = buf.readEnum(BingoGameMode.RenderMode.class);
     }
 
+    @NotNull
     @Override
-    public MessageType getType() {
-        return BingoS2C.INIT_BOARD;
+    public ResourceLocation id() {
+        return ID;
     }
 
     @Override
@@ -63,8 +66,8 @@ public class InitBoardMessage extends BaseS2CMessage {
     }
 
     @Override
-    public void handle(NetworkManager.PacketContext context) {
-        final Scoreboard scoreboard = Minecraft.getInstance().level.getScoreboard();
+    public void handle(BingoNetworking.Context context) {
+        final Scoreboard scoreboard = context.level().getScoreboard();
         final PlayerTeam[] playerTeams = new PlayerTeam[teams.length];
         for (int i = 0; i < teams.length; i++) {
             final PlayerTeam team = scoreboard.getPlayerTeam(teams[i]);

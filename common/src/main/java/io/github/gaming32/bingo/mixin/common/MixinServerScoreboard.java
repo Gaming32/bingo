@@ -3,8 +3,8 @@ package io.github.gaming32.bingo.mixin.common;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.VanillaNetworking;
-import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesMessage;
-import io.github.gaming32.bingo.network.messages.s2c.SyncTeamMessage;
+import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPacket;
+import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerScoreboard;
@@ -56,11 +56,11 @@ public class MixinServerScoreboard {
             final ServerPlayer player = server.getPlayerList().getPlayerByName(playerName);
             if (player != null) {
                 final BingoBoard.Teams team = Bingo.activeGame.getTeam(player);
-                new SyncTeamMessage(team).sendTo(player);
+                new SyncTeamPacket(team).sendTo(player);
                 if (team.any()) {
                     Bingo.activeGame.flushQueuedGoals(player);
                 }
-                new ResyncStatesMessage(Bingo.activeGame.obfuscateTeam(team)).sendTo(player);
+                new ResyncStatesPacket(Bingo.activeGame.obfuscateTeam(team)).sendTo(player);
                 player.connection.send(new ClientboundUpdateAdvancementsPacket(
                     false,
                     List.of(),

@@ -1,31 +1,35 @@
 package io.github.gaming32.bingo.network.messages.s2c;
 
-import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseS2CMessage;
-import dev.architectury.networking.simple.MessageType;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.game.GoalProgress;
+import io.github.gaming32.bingo.network.AbstractCustomPayload;
+import io.github.gaming32.bingo.network.BingoNetworking;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-public class UpdateProgressMessage extends BaseS2CMessage {
+public class UpdateProgressPacket extends AbstractCustomPayload {
+    public static final ResourceLocation ID = id("update_progress");
+
     private final int index;
     private final int progress;
     private final int maxProgress;
 
-    public UpdateProgressMessage(int index, int progress, int maxProgress) {
+    public UpdateProgressPacket(int index, int progress, int maxProgress) {
         this.index = index;
         this.progress = progress;
         this.maxProgress = maxProgress;
     }
 
-    public UpdateProgressMessage(FriendlyByteBuf buf) {
+    public UpdateProgressPacket(FriendlyByteBuf buf) {
         this(buf.readVarInt(), buf.readVarInt(), buf.readVarInt());
     }
 
+    @NotNull
     @Override
-    public MessageType getType() {
-        return BingoS2C.UPDATE_PROGRESS;
+    public ResourceLocation id() {
+        return ID;
     }
 
     @Override
@@ -36,9 +40,9 @@ public class UpdateProgressMessage extends BaseS2CMessage {
     }
 
     @Override
-    public void handle(NetworkManager.PacketContext context) {
+    public void handle(BingoNetworking.Context context) {
         if (BingoClient.clientGame == null) {
-            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling " + getType().getId() + "!");
+            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling " + ID + "!");
             return;
         }
         BingoClient.clientGame.progress()[index] = new GoalProgress(progress, maxProgress);

@@ -10,7 +10,6 @@ import dev.architectury.event.events.common.InteractionEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.event.events.common.TickEvent;
-import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
 import io.github.gaming32.bingo.conditions.BingoConditions;
@@ -23,7 +22,14 @@ import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
-import io.github.gaming32.bingo.network.BingoNetwork;
+import io.github.gaming32.bingo.network.BingoNetworking;
+import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPacket;
+import io.github.gaming32.bingo.network.messages.s2c.InitBoardPacket;
+import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPacket;
+import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPacket;
+import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPacket;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPacket;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePacket;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.locale.Language;
@@ -35,6 +41,7 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
@@ -161,7 +168,16 @@ public class Bingo {
             List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
         );
 
-        BingoNetwork.load();
+        BingoNetworking.instance().onRegister(registrar -> {
+            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPacket.ID, InitBoardPacket::new);
+            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPacket.ID, buf -> RemoveBoardPacket.INSTANCE);
+            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPacket.ID, ResyncStatesPacket::new);
+            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPacket.ID, SyncTeamPacket::new);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPacket.ID, UpdateProgressPacket::new);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePacket.ID, UpdateStatePacket::new);
+
+            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.ID, KeyPressedPacket::new);
+        });
 
         LOGGER.info("I got the diagonal!");
     }
@@ -227,6 +243,6 @@ public class Bingo {
     }
 
     public static boolean isInstalledOnClient(ServerPlayer player) {
-        return NetworkManager.canPlayerReceive(player, BingoNetwork.PROTOCOL_VERSION_PACKET);
+        return BingoNetworking.instance().canPlayerReceive(player, InitBoardPacket.ID);
     }
 }

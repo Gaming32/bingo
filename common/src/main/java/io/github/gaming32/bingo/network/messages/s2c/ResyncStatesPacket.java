@@ -1,29 +1,33 @@
 package io.github.gaming32.bingo.network.messages.s2c;
 
-import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseS2CMessage;
-import dev.architectury.networking.simple.MessageType;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.game.BingoBoard;
+import io.github.gaming32.bingo.network.AbstractCustomPayload;
+import io.github.gaming32.bingo.network.BingoNetworking;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public class ResyncStatesMessage extends BaseS2CMessage {
+public class ResyncStatesPacket extends AbstractCustomPayload {
+    public static final ResourceLocation ID = id("resync_states");
+
     private final BingoBoard.Teams[] states;
 
-    public ResyncStatesMessage(BingoBoard.Teams[] states) {
+    public ResyncStatesPacket(BingoBoard.Teams[] states) {
         this.states = states;
     }
 
-    public ResyncStatesMessage(FriendlyByteBuf buf) {
+    public ResyncStatesPacket(FriendlyByteBuf buf) {
         states = buf.readList(b -> BingoBoard.Teams.fromBits(b.readVarInt())).toArray(BingoBoard.Teams[]::new);
     }
 
+    @NotNull
     @Override
-    public MessageType getType() {
-        return BingoS2C.RESYNC_STATES;
+    public ResourceLocation id() {
+        return ID;
     }
 
     @Override
@@ -32,9 +36,9 @@ public class ResyncStatesMessage extends BaseS2CMessage {
     }
 
     @Override
-    public void handle(NetworkManager.PacketContext context) {
+    public void handle(BingoNetworking.Context context) {
         if (BingoClient.clientGame == null) {
-            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling " + getType().getId() + "!");
+            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling " + ID + "!");
             return;
         }
         System.arraycopy(states, 0, BingoClient.clientGame.states(), 0, BingoClient.clientGame.size() * BingoClient.clientGame.size());
