@@ -7,6 +7,7 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientScreenInputEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.platform.Platform;
+import dev.architectury.registry.client.gui.ClientTooltipComponentRegistry;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.config.BingoClientConfig;
@@ -162,6 +163,8 @@ public class BingoClient {
                 }
             }
         });
+
+        ClientTooltipComponentRegistry.register(IconTooltip.class, ClientIconTooltip::new);
     }
 
     public static RecipeViewerPlugin getRecipeViewerPlugin() {

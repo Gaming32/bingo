@@ -1,13 +1,10 @@
 package io.github.gaming32.bingo.fabric.client;
 
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.client.ClientIconTooltip;
-import io.github.gaming32.bingo.client.IconTooltip;
 import io.github.gaming32.bingo.fabric.BingoFabric;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -24,13 +21,6 @@ public class BingoFabricClient implements ClientModInitializer {
             final FriendlyByteBuf response = PacketByteBufs.create();
             response.writeVarInt(BingoNetworking.PROTOCOL_VERSION);
             return CompletableFuture.completedFuture(response);
-        });
-
-        TooltipComponentCallback.EVENT.register(data -> {
-            if (data instanceof IconTooltip iconTooltip) {
-                return new ClientIconTooltip(iconTooltip);
-            }
-            return null;
         });
     }
 }

@@ -37,6 +37,6 @@ config = "bingo.mixins.json"
 [[dependencies.bingo]]
    modId="architectury"
    type="required"
-   versionRange="[11.0.10,)"
+   versionRange="[11.0.12,)"
    ordering="NONE"
    side="BOTH"

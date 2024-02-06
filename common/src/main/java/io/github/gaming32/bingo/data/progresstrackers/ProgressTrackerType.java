@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.data.progresstrackers;
 import com.mojang.serialization.Codec;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
+import dev.architectury.registry.registries.options.DefaultIdRegistrarOption;
 import io.github.gaming32.bingo.Bingo;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -14,6 +15,7 @@ public interface ProgressTrackerType<P extends ProgressTracker> {
     );
     Registrar<ProgressTrackerType<?>> REGISTRAR = Bingo.REGISTRAR_MANAGER
         .<ProgressTrackerType<?>>builder(REGISTRY_KEY.location())
+        .option(new DefaultIdRegistrarOption(new ResourceLocation("bingo:empty")))
         .build();
 
     RegistrySupplier<ProgressTrackerType<EmptyProgressTracker>> EMPTY = register("empty", EmptyProgressTracker.CODEC);
