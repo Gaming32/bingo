@@ -10,8 +10,11 @@ import dev.architectury.event.events.common.InteractionEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.event.events.common.TickEvent;
+import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
+import dev.architectury.utils.Env;
+import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.conditions.BingoParamSets;
 import io.github.gaming32.bingo.data.BingoDifficulty;
@@ -178,6 +181,10 @@ public class Bingo {
 
             registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.ID, KeyPressedPacket::new);
         });
+
+        if (Platform.getEnvironment() == Env.CLIENT) {
+            BingoClient.init();
+        }
 
         LOGGER.info("I got the diagonal!");
     }
