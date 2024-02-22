@@ -11,6 +11,7 @@ public class BoardScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics, mouseX, mouseY, partialTick);
+        if (BingoClient.clientGame == null) return;
         BingoClient.renderBingo(
             graphics, true,
             width / 2f - BingoClient.getBoardWidth() / 2f,
@@ -21,7 +22,7 @@ public class BoardScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (BingoClient.detectPress(
+        if (BingoClient.clientGame != null && BingoClient.detectPress(
             keyCode, scanCode,
             width / 2f - BingoClient.getBoardWidth() / 2f,
             height / 2f - BingoClient.getBoardHeight() / 2f,
@@ -34,7 +35,7 @@ public class BoardScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (BingoClient.detectClick(
+        if (BingoClient.clientGame != null && BingoClient.detectClick(
             button,
             width / 2f - BingoClient.getBoardWidth() / 2f,
             height / 2f - BingoClient.getBoardHeight() / 2f,
