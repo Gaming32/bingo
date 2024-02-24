@@ -493,7 +493,7 @@ public class BingoCommand {
 
         Bingo.activeGame = new BingoGame(board, gamemode, requireClient, persistent, teams.toArray(PlayerTeam[]::new));
         Bingo.updateCommandTree(playerList);
-        playerList.getPlayers().forEach(Bingo.activeGame::addPlayer);
+        new ArrayList<>(playerList.getPlayers()).forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(Bingo.translatable("bingo.started", difficulty.getDescription()), false);
         return Command.SINGLE_SUCCESS;
     }
