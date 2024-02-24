@@ -332,10 +332,18 @@ public class BingoCommand {
                             .getPlayers()
                             .stream()
                             .filter(p -> !p.isSpectator())
-                            .toList()
+                            .toList(),
+                        null
                     ))
                     .then(argument("players", EntityArgument.players())
-                        .executes(context -> randomizeTeams(context, EntityArgument.getPlayers(context, "players")))
+                        .executes(context -> randomizeTeams(context, EntityArgument.getPlayers(context, "players"), null))
+                        .then(argument("groups", IntegerArgumentType.integer(1))
+                            .executes(context -> randomizeTeams(
+                                context,
+                                EntityArgument.getPlayers(context, "players"),
+                                IntegerArgumentType.getInteger(context, "groups")
+                            ))
+                        )
                     )
                 )
             )
@@ -498,16 +506,23 @@ public class BingoCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int randomizeTeams(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) throws CommandSyntaxException {
+    private static int randomizeTeams(
+        CommandContext<CommandSourceStack> context,
+        Collection<ServerPlayer> players,
+        Integer groupCount
+    ) throws CommandSyntaxException {
         final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
-        final List<PlayerTeam> teams = new ArrayList<>(scoreboard.getPlayerTeams());
+        List<PlayerTeam> teams = new ArrayList<>(scoreboard.getPlayerTeams());
+        Collections.shuffle(teams);
+        if (groupCount != null) {
+            teams.subList(0, Math.min(groupCount, teams.size()));
+        }
         if (teams.isEmpty()) {
             throw NO_TEAMS.create();
         }
 
         final List<ServerPlayer> playerList = new ArrayList<>(players);
         Collections.shuffle(playerList);
-        Collections.shuffle(teams);
         for (int i = 0; i < playerList.size(); i++) {
             scoreboard.addPlayerToTeam(playerList.get(i).getScoreboardName(), teams.get(i % teams.size()));
         }
