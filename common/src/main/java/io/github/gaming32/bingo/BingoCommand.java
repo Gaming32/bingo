@@ -512,10 +512,10 @@ public class BingoCommand {
         Integer groupCount
     ) throws CommandSyntaxException {
         final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
-        List<PlayerTeam> teams = new ArrayList<>(scoreboard.getPlayerTeams());
+        final List<PlayerTeam> teams = new ArrayList<>(scoreboard.getPlayerTeams());
         Collections.shuffle(teams);
-        if (groupCount != null) {
-            teams.subList(0, Math.min(groupCount, teams.size()));
+        if (groupCount != null && groupCount < teams.size()) {
+            teams.subList(groupCount, teams.size()).clear();
         }
         if (teams.isEmpty()) {
             throw NO_TEAMS.create();
