@@ -18,10 +18,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
+    private static final Set<Item> FISH_ITEMS = Set.of(
+        Items.COD, Items.COOKED_COD, Items.SALMON, Items.COOKED_SALMON, Items.PUFFERFISH, Items.TROPICAL_FISH
+    );
+
     public BingoItemTagProvider(
         FabricDataOutput output,
         CompletableFuture<HolderLookup.Provider> registriesFuture,
@@ -218,7 +223,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             if (item.isEdible()) {
                 assert item.getFoodProperties() != null;
                 foodBuilder.add(item);
-                if (item.getFoodProperties().isMeat()) {
+                if (item.getFoodProperties().isMeat() || FISH_ITEMS.contains(item)) {
                     meatBuilder.add(item);
                 } else {
                     notMeatBuilder.add(item);
