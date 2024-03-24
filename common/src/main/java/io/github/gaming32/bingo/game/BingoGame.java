@@ -15,6 +15,7 @@ import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPacket;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePacket;
 import io.github.gaming32.bingo.triggers.progress.ProgressibleTrigger;
 import io.github.gaming32.bingo.util.BingoCodecs;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.StatCodecs;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
@@ -174,7 +175,7 @@ public class BingoGame {
                 message = Bingo.translatable("bingo.ended.tie");
             } else {
                 final PlayerTeam playerTeam = getTeam(winner);
-                Component teamName = playerTeam.getDisplayName();
+                Component teamName = BingoUtil.getDisplayName(playerTeam, playerList);
                 if (playerTeam.getColor() != ChatFormatting.RESET) {
                     teamName = teamName.copy().withStyle(playerTeam.getColor());
                 }
@@ -473,7 +474,7 @@ public class BingoGame {
         if (showOtherTeam) {
             new UpdateStatePacket(boardIndex, boardState).sendTo(playerList.getPlayers());
             if (gameMode.isLockout()) {
-                Component teamComponent = playerTeam.getDisplayName();
+                Component teamComponent = BingoUtil.getDisplayName(playerTeam, playerList);
                 if (playerTeam.getColor() != ChatFormatting.RESET) {
                     teamComponent = teamComponent.copy().withStyle(playerTeam.getColor());
                 }

@@ -29,16 +29,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class BingoClient {
@@ -109,7 +115,7 @@ public class BingoClient {
                 for (final TeamValue teamValue : teams) {
                     if (teamValue.score == 0) break;
                     final PlayerTeam team = clientGame.teams()[teamValue.team.getFirstIndex()];
-                    final MutableComponent leftText = team.getDisplayName().copy();
+                    final MutableComponent leftText = getDisplayName(team).copy();
                     final MutableComponent rightText = Component.literal(" - " + teamValue.score);
                     if (team.getColor() != ChatFormatting.RESET) {
                         leftText.withStyle(team.getColor());
@@ -235,9 +241,7 @@ public class BingoClient {
                     graphics.pose().translate(0, 0, 200);
 
                     final int pWidth = Math.round(progress.progress() * 13f / progress.maxProgress());
-                    final int pColor = Mth.hsvToRgb(
-                        (float)progress.progress() / progress.maxProgress() / 3f, 1f, 1f
-                    );
+                    final int pColor = Mth.hsvToRgb((float)progress.progress() / progress.maxProgress() / 3f, 1f, 1f);
                     final int pX = slotX + 2;
                     final int pY = slotY + 13;
                     graphics.fill(RenderType.guiOverlay(), pX, pY, pX + 13, pY + 2, 0xff000000);
@@ -309,5 +313,28 @@ public class BingoClient {
             return true;
         }
         return false;
+    }
+
+    public static Component getDisplayName(PlayerTeam team) {
+        final ClientPacketListener connection = Minecraft.getInstance().getConnection();
+        if (connection != null) {
+            final Iterator<PlayerInfo> players = team.getPlayers()
+                .stream()
+                .map(connection::getPlayerInfo)
+                .filter(Objects::nonNull)
+                .iterator();
+            if (players.hasNext()) {
+                final PlayerInfo playerInfo = players.next();
+                final ClientLevel level = Minecraft.getInstance().level;
+                if (level != null) {
+                    final Player player = level.getPlayerByUUID(playerInfo.getProfile().getId());
+                    if (player != null) {
+                        return player.getName();
+                    }
+                }
+                return Component.literal(players.next().getProfile().getName());
+            }
+        }
+        return team.getDisplayName();
     }
 }

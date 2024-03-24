@@ -17,12 +17,18 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collector;
 
@@ -162,5 +168,17 @@ public class BingoUtil {
         } catch (IllegalArgumentException e) {
             return defaultValue;
         }
+    }
+
+    public static Component getDisplayName(PlayerTeam team, PlayerList playerList) {
+        final Iterator<ServerPlayer> players = team.getPlayers()
+            .stream()
+            .map(playerList::getPlayerByName)
+            .filter(Objects::nonNull)
+            .iterator();
+        if (players.hasNext()) {
+            return players.next().getName();
+        }
+        return team.getDisplayName();
     }
 }
