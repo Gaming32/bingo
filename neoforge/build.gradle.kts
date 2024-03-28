@@ -1,5 +1,5 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 operator fun Project.get(key: String) = properties[key] as String
@@ -31,9 +31,6 @@ dependencies {
         isTransitive = false
     }
 
-    shadowCommon(implementation("com.electronwill.night-config:core:3.6.0")!!)
-    shadowCommon(implementation("com.electronwill.night-config:toml:3.6.0")!!)
-
 //    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-neoforge:14.0.680")
 //    modRuntimeOnly("mezz.jei:jei-1.20.1-neoforge:15.2.0.27")
 //    modRuntimeOnly("dev.emi:emi-neoforge:1.0.19+1.20.1")
@@ -56,8 +53,6 @@ tasks.shadowJar {
 
     configurations = listOf(shadowCommon)
     archiveClassifier = "dev-shadow"
-
-    relocate("com.electronwill.nightconfig", "io.github.gaming32.bingo.shadow.nightconfig")
 }
 
 tasks.remapJar {
