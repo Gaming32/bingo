@@ -325,14 +325,16 @@ public class BingoClient {
                 .iterator();
             if (players.hasNext()) {
                 final PlayerInfo playerInfo = players.next();
-                final ClientLevel level = Minecraft.getInstance().level;
-                if (level != null) {
-                    final Player player = level.getPlayerByUUID(playerInfo.getProfile().getId());
-                    if (player != null) {
-                        return player.getName();
+                if (!players.hasNext()) {
+                    final ClientLevel level = Minecraft.getInstance().level;
+                    if (level != null) {
+                        final Player player = level.getPlayerByUUID(playerInfo.getProfile().getId());
+                        if (player != null) {
+                            return player.getName();
+                        }
                     }
+                    return Component.literal(players.next().getProfile().getName());
                 }
-                return Component.literal(players.next().getProfile().getName());
             }
         }
         return team.getDisplayName();

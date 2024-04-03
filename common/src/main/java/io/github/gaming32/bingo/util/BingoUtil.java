@@ -177,7 +177,10 @@ public class BingoUtil {
             .filter(Objects::nonNull)
             .iterator();
         if (players.hasNext()) {
-            return players.next().getName();
+            final ServerPlayer player = players.next();
+            if (!players.hasNext()) {
+                return player.getName();
+            }
         }
         return team.getDisplayName();
     }
