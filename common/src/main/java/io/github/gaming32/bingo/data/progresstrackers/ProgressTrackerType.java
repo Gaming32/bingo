@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.data.progresstrackers;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import dev.architectury.registry.registries.options.DefaultIdRegistrarOption;
@@ -23,16 +23,16 @@ public interface ProgressTrackerType<P extends ProgressTracker> {
     RegistrySupplier<ProgressTrackerType<CriterionProgressTracker>> CRITERION = register("criterion", CriterionProgressTracker.CODEC);
     RegistrySupplier<ProgressTrackerType<GoalAchievedCountProgressTracker>> GOAL_ACHIEVED_COUNT = register("goal_achieved_type", GoalAchievedCountProgressTracker.CODEC);
 
-    Codec<P> codec();
+    MapCodec<P> codec();
 
-    static <P extends ProgressTracker> RegistrySupplier<ProgressTrackerType<P>> register(String id, Codec<P> codec) {
+    static <P extends ProgressTracker> RegistrySupplier<ProgressTrackerType<P>> register(String id, MapCodec<P> codec) {
         if (id.indexOf(':') < 0) {
             id = "bingo:" + id;
         }
         final ResourceLocation location = new ResourceLocation(id);
         return REGISTRAR.register(location, () -> new ProgressTrackerType<>() {
             @Override
-            public Codec<P> codec() {
+            public MapCodec<P> codec() {
                 return codec;
             }
 

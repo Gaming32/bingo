@@ -1,11 +1,11 @@
 package io.github.gaming32.bingo.data.progresstrackers;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 
 public enum EmptyProgressTracker implements ProgressTracker {
     INSTANCE;
 
-    public static final Codec<EmptyProgressTracker> CODEC = Codec.unit(INSTANCE);
+    public static final MapCodec<EmptyProgressTracker> CODEC = MapCodec.unit(INSTANCE);
 
     @Override
     public ProgressTrackerType<?> type() {

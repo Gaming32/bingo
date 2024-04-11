@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public interface ProgressTracker {
     Codec<ProgressTracker> CODEC = BingoCodecs.registrarByName(ProgressTrackerType.REGISTRAR)
-        .dispatch(ProgressTracker::type, ProgressTrackerType::codec);
+        .dispatch(ProgressTracker::type, type -> type.codec().codec());
 
     default DataResult<ProgressTracker> validate(BingoGoal goal) {
         return DataResult.success(this);
