@@ -14,7 +14,7 @@
   "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 16,
       "id": "minecraft:magenta_bed"
     }

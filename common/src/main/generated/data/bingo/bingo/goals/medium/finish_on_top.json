@@ -24,7 +24,7 @@
   "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 320,
       "id": "minecraft:dirt"
     }

@@ -14,7 +14,7 @@
   "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 1,
       "id": "minecraft:carrot_on_a_stick",
       "tag": {

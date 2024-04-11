@@ -30,17 +30,17 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:soul_campfire"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 4,
           "id": "minecraft:porkchop"
         }

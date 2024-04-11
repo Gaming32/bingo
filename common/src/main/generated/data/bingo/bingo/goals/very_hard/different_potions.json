@@ -25,10 +25,10 @@
   "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -41,7 +41,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -54,7 +54,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -67,7 +67,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -80,7 +80,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -93,7 +93,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -106,7 +106,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -119,7 +119,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -132,7 +132,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -145,7 +145,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -158,7 +158,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -171,7 +171,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -184,7 +184,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -197,7 +197,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -210,7 +210,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -223,7 +223,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -236,7 +236,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -249,7 +249,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -262,7 +262,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"
@@ -275,7 +275,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "count"

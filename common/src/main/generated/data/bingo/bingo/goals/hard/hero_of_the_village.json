@@ -7,7 +7,7 @@
   "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 1,
       "id": "minecraft:white_banner",
       "tag": {

@@ -12,7 +12,7 @@
   "difficulty": "bingo:very_easy",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 1,
       "id": "minecraft:stone_hoe",
       "tag": {

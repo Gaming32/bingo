@@ -36,7 +36,7 @@
     "type": "bingo:indicator",
     "base": {
       "type": "bingo:cycle",
-      "value": [
+      "icons": [
         {
           "type": "bingo:entity",
           "entity": "minecraft:allay",
@@ -641,7 +641,7 @@
     },
     "indicator": {
       "type": "bingo:item",
-      "value": {
+      "item": {
         "Count": 1,
         "id": "minecraft:diamond_sword",
         "tag": {

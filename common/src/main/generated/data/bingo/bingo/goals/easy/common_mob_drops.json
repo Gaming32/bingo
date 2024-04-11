@@ -64,38 +64,38 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:rotten_flesh"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:spider_eye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:bone"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:gunpowder"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:ender_pearl"
         }

@@ -13,7 +13,7 @@
   "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 50,
       "id": "minecraft:experience_bottle"
     }

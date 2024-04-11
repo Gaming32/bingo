@@ -18,7 +18,7 @@
   "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 6,
       "id": "minecraft:fire_charge"
     }

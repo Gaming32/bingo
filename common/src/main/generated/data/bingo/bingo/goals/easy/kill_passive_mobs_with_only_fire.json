@@ -47,7 +47,7 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:entity_type_tag_cycle",
         "count": {

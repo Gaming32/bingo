@@ -61,17 +61,17 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 26,
           "id": "minecraft:glass"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:lava_bucket"
         }

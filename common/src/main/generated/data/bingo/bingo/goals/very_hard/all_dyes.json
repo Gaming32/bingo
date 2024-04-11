@@ -92,115 +92,115 @@
   "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:white_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:orange_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:magenta_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:light_blue_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:yellow_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:lime_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:pink_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:gray_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:light_gray_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:cyan_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:purple_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:blue_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:brown_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:green_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:red_dye"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 16,
           "id": "minecraft:black_dye"
         }

@@ -69,7 +69,7 @@ public record JsonSubber(JsonElement json) {
             if (value.isJsonObject()) {
                 next = value.getAsJsonObject().get(offset);
                 if (next == null) {
-                    throw new IllegalArgumentException("Could not find " + pathToString(offset));
+                    throw new IllegalArgumentException("Could not find " + pathToString(offset) + " in " + value);
                 }
             } else if (value.isJsonArray()) {
                 int index;

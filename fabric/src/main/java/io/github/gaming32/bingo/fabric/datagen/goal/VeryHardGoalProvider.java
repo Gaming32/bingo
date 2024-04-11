@@ -14,28 +14,11 @@ import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgre
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.triggers.BeaconEffectTrigger;
-import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
-import io.github.gaming32.bingo.triggers.DifferentPotionsTrigger;
-import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
-import io.github.gaming32.bingo.triggers.ExperienceChangeTrigger;
-import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
-import io.github.gaming32.bingo.triggers.PartyParrotsTrigger;
-import io.github.gaming32.bingo.triggers.PowerConduitTrigger;
-import io.github.gaming32.bingo.triggers.ZombifyPigTrigger;
+import io.github.gaming32.bingo.triggers.*;
 import net.minecraft.Util;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DamagePredicate;
-import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.KilledTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -43,11 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.InstrumentItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -87,7 +66,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tooltip("different_potions")
             .icon(
                 createPotionsIcon(Items.POTION),
-                subber -> subber.multiSub("value.*.value.Count", "count")
+                subber -> subber.multiSub("icons.*.item.Count", "count")
             )
         );
         addGoal(obtainAllItemsFromTag(BingoItemTags.ARMOR_CHESTPLATES, "chestplates")
@@ -139,7 +118,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER, BingoTags.OVERWORLD)
             .icon(
                 createPotionsIcon(Items.TIPPED_ARROW),
-                subber -> subber.multiSub("value.*.value.Count", "count")
+                subber -> subber.multiSub("icons.*.item.Count", "count")
             )
         );
         addGoal(mineralPillarGoal(id("all_mineral_blocks"), BingoBlockTags.ALL_MINERAL_BLOCKS)

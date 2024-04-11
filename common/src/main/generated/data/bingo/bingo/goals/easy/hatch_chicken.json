@@ -7,10 +7,10 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:egg"
         }

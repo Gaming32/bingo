@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.data.icons;
 
 import com.google.common.collect.Iterables;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -12,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public record ItemTagCycleIcon(TagKey<Item> tag, int count) implements GoalIcon {
-    public static final Codec<ItemTagCycleIcon> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<ItemTagCycleIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(ItemTagCycleIcon::tag),
             ExtraCodecs.strictOptionalField(Codec.INT, "count", 1).forGetter(ItemTagCycleIcon::count)

@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface GoalIcon {
     Codec<GoalIcon> CODEC = BingoCodecs.registrarByName(GoalIconType.REGISTRAR)
-        .dispatch(GoalIcon::type, GoalIconType::codec);
+        .dispatch(GoalIcon::type, type -> type.codec().codec());
 
     /**
      * Used for rendering count, as well as for a fallback for Vanilla clients.

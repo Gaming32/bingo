@@ -109,10 +109,10 @@
   "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:goat_horn",
           "tag": {
@@ -122,7 +122,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:goat_horn",
           "tag": {
@@ -132,7 +132,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:goat_horn",
           "tag": {
@@ -142,7 +142,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:goat_horn",
           "tag": {
@@ -152,7 +152,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:goat_horn",
           "tag": {
@@ -162,7 +162,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:goat_horn",
           "tag": {
@@ -172,7 +172,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:goat_horn",
           "tag": {
@@ -182,7 +182,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:goat_horn",
           "tag": {

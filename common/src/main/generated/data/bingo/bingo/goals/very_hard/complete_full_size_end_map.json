@@ -16,7 +16,7 @@
   "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 1,
       "id": "minecraft:filled_map"
     }

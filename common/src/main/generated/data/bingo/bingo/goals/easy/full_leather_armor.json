@@ -31,10 +31,10 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:leather_helmet",
           "tag": {
@@ -44,7 +44,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:leather_chestplate",
           "tag": {
@@ -54,7 +54,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:leather_leggings",
           "tag": {
@@ -64,7 +64,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:leather_boots",
           "tag": {

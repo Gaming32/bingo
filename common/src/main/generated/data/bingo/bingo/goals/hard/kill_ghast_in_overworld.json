@@ -21,7 +21,7 @@
   "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 1,
       "id": "minecraft:ghast_tear"
     }

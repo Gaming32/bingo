@@ -44,7 +44,7 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": {
         "bingo_type": "bingo:sub",
         "value": "distance"

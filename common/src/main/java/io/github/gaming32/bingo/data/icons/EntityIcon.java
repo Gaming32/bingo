@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.data.icons;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -13,7 +13,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import java.util.Objects;
 
 public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item) implements GoalIcon {
-    public static final Codec<EntityIcon> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<EntityIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(EntityIcon::entity),
             ExtraCodecs.strictOptionalField(CompoundTag.CODEC, "data", new CompoundTag()).forGetter(EntityIcon::data),

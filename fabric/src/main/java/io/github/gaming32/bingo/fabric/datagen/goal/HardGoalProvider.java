@@ -38,11 +38,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
-import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.MatchTool;
+import net.minecraft.world.level.storage.loot.predicates.*;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -593,7 +589,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 BlockIcon.ofBlock(Blocks.DIRT),
                 BlockIcon.ofBlock(Blocks.NETHERRACK),
                 BlockIcon.ofBlock(Blocks.END_STONE)
-            ), subber -> subber.multiSub("value.*.item.Count", "count"))
+            ), subber -> subber.multiSub("icons.*.item.Count", "count"))
         );
         addGoal(BingoGoal.builder(id("tame_mule"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(

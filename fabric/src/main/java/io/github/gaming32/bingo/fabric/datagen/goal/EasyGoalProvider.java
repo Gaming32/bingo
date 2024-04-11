@@ -1,25 +1,10 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
-import io.github.gaming32.bingo.conditions.BlockPatternCondition;
-import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
-import io.github.gaming32.bingo.conditions.FlammableCondition;
-import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
-import io.github.gaming32.bingo.conditions.HasOnlyBeenDamagedByCondition;
-import io.github.gaming32.bingo.conditions.InStructureCondition;
-import io.github.gaming32.bingo.conditions.PassengersCondition;
-import io.github.gaming32.bingo.conditions.ToolDamageCondition;
-import io.github.gaming32.bingo.conditions.ToolIsEnchantedCondition;
-import io.github.gaming32.bingo.conditions.VillagerOwnershipCondition;
+import io.github.gaming32.bingo.conditions.*;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
-import io.github.gaming32.bingo.data.icons.BlockIcon;
-import io.github.gaming32.bingo.data.icons.CycleIcon;
-import io.github.gaming32.bingo.data.icons.EffectIcon;
-import io.github.gaming32.bingo.data.icons.EntityIcon;
-import io.github.gaming32.bingo.data.icons.EntityTypeTagCycleIcon;
-import io.github.gaming32.bingo.data.icons.ItemIcon;
-import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
+import io.github.gaming32.bingo.data.icons.*;
 import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgressTracker;
 import io.github.gaming32.bingo.data.progresstrackers.GoalAchievedCountProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
@@ -28,55 +13,12 @@ import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.data.tags.BingoPaintingVariantTags;
-import io.github.gaming32.bingo.triggers.AdjacentPaintingTrigger;
-import io.github.gaming32.bingo.triggers.ArrowPressTrigger;
-import io.github.gaming32.bingo.triggers.BingoTriggers;
-import io.github.gaming32.bingo.triggers.ChickenHatchTrigger;
-import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
-import io.github.gaming32.bingo.triggers.DestroyVehicleTrigger;
-import io.github.gaming32.bingo.triggers.DifferentColoredShieldsTrigger;
-import io.github.gaming32.bingo.triggers.DoorOpenedByTargetTrigger;
-import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
-import io.github.gaming32.bingo.triggers.EquipItemTrigger;
-import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
-import io.github.gaming32.bingo.triggers.HasSomeFoodItemsTrigger;
-import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
-import io.github.gaming32.bingo.triggers.KeyPressedTrigger;
-import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
-import io.github.gaming32.bingo.triggers.ShootBellTrigger;
-import io.github.gaming32.bingo.triggers.UseGrindstoneTrigger;
-import io.github.gaming32.bingo.triggers.WearDifferentColoredArmorTrigger;
-import io.github.gaming32.bingo.triggers.ZombieDrownedTrigger;
+import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.ConsumeItemTrigger;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DamagePredicate;
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
-import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.advancements.critereon.EffectsChangedTrigger;
-import net.minecraft.advancements.critereon.EntityFlagsPredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.EntityTypePredicate;
-import net.minecraft.advancements.critereon.FishingRodHookedTrigger;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.MobEffectsPredicate;
-import net.minecraft.advancements.critereon.PickedUpItemTrigger;
-import net.minecraft.advancements.critereon.PlayerInteractTrigger;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.advancements.critereon.SummonedEntityTrigger;
-import net.minecraft.advancements.critereon.TagPredicate;
-import net.minecraft.advancements.critereon.TameAnimalTrigger;
-import net.minecraft.advancements.critereon.TradeTrigger;
-import net.minecraft.advancements.critereon.UsingItemTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -86,32 +28,19 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.StructureTags;
+import net.minecraft.tags.*;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.MatchTool;
+import net.minecraft.world.level.storage.loot.predicates.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -434,7 +363,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tooltip("different_colored_shields")
             .icon(CycleIcon.infer(Arrays.stream(DyeColor.values()).map(DifficultyGoalProvider::makeShieldWithColor)), subber -> {
                 for (int i = 0; i < DyeColor.values().length; i++) {
-                    subber.sub("value." + i + ".value.Count", "count");
+                    subber.sub("icons." + i + ".item.Count", "count");
                 }
             })
             .tags(BingoTags.ITEM, BingoTags.COLOR, BingoTags.OVERWORLD));
@@ -527,7 +456,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(new CycleIcon(
                 new EntityTypeTagCycleIcon(BingoEntityTypeTags.PASSIVE, 0),
                 new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStack(Items.FLINT_AND_STEEL, 1))
-            ), subber -> subber.sub("value.0.count", "count").sub("value.1.item.Count", "count"))
+            ), subber -> subber.sub("icons.0.count", "count").sub("icons.1.item.Count", "count"))
             .reactant("pacifist")
             .tags(BingoTags.ACTION, BingoTags.COMBAT));
         addGoal(BingoGoal.builder(id("kill_creeper_with_only_fire"))

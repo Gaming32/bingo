@@ -34,7 +34,7 @@
     },
     "indicator": {
       "type": "bingo:item",
-      "value": {
+      "item": {
         "Count": 1,
         "id": "minecraft:sweet_berries"
       }

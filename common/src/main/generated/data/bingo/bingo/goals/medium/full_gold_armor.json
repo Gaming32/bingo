@@ -31,10 +31,10 @@
   "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:golden_boots",
           "tag": {
@@ -44,7 +44,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:golden_leggings",
           "tag": {
@@ -54,7 +54,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:golden_chestplate",
           "tag": {
@@ -64,7 +64,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:golden_helmet",
           "tag": {

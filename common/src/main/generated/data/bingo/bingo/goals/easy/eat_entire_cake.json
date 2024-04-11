@@ -99,7 +99,7 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 1,
       "id": "minecraft:cake"
     }

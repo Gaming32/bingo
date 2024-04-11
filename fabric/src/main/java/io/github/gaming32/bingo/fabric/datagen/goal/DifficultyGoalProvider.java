@@ -15,21 +15,11 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.triggers.BedRowTrigger;
-import io.github.gaming32.bingo.triggers.ExperienceChangeTrigger;
-import io.github.gaming32.bingo.triggers.HasSomeFoodItemsTrigger;
-import io.github.gaming32.bingo.triggers.HasSomeItemsFromTagTrigger;
-import io.github.gaming32.bingo.triggers.MineralPillarTrigger;
-import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
-import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
+import io.github.gaming32.bingo.triggers.*;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
 import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -41,12 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ShieldItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
@@ -144,7 +129,7 @@ public abstract class DifficultyGoalProvider {
                 subber -> subber.sub("conditions.items.0.count.min", "count"))
             .progress("obtain")
             .tags(BingoTags.ITEM)
-            .icon(icon, subber -> subber.sub("value.Count", "count"));
+            .icon(icon, subber -> subber.sub("item.Count", "count"));
     }
 
     protected static BingoGoal.Builder obtainSomeItemsFromTag(
@@ -215,7 +200,7 @@ public abstract class DifficultyGoalProvider {
                 subber -> subber.sub("conditions.levels.min", "count"))
             .tags(BingoTags.STAT)
             .name(Component.translatable("bingo.goal.levels", 0), subber -> subber.sub("with.0", "count"))
-            .icon(Items.EXPERIENCE_BOTTLE, subber -> subber.sub("value.Count", "count"))
+            .icon(Items.EXPERIENCE_BOTTLE, subber -> subber.sub("item.Count", "count"))
             .infrequency(2)
             .antisynergy("levels");
     }
@@ -243,7 +228,7 @@ public abstract class DifficultyGoalProvider {
             .antisynergy("crouch_distance")
             .infrequency(2)
             .tags(BingoTags.ACTION, BingoTags.STAT)
-            .icon(Items.LEATHER_BOOTS, subber -> subber.sub("value.Count", "distance"));
+            .icon(Items.LEATHER_BOOTS, subber -> subber.sub("item.Count", "distance"));
     }
 
     protected static BingoGoal.Builder bedRowGoal(ResourceLocation id, int minCount, int maxCount) {
@@ -262,7 +247,7 @@ public abstract class DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.bed_row", 0), subber -> subber.sub("with.0", "count"))
             .antisynergy("bed_color")
             .infrequency(4)
-            .icon(Items.MAGENTA_BED, subber -> subber.sub("value.Count", "count"))
+            .icon(Items.MAGENTA_BED, subber -> subber.sub("item.Count", "count"))
             .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
     }
 

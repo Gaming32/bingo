@@ -65,10 +65,10 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:wooden_pickaxe",
           "tag": {
@@ -78,7 +78,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:stone_pickaxe",
           "tag": {
@@ -88,7 +88,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:golden_pickaxe",
           "tag": {
@@ -98,7 +98,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:iron_pickaxe",
           "tag": {
@@ -108,7 +108,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:diamond_pickaxe",
           "tag": {

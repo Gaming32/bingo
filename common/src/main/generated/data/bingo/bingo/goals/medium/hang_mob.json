@@ -15,7 +15,7 @@
   "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:entity",
         "entity": "minecraft:pig",
@@ -26,14 +26,14 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:lead"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:oak_fence"
         }

@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -16,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 public record EntityTypeTagCycleIcon(TagKey<EntityType<?>> tag, int count) implements GoalIcon {
-    public static final Codec<EntityTypeTagCycleIcon> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<EntityTypeTagCycleIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             TagKey.codec(Registries.ENTITY_TYPE).fieldOf("tag").forGetter(EntityTypeTagCycleIcon::tag),
             ExtraCodecs.strictOptionalField(Codec.INT, "count", 1).forGetter(EntityTypeTagCycleIcon::count)

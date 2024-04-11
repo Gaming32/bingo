@@ -35,7 +35,7 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:entity",
         "entity": "minecraft:creeper",

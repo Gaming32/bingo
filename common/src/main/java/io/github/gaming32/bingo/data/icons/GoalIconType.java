@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.data.icons;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import dev.architectury.registry.registries.options.DefaultIdRegistrarOption;
@@ -29,16 +29,16 @@ public interface GoalIconType<I extends GoalIcon> {
     RegistrySupplier<GoalIconType<ItemIcon>> ITEM = register("item", ItemIcon.CODEC);
     RegistrySupplier<GoalIconType<ItemTagCycleIcon>> ITEM_TAG_CYCLE = register("item_tag_cycle", ItemTagCycleIcon.CODEC);
 
-    Codec<I> codec();
+    MapCodec<I> codec();
 
-    static <I extends GoalIcon> RegistrySupplier<GoalIconType<I>> register(String id, Codec<I> codec) {
+    static <I extends GoalIcon> RegistrySupplier<GoalIconType<I>> register(String id, MapCodec<I> codec) {
         if (id.indexOf(':') < 0) {
             id = "bingo:" + id;
         }
         final ResourceLocation location = new ResourceLocation(id);
         return REGISTRAR.register(location, () -> new GoalIconType<>() {
             @Override
-            public Codec<I> codec() {
+            public MapCodec<I> codec() {
                 return codec;
             }
 

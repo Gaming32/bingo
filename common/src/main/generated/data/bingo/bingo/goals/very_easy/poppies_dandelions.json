@@ -55,10 +55,10 @@
   "difficulty": "bingo:very_easy",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "poppies_count"
@@ -68,7 +68,7 @@
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": {
             "bingo_type": "bingo:sub",
             "value": "dandelions_count"

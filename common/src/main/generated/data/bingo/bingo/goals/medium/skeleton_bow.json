@@ -28,7 +28,7 @@
   "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 1,
       "id": "minecraft:bow",
       "tag": {

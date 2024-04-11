@@ -17,7 +17,7 @@
   "difficulty": "bingo:very_easy",
   "icon": {
     "type": "bingo:item",
-    "value": {
+    "item": {
       "Count": 1,
       "id": "minecraft:lava_bucket"
     }

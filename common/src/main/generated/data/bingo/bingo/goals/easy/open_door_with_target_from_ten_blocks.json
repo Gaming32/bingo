@@ -27,24 +27,24 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:arrow"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 10,
           "id": "minecraft:target"
         }
       },
       {
         "type": "bingo:item",
-        "value": {
+        "item": {
           "Count": 1,
           "id": "minecraft:oak_door"
         }

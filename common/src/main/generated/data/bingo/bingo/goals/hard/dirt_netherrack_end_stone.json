@@ -56,7 +56,7 @@
   "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:cycle",
-    "value": [
+    "icons": [
       {
         "type": "bingo:block",
         "block": {

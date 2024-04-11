@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.data.icons;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
@@ -11,7 +11,10 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public record CycleIcon(List<GoalIcon> icons) implements GoalIcon {
-    public static final Codec<CycleIcon> CODEC = GoalIcon.CODEC.listOf().xmap(CycleIcon::new, CycleIcon::icons);
+    public static final MapCodec<CycleIcon> CODEC = GoalIcon.CODEC
+        .listOf()
+        .xmap(CycleIcon::new, CycleIcon::icons)
+        .fieldOf("icons");
 
     public CycleIcon {
         icons = ImmutableList.copyOf(icons);
