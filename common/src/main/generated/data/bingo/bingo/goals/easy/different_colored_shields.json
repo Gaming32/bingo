@@ -16,7 +16,7 @@
       "conditions": {
         "min_count": {
           "bingo_type": "bingo:sub",
-          "value": "count"
+          "key": "count"
         }
       },
       "trigger": "bingo:different_colored_shields"
@@ -31,7 +31,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -48,7 +48,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -65,7 +65,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -82,7 +82,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -99,7 +99,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -116,7 +116,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -133,7 +133,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -150,7 +150,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -167,7 +167,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -184,7 +184,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -201,7 +201,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -218,7 +218,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -235,7 +235,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -252,7 +252,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -269,7 +269,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -286,7 +286,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:shield",
           "tag": {
@@ -305,7 +305,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       }
     ]
   },

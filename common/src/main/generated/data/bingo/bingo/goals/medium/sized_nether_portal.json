@@ -48,7 +48,7 @@
                           },
                           {
                             "type": "bingo:sub",
-                            "value": "width"
+                            "key": "width"
                           }
                         ],
                         "operator": "mul"
@@ -57,7 +57,7 @@
                   },
                   {
                     "type": "bingo:sub",
-                    "value": "height"
+                    "key": "height"
                   }
                 ],
                 "operator": "mul"
@@ -98,11 +98,11 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "width"
+        "key": "width"
       },
       {
         "bingo_type": "bingo:sub",
-        "value": "height"
+        "key": "height"
       }
     ]
   },

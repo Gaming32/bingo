@@ -18,7 +18,7 @@
         "levels": {
           "min": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           }
         }
       },
@@ -31,7 +31,7 @@
     "item": {
       "Count": {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       },
       "id": "minecraft:experience_bottle"
     }
@@ -42,7 +42,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       }
     ]
   },

@@ -17,7 +17,7 @@
       "conditions": {
         "required_count": {
           "bingo_type": "bingo:sub",
-          "value": "count"
+          "key": "count"
         }
       },
       "trigger": "bingo:has_some_food_items"
@@ -28,7 +28,7 @@
     "type": "bingo:item_tag_cycle",
     "count": {
       "bingo_type": "bingo:sub",
-      "value": "count"
+      "key": "count"
     },
     "tag": "bingo:food"
   },
@@ -38,7 +38,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       }
     ]
   },

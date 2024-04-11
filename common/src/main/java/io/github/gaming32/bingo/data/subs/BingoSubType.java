@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.data.subs;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import io.github.gaming32.bingo.Bingo;
@@ -21,16 +21,16 @@ public interface BingoSubType<S extends BingoSub> {
     RegistrySupplier<BingoSubType<SubBingoSub>> SUB = register("sub", SubBingoSub.CODEC);
     RegistrySupplier<BingoSubType<WrapBingoSub>> WRAP = register("wrap", WrapBingoSub.CODEC);
 
-    Codec<S> codec();
+    MapCodec<S> codec();
 
-    static <S extends BingoSub> RegistrySupplier<BingoSubType<S>> register(String id, Codec<S> codec) {
+    static <S extends BingoSub> RegistrySupplier<BingoSubType<S>> register(String id, MapCodec<S> codec) {
         if (id.indexOf(':') < 0) {
             id = "bingo:" + id;
         }
         final ResourceLocation location = new ResourceLocation(id);
         return REGISTRAR.register(location, () -> new BingoSubType<>() {
             @Override
-            public Codec<S> codec() {
+            public MapCodec<S> codec() {
                 return codec;
             }
 

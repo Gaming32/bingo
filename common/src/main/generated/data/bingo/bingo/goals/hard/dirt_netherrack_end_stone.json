@@ -19,7 +19,7 @@
             "count": {
               "min": {
                 "bingo_type": "bingo:sub",
-                "value": "count"
+                "key": "count"
               }
             },
             "items": [
@@ -30,7 +30,7 @@
             "count": {
               "min": {
                 "bingo_type": "bingo:sub",
-                "value": "count"
+                "key": "count"
               }
             },
             "items": [
@@ -41,7 +41,7 @@
             "count": {
               "min": {
                 "bingo_type": "bingo:sub",
-                "value": "count"
+                "key": "count"
               }
             },
             "items": [
@@ -65,7 +65,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:dirt"
         }
@@ -78,7 +78,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:netherrack"
         }
@@ -91,7 +91,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:end_stone"
         }
@@ -103,7 +103,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       },
       {
         "translate": "block.minecraft.dirt"

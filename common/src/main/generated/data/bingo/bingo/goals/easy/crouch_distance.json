@@ -25,7 +25,7 @@
                 "factors": [
                   {
                     "type": "bingo:sub",
-                    "value": "distance"
+                    "key": "distance"
                   },
                   {
                     "type": "bingo:int",
@@ -47,7 +47,7 @@
     "item": {
       "Count": {
         "bingo_type": "bingo:sub",
-        "value": "distance"
+        "key": "distance"
       },
       "id": "minecraft:leather_boots",
       "tag": {
@@ -61,7 +61,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "distance"
+        "key": "distance"
       }
     ]
   },

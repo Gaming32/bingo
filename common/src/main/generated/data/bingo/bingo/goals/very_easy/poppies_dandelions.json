@@ -29,7 +29,7 @@
             "count": {
               "min": {
                 "bingo_type": "bingo:sub",
-                "value": "poppies_count"
+                "key": "poppies_count"
               }
             },
             "items": [
@@ -40,7 +40,7 @@
             "count": {
               "min": {
                 "bingo_type": "bingo:sub",
-                "value": "dandelions_count"
+                "key": "dandelions_count"
               }
             },
             "items": [
@@ -61,7 +61,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "poppies_count"
+            "key": "poppies_count"
           },
           "id": "minecraft:poppy"
         }
@@ -71,7 +71,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "dandelions_count"
+            "key": "dandelions_count"
           },
           "id": "minecraft:dandelion"
         }
@@ -86,7 +86,7 @@
         "with": [
           {
             "bingo_type": "bingo:sub",
-            "value": "poppies_count"
+            "key": "poppies_count"
           },
           {
             "translate": "block.minecraft.poppy"
@@ -98,7 +98,7 @@
         "with": [
           {
             "bingo_type": "bingo:sub",
-            "value": "dandelions_count"
+            "key": "dandelions_count"
           },
           {
             "translate": "block.minecraft.dandelion"

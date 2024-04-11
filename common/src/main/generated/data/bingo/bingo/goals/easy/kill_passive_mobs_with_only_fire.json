@@ -52,7 +52,7 @@
         "type": "bingo:entity_type_tag_cycle",
         "count": {
           "bingo_type": "bingo:sub",
-          "value": "count"
+          "key": "count"
         },
         "tag": "bingo:passive"
       },
@@ -72,7 +72,7 @@
         "item": {
           "Count": {
             "bingo_type": "bingo:sub",
-            "value": "count"
+            "key": "count"
           },
           "id": "minecraft:flint_and_steel",
           "tag": {
@@ -87,7 +87,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       }
     ]
   },
@@ -97,7 +97,7 @@
   "reactant": "pacifist",
   "required_count": {
     "bingo_type": "bingo:sub",
-    "value": "count"
+    "key": "count"
   },
   "requirements": [
     [

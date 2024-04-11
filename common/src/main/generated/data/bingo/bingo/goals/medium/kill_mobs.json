@@ -22,7 +22,7 @@
             "value": {
               "min": {
                 "bingo_type": "bingo:sub",
-                "value": "count"
+                "key": "count"
               }
             }
           }
@@ -655,7 +655,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       }
     ]
   },

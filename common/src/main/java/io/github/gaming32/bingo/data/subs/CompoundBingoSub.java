@@ -2,8 +2,8 @@ package io.github.gaming32.bingo.data.subs;
 
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multisets;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
@@ -19,7 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 public record CompoundBingoSub(ElementType elementType, Operator operator, List<BingoSub> factors) implements BingoSub {
-    public static final Codec<CompoundBingoSub> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<CompoundBingoSub> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
         ExtraCodecs.strictOptionalField(ElementType.CODEC, "element_type", ElementType.INT).forGetter(CompoundBingoSub::elementType),
         Operator.CODEC.fieldOf("operator").forGetter(CompoundBingoSub::operator),
         ExtraCodecs.nonEmptyList(BingoSub.CODEC.listOf()).fieldOf("factors").forGetter(CompoundBingoSub::factors)

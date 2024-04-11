@@ -20,7 +20,7 @@
             "count": {
               "min": {
                 "bingo_type": "bingo:sub",
-                "value": "count"
+                "key": "count"
               }
             },
             "items": [
@@ -38,7 +38,7 @@
     "item": {
       "Count": {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       },
       "id": "minecraft:stripped_spruce_log"
     }
@@ -49,7 +49,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       },
       {
         "translate": "block.minecraft.stripped_spruce_log"

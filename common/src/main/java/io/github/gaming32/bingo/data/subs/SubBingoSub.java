@@ -2,12 +2,15 @@ package io.github.gaming32.bingo.data.subs;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.util.RandomSource;
 
 import java.util.Map;
 
 public record SubBingoSub(String key) implements BingoSub {
-    public static final Codec<SubBingoSub> CODEC = Codec.STRING.xmap(SubBingoSub::new, SubBingoSub::key);
+    public static final MapCodec<SubBingoSub> CODEC = Codec.STRING
+        .xmap(SubBingoSub::new, SubBingoSub::key)
+        .fieldOf("key");
 
     @Override
     public Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand) {

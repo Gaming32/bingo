@@ -68,7 +68,7 @@
                                 },
                                 {
                                   "type": "bingo:sub",
-                                  "value": "width"
+                                  "key": "width"
                                 }
                               ],
                               "operator": "mul"
@@ -77,7 +77,7 @@
                         },
                         {
                           "type": "bingo:sub",
-                          "value": "height"
+                          "key": "height"
                         }
                       ],
                       "operator": "mul"
@@ -86,7 +86,7 @@
                 },
                 {
                   "type": "bingo:sub",
-                  "value": "depth"
+                  "key": "depth"
                 }
               ],
               "operator": "mul"
@@ -124,15 +124,15 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "width"
+        "key": "width"
       },
       {
         "bingo_type": "bingo:sub",
-        "value": "height"
+        "key": "height"
       },
       {
         "bingo_type": "bingo:sub",
-        "value": "depth"
+        "key": "depth"
       },
       {
         "translate": "bingo.goal.cube.leaf"

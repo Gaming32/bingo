@@ -16,7 +16,7 @@
       "conditions": {
         "required_count": {
           "bingo_type": "bingo:sub",
-          "value": "count"
+          "key": "count"
         },
         "tag": "bingo:ores"
       },
@@ -28,7 +28,7 @@
     "type": "bingo:item_tag_cycle",
     "count": {
       "bingo_type": "bingo:sub",
-      "value": "count"
+      "key": "count"
     },
     "tag": "bingo:ores"
   },
@@ -37,7 +37,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       }
     ]
   },

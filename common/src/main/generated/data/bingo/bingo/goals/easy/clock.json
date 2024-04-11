@@ -20,7 +20,7 @@
             "count": {
               "min": {
                 "bingo_type": "bingo:sub",
-                "value": "count"
+                "key": "count"
               }
             },
             "items": [
@@ -38,7 +38,7 @@
     "item": {
       "Count": {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       },
       "id": "minecraft:clock"
     }
@@ -48,7 +48,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       },
       {
         "translate": "item.minecraft.clock"

@@ -16,7 +16,7 @@
       "conditions": {
         "required_count": {
           "bingo_type": "bingo:sub",
-          "value": "count"
+          "key": "count"
         },
         "tag": {
           "expected": true,
@@ -31,7 +31,7 @@
     "type": "bingo:item_tag_cycle",
     "count": {
       "bingo_type": "bingo:sub",
-      "value": "count"
+      "key": "count"
     },
     "tag": "minecraft:fishes"
   },
@@ -40,7 +40,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       }
     ]
   },

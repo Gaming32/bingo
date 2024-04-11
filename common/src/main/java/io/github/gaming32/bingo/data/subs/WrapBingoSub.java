@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.MapCodec;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.JsonSubber;
 import net.minecraft.Util;
@@ -13,7 +14,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public record WrapBingoSub(Dynamic<?> value) implements BingoSub {
-    public static final Codec<WrapBingoSub> CODEC = Codec.PASSTHROUGH.xmap(WrapBingoSub::new, WrapBingoSub::value);
+    public static final MapCodec<WrapBingoSub> CODEC = Codec.PASSTHROUGH
+        .xmap(WrapBingoSub::new, WrapBingoSub::value)
+        .fieldOf("value");
 
     public WrapBingoSub(JsonElement value, Consumer<JsonSubber> subber) {
         this(new Dynamic<>(JsonOps.INSTANCE, Util.make(new JsonSubber(value), subber).json()));

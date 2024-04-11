@@ -19,7 +19,7 @@
             "count": {
               "min": {
                 "bingo_type": "bingo:sub",
-                "value": "count"
+                "key": "count"
               }
             },
             "tag": "minecraft:leaves"
@@ -34,7 +34,7 @@
     "type": "bingo:item_tag_cycle",
     "count": {
       "bingo_type": "bingo:sub",
-      "value": "count"
+      "key": "count"
     },
     "tag": "minecraft:leaves"
   },
@@ -43,7 +43,7 @@
     "with": [
       {
         "bingo_type": "bingo:sub",
-        "value": "count"
+        "key": "count"
       }
     ]
   },
