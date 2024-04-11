@@ -83,7 +83,12 @@ public class BingoBoard {
             size, difficulty, rand, isAllowedGoal, requiredGoals, excludedTags, allowsClientRequired
         );
         for (int i = 0; i < size * size; i++) {
-            final ActiveGoal goal = board.goals[i] = generatedSheet[i].build(rand);
+            final ActiveGoal goal;
+            try {
+                goal = board.goals[i] = generatedSheet[i].build(rand);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid goal " + generatedSheet[i].id() + ": " + e.getMessage(), e);
+            }
             if (lootData != null) {
                 goal.validateAndLog(lootData);
             }
