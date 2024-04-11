@@ -18,7 +18,12 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 public record BingoDifficulty(int number, @Nullable String fallbackName) {
     public static final Codec<BingoDifficulty> CODEC = RecordCodecBuilder.create(instance ->

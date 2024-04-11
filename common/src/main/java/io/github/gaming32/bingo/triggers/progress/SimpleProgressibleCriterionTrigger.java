@@ -3,7 +3,11 @@ package io.github.gaming32.bingo.triggers.progress;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public abstract class SimpleProgressibleCriterionTrigger<T extends SimpleCriterionTrigger.SimpleInstance>
     extends SimpleCriterionTrigger<T> implements ProgressibleTrigger<T> {

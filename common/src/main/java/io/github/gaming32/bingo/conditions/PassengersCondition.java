@@ -14,7 +14,11 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public record PassengersCondition(List<ContextAwarePredicate> passengers, boolean requireFull) implements LootItemCondition {
     public static final Codec<PassengersCondition> CODEC = RecordCodecBuilder.create(instance ->
