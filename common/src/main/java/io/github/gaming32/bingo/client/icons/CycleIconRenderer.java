@@ -5,6 +5,7 @@ import io.github.gaming32.bingo.data.icons.GoalIcon;
 import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -34,6 +35,21 @@ public class CycleIconRenderer implements AbstractCycleIconRenderer<CycleIcon> {
             subCycleRenderer.renderDecorationsWithParentPeriod(parentPeriod * icons.size(), subIcon, font, graphics, x, y);
         } else {
             subRenderer.renderDecorations(subIcon, font, graphics, x, y);
+        }
+    }
+
+    @Override
+    public ItemStack getIconItemWithParentPeriod(int parentPeriod, CycleIcon icon) {
+        final List<GoalIcon> icons = icon.icons();
+        if (icons.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        final GoalIcon subIcon = getIcon(icons, parentPeriod);
+        IconRenderer<GoalIcon> subRenderer = IconRenderers.getRenderer(subIcon);
+        if (subRenderer instanceof AbstractCycleIconRenderer<GoalIcon> subCycleRenderer) {
+            return subCycleRenderer.getIconItemWithParentPeriod(parentPeriod * icons.size(), subIcon);
+        } else {
+            return subRenderer.getIconItem(subIcon);
         }
     }
 

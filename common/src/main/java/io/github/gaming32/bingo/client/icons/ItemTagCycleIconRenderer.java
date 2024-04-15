@@ -25,6 +25,15 @@ public class ItemTagCycleIconRenderer implements AbstractCycleIconRenderer<ItemT
         IconRenderer.renderCount(icon.count(), font, graphics, x, y);
     }
 
+    @Override
+    public ItemStack getIconItemWithParentPeriod(int parentPeriod, ItemTagCycleIcon icon) {
+        final Optional<HolderSet.Named<Item>> items = BuiltInRegistries.ITEM.getTag(icon.tag());
+        if (items.isEmpty() || items.get().size() == 0) {
+            return ItemStack.EMPTY;
+        }
+        return new ItemStack(getIcon(items.get(), parentPeriod), icon.count());
+    }
+
     private static Holder<Item> getIcon(HolderSet.Named<Item> icons, int parentPeriod) {
         return icons.get((int)((Util.getMillis() / (CycleIconRenderer.TIME_PER_ICON * parentPeriod)) % icons.size()));
     }

@@ -305,11 +305,11 @@ public class BingoClient {
 
         final RecipeViewerPlugin plugin = getRecipeViewerPlugin();
         if (plugin.isViewRecipe(key)) {
-            plugin.showRecipe(goal.icon().item());
+            plugin.showRecipe(IconRenderers.getRenderer(goal.icon()).getIconItem(goal.icon()));
             return true;
         }
         if (plugin.isViewUsages(key)) {
-            plugin.showUsages(goal.icon().item());
+            plugin.showUsages(IconRenderers.getRenderer(goal.icon()).getIconItem(goal.icon()));
             return true;
         }
         return false;

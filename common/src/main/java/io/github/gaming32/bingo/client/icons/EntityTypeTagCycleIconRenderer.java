@@ -11,6 +11,9 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +42,16 @@ public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer
     @Override
     public void renderDecorationsWithParentPeriod(int parentPeriod, EntityTypeTagCycleIcon icon, Font font, GuiGraphics graphics, int x, int y) {
         IconRenderer.renderCount(icon.count(), font, graphics, x, y);
+    }
+
+    @Override
+    public ItemStack getIconItemWithParentPeriod(int parentPeriod, EntityTypeTagCycleIcon icon) {
+        final var entityTypes = BuiltInRegistries.ENTITY_TYPE.getTag(icon.tag());
+        if (entityTypes.isEmpty() || entityTypes.get().size() == 0) {
+            return ItemStack.EMPTY;
+        }
+        final Item spawnEggItem = SpawnEggItem.byId(getIcon(entityTypes.get(), parentPeriod).value());
+        return spawnEggItem != null ? new ItemStack(spawnEggItem, icon.count()) : ItemStack.EMPTY;
     }
 
     private static Holder<EntityType<?>> getIcon(HolderSet.Named<EntityType<?>> icons, int parentPeriod) {
