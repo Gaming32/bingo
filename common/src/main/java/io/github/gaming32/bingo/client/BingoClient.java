@@ -1,11 +1,7 @@
 package io.github.gaming32.bingo.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.architectury.event.EventResult;
-import dev.architectury.event.events.client.ClientGuiEvent;
-import dev.architectury.event.events.client.ClientPlayerEvent;
-import dev.architectury.event.events.client.ClientScreenInputEvent;
-import dev.architectury.event.events.client.ClientTickEvent;
+import com.mojang.blaze3d.platform.Window;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.gui.ClientTooltipComponentRegistry;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
@@ -20,6 +16,7 @@ import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.game.GoalProgress;
+import io.github.gaming32.bingo.multiloader.ClientEvents;
 import io.github.gaming32.bingo.network.ClientGoal;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -69,7 +66,7 @@ public class BingoClient {
             Platform.getMod(Bingo.MOD_ID).registerConfigurationScreen(BingoConfigScreen::new);
         }
 
-        ClientGuiEvent.RENDER_HUD.register((graphics, tickDelta) -> {
+        ClientEvents.RENDER_HUD.register((graphics, tickDelta) -> {
             if (clientGame == null) return;
             final Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.getDebugOverlay().showDebugScreen() || minecraft.screen instanceof BoardScreen) return;
@@ -133,27 +130,29 @@ public class BingoClient {
             }
         });
 
-        ClientScreenInputEvent.KEY_RELEASED_PRE.register((client, screen, keyCode, scanCode, modifiers) -> {
+        ClientEvents.KEY_RELEASED_PRE.register((screen, keyCode, scanCode, modifiers) -> {
             if (clientGame == null || !(screen instanceof ChatScreen)) {
-                return EventResult.pass();
+                return false;
             }
+            final Window window = Minecraft.getInstance().getWindow();
             final float scale = CONFIG.getBoardScale();
-            final float x = CONFIG.getBoardCorner().getX(client.getWindow().getGuiScaledWidth(), scale);
-            final float y = CONFIG.getBoardCorner().getY(client.getWindow().getGuiScaledHeight(), scale);
-            return detectPress(keyCode, scanCode, x, y, scale) ? EventResult.interruptTrue() : EventResult.pass();
+            final float x = CONFIG.getBoardCorner().getX(window.getGuiScaledWidth(), scale);
+            final float y = CONFIG.getBoardCorner().getY(window.getGuiScaledHeight(), scale);
+            return detectPress(keyCode, scanCode, x, y, scale);
         });
 
-        ClientScreenInputEvent.MOUSE_RELEASED_PRE.register((client, screen, mouseX, mouseY, button) -> {
+        ClientEvents.MOUSE_RELEASED_PRE.register((screen, mouseX, mouseY, button) -> {
             if (clientGame == null || !(screen instanceof ChatScreen)) {
-                return EventResult.pass();
+                return false;
             }
+            final Window window = Minecraft.getInstance().getWindow();
             final float scale = CONFIG.getBoardScale();
-            final float x = CONFIG.getBoardCorner().getX(client.getWindow().getGuiScaledWidth(), scale);
-            final float y = CONFIG.getBoardCorner().getY(client.getWindow().getGuiScaledHeight(), scale);
-            return detectClick(button, x, y, scale) ? EventResult.interruptTrue() : EventResult.pass();
+            final float x = CONFIG.getBoardCorner().getX(window.getGuiScaledWidth(), scale);
+            final float y = CONFIG.getBoardCorner().getY(window.getGuiScaledHeight(), scale);
+            return detectClick(button, x, y, scale);
         });
 
-        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> {
+        ClientEvents.PLAYER_QUIT.register(player -> {
             clientTeam = BingoBoard.Teams.NONE;
             clientGame = null;
         });
@@ -162,10 +161,10 @@ public class BingoClient {
 
         final KeyMapping boardKey = new KeyMapping("bingo.key.board", InputConstants.KEY_B, "bingo.key.category");
         KeyMappingRegistry.register(boardKey);
-        ClientTickEvent.CLIENT_PRE.register(instance -> {
+        ClientEvents.CLIENT_TICK_START.register(minecraft -> {
             while (boardKey.consumeClick()) {
                 if (clientGame != null) {
-                    instance.setScreen(new BoardScreen());
+                    minecraft.setScreen(new BoardScreen());
                 }
             }
         });

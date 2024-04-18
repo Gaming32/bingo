@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.network;
 
+import io.github.gaming32.bingo.multiloader.MultiLoaderInterface;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -15,17 +16,8 @@ import java.util.function.Consumer;
 public abstract class BingoNetworking {
     public static final int PROTOCOL_VERSION = 9;
 
-    private static BingoNetworking instance;
-
     public static BingoNetworking instance() {
-        return instance;
-    }
-
-    public static void init(BingoNetworking impl) {
-        if (instance != null) {
-            throw new IllegalStateException("Cannot override BingoNetworking impl");
-        }
-        instance = impl;
+        return MultiLoaderInterface.instance.getNetworking();
     }
 
     public abstract void onRegister(Consumer<Registrar> handler);

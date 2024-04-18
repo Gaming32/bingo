@@ -2,14 +2,6 @@ package io.github.gaming32.bingo;
 
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
-import dev.architectury.event.CompoundEventResult;
-import dev.architectury.event.EventResult;
-import dev.architectury.event.events.common.CommandRegistrationEvent;
-import dev.architectury.event.events.common.ExplosionEvent;
-import dev.architectury.event.events.common.InteractionEvent;
-import dev.architectury.event.events.common.LifecycleEvent;
-import dev.architectury.event.events.common.PlayerEvent;
-import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
@@ -25,6 +17,7 @@ import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
+import io.github.gaming32.bingo.multiloader.Event;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPacket;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPacket;
@@ -74,26 +67,25 @@ public class Bingo {
     public static final Set<UUID> needAdvancementsClear = new HashSet<>();
 
     public static void init() {
-        CommandRegistrationEvent.EVENT.register(BingoCommand::register);
+        Event.REGISTER_COMMANDS.register(BingoCommand::register);
 
-        PlayerEvent.PLAYER_JOIN.register(player -> {
+        Event.PLAYER_JOIN.register(player -> {
             if (activeGame != null) {
                 activeGame.addPlayer(player);
             }
         });
 
-        PlayerEvent.PLAYER_QUIT.register(player -> needAdvancementsClear.remove(player.getUUID()));
+        Event.PLAYER_QUIT.register(player -> needAdvancementsClear.remove(player.getUUID()));
 
-        LifecycleEvent.SERVER_STOPPED.register(instance -> activeGame = null);
+        Event.SERVER_STOPPED.register(instance -> activeGame = null);
 
-        InteractionEvent.RIGHT_CLICK_ITEM.register((player, hand) -> {
+        Event.RIGHT_CLICK_ITEM.register((player, hand) -> {
             if (player instanceof ServerPlayer serverPlayer) {
                 BingoTriggers.TRY_USE_ITEM.get().trigger(serverPlayer, hand);
             }
-            return CompoundEventResult.pass();
         });
 
-        ExplosionEvent.PRE.register((level, explosion) -> {
+        Event.EXPLOSION_START.register((level, explosion) -> {
             if (level instanceof ServerLevel serverLevel) {
                 final ServerPlayer player;
                 if (explosion.getIndirectSourceEntity() instanceof ServerPlayer thePlayer) {
@@ -107,10 +99,9 @@ public class Bingo {
                     BingoTriggers.EXPLOSION.get().trigger(player, serverLevel, explosion);
                 }
             }
-            return EventResult.pass();
         });
 
-        TickEvent.SERVER_POST.register(instance -> {
+        Event.SERVER_TICK_END.register(instance -> {
             if (activeGame != null && activeGame.isRequireClient()) {
                 for (final ServerPlayer player : instance.getPlayerList().getPlayers()) {
                     if (player.tickCount == 60 && !Bingo.isInstalledOnClient(player)) {
@@ -120,7 +111,7 @@ public class Bingo {
             }
         });
 
-        LifecycleEvent.SERVER_STARTED.register(instance -> {
+        Event.SERVER_STARTED.register(instance -> {
             final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
             if (!Files.isRegularFile(path)) return;
             LOGGER.info("Reading persisted Bingo game");
@@ -134,7 +125,7 @@ public class Bingo {
             }
         });
 
-        LifecycleEvent.SERVER_STOPPING.register(instance -> {
+        Event.SERVER_STOPPING.register(instance -> {
             if (activeGame == null || !activeGame.isPersistent()) return;
             LOGGER.info("Storing persistent Bingo game");
             final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
