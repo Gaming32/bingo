@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.network;
 
-import io.github.gaming32.bingo.multiloader.MultiLoaderInterface;
+import io.github.gaming32.bingo.multiloader.BingoPlatform;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -17,7 +17,7 @@ public abstract class BingoNetworking {
     public static final int PROTOCOL_VERSION = 9;
 
     public static BingoNetworking instance() {
-        return MultiLoaderInterface.instance.getNetworking();
+        return BingoPlatform.platform.getNetworking();
     }
 
     public abstract void onRegister(Consumer<Registrar> handler);

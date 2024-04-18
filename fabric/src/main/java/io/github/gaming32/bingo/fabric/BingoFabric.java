@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.fabric;
 
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.multiloader.MultiLoaderInterface;
+import io.github.gaming32.bingo.multiloader.BingoPlatform;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -16,7 +16,7 @@ public class BingoFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        MultiLoaderInterface.instance = new FabricInterface();
+        BingoPlatform.platform = new FabricPlatform();
         Bingo.init();
 
         ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> {

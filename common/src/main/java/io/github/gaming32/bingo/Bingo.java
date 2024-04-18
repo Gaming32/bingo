@@ -15,8 +15,8 @@ import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
+import io.github.gaming32.bingo.multiloader.BingoPlatform;
 import io.github.gaming32.bingo.multiloader.Event;
-import io.github.gaming32.bingo.multiloader.MultiLoaderInterface;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPacket;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPacket;
@@ -172,7 +172,7 @@ public class Bingo {
             registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.ID, KeyPressedPacket::new);
         });
 
-        if (MultiLoaderInterface.instance.isClient()) {
+        if (BingoPlatform.platform.isClient()) {
             BingoClient.init();
         }
 

@@ -1,8 +1,8 @@
 package io.github.gaming32.bingo.neoforge;
 
+import io.github.gaming32.bingo.multiloader.BingoPlatform;
 import io.github.gaming32.bingo.multiloader.ClientEvents;
 import io.github.gaming32.bingo.multiloader.Event;
-import io.github.gaming32.bingo.multiloader.MultiLoaderInterface;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,10 +21,10 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforgespi.Environment;
 
-public class NeoForgeInterface extends MultiLoaderInterface {
+public class NeoForgePlatform extends BingoPlatform {
     private final BingoNetworking networking;
 
-    public NeoForgeInterface(IEventBus modEventBus) {
+    public NeoForgePlatform(IEventBus modEventBus) {
         networking = new BingoNetworkingImpl(modEventBus);
         registerEvents();
     }

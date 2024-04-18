@@ -1,8 +1,8 @@
 package io.github.gaming32.bingo.fabric;
 
+import io.github.gaming32.bingo.multiloader.BingoPlatform;
 import io.github.gaming32.bingo.multiloader.ClientEvents;
 import io.github.gaming32.bingo.multiloader.Event;
-import io.github.gaming32.bingo.multiloader.MultiLoaderInterface;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -18,10 +18,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.ItemStack;
 
-public class FabricInterface extends MultiLoaderInterface {
+public class FabricPlatform extends BingoPlatform {
     private final BingoNetworking networking;
 
-    public FabricInterface() {
+    public FabricPlatform() {
         networking = new BingoNetworkingImpl();
         registerEvents();
     }
