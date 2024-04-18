@@ -2,10 +2,8 @@ package io.github.gaming32.bingo;
 
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
-import dev.architectury.platform.Platform;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
-import dev.architectury.utils.Env;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.conditions.BingoParamSets;
@@ -18,6 +16,7 @@ import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
 import io.github.gaming32.bingo.multiloader.Event;
+import io.github.gaming32.bingo.multiloader.MultiLoaderInterface;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPacket;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPacket;
@@ -173,7 +172,7 @@ public class Bingo {
             registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.ID, KeyPressedPacket::new);
         });
 
-        if (Platform.getEnvironment() == Env.CLIENT) {
+        if (MultiLoaderInterface.instance.isClient()) {
             BingoClient.init();
         }
 

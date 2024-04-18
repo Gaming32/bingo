@@ -31,6 +31,11 @@ public class FabricInterface extends MultiLoaderInterface {
         return networking;
     }
 
+    @Override
+    public boolean isClient() {
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+    }
+
     private void registerEvents() {
         Event.REGISTER_COMMANDS.setRegistrar(handler -> CommandRegistrationCallback.EVENT.register(handler::register));
         Event.PLAYER_JOIN.setRegistrar(FabricEvents.PLAYER_JOIN::register);
@@ -45,7 +50,7 @@ public class FabricInterface extends MultiLoaderInterface {
         Event.EXPLOSION_START.setRegistrar(FabricEvents.EXPLOSION::register);
         Event.SERVER_TICK_END.setRegistrar(handler -> ServerTickEvents.END_SERVER_TICK.register(handler::accept));
 
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+        if (isClient()) {
             ClientEvents.RENDER_HUD.setRegistrar(handler -> HudRenderCallback.EVENT.register(handler::renderHud));
             ClientEvents.KEY_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
                 (client, screen, scaledWidth, scaledHeight) ->

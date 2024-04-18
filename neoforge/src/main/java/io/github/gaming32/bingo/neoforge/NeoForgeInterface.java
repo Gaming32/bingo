@@ -34,6 +34,11 @@ public class NeoForgeInterface extends MultiLoaderInterface {
         return networking;
     }
 
+    @Override
+    public boolean isClient() {
+        return Environment.get().getDist().isClient();
+    }
+
     private void registerEvents() {
         final IEventBus bus = NeoForge.EVENT_BUS;
         Event.REGISTER_COMMANDS.setRegistrar(handler -> bus.addListener((RegisterCommandsEvent event) ->
@@ -70,7 +75,7 @@ public class NeoForgeInterface extends MultiLoaderInterface {
             }
         }));
 
-        if (Environment.get().getDist().isClient()) {
+        if (isClient()) {
             ClientEvents.RENDER_HUD.setRegistrar(handler -> bus.addListener((RenderGuiEvent.Post event) ->
                 handler.renderHud(event.getGuiGraphics(), event.getPartialTick())
             ));

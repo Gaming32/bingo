@@ -6,4 +6,6 @@ public abstract class MultiLoaderInterface {
     public static MultiLoaderInterface instance;
 
     public abstract BingoNetworking getNetworking();
+
+    public abstract boolean isClient();
 }
