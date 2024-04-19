@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.config.BingoClientConfig;
 import io.github.gaming32.bingo.client.icons.DefaultIconRenderers;
@@ -154,7 +153,7 @@ public class BingoClient {
         DefaultIconRenderers.setup();
 
         final KeyMapping boardKey = new KeyMapping("bingo.key.board", InputConstants.KEY_B, "bingo.key.category");
-        KeyMappingRegistry.register(boardKey);
+        BingoPlatform.platform.registerKeyMappings(registrar -> registrar.accept(boardKey));
         ClientEvents.CLIENT_TICK_START.register(minecraft -> {
             while (boardKey.consumeClick()) {
                 if (clientGame != null) {

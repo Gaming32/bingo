@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
@@ -12,6 +13,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -28,9 +30,11 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 
 public class NeoForgePlatform extends BingoPlatform {
+    private final IEventBus modEventBus;
     private final BingoNetworking networking;
 
     public NeoForgePlatform(IEventBus modEventBus) {
+        this.modEventBus = modEventBus;
         networking = new BingoNetworkingImpl(modEventBus);
         registerEvents();
     }
@@ -57,9 +61,14 @@ public class NeoForgePlatform extends BingoPlatform {
 
     @Override
     public void registerClientTooltips(Consumer<ClientTooltipRegistrar> handler) {
-        NeoForge.EVENT_BUS.addListener((RegisterClientTooltipComponentFactoriesEvent event) ->
+        modEventBus.addListener((RegisterClientTooltipComponentFactoriesEvent event) ->
             handler.accept(event::register)
         );
+    }
+
+    @Override
+    public void registerKeyMappings(Consumer<Consumer<KeyMapping>> handler) {
+        modEventBus.addListener((RegisterKeyMappingsEvent event) -> handler.accept(event::register));
     }
 
     private void registerEvents() {

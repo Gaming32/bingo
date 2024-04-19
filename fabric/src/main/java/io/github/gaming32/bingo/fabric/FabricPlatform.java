@@ -8,6 +8,7 @@ import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -18,6 +19,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -68,6 +70,11 @@ public class FabricPlatform extends BingoPlatform {
                 });
             }
         });
+    }
+
+    @Override
+    public void registerKeyMappings(Consumer<Consumer<KeyMapping>> handler) {
+        handler.accept(KeyBindingHelper::registerKeyBinding);
     }
 
     private void registerEvents() {
