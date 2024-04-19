@@ -10,11 +10,11 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.storage.loot.LootDataResolver;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,7 +79,7 @@ public class BingoBoard {
         List<BingoGoal.Holder> requiredGoals,
         Set<BingoTag.Holder> excludedTags,
         boolean allowsClientRequired,
-        @Nullable LootDataResolver lootData
+        @Nullable HolderGetter.Provider lootData
     ) {
         final BingoBoard board = new BingoBoard(size);
         final BingoGoal.Holder[] generatedSheet = generateGoals(

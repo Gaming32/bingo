@@ -491,7 +491,7 @@ public class BingoCommand {
                 requiredGoals,
                 excludedTags,
                 requireClient,
-                server.getLootData()
+                server.reloadableRegistries().lookup()
             );
         } catch (Exception e) {
             Bingo.LOGGER.error("Error generating bingo board", e);

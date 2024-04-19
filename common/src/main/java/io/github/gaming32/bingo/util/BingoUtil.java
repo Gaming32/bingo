@@ -22,6 +22,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
@@ -184,6 +187,14 @@ public class BingoUtil {
             }
         }
         return team.getDisplayName();
+    }
+
+    public static boolean isDyeableArmor(Item item) {
+        return item instanceof ArmorItem armor && armor.getMaterial()
+            .value()
+            .layers()
+            .stream()
+            .anyMatch(ArmorMaterial.Layer::dyeable);
     }
 
     public static boolean collidesWithProjectedBox(Vec3 entityOrigin, Vec3 boxNormal, double boxWidth) {

@@ -7,14 +7,15 @@ import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTri
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -43,7 +44,7 @@ public class DifferentPotionsTrigger extends SimpleProgressibleCriterionTrigger<
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 ExtraCodecs.POSITIVE_INT.fieldOf("min_count").forGetter(TriggerInstance::minCount)
             ).apply(instance, TriggerInstance::new)
         );
@@ -55,12 +56,13 @@ public class DifferentPotionsTrigger extends SimpleProgressibleCriterionTrigger<
         }
 
         public boolean matches(Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
-            final Set<String> discovered = new HashSet<>();
+            final Set<Holder<Potion>> discovered = new HashSet<>();
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
                 if (item.getItem() instanceof PotionItem) {
-                    final Potion potion = PotionUtils.getPotion(item);
-                    if (potion != Potions.EMPTY && discovered.add(potion.getName("")) && discovered.size() >= minCount) {
+                    final PotionContents potion = item.get(DataComponents.POTION_CONTENTS);
+                    if (potion == null || potion.potion().isEmpty()) continue;
+                    if (discovered.add(potion.potion().get()) && discovered.size() >= minCount) {
                         progressListener.update(this, minCount, minCount);
                         return true;
                     }
