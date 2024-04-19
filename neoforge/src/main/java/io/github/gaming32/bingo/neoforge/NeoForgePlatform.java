@@ -31,6 +31,7 @@ import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -79,7 +80,7 @@ public class NeoForgePlatform extends BingoPlatform {
 
     @Override
     public void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
-        modEventBus.addListener((AddReloadListenerEvent event) -> handler.accept(
+        NeoForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> handler.accept(
             (id, listener, dependencies) -> event.addListener(listener)
         ));
     }
@@ -93,11 +94,13 @@ public class NeoForgePlatform extends BingoPlatform {
 
     @Override
     public <T> DeferredRegister<T> buildDeferredRegister(RegistryBuilder builder) {
-        return createDeferredRegister(
+        final Registry<T> registry =
             new net.neoforged.neoforge.registries.RegistryBuilder<>(ResourceKey.<T>createRegistryKey(builder.getId()))
                 .sync(builder.isSynced())
-                .defaultKey(builder.getDefaultId()).create()
-        );
+                .defaultKey(builder.getDefaultId())
+                .create();
+        modEventBus.addListener((NewRegistryEvent event) -> event.register(registry));
+        return createDeferredRegister(registry);
     }
 
     private void registerEvents() {
