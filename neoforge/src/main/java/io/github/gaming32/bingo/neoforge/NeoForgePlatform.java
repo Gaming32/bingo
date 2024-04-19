@@ -1,9 +1,9 @@
 package io.github.gaming32.bingo.neoforge;
 
-import io.github.gaming32.bingo.multiloader.BingoPlatform;
-import io.github.gaming32.bingo.multiloader.ClientEvents;
-import io.github.gaming32.bingo.multiloader.Event;
 import io.github.gaming32.bingo.network.BingoNetworking;
+import io.github.gaming32.bingo.platform.BingoPlatform;
+import io.github.gaming32.bingo.platform.event.ClientEvents;
+import io.github.gaming32.bingo.platform.event.Event;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;

@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.mixin.fabric.client;
 
-import io.github.gaming32.bingo.fabric.FabricClientEvents;
+import io.github.gaming32.bingo.fabric.event.FabricClientEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;

@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.mixin.fabric;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import io.github.gaming32.bingo.fabric.FabricEvents;
+import io.github.gaming32.bingo.fabric.event.FabricEvents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;

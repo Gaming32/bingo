@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.multiloader;
+package io.github.gaming32.bingo.platform.event;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

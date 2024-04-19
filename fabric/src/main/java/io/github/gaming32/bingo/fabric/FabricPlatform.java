@@ -1,9 +1,11 @@
 package io.github.gaming32.bingo.fabric;
 
-import io.github.gaming32.bingo.multiloader.BingoPlatform;
-import io.github.gaming32.bingo.multiloader.ClientEvents;
-import io.github.gaming32.bingo.multiloader.Event;
+import io.github.gaming32.bingo.fabric.event.FabricClientEvents;
+import io.github.gaming32.bingo.fabric.event.FabricEvents;
 import io.github.gaming32.bingo.network.BingoNetworking;
+import io.github.gaming32.bingo.platform.BingoPlatform;
+import io.github.gaming32.bingo.platform.event.ClientEvents;
+import io.github.gaming32.bingo.platform.event.Event;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;

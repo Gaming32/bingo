@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.mixin.fabric;
 
-import io.github.gaming32.bingo.fabric.FabricEvents;
+import io.github.gaming32.bingo.fabric.event.FabricEvents;
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;

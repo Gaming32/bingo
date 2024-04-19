@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.multiloader;
+package io.github.gaming32.bingo.platform;
 
 import io.github.gaming32.bingo.network.BingoNetworking;
 

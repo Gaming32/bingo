@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.multiloader;
+package io.github.gaming32.bingo.platform.event;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandBuildContext;

@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.network;
 
-import io.github.gaming32.bingo.multiloader.BingoPlatform;
+import io.github.gaming32.bingo.platform.BingoPlatform;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

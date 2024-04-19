@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.neoforge;
 
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.multiloader.BingoPlatform;
+import io.github.gaming32.bingo.platform.BingoPlatform;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 
