@@ -8,10 +8,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.util.BingoStreamCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.floats.FloatImmutableList;
 import it.unimi.dsi.fastutil.floats.FloatList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -30,8 +33,8 @@ import java.util.function.Function;
 
 public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, SpecialType specialType) {
     private static final Codec<FloatList> DIFFICULTY_MAX_CODEC = ExtraCodecs.nonEmptyList(
-        ExtraCodecs.validate(
-            Codec.FLOAT, f -> f >= 0f && f <= 1f
+        Codec.FLOAT.validate(
+            f -> f >= 0f && f <= 1f
                 ? DataResult.success(f)
                 : DataResult.error(() -> "Value in difficulty_max must be in range [0,1]")
         ).listOf()
@@ -40,8 +43,8 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
     public static final Codec<BingoTag> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             DIFFICULTY_MAX_CODEC.fieldOf("difficulty_max").forGetter(BingoTag::difficultyMax),
-            ExtraCodecs.strictOptionalField(Codec.BOOL, "allowed_on_same_line", true).forGetter(BingoTag::allowedOnSameLine),
-            ExtraCodecs.strictOptionalField(SpecialType.CODEC, "special_type", SpecialType.NONE).forGetter(BingoTag::specialType)
+            Codec.BOOL.optionalFieldOf("allowed_on_same_line", true).forGetter(BingoTag::allowedOnSameLine),
+            SpecialType.CODEC.optionalFieldOf("special_type", SpecialType.NONE).forGetter(BingoTag::specialType)
         ).apply(instance, BingoTag::new)
     );
 
@@ -163,6 +166,7 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
 
         @SuppressWarnings("deprecation")
         public static final EnumCodec<SpecialType> CODEC = StringRepresentable.fromEnum(SpecialType::values);
+        public static final StreamCodec<FriendlyByteBuf, SpecialType> STREAM_CODEC = BingoStreamCodecs.enum_(SpecialType.class);
 
         public final int incompleteColor;
 

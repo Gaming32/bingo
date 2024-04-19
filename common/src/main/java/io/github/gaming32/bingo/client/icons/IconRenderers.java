@@ -16,7 +16,7 @@ public final class IconRenderers {
     }
 
     public static <I extends GoalIcon> void register(GoalIconType<I> iconType, IconRenderer<I> renderer) {
-        final ResourceLocation id = GoalIconType.REGISTRAR.registry().getKey(iconType);
+        final ResourceLocation id = GoalIconType.REGISTER.registry().getKey(iconType);
         if (id == null) {
             throw new IllegalArgumentException("Tried to register renderer for unregistered icon type " + iconType);
         }
@@ -28,7 +28,7 @@ public final class IconRenderers {
     }
 
     public static <I extends GoalIcon> IconRenderer<I> getRenderer(GoalIconType<I> iconType) {
-        final ResourceLocation id = GoalIconType.REGISTRAR.registry().getKey(iconType);
+        final ResourceLocation id = GoalIconType.REGISTER.registry().getKey(iconType);
         if (id == null) {
             throw new NoSuchElementException("Unknown id for icon type " + iconType);
         }

@@ -5,12 +5,18 @@ import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
 public class UpdateStatePacket extends AbstractCustomPayload {
-    public static final ResourceLocation ID = id("update_state");
+    public static final Type<UpdateStatePacket> TYPE = type("update_state");
+    public static final StreamCodec<ByteBuf, UpdateStatePacket> CODEC = StreamCodec.composite(
+        ByteBufCodecs.VAR_INT, p -> p.index,
+        BingoBoard.Teams.STREAM_CODEC, p -> p.newState,
+        UpdateStatePacket::new
+    );
 
     private final int index;
     private final BingoBoard.Teams newState;
@@ -20,31 +26,20 @@ public class UpdateStatePacket extends AbstractCustomPayload {
         this.newState = newState;
     }
 
-    public UpdateStatePacket(FriendlyByteBuf buf) {
-        index = buf.readVarInt();
-        newState = BingoBoard.Teams.fromBits(buf.readVarInt());
-    }
-
     @NotNull
     @Override
-    public ResourceLocation id() {
-        return ID;
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeVarInt(index);
-        buf.writeVarInt(newState.toBits());
+    public Type<UpdateStatePacket> type() {
+        return TYPE;
     }
 
     @Override
     public void handle(BingoNetworking.Context context) {
         if (BingoClient.clientGame == null) {
-            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling " + ID + "!");
+            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling {}!", TYPE);
             return;
         }
         if (index < 0 || index >= BingoClient.clientGame.size() * BingoClient.clientGame.size()) {
-            Bingo.LOGGER.warn("Invalid " + ID + " packet: invalid board index " + index);
+            Bingo.LOGGER.warn("Invalid {} packet: invalid board index {}", TYPE, index);
             return;
         }
         BingoClient.clientGame.states()[index] = newState;

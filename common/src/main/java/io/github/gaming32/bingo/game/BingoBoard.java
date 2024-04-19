@@ -7,8 +7,11 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.storage.loot.LootDataResolver;
@@ -366,6 +369,7 @@ public class BingoBoard {
         private static final Teams[] CACHE = {NONE, TEAM1, TEAM2, new Teams(0b11)};
 
         public static final Codec<Teams> CODEC = Codec.INT.xmap(Teams::fromBits, Teams::toBits);
+        public static final StreamCodec<ByteBuf, Teams> STREAM_CODEC = ByteBufCodecs.VAR_INT.map(Teams::fromBits, Teams::toBits);
 
         private final int bits;
 

@@ -4,12 +4,14 @@ import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
 public class SyncTeamPacket extends AbstractCustomPayload {
-    public static final ResourceLocation ID = id("sync_team");
+    public static final Type<SyncTeamPacket> TYPE = type("sync_team");
+    public static final StreamCodec<ByteBuf, SyncTeamPacket> CODEC = BingoBoard.Teams.STREAM_CODEC
+        .map(SyncTeamPacket::new, p -> p.team);
 
     private final BingoBoard.Teams team;
 
@@ -17,19 +19,10 @@ public class SyncTeamPacket extends AbstractCustomPayload {
         this.team = team;
     }
 
-    public SyncTeamPacket(FriendlyByteBuf buf) {
-        team = BingoBoard.Teams.fromBits(buf.readVarInt());
-    }
-
     @NotNull
     @Override
-    public ResourceLocation id() {
-        return ID;
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeVarInt(team.toBits());
+    public Type<SyncTeamPacket> type() {
+        return TYPE;
     }
 
     @Override

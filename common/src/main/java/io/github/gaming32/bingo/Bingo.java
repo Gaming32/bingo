@@ -149,14 +149,14 @@ public class Bingo {
         });
 
         BingoNetworking.instance().onRegister(registrar -> {
-            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPacket.ID, InitBoardPacket::new);
-            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPacket.ID, buf -> RemoveBoardPacket.INSTANCE);
-            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPacket.ID, ResyncStatesPacket::new);
-            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPacket.ID, SyncTeamPacket::new);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPacket.ID, UpdateProgressPacket::new);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePacket.ID, UpdateStatePacket::new);
+            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPacket.TYPE, InitBoardPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPacket.TYPE, RemoveBoardPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPacket.TYPE, ResyncStatesPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPacket.TYPE, SyncTeamPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPacket.TYPE, UpdateProgressPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePacket.TYPE, UpdateStatePacket.CODEC);
 
-            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.ID, KeyPressedPacket::new);
+            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.TYPE, KeyPressedPacket.CODEC);
         });
 
         if (BingoPlatform.platform.isClient()) {
@@ -227,6 +227,6 @@ public class Bingo {
     }
 
     public static boolean isInstalledOnClient(ServerPlayer player) {
-        return BingoNetworking.instance().canPlayerReceive(player, InitBoardPacket.ID);
+        return BingoNetworking.instance().canPlayerReceive(player, InitBoardPacket.TYPE);
     }
 }

@@ -6,7 +6,7 @@ import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
 
 public interface BingoSubType<S extends BingoSub> {
-    DeferredRegister<BingoSubType<?>> REGISTRAR = new RegistryBuilder("bingo_sub_type")
+    DeferredRegister<BingoSubType<?>> REGISTER = new RegistryBuilder("bingo_sub_type")
         .build();
 
     RegistryValue<BingoSubType<CompoundBingoSub>> COMPOUND = register("compound", CompoundBingoSub.CODEC);
@@ -17,7 +17,7 @@ public interface BingoSubType<S extends BingoSub> {
     MapCodec<S> codec();
 
     static <S extends BingoSub> RegistryValue<BingoSubType<S>> register(String id, MapCodec<S> codec) {
-        return REGISTRAR.register(id, () -> new BingoSubType<>() {
+        return REGISTER.register(id, () -> new BingoSubType<>() {
             @Override
             public MapCodec<S> codec() {
                 return codec;

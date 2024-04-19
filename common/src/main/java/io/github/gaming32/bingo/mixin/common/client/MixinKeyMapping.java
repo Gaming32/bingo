@@ -22,7 +22,7 @@ public class MixinKeyMapping {
         )
     )
     private static void onKeyPress(InputConstants.Key key, CallbackInfo ci, @Local KeyMapping keyMapping) {
-        if (BingoNetworking.instance().canServerReceive(KeyPressedPacket.ID)) {
+        if (BingoNetworking.instance().canServerReceive(KeyPressedPacket.TYPE)) {
             new KeyPressedPacket(keyMapping.getName()).sendToServer();
         }
     }
