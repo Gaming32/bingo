@@ -17,6 +17,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -69,6 +70,13 @@ public class NeoForgePlatform extends BingoPlatform {
     @Override
     public void registerKeyMappings(Consumer<Consumer<KeyMapping>> handler) {
         modEventBus.addListener((RegisterKeyMappingsEvent event) -> handler.accept(event::register));
+    }
+
+    @Override
+    public void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
+        modEventBus.addListener((AddReloadListenerEvent event) -> handler.accept(
+            (id, listener, dependencies) -> event.addListener(listener)
+        ));
     }
 
     private void registerEvents() {

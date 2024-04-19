@@ -2,7 +2,6 @@ package io.github.gaming32.bingo;
 
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
-import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.registries.RegistrarManager;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.conditions.BingoConditions;
@@ -39,7 +38,6 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.level.storage.LevelResource;
 import org.slf4j.Logger;
@@ -144,22 +142,14 @@ public class Bingo {
         ProgressTrackerType.load();
         BingoTriggers.load();
 
-        ReloadListenerRegistry.register(
-            PackType.SERVER_DATA,
-            new BingoTag.ReloadListener(),
-            BingoTag.ReloadListener.ID
-        );
-        ReloadListenerRegistry.register(
-            PackType.SERVER_DATA,
-            new BingoDifficulty.ReloadListener(),
-            BingoDifficulty.ReloadListener.ID
-        );
-        ReloadListenerRegistry.register(
-            PackType.SERVER_DATA,
-            new BingoGoal.ReloadListener(),
-            BingoGoal.ReloadListener.ID,
-            List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
-        );
+        BingoPlatform.platform.registerDataReloadListeners(registrar -> {
+            registrar.register(BingoTag.ReloadListener.ID, new BingoTag.ReloadListener());
+            registrar.register(BingoDifficulty.ReloadListener.ID, new BingoDifficulty.ReloadListener());
+            registrar.register(
+                BingoGoal.ReloadListener.ID, new BingoGoal.ReloadListener(),
+                List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
+            );
+        });
 
         BingoNetworking.instance().onRegister(registrar -> {
             registrar.register(PacketFlow.CLIENTBOUND, InitBoardPacket.ID, InitBoardPacket::new);
