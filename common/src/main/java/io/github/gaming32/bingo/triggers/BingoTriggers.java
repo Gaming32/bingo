@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.triggers;
 
+import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
@@ -17,7 +18,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class BingoTriggers {
-    private static final DeferredRegister<CriterionTrigger<?>> REGISTRAR =
+    private static final DeferredRegister<CriterionTrigger<?>> REGISTER =
         BingoPlatform.platform.createDeferredRegister(BuiltInRegistries.TRIGGER_TYPES);
 
     public static final RegistryValue<AdjacentPaintingTrigger> ADJACENT_PAINTING = register("adjacent_painting", AdjacentPaintingTrigger::new);
@@ -70,7 +71,7 @@ public class BingoTriggers {
     }
 
     private static <T extends CriterionTrigger<?>> RegistryValue<T> register(String name, Supplier<T> init) {
-        return REGISTRAR.register(new ResourceLocation("bingo", name), init);
+        return REGISTER.register(new ResourceLocation(Bingo.MOD_ID, name), init);
     }
 
     public static Criterion<DistanceTrigger.TriggerInstance> crouch(DistancePredicate distance) {
