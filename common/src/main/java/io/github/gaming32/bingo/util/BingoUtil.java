@@ -22,6 +22,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 
@@ -183,5 +184,32 @@ public class BingoUtil {
             }
         }
         return team.getDisplayName();
+    }
+
+    public static boolean collidesWithProjectedBox(Vec3 entityOrigin, Vec3 boxNormal, double boxWidth) {
+        // Distance from origin to the closest point on the boxNormal line
+        final double pointDistance = entityOrigin.dot(boxNormal) / boxNormal.lengthSqr();
+
+        // Entity is behind box
+        if (pointDistance < 0) {
+            return false;
+        }
+
+        final Vec3 closestPoint = boxNormal.scale(pointDistance);
+        final double angle = vectorAngle(closestPoint, entityOrigin);
+        final double maxDistance = distanceToSquareEdge(angle, boxWidth / 2);
+        return closestPoint.distanceToSqr(entityOrigin) <= maxDistance * maxDistance;
+    }
+
+    public static double vectorAngle(Vec3 a, Vec3 b) {
+        return Math.atan2(a.dot(b), a.length() * b.length());
+    }
+
+    public static double distanceToSquareEdge(double angle, double squareRadius) {
+        final double sin = Math.abs(Math.sin(angle));
+        final double cos = Math.abs(Math.cos(angle));
+        return squareRadius * sin <= squareRadius * cos
+            ? squareRadius / cos
+            : squareRadius / sin;
     }
 }

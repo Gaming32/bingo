@@ -42,7 +42,7 @@ public record CycleIcon(List<GoalIcon> icons) implements GoalIcon {
 
     @Override
     public ItemStack item() {
-        return !icons.isEmpty() ? icons.get(icons.size() - 1).item() : ItemStack.EMPTY;
+        return !icons.isEmpty() ? icons.getLast().item() : ItemStack.EMPTY;
     }
 
     @Override

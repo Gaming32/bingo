@@ -71,7 +71,7 @@ public class RelativeStatsTrigger extends SimpleProgressibleCriterionTrigger<Rel
                     }
 
                     if (!stats.isEmpty()) {
-                        stats.get(0).range().min().ifPresent(min -> progressListener.update(this, min, min));
+                        stats.getFirst().range().min().ifPresent(min -> progressListener.update(this, min, min));
                     }
                 }
             }

@@ -39,7 +39,7 @@ public abstract class SimpleProgressibleCriterionTrigger<T extends SimpleCriteri
             return (triggerInstance, progress, maxProgress) -> {};
         }
         if (listeners.size() == 1) {
-            return listeners.get(0);
+            return listeners.getFirst();
         }
         return (triggerInstance, progress, maxProgress) -> {
             for (final ProgressListener<T> listener : listeners) {
