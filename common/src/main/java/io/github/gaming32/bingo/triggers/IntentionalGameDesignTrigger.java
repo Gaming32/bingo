@@ -10,7 +10,6 @@ import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,8 +33,8 @@ public class IntentionalGameDesignTrigger extends SimpleCriterionTrigger<Intenti
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "respawn").forGetter(TriggerInstance::respawn)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LocationPredicate.CODEC.optionalFieldOf("respawn").forGetter(TriggerInstance::respawn)
             ).apply(instance, TriggerInstance::new)
         );
 

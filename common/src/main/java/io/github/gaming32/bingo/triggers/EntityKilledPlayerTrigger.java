@@ -9,7 +9,6 @@ import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -48,11 +47,11 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "credited_entity").forGetter(TriggerInstance::creditedEntity),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "direct_entity").forGetter(TriggerInstance::directEntity),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "source_entity").forGetter(TriggerInstance::sourceEntity),
-                ExtraCodecs.strictOptionalField(DamageSourcePredicate.CODEC, "source").forGetter(TriggerInstance::source)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("credited_entity").forGetter(TriggerInstance::creditedEntity),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("direct_entity").forGetter(TriggerInstance::directEntity),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("source_entity").forGetter(TriggerInstance::sourceEntity),
+                DamageSourcePredicate.CODEC.optionalFieldOf("source").forGetter(TriggerInstance::source)
             ).apply(instance, TriggerInstance::new)
         );
 

@@ -8,7 +8,6 @@ import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +32,8 @@ public class EntityTrigger extends SimpleCriterionTrigger<EntityTrigger.TriggerI
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "entity").forGetter(TriggerInstance::entity)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("entity").forGetter(TriggerInstance::entity)
             ).apply(instance, TriggerInstance::new)
         );
 

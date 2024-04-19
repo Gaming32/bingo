@@ -9,7 +9,6 @@ import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -46,11 +45,11 @@ public class PulledByLeashTrigger extends SimpleCriterionTrigger<PulledByLeashTr
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "mob").forGetter(TriggerInstance::mob),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "knot").forGetter(TriggerInstance::knot),
-                ExtraCodecs.strictOptionalField(Codec.BOOL, "knot_required").forGetter(TriggerInstance::knotRequired),
-                ExtraCodecs.strictOptionalField(DistancePredicate.CODEC, "force").forGetter(TriggerInstance::force)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("mob").forGetter(TriggerInstance::mob),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("knot").forGetter(TriggerInstance::knot),
+                Codec.BOOL.optionalFieldOf("knot_required").forGetter(TriggerInstance::knotRequired),
+                DistancePredicate.CODEC.optionalFieldOf("force").forGetter(TriggerInstance::force)
             ).apply(instance, TriggerInstance::new)
         );
 

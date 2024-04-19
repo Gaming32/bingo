@@ -9,6 +9,7 @@ import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
@@ -58,9 +59,9 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 ExtraCodecs.POSITIVE_INT.fieldOf("required_count").forGetter(TriggerInstance::requiredCount),
-                ExtraCodecs.strictOptionalField(TagPredicate.codec(Registries.ITEM), "tag").forGetter(TriggerInstance::tag)
+                TagPredicate.codec(Registries.ITEM).optionalFieldOf("tag").forGetter(TriggerInstance::tag)
             ).apply(instance, TriggerInstance::new)
         );
 
@@ -77,7 +78,7 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
                 if (tag.isPresent() && !tag.get().matches(item.getItemHolder())) {
                     continue;
                 }
-                final FoodProperties food = item.getItem().getFoodProperties();
+                final FoodProperties food = item.get(DataComponents.FOOD);
                 if (food != null) {
                     // attempt to smelt the item
                     fakeFurnace.setItem(0, item);

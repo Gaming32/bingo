@@ -29,7 +29,7 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
     public static final Codec<BingoDifficulty> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             ExtraCodecs.NON_NEGATIVE_INT.fieldOf("number").forGetter(BingoDifficulty::number),
-            ExtraCodecs.strictOptionalField(Codec.STRING, "fallback_name").forGetter(d -> Optional.ofNullable(d.fallbackName))
+            Codec.STRING.optionalFieldOf("fallback_name").forGetter(d -> Optional.ofNullable(d.fallbackName))
         ).apply(instance, BingoDifficulty::new)
     );
 

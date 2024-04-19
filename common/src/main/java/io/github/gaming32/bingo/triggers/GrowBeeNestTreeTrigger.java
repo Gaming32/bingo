@@ -9,7 +9,6 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -44,8 +43,8 @@ public class GrowBeeNestTreeTrigger extends SimpleCriterionTrigger<GrowBeeNestTr
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(ContextAwarePredicate.CODEC, "nest").forGetter(TriggerInstance::nest)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                ContextAwarePredicate.CODEC.optionalFieldOf("nest").forGetter(TriggerInstance::nest)
             ).apply(instance, TriggerInstance::new)
         );
 

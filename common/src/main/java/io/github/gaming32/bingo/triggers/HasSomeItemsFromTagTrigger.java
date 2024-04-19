@@ -52,7 +52,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleProgressibleCriterionTrigg
         private static final Codec<Integer> REQUIRED_COUNT_CODEC = BingoCodecs.firstValid(ExtraCodecs.POSITIVE_INT, BingoCodecs.exactly(ALL));
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(TriggerInstance::tag),
                 REQUIRED_COUNT_CODEC.fieldOf("required_count").forGetter(TriggerInstance::requiredCount)
             ).apply(instance, TriggerInstance::new)

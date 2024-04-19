@@ -8,7 +8,6 @@ import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -41,10 +40,10 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "pig").forGetter(TriggerInstance::pig),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "zombified_piglin").forGetter(TriggerInstance::zombifiedPiglin),
-                ExtraCodecs.strictOptionalField(Codec.BOOL, "direct").forGetter(TriggerInstance::direct)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("pig").forGetter(TriggerInstance::pig),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("zombified_piglin").forGetter(TriggerInstance::zombifiedPiglin),
+                Codec.BOOL.optionalFieldOf("direct").forGetter(TriggerInstance::direct)
             ).apply(instance, TriggerInstance::new)
         );
 

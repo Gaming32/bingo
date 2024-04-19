@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +19,7 @@ public record EntityTypeTagCycleIcon(TagKey<EntityType<?>> tag, int count) imple
     public static final MapCodec<EntityTypeTagCycleIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             TagKey.codec(Registries.ENTITY_TYPE).fieldOf("tag").forGetter(EntityTypeTagCycleIcon::tag),
-            ExtraCodecs.strictOptionalField(Codec.INT, "count", 1).forGetter(EntityTypeTagCycleIcon::count)
+            Codec.INT.optionalFieldOf("count", 1).forGetter(EntityTypeTagCycleIcon::count)
         ).apply(instance, EntityTypeTagCycleIcon::new)
     );
 
