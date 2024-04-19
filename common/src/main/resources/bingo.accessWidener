@@ -3,3 +3,4 @@ accessible	class	net/minecraft/advancements/critereon/PlayerPredicate$StatMatche
 accessible	method	net/minecraft/client/gui/GuiGraphics	renderTooltipInternal	(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V
 accessible  method  net/minecraft/world/level/storage/loot/parameters/LootContextParamSets  register    (Ljava/lang/String;Ljava/util/function/Consumer;)Lnet/minecraft/world/level/storage/loot/parameters/LootContextParamSet;
 accessible  field   net/minecraft/world/inventory/GrindstoneMenu    repairSlots Lnet/minecraft/world/Container;
+accessible	method	net/minecraft/world/level/storage/LevelResource	<init>	(Ljava/lang/String;)V

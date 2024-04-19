@@ -21,8 +21,6 @@ configurations {
 
 dependencies {
     neoForge("net.neoforged:neoforge:${rootProject["neoforge_version"]}")
-    // Remove the next line if you don't want to depend on the API
-    modApi("dev.architectury:architectury-neoforge:${rootProject["architectury_version"]}")
 
     common(project(":common", configuration = "namedElements")) {
         isTransitive = false

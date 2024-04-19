@@ -2,18 +2,6 @@ package io.github.gaming32.bingo;
 
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
-import dev.architectury.event.CompoundEventResult;
-import dev.architectury.event.EventResult;
-import dev.architectury.event.events.common.CommandRegistrationEvent;
-import dev.architectury.event.events.common.ExplosionEvent;
-import dev.architectury.event.events.common.InteractionEvent;
-import dev.architectury.event.events.common.LifecycleEvent;
-import dev.architectury.event.events.common.PlayerEvent;
-import dev.architectury.event.events.common.TickEvent;
-import dev.architectury.platform.Platform;
-import dev.architectury.registry.ReloadListenerRegistry;
-import dev.architectury.registry.registries.RegistrarManager;
-import dev.architectury.utils.Env;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.conditions.BingoParamSets;
@@ -33,6 +21,8 @@ import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPacket;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPacket;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPacket;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePacket;
+import io.github.gaming32.bingo.platform.BingoPlatform;
+import io.github.gaming32.bingo.platform.event.Event;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.locale.Language;
@@ -47,7 +37,6 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.level.storage.LevelResource;
 import org.slf4j.Logger;
@@ -64,8 +53,6 @@ public class Bingo {
     public static final String MOD_ID = "bingo";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final RegistrarManager REGISTRAR_MANAGER = RegistrarManager.get(MOD_ID);
-
     public static final LevelResource PERSISTED_BINGO_GAME = new LevelResource("persisted_bingo_game.dat");
 
     public static boolean showOtherTeam;
@@ -74,26 +61,25 @@ public class Bingo {
     public static final Set<UUID> needAdvancementsClear = new HashSet<>();
 
     public static void init() {
-        CommandRegistrationEvent.EVENT.register(BingoCommand::register);
+        Event.REGISTER_COMMANDS.register(BingoCommand::register);
 
-        PlayerEvent.PLAYER_JOIN.register(player -> {
+        Event.PLAYER_JOIN.register(player -> {
             if (activeGame != null) {
                 activeGame.addPlayer(player);
             }
         });
 
-        PlayerEvent.PLAYER_QUIT.register(player -> needAdvancementsClear.remove(player.getUUID()));
+        Event.PLAYER_QUIT.register(player -> needAdvancementsClear.remove(player.getUUID()));
 
-        LifecycleEvent.SERVER_STOPPED.register(instance -> activeGame = null);
+        Event.SERVER_STOPPED.register(instance -> activeGame = null);
 
-        InteractionEvent.RIGHT_CLICK_ITEM.register((player, hand) -> {
+        Event.RIGHT_CLICK_ITEM.register((player, hand) -> {
             if (player instanceof ServerPlayer serverPlayer) {
                 BingoTriggers.TRY_USE_ITEM.get().trigger(serverPlayer, hand);
             }
-            return CompoundEventResult.pass();
         });
 
-        ExplosionEvent.PRE.register((level, explosion) -> {
+        Event.EXPLOSION_START.register((level, explosion) -> {
             if (level instanceof ServerLevel serverLevel) {
                 final ServerPlayer player;
                 if (explosion.getIndirectSourceEntity() instanceof ServerPlayer thePlayer) {
@@ -107,10 +93,9 @@ public class Bingo {
                     BingoTriggers.EXPLOSION.get().trigger(player, serverLevel, explosion);
                 }
             }
-            return EventResult.pass();
         });
 
-        TickEvent.SERVER_POST.register(instance -> {
+        Event.SERVER_TICK_END.register(instance -> {
             if (activeGame != null && activeGame.isRequireClient()) {
                 for (final ServerPlayer player : instance.getPlayerList().getPlayers()) {
                     if (player.tickCount == 60 && !Bingo.isInstalledOnClient(player)) {
@@ -120,7 +105,7 @@ public class Bingo {
             }
         });
 
-        LifecycleEvent.SERVER_STARTED.register(instance -> {
+        Event.SERVER_STARTED.register(instance -> {
             final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
             if (!Files.isRegularFile(path)) return;
             LOGGER.info("Reading persisted Bingo game");
@@ -134,7 +119,7 @@ public class Bingo {
             }
         });
 
-        LifecycleEvent.SERVER_STOPPING.register(instance -> {
+        Event.SERVER_STOPPING.register(instance -> {
             if (activeGame == null || !activeGame.isPersistent()) return;
             LOGGER.info("Storing persistent Bingo game");
             final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
@@ -154,22 +139,14 @@ public class Bingo {
         ProgressTrackerType.load();
         BingoTriggers.load();
 
-        ReloadListenerRegistry.register(
-            PackType.SERVER_DATA,
-            new BingoTag.ReloadListener(),
-            BingoTag.ReloadListener.ID
-        );
-        ReloadListenerRegistry.register(
-            PackType.SERVER_DATA,
-            new BingoDifficulty.ReloadListener(),
-            BingoDifficulty.ReloadListener.ID
-        );
-        ReloadListenerRegistry.register(
-            PackType.SERVER_DATA,
-            new BingoGoal.ReloadListener(),
-            BingoGoal.ReloadListener.ID,
-            List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
-        );
+        BingoPlatform.platform.registerDataReloadListeners(registrar -> {
+            registrar.register(BingoTag.ReloadListener.ID, new BingoTag.ReloadListener());
+            registrar.register(BingoDifficulty.ReloadListener.ID, new BingoDifficulty.ReloadListener());
+            registrar.register(
+                BingoGoal.ReloadListener.ID, new BingoGoal.ReloadListener(),
+                List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
+            );
+        });
 
         BingoNetworking.instance().onRegister(registrar -> {
             registrar.register(PacketFlow.CLIENTBOUND, InitBoardPacket.ID, InitBoardPacket::new);
@@ -182,7 +159,7 @@ public class Bingo {
             registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.ID, KeyPressedPacket::new);
         });
 
-        if (Platform.getEnvironment() == Env.CLIENT) {
+        if (BingoPlatform.platform.isClient()) {
             BingoClient.init();
         }
 

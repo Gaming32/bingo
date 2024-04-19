@@ -6,9 +6,12 @@
   "mixins": [
     "MixinBoneMealItem",
     "MixinHashCache_ProviderCache",
+    "MixinLevel",
+    "MixinPlayerList",
     "brigadier.MixinCommandContext"
   ],
   "client": [
+    "client.MixinMinecraft"
   ],
   "injectors": {
     "defaultRequire": 1

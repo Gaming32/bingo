@@ -1,7 +1,6 @@
 package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.Codec;
-import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -12,7 +11,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface GoalIcon {
-    Codec<GoalIcon> CODEC = BingoCodecs.registrarByName(GoalIconType.REGISTRAR)
+    Codec<GoalIcon> CODEC = GoalIconType.REGISTRAR
+        .registry()
+        .byNameCodec()
         .dispatch(GoalIcon::type, type -> type.codec().codec());
 
     /**

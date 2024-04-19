@@ -29,14 +29,15 @@ public record EntityTypeTagCycleIcon(TagKey<EntityType<?>> tag, int count) imple
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ItemStack item() {
         return new ItemStack(
             StreamSupport.stream(BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(tag).spliterator(), false)
                 .map(holder -> SpawnEggItem.byId(holder.value()))
                 .filter(Objects::nonNull)
                 .findFirst()
-                .map(Item::arch$holder)
-                .orElseGet(Items.AIR::arch$holder),
+                .map(Item::builtInRegistryHolder)
+                .orElseGet(Items.AIR::builtInRegistryHolder),
             count
         );
     }
