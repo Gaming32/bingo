@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
-import dev.architectury.registry.client.gui.ClientTooltipComponentRegistry;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.config.BingoClientConfig;
@@ -164,7 +163,7 @@ public class BingoClient {
             }
         });
 
-        ClientTooltipComponentRegistry.register(IconTooltip.class, ClientIconTooltip::new);
+        BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
     }
 
     public static RecipeViewerPlugin getRecipeViewerPlugin() {

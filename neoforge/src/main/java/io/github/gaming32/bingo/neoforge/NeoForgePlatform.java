@@ -11,6 +11,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -24,6 +25,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 public class NeoForgePlatform extends BingoPlatform {
     private final BingoNetworking networking;
@@ -51,6 +53,13 @@ public class NeoForgePlatform extends BingoPlatform {
     @Override
     public boolean isModLoaded(String id) {
         return ModList.get().isLoaded(id);
+    }
+
+    @Override
+    public void registerClientTooltips(Consumer<ClientTooltipRegistrar> handler) {
+        NeoForge.EVENT_BUS.addListener((RegisterClientTooltipComponentFactoriesEvent event) ->
+            handler.accept(event::register)
+        );
     }
 
     private void registerEvents() {

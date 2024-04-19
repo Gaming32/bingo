@@ -9,6 +9,7 @@ import io.github.gaming32.bingo.platform.event.Event;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -17,10 +18,14 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.nio.file.Path;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class FabricPlatform extends BingoPlatform {
     private final BingoNetworking networking;
@@ -48,6 +53,21 @@ public class FabricPlatform extends BingoPlatform {
     @Override
     public boolean isModLoaded(String id) {
         return FabricLoader.getInstance().isModLoaded(id);
+    }
+
+    @Override
+    public void registerClientTooltips(Consumer<ClientTooltipRegistrar> handler) {
+        handler.accept(new ClientTooltipRegistrar() {
+            @Override
+            public <T extends TooltipComponent> void register(Class<T> clazz, Function<? super T, ? extends ClientTooltipComponent> factory) {
+                TooltipComponentCallback.EVENT.register(data -> {
+                    if (clazz.isInstance(data)) {
+                        return factory.apply(clazz.cast(data));
+                    }
+                    return null;
+                });
+            }
+        });
     }
 
     private void registerEvents() {
