@@ -25,8 +25,12 @@ public record ItemTagCycleIcon(TagKey<Item> tag, int count) implements GoalIcon 
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ItemStack item() {
-        return new ItemStack(Iterables.getFirst(BuiltInRegistries.ITEM.getTagOrEmpty(tag), Items.AIR.arch$holder()), count);
+        return new ItemStack(
+            Iterables.getFirst(BuiltInRegistries.ITEM.getTagOrEmpty(tag), Items.AIR.builtInRegistryHolder()),
+            count
+        );
     }
 
     @Override
