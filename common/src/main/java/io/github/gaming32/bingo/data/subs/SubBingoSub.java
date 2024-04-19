@@ -9,8 +9,8 @@ import java.util.Map;
 
 public record SubBingoSub(String key) implements BingoSub {
     public static final MapCodec<SubBingoSub> CODEC = Codec.STRING
-        .xmap(SubBingoSub::new, SubBingoSub::key)
-        .fieldOf("key");
+        .fieldOf("key")
+        .xmap(SubBingoSub::new, SubBingoSub::key);
 
     @Override
     public Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand) {

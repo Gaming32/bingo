@@ -14,8 +14,8 @@ import net.minecraft.world.item.alchemy.Potions;
 public record EffectIcon(MobEffect effect, Holder<Potion> potion) implements GoalIcon {
     public static final MapCodec<EffectIcon> CODEC = BuiltInRegistries.MOB_EFFECT
         .byNameCodec()
-        .xmap(EffectIcon::of, EffectIcon::effect)
-        .fieldOf("effect");
+        .fieldOf("effect")
+        .xmap(EffectIcon::of, EffectIcon::effect);
 
     public static EffectIcon of(MobEffect effect) {
         return new EffectIcon(

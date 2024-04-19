@@ -13,8 +13,8 @@ import java.util.stream.StreamSupport;
 public record CycleIcon(List<GoalIcon> icons) implements GoalIcon {
     public static final MapCodec<CycleIcon> CODEC = GoalIcon.CODEC
         .listOf()
-        .xmap(CycleIcon::new, CycleIcon::icons)
-        .fieldOf("icons");
+        .fieldOf("icons")
+        .xmap(CycleIcon::new, CycleIcon::icons);
 
     public CycleIcon {
         icons = ImmutableList.copyOf(icons);

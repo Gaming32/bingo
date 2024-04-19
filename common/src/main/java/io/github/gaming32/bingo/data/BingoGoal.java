@@ -78,17 +78,17 @@ public class BingoGoal {
             },
             BingoDifficulty.Holder::id
         );
-    public static final Codec<BingoGoal> CODEC = ExtraCodecs.validate(RecordCodecBuilder.create(
+    public static final Codec<BingoGoal> CODEC = RecordCodecBuilder.<BingoGoal>create(
         instance -> instance.group(
-            ExtraCodecs.strictOptionalField(SUBS_CODEC, "bingo_subs", Map.of()).forGetter(BingoGoal::getSubs),
+            SUBS_CODEC.optionalFieldOf("bingo_subs", Map.of()).forGetter(BingoGoal::getSubs),
             Codec.unboundedMap(Codec.STRING, Codec.PASSTHROUGH).fieldOf("criteria").forGetter(BingoGoal::getCriteria),
-            ExtraCodecs.strictOptionalField(AdvancementRequirements.CODEC, "requirements").forGetter(g -> Optional.of(g.requirements)),
-            ExtraCodecs.strictOptionalField(ProgressTracker.CODEC, "progress", EmptyProgressTracker.INSTANCE).forGetter(BingoGoal::getProgress),
+            AdvancementRequirements.CODEC.optionalFieldOf("requirements").forGetter(g -> Optional.of(g.requirements)),
+            ProgressTracker.CODEC.optionalFieldOf("progress", EmptyProgressTracker.INSTANCE).forGetter(BingoGoal::getProgress),
             BingoCodecs.optionalDynamicField("required_count", BingoCodecs.EMPTY_DYNAMIC.createInt(1)).forGetter(BingoGoal::getRequiredCount),
-            ExtraCodecs.strictOptionalField(TAGS_CODEC, "tags", Set.of()).forGetter(BingoGoal::getTags),
+            TAGS_CODEC.optionalFieldOf("tags", Set.of()).forGetter(BingoGoal::getTags),
             Codec.PASSTHROUGH.fieldOf("name").forGetter(BingoGoal::getName),
             BingoCodecs.optionalDynamicField("tooltip").forGetter(BingoGoal::getTooltip),
-            ExtraCodecs.strictOptionalField(ResourceLocation.CODEC, "tooltip_icon").forGetter(BingoGoal::getTooltipIcon),
+            ResourceLocation.CODEC.optionalFieldOf("tooltip_icon").forGetter(BingoGoal::getTooltipIcon),
             BingoCodecs.optionalDynamicField("icon").forGetter(BingoGoal::getIcon),
             BingoCodecs.optionalInt("infrequency").forGetter(BingoGoal::getInfrequency),
             BingoCodecs.minifiedSetField(Codec.STRING, "antisynergy").forGetter(BingoGoal::getAntisynergy),
@@ -96,7 +96,7 @@ public class BingoGoal {
             BingoCodecs.minifiedSetField(Codec.STRING, "reactant").forGetter(BingoGoal::getReactant),
             DIFFICULTY_CODEC.fieldOf("difficulty").forGetter(BingoGoal::getDifficulty)
         ).apply(instance, BingoGoal::new)
-    ), BingoGoal::validate);
+    ).validate(BingoGoal::validate);
 
     private static Map<ResourceLocation, Holder> goals = Map.of();
     private static Map<Integer, List<Holder>> goalsByDifficulty = Map.of();
@@ -512,7 +512,7 @@ public class BingoGoal {
         }
 
         public Builder name(Component name, Consumer<JsonSubber> subber) {
-            JsonSubber json = new JsonSubber(Component.Serializer.toJsonTree(name));
+            JsonSubber json = new JsonSubber(BingoUtil.toJsonElement(ComponentSerialization.CODEC, name));
             subber.accept(json);
             this.name = Optional.of(new Dynamic<>(JsonOps.INSTANCE, json.json()));
             return this;
@@ -527,7 +527,7 @@ public class BingoGoal {
         }
 
         public Builder tooltip(Component tooltip, Consumer<JsonSubber> subber) {
-            JsonSubber json = new JsonSubber(Component.Serializer.toJsonTree(tooltip));
+            JsonSubber json = new JsonSubber(BingoUtil.toJsonElement(ComponentSerialization.CODEC, tooltip));
             subber.accept(json);
             this.tooltip = new Dynamic<>(JsonOps.INSTANCE, json.json());
             return this;

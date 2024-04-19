@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public record OneByOneHoleCondition(int bottom, int top, BlockPredicate predicate) implements LootItemCondition {
-    public static final Codec<OneByOneHoleCondition> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<OneByOneHoleCondition> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             Codec.INT.fieldOf("bottom").forGetter(OneByOneHoleCondition::bottom),
             Codec.INT.fieldOf("top").forGetter(OneByOneHoleCondition::top),

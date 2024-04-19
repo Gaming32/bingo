@@ -15,8 +15,8 @@ import java.util.function.Consumer;
 
 public record WrapBingoSub(Dynamic<?> value) implements BingoSub {
     public static final MapCodec<WrapBingoSub> CODEC = Codec.PASSTHROUGH
-        .xmap(WrapBingoSub::new, WrapBingoSub::value)
-        .fieldOf("value");
+        .fieldOf("value")
+        .xmap(WrapBingoSub::new, WrapBingoSub::value);
 
     public WrapBingoSub(JsonElement value, Consumer<JsonSubber> subber) {
         this(new Dynamic<>(JsonOps.INSTANCE, Util.make(new JsonSubber(value), subber).json()));

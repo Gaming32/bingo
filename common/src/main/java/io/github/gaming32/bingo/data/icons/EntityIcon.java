@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +15,7 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
     public static final MapCodec<EntityIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(EntityIcon::entity),
-            ExtraCodecs.strictOptionalField(CompoundTag.CODEC, "data", new CompoundTag()).forGetter(EntityIcon::data),
+            CompoundTag.CODEC.optionalFieldOf("data", new CompoundTag()).forGetter(EntityIcon::data),
             ItemStack.CODEC.fieldOf("item").forGetter(EntityIcon::item)
         ).apply(instance, EntityIcon::new)
     );

@@ -1,11 +1,12 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.google.common.collect.Sets;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.util.ExtraCodecs;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
@@ -22,10 +23,10 @@ public record WearingDifferentArmorCondition(
     MinMaxBounds.Ints equippedArmor,
     MinMaxBounds.Ints differentTypes
 ) implements LootItemCondition {
-    public static final Codec<WearingDifferentArmorCondition> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<WearingDifferentArmorCondition> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
-            ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "equipped_armor", MinMaxBounds.Ints.ANY).forGetter(WearingDifferentArmorCondition::equippedArmor),
-            ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "different_types", MinMaxBounds.Ints.ANY).forGetter(WearingDifferentArmorCondition::differentTypes)
+            MinMaxBounds.Ints.CODEC.optionalFieldOf("equipped_armor", MinMaxBounds.Ints.ANY).forGetter(WearingDifferentArmorCondition::equippedArmor),
+            MinMaxBounds.Ints.CODEC.optionalFieldOf("different_types", MinMaxBounds.Ints.ANY).forGetter(WearingDifferentArmorCondition::differentTypes)
         ).apply(instance, WearingDifferentArmorCondition::new)
     );
 
@@ -38,9 +39,12 @@ public record WearingDifferentArmorCondition(
     @Override
     public boolean test(LootContext lootContext) {
         final Entity entity = lootContext.getParam(LootContextParams.THIS_ENTITY);
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            return false;
+        }
         int wearingCount = 0;
-        final Set<ArmorMaterial> materials = Sets.newHashSetWithExpectedSize(4);
-        for (final ItemStack stack : entity.getArmorSlots()) {
+        final Set<Holder<ArmorMaterial>> materials = Sets.newHashSetWithExpectedSize(4);
+        for (final ItemStack stack : livingEntity.getArmorSlots()) {
             if (!(stack.getItem() instanceof ArmorItem armorItem)) continue;
             wearingCount++;
             materials.add(armorItem.getMaterial());

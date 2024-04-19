@@ -1,7 +1,6 @@
 package io.github.gaming32.bingo.conditions;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -14,11 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public record ToolDamageCondition(MinMaxBounds.Ints damage) implements LootItemCondition {
-    public static final Codec<ToolDamageCondition> CODEC = RecordCodecBuilder.create(instance ->
-        instance.group(
-            MinMaxBounds.Ints.CODEC.fieldOf("damage").forGetter(ToolDamageCondition::damage)
-        ).apply(instance, ToolDamageCondition::new)
-    );
+    public static final MapCodec<ToolDamageCondition> CODEC = MinMaxBounds.Ints.CODEC
+        .fieldOf("damage")
+        .xmap(ToolDamageCondition::new, ToolDamageCondition::damage);
 
     @NotNull
     @Override

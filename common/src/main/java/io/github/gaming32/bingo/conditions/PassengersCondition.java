@@ -1,9 +1,9 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -21,10 +21,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public record PassengersCondition(List<ContextAwarePredicate> passengers, boolean requireFull) implements LootItemCondition {
-    public static final Codec<PassengersCondition> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<PassengersCondition> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             ContextAwarePredicate.CODEC.listOf().fieldOf("passengers").forGetter(PassengersCondition::passengers),
-            ExtraCodecs.strictOptionalField(Codec.BOOL, "require_full", false).forGetter(PassengersCondition::requireFull)
+            Codec.BOOL.optionalFieldOf("require_full", false).forGetter(PassengersCondition::requireFull)
         ).apply(instance, PassengersCondition::new)
     );
 
