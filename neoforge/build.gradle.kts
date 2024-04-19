@@ -19,6 +19,16 @@ configurations {
     developmentNeoForge.extendsFrom(common)
 }
 
+repositories {
+    maven("https://prmaven.neoforged.net/NeoForge/pr794") {
+        name = "Maven for PR #794" // https://github.com/neoforged/NeoForge/pull/794
+        content {
+            includeModule("net.neoforged", "testframework")
+            includeModule("net.neoforged", "neoforge")
+        }
+    }
+}
+
 dependencies {
     neoForge("net.neoforged:neoforge:${rootProject["neoforge_version"]}")
 
