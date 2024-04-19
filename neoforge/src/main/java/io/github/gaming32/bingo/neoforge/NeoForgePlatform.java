@@ -7,6 +7,9 @@ import io.github.gaming32.bingo.platform.event.Event;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
@@ -19,7 +22,8 @@ import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
-import net.neoforged.neoforgespi.Environment;
+
+import java.nio.file.Path;
 
 public class NeoForgePlatform extends BingoPlatform {
     private final BingoNetworking networking;
@@ -36,7 +40,17 @@ public class NeoForgePlatform extends BingoPlatform {
 
     @Override
     public boolean isClient() {
-        return Environment.get().getDist().isClient();
+        return FMLEnvironment.dist.isClient();
+    }
+
+    @Override
+    public Path getConfigDir() {
+        return FMLPaths.CONFIGDIR.get();
+    }
+
+    @Override
+    public boolean isModLoaded(String id) {
+        return ModList.get().isLoaded(id);
     }
 
     private void registerEvents() {

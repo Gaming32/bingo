@@ -2,12 +2,10 @@ package io.github.gaming32.bingo.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
-import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.gui.ClientTooltipComponentRegistry;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.config.BingoClientConfig;
-import io.github.gaming32.bingo.client.config.BingoConfigScreen;
 import io.github.gaming32.bingo.client.icons.DefaultIconRenderers;
 import io.github.gaming32.bingo.client.icons.IconRenderer;
 import io.github.gaming32.bingo.client.icons.IconRenderers;
@@ -17,6 +15,7 @@ import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.ClientGoal;
+import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -54,17 +53,13 @@ public class BingoClient {
     public static ClientGame clientGame;
 
     public static final BingoClientConfig CONFIG = new BingoClientConfig(
-        Platform.getConfigFolder().resolve("bingo-client.toml")
+        BingoPlatform.platform.getConfigDir().resolve("bingo-client.toml")
     );
     private static RecipeViewerPlugin recipeViewerPlugin;
 
     public static void init() {
         CONFIG.load();
         CONFIG.save();
-
-        if (!Platform.isFabric()) {
-            Platform.getMod(Bingo.MOD_ID).registerConfigurationScreen(BingoConfigScreen::new);
-        }
 
         ClientEvents.RENDER_HUD.register((graphics, tickDelta) -> {
             if (clientGame == null) return;

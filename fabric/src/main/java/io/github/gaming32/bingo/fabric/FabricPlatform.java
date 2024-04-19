@@ -20,6 +20,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.ItemStack;
 
+import java.nio.file.Path;
+
 public class FabricPlatform extends BingoPlatform {
     private final BingoNetworking networking;
 
@@ -36,6 +38,16 @@ public class FabricPlatform extends BingoPlatform {
     @Override
     public boolean isClient() {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+    }
+
+    @Override
+    public Path getConfigDir() {
+        return FabricLoader.getInstance().getConfigDir();
+    }
+
+    @Override
+    public boolean isModLoaded(String id) {
+        return FabricLoader.getInstance().isModLoaded(id);
     }
 
     private void registerEvents() {
