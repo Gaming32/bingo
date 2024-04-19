@@ -1,12 +1,13 @@
 package io.github.gaming32.bingo.event;
 
-import dev.architectury.event.Event;
-import dev.architectury.event.EventFactory;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 
-public interface InventoryChangedEvent {
-    Event<InventoryChangedEvent> EVENT = EventFactory.createLoop();
+import java.util.ArrayList;
+import java.util.List;
+
+public interface InventoryChangedCallback {
+    List<InventoryChangedCallback> HANDLERS = new ArrayList<>();
 
     void inventoryChanged(ServerPlayer player, Inventory inventory);
 }

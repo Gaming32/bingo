@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.event.InventoryChangedEvent;
+import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterionTrigger<WearDifferentColoredArmorTrigger.TriggerInstance> {
     static {
-        InventoryChangedEvent.EVENT.register((player, inventory) -> BingoTriggers.WEAR_DIFFERENT_COLORED_ARMOR.get().trigger(player, inventory));
+        InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.WEAR_DIFFERENT_COLORED_ARMOR.get().trigger(player, inventory));
     }
 
     @NotNull

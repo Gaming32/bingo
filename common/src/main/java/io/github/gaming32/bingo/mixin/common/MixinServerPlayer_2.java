@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.mixin.common;
 
-import io.github.gaming32.bingo.event.InventoryChangedEvent;
+import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +25,8 @@ public class MixinServerPlayer_2 {
         )
     )
     private void onInventoryChanged(AbstractContainerMenu containerToSend, int dataSlotIndex, ItemStack stack, CallbackInfo ci) {
-        InventoryChangedEvent.EVENT.invoker().inventoryChanged(this$0, this$0.getInventory());
+        for (final InventoryChangedCallback handler : InventoryChangedCallback.HANDLERS) {
+            handler.inventoryChanged(this$0, this$0.getInventory());
+        }
     }
 }

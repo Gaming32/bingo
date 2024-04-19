@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.event.InventoryChangedEvent;
+import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -23,7 +23,7 @@ import java.util.Set;
 
 public class DifferentPotionsTrigger extends SimpleProgressibleCriterionTrigger<DifferentPotionsTrigger.TriggerInstance> {
     static {
-        InventoryChangedEvent.EVENT.register((player, inventory) -> BingoTriggers.DIFFERENT_POTIONS.get().trigger(player, inventory));
+        InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.DIFFERENT_POTIONS.get().trigger(player, inventory));
     }
 
     @NotNull

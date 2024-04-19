@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.triggers;
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.event.InventoryChangedEvent;
+import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -33,7 +33,7 @@ import java.util.Set;
 
 public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<HasSomeFoodItemsTrigger.TriggerInstance> {
     static {
-        InventoryChangedEvent.EVENT.register((player, inventory) -> BingoTriggers.HAS_SOME_FOOD_ITEMS.get().trigger(player, inventory));
+        InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.HAS_SOME_FOOD_ITEMS.get().trigger(player, inventory));
     }
 
     @NotNull
