@@ -154,10 +154,10 @@ public class FabricPlatform extends BingoPlatform {
         Event.SERVER_STARTED.setRegistrar(handler -> ServerLifecycleEvents.SERVER_STARTED.register(handler::accept));
         Event.SERVER_STOPPING.setRegistrar(handler -> ServerLifecycleEvents.SERVER_STOPPING.register(handler::accept));
         Event.SERVER_STOPPED.setRegistrar(handler -> ServerLifecycleEvents.SERVER_STOPPED.register(handler::accept));
-        Event.RIGHT_CLICK_ITEM.setRegistrar(handler -> UseItemCallback.EVENT.register(((player, world, hand) -> {
+        Event.RIGHT_CLICK_ITEM.setRegistrar(handler -> UseItemCallback.EVENT.register((player, world, hand) -> {
             handler.accept(player, hand);
             return InteractionResultHolder.pass(ItemStack.EMPTY);
-        })));
+        }));
         Event.EXPLOSION_START.setRegistrar(FabricEvents.EXPLOSION::register);
         Event.SERVER_TICK_END.setRegistrar(handler -> ServerTickEvents.END_SERVER_TICK.register(handler::accept));
 
