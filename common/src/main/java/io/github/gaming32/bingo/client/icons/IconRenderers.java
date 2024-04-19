@@ -1,8 +1,8 @@
 package io.github.gaming32.bingo.client.icons;
 
-import dev.architectury.registry.registries.RegistrySupplier;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.icons.GoalIconType;
+import io.github.gaming32.bingo.platform.registry.RegistryValue;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -16,27 +16,27 @@ public final class IconRenderers {
     }
 
     public static <I extends GoalIcon> void register(GoalIconType<I> iconType, IconRenderer<I> renderer) {
-        final ResourceLocation id = GoalIconType.REGISTRAR.getId(iconType);
+        final ResourceLocation id = GoalIconType.REGISTRAR.registry().getKey(iconType);
         if (id == null) {
             throw new IllegalArgumentException("Tried to register renderer for unregistered icon type " + iconType);
         }
-        RENDERERS.put(GoalIconType.REGISTRAR.getId(iconType), renderer);
+        RENDERERS.put(id, renderer);
     }
 
-    public static <I extends GoalIcon> void register(RegistrySupplier<GoalIconType<I>> iconType, IconRenderer<I> renderer) {
-        RENDERERS.put(iconType.getId(), renderer);
+    public static <I extends GoalIcon> void register(RegistryValue<GoalIconType<I>> iconType, IconRenderer<I> renderer) {
+        RENDERERS.put(iconType.id(), renderer);
     }
 
     public static <I extends GoalIcon> IconRenderer<I> getRenderer(GoalIconType<I> iconType) {
-        final ResourceLocation id = GoalIconType.REGISTRAR.getId(iconType);
+        final ResourceLocation id = GoalIconType.REGISTRAR.registry().getKey(iconType);
         if (id == null) {
             throw new NoSuchElementException("Unknown id for icon type " + iconType);
         }
         return getRenderer(id);
     }
 
-    public static <I extends GoalIcon> IconRenderer<I> getRenderer(RegistrySupplier<GoalIconType<I>> iconType) {
-        return getRenderer(iconType.getId());
+    public static <I extends GoalIcon> IconRenderer<I> getRenderer(RegistryValue<GoalIconType<I>> iconType) {
+        return getRenderer(iconType.id());
     }
 
     @SuppressWarnings("unchecked")

@@ -2,10 +2,13 @@ package io.github.gaming32.bingo.fabric;
 
 import io.github.gaming32.bingo.fabric.event.FabricClientEvents;
 import io.github.gaming32.bingo.fabric.event.FabricEvents;
+import io.github.gaming32.bingo.fabric.registry.FabricDeferredRegister;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
+import io.github.gaming32.bingo.platform.registry.DeferredRegister;
+import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -18,11 +21,15 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -121,6 +128,23 @@ public class FabricPlatform extends BingoPlatform {
                 }
             })
         );
+    }
+
+    @Override
+    public <T> DeferredRegister<T> createDeferredRegister(Registry<T> registry) {
+        return new FabricDeferredRegister<>(registry);
+    }
+
+    @Override
+    public <T> DeferredRegister<T> buildDeferredRegister(RegistryBuilder builder) {
+        final var registryKey = ResourceKey.<T>createRegistryKey(builder.getId());
+        final var fabricBuilder = builder.getDefaultId() != null
+            ? FabricRegistryBuilder.createDefaulted(registryKey, builder.getDefaultId())
+            : FabricRegistryBuilder.createSimple(registryKey);
+        if (builder.isSynced()) {
+            fabricBuilder.attribute(RegistryAttribute.SYNCED);
+        }
+        return new FabricDeferredRegister<>(fabricBuilder.buildAndRegister());
     }
 
     private void registerEvents() {

@@ -6,11 +6,12 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.GoalProgress;
-import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.server.level.ServerPlayer;
 
 public interface ProgressTracker {
-    Codec<ProgressTracker> CODEC = BingoCodecs.registrarByName(ProgressTrackerType.REGISTRAR)
+    Codec<ProgressTracker> CODEC = ProgressTrackerType.REGISTER
+        .registry()
+        .byNameCodec()
         .dispatch(ProgressTracker::type, type -> type.codec().codec());
 
     default DataResult<ProgressTracker> validate(BingoGoal goal) {

@@ -1,34 +1,23 @@
 package io.github.gaming32.bingo.data.subs;
 
 import com.mojang.serialization.MapCodec;
-import dev.architectury.registry.registries.Registrar;
-import dev.architectury.registry.registries.RegistrySupplier;
-import io.github.gaming32.bingo.Bingo;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import io.github.gaming32.bingo.platform.registry.DeferredRegister;
+import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
+import io.github.gaming32.bingo.platform.registry.RegistryValue;
 
 public interface BingoSubType<S extends BingoSub> {
-    ResourceKey<Registry<BingoSubType<?>>> REGISTRY_KEY = ResourceKey.createRegistryKey(
-        new ResourceLocation("bingo:bingo_sub_type")
-    );
-    Registrar<BingoSubType<?>> REGISTRAR = Bingo.REGISTRAR_MANAGER
-        .<BingoSubType<?>>builder(REGISTRY_KEY.location())
+    DeferredRegister<BingoSubType<?>> REGISTRAR = new RegistryBuilder("bingo_sub_type")
         .build();
 
-    RegistrySupplier<BingoSubType<CompoundBingoSub>> COMPOUND = register("compound", CompoundBingoSub.CODEC);
-    RegistrySupplier<BingoSubType<IntBingoSub>> INT = register("int", IntBingoSub.CODEC);
-    RegistrySupplier<BingoSubType<SubBingoSub>> SUB = register("sub", SubBingoSub.CODEC);
-    RegistrySupplier<BingoSubType<WrapBingoSub>> WRAP = register("wrap", WrapBingoSub.CODEC);
+    RegistryValue<BingoSubType<CompoundBingoSub>> COMPOUND = register("compound", CompoundBingoSub.CODEC);
+    RegistryValue<BingoSubType<IntBingoSub>> INT = register("int", IntBingoSub.CODEC);
+    RegistryValue<BingoSubType<SubBingoSub>> SUB = register("sub", SubBingoSub.CODEC);
+    RegistryValue<BingoSubType<WrapBingoSub>> WRAP = register("wrap", WrapBingoSub.CODEC);
 
     MapCodec<S> codec();
 
-    static <S extends BingoSub> RegistrySupplier<BingoSubType<S>> register(String id, MapCodec<S> codec) {
-        if (id.indexOf(':') < 0) {
-            id = "bingo:" + id;
-        }
-        final ResourceLocation location = new ResourceLocation(id);
-        return REGISTRAR.register(location, () -> new BingoSubType<>() {
+    static <S extends BingoSub> RegistryValue<BingoSubType<S>> register(String id, MapCodec<S> codec) {
+        return REGISTRAR.register(id, () -> new BingoSubType<>() {
             @Override
             public MapCodec<S> codec() {
                 return codec;
@@ -36,7 +25,7 @@ public interface BingoSubType<S extends BingoSub> {
 
             @Override
             public String toString() {
-                return "BingoSubType[" + location + "]";
+                return "BingoSubType[" + id + "]";
             }
         });
     }

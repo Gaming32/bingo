@@ -1,11 +1,16 @@
 package io.github.gaming32.bingo.neoforge;
 
+import io.github.gaming32.bingo.neoforge.registry.NeoForgeDeferredRegister;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
+import io.github.gaming32.bingo.platform.registry.DeferredRegister;
+import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
@@ -77,6 +82,22 @@ public class NeoForgePlatform extends BingoPlatform {
         modEventBus.addListener((AddReloadListenerEvent event) -> handler.accept(
             (id, listener, dependencies) -> event.addListener(listener)
         ));
+    }
+
+    @Override
+    public <T> DeferredRegister<T> createDeferredRegister(Registry<T> registry) {
+        final NeoForgeDeferredRegister<T> register = new NeoForgeDeferredRegister<>(registry);
+        register.getDeferredRegister().register(modEventBus);
+        return register;
+    }
+
+    @Override
+    public <T> DeferredRegister<T> buildDeferredRegister(RegistryBuilder builder) {
+        return createDeferredRegister(
+            new net.neoforged.neoforge.registries.RegistryBuilder<>(ResourceKey.<T>createRegistryKey(builder.getId()))
+                .sync(builder.isSynced())
+                .defaultKey(builder.getDefaultId()).create()
+        );
     }
 
     private void registerEvents() {

@@ -12,9 +12,13 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public interface BingoSub {
-    Codec<BingoSub> CODEC = BingoCodecs.registrarByName(BingoSubType.REGISTRAR)
+    Codec<BingoSub> CODEC = BingoSubType.REGISTRAR
+        .registry()
+        .byNameCodec()
         .dispatch(BingoSub::type, type -> type.codec().codec());
-    Codec<BingoSub> INNER_CODEC = BingoCodecs.registrarByName(BingoSubType.REGISTRAR)
+    Codec<BingoSub> INNER_CODEC = BingoSubType.REGISTRAR
+        .registry()
+        .byNameCodec()
         .dispatch("bingo_type", BingoSub::type, type -> type.codec().codec());
 
     Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand);

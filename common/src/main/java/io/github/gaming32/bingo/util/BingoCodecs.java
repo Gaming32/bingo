@@ -13,7 +13,6 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
-import dev.architectury.registry.registries.Registrar;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -22,8 +21,6 @@ import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 
 import java.lang.reflect.Array;
@@ -62,25 +59,6 @@ public final class BingoCodecs {
     public static final Codec<IntList> INT_LIST = Codec.INT.listOf().xmap(IntImmutableList::new, Function.identity());
 
     private BingoCodecs() {
-    }
-
-    // Registry.byNameCodec, but adapted for Registrar
-    public static <T> Codec<T> registrarByName(Registrar<T> registrar) {
-        final Codec<T> uncompressed = ResourceLocation.CODEC.flatXmap(
-            location -> Optional.ofNullable(registrar.get(location))
-                .map(DataResult::success)
-                .orElseGet(() -> DataResult.error(() -> "Unknown registry key in " + registrar.key() + ": " + location)),
-            obj -> registrar.getKey(obj)
-                .map(ResourceKey::location)
-                .map(DataResult::success)
-                .orElseGet(() -> DataResult.error(() -> "Unknown registry element in " + registrar.key() + ": " + obj))
-        );
-        final Codec<T> compressed = ExtraCodecs.idResolverCodec(
-            obj -> registrar.getKey(obj).isPresent() ? registrar.getRawId(obj) : -1,
-            registrar::byRawId,
-            -1
-        );
-        return ExtraCodecs.orCompressed(uncompressed, compressed);
     }
 
     public static <T> Codec<Optional<T>> optional(Codec<T> codec) {
