@@ -1,0 +1,40 @@
+{
+  "antisynergy": "turtle_helmet",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:turtle_scute"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:turtle_scute"
+    }
+  },
+  "name": {
+    "translate": "item.minecraft.turtle_scute"
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:ocean",
+    "bingo:overworld"
+  ]
+}
