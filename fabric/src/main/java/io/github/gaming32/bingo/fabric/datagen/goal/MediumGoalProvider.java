@@ -40,6 +40,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.BredAnimalsTrigger;
+import net.minecraft.advancements.critereon.ConsumeItemTrigger;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DamagePredicate;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
@@ -238,19 +239,18 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tooltip(Component.translatable("advancements.adventure.fall_from_world_height.description"))
             .icon(Items.WATER_BUCKET)
         );
-        // TODO: Figure out carnivore and vegitarian goals now that meat is a tag in Vanilla
-//        addGoal(BingoGoal.builder(id("vegetarian"))
-//            .criterion("meat", ConsumeItemTrigger.TriggerInstance.usedItem(
-//                ItemPredicate.Builder.item()
-//                    .of(BingoItemTags.MEAT)
-//            ))
-//            .tags(BingoTags.NEVER, BingoTags.ACTION)
-//            .antisynergy("food")
-//            .catalyst("eat_meat")
-//            .name("vegetarian")
-//            .tooltip("vegetarian")
-//            .icon(new ItemTagCycleIcon(BingoItemTags.NOT_MEAT))
-//        );
+        addGoal(BingoGoal.builder(id("vegetarian"))
+            .criterion("meat", ConsumeItemTrigger.TriggerInstance.usedItem(
+                ItemPredicate.Builder.item()
+                    .of(BingoItemTags.MEAT)
+            ))
+            .tags(BingoTags.NEVER, BingoTags.ACTION)
+            .antisynergy("food")
+            .catalyst("eat_meat")
+            .name("vegetarian")
+            .tooltip("vegetarian")
+            .icon(new ItemTagCycleIcon(BingoItemTags.NOT_MEAT))
+        );
         addGoal(BingoGoal.builder(id("kill_self_with_arrow"))
             .criterion("kill", KillSelfTrigger.TriggerInstance.killSelf(
                 DamageSourcePredicate.Builder.damageType()

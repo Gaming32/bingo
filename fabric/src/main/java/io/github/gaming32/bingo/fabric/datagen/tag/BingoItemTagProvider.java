@@ -2,10 +2,12 @@ package io.github.gaming32.bingo.fabric.datagen.tag;
 
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -18,10 +20,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
+    private static final Set<Item> FORCED_MEAT = Set.of(
+        Items.COD,
+        Items.COOKED_COD,
+        Items.SALMON,
+        Items.COOKED_SALMON,
+        Items.PUFFERFISH,
+        Items.TROPICAL_FISH,
+        Items.SPIDER_EYE,
+        Items.RABBIT_STEW
+    );
+
     public BingoItemTagProvider(
         FabricDataOutput output,
         CompletableFuture<HolderLookup.Provider> registriesFuture,
@@ -31,7 +45,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider arg) {
+    protected void addTags(HolderLookup.Provider registries) {
         getOrCreateTagBuilder(BingoItemTags.ALLOWED_HEADS).add(
             Items.SKELETON_SKULL,
             Items.PLAYER_HEAD,
@@ -146,8 +160,12 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             concreteBuilder.add(concrete);
         }
 
+        final var vanillaMeatTag = BingoDataGenFabric.loadTag(ItemTags.MEAT, registries);
+
         var goldInNameBuilder = getOrCreateTagBuilder(BingoItemTags.GOLD_IN_NAME);
         var diamondInNameBuilder = getOrCreateTagBuilder(BingoItemTags.DIAMOND_IN_NAME);
+        var meatBuilder = getOrCreateTagBuilder(BingoItemTags.MEAT);
+        var notMeatBuilder = getOrCreateTagBuilder(BingoItemTags.NOT_MEAT);
         var bannerPatternsBuilder = getOrCreateTagBuilder(BingoItemTags.BANNER_PATTERNS);
         var slabBuilder = getOrCreateTagBuilder(BingoItemTags.SLABS);
         var stairsBuilder = getOrCreateTagBuilder(BingoItemTags.STAIRS);
@@ -160,6 +178,13 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             }
             if (diamondPattern.matcher(itemName).find()) {
                 diamondInNameBuilder.add(item);
+            }
+            if (item.components().has(DataComponents.FOOD)) {
+                if (vanillaMeatTag.contains(item) || FORCED_MEAT.contains(item)) {
+                    meatBuilder.add(item);
+                } else {
+                    notMeatBuilder.add(item);
+                }
             }
             switch (item) {
                 case BannerPatternItem ignored -> bannerPatternsBuilder.add(item);

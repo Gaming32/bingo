@@ -1,0 +1,34 @@
+{
+  "antisynergy": "food",
+  "catalyst": "eat_non_meat",
+  "criteria": {
+    "not_meat": {
+      "conditions": {
+        "item": {
+          "items": "#bingo:not_meat"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "tag": "minecraft:meat"
+  },
+  "name": {
+    "translate": "bingo.goal.carnivore"
+  },
+  "requirements": [
+    [
+      "not_meat"
+    ]
+  ],
+  "tags": [
+    "bingo:never",
+    "bingo:action"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.carnivore.tooltip"
+  }
+}

@@ -848,19 +848,18 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(CycleIcon.infer(Items.GRINDSTONE, Items.ENCHANTED_BOOK))
             .tags(BingoTags.ACTION));
         // TODO: never use sword
-        // TODO: Figure out carnivore and vegitarian goals now that meat is a tag in Vanilla
-//        addGoal(BingoGoal.builder(id("carnivore"))
-//            .criterion("not_meat", ConsumeItemTrigger.TriggerInstance.usedItem(
-//                ItemPredicate.Builder.item()
-//                    .of(BingoItemTags.NOT_MEAT)
-//            ))
-//            .tags(BingoTags.NEVER, BingoTags.ACTION)
-//            .antisynergy("food")
-//            .catalyst("eat_non_meat")
-//            .name("carnivore")
-//            .tooltip("carnivore")
-//            .icon(new ItemTagCycleIcon(ItemTags.MEAT))
-//        );
+        addGoal(BingoGoal.builder(id("carnivore"))
+            .criterion("not_meat", ConsumeItemTrigger.TriggerInstance.usedItem(
+                ItemPredicate.Builder.item()
+                    .of(BingoItemTags.NOT_MEAT)
+            ))
+            .tags(BingoTags.NEVER, BingoTags.ACTION)
+            .antisynergy("food")
+            .catalyst("eat_non_meat")
+            .name("carnivore")
+            .tooltip("carnivore")
+            .icon(new ItemTagCycleIcon(ItemTags.MEAT))
+        );
         // TODO: clean banner
         addGoal(obtainSomeItemsFromTag(id("gold_in_name"), BingoItemTags.GOLD_IN_NAME, "bingo.goal.gold_in_name", 5, 7)
             .tooltip("gold_in_name")

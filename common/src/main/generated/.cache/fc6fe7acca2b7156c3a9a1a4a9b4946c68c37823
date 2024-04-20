@@ -23,6 +23,7 @@ b4e141ebb8f19ff9a8c1972612e882284f0745d7 data/bingo/bingo/goals/easy/breed_mobs.
 c29973be6f844b22651290697ee4539dbd9e4e09 data/bingo/bingo/goals/easy/bricks.json
 16ca88a5d6ce50e00c37c4ea32d68536752392a8 data/bingo/bingo/goals/easy/burn_village_house.json
 e2aa9fa2d433f79e5568faf6a87841d39b89c752 data/bingo/bingo/goals/easy/cactus.json
+f1d0445f586dd4904cbe95fb896cc980d1fd799e data/bingo/bingo/goals/easy/carnivore.json
 5fbeca95a5cf444c72ef8aec55561ab8faaad8e3 data/bingo/bingo/goals/easy/carrot_on_a_stick.json
 d4411eb8fd3eb19d214f7d9508a8ae9f3441bf52 data/bingo/bingo/goals/easy/carved_pumpkin.json
 d46e57e9cd42ff50d380a1734f6ff765705577f7 data/bingo/bingo/goals/easy/cherry_log.json
@@ -350,6 +351,7 @@ bccd153fbb60dc018f5b79aeb54367af041feae1 data/bingo/bingo/goals/medium/tame_wolf
 1ed368476e5c5e555e7792dee39d960875e906af data/bingo/bingo/goals/medium/terracotta.json
 2f22fa5c3eb6bb052b29201d4caa7d5d7e32f2e8 data/bingo/bingo/goals/medium/turtle_master_potion.json
 d3226546903435ba5a5c34ea0c73a16df66a17f3 data/bingo/bingo/goals/medium/turtle_scute.json
+5cf0a7cd53b0138a7905e6086c36c8a167a584eb data/bingo/bingo/goals/medium/vegetarian.json
 3a273d7a3cca2e873ca954b612e6e3326e0e9cec data/bingo/bingo/goals/medium/warped_fungus_on_a_stick.json
 e4f197572431f41afc75b035d653ea7e10d8d31d data/bingo/bingo/goals/medium/warped_hyphae.json
 4ba606d29b9b8255dd3f96cde8f02b2b737bc076 data/bingo/bingo/goals/medium/warped_planks.json
