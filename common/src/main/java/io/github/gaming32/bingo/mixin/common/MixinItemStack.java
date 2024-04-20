@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemStack.class)
 public class MixinItemStack {
     @Inject(
-        method = "lambda$hurtAndBreak$15",
+        method = {"lambda$hurtAndBreak$15", "lambda$hurtAndBreak$17"},
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V"

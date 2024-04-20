@@ -22,13 +22,15 @@ config = "bingo.mixins.json"
 [[dependencies.bingo]]
    modId="neoforge"
    type="required"
-   versionRange="[20.5,)"
+#   versionRange="[20.5,20.6)" # TODO: Use proper version range
+   versionRange = "[20,)"
    ordering="NONE"
    side="BOTH"
 
 [[dependencies.bingo]]
    modId="minecraft"
    type="required"
-   versionRange="[1.20.5,1.20.6)"
+#   versionRange="[1.20.5,1.20.6)" # TODO: Use proper version range
+   versionRange="[1,)"
    ordering="NONE"
    side="BOTH"

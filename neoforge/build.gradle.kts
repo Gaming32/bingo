@@ -51,7 +51,7 @@ loom {
 tasks.processResources {
     inputs.property("version", project.version)
 
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand("version" to project.version)
     }
 }

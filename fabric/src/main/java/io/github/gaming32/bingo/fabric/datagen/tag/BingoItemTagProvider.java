@@ -145,11 +145,27 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         );
 
         getOrCreateTagBuilder(BingoItemTags.BUCKETS)
-            .forceAddTag(ConventionalItemTags.WATER_BUCKETS)
-            .forceAddTag(ConventionalItemTags.ENTITY_WATER_BUCKETS)
-            .forceAddTag(ConventionalItemTags.LAVA_BUCKETS)
-            .forceAddTag(ConventionalItemTags.MILK_BUCKETS)
-            .forceAddTag(ConventionalItemTags.EMPTY_BUCKETS);
+            // These tags are missing on NeoForge (for now at least)
+            .addOptionalTag(ConventionalItemTags.WATER_BUCKETS)
+            .addOptionalTag(ConventionalItemTags.ENTITY_WATER_BUCKETS)
+            .addOptionalTag(ConventionalItemTags.LAVA_BUCKETS)
+            .addOptionalTag(ConventionalItemTags.MILK_BUCKETS)
+            .addOptionalTag(ConventionalItemTags.EMPTY_BUCKETS)
+            // WATER_BUCKETS
+            .add(Items.WATER_BUCKET)
+            // ENTITY_WATER_BUCKETS
+            .add(Items.AXOLOTL_BUCKET)
+            .add(Items.COD_BUCKET)
+            .add(Items.PUFFERFISH_BUCKET)
+            .add(Items.TADPOLE_BUCKET)
+            .add(Items.TROPICAL_FISH_BUCKET)
+            .add(Items.SALMON_BUCKET)
+            // LAVA_BUCKETS
+            .add(Items.LAVA_BUCKET)
+            // MILK_BUCKETS
+            .add(Items.MILK_BUCKET)
+            // EMPTY_BUCKETS
+            .add(Items.BUCKET);
 
         var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
         var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);
