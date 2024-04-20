@@ -8,7 +8,6 @@ modId="bingo"
 version="${version}"
 displayName="Bingo"
 logoFile="icon.png"
-displayTest="IGNORE_SERVER_VERSION"
 
 description='''
 A mod for playing bingo! Works best if on both client and server, but also has compat for Vanilla clients.
@@ -23,13 +22,13 @@ config = "bingo.mixins.json"
 [[dependencies.bingo]]
    modId="neoforge"
    type="required"
-   versionRange="[20.4.167,)"
+   versionRange="[20.5,)"
    ordering="NONE"
    side="BOTH"
 
 [[dependencies.bingo]]
    modId="minecraft"
    type="required"
-   versionRange="[1.20.4,1.20.5)"
+   versionRange="[1.20.5,1.20.6)"
    ordering="NONE"
    side="BOTH"

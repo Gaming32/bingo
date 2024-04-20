@@ -6,7 +6,7 @@ import io.github.gaming32.bingo.platform.BingoPlatform;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.ConfigScreenHandler;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(Bingo.MOD_ID)
 public class BingoNeoForge {
@@ -15,11 +15,7 @@ public class BingoNeoForge {
         Bingo.init();
 
         if (BingoPlatform.platform.isClient()) {
-            container.registerExtensionPoint(
-                ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(
-                    (minecraft, screen) -> new BingoConfigScreen(screen)
-                )
-            );
+            container.registerExtensionPoint(IConfigScreenFactory.class, (minecraft, screen) -> new BingoConfigScreen(screen));
         }
     }
 }

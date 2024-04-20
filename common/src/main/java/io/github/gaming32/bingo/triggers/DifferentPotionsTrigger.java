@@ -7,7 +7,6 @@ import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTri
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
@@ -56,13 +55,13 @@ public class DifferentPotionsTrigger extends SimpleProgressibleCriterionTrigger<
         }
 
         public boolean matches(Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
-            final Set<Holder<Potion>> discovered = new HashSet<>();
+            final Set<String> discovered = new HashSet<>();
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
                 if (item.getItem() instanceof PotionItem) {
                     final PotionContents potion = item.get(DataComponents.POTION_CONTENTS);
                     if (potion == null || potion.potion().isEmpty()) continue;
-                    if (discovered.add(potion.potion().get()) && discovered.size() >= minCount) {
+                    if (discovered.add(Potion.getName(potion.potion(), "")) && discovered.size() >= minCount) {
                         progressListener.update(this, minCount, minCount);
                         return true;
                     }

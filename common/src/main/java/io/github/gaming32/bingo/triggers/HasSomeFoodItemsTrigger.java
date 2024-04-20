@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.Set;
 
+@Deprecated(forRemoval = true)
 public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<HasSomeFoodItemsTrigger.TriggerInstance> {
     static {
         InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.HAS_SOME_FOOD_ITEMS.get().trigger(player, inventory));

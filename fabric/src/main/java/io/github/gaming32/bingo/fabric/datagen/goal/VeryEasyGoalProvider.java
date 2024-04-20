@@ -9,10 +9,26 @@ import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
-import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.triggers.AdjacentPaintingTrigger;
+import io.github.gaming32.bingo.triggers.BounceOnBlockTrigger;
+import io.github.gaming32.bingo.triggers.ItemBrokenTrigger;
+import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
+import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
+import io.github.gaming32.bingo.triggers.TryUseItemTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.critereon.BredAnimalsTrigger;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +54,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
     }
 
     @Override
-    public void addGoals() {
+    public void addGoals(HolderLookup.Provider registries) {
         addGoal(obtainItemGoal(id("cobblestone"), Items.COBBLESTONE, 32, 64)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("dirt"), Items.DIRT, 32, 64)
@@ -203,7 +219,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("dye_sign"))
             .criterion("dye", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(BlockTags.ALL_SIGNS)),
-                ItemPredicate.Builder.item().of(BingoItemTags.DYES)
+                ItemPredicate.Builder.item().of(ConventionalItemTags.DYES)
             ))
             .name("dye_sign")
             .tags(BingoTags.ACTION)

@@ -10,9 +10,9 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.Hash;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -25,6 +25,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
@@ -119,7 +122,7 @@ public class BingoUtil {
     }
 
     public static <T> JsonElement toJsonElement(Codec<T> codec, T obj) {
-        return Util.getOrThrow(codec.encodeStart(JsonOps.INSTANCE, obj), IllegalStateException::new);
+        return codec.encodeStart(JsonOps.INSTANCE, obj).getOrThrow(IllegalStateException::new);
     }
 
     public static <T> JsonObject toJsonObject(Codec<T> codec, T obj) {
@@ -127,11 +130,11 @@ public class BingoUtil {
     }
 
     public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) throws JsonParseException {
-        return Util.getOrThrow(codec.parse(JsonOps.INSTANCE, element), JsonParseException::new);
+        return codec.parse(JsonOps.INSTANCE, element).getOrThrow(JsonParseException::new);
     }
 
     public static <T> Tag toTag(Codec<T> codec, T obj) {
-        return Util.getOrThrow(codec.encodeStart(NbtOps.INSTANCE, obj), IllegalStateException::new);
+        return codec.encodeStart(NbtOps.INSTANCE, obj).getOrThrow(IllegalStateException::new);
     }
 
     public static <T> CompoundTag toCompoundTag(Codec<T> codec, T obj) {
@@ -143,7 +146,7 @@ public class BingoUtil {
     }
 
     public static <T> T fromTag(Codec<T> codec, Tag tag) {
-        return Util.getOrThrow(codec.parse(NbtOps.INSTANCE, tag), IllegalArgumentException::new);
+        return codec.parse(NbtOps.INSTANCE, tag).getOrThrow(IllegalArgumentException::new);
     }
 
     public static <T> Dynamic<?> toDynamic(Codec<T> codec, T obj) {
@@ -151,11 +154,11 @@ public class BingoUtil {
     }
 
     public static <T, O> Dynamic<O> toDynamic(Codec<T> codec, T obj, DynamicOps<O> ops) {
-        return new Dynamic<>(ops, Util.getOrThrow(codec.encodeStart(ops, obj), IllegalStateException::new));
+        return new Dynamic<>(ops, codec.encodeStart(ops, obj).getOrThrow(IllegalStateException::new));
     }
 
     public static <T> T fromDynamic(Codec<T> codec, Dynamic<?> dynamic) throws IllegalArgumentException {
-        return Util.getOrThrow(codec.parse(dynamic), IllegalArgumentException::new);
+        return codec.parse(dynamic).getOrThrow(IllegalArgumentException::new);
     }
 
     public static <T> List<T> addToList(List<T> a, T b) {
@@ -195,6 +198,11 @@ public class BingoUtil {
             .layers()
             .stream()
             .anyMatch(ArmorMaterial.Layer::dyeable);
+    }
+
+    public static ItemStack setPotion(ItemStack stack, Holder<Potion> potion) {
+        stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
+        return stack;
     }
 
     public static boolean collidesWithProjectedBox(Vec3 entityOrigin, Vec3 boxNormal, double boxWidth) {

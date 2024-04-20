@@ -12,7 +12,7 @@ public interface ProgressTracker {
     Codec<ProgressTracker> CODEC = ProgressTrackerType.REGISTER
         .registry()
         .byNameCodec()
-        .dispatch(ProgressTracker::type, type -> type.codec().codec());
+        .dispatch(ProgressTracker::type, ProgressTrackerType::codec);
 
     default DataResult<ProgressTracker> validate(BingoGoal goal) {
         return DataResult.success(this);
