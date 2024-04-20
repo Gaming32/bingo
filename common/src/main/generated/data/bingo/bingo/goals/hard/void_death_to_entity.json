@@ -21,7 +21,7 @@
       "Name": "minecraft:black_concrete"
     },
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:black_concrete"
     }
   },

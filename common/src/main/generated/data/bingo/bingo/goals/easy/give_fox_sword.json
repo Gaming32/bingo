@@ -12,7 +12,7 @@
           }
         ],
         "item": {
-          "tag": "minecraft:swords"
+          "items": "#minecraft:swords"
         }
       },
       "trigger": "minecraft:thrown_item_picked_up_by_entity"
@@ -26,18 +26,15 @@
         "type": "bingo:entity",
         "entity": "minecraft:fox",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:fox_spawn_egg"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:iron_sword",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:iron_sword"
         }
       }
     ]

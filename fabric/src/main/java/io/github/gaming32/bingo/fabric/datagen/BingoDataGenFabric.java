@@ -9,6 +9,7 @@ import io.github.gaming32.bingo.fabric.datagen.tag.BingoItemTagProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoPaintingVariantTagProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.JsonKeySortOrderCallback;
 
 public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     private static final boolean DUMP_BINGO_COMMAND = false;
@@ -30,5 +31,10 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
         if (DUMP_BINGO_COMMAND) {
             pack.addProvider(BingoCommandDumper::new);
         }
+    }
+
+    @Override
+    public void addJsonKeySortOrders(JsonKeySortOrderCallback callback) {
+        callback.add("bingo_type", 0);
     }
 }

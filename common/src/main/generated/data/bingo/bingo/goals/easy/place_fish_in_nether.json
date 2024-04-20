@@ -7,7 +7,7 @@
           {
             "condition": "minecraft:match_tool",
             "predicate": {
-              "tag": "bingo:fish_buckets"
+              "items": "#bingo:fish_buckets"
             }
           },
           {
@@ -28,14 +28,14 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:netherrack"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:tropical_fish_bucket"
         }
       }

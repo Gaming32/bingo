@@ -142,10 +142,10 @@ public class Bingo {
         BingoTriggers.load();
 
         BingoPlatform.platform.registerDataReloadListeners(registrar -> {
-            registrar.register(BingoTag.ReloadListener.ID, new BingoTag.ReloadListener());
-            registrar.register(BingoDifficulty.ReloadListener.ID, new BingoDifficulty.ReloadListener());
+            registrar.register(BingoTag.ReloadListener.ID, new BingoTag.ReloadListener(registrar.registryAccess()));
+            registrar.register(BingoDifficulty.ReloadListener.ID, new BingoDifficulty.ReloadListener(registrar.registryAccess()));
             registrar.register(
-                BingoGoal.ReloadListener.ID, new BingoGoal.ReloadListener(),
+                BingoGoal.ReloadListener.ID, new BingoGoal.ReloadListener(registrar.registryAccess()),
                 List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
             );
         });

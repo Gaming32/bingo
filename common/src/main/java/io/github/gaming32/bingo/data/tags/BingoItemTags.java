@@ -12,11 +12,6 @@ public final class BingoItemTags {
 
     public static final TagKey<Item> ALLOWED_HEADS = create("allowed_heads");
     public static final TagKey<Item> ALL_MINERAL_BLOCKS = create("all_mineral_blocks");
-    public static final TagKey<Item> ARMOR = create("armor");
-    public static final TagKey<Item> ARMOR_BOOTS = create("armor/boots");
-    public static final TagKey<Item> ARMOR_CHESTPLATES = create("armor/chestplates");
-    public static final TagKey<Item> ARMOR_HELMETS = create("armor/helmets");
-    public static final TagKey<Item> ARMOR_LEGGINGS = create("armor/leggings");
     public static final TagKey<Item> BANNER_PATTERNS = create("banner_patterns");
     public static final TagKey<Item> BASIC_MINERAL_BLOCKS = create("basic_mineral_blocks");
     public static final TagKey<Item> BONEMEALABLE = create("bonemealable");

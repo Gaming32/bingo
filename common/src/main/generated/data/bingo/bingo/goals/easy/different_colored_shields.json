@@ -4,10 +4,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 3,
-          "min_inclusive": 2
-        }
+        "max_inclusive": 3,
+        "min_inclusive": 2
       }
     }
   },
@@ -33,14 +31,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 0,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "white"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -50,14 +45,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 1,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "orange"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -67,14 +59,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 2,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "magenta"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -84,14 +73,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 3,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "light_blue"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -101,14 +87,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 4,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "yellow"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -118,14 +101,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 5,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "lime"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -135,14 +115,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 6,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "pink"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -152,14 +129,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 7,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "gray"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -169,14 +143,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 8,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "light_gray"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -186,14 +157,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 9,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "cyan"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -203,14 +171,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 10,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "purple"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -220,14 +185,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 11,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "blue"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -237,14 +199,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 12,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "brown"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -254,14 +213,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 13,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "green"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -271,14 +227,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 14,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "red"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       },
       {
@@ -288,14 +241,11 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:shield",
-          "tag": {
-            "BlockEntityTag": {
-              "Base": 15,
-              "id": "minecraft:banner"
-            },
-            "Damage": 0
-          }
+          "components": {
+            "minecraft:base_color": "black"
+          },
+          "count": 1,
+          "id": "minecraft:shield"
         }
       }
     ]

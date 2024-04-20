@@ -6,9 +6,7 @@
         "items": [
           {
             "count": 16,
-            "items": [
-              "minecraft:egg"
-            ]
+            "items": "minecraft:egg"
           }
         ]
       },
@@ -19,7 +17,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 16,
+      "count": 16,
       "id": "minecraft:egg"
     }
   },

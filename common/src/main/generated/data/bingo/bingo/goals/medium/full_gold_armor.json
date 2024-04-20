@@ -4,24 +4,16 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:golden_boots"
-            ]
+            "items": "minecraft:golden_boots"
           },
           {
-            "items": [
-              "minecraft:golden_leggings"
-            ]
+            "items": "minecraft:golden_leggings"
           },
           {
-            "items": [
-              "minecraft:golden_chestplate"
-            ]
+            "items": "minecraft:golden_chestplate"
           },
           {
-            "items": [
-              "minecraft:golden_helmet"
-            ]
+            "items": "minecraft:golden_helmet"
           }
         ]
       },
@@ -35,41 +27,29 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:golden_boots",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:golden_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:golden_leggings",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:golden_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:golden_chestplate",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:golden_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:golden_helmet",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:golden_helmet"
         }
       }
     ]

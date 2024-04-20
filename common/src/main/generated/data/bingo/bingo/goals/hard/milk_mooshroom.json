@@ -12,9 +12,7 @@
           }
         ],
         "item": {
-          "items": [
-            "minecraft:bucket"
-          ]
+          "items": "minecraft:bucket"
         }
       },
       "trigger": "minecraft:player_interacted_with_entity"
@@ -25,7 +23,7 @@
     "type": "bingo:entity",
     "entity": "minecraft:mooshroom",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:mooshroom_spawn_egg"
     }
   },

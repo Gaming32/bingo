@@ -9,9 +9,7 @@
             "predicate": {
               "stepping_on": {
                 "block": {
-                  "blocks": [
-                    "minecraft:spawner"
-                  ],
+                  "blocks": "minecraft:spawner",
                   "nbt": "{SpawnData:{entity:{id:\"minecraft:blaze\"}}}"
                 }
               }
@@ -29,7 +27,7 @@
       "Name": "minecraft:spawner"
     },
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:spawner"
     }
   },

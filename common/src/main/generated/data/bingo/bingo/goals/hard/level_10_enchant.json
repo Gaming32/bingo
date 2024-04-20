@@ -13,7 +13,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 10,
+      "count": 10,
       "id": "minecraft:enchanting_table"
     }
   },

@@ -4,29 +4,19 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:tube_coral_block"
-            ]
+            "items": "minecraft:tube_coral_block"
           },
           {
-            "items": [
-              "minecraft:brain_coral_block"
-            ]
+            "items": "minecraft:brain_coral_block"
           },
           {
-            "items": [
-              "minecraft:bubble_coral_block"
-            ]
+            "items": "minecraft:bubble_coral_block"
           },
           {
-            "items": [
-              "minecraft:fire_coral_block"
-            ]
+            "items": "minecraft:fire_coral_block"
           },
           {
-            "items": [
-              "minecraft:horn_coral_block"
-            ]
+            "items": "minecraft:horn_coral_block"
           }
         ]
       },
@@ -40,35 +30,35 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:tube_coral_block"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:brain_coral_block"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:bubble_coral_block"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:fire_coral_block"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:horn_coral_block"
         }
       }

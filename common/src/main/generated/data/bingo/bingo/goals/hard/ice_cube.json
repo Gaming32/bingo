@@ -4,30 +4,24 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 4,
-          "min_inclusive": 2
-        }
+        "max_inclusive": 4,
+        "min_inclusive": 2
       }
     },
     "height": {
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 4,
-          "min_inclusive": 2
-        }
+        "max_inclusive": 4,
+        "min_inclusive": 2
       }
     },
     "width": {
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 4,
-          "min_inclusive": 2
-        }
+        "max_inclusive": 4,
+        "min_inclusive": 2
       }
     }
   },
@@ -39,7 +33,7 @@
             "condition": "minecraft:location_check",
             "predicate": {
               "block": {
-                "tag": "minecraft:ice"
+                "blocks": "#minecraft:ice"
               }
             }
           },
@@ -96,7 +90,7 @@
             "where": {
               "#": {
                 "block": {
-                  "tag": "minecraft:ice"
+                  "blocks": "#minecraft:ice"
                 }
               }
             }
@@ -110,7 +104,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:ice"
     }
   },

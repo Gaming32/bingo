@@ -252,7 +252,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
 
         addGoal(BingoGoal.builder(id("never_wear_armor_or_use_shields"))
             .criterion("equip", EquipItemTrigger.builder()
-                .newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR).build())
+                .newItem(ItemPredicate.Builder.item().of(ConventionalItemTags.ARMORS).build())
                 .slots(EquipmentSlot.Type.ARMOR)
                 .build()
             )

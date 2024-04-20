@@ -13,9 +13,7 @@
                   "type": "minecraft:pillager"
                 },
                 "item": {
-                  "items": [
-                    "minecraft:crossbow"
-                  ]
+                  "items": "minecraft:crossbow"
                 }
               }
             }
@@ -29,11 +27,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:crossbow",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:crossbow"
     }
   },
   "name": {

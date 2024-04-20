@@ -95,7 +95,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 subber -> subber.multiSub("icons.*.item.Count", "count")
             )
         );
-        addGoal(obtainAllItemsFromTag(BingoItemTags.ARMOR_CHESTPLATES, "chestplates")
+        addGoal(obtainAllItemsFromTag(ItemTags.CHEST_ARMOR, "chestplates")
             .tags(BingoTags.NETHER)
             .tooltip("all_somethings.armor")
         );

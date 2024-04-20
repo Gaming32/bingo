@@ -22,27 +22,24 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:bow",
-          "tag": {
-            "Damage": 0,
-            "Enchantments": [
-              {}
-            ]
-          }
+          "components": {
+            "minecraft:enchantment_glint_override": true
+          },
+          "count": 1,
+          "id": "minecraft:bow"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:arrow"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:tnt_minecart"
         }
       }

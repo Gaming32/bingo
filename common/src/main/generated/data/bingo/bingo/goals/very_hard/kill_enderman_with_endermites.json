@@ -29,7 +29,7 @@
     "type": "bingo:entity",
     "entity": "minecraft:endermite",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:endermite_spawn_egg"
     }
   },

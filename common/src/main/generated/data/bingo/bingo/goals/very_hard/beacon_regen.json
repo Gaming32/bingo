@@ -16,7 +16,7 @@
       "Name": "minecraft:beacon"
     },
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:beacon"
     }
   },

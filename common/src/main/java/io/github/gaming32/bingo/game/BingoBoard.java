@@ -79,7 +79,7 @@ public class BingoBoard {
         List<BingoGoal.Holder> requiredGoals,
         Set<BingoTag.Holder> excludedTags,
         boolean allowsClientRequired,
-        @Nullable HolderGetter.Provider lootData
+        @Nullable HolderGetter.Provider registries
     ) {
         final BingoBoard board = new BingoBoard(size);
         final BingoGoal.Holder[] generatedSheet = generateGoals(
@@ -92,8 +92,8 @@ public class BingoBoard {
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Invalid goal " + generatedSheet[i].id() + ": " + e.getMessage(), e);
             }
-            if (lootData != null) {
-                goal.validateAndLog(lootData);
+            if (registries != null) {
+                goal.validateAndLog(registries);
             }
             if (generatedSheet[i].goal().getSpecialType() == BingoTag.SpecialType.NEVER) {
                 board.states[i] = Teams.fromAll(teamCount);

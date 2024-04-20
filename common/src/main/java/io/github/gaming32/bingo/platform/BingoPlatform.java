@@ -5,8 +5,10 @@ import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
@@ -42,6 +44,10 @@ public abstract class BingoPlatform {
     }
 
     public interface DataReloadListenerRegistrar {
+        ReloadableServerResources serverResources();
+
+        HolderLookup.Provider registryAccess();
+
         default void register(ResourceLocation id, PreparableReloadListener listener) {
             register(id, listener, List.of());
         }

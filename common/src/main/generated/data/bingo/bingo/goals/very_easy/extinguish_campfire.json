@@ -7,16 +7,14 @@
             "condition": "minecraft:location_check",
             "predicate": {
               "block": {
-                "blocks": [
-                  "minecraft:campfire"
-                ]
+                "blocks": "minecraft:campfire"
               }
             }
           },
           {
             "condition": "minecraft:match_tool",
             "predicate": {
-              "tag": "minecraft:shovels"
+              "items": "#minecraft:shovels"
             }
           }
         ]
@@ -28,7 +26,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:campfire"
     }
   },

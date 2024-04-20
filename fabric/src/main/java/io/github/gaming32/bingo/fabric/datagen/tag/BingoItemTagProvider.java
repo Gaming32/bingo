@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -41,46 +40,6 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.DRAGON_HEAD,
             Items.PIGLIN_HEAD
         );
-
-        getOrCreateTagBuilder(BingoItemTags.ARMOR_HELMETS).add(
-            Items.LEATHER_HELMET,
-            Items.TURTLE_HELMET,
-            Items.CHAINMAIL_HELMET,
-            Items.IRON_HELMET,
-            Items.GOLDEN_HELMET,
-            Items.DIAMOND_HELMET,
-            Items.NETHERITE_HELMET
-        );
-        getOrCreateTagBuilder(BingoItemTags.ARMOR_CHESTPLATES).add(
-            Items.LEATHER_CHESTPLATE,
-            Items.CHAINMAIL_CHESTPLATE,
-            Items.IRON_CHESTPLATE,
-            Items.GOLDEN_CHESTPLATE,
-            Items.DIAMOND_CHESTPLATE,
-            Items.NETHERITE_CHESTPLATE
-        );
-        getOrCreateTagBuilder(BingoItemTags.ARMOR_LEGGINGS).add(
-            Items.LEATHER_LEGGINGS,
-            Items.CHAINMAIL_LEGGINGS,
-            Items.IRON_LEGGINGS,
-            Items.GOLDEN_LEGGINGS,
-            Items.DIAMOND_LEGGINGS,
-            Items.NETHERITE_LEGGINGS
-        );
-        getOrCreateTagBuilder(BingoItemTags.ARMOR_BOOTS).add(
-            Items.LEATHER_BOOTS,
-            Items.CHAINMAIL_BOOTS,
-            Items.IRON_BOOTS,
-            Items.GOLDEN_BOOTS,
-            Items.DIAMOND_BOOTS,
-            Items.NETHERITE_BOOTS
-        );
-        getOrCreateTagBuilder(BingoItemTags.ARMOR)
-            .addOptionalTag(ConventionalItemTags.ARMORS)
-            .addTag(BingoItemTags.ARMOR_HELMETS)
-            .addTag(BingoItemTags.ARMOR_CHESTPLATES)
-            .addTag(BingoItemTags.ARMOR_LEGGINGS)
-            .addTag(BingoItemTags.ARMOR_BOOTS);
 
         // Cannot copy() because that can't copy from Vanilla's block tags, only our block tags
         getOrCreateTagBuilder(BingoItemTags.CLIMBABLE).add(
@@ -171,6 +130,13 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.DEAD_TUBE_CORAL_BLOCK
         );
 
+        getOrCreateTagBuilder(BingoItemTags.BUCKETS)
+            .forceAddTag(ConventionalItemTags.WATER_BUCKETS)
+            .forceAddTag(ConventionalItemTags.ENTITY_WATER_BUCKETS)
+            .forceAddTag(ConventionalItemTags.LAVA_BUCKETS)
+            .forceAddTag(ConventionalItemTags.MILK_BUCKETS)
+            .forceAddTag(ConventionalItemTags.EMPTY_BUCKETS);
+
         var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
         var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);
         for (DyeColor dyeColor : DyeColor.values()) {
@@ -180,13 +146,6 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             concreteBuilder.add(concrete);
         }
 
-        var bucketsBuilder = getOrCreateTagBuilder(BingoItemTags.BUCKETS)
-            .addTag(ConventionalItemTags.WATER_BUCKETS)
-            .addTag(ConventionalItemTags.ENTITY_WATER_BUCKETS)
-            .addTag(ConventionalItemTags.LAVA_BUCKETS)
-            .addTag(ConventionalItemTags.MILK_BUCKETS)
-            .addTag(ConventionalItemTags.EMPTY_BUCKETS)
-            .add(Items.MILK_BUCKET);
         var goldInNameBuilder = getOrCreateTagBuilder(BingoItemTags.GOLD_IN_NAME);
         var diamondInNameBuilder = getOrCreateTagBuilder(BingoItemTags.DIAMOND_IN_NAME);
         var bannerPatternsBuilder = getOrCreateTagBuilder(BingoItemTags.BANNER_PATTERNS);
@@ -203,7 +162,6 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 diamondInNameBuilder.add(item);
             }
             switch (item) {
-                case BucketItem ignored -> bucketsBuilder.add(item);
                 case BannerPatternItem ignored -> bannerPatternsBuilder.add(item);
                 case BlockItem blockItem -> {
                     Block block = blockItem.getBlock();

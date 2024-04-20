@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:skull_banner_pattern"
-            ]
+            "items": "minecraft:skull_banner_pattern"
           }
         ]
       },
@@ -18,19 +16,16 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:white_banner",
-      "tag": {
-        "BlockEntityTag": {
-          "Patterns": [
-            {
-              "Color": 15,
-              "Pattern": "sku"
-            }
-          ],
-          "id": "minecraft:banner"
-        }
-      }
+      "components": {
+        "minecraft:banner_patterns": [
+          {
+            "color": "black",
+            "pattern": "minecraft:skull"
+          }
+        ]
+      },
+      "count": 1,
+      "id": "minecraft:white_banner"
     }
   },
   "name": {

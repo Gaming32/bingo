@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:hay_block"
-            ]
+            "items": "minecraft:hay_block"
           }
         ]
       },
@@ -18,7 +16,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:hay_block"
     }
   },

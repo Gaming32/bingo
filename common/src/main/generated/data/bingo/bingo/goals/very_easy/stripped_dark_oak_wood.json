@@ -5,10 +5,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 10,
-          "min_inclusive": 5
-        }
+        "max_inclusive": 10,
+        "min_inclusive": 5
       }
     }
   },
@@ -23,9 +21,7 @@
                 "key": "count"
               }
             },
-            "items": [
-              "minecraft:stripped_dark_oak_wood"
-            ]
+            "items": "minecraft:stripped_dark_oak_wood"
           }
         ]
       },
@@ -40,6 +36,7 @@
         "bingo_type": "bingo:sub",
         "key": "count"
       },
+      "count": 1,
       "id": "minecraft:stripped_dark_oak_wood"
     }
   },

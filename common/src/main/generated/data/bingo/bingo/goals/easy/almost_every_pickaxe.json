@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:diamond_pickaxe"
-            ]
+            "items": "minecraft:diamond_pickaxe"
           }
         ]
       },
@@ -17,9 +15,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:golden_pickaxe"
-            ]
+            "items": "minecraft:golden_pickaxe"
           }
         ]
       },
@@ -29,9 +25,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:iron_pickaxe"
-            ]
+            "items": "minecraft:iron_pickaxe"
           }
         ]
       },
@@ -41,9 +35,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:stone_pickaxe"
-            ]
+            "items": "minecraft:stone_pickaxe"
           }
         ]
       },
@@ -53,9 +45,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:wooden_pickaxe"
-            ]
+            "items": "minecraft:wooden_pickaxe"
           }
         ]
       },
@@ -69,51 +59,36 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:wooden_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:wooden_pickaxe"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:stone_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:stone_pickaxe"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:golden_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:golden_pickaxe"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:iron_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:iron_pickaxe"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_pickaxe"
         }
       }
     ]

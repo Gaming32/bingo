@@ -24,161 +24,141 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:leather_horse_armor"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:chainmail_leggings",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:chainmail_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:iron_chestplate",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:iron_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:golden_helmet",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:golden_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_boots",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_leggings",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:wolf_armor"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:chainmail_helmet",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:chainmail_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:iron_boots",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:iron_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:golden_leggings",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:golden_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_chestplate",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_horse_armor"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:turtle_helmet",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:netherite_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_boots",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:chainmail_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:chainmail_chestplate",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:iron_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:iron_helmet",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:golden_horse_armor"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:diamond_boots"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:netherite_leggings"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:chainmail_helmet"
         }
       }
     ]

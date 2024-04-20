@@ -122,7 +122,7 @@ public class BingoUtil {
     }
 
     public static <T> JsonElement toJsonElement(Codec<T> codec, T obj) {
-        return codec.encodeStart(JsonOps.INSTANCE, obj).getOrThrow(IllegalStateException::new);
+        return codec.encodeStart(JsonOps.INSTANCE, obj).getOrThrow();
     }
 
     public static <T> JsonObject toJsonObject(Codec<T> codec, T obj) {
@@ -134,7 +134,7 @@ public class BingoUtil {
     }
 
     public static <T> Tag toTag(Codec<T> codec, T obj) {
-        return codec.encodeStart(NbtOps.INSTANCE, obj).getOrThrow(IllegalStateException::new);
+        return codec.encodeStart(NbtOps.INSTANCE, obj).getOrThrow();
     }
 
     public static <T> CompoundTag toCompoundTag(Codec<T> codec, T obj) {
@@ -154,7 +154,7 @@ public class BingoUtil {
     }
 
     public static <T, O> Dynamic<O> toDynamic(Codec<T> codec, T obj, DynamicOps<O> ops) {
-        return new Dynamic<>(ops, codec.encodeStart(ops, obj).getOrThrow(IllegalStateException::new));
+        return new Dynamic<>(ops, codec.encodeStart(ops, obj).getOrThrow());
     }
 
     public static <T> T fromDynamic(Codec<T> codec, Dynamic<?> dynamic) throws IllegalArgumentException {

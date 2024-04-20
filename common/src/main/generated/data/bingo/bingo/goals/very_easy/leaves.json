@@ -4,10 +4,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 64,
-          "min_inclusive": 32
-        }
+        "max_inclusive": 64,
+        "min_inclusive": 32
       }
     }
   },
@@ -22,7 +20,7 @@
                 "key": "count"
               }
             },
-            "tag": "minecraft:leaves"
+            "items": "#minecraft:leaves"
           }
         ]
       },

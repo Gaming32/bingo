@@ -1,7 +1,8 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
+import com.google.gson.JsonElement;
+import com.mojang.serialization.DynamicOps;
 import io.github.gaming32.bingo.data.BingoGoal;
-import io.github.gaming32.bingo.util.BingoUtil;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
@@ -39,11 +40,17 @@ public class BingoGoalProvider implements DataProvider {
                     throw new IllegalArgumentException("Duplicate goal " + goal.id());
                 } else {
                     Path path = pathProvider.json(goal.id());
-                    generators.add(DataProvider.saveStable(output, BingoUtil.toJsonElement(BingoGoal.CODEC, goal.goal()), path));
+                    generators.add(DataProvider.saveStable(output, registries, BingoGoal.CODEC, goal.goal(), path));
                 }
             };
 
-            addGoals(goalAdder, registries);
+            final DynamicOps<JsonElement> oldOps = BingoGoal.Builder.JSON_OPS.get();
+            try {
+                BingoGoal.Builder.JSON_OPS.set(registries.createSerializationContext(oldOps));
+                addGoals(goalAdder, registries);
+            } finally {
+                BingoGoal.Builder.JSON_OPS.set(oldOps);
+            }
 
             return CompletableFuture.allOf(generators.toArray(CompletableFuture[]::new));
         });

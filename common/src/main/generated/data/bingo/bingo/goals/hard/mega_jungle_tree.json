@@ -16,7 +16,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 4,
+      "count": 4,
       "id": "minecraft:jungle_sapling"
     }
   },

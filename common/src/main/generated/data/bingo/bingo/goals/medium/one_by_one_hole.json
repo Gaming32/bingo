@@ -23,11 +23,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:diamond_pickaxe",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:diamond_pickaxe"
     }
   },
   "name": {

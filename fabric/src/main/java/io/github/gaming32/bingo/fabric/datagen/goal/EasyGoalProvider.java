@@ -201,7 +201,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("never_wear_chestplates"))
             .criterion("equip", EquipItemTrigger.builder()
-                .newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR_CHESTPLATES).build())
+                .newItem(ItemPredicate.Builder.item().of(ItemTags.CHEST_ARMOR).build())
                 .slots(EquipmentSlot.CHEST)
                 .build()
             )
@@ -581,16 +581,19 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .criterion("obtain", WearDifferentColoredArmorTrigger.builder(4).build())
             .progress("obtain")
             .name(Component.translatable("bingo.goal.wear_different_colored_armor", 4))
-            .icon(CycleIcon.infer(Stream.concat(Stream.of((DyeColor) null), Arrays.stream(DyeColor.values()))
-                .flatMap(color -> Stream.of(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS)
-                    .map(item -> {
-                        if (color == null) {
-                            return new ItemStack(item, 4);
-                        }
-                        ItemStack stack = DyedItemColor.applyDyes(new ItemStack(item), List.of(DyeItem.byColor(color)));
-                        stack.setCount(4);
-                        return stack;
-                    }))))
+            .icon(CycleIcon.infer(
+                Stream.concat(Stream.of((DyeColor) null), Arrays.stream(DyeColor.values()))
+                    .flatMap(color -> Stream.of(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS)
+                        .map(item -> {
+                            if (color == null) {
+                                return new ItemStack(item, 4);
+                            }
+                            ItemStack stack = DyedItemColor.applyDyes(new ItemStack(item), List.of(DyeItem.byColor(color)));
+                            stack.setCount(4);
+                            return stack;
+                        })
+                    )
+            ))
             .reactant("wear_armor")
             .tags(BingoTags.ITEM, BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("seagrass"), Items.SEAGRASS, 15, 32)

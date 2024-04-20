@@ -19,24 +19,16 @@
             "predicate": {
               "equipment": {
                 "chest": {
-                  "items": [
-                    "minecraft:iron_chestplate"
-                  ]
+                  "items": "minecraft:iron_chestplate"
                 },
                 "feet": {
-                  "items": [
-                    "minecraft:iron_boots"
-                  ]
+                  "items": "minecraft:iron_boots"
                 },
                 "head": {
-                  "items": [
-                    "minecraft:iron_helmet"
-                  ]
+                  "items": "minecraft:iron_helmet"
                 },
                 "legs": {
-                  "items": [
-                    "minecraft:iron_leggings"
-                  ]
+                  "items": "minecraft:iron_leggings"
                 }
               }
             }
@@ -50,14 +42,11 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:iron_sword",
-      "tag": {
-        "Damage": 0,
-        "Enchantments": [
-          {}
-        ]
-      }
+      "components": {
+        "minecraft:enchantment_glint_override": true
+      },
+      "count": 1,
+      "id": "minecraft:iron_sword"
     }
   },
   "name": {

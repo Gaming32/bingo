@@ -1,35 +1,9 @@
 {
-  "replace": false,
   "values": [
-    {
-      "id": "#c:water_buckets",
-      "required": false
-    },
-    {
-      "id": "#c:entity_water_buckets",
-      "required": false
-    },
-    {
-      "id": "#c:lava_buckets",
-      "required": false
-    },
-    {
-      "id": "#c:milk_buckets",
-      "required": false
-    },
-    {
-      "id": "#c:empty_buckets",
-      "required": false
-    },
-    "minecraft:milk_bucket",
-    "minecraft:bucket",
-    "minecraft:water_bucket",
-    "minecraft:lava_bucket",
-    "minecraft:pufferfish_bucket",
-    "minecraft:salmon_bucket",
-    "minecraft:cod_bucket",
-    "minecraft:tropical_fish_bucket",
-    "minecraft:axolotl_bucket",
-    "minecraft:tadpole_bucket"
+    "#c:buckets/water",
+    "#c:buckets/entity_water",
+    "#c:buckets/lava",
+    "#c:buckets/milk",
+    "#c:buckets/empty"
   ]
 }

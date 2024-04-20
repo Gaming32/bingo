@@ -5,10 +5,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 400,
-          "min_inclusive": 200
-        }
+        "max_inclusive": 400,
+        "min_inclusive": 200
       }
     }
   },
@@ -49,10 +47,8 @@
         "bingo_type": "bingo:sub",
         "key": "distance"
       },
-      "id": "minecraft:leather_boots",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:leather_boots"
     }
   },
   "infrequency": 2,

@@ -10,7 +10,7 @@
               "location": {
                 "position": {
                   "y": {
-                    "min": 319.0
+                    "min": 319
                   }
                 }
               }
@@ -25,7 +25,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 320,
+      "count": 320,
       "id": "minecraft:dirt"
     }
   },

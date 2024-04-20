@@ -13,9 +13,7 @@
                   "type": "minecraft:skeleton"
                 },
                 "item": {
-                  "items": [
-                    "minecraft:bow"
-                  ]
+                  "items": "minecraft:bow"
                 }
               }
             }
@@ -29,11 +27,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:bow",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:bow"
     }
   },
   "name": {

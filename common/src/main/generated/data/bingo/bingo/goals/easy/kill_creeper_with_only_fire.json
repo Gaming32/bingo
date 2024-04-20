@@ -40,7 +40,7 @@
         "type": "bingo:entity",
         "entity": "minecraft:creeper",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:creeper_spawn_egg"
         }
       },
@@ -58,7 +58,7 @@
           }
         },
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:stone"
         }
       }

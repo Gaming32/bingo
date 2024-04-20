@@ -39,16 +39,12 @@
             "where": {
               "#": {
                 "block": {
-                  "blocks": [
-                    "minecraft:glass"
-                  ]
+                  "blocks": "minecraft:glass"
                 }
               },
               "+": {
                 "block": {
-                  "blocks": [
-                    "minecraft:lava"
-                  ]
+                  "blocks": "minecraft:lava"
                 }
               }
             }
@@ -65,14 +61,14 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 26,
+          "count": 26,
           "id": "minecraft:glass"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:lava_bucket"
         }
       }

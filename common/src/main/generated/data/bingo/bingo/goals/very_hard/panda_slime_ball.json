@@ -13,9 +13,7 @@
                   "type": "minecraft:panda"
                 },
                 "item": {
-                  "items": [
-                    "minecraft:slime_ball"
-                  ]
+                  "items": "minecraft:slime_ball"
                 }
               }
             }
@@ -29,7 +27,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:slime_ball"
     }
   },

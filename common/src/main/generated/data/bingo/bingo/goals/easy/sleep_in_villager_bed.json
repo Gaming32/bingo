@@ -19,7 +19,7 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:red_bed"
         }
       },
@@ -27,7 +27,7 @@
         "type": "bingo:entity",
         "entity": "minecraft:villager",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:villager_spawn_egg"
         }
       }

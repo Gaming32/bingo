@@ -4,9 +4,7 @@
     "use": {
       "conditions": {
         "item": {
-          "items": [
-            "minecraft:fishing_rod"
-          ]
+          "items": "minecraft:fishing_rod"
         }
       },
       "trigger": "bingo:try_use_item"
@@ -16,11 +14,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:fishing_rod",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:fishing_rod"
     }
   },
   "name": {

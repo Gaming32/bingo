@@ -11,7 +11,7 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:egg"
         }
       },
@@ -19,7 +19,7 @@
         "type": "bingo:entity",
         "entity": "minecraft:chicken",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:chicken_spawn_egg"
         }
       }

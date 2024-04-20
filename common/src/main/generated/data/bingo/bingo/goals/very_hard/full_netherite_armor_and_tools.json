@@ -4,49 +4,31 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:netherite_boots"
-            ]
+            "items": "minecraft:netherite_boots"
           },
           {
-            "items": [
-              "minecraft:netherite_leggings"
-            ]
+            "items": "minecraft:netherite_leggings"
           },
           {
-            "items": [
-              "minecraft:netherite_chestplate"
-            ]
+            "items": "minecraft:netherite_chestplate"
           },
           {
-            "items": [
-              "minecraft:netherite_helmet"
-            ]
+            "items": "minecraft:netherite_helmet"
           },
           {
-            "items": [
-              "minecraft:netherite_sword"
-            ]
+            "items": "minecraft:netherite_sword"
           },
           {
-            "items": [
-              "minecraft:netherite_shovel"
-            ]
+            "items": "minecraft:netherite_shovel"
           },
           {
-            "items": [
-              "minecraft:netherite_pickaxe"
-            ]
+            "items": "minecraft:netherite_pickaxe"
           },
           {
-            "items": [
-              "minecraft:netherite_axe"
-            ]
+            "items": "minecraft:netherite_axe"
           },
           {
-            "items": [
-              "minecraft:netherite_hoe"
-            ]
+            "items": "minecraft:netherite_hoe"
           }
         ]
       },
@@ -60,91 +42,64 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_boots",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:netherite_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_leggings",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:netherite_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_chestplate",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:netherite_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_helmet",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:netherite_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_sword",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:netherite_sword"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_shovel",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:netherite_shovel"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:netherite_pickaxe"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_axe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:netherite_axe"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:netherite_hoe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:netherite_hoe"
         }
       }
     ]

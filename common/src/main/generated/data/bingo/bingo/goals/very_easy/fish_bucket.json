@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "bingo:fish_buckets"
+            "items": "#bingo:fish_buckets"
           }
         ]
       },

@@ -20,21 +20,21 @@
         "type": "bingo:entity",
         "entity": "minecraft:pig",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:pig_spawn_egg"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:lead"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:oak_fence"
         }
       }

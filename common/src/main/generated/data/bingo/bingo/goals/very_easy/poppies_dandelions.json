@@ -4,20 +4,16 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 25,
-          "min_inclusive": 5
-        }
+        "max_inclusive": 25,
+        "min_inclusive": 5
       }
     },
     "poppies_count": {
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 25,
-          "min_inclusive": 5
-        }
+        "max_inclusive": 25,
+        "min_inclusive": 5
       }
     }
   },
@@ -32,9 +28,7 @@
                 "key": "poppies_count"
               }
             },
-            "items": [
-              "minecraft:poppy"
-            ]
+            "items": "minecraft:poppy"
           },
           {
             "count": {
@@ -43,9 +37,7 @@
                 "key": "dandelions_count"
               }
             },
-            "items": [
-              "minecraft:dandelion"
-            ]
+            "items": "minecraft:dandelion"
           }
         ]
       },
@@ -63,6 +55,7 @@
             "bingo_type": "bingo:sub",
             "key": "poppies_count"
           },
+          "count": 1,
           "id": "minecraft:poppy"
         }
       },
@@ -73,6 +66,7 @@
             "bingo_type": "bingo:sub",
             "key": "dandelions_count"
           },
+          "count": 1,
           "id": "minecraft:dandelion"
         }
       }

@@ -5,10 +5,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 32,
-          "min_inclusive": 16
-        }
+        "max_inclusive": 32,
+        "min_inclusive": 16
       }
     }
   },
@@ -23,9 +21,7 @@
                 "key": "count"
               }
             },
-            "items": [
-              "minecraft:tipped_arrow"
-            ]
+            "items": "minecraft:tipped_arrow"
           }
         ]
       },
@@ -43,10 +39,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:water"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:water"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -56,10 +55,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:mundane"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:mundane"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -69,10 +71,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:thick"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:thick"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -82,10 +87,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:awkward"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:awkward"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -95,10 +103,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:night_vision"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:night_vision"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -108,10 +119,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:invisibility"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:invisibility"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -121,10 +135,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:leaping"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:leaping"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -134,10 +151,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:fire_resistance"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:fire_resistance"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -147,10 +167,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:swiftness"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:swiftness"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -160,10 +183,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:slowness"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:slowness"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -173,10 +199,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:turtle_master"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:turtle_master"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -186,10 +215,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:water_breathing"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:water_breathing"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -199,10 +231,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:healing"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:healing"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -212,10 +247,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:harming"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:harming"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -225,10 +263,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:poison"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:poison"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -238,10 +279,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:regeneration"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:regeneration"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -251,10 +295,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:strength"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:strength"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -264,10 +311,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:weakness"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:weakness"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -277,10 +327,13 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:luck"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:luck"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       },
       {
@@ -290,10 +343,77 @@
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "id": "minecraft:tipped_arrow",
-          "tag": {
-            "Potion": "minecraft:slow_falling"
-          }
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:slow_falling"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:wind_charged"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:weaving"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:oozing"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "Count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:infested"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:tipped_arrow"
         }
       }
     ]

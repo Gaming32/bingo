@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:writable_book"
-            ]
+            "items": "minecraft:writable_book"
           }
         ]
       },
@@ -18,7 +16,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:writable_book"
     }
   },

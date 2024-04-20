@@ -7,10 +7,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
@@ -27,11 +29,13 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -427,6 +431,8 @@ public class BingoGoal {
     }
 
     public static final class Builder {
+        public static final ThreadLocal<DynamicOps<JsonElement>> JSON_OPS = ThreadLocal.withInitial(() -> JsonOps.INSTANCE);
+
         private final ResourceLocation id;
         private final ImmutableMap.Builder<String, BingoSub> subs = ImmutableMap.builder();
         private final ImmutableMap.Builder<String, Dynamic<?>> criteria = ImmutableMap.builder();
@@ -459,7 +465,7 @@ public class BingoGoal {
         }
 
         public Builder criterion(String key, Criterion<?> criterion, Consumer<JsonSubber> subber) {
-            JsonSubber json = new JsonSubber(BingoUtil.toJsonElement(Criterion.CODEC, criterion));
+            JsonSubber json = new JsonSubber(Criterion.CODEC.encodeStart(JSON_OPS.get(), criterion).getOrThrow());
             subber.accept(json);
             this.criteria.put(key, new Dynamic<>(JsonOps.INSTANCE, json.json()));
             return this;
@@ -512,7 +518,7 @@ public class BingoGoal {
         }
 
         public Builder name(Component name, Consumer<JsonSubber> subber) {
-            JsonSubber json = new JsonSubber(BingoUtil.toJsonElement(ComponentSerialization.CODEC, name));
+            JsonSubber json = new JsonSubber(ComponentSerialization.CODEC.encodeStart(JSON_OPS.get(), name).getOrThrow());
             subber.accept(json);
             this.name = Optional.of(new Dynamic<>(JsonOps.INSTANCE, json.json()));
             return this;
@@ -527,7 +533,7 @@ public class BingoGoal {
         }
 
         public Builder tooltip(Component tooltip, Consumer<JsonSubber> subber) {
-            JsonSubber json = new JsonSubber(BingoUtil.toJsonElement(ComponentSerialization.CODEC, tooltip));
+            JsonSubber json = new JsonSubber(ComponentSerialization.CODEC.encodeStart(JSON_OPS.get(), tooltip).getOrThrow());
             subber.accept(json);
             this.tooltip = new Dynamic<>(JsonOps.INSTANCE, json.json());
             return this;
@@ -559,7 +565,7 @@ public class BingoGoal {
         }
 
         public Builder icon(GoalIcon icon, Consumer<JsonSubber> subber) {
-            JsonSubber jsonSubber = new JsonSubber(BingoUtil.toJsonElement(GoalIcon.CODEC, icon));
+            JsonSubber jsonSubber = new JsonSubber(GoalIcon.CODEC.encodeStart(JSON_OPS.get(), icon).getOrThrow());
             subber.accept(jsonSubber);
             this.icon = new Dynamic<>(JsonOps.INSTANCE, jsonSubber.json());
             return this;
@@ -623,8 +629,11 @@ public class BingoGoal {
         public static final ResourceLocation ID = new ResourceLocation("bingo:goals");
         private static final Gson GSON = new GsonBuilder().create();
 
-        public ReloadListener() {
+        private final HolderLookup.Provider registries;
+
+        public ReloadListener(HolderLookup.Provider registries) {
             super(GSON, "bingo/goals");
+            this.registries = registries;
         }
 
         @NotNull
@@ -635,11 +644,12 @@ public class BingoGoal {
 
         @Override
         protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
+            final RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
             final ImmutableMap.Builder<ResourceLocation, Holder> result = ImmutableMap.builder();
             final Map<Integer, ImmutableList.Builder<Holder>> byDifficulty = new HashMap<>();
             for (final var entry : jsons.entrySet()) {
                 try {
-                    final BingoGoal goal = BingoUtil.fromJsonElement(CODEC, entry.getValue());
+                    final BingoGoal goal = CODEC.parse(ops, entry.getValue()).getOrThrow(JsonParseException::new);
                     final Holder holder = new Holder(entry.getKey(), goal);
                     result.put(holder.id, holder);
                     byDifficulty.computeIfAbsent(goal.difficulty.difficulty().number(), k -> ImmutableList.builder()).add(holder);

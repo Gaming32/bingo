@@ -9,11 +9,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:diamond_sword",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:diamond_sword"
     }
   },
   "name": {

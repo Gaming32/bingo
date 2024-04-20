@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:turtle_helmet"
-            ]
+            "items": "minecraft:turtle_helmet"
           }
         ]
       },
@@ -18,11 +16,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:turtle_helmet",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:turtle_helmet"
     }
   },
   "name": {

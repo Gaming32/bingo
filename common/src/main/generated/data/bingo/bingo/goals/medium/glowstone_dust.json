@@ -5,10 +5,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 64,
-          "min_inclusive": 32
-        }
+        "max_inclusive": 64,
+        "min_inclusive": 32
       }
     }
   },
@@ -23,9 +21,7 @@
                 "key": "count"
               }
             },
-            "items": [
-              "minecraft:glowstone_dust"
-            ]
+            "items": "minecraft:glowstone_dust"
           }
         ]
       },
@@ -40,6 +36,7 @@
         "bingo_type": "bingo:sub",
         "key": "count"
       },
+      "count": 1,
       "id": "minecraft:glowstone_dust"
     }
   },

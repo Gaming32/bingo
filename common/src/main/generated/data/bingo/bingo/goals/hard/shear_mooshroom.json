@@ -12,9 +12,7 @@
           }
         ],
         "item": {
-          "items": [
-            "minecraft:shears"
-          ]
+          "items": "minecraft:shears"
         }
       },
       "trigger": "minecraft:player_interacted_with_entity"
@@ -25,7 +23,7 @@
     "type": "bingo:entity",
     "entity": "minecraft:cow",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:cow_spawn_egg"
     }
   },

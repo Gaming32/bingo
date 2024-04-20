@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:diamond_block"
-            ]
+            "items": "minecraft:diamond_block"
           }
         ]
       },
@@ -18,7 +16,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:diamond_block"
     }
   },

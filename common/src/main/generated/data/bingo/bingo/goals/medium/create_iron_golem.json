@@ -20,7 +20,7 @@
     "type": "bingo:entity",
     "entity": "minecraft:iron_golem",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:iron_golem_spawn_egg"
     }
   },

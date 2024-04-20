@@ -5,7 +5,7 @@
     "equip": {
       "conditions": {
         "new_item": {
-          "tag": "bingo:armor"
+          "items": "#c:armors"
         },
         "slots": [
           "feet",
@@ -21,11 +21,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:diamond_chestplate",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:diamond_chestplate"
     }
   },
   "name": {

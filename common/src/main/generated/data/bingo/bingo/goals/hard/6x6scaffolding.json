@@ -23,9 +23,7 @@
             "where": {
               "#": {
                 "block": {
-                  "blocks": [
-                    "minecraft:scaffolding"
-                  ]
+                  "blocks": "minecraft:scaffolding"
                 }
               }
             }
@@ -39,7 +37,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:scaffolding"
     }
   },
