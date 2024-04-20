@@ -60,7 +60,7 @@ dependencies {
 //    }
 //    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api-deprecated:${rootProject.fabric_api_version}") // Required by EMI
 
-    modImplementation("com.terraformersmc:modmenu:9.0.0-pre.1")
+    modImplementation("com.terraformersmc:modmenu:10.0.0-alpha.3")
 }
 
 tasks.processResources {

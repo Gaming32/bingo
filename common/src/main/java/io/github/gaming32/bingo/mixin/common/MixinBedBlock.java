@@ -34,35 +34,40 @@ public class MixinBedBlock {
     }
 
     @Inject(
-        method = "use",
+        method = "useWithoutItem",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/Level;removeBlock(Lnet/minecraft/core/BlockPos;Z)Z"
         )
     )
-    private void intentionalGameDesignTrigger(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
+    private void intentionalGameDesignTrigger(
+        BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult,
+        CallbackInfoReturnable<InteractionResult> cir
+    ) {
         if (player instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.INTENTIONAL_GAME_DESIGN.get().trigger(serverPlayer, pos);
+            BingoTriggers.INTENTIONAL_GAME_DESIGN.get().trigger(serverPlayer, blockPos);
         }
     }
 
     @WrapOperation(
-        method = "use",
+        method = "useWithoutItem",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/player/Player;startSleepInBed(Lnet/minecraft/core/BlockPos;)Lcom/mojang/datafixers/util/Either;"
         )
     )
     private Either<Player.BedSleepingProblem, Unit> sleptTrigger(
-        Player instance, BlockPos bedPos, Operation<Either<Player.BedSleepingProblem, Unit>> original,
-        @Local BlockState state, @Local InteractionHand hand
+        Player instance, BlockPos bedPos,
+        Operation<Either<Player.BedSleepingProblem, Unit>> original,
+        @Local(argsOnly = true) BlockState state
     ) {
         final var result = original.call(instance, bedPos);
         if (!(instance instanceof ServerPlayer serverPlayer)) {
             return result;
         }
         return result.ifRight(unit -> BingoTriggers.SLEPT.get().trigger(
-            serverPlayer, bedPos, instance.getItemInHand(hand)
+            // useWithoutItem is only ever called with the MAIN_HAND
+            serverPlayer, bedPos, instance.getItemInHand(InteractionHand.MAIN_HAND)
         ));
     }
 }

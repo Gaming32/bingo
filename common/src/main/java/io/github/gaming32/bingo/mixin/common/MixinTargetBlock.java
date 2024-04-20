@@ -25,7 +25,7 @@ public class MixinTargetBlock {
     )
     private static void preOutputPower(
         LevelAccessor level, BlockState state, int power, BlockPos pos, int waitTime, Operation<Void> original,
-        @Local Entity projectileEntity
+        @Local(argsOnly = true) Entity projectileEntity
     ) {
         if (!(projectileEntity instanceof Projectile projectile) || !(projectile.getOwner() instanceof Player player)) {
             original.call(level, state, power, pos, waitTime);

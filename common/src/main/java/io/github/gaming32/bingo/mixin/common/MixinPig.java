@@ -28,7 +28,7 @@ public abstract class MixinPig extends Animal {
             target = "Lnet/minecraft/server/level/ServerLevel;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"
         )
     )
-    private boolean zombifyPigTrigger(ServerLevel instance, Entity entity, Operation<Boolean> original, @Local LightningBolt lightning) {
+    private boolean zombifyPigTrigger(ServerLevel instance, Entity entity, Operation<Boolean> original, @Local(argsOnly = true) LightningBolt lightning) {
         final boolean result = original.call(instance, entity);
         if (result) {
             if (lightning.getCause() != null) {

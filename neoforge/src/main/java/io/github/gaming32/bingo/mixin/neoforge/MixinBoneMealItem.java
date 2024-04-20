@@ -32,8 +32,8 @@ public class MixinBoneMealItem {
         BlockPos pos,
         BlockState state,
         Operation<Void> operation,
-        @Local ItemStack boneMeal,
-        @Local Player player
+        @Local(argsOnly = true) ItemStack boneMeal,
+        @Local(argsOnly = true) Player player
     ) {
         try (
             var ignored = GlobalVars.CURRENT_PLAYER.push(player);

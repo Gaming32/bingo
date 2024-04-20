@@ -23,7 +23,7 @@ public class MixinLeadItem {
     )
     private static LeashFenceKnotEntity setKnotOwner(
         Level level, BlockPos pos, Operation<LeashFenceKnotEntity> original,
-        @Local Player player
+        @Local(argsOnly = true) Player player
     ) {
         final LeashFenceKnotEntity entity = original.call(level, pos);
         ((LeashFenceKnotEntityExt)entity).bingo$setOwner(player);

@@ -31,7 +31,7 @@ public class ResyncStatesPacket extends AbstractCustomPayload {
     @Override
     public void handle(BingoNetworking.Context context) {
         if (BingoClient.clientGame == null) {
-            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling " + TYPE + "!");
+            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling {}!", TYPE);
             return;
         }
         System.arraycopy(states, 0, BingoClient.clientGame.states(), 0, BingoClient.clientGame.size() * BingoClient.clientGame.size());
