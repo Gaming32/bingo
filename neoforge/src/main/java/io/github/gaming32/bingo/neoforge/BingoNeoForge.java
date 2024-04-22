@@ -1,21 +1,18 @@
 package io.github.gaming32.bingo.neoforge;
 
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.client.config.BingoConfigScreen;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(Bingo.MOD_ID)
 public class BingoNeoForge {
+    public static ModContainer container;
+
     public BingoNeoForge(ModContainer container, IEventBus modEventBus) {
+        BingoNeoForge.container = container;
         BingoPlatform.platform = new NeoForgePlatform(modEventBus);
         Bingo.init();
-
-        if (BingoPlatform.platform.isClient()) {
-            container.registerExtensionPoint(IConfigScreenFactory.class, (minecraft, screen) -> new BingoConfigScreen(screen));
-        }
     }
 }
