@@ -1,11 +1,10 @@
 package io.github.gaming32.bingo.fabric;
 
 import io.github.gaming32.bingo.network.BingoNetworking;
-import net.fabricmc.api.EnvType;
+import io.github.gaming32.bingo.platform.BingoPlatform;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
@@ -58,15 +57,25 @@ public class BingoNetworkingImpl extends BingoNetworking {
             StreamCodec<? super RegistryFriendlyByteBuf, P> codec,
             BiConsumer<P, Context> handler
         ) {
-            if ((flow == null || flow == PacketFlow.CLIENTBOUND) && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            if (flow == null || flow == PacketFlow.CLIENTBOUND) {
                 PayloadTypeRegistry.playS2C().register(type, codec);
-                ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
-                    handler.accept(payload, new Context(context.player(), context.responseSender()::sendPacket))
-                );
+                if (BingoPlatform.platform.isClient()) {
+                    ClientReceiverRegistrar.register(type, handler);
+                }
             }
             if (flow == null || flow == PacketFlow.SERVERBOUND) {
                 PayloadTypeRegistry.playC2S().register(type, codec);
                 ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
+                    handler.accept(payload, new Context(context.player(), context.responseSender()::sendPacket))
+                );
+            }
+        }
+
+        private static class ClientReceiverRegistrar {
+            public static <P extends CustomPacketPayload> void register(
+                CustomPacketPayload.Type<P> type, BiConsumer<P, Context> handler
+            ) {
+                ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
                     handler.accept(payload, new Context(context.player(), context.responseSender()::sendPacket))
                 );
             }
