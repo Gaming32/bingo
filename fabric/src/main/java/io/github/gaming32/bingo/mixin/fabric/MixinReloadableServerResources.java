@@ -33,7 +33,7 @@ public class MixinReloadableServerResources {
     )
     private static List<PreparableReloadListener> addReloadListeners(
         List<PreparableReloadListener> listeners,
-        @SuppressWarnings("LocalMayBeArgsOnly") @Local ReloadableServerResources reloadableServerResources
+        @Local ReloadableServerResources reloadableServerResources
     ) {
         final List<PreparableReloadListener> newListeners = new ArrayList<>(listeners);
         FabricEvents.ADD_RELOAD_LISTENERS.invoker().accept(new BingoPlatform.DataReloadListenerRegistrar() {
