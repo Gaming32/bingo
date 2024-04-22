@@ -5,3 +5,4 @@ accessible  method  net/minecraft/world/level/storage/loot/parameters/LootContex
 accessible  field   net/minecraft/world/inventory/GrindstoneMenu    repairSlots Lnet/minecraft/world/Container;
 accessible	method	net/minecraft/world/level/storage/LevelResource	<init>	(Ljava/lang/String;)V
 accessible	field	net/minecraft/server/ReloadableServerResources	registryLookup	Lnet/minecraft/server/ReloadableServerResources$ConfigurableRegistryLookup;
+accessible	field	net/minecraft/world/level/Explosion	source	Lnet/minecraft/world/entity/Entity;
