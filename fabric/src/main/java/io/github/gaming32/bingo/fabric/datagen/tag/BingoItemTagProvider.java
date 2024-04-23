@@ -5,7 +5,6 @@ import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -143,29 +142,6 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.DEAD_HORN_CORAL_BLOCK,
             Items.DEAD_TUBE_CORAL_BLOCK
         );
-
-        getOrCreateTagBuilder(BingoItemTags.BUCKETS)
-            // These tags are missing on NeoForge (for now at least)
-            .addOptionalTag(ConventionalItemTags.WATER_BUCKETS)
-            .addOptionalTag(ConventionalItemTags.ENTITY_WATER_BUCKETS)
-            .addOptionalTag(ConventionalItemTags.LAVA_BUCKETS)
-            .addOptionalTag(ConventionalItemTags.MILK_BUCKETS)
-            .addOptionalTag(ConventionalItemTags.EMPTY_BUCKETS)
-            // WATER_BUCKETS
-            .add(Items.WATER_BUCKET)
-            // ENTITY_WATER_BUCKETS
-            .add(Items.AXOLOTL_BUCKET)
-            .add(Items.COD_BUCKET)
-            .add(Items.PUFFERFISH_BUCKET)
-            .add(Items.TADPOLE_BUCKET)
-            .add(Items.TROPICAL_FISH_BUCKET)
-            .add(Items.SALMON_BUCKET)
-            // LAVA_BUCKETS
-            .add(Items.LAVA_BUCKET)
-            // MILK_BUCKETS
-            .add(Items.MILK_BUCKET)
-            // EMPTY_BUCKETS
-            .add(Items.BUCKET);
 
         var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
         var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);

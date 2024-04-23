@@ -4,7 +4,7 @@
     "consume": {
       "conditions": {
         "item": {
-          "items": "#bingo:buckets"
+          "items": "#c:buckets"
         }
       },
       "trigger": "minecraft:consume_item"
@@ -18,7 +18,7 @@
           {
             "condition": "minecraft:match_tool",
             "predicate": {
-              "items": "#bingo:buckets"
+              "items": "#c:buckets"
             }
           }
         ]
@@ -28,7 +28,7 @@
     "use_on_entity": {
       "conditions": {
         "item": {
-          "items": "#bingo:buckets"
+          "items": "#c:buckets"
         }
       },
       "trigger": "minecraft:player_interacted_with_entity"

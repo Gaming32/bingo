@@ -1,4 +1,4 @@
-// 1.20.5 Release Candidate 1	
+// 1.20.5	
 60933cb93b51bc5046fb820f19ed358af2699f4d data/bingo/bingo/goals/easy/3x3x3_glass_cube.json
 5330a9593cd38fc8aa8b8fcd6ac88540e1b1224b data/bingo/bingo/goals/easy/4x4_paintings.json
 b976d8c88b52904f5c82cbdd0f89d27a9659bb58 data/bingo/bingo/goals/easy/acacia_log.json
@@ -215,7 +215,7 @@ f5e49cbb47e5c6e973a49c9101e5e52aedb8c379 data/bingo/bingo/goals/hard/mega_jungle
 f144f0d937e93c0fdb57c89e3e52cc57d4363a54 data/bingo/bingo/goals/hard/milk_mooshroom.json
 44f3f1a2b55ff69e5d994b787e0f554a0080b36d data/bingo/bingo/goals/hard/nametag_enderman.json
 38764bbdae9acd5a8ec0447de5d818268437f65d data/bingo/bingo/goals/hard/netherite_ingot.json
-24b1e8101c61ee96e51f62b9078a3cd9bbb2ab4b data/bingo/bingo/goals/hard/never_use_buckets.json
+aff3bd462fadeed7d3cb7d56d366c672b2c455c2 data/bingo/bingo/goals/hard/never_use_buckets.json
 892c9f93314292865c808bfeef9d270a485ff2bc data/bingo/bingo/goals/hard/never_wear_armor_or_use_shields.json
 6131ad793f1b92b6f56246d34686da1842d8f8c1 data/bingo/bingo/goals/hard/ocelot_trust.json
 e3d24467da208400a1e5f3174b5603c1c66fc620 data/bingo/bingo/goals/hard/pacifist.json
