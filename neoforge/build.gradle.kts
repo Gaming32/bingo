@@ -19,16 +19,6 @@ configurations {
     developmentNeoForge.extendsFrom(common)
 }
 
-repositories {
-    maven("https://prmaven.neoforged.net/NeoForge/pr794") {
-        name = "Maven for PR #794" // https://github.com/neoforged/NeoForge/pull/794
-        content {
-            includeModule("net.neoforged", "testframework")
-            includeModule("net.neoforged", "neoforge")
-        }
-    }
-}
-
 dependencies {
     neoForge("net.neoforged:neoforge:${rootProject["neoforge_version"]}")
 
@@ -38,10 +28,6 @@ dependencies {
     shadowCommon(project(":common", configuration = "transformProductionNeoForge")) {
         isTransitive = false
     }
-
-//    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-neoforge:14.0.680")
-//    modRuntimeOnly("mezz.jei:jei-1.20.1-neoforge:15.2.0.27")
-//    modRuntimeOnly("dev.emi:emi-neoforge:1.0.19+1.20.1")
 }
 
 loom {

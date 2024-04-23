@@ -47,20 +47,7 @@ dependencies {
     include(implementation("com.electronwill.night-config:core:3.6.0")!!)
     include(implementation("com.electronwill.night-config:toml:3.6.0")!!)
 
-//    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:14.0.680") {
-//        exclude(module = "fabric-api")
-//    }
-
-//    modRuntimeOnly("mezz.jei:jei-1.20.1-fabric:15.2.0.27") {
-//        exclude(module = "fabric-api")
-//    }
-
-//    modRuntimeOnly("dev.emi:emi-fabric:1.0.19+1.20.1") {
-//        exclude(module = "fabric-api")
-//    }
-//    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api-deprecated:${rootProject.fabric_api_version}") // Required by EMI
-
-    modImplementation("com.terraformersmc:modmenu:10.0.0-alpha.3")
+    modImplementation("com.terraformersmc:modmenu:10.0.0-beta.1")
 }
 
 tasks.processResources {
