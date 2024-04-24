@@ -221,7 +221,7 @@ public class BingoUtil {
     }
 
     public static double vectorAngle(Vec3 a, Vec3 b) {
-        return Math.atan2(a.dot(b), a.length() * b.length());
+        return Math.acos(a.dot(b) / (a.length() * b.length()));
     }
 
     public static double distanceToSquareEdge(double angle, double squareRadius) {
