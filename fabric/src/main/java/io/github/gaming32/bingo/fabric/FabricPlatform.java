@@ -124,11 +124,15 @@ public class FabricPlatform extends BingoPlatform {
             ClientEvents.RENDER_HUD.setRegistrar(handler -> HudRenderCallback.EVENT.register(handler::renderHud));
             ClientEvents.KEY_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
                 (client, screen, scaledWidth, scaledHeight) ->
-                    ScreenKeyboardEvents.allowKeyRelease(screen).register(handler::onKeyReleased)
+                    ScreenKeyboardEvents.allowKeyRelease(screen).register((screen1, key, scancode, modifiers) ->
+                        !handler.onKeyReleased(screen1, key, scancode, modifiers)
+                    )
             ));
             ClientEvents.MOUSE_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
                 (client, screen, scaledWidth, scaledHeight) ->
-                    ScreenMouseEvents.allowMouseRelease(screen).register(handler::onMouseReleased)
+                    ScreenMouseEvents.allowMouseRelease(screen).register((screen1, mouseX, mouseY, button) ->
+                        !handler.onMouseReleased(screen1, mouseX, mouseY, button)
+                    )
             ));
             ClientEvents.PLAYER_QUIT.setRegistrar(FabricClientEvents.PLAYER_QUIT::register);
             ClientEvents.CLIENT_TICK_START.setRegistrar(handler -> ClientTickEvents.START_CLIENT_TICK.register(handler::accept));
