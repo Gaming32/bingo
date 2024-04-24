@@ -166,7 +166,7 @@ public abstract class DifficultyGoalProvider {
             .progress("obtain")
             .tags(BingoTags.ITEM)
             .name(Component.translatable(translationKey, 0), subber -> subber.sub("with.0", "count"))
-            .icon(new ItemTagCycleIcon(tag), subber -> subber.sub("count", "count"));
+            .icon(new ItemTagCycleIcon(tag), subber -> subber.sub("+count", "count"));
     }
 
     protected BingoGoal.Builder obtainAllItemsFromTag(TagKey<Item> tag, @Translatable(prefix = "bingo.goal.all_somethings.") String what) {
@@ -202,7 +202,7 @@ public abstract class DifficultyGoalProvider {
             .tooltipIcon(new ResourceLocation("bingo:textures/gui/tooltips/raw_and_cooked.png"))
             .antisynergy("edible_items")
             .infrequency(2)
-            .icon(new ItemTagCycleIcon(ConventionalItemTags.FOODS), subber -> subber.sub("count", "count"));
+            .icon(new ItemTagCycleIcon(ConventionalItemTags.FOODS), subber -> subber.sub("+count", "count"));
     }
 
     protected static BingoGoal.Builder obtainLevelsGoal(ResourceLocation id, int minLevels, int maxLevels) {

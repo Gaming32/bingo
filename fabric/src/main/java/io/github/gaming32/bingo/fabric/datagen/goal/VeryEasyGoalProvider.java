@@ -126,7 +126,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("leaves"), Items.OAK_LEAVES, ItemPredicate.Builder.item().of(ItemTags.LEAVES), 32, 64)
             .tags(BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.leaves", 0), subber -> subber.sub("with.0", "count"))
-            .icon(new ItemTagCycleIcon(ItemTags.LEAVES), subber -> subber.sub("count", "count"))
+            .icon(new ItemTagCycleIcon(ItemTags.LEAVES), subber -> subber.sub("+count", "count"))
         );
         addGoal(blockCubeGoal(
             id("leaf_cube"),

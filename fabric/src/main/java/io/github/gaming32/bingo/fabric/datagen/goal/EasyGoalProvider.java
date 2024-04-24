@@ -141,7 +141,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.different_fish", 0), subber -> subber.sub("with.0", "count"))
             .tooltip("different_fish")
-            .icon(new ItemTagCycleIcon(ItemTags.FISHES), subber -> subber.sub("count", "count")));
+            .icon(new ItemTagCycleIcon(ItemTags.FISHES), subber -> subber.sub("+count", "count")));
         addGoal(BingoGoal.builder(id("grow_tree_in_nether"))
             .criterion("grow", GrowFeatureTrigger.builder()
                 .feature(BingoFeatureTags.TREES)

@@ -630,7 +630,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     ItemPredicate.Builder.item().of(Blocks.END_STONE).withCount(MinMaxBounds.Ints.atLeast(0)).build()
                 )
                 .build(),
-                subber -> subber.multiSub("conditions.items.*.count.min", "count")
+                subber -> subber.sub("conditions.items.*.count.min", "count")
             )
             .progress("items")
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD, BingoTags.NETHER, BingoTags.END)
@@ -645,7 +645,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 BlockIcon.ofBlock(Blocks.DIRT),
                 BlockIcon.ofBlock(Blocks.NETHERRACK),
                 BlockIcon.ofBlock(Blocks.END_STONE)
-            ), subber -> subber.multiSub("icons.*.item.count", "count"))
+            ), subber -> subber.sub("icons.*.item.count", "count"))
         );
         addGoal(BingoGoal.builder(id("tame_mule"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(

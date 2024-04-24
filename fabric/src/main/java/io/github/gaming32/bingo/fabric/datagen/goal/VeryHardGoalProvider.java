@@ -92,7 +92,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tooltip("different_potions")
             .icon(
                 createPotionsIcon(Items.POTION),
-                subber -> subber.multiSub("icons.*.item.count", "count")
+                subber -> subber.sub("icons.*.item.count", "count")
             )
         );
         addGoal(obtainAllItemsFromTag(ItemTags.CHEST_ARMOR, "chestplates")
@@ -144,7 +144,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER, BingoTags.OVERWORLD)
             .icon(
                 createPotionsIcon(Items.TIPPED_ARROW),
-                subber -> subber.multiSub("icons.*.item.count", "count")
+                subber -> subber.sub("icons.*.item.count", "count")
             )
         );
         addGoal(mineralPillarGoal(id("all_mineral_blocks"), BingoBlockTags.ALL_MINERAL_BLOCKS)
