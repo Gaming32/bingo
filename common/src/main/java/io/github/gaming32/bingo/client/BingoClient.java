@@ -325,7 +325,7 @@ public class BingoClient {
                             return player.getName();
                         }
                     }
-                    return Component.literal(players.next().getProfile().getName());
+                    return Component.literal(playerInfo.getProfile().getName());
                 }
             }
         }

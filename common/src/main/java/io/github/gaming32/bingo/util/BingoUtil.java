@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collector;
 
 public class BingoUtil {
@@ -177,7 +179,10 @@ public class BingoUtil {
         }
     }
 
-    public static Component getDisplayName(PlayerTeam team, PlayerList playerList) {
+    /**
+     * @return Left is single player name, right is team name
+     */
+    public static Either<Component, Component> getDisplayName(PlayerTeam team, PlayerList playerList) {
         final Iterator<ServerPlayer> players = team.getPlayers()
             .stream()
             .map(playerList::getPlayerByName)
@@ -186,10 +191,14 @@ public class BingoUtil {
         if (players.hasNext()) {
             final ServerPlayer player = players.next();
             if (!players.hasNext()) {
-                return player.getName();
+                return Either.left(player.getName());
             }
         }
-        return team.getDisplayName();
+        return Either.right(team.getDisplayName());
+    }
+
+    public static <T, R> Either<R, R> mapEither(Either<T, T> either, Function<T, R> mapper) {
+        return either.mapBoth(mapper, mapper);
     }
 
     public static boolean isDyeableArmor(Item item) {

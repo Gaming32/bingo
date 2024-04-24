@@ -34,7 +34,6 @@ import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -54,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class BingoGame {
     public static final Component REQUIRED_CLIENT_KICK = Component.literal(
@@ -176,19 +176,18 @@ public class BingoGame {
                 message = Bingo.translatable("bingo.ended.tie");
             } else {
                 final PlayerTeam playerTeam = getTeam(winner);
-                if (playerTeam.getPlayers().size() == 1) {
-                    Component playerName = Component.literal(playerTeam.getPlayers().iterator().next());
-                    if (playerTeam.getColor() != ChatFormatting.RESET) {
-                        playerName = playerName.copy().withStyle(playerTeam.getColor());
+                message = BingoUtil.mapEither(
+                    BingoUtil.getDisplayName(playerTeam, playerList),
+                    name -> {
+                        if (playerTeam.getColor() != ChatFormatting.RESET) {
+                            return name.copy().withStyle(playerTeam.getColor());
+                        }
+                        return name;
                     }
-                    message = Bingo.translatable("bingo.ended.single", playerName);
-                } else {
-                    Component teamName = BingoUtil.getDisplayName(playerTeam, playerList);
-                    if (playerTeam.getColor() != ChatFormatting.RESET) {
-                        teamName = teamName.copy().withStyle(playerTeam.getColor());
-                    }
-                    message = Bingo.translatable("bingo.ended", teamName);
-                }
+                ).map(
+                    playerName -> Bingo.translatable("bingo.ended.single", playerName),
+                    teamName -> Bingo.translatable("bingo.ended", teamName)
+                );
             }
             for (final ServerPlayer player : playerList.getPlayers()) {
                 player.playNotifySound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.MASTER, 1f, 1f);
@@ -492,7 +491,8 @@ public class BingoGame {
         if (showOtherTeam) {
             new UpdateStatePacket(boardIndex, boardState).sendTo(playerList.getPlayers());
             if (gameMode.isLockout()) {
-                Component teamComponent = BingoUtil.getDisplayName(playerTeam, playerList);
+                Component teamComponent = BingoUtil.getDisplayName(playerTeam, playerList)
+                    .map(Function.identity(), Function.identity());
                 if (playerTeam.getColor() != ChatFormatting.RESET) {
                     teamComponent = teamComponent.copy().withStyle(playerTeam.getColor());
                 }
