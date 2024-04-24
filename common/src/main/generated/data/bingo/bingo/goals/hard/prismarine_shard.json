@@ -32,11 +32,10 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": {
+      "count": {
         "bingo_type": "bingo:sub",
         "key": "count"
       },
-      "count": 1,
       "id": "minecraft:prismarine_shard"
     }
   },

@@ -438,7 +438,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tooltip("different_colored_shields")
             .icon(CycleIcon.infer(Arrays.stream(DyeColor.values()).map(DifficultyGoalProvider::makeShieldWithColor)), subber -> {
                 for (int i = 0; i < DyeColor.values().length; i++) {
-                    subber.sub("icons." + i + ".item.Count", "count");
+                    subber.sub("icons." + i + ".item.count", "count");
                 }
             })
             .tags(BingoTags.ITEM, BingoTags.COLOR, BingoTags.OVERWORLD));
@@ -531,7 +531,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(new CycleIcon(
                 new EntityTypeTagCycleIcon(BingoEntityTypeTags.PASSIVE, 0),
                 new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStack(Items.FLINT_AND_STEEL, 1))
-            ), subber -> subber.sub("icons.0.count", "count").sub("icons.1.item.Count", "count"))
+            ), subber -> subber.sub("icons.0.count", "count").sub("icons.1.item.count", "count"))
             .reactant("pacifist")
             .tags(BingoTags.ACTION, BingoTags.COMBAT));
         addGoal(BingoGoal.builder(id("kill_creeper_with_only_fire"))

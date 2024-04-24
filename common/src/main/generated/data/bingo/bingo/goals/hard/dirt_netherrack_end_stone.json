@@ -55,11 +55,10 @@
           "Name": "minecraft:dirt"
         },
         "item": {
-          "Count": {
+          "count": {
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "count": 1,
           "id": "minecraft:dirt"
         }
       },
@@ -69,11 +68,10 @@
           "Name": "minecraft:netherrack"
         },
         "item": {
-          "Count": {
+          "count": {
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "count": 1,
           "id": "minecraft:netherrack"
         }
       },
@@ -83,11 +81,10 @@
           "Name": "minecraft:end_stone"
         },
         "item": {
-          "Count": {
+          "count": {
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "count": 1,
           "id": "minecraft:end_stone"
         }
       }

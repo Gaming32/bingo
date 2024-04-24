@@ -27,224 +27,208 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "white"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "orange"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "magenta"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "light_blue"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "yellow"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "lime"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "pink"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "gray"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "light_gray"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "cyan"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "purple"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "blue"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "brown"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "green"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "red"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
-            "bingo_type": "bingo:sub",
-            "key": "count"
-          },
           "components": {
             "minecraft:base_color": "black"
           },
-          "count": 1,
+          "count": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          },
           "id": "minecraft:shield"
         }
       }

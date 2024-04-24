@@ -68,11 +68,10 @@
           }
         },
         "item": {
-          "Count": {
+          "count": {
             "bingo_type": "bingo:sub",
             "key": "count"
           },
-          "count": 1,
           "id": "minecraft:flint_and_steel"
         }
       }

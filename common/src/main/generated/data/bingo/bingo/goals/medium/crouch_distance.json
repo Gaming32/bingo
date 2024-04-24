@@ -43,11 +43,10 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": {
+      "count": {
         "bingo_type": "bingo:sub",
         "key": "distance"
       },
-      "count": 1,
       "id": "minecraft:leather_boots"
     }
   },

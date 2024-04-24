@@ -118,7 +118,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .icon(new CycleIcon(
                 ItemIcon.ofItem(Items.POPPY),
                 ItemIcon.ofItem(Items.DANDELION)
-            ), subber -> subber.sub("icons.0.item.Count", "poppies_count").sub("icons.1.item.Count", "dandelions_count")));
+            ), subber -> subber.sub("icons.0.item.count", "poppies_count").sub("icons.1.item.count", "dandelions_count")));
         addGoal(obtainLevelsGoal(id("levels"), 5, 7));
         addGoal(obtainItemGoal(id("note_block"), Items.NOTE_BLOCK, 5, 7)
             .infrequency(2)

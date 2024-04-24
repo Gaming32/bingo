@@ -51,22 +51,20 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
+          "count": {
             "bingo_type": "bingo:sub",
             "key": "poppies_count"
           },
-          "count": 1,
           "id": "minecraft:poppy"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": {
+          "count": {
             "bingo_type": "bingo:sub",
             "key": "dandelions_count"
           },
-          "count": 1,
           "id": "minecraft:dandelion"
         }
       }
