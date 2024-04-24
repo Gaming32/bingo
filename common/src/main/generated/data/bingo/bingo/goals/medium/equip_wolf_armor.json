@@ -1,6 +1,6 @@
 {
   "criteria": {
-    "brush": {
+    "equip": {
       "conditions": {
         "entity": [
           {
@@ -18,31 +18,31 @@
       "trigger": "minecraft:player_interacted_with_entity"
     }
   },
-  "difficulty": "bingo:easy",
+  "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:indicator",
     "base": {
       "type": "bingo:entity",
-      "entity": "minecraft:armadillo",
+      "entity": "minecraft:wolf",
       "item": {
         "count": 1,
-        "id": "minecraft:armadillo_spawn_egg"
+        "id": "minecraft:wolf_spawn_egg"
       }
     },
     "indicator": {
       "type": "bingo:item",
       "item": {
         "count": 1,
-        "id": "minecraft:brush"
+        "id": "minecraft:wolf_armor"
       }
     }
   },
   "name": {
-    "translate": "bingo.goal.brush_armadillo"
+    "translate": "bingo.goal.equip_wolf_armor"
   },
   "requirements": [
     [
-      "brush"
+      "equip"
     ]
   ],
   "tags": [

@@ -799,6 +799,14 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.all_different_armor", 4))
             .icon(createAllDifferentMaterialsIcon())
         );
+        addGoal(BingoGoal.builder(id("equip_wolf_armor"))
+            .criterion("equip", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                ItemPredicate.Builder.item().of(Items.BRUSH),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.ARMADILLO)))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name("equip_wolf_armor")
+            .icon(IndicatorIcon.infer(EntityType.WOLF, Items.WOLF_ARMOR)));
     }
 
     @SafeVarargs

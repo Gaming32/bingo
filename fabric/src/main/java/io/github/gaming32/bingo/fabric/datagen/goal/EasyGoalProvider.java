@@ -18,6 +18,7 @@ import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EffectIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.data.icons.EntityTypeTagCycleIcon;
+import io.github.gaming32.bingo.data.icons.IndicatorIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgressTracker;
@@ -966,7 +967,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("brush_armadillo")
-            .icon(CycleIcon.infer(Items.BRUSH, EntityType.ARMADILLO)));
+            .icon(IndicatorIcon.infer(EntityType.ARMADILLO, Items.BRUSH)));
     }
 
     private BingoGoal.Builder eatEntireCake() {

@@ -21,7 +21,7 @@ fbc9f80a4c8572b8dd12ac5e892a8fc0a9dfe470 data/bingo/bingo/goals/easy/bookshelf.j
 6d9ca7804ec1257fb471518f1cafab7e639a8fc7 data/bingo/bingo/goals/easy/bread.json
 b4e141ebb8f19ff9a8c1972612e882284f0745d7 data/bingo/bingo/goals/easy/breed_mobs.json
 dae53aa4d51ae789997aa434b7fa87d213629096 data/bingo/bingo/goals/easy/bricks.json
-eef5d2088a0f2cb0667893eaccf921bdc38d55af data/bingo/bingo/goals/easy/brush_armadillo.json
+b82b7a4cde9cdbf572f556e2d54e068a6c70a02c data/bingo/bingo/goals/easy/brush_armadillo.json
 16ca88a5d6ce50e00c37c4ea32d68536752392a8 data/bingo/bingo/goals/easy/burn_village_house.json
 6a52cc839d1f4c38577fdc7d80296b8c1fa954c0 data/bingo/bingo/goals/easy/cactus.json
 f1d0445f586dd4904cbe95fb896cc980d1fd799e data/bingo/bingo/goals/easy/carnivore.json
@@ -276,6 +276,7 @@ eea0fbcd44d5cc8711fe90cd419cff4810543a6e data/bingo/bingo/goals/medium/enchant_i
 1c6ad2c703365e0b3934d4ae41546ee05bbbfb3c data/bingo/bingo/goals/medium/enchanted_golden_sword.json
 5959a6bbe117ca7538891698be02c7f2311867e8 data/bingo/bingo/goals/medium/ender_eye.json
 5f37eeecac3ef41daff4b0b57098a3faeb392bd8 data/bingo/bingo/goals/medium/ender_pearl.json
+0145fffb3a99bdb9eb441db86e01f9ced64764c4 data/bingo/bingo/goals/medium/equip_wolf_armor.json
 138a0a766a7ddb2fe6f5025f6f965ec686fa3e48 data/bingo/bingo/goals/medium/finish_by_free_falling.json
 0d461d17bb7b180afc5f84c32d9b91c0a7e83aa4 data/bingo/bingo/goals/medium/finish_on_top.json
 9ac5236530416bfd9c6d8c49148496bb345a11fa data/bingo/bingo/goals/medium/fire_charge.json
