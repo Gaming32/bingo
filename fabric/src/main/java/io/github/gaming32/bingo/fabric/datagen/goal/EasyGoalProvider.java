@@ -106,6 +106,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
@@ -957,6 +958,15 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .infrequency(4)
             .icon(Items.DIRT_PATH)
         );
+
+        addGoal(BingoGoal.builder(id("brush_armadillo"))
+            .criterion("brush", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                ItemPredicate.Builder.item().of(Items.BRUSH),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.ARMADILLO)))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name("brush_armadillo")
+            .icon(CycleIcon.infer(Items.BRUSH, EntityType.ARMADILLO)));
     }
 
     private BingoGoal.Builder eatEntireCake() {

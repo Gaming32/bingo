@@ -1,0 +1,54 @@
+{
+  "criteria": {
+    "brush": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:armadillo"
+            }
+          }
+        ],
+        "item": {
+          "items": "minecraft:brush"
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:brush"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "entity": "minecraft:armadillo",
+        "item": {
+          "count": 1,
+          "id": "minecraft:armadillo_spawn_egg"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.brush_armadillo"
+  },
+  "requirements": [
+    [
+      "brush"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}
