@@ -22,14 +22,14 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:bone_meal"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:oak_sapling"
         }
       }

@@ -30,7 +30,7 @@ public class BlockIconRenderer implements IconRenderer<BlockIcon> {
         final BakedModel model = minecraft.getBlockRenderer().getBlockModel(icon.block());
         graphics.pose().pushPose();
         graphics.pose().translate(x + 8f, y + 8f, 150f);
-        graphics.pose().mulPoseMatrix(new Matrix4f().scaling(1f, -1f, 1f));
+        graphics.pose().mulPose(new Matrix4f().scaling(1f, -1f, 1f));
         graphics.pose().scale(16f, 16f, 16f);
         final boolean flatLight = !model.usesBlockLight();
         if (flatLight) {

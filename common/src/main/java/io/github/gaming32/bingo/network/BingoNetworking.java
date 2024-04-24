@@ -1,10 +1,10 @@
 package io.github.gaming32.bingo.network;
 
 import io.github.gaming32.bingo.platform.BingoPlatform;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -32,17 +32,24 @@ public abstract class BingoNetworking {
         }
     }
 
-    public abstract boolean canServerReceive(ResourceLocation id);
+    public abstract boolean canServerReceive(CustomPacketPayload.Type<?> type);
 
-    public abstract boolean canPlayerReceive(ServerPlayer player, ResourceLocation id);
+    public abstract boolean canPlayerReceive(ServerPlayer player, CustomPacketPayload.Type<?> type);
 
     public abstract static class Registrar {
         public abstract <P extends CustomPacketPayload> void register(
-            @Nullable PacketFlow flow, ResourceLocation id, FriendlyByteBuf.Reader<P> reader, BiConsumer<P, Context> handler
+            @Nullable PacketFlow flow,
+            CustomPacketPayload.Type<P> type,
+            StreamCodec<? super RegistryFriendlyByteBuf, P> codec,
+            BiConsumer<P, Context> handler
         );
 
-        public <P extends AbstractCustomPayload> void register(@Nullable PacketFlow flow, ResourceLocation id, FriendlyByteBuf.Reader<P> reader) {
-            register(flow, id, reader, AbstractCustomPayload::handle);
+        public <P extends AbstractCustomPayload> void register(
+            @Nullable PacketFlow flow,
+            CustomPacketPayload.Type<P> type,
+            StreamCodec<? super RegistryFriendlyByteBuf, P> codec
+        ) {
+            register(flow, type, codec, AbstractCustomPayload::handle);
         }
     }
 

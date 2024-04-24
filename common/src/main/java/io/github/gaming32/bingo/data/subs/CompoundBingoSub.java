@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 public record CompoundBingoSub(ElementType elementType, Operator operator, List<BingoSub> factors) implements BingoSub {
     public static final MapCodec<CompoundBingoSub> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-        ExtraCodecs.strictOptionalField(ElementType.CODEC, "element_type", ElementType.INT).forGetter(CompoundBingoSub::elementType),
+        ElementType.CODEC.optionalFieldOf("element_type", ElementType.INT).forGetter(CompoundBingoSub::elementType),
         Operator.CODEC.fieldOf("operator").forGetter(CompoundBingoSub::operator),
         ExtraCodecs.nonEmptyList(BingoSub.CODEC.listOf()).fieldOf("factors").forGetter(CompoundBingoSub::factors)
     ).apply(instance, CompoundBingoSub::new));
@@ -38,7 +38,7 @@ public record CompoundBingoSub(ElementType elementType, Operator operator, List<
     @Override
     public Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand) {
         final var op = elementType.accumulator.apply(operator);
-        Dynamic<?> result = factors.get(0).substitute(referable, rand);
+        Dynamic<?> result = factors.getFirst().substitute(referable, rand);
         for (int i = 1; i < factors.size(); i++) {
             result = op.apply(result, factors.get(i).substitute(referable, rand));
         }

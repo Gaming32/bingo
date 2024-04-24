@@ -8,7 +8,6 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -36,10 +35,10 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "levels", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::levels),
-                ExtraCodecs.strictOptionalField(MinMaxBounds.Doubles.CODEC, "progress", MinMaxBounds.Doubles.ANY).forGetter(TriggerInstance::progress),
-                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "total_experience", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::totalExperience)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                MinMaxBounds.Ints.CODEC.optionalFieldOf("levels", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::levels),
+                MinMaxBounds.Doubles.CODEC.optionalFieldOf("progress", MinMaxBounds.Doubles.ANY).forGetter(TriggerInstance::progress),
+                MinMaxBounds.Ints.CODEC.optionalFieldOf("total_experience", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::totalExperience)
             ).apply(instance, TriggerInstance::new)
         );
 

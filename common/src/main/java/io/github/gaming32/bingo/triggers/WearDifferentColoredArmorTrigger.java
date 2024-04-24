@@ -4,17 +4,19 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
+import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.DyeableArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -47,10 +49,10 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(Codec.BOOL, "allow_uncolored", true).forGetter(TriggerInstance::allowUncolored),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                Codec.BOOL.optionalFieldOf("allow_uncolored", true).forGetter(TriggerInstance::allowUncolored),
                 ExtraCodecs.POSITIVE_INT.fieldOf("min_count").forGetter(TriggerInstance::minCount),
-                ExtraCodecs.strictOptionalField(ItemPredicate.CODEC, "item_predicate").forGetter(TriggerInstance::itemPredicate)
+                ItemPredicate.CODEC.optionalFieldOf("item_predicate").forGetter(TriggerInstance::itemPredicate)
             ).apply(instance, TriggerInstance::new)
         );
 
@@ -58,15 +60,15 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
             final IntSet discovered = new IntOpenHashSet();
             for (int i : Inventory.ALL_ARMOR_SLOTS) {
                 final ItemStack item = inventory.getArmor(i);
-                if (itemPredicate.isPresent() && !itemPredicate.get().matches(item)) {
+                if (itemPredicate.isPresent() && !itemPredicate.get().test(item)) {
                     continue;
                 }
-                if (item.getItem() instanceof DyeableArmorItem dyeableItem) {
-                    final int color = dyeableItem.getColor(item);
-                    if (!allowUncolored && color == dyeableItem.getColor(new ItemStack(dyeableItem))) {
+                if (BingoUtil.isDyeableArmor(item.getItem())) {
+                    final DyedItemColor color = item.get(DataComponents.DYED_COLOR);
+                    if (!allowUncolored && color == null) {
                         continue;
                     }
-                    if (discovered.add(color) && discovered.size() >= minCount) {
+                    if (discovered.add(color != null ? color.rgb() : -1) && discovered.size() >= minCount) {
                         progressListener.update(this, minCount, minCount);
                         return true;
                     }

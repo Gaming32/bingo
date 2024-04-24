@@ -4,9 +4,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:bone"
-            ]
+            "items": "minecraft:bone"
           }
         ]
       },
@@ -16,9 +14,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:ender_pearl"
-            ]
+            "items": "minecraft:ender_pearl"
           }
         ]
       },
@@ -28,9 +24,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:gunpowder"
-            ]
+            "items": "minecraft:gunpowder"
           }
         ]
       },
@@ -40,9 +34,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:rotten_flesh"
-            ]
+            "items": "minecraft:rotten_flesh"
           }
         ]
       },
@@ -52,9 +44,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:spider_eye"
-            ]
+            "items": "minecraft:spider_eye"
           }
         ]
       },
@@ -68,35 +58,35 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:rotten_flesh"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:spider_eye"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:bone"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:gunpowder"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:ender_pearl"
         }
       }

@@ -34,13 +34,13 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:grindstone"
         }
       },
       {
         "type": "bingo:item_tag_cycle",
-        "tag": "minecraft:tools"
+        "tag": "c:tools"
       }
     ]
   },

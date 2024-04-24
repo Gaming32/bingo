@@ -9,7 +9,6 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.projectile.ThrownEgg;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
@@ -39,9 +38,9 @@ public class ChickenHatchTrigger extends SimpleCriterionTrigger<ChickenHatchTrig
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "projectile").forGetter(TriggerInstance::projectile),
-                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "num_chickens", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::numChickens)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("projectile").forGetter(TriggerInstance::projectile),
+                MinMaxBounds.Ints.CODEC.optionalFieldOf("num_chickens", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::numChickens)
             ).apply(instance, TriggerInstance::new)
         );
 

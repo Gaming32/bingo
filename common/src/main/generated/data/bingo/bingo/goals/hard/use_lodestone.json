@@ -7,18 +7,14 @@
             "condition": "minecraft:location_check",
             "predicate": {
               "block": {
-                "blocks": [
-                  "minecraft:lodestone"
-                ]
+                "blocks": "minecraft:lodestone"
               }
             }
           },
           {
             "condition": "minecraft:match_tool",
             "predicate": {
-              "items": [
-                "minecraft:compass"
-              ]
+              "items": "minecraft:compass"
             }
           }
         ]
@@ -33,7 +29,7 @@
       "Name": "minecraft:lodestone"
     },
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:lodestone"
     }
   },

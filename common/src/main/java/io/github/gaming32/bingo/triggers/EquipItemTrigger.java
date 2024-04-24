@@ -10,7 +10,6 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -44,20 +43,20 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(ItemPredicate.CODEC, "old_item").forGetter(TriggerInstance::oldItem),
-                ExtraCodecs.strictOptionalField(ItemPredicate.CODEC, "new_item").forGetter(TriggerInstance::newItem),
-                ExtraCodecs.strictOptionalField(
-                    BingoCodecs.enumSetOf(EquipmentSlot.CODEC), "slots", ImmutableSet.copyOf(EnumSet.allOf(EquipmentSlot.class))
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                ItemPredicate.CODEC.optionalFieldOf("old_item").forGetter(TriggerInstance::oldItem),
+                ItemPredicate.CODEC.optionalFieldOf("new_item").forGetter(TriggerInstance::newItem),
+                BingoCodecs.enumSetOf(EquipmentSlot.CODEC).optionalFieldOf(
+                    "slots", ImmutableSet.copyOf(EnumSet.allOf(EquipmentSlot.class))
                 ).forGetter(TriggerInstance::slots)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(ItemStack oldItem, ItemStack newItem, EquipmentSlot slot) {
-            if (this.oldItem.isPresent() && !this.oldItem.get().matches(oldItem)) {
+            if (this.oldItem.isPresent() && !this.oldItem.get().test(oldItem)) {
                 return false;
             }
-            if (this.newItem.isPresent() && !this.newItem.get().matches(newItem)) {
+            if (this.newItem.isPresent() && !this.newItem.get().test(newItem)) {
                 return false;
             }
             if (!this.slots.contains(slot)) {

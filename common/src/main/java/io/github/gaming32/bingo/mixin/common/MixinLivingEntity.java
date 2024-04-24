@@ -43,6 +43,7 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
             target = "Lnet/minecraft/world/entity/LivingEntity;doesEmitEquipEvent(Lnet/minecraft/world/entity/EquipmentSlot;)Z"
         )
     )
+    @SuppressWarnings("UnreachableCode")
     private void onEquipItem(EquipmentSlot slot, ItemStack oldItem, ItemStack newItem, CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer player) {
             BingoTriggers.EQUIP_ITEM.get().trigger(player, oldItem, newItem, slot);

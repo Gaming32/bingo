@@ -14,36 +14,48 @@ import io.github.gaming32.bingo.data.progresstrackers.CriterionProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
-import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.triggers.BedRowTrigger;
+import io.github.gaming32.bingo.triggers.ExperienceChangeTrigger;
+import io.github.gaming32.bingo.triggers.HasSomeFoodItemsTrigger;
+import io.github.gaming32.bingo.triggers.HasSomeItemsFromTagTrigger;
+import io.github.gaming32.bingo.triggers.MineralPillarTrigger;
+import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
+import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPattern;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -66,7 +78,7 @@ public abstract class DifficultyGoalProvider {
         goalAdder.accept(builtGoal);
     }
 
-    public abstract void addGoals();
+    public abstract void addGoals(HolderLookup.Provider registries);
 
     protected final ResourceLocation id(String path) {
         return new ResourceLocation(Bingo.MOD_ID, prefix + path);
@@ -178,7 +190,7 @@ public abstract class DifficultyGoalProvider {
                 .tooltipIcon(new ResourceLocation("bingo:textures/gui/tooltips/raw_and_cooked.png"))
                 .antisynergy("edible_items")
                 .infrequency(2)
-                .icon(new ItemTagCycleIcon(BingoItemTags.FOOD, minCount));
+                .icon(new ItemTagCycleIcon(ConventionalItemTags.FOODS, minCount));
         }
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minCount, maxCount))
@@ -190,7 +202,7 @@ public abstract class DifficultyGoalProvider {
             .tooltipIcon(new ResourceLocation("bingo:textures/gui/tooltips/raw_and_cooked.png"))
             .antisynergy("edible_items")
             .infrequency(2)
-            .icon(new ItemTagCycleIcon(BingoItemTags.FOOD), subber -> subber.sub("count", "count"));
+            .icon(new ItemTagCycleIcon(ConventionalItemTags.FOODS), subber -> subber.sub("count", "count"));
     }
 
     protected static BingoGoal.Builder obtainLevelsGoal(ResourceLocation id, int minLevels, int maxLevels) {
@@ -304,26 +316,19 @@ public abstract class DifficultyGoalProvider {
     }
 
     protected static ItemStack makeItemWithGlint(ItemStack item) {
-        ListTag enchantments = new ListTag();
-        enchantments.add(new CompoundTag());
-        item.getOrCreateTag().put("Enchantments", enchantments);
+        item.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         return item;
     }
 
-    protected static ItemStack makeBannerWithPattern(Item base, ResourceKey<BannerPattern> pattern, DyeColor color) {
+    protected static ItemStack makeBannerWithPattern(Item base, Holder<BannerPattern> pattern, DyeColor color) {
         final ItemStack result = new ItemStack(base);
-        final CompoundTag compound = new CompoundTag();
-        compound.put("Patterns", new BannerPattern.Builder().addPattern(pattern, color).toListTag());
-        BlockItem.setBlockEntityData(result, BlockEntityType.BANNER, compound);
+        result.set(DataComponents.BANNER_PATTERNS, new BannerPatternLayers.Builder().add(pattern, color).build());
         return result;
     }
 
     protected static ItemStack makeShieldWithColor(@Nullable DyeColor color) {
         ItemStack stack = new ItemStack(Items.SHIELD);
-        if (color == null) {
-            return stack;
-        }
-        BlockItem.setBlockEntityData(stack, BlockEntityType.BANNER, BingoUtil.compound(Map.of(ShieldItem.TAG_BASE_COLOR, IntTag.valueOf(color.getId()))));
+        stack.set(DataComponents.BASE_COLOR, color);
         return stack;
     }
 
@@ -339,26 +344,12 @@ public abstract class DifficultyGoalProvider {
             )));
     }
 
-    protected static ItemStack simplifyBlockEntityStackData(ItemStack stack) {
-        if (stack.hasTag()) {
-            assert stack.getTag() != null;
-            for (final String key : stack.getTag().getAllKeys().toArray(String[]::new)) {
-                if (!key.equals(BlockItem.BLOCK_ENTITY_TAG) && !key.equals(BlockItem.BLOCK_STATE_TAG)) {
-                    stack.getTag().remove(key);
-                }
-            }
-            stack.getTag().getCompound(BlockItem.BLOCK_ENTITY_TAG).remove("id");
-        }
-        return stack;
-    }
-
     protected static GoalIcon createPotionsIcon(Item baseItem) {
         final Set<String> encountered = new HashSet<>();
         return new CycleIcon(
-            BuiltInRegistries.POTION.stream()
-                .filter(p -> p != Potions.EMPTY)
-                .filter(p -> encountered.add(p.getName("")))
-                .map(p -> PotionUtils.setPotion(new ItemStack(baseItem), p))
+            BuiltInRegistries.POTION.holders()
+                .filter(p -> encountered.add(Potion.getName(Optional.of(p), "")))
+                .map(p -> BingoUtil.setPotion(new ItemStack(baseItem), p))
                 .map(ItemIcon::new)
                 .collect(ImmutableList.toImmutableList())
         );

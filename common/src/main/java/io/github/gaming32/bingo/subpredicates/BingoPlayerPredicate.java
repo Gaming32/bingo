@@ -15,7 +15,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
 import net.minecraft.stats.StatsCounter;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -28,11 +27,10 @@ public record BingoPlayerPredicate(
 ) implements EntitySubPredicate {
     public static final MapCodec<BingoPlayerPredicate> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
-            ExtraCodecs.strictOptionalField(PlayerPredicate.StatMatcher.CODEC.listOf(), "relative_stats", List.of())
+            PlayerPredicate.StatMatcher.CODEC.listOf().optionalFieldOf("relative_stats", List.of())
                 .forGetter(BingoPlayerPredicate::relativeStats)
         ).apply(instance, BingoPlayerPredicate::new)
     );
-    public static final Type TYPE = new Type(CODEC);
 
     @Override
     public boolean matches(Entity entity, ServerLevel level, @Nullable Vec3 position) {
@@ -58,8 +56,8 @@ public record BingoPlayerPredicate(
 
     @NotNull
     @Override
-    public Type type() {
-        return TYPE;
+    public MapCodec<? extends EntitySubPredicate> codec() {
+        return CODEC;
     }
 
     public static class Builder {

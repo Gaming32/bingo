@@ -5,69 +5,43 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:diamond_block"
-            ]
+            "items": "minecraft:diamond_block"
           },
           {
-            "items": [
-              "minecraft:diamond_axe"
-            ]
+            "items": "minecraft:diamond_axe"
           },
           {
-            "items": [
-              "minecraft:diamond_boots"
-            ]
+            "items": "minecraft:diamond_boots"
           },
           {
-            "items": [
-              "minecraft:diamond_chestplate"
-            ]
+            "items": "minecraft:diamond_chestplate"
           },
           {
-            "items": [
-              "minecraft:diamond_helmet"
-            ]
+            "items": "minecraft:diamond_helmet"
           },
           {
-            "items": [
-              "minecraft:diamond_hoe"
-            ]
+            "items": "minecraft:diamond_hoe"
           },
           {
-            "items": [
-              "minecraft:diamond_leggings"
-            ]
+            "items": "minecraft:diamond_leggings"
           },
           {
-            "items": [
-              "minecraft:diamond_pickaxe"
-            ]
+            "items": "minecraft:diamond_pickaxe"
           },
           {
-            "items": [
-              "minecraft:diamond_shovel"
-            ]
+            "items": "minecraft:diamond_shovel"
           },
           {
-            "items": [
-              "minecraft:diamond_sword"
-            ]
+            "items": "minecraft:diamond_sword"
           },
           {
-            "items": [
-              "minecraft:enchanting_table"
-            ]
+            "items": "minecraft:enchanting_table"
           },
           {
-            "items": [
-              "minecraft:firework_star"
-            ]
+            "items": "minecraft:firework_star"
           },
           {
-            "items": [
-              "minecraft:jukebox"
-            ]
+            "items": "minecraft:jukebox"
           }
         ]
       },
@@ -81,118 +55,91 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:diamond_block"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_axe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_axe"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_boots",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_chestplate",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_helmet",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_hoe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_hoe"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_leggings",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_pickaxe",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_pickaxe"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_shovel",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_shovel"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_sword",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_sword"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:enchanting_table"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:firework_star"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:jukebox"
         }
       }

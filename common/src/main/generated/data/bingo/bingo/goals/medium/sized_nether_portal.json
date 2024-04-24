@@ -4,20 +4,16 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 6,
-          "min_inclusive": 4
-        }
+        "max_inclusive": 6,
+        "min_inclusive": 4
       }
     },
     "width": {
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 6,
-          "min_inclusive": 4
-        }
+        "max_inclusive": 6,
+        "min_inclusive": 4
       }
     }
   },
@@ -67,9 +63,7 @@
             "where": {
               "P": {
                 "block": {
-                  "blocks": [
-                    "minecraft:nether_portal"
-                  ]
+                  "blocks": "minecraft:nether_portal"
                 }
               }
             }
@@ -89,7 +83,7 @@
       }
     },
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:obsidian"
     }
   },

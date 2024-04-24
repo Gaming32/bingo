@@ -12,7 +12,7 @@
         "type": "bingo:entity",
         "entity": "minecraft:zombie",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:zombie_spawn_egg"
         }
       },
@@ -20,7 +20,7 @@
         "type": "bingo:entity",
         "entity": "minecraft:drowned",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:drowned_spawn_egg"
         }
       }

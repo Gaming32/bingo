@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.conditions;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.ext.LivingEntityExt;
 import io.github.gaming32.bingo.util.BingoUtil;
@@ -9,7 +9,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -32,14 +31,14 @@ public record HasOnlyBeenDamagedByCondition(
     Optional<TagPredicate<DamageType>> damageTypeTag
 ) implements LootItemCondition {
 
-    public static final Codec<HasOnlyBeenDamagedByCondition> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<HasOnlyBeenDamagedByCondition> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
-            ExtraCodecs.strictOptionalField(BuiltInRegistries.ENTITY_TYPE.byNameCodec(), "entity_type").forGetter(HasOnlyBeenDamagedByCondition::entityType),
-            ExtraCodecs.strictOptionalField(TagPredicate.codec(Registries.ENTITY_TYPE), "entity_type_tag").forGetter(HasOnlyBeenDamagedByCondition::entityTypeTag),
-            ExtraCodecs.strictOptionalField(BuiltInRegistries.ENTITY_TYPE.byNameCodec(), "direct_entity_type").forGetter(HasOnlyBeenDamagedByCondition::directEntityType),
-            ExtraCodecs.strictOptionalField(TagPredicate.codec(Registries.ENTITY_TYPE), "direct_entity_type_tag").forGetter(HasOnlyBeenDamagedByCondition::directEntityTypeTag),
-            ExtraCodecs.strictOptionalField(ResourceKey.codec(Registries.DAMAGE_TYPE), "damage_type").forGetter(HasOnlyBeenDamagedByCondition::damageType),
-            ExtraCodecs.strictOptionalField(TagPredicate.codec(Registries.DAMAGE_TYPE), "damage_type_tag").forGetter(HasOnlyBeenDamagedByCondition::damageTypeTag)
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().optionalFieldOf("entity_type").forGetter(HasOnlyBeenDamagedByCondition::entityType),
+            TagPredicate.codec(Registries.ENTITY_TYPE).optionalFieldOf("entity_type_tag").forGetter(HasOnlyBeenDamagedByCondition::entityTypeTag),
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().optionalFieldOf("direct_entity_type").forGetter(HasOnlyBeenDamagedByCondition::directEntityType),
+            TagPredicate.codec(Registries.ENTITY_TYPE).optionalFieldOf("direct_entity_type_tag").forGetter(HasOnlyBeenDamagedByCondition::directEntityTypeTag),
+            ResourceKey.codec(Registries.DAMAGE_TYPE).optionalFieldOf("damage_type").forGetter(HasOnlyBeenDamagedByCondition::damageType),
+            TagPredicate.codec(Registries.DAMAGE_TYPE).optionalFieldOf("damage_type_tag").forGetter(HasOnlyBeenDamagedByCondition::damageTypeTag)
         ).apply(instance, HasOnlyBeenDamagedByCondition::new)
     );
 

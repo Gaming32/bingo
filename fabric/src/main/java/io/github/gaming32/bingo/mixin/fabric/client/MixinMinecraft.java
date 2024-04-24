@@ -17,14 +17,14 @@ public class MixinMinecraft {
     @Shadow @Nullable public LocalPlayer player;
 
     @Inject(
-        method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;)V",
+        method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;Z)V",
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/Minecraft;gameMode:Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;",
             opcode = Opcodes.PUTFIELD
         )
     )
-    private void onPlayerQuit(Screen nextScreen, CallbackInfo ci) {
+    private void onPlayerQuit(Screen screen, boolean bl, CallbackInfo ci) {
         FabricClientEvents.PLAYER_QUIT.invoker().accept(player);
     }
 }

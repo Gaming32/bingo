@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:warped_fungus_on_a_stick"
-            ]
+            "items": "minecraft:warped_fungus_on_a_stick"
           }
         ]
       },
@@ -18,11 +16,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:warped_fungus_on_a_stick",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:warped_fungus_on_a_stick"
     }
   },
   "name": {

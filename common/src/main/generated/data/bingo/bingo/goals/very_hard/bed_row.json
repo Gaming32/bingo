@@ -15,7 +15,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 16,
+      "count": 16,
       "id": "minecraft:magenta_bed"
     }
   },

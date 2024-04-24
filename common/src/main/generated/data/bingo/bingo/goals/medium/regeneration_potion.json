@@ -5,10 +5,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:regeneration"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:regeneration"
+            }
           }
         ]
       },
@@ -18,10 +18,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:long_regeneration"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:long_regeneration"
+            }
           }
         ]
       },
@@ -31,10 +31,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:strong_regeneration"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:strong_regeneration"
+            }
           }
         ]
       },
@@ -45,11 +45,13 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:potion",
-      "tag": {
-        "Potion": "minecraft:regeneration"
-      }
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:regeneration"
+        }
+      },
+      "count": 1,
+      "id": "minecraft:potion"
     }
   },
   "infrequency": 12,

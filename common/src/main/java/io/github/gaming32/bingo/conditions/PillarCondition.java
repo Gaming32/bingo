@@ -1,11 +1,11 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -18,10 +18,10 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 
 public record PillarCondition(int minHeight, Optional<BlockPredicate> block) implements LootItemCondition {
-    public static final Codec<PillarCondition> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<PillarCondition> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             Codec.INT.fieldOf("min_height").forGetter(PillarCondition::minHeight),
-            ExtraCodecs.strictOptionalField(BlockPredicate.CODEC, "block").forGetter(PillarCondition::block)
+            BlockPredicate.CODEC.optionalFieldOf("block").forGetter(PillarCondition::block)
         ).apply(instance, PillarCondition::new)
     );
 

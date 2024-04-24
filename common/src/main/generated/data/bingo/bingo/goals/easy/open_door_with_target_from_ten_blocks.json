@@ -4,7 +4,7 @@
       "conditions": {
         "door": {
           "block": {
-            "tag": "minecraft:doors"
+            "blocks": "#minecraft:doors"
           }
         },
         "projectile": [
@@ -14,7 +14,7 @@
             "predicate": {
               "distance": {
                 "horizontal": {
-                  "min": 10.0
+                  "min": 10
                 }
               }
             }
@@ -31,21 +31,21 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:arrow"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 10,
+          "count": 10,
           "id": "minecraft:target"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:oak_door"
         }
       }

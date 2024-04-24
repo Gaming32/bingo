@@ -4,16 +4,16 @@
       "conditions": {
         "items": [
           {
-            "enchantments": [
-              {
-                "levels": {
-                  "min": 1
+            "items": "minecraft:golden_sword",
+            "predicates": {
+              "minecraft:enchantments": [
+                {
+                  "levels": {
+                    "min": 1
+                  }
                 }
-              }
-            ],
-            "items": [
-              "minecraft:golden_sword"
-            ]
+              ]
+            }
           }
         ]
       },
@@ -24,14 +24,11 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:golden_sword",
-      "tag": {
-        "Damage": 0,
-        "Enchantments": [
-          {}
-        ]
-      }
+      "components": {
+        "minecraft:enchantment_glint_override": true
+      },
+      "count": 1,
+      "id": "minecraft:golden_sword"
     }
   },
   "name": {

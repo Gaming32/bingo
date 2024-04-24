@@ -6,8 +6,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public abstract class AbstractCustomPayload implements CustomPacketPayload {
-    protected static ResourceLocation id(String id) {
-        return new ResourceLocation(Bingo.MOD_ID, id);
+    protected static <P extends AbstractCustomPayload> Type<P> type(String id) {
+        return new Type<>(new ResourceLocation(Bingo.MOD_ID, id));
     }
 
     public final void sendToServer() {

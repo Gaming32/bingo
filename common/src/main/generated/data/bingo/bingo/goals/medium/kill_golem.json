@@ -22,18 +22,15 @@
       "type": "bingo:entity",
       "entity": "minecraft:iron_golem",
       "item": {
-        "Count": 1,
+        "count": 1,
         "id": "minecraft:iron_golem_spawn_egg"
       }
     },
     "indicator": {
       "type": "bingo:item",
       "item": {
-        "Count": 1,
-        "id": "minecraft:diamond_sword",
-        "tag": {
-          "Damage": 0
-        }
+        "count": 1,
+        "id": "minecraft:diamond_sword"
       }
     }
   },

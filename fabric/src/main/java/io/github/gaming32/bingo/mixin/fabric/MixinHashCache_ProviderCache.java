@@ -23,7 +23,7 @@ public class MixinHashCache_ProviderCache {
             target = "Ljava/io/BufferedWriter;write(Ljava/lang/String;)V"
         )
     )
-    private void skipDate(BufferedWriter instance, String str, Operation<Void> original, @Local String date) {
+    private void skipDate(BufferedWriter instance, String str, Operation<Void> original, @Local(argsOnly = true) String date) {
         //noinspection StringEquality
         if (str != date) {
             original.call(instance, str);

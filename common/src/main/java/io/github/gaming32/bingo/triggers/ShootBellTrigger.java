@@ -12,7 +12,6 @@ import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -58,10 +57,10 @@ public class ShootBellTrigger extends SimpleCriterionTrigger<ShootBellTrigger.Tr
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(ContextAwarePredicate.CODEC, "bell").forGetter(TriggerInstance::bell),
-                ExtraCodecs.strictOptionalField(ContextAwarePredicate.CODEC, "projectile").forGetter(TriggerInstance::projectile),
-                ExtraCodecs.strictOptionalField(DistancePredicate.CODEC, "distance").forGetter(TriggerInstance::distance)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                ContextAwarePredicate.CODEC.optionalFieldOf("bell").forGetter(TriggerInstance::bell),
+                ContextAwarePredicate.CODEC.optionalFieldOf("projectile").forGetter(TriggerInstance::projectile),
+                DistancePredicate.CODEC.optionalFieldOf("distance").forGetter(TriggerInstance::distance)
             ).apply(instance, TriggerInstance::new)
         );
 

@@ -2,15 +2,16 @@ package io.github.gaming32.bingo.fabric.datagen.tag;
 
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -23,8 +24,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
-    private static final Set<Item> FISH_ITEMS = Set.of(
-        Items.COD, Items.COOKED_COD, Items.SALMON, Items.COOKED_SALMON, Items.PUFFERFISH, Items.TROPICAL_FISH
+    private static final Set<Item> FORCED_MEAT = Set.of(
+        Items.COD,
+        Items.COOKED_COD,
+        Items.SALMON,
+        Items.COOKED_SALMON,
+        Items.PUFFERFISH,
+        Items.TROPICAL_FISH,
+        Items.SPIDER_EYE,
+        Items.RABBIT_STEW
     );
 
     public BingoItemTagProvider(
@@ -36,7 +44,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider arg) {
+    protected void addTags(HolderLookup.Provider registries) {
         getOrCreateTagBuilder(BingoItemTags.ALLOWED_HEADS).add(
             Items.SKELETON_SKULL,
             Items.PLAYER_HEAD,
@@ -45,46 +53,6 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.DRAGON_HEAD,
             Items.PIGLIN_HEAD
         );
-
-        getOrCreateTagBuilder(BingoItemTags.ARMOR_HELMETS).addOptionalTag(new ResourceLocation("forge", "armors/helmets")).add(
-            Items.LEATHER_HELMET,
-            Items.TURTLE_HELMET,
-            Items.CHAINMAIL_HELMET,
-            Items.IRON_HELMET,
-            Items.GOLDEN_HELMET,
-            Items.DIAMOND_HELMET,
-            Items.NETHERITE_HELMET
-        );
-        getOrCreateTagBuilder(BingoItemTags.ARMOR_CHESTPLATES).addOptionalTag(new ResourceLocation("forge", "armors/chestplates")).add(
-            Items.LEATHER_CHESTPLATE,
-            Items.CHAINMAIL_CHESTPLATE,
-            Items.IRON_CHESTPLATE,
-            Items.GOLDEN_CHESTPLATE,
-            Items.DIAMOND_CHESTPLATE,
-            Items.NETHERITE_CHESTPLATE
-        );
-        getOrCreateTagBuilder(BingoItemTags.ARMOR_LEGGINGS).addOptionalTag(new ResourceLocation("forge", "armors/leggings")).add(
-            Items.LEATHER_LEGGINGS,
-            Items.CHAINMAIL_LEGGINGS,
-            Items.IRON_LEGGINGS,
-            Items.GOLDEN_LEGGINGS,
-            Items.DIAMOND_LEGGINGS,
-            Items.NETHERITE_LEGGINGS
-        );
-        getOrCreateTagBuilder(BingoItemTags.ARMOR_BOOTS).addOptionalTag(new ResourceLocation("forge", "armors/boots")).add(
-            Items.LEATHER_BOOTS,
-            Items.CHAINMAIL_BOOTS,
-            Items.IRON_BOOTS,
-            Items.GOLDEN_BOOTS,
-            Items.DIAMOND_BOOTS,
-            Items.NETHERITE_BOOTS
-        );
-        getOrCreateTagBuilder(BingoItemTags.ARMOR)
-            .addOptionalTag(new ResourceLocation("forge", "armors"))
-            .addTag(BingoItemTags.ARMOR_HELMETS)
-            .addTag(BingoItemTags.ARMOR_CHESTPLATES)
-            .addTag(BingoItemTags.ARMOR_LEGGINGS)
-            .addTag(BingoItemTags.ARMOR_BOOTS);
 
         // Cannot copy() because that can't copy from Vanilla's block tags, only our block tags
         getOrCreateTagBuilder(BingoItemTags.CLIMBABLE).add(
@@ -121,17 +89,6 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.NAUTILUS_SHELL,
             Items.SADDLE
         );
-
-        getOrCreateTagBuilder(BingoItemTags.SHIELDS)
-            .addOptionalTag(new ResourceLocation("forge", "shields"))
-            .add(Items.SHIELD);
-
-        getOrCreateTagBuilder(BingoItemTags.DYES)
-            .addOptionalTag(new ResourceLocation("forge:dyes"))
-            .addOptionalTag(new ResourceLocation("c:dyes"));
-        getOrCreateTagBuilder(BingoItemTags.ORES)
-            .addOptionalTag(new ResourceLocation("forge:ores"))
-            .addOptionalTag(new ResourceLocation("c:ores"));
 
         getOrCreateTagBuilder(BingoItemTags.LIVING_CORAL_BLOCKS).add(
             Items.TUBE_CORAL_BLOCK,
@@ -195,16 +152,10 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             concreteBuilder.add(concrete);
         }
 
-        var bucketsBuilder = getOrCreateTagBuilder(BingoItemTags.BUCKETS)
-            .addOptionalTag(new ResourceLocation("c:water_buckets"))
-            .addOptionalTag(new ResourceLocation("c:entity_water_buckets"))
-            .addOptionalTag(new ResourceLocation("c:lava_buckets"))
-            .addOptionalTag(new ResourceLocation("c:milk_buckets"))
-            .addOptionalTag(new ResourceLocation("c:empty_buckets"))
-            .add(Items.MILK_BUCKET);
+        final var vanillaMeatTag = BingoDataGenFabric.loadTag(ItemTags.MEAT, registries);
+
         var goldInNameBuilder = getOrCreateTagBuilder(BingoItemTags.GOLD_IN_NAME);
         var diamondInNameBuilder = getOrCreateTagBuilder(BingoItemTags.DIAMOND_IN_NAME);
-        var foodBuilder = getOrCreateTagBuilder(BingoItemTags.FOOD);
         var meatBuilder = getOrCreateTagBuilder(BingoItemTags.MEAT);
         var notMeatBuilder = getOrCreateTagBuilder(BingoItemTags.NOT_MEAT);
         var bannerPatternsBuilder = getOrCreateTagBuilder(BingoItemTags.BANNER_PATTERNS);
@@ -220,26 +171,24 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             if (diamondPattern.matcher(itemName).find()) {
                 diamondInNameBuilder.add(item);
             }
-            if (item.isEdible()) {
-                assert item.getFoodProperties() != null;
-                foodBuilder.add(item);
-                if (item.getFoodProperties().isMeat() || FISH_ITEMS.contains(item)) {
+            if (item.components().has(DataComponents.FOOD)) {
+                if (vanillaMeatTag.contains(item) || FORCED_MEAT.contains(item)) {
                     meatBuilder.add(item);
                 } else {
                     notMeatBuilder.add(item);
                 }
             }
-            if (item instanceof BucketItem) {
-                bucketsBuilder.add(item);
-            } else if (item instanceof BannerPatternItem) {
-                bannerPatternsBuilder.add(item);
-            } else if (item instanceof BlockItem blockItem) {
-                Block block = blockItem.getBlock();
-                if (block instanceof SlabBlock) {
-                    slabBuilder.add(item);
-                } else if (block instanceof StairBlock) {
-                    stairsBuilder.add(item);
+            switch (item) {
+                case BannerPatternItem ignored -> bannerPatternsBuilder.add(item);
+                case BlockItem blockItem -> {
+                    Block block = blockItem.getBlock();
+                    if (block instanceof SlabBlock) {
+                        slabBuilder.add(item);
+                    } else if (block instanceof StairBlock) {
+                        stairsBuilder.add(item);
+                    }
                 }
+                default -> {}
             }
         }
 

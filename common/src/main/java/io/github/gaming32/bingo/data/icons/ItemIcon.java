@@ -6,8 +6,8 @@ import net.minecraft.world.level.ItemLike;
 
 public record ItemIcon(ItemStack item) implements GoalIcon {
     public static final MapCodec<ItemIcon> CODEC = ItemStack.CODEC
-        .xmap(ItemIcon::new, ItemIcon::item)
-        .fieldOf("item");
+        .fieldOf("item")
+        .xmap(ItemIcon::new, ItemIcon::item);
 
     public static ItemIcon ofItem(ItemLike item) {
         return new ItemIcon(new ItemStack(item));

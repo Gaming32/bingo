@@ -28,10 +28,6 @@ dependencies {
     shadowCommon(project(":common", configuration = "transformProductionNeoForge")) {
         isTransitive = false
     }
-
-//    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-neoforge:14.0.680")
-//    modRuntimeOnly("mezz.jei:jei-1.20.1-neoforge:15.2.0.27")
-//    modRuntimeOnly("dev.emi:emi-neoforge:1.0.19+1.20.1")
 }
 
 loom {
@@ -41,7 +37,7 @@ loom {
 tasks.processResources {
     inputs.property("version", project.version)
 
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand("version" to project.version)
     }
 }

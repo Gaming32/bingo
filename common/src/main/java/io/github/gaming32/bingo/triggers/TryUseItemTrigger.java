@@ -9,7 +9,6 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -40,14 +39,14 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
         private static final CustomEnumCodec<InteractionHand> INTERACTION_HAND_CODEC = CustomEnumCodec.of(InteractionHand.class);
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(ItemPredicate.CODEC, "item").forGetter(TriggerInstance::item),
-                ExtraCodecs.strictOptionalField(INTERACTION_HAND_CODEC.codec(), "hand").forGetter(TriggerInstance::hand)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                ItemPredicate.CODEC.optionalFieldOf("item").forGetter(TriggerInstance::item),
+                INTERACTION_HAND_CODEC.codec().optionalFieldOf("hand").forGetter(TriggerInstance::hand)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(ItemStack item, InteractionHand hand) {
-            if (this.item.isPresent() && !this.item.get().matches(item)) {
+            if (this.item.isPresent() && !this.item.get().test(item)) {
                 return false;
             }
             if (this.hand.isPresent() && hand != this.hand.get()) {

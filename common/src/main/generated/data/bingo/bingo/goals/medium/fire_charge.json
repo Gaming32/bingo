@@ -6,9 +6,7 @@
         "items": [
           {
             "count": 6,
-            "items": [
-              "minecraft:fire_charge"
-            ]
+            "items": "minecraft:fire_charge"
           }
         ]
       },
@@ -19,7 +17,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 6,
+      "count": 6,
       "id": "minecraft:fire_charge"
     }
   },

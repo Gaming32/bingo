@@ -3,9 +3,7 @@
     "cure": {
       "conditions": {
         "item": {
-          "items": [
-            "minecraft:milk_bucket"
-          ]
+          "items": "minecraft:milk_bucket"
         },
         "player": [
           {
@@ -21,7 +19,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:milk_bucket"
     }
   },

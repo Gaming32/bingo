@@ -5,7 +5,7 @@
     "not_meat": {
       "conditions": {
         "item": {
-          "tag": "bingo:not_meat"
+          "items": "#bingo:not_meat"
         }
       },
       "trigger": "minecraft:consume_item"
@@ -14,7 +14,7 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:item_tag_cycle",
-    "tag": "bingo:meat"
+    "tag": "minecraft:meat"
   },
   "name": {
     "translate": "bingo.goal.carnivore"

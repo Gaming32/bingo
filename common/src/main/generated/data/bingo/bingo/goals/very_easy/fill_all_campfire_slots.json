@@ -7,9 +7,7 @@
             "condition": "minecraft:location_check",
             "predicate": {
               "block": {
-                "blocks": [
-                  "minecraft:campfire"
-                ],
+                "blocks": "minecraft:campfire",
                 "nbt": "{Items:[{Slot:0b},{Slot:1b},{Slot:2b},{Slot:3b}]}"
               }
             }
@@ -27,13 +25,11 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:campfire",
-      "tag": {
-        "Enchantments": [
-          {}
-        ]
-      }
+      "components": {
+        "minecraft:enchantment_glint_override": true
+      },
+      "count": 1,
+      "id": "minecraft:campfire"
     }
   },
   "name": {

@@ -7,11 +7,14 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.storage.loot.LootDataResolver;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,7 +79,7 @@ public class BingoBoard {
         List<BingoGoal.Holder> requiredGoals,
         Set<BingoTag.Holder> excludedTags,
         boolean allowsClientRequired,
-        @Nullable LootDataResolver lootData
+        @Nullable HolderGetter.Provider registries
     ) {
         final BingoBoard board = new BingoBoard(size);
         final BingoGoal.Holder[] generatedSheet = generateGoals(
@@ -89,8 +92,8 @@ public class BingoBoard {
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Invalid goal " + generatedSheet[i].id() + ": " + e.getMessage(), e);
             }
-            if (lootData != null) {
-                goal.validateAndLog(lootData);
+            if (registries != null) {
+                goal.validateAndLog(registries);
             }
             if (generatedSheet[i].goal().getSpecialType() == BingoTag.SpecialType.NEVER) {
                 board.states[i] = Teams.fromAll(teamCount);
@@ -366,6 +369,7 @@ public class BingoBoard {
         private static final Teams[] CACHE = {NONE, TEAM1, TEAM2, new Teams(0b11)};
 
         public static final Codec<Teams> CODEC = Codec.INT.xmap(Teams::fromBits, Teams::toBits);
+        public static final StreamCodec<ByteBuf, Teams> STREAM_CODEC = ByteBufCodecs.VAR_INT.map(Teams::fromBits, Teams::toBits);
 
         private final int bits;
 

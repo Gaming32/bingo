@@ -6,9 +6,7 @@
         "items": [
           {
             "count": 2,
-            "items": [
-              "minecraft:netherite_block"
-            ]
+            "items": "minecraft:netherite_block"
           }
         ]
       },
@@ -19,7 +17,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 2,
+      "count": 2,
       "id": "minecraft:netherite_block"
     }
   },

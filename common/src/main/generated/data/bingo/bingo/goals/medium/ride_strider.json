@@ -22,7 +22,7 @@
     "type": "bingo:entity",
     "entity": "minecraft:strider",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:strider_spawn_egg"
     }
   },

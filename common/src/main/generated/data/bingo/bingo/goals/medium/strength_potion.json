@@ -5,10 +5,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:strength"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:strength"
+            }
           }
         ]
       },
@@ -18,10 +18,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:long_strength"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:long_strength"
+            }
           }
         ]
       },
@@ -31,10 +31,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:strong_strength"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:strong_strength"
+            }
           }
         ]
       },
@@ -45,11 +45,13 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:potion",
-      "tag": {
-        "Potion": "minecraft:strength"
-      }
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:strength"
+        }
+      },
+      "count": 1,
+      "id": "minecraft:potion"
     }
   },
   "infrequency": 12,

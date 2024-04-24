@@ -5,7 +5,7 @@
     "meat": {
       "conditions": {
         "item": {
-          "tag": "bingo:meat"
+          "items": "#bingo:meat"
         }
       },
       "trigger": "minecraft:consume_item"

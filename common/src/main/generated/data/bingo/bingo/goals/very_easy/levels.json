@@ -5,10 +5,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 7,
-          "min_inclusive": 5
-        }
+        "max_inclusive": 7,
+        "min_inclusive": 5
       }
     }
   },
@@ -33,6 +31,7 @@
         "bingo_type": "bingo:sub",
         "key": "count"
       },
+      "count": 1,
       "id": "minecraft:experience_bottle"
     }
   },

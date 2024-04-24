@@ -7,10 +7,10 @@ import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTri
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
@@ -48,8 +48,8 @@ public class DifferentColoredShieldsTrigger extends SimpleProgressibleCriterionT
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(Codec.BOOL, "allow_uncolored", false).forGetter(TriggerInstance::allowUncolored),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                Codec.BOOL.optionalFieldOf("allow_uncolored", false).forGetter(TriggerInstance::allowUncolored),
                 ExtraCodecs.POSITIVE_INT.fieldOf("min_count").forGetter(TriggerInstance::minCount)
             ).apply(instance, TriggerInstance::new)
         );
@@ -59,7 +59,7 @@ public class DifferentColoredShieldsTrigger extends SimpleProgressibleCriterionT
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
                 if (item.getItem() instanceof ShieldItem) {
-                    final DyeColor color = BlockItem.getBlockEntityData(item) == null ? null : ShieldItem.getColor(item);
+                    final DyeColor color = item.get(DataComponents.BASE_COLOR);
                     if (!allowUncolored && color == null) {
                         continue;
                     }

@@ -3,7 +3,7 @@
     "break": {
       "conditions": {
         "item": {
-          "tag": "minecraft:hoes"
+          "items": "#minecraft:hoes"
         }
       },
       "trigger": "bingo:item_broken"
@@ -13,11 +13,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:stone_hoe",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:stone_hoe"
     }
   },
   "name": {

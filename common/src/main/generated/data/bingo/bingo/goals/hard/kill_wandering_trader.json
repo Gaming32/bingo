@@ -20,7 +20,7 @@
     "type": "bingo:entity",
     "entity": "minecraft:wandering_trader",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:wandering_trader_spawn_egg"
     }
   },

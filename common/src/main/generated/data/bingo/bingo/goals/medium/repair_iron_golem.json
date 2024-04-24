@@ -12,9 +12,7 @@
           }
         ],
         "item": {
-          "items": [
-            "minecraft:iron_ingot"
-          ]
+          "items": "minecraft:iron_ingot"
         }
       },
       "trigger": "minecraft:player_interacted_with_entity"
@@ -24,11 +22,11 @@
   "icon": {
     "type": "bingo:entity",
     "data": {
-      "Health": 40.0
+      "Health": 40
     },
     "entity": "minecraft:iron_golem",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:iron_golem_spawn_egg"
     }
   },

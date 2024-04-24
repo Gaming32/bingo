@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:diamond_sword"
-            ]
+            "items": "minecraft:diamond_sword"
           }
         ]
       },
@@ -17,9 +15,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:golden_sword"
-            ]
+            "items": "minecraft:golden_sword"
           }
         ]
       },
@@ -29,9 +25,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:iron_sword"
-            ]
+            "items": "minecraft:iron_sword"
           }
         ]
       },
@@ -41,9 +35,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:stone_sword"
-            ]
+            "items": "minecraft:stone_sword"
           }
         ]
       },
@@ -53,9 +45,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:wooden_sword"
-            ]
+            "items": "minecraft:wooden_sword"
           }
         ]
       },
@@ -69,51 +59,36 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:wooden_sword",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:wooden_sword"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:stone_sword",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:stone_sword"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:golden_sword",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:golden_sword"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:iron_sword",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:iron_sword"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
-          "id": "minecraft:diamond_sword",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:diamond_sword"
         }
       }
     ]

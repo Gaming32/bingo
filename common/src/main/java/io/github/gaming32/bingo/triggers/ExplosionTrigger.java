@@ -14,7 +14,6 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.Vec3;
@@ -50,12 +49,12 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
         public static final CustomEnumCodec<Explosion.BlockInteraction> EXPLOSION_TYPE_PREDICATE = CustomEnumCodec.of(Explosion.BlockInteraction.class);
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "source").forGetter(TriggerInstance::source),
-                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "location").forGetter(TriggerInstance::location),
-                ExtraCodecs.strictOptionalField(MinMaxBounds.Doubles.CODEC, "radius", MinMaxBounds.Doubles.ANY).forGetter(TriggerInstance::radius),
-                ExtraCodecs.strictOptionalField(DamageSourcePredicate.CODEC, "damage_source").forGetter(TriggerInstance::damageSource),
-                ExtraCodecs.strictOptionalField(EXPLOSION_TYPE_PREDICATE.codec(), "block_interaction").forGetter(TriggerInstance::blockInteraction)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("source").forGetter(TriggerInstance::source),
+                LocationPredicate.CODEC.optionalFieldOf("location").forGetter(TriggerInstance::location),
+                MinMaxBounds.Doubles.CODEC.optionalFieldOf("radius", MinMaxBounds.Doubles.ANY).forGetter(TriggerInstance::radius),
+                DamageSourcePredicate.CODEC.optionalFieldOf("damage_source").forGetter(TriggerInstance::damageSource),
+                EXPLOSION_TYPE_PREDICATE.codec().optionalFieldOf("block_interaction").forGetter(TriggerInstance::blockInteraction)
             ).apply(instance, TriggerInstance::new)
         );
 

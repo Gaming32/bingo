@@ -8,14 +8,15 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.CriterionValidator;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.LootDataResolver;
+import net.minecraft.world.item.component.ItemLore;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,16 +46,12 @@ public record ActiveGoal(
 
     public ItemStack toSingleStack() {
         final ItemStack result = icon.item().copy();
-        result.setHoverName(name);
-        tooltip.ifPresent(component -> {
-            final ListTag lore = new ListTag();
-            lore.add(StringTag.valueOf(Component.Serializer.toJson(component)));
-            result.getOrCreateTagElement("display").put("Lore", lore);
-        });
+        result.set(DataComponents.ITEM_NAME, name);
+        tooltip.ifPresent(component -> result.set(DataComponents.LORE, new ItemLore(List.of(component))));
         return result;
     }
 
-    public void validateAndLog(LootDataResolver lootData) {
+    public void validateAndLog(HolderGetter.Provider lootData) {
         final ProblemReporter.Collector collector = new ProblemReporter.Collector();
         validate(collector, lootData);
         final Multimap<String, String> errors = collector.get();
@@ -68,7 +65,7 @@ public record ActiveGoal(
         }
     }
 
-    public void validate(ProblemReporter reporter, LootDataResolver lootData) {
+    public void validate(ProblemReporter reporter, HolderGetter.Provider lootData) {
         criteria.forEach((key, criterion) -> {
             final CriterionValidator validator = new CriterionValidator(reporter.forChild(key), lootData);
             criterion.triggerInstance().validate(validator);

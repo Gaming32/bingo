@@ -13,13 +13,50 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoDamageTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.triggers.BreakBlockTrigger;
+import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
-import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.triggers.EntityKilledPlayerTrigger;
+import io.github.gaming32.bingo.triggers.EntityTrigger;
+import io.github.gaming32.bingo.triggers.EquipItemTrigger;
+import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
+import io.github.gaming32.bingo.triggers.ItemBrokenTrigger;
+import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
+import io.github.gaming32.bingo.triggers.KillItemTrigger;
+import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
+import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
 import io.github.gaming32.bingo.util.BlockPattern;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.critereon.BredAnimalsTrigger;
+import net.minecraft.advancements.critereon.ConsumeItemTrigger;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.CuredZombieVillagerTrigger;
+import net.minecraft.advancements.critereon.DamagePredicate;
+import net.minecraft.advancements.critereon.DamageSourcePredicate;
+import net.minecraft.advancements.critereon.EnchantmentPredicate;
+import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.FilledBucketTrigger;
+import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.ItemSubPredicates;
+import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.critereon.KilledTrigger;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.PickedUpItemTrigger;
+import net.minecraft.advancements.critereon.PlayerInteractTrigger;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.critereon.TameAnimalTrigger;
+import net.minecraft.advancements.critereon.UsedTotemTrigger;
+import net.minecraft.advancements.critereon.UsingItemTrigger;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
@@ -38,8 +75,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.*;
+import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
+import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -49,7 +91,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
     }
 
     @Override
-    public void addGoals() {
+    public void addGoals(HolderLookup.Provider registries) {
+        final var bannerPatterns = registries.lookupOrThrow(Registries.BANNER_PATTERN);
         addGoal(BingoGoal.builder(id("level_10_enchant"))
             .criterion("enchant", EnchantedItemTrigger.builder().requiredLevels(MinMaxBounds.Ints.atLeast(10)).build())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
@@ -209,14 +252,14 @@ public class HardGoalProvider extends DifficultyGoalProvider {
 
         addGoal(BingoGoal.builder(id("never_wear_armor_or_use_shields"))
             .criterion("equip", EquipItemTrigger.builder()
-                .newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR).build())
+                .newItem(ItemPredicate.Builder.item().of(ConventionalItemTags.ARMORS).build())
                 .slots(EquipmentSlot.Type.ARMOR)
                 .build()
             )
             .criterion("use", CriteriaTriggers.USING_ITEM.createCriterion(
                 new UsingItemTrigger.TriggerInstance(
                     Optional.empty(),
-                    Optional.of(ItemPredicate.Builder.item().of(BingoItemTags.SHIELDS).build())
+                    Optional.of(ItemPredicate.Builder.item().of(ConventionalItemTags.SHIELDS_TOOLS).build())
                 )
             ))
             .requirements(AdvancementRequirements.Strategy.OR)
@@ -270,9 +313,9 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .criterion("filled_bucket", CriteriaTriggers.FILLED_BUCKET.createCriterion(
                 new FilledBucketTrigger.TriggerInstance(Optional.empty(), Optional.empty())
             ))
-            .criterion("placed_block", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(MatchTool.toolMatches(ItemPredicate.Builder.item().of(BingoItemTags.BUCKETS))))
-            .criterion("use_on_entity", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(ItemPredicate.Builder.item().of(BingoItemTags.BUCKETS), Optional.empty()))
-            .criterion("consume", ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(BingoItemTags.BUCKETS)))
+            .criterion("placed_block", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(MatchTool.toolMatches(ItemPredicate.Builder.item().of(ConventionalItemTags.BUCKETS))))
+            .criterion("use_on_entity", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(ItemPredicate.Builder.item().of(ConventionalItemTags.BUCKETS), Optional.empty()))
+            .criterion("consume", ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(ConventionalItemTags.BUCKETS)))
             .requirements(AdvancementRequirements.Strategy.OR)
             .tags(BingoTags.NEVER)
             .catalyst("use_buckets")
@@ -451,7 +494,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT, BingoTags.VILLAGE)
             .reactant("pacifist")
             .name(Component.translatable("advancements.adventure.hero_of_the_village.title"))
-            .icon(Raid.getLeaderBannerInstance())
+            .icon(Raid.getLeaderBannerInstance(bannerPatterns))
         );
         addGoal(BingoGoal.builder(id("ocelot_trust"))
             .criterion("trust", TameAnimalTrigger.TriggerInstance.tamedAnimal(
@@ -495,7 +538,12 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     Optional.empty(),
                     Optional.of(ItemPredicate.Builder.item()
                         .of(ItemTags.AXES)
-                        .hasEnchantment(new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1)))
+                        .withSubPredicate(
+                            ItemSubPredicates.ENCHANTMENTS,
+                            ItemEnchantmentsPredicate.enchantments(List.of(
+                                new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1))
+                            ))
+                        )
                         .build()
                     ),
                     Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity()
@@ -546,8 +594,16 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("burn_mending_book"))
             .criterion("obtain", KillItemTrigger.builder()
-                .item(ItemPredicate.Builder.item().of(Items.ENCHANTED_BOOK)
-                    .hasStoredEnchantment(new EnchantmentPredicate(Enchantments.MENDING, MinMaxBounds.Ints.ANY)).build())
+                .item(ItemPredicate.Builder.item()
+                    .of(Items.ENCHANTED_BOOK)
+                    .withSubPredicate(
+                        ItemSubPredicates.STORED_ENCHANTMENTS,
+                        ItemEnchantmentsPredicate.storedEnchantments(List.of(
+                            new EnchantmentPredicate(Enchantments.MENDING, MinMaxBounds.Ints.ANY)
+                        ))
+                    )
+                    .build()
+                )
                 .damage(DamagePredicate.Builder.damageInstance().type(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_FIRE))).build())
                 .build()
             )
@@ -617,7 +673,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 Component.translatable("item.minecraft.skull_banner_pattern.desc"),
                 Component.translatable("item.minecraft.skull_banner_pattern")
             ))
-            .icon(makeBannerWithPattern(Items.WHITE_BANNER, BannerPatterns.SKULL, DyeColor.BLACK)));
+            .icon(makeBannerWithPattern(Items.WHITE_BANNER, bannerPatterns.getOrThrow(BannerPatterns.SKULL), DyeColor.BLACK)));
         addGoal(obtainItemGoal(id("turtle_helmet"), Items.TURTLE_HELMET)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("sniffer_egg"), Items.SNIFFER_EGG)
@@ -626,7 +682,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .antisynergy("armor_trims"));
         addGoal(obtainSomeItemsFromTag(id("bonemealable_blocks"), BingoItemTags.BONEMEALABLE, "bingo.goal.bonemealable", 15, 25)
             .antisynergy("bonemealable"));
-        addGoal(obtainSomeItemsFromTag(id("food"), BingoItemTags.FOOD, "bingo.goal.food", 15, 20)
+        addGoal(obtainSomeItemsFromTag(id("food"), ConventionalItemTags.FOODS, "bingo.goal.food", 15, 20)
             .antisynergy("food"));
     }
 }

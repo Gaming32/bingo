@@ -46,7 +46,7 @@
         "type": "bingo:entity",
         "entity": "minecraft:boat",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:oak_boat"
         }
       },
@@ -54,7 +54,7 @@
         "type": "bingo:entity",
         "entity": "minecraft:creeper",
         "item": {
-          "Count": 2,
+          "count": 2,
           "id": "minecraft:creeper_spawn_egg"
         }
       }

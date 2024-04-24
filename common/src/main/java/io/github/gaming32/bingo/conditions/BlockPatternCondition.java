@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BlockPattern;
@@ -9,7 +10,6 @@ import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
@@ -28,11 +28,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class BlockPatternCondition implements LootItemCondition {
-    public static final Codec<BlockPatternCondition> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<BlockPatternCondition> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             Codec.STRING.listOf().listOf().fieldOf("aisles").forGetter(BlockPatternCondition::aisles),
             Codec.unboundedMap(BingoCodecs.CHAR, LocationPredicate.CODEC).fieldOf("where").forGetter(BlockPatternCondition::where),
-            ExtraCodecs.strictOptionalField(BlockPattern.Rotations.CODEC, "rotations", BlockPattern.Rotations.HORIZONTAL).forGetter(BlockPatternCondition::rotations)
+            BlockPattern.Rotations.CODEC.optionalFieldOf("rotations", BlockPattern.Rotations.HORIZONTAL).forGetter(BlockPatternCondition::rotations)
         ).apply(instance, BlockPatternCondition::new)
     );
 

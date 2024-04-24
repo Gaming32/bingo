@@ -8,7 +8,6 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,8 +30,8 @@ public class ItemBrokenTrigger extends SimpleCriterionTrigger<ItemBrokenTrigger.
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(ItemPredicate.CODEC, "item").forGetter(TriggerInstance::item)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                ItemPredicate.CODEC.optionalFieldOf("item").forGetter(TriggerInstance::item)
             ).apply(instance, TriggerInstance::new)
         );
 
@@ -43,7 +42,7 @@ public class ItemBrokenTrigger extends SimpleCriterionTrigger<ItemBrokenTrigger.
         }
 
         public boolean matches(ItemStack item) {
-            return this.item.isEmpty() || this.item.get().matches(item);
+            return this.item.isEmpty() || this.item.get().test(item);
         }
     }
 }

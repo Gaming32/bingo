@@ -10,7 +10,6 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,10 +34,10 @@ public class CompleteMapTrigger extends SimpleCriterionTrigger<CompleteMapTrigge
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "scale", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::scale),
-                ExtraCodecs.strictOptionalField(Codec.BOOL, "locked").forGetter(TriggerInstance::locked),
-                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "center").forGetter(TriggerInstance::center)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                MinMaxBounds.Ints.CODEC.optionalFieldOf("scale", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::scale),
+                Codec.BOOL.optionalFieldOf("locked").forGetter(TriggerInstance::locked),
+                LocationPredicate.CODEC.optionalFieldOf("center").forGetter(TriggerInstance::center)
             ).apply(instance, TriggerInstance::new)
         );
 

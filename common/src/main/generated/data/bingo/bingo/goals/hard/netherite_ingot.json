@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:netherite_ingot"
-            ]
+            "items": "minecraft:netherite_ingot"
           }
         ]
       },
@@ -18,7 +16,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:netherite_ingot"
     }
   },

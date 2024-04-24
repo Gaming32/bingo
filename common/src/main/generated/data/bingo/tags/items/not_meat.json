@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     "minecraft:apple",
     "minecraft:mushroom_stew",
@@ -9,20 +8,19 @@
     "minecraft:cookie",
     "minecraft:melon_slice",
     "minecraft:dried_kelp",
-    "minecraft:spider_eye",
     "minecraft:carrot",
     "minecraft:potato",
     "minecraft:baked_potato",
     "minecraft:poisonous_potato",
     "minecraft:golden_carrot",
     "minecraft:pumpkin_pie",
-    "minecraft:rabbit_stew",
     "minecraft:chorus_fruit",
     "minecraft:beetroot",
     "minecraft:beetroot_soup",
     "minecraft:suspicious_stew",
     "minecraft:sweet_berries",
     "minecraft:glow_berries",
-    "minecraft:honey_bottle"
+    "minecraft:honey_bottle",
+    "minecraft:ominous_bottle"
   ]
 }

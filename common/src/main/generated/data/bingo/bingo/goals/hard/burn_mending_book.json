@@ -20,14 +20,14 @@
               "type_specific": {
                 "type": "bingo:item",
                 "item": {
-                  "items": [
-                    "minecraft:enchanted_book"
-                  ],
-                  "stored_enchantments": [
-                    {
-                      "enchantment": "minecraft:mending"
-                    }
-                  ]
+                  "items": "minecraft:enchanted_book",
+                  "predicates": {
+                    "minecraft:stored_enchantments": [
+                      {
+                        "enchantment": "minecraft:mending"
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -52,7 +52,7 @@
       }
     },
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:enchanted_book"
     }
   },

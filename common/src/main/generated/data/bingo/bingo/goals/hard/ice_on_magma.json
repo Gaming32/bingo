@@ -28,16 +28,12 @@
             "where": {
               "i": {
                 "block": {
-                  "blocks": [
-                    "minecraft:ice"
-                  ]
+                  "blocks": "minecraft:ice"
                 }
               },
               "m": {
                 "block": {
-                  "blocks": [
-                    "minecraft:magma_block"
-                  ]
+                  "blocks": "minecraft:magma_block"
                 }
               }
             }
@@ -51,7 +47,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:basalt"
     }
   },

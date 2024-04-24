@@ -23,6 +23,7 @@ import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPacket;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePacket;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.Event;
+import io.github.gaming32.bingo.subpredicates.BingoSubPredicates;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.locale.Language;
@@ -137,26 +138,27 @@ public class Bingo {
         GoalIconType.load();
         BingoSubType.load();
         ProgressTrackerType.load();
+        BingoSubPredicates.load();
         BingoTriggers.load();
 
         BingoPlatform.platform.registerDataReloadListeners(registrar -> {
-            registrar.register(BingoTag.ReloadListener.ID, new BingoTag.ReloadListener());
-            registrar.register(BingoDifficulty.ReloadListener.ID, new BingoDifficulty.ReloadListener());
+            registrar.register(BingoTag.ReloadListener.ID, new BingoTag.ReloadListener(registrar.registryAccess()));
+            registrar.register(BingoDifficulty.ReloadListener.ID, new BingoDifficulty.ReloadListener(registrar.registryAccess()));
             registrar.register(
-                BingoGoal.ReloadListener.ID, new BingoGoal.ReloadListener(),
+                BingoGoal.ReloadListener.ID, new BingoGoal.ReloadListener(registrar.registryAccess()),
                 List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
             );
         });
 
         BingoNetworking.instance().onRegister(registrar -> {
-            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPacket.ID, InitBoardPacket::new);
-            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPacket.ID, buf -> RemoveBoardPacket.INSTANCE);
-            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPacket.ID, ResyncStatesPacket::new);
-            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPacket.ID, SyncTeamPacket::new);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPacket.ID, UpdateProgressPacket::new);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePacket.ID, UpdateStatePacket::new);
+            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPacket.TYPE, InitBoardPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPacket.TYPE, RemoveBoardPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPacket.TYPE, ResyncStatesPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPacket.TYPE, SyncTeamPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPacket.TYPE, UpdateProgressPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePacket.TYPE, UpdateStatePacket.CODEC);
 
-            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.ID, KeyPressedPacket::new);
+            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.TYPE, KeyPressedPacket.CODEC);
         });
 
         if (BingoPlatform.platform.isClient()) {
@@ -227,6 +229,6 @@ public class Bingo {
     }
 
     public static boolean isInstalledOnClient(ServerPlayer player) {
-        return BingoNetworking.instance().canPlayerReceive(player, InitBoardPacket.ID);
+        return BingoNetworking.instance().canPlayerReceive(player, InitBoardPacket.TYPE);
     }
 }

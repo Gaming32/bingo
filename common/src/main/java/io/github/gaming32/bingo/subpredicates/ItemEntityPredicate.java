@@ -8,7 +8,6 @@ import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.Vec3;
@@ -24,12 +23,11 @@ public record ItemEntityPredicate(
 ) implements EntitySubPredicate {
     public static final MapCodec<ItemEntityPredicate> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
-            ExtraCodecs.strictOptionalField(ItemPredicate.CODEC, "item").forGetter(ItemEntityPredicate::item),
-            ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "age", MinMaxBounds.Ints.ANY).forGetter(ItemEntityPredicate::age),
-            ExtraCodecs.strictOptionalField(EntityPredicate.CODEC, "dropped_by").forGetter(ItemEntityPredicate::droppedBy)
+            ItemPredicate.CODEC.optionalFieldOf("item").forGetter(ItemEntityPredicate::item),
+            MinMaxBounds.Ints.CODEC.optionalFieldOf("age", MinMaxBounds.Ints.ANY).forGetter(ItemEntityPredicate::age),
+            EntityPredicate.CODEC.optionalFieldOf("dropped_by").forGetter(ItemEntityPredicate::droppedBy)
         ).apply(instance, ItemEntityPredicate::new)
     );
-    public static final Type TYPE = new Type(CODEC);
 
     public static ItemEntityPredicate item(ItemPredicate item) {
         return new ItemEntityPredicate(Optional.of(item), MinMaxBounds.Ints.ANY, Optional.empty());
@@ -44,7 +42,7 @@ public record ItemEntityPredicate(
         if (!(entity instanceof ItemEntity itemEntity)) {
             return false;
         }
-        if (item.isPresent() && !item.get().matches(itemEntity.getItem())) {
+        if (item.isPresent() && !item.get().test(itemEntity.getItem())) {
             return false;
         }
         if (!age.matches(itemEntity.getAge())) {
@@ -58,7 +56,7 @@ public record ItemEntityPredicate(
 
     @NotNull
     @Override
-    public Type type() {
-        return TYPE;
+    public MapCodec<ItemEntityPredicate> codec() {
+        return CODEC;
     }
 }

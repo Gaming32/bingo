@@ -5,10 +5,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:turtle_master"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:turtle_master"
+            }
           }
         ]
       },
@@ -18,10 +18,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:long_turtle_master"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:long_turtle_master"
+            }
           }
         ]
       },
@@ -31,10 +31,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:strong_turtle_master"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:strong_turtle_master"
+            }
           }
         ]
       },
@@ -45,11 +45,13 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:potion",
-      "tag": {
-        "Potion": "minecraft:turtle_master"
-      }
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:turtle_master"
+        }
+      },
+      "count": 1,
+      "id": "minecraft:potion"
     }
   },
   "infrequency": 12,

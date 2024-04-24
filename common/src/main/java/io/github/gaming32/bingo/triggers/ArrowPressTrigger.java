@@ -11,7 +11,6 @@ import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
@@ -43,10 +42,10 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "arrow").forGetter(TriggerInstance::arrow),
-                ExtraCodecs.strictOptionalField(BlockPredicate.CODEC, "button_or_plate").forGetter(TriggerInstance::buttonOrPlate),
-                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "location").forGetter(TriggerInstance::location)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("arrow").forGetter(TriggerInstance::arrow),
+                BlockPredicate.CODEC.optionalFieldOf("button_or_plate").forGetter(TriggerInstance::buttonOrPlate),
+                LocationPredicate.CODEC.optionalFieldOf("location").forGetter(TriggerInstance::location)
             ).apply(instance, TriggerInstance::new)
         );
 

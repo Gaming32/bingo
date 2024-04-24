@@ -12,9 +12,7 @@
           }
         ],
         "item": {
-          "items": [
-            "minecraft:cake"
-          ]
+          "items": "minecraft:cake"
         }
       },
       "trigger": "minecraft:thrown_item_picked_up_by_entity"
@@ -25,7 +23,7 @@
     "type": "bingo:entity",
     "entity": "minecraft:panda",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:panda_spawn_egg"
     }
   },

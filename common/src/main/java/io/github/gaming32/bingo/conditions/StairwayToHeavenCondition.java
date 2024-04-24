@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.conditions;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerChunkCache;
@@ -25,7 +25,7 @@ import java.util.Set;
 public enum StairwayToHeavenCondition implements LootItemCondition {
     INSTANCE;
 
-    public static final Codec<StairwayToHeavenCondition> CODEC = Codec.unit(INSTANCE);
+    public static final MapCodec<StairwayToHeavenCondition> CODEC = MapCodec.unit(INSTANCE);
 
     @NotNull
     @Override

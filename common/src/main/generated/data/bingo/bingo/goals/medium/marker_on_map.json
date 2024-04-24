@@ -10,9 +10,7 @@
           {
             "condition": "minecraft:match_tool",
             "predicate": {
-              "items": [
-                "minecraft:filled_map"
-              ]
+              "items": "minecraft:filled_map"
             }
           }
         ]
@@ -24,7 +22,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:blue_banner"
     }
   },

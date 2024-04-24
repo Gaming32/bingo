@@ -28,7 +28,7 @@ public class MixinDoorBlock {
             target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"
         )
     )
-    private BlockState onDoorOpened(BlockState state, @Local Level level, @Local(ordinal = 0) BlockPos doorPos) {
+    private BlockState onDoorOpened(BlockState state, @Local(argsOnly = true) Level level, @Local(ordinal = 0, argsOnly = true) BlockPos doorPos) {
         if (state.getValue(OPEN) && GlobalVars.CURRENT_PLAYER.get() instanceof ServerPlayer player) {
             final Projectile projectile = GlobalVars.CURRENT_PROJECTILE.get();
             final BlockPos targetPos = GlobalVars.CURRENT_BLOCK_POS.get();

@@ -5,10 +5,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 10,
-          "min_inclusive": 7
-        }
+        "max_inclusive": 10,
+        "min_inclusive": 7
       }
     }
   },
@@ -31,6 +29,7 @@
         "bingo_type": "bingo:sub",
         "key": "count"
       },
+      "count": 1,
       "id": "minecraft:magenta_bed"
     }
   },

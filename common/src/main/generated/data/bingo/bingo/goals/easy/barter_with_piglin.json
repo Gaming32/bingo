@@ -15,9 +15,7 @@
           }
         ],
         "item": {
-          "items": [
-            "minecraft:gold_ingot"
-          ]
+          "items": "minecraft:gold_ingot"
         }
       },
       "trigger": "minecraft:thrown_item_picked_up_by_entity"
@@ -37,9 +35,7 @@
           }
         ],
         "item": {
-          "items": [
-            "minecraft:gold_ingot"
-          ]
+          "items": "minecraft:gold_ingot"
         }
       },
       "trigger": "minecraft:player_interacted_with_entity"
@@ -50,7 +46,7 @@
     "type": "bingo:entity",
     "entity": "minecraft:piglin",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:piglin_spawn_egg"
     }
   },

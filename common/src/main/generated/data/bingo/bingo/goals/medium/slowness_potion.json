@@ -5,10 +5,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:slowness"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:slowness"
+            }
           }
         ]
       },
@@ -18,10 +18,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:long_slowness"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:long_slowness"
+            }
           }
         ]
       },
@@ -31,10 +31,10 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:potion"
-            ],
-            "potion": "minecraft:strong_slowness"
+            "items": "minecraft:potion",
+            "predicates": {
+              "minecraft:potion_contents": "minecraft:strong_slowness"
+            }
           }
         ]
       },
@@ -45,11 +45,13 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:potion",
-      "tag": {
-        "Potion": "minecraft:slowness"
-      }
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:slowness"
+        }
+      },
+      "count": 1,
+      "id": "minecraft:potion"
     }
   },
   "infrequency": 12,

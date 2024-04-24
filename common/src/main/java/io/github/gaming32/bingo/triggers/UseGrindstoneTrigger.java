@@ -12,7 +12,6 @@ import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import org.jetbrains.annotations.NotNull;
@@ -45,10 +44,10 @@ public class UseGrindstoneTrigger extends SimpleCriterionTrigger<UseGrindstoneTr
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "location").forGetter(TriggerInstance::location),
-                ExtraCodecs.strictOptionalField(ContextAwarePredicate.CODEC, "first_item").forGetter(TriggerInstance::firstItem),
-                ExtraCodecs.strictOptionalField(ContextAwarePredicate.CODEC, "second_item").forGetter(TriggerInstance::secondItem)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LocationPredicate.CODEC.optionalFieldOf("location").forGetter(TriggerInstance::location),
+                ContextAwarePredicate.CODEC.optionalFieldOf("first_item").forGetter(TriggerInstance::firstItem),
+                ContextAwarePredicate.CODEC.optionalFieldOf("second_item").forGetter(TriggerInstance::secondItem)
             ).apply(instance, TriggerInstance::new)
         );
 

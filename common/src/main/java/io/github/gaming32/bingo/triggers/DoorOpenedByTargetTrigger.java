@@ -11,7 +11,6 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.NotNull;
@@ -49,11 +48,11 @@ public class DoorOpenedByTargetTrigger extends SimpleCriterionTrigger<DoorOpened
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "projectile").forGetter(TriggerInstance::projectile),
-                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "target_block").forGetter(TriggerInstance::targetBlock),
-                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "target_block_power", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::targetBlockPower),
-                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "door").forGetter(TriggerInstance::door)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("projectile").forGetter(TriggerInstance::projectile),
+                LocationPredicate.CODEC.optionalFieldOf("target_block").forGetter(TriggerInstance::targetBlock),
+                MinMaxBounds.Ints.CODEC.optionalFieldOf("target_block_power", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::targetBlockPower),
+                LocationPredicate.CODEC.optionalFieldOf("door").forGetter(TriggerInstance::door)
             ).apply(instance, TriggerInstance::new)
         );
 

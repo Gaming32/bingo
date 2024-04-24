@@ -14,19 +14,44 @@ import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgre
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.triggers.BeaconEffectTrigger;
+import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
+import io.github.gaming32.bingo.triggers.DifferentPotionsTrigger;
+import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
+import io.github.gaming32.bingo.triggers.ExperienceChangeTrigger;
+import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
+import io.github.gaming32.bingo.triggers.PartyParrotsTrigger;
+import io.github.gaming32.bingo.triggers.PowerConduitTrigger;
+import io.github.gaming32.bingo.triggers.ZombifyPigTrigger;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.Util;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DamagePredicate;
+import net.minecraft.advancements.critereon.DistancePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.KilledTrigger;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.InstrumentItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -46,8 +71,9 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
     }
 
     @Override
-    public void addGoals() {
-        addGoal(obtainSomeItemsFromTag(id("ores"), BingoItemTags.ORES, "bingo.goal.ores", 5, 7)
+    public void addGoals(HolderLookup.Provider registries) {
+        final var structures = registries.lookupOrThrow(Registries.STRUCTURE);
+        addGoal(obtainSomeItemsFromTag(id("ores"), ConventionalItemTags.ORES, "bingo.goal.ores", 5, 7)
             .tooltip("ores")
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("different_potions"))
@@ -69,7 +95,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 subber -> subber.multiSub("icons.*.item.Count", "count")
             )
         );
-        addGoal(obtainAllItemsFromTag(BingoItemTags.ARMOR_CHESTPLATES, "chestplates")
+        addGoal(obtainAllItemsFromTag(ItemTags.CHEST_ARMOR, "chestplates")
             .tags(BingoTags.NETHER)
             .tooltip("all_somethings.armor")
         );
@@ -132,7 +158,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 new PlayerTrigger.TriggerInstance(
                     Optional.of(EntityPredicate.wrap(
                         EntityPredicate.Builder.entity()
-                            .located(LocationPredicate.Builder.inStructure(BuiltinStructures.WOODLAND_MANSION))
+                            .located(LocationPredicate.Builder.inStructure(structures.getOrThrow(BuiltinStructures.WOODLAND_MANSION)))
                             .build()
                     ))
                 )
@@ -316,7 +342,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             InventoryChangeTrigger.TriggerInstance.hasItems(
                 ItemPredicate.Builder.item()
                     .of(goatHorn.getItem())
-                    .hasNbt(goatHorn.getTag())
+                    .hasComponents(DataComponentPredicate.allOf(goatHorn.getComponents()))
                     .build()
             )
         ));

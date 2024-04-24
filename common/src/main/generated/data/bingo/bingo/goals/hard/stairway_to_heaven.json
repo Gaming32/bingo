@@ -8,7 +8,7 @@
             "predicate": {
               "position": {
                 "y": {
-                  "min": 319.0
+                  "min": 319
                 }
               }
             }
@@ -34,7 +34,7 @@
       }
     },
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:cobblestone_stairs"
     }
   },

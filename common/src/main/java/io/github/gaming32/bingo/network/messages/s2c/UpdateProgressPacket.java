@@ -5,12 +5,19 @@ import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
 public class UpdateProgressPacket extends AbstractCustomPayload {
-    public static final ResourceLocation ID = id("update_progress");
+    public static final Type<UpdateProgressPacket> TYPE = type("update_progress");
+    public static final StreamCodec<ByteBuf, UpdateProgressPacket> CODEC = StreamCodec.composite(
+        ByteBufCodecs.VAR_INT, p -> p.index,
+        ByteBufCodecs.VAR_INT, p -> p.progress,
+        ByteBufCodecs.VAR_INT, p -> p.maxProgress,
+        UpdateProgressPacket::new
+    );
 
     private final int index;
     private final int progress;
@@ -22,27 +29,16 @@ public class UpdateProgressPacket extends AbstractCustomPayload {
         this.maxProgress = maxProgress;
     }
 
-    public UpdateProgressPacket(FriendlyByteBuf buf) {
-        this(buf.readVarInt(), buf.readVarInt(), buf.readVarInt());
-    }
-
     @NotNull
     @Override
-    public ResourceLocation id() {
-        return ID;
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeVarInt(index);
-        buf.writeVarInt(progress);
-        buf.writeVarInt(maxProgress);
+    public Type<UpdateProgressPacket> type() {
+        return TYPE;
     }
 
     @Override
     public void handle(BingoNetworking.Context context) {
         if (BingoClient.clientGame == null) {
-            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling " + ID + "!");
+            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling {}!", TYPE);
             return;
         }
         BingoClient.clientGame.progress()[index] = new GoalProgress(progress, maxProgress);

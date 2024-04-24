@@ -10,7 +10,6 @@ import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -47,10 +46,10 @@ public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDie
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "entity").forGetter(TriggerInstance::entity),
-                ExtraCodecs.strictOptionalField(DamagePredicate.CODEC, "killing_blow").forGetter(TriggerInstance::killingBlow),
-                ExtraCodecs.strictOptionalField(DistancePredicate.CODEC, "distance").forGetter(TriggerInstance::distance)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("entity").forGetter(TriggerInstance::entity),
+                DamagePredicate.CODEC.optionalFieldOf("killing_blow").forGetter(TriggerInstance::killingBlow),
+                DistancePredicate.CODEC.optionalFieldOf("distance").forGetter(TriggerInstance::distance)
             ).apply(instance, TriggerInstance::new)
         );
 

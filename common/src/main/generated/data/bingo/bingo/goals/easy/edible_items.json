@@ -5,10 +5,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 5,
-          "min_inclusive": 4
-        }
+        "max_inclusive": 5,
+        "min_inclusive": 4
       }
     }
   },
@@ -30,7 +28,7 @@
       "bingo_type": "bingo:sub",
       "key": "count"
     },
-    "tag": "bingo:food"
+    "tag": "c:foods"
   },
   "infrequency": 2,
   "name": {

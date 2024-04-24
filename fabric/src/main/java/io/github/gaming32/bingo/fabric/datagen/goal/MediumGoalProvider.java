@@ -36,6 +36,7 @@ import io.github.gaming32.bingo.triggers.KillSelfTrigger;
 import io.github.gaming32.bingo.triggers.PulledByLeashTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.BredAnimalsTrigger;
@@ -49,7 +50,10 @@ import net.minecraft.advancements.critereon.EnchantedItemTrigger;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
+import net.minecraft.advancements.critereon.ItemPotionsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.ItemSubPredicates;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -61,11 +65,14 @@ import net.minecraft.advancements.critereon.StartRidingTrigger;
 import net.minecraft.advancements.critereon.SummonedEntityTrigger;
 import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.advancements.critereon.TameAnimalTrigger;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.FloatTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
@@ -77,21 +84,18 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.entity.BannerPatterns;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -110,7 +114,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
     }
 
     @Override
-    public void addGoals() {
+    public void addGoals(HolderLookup.Provider registries) {
+        final var bannerPatterns = registries.lookupOrThrow(Registries.BANNER_PATTERN);
         addGoal(obtainSomeEdibleItems(id("edible_items"), 6, 7).tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("beetroot_soup"), Items.BEETROOT_SOUP)
             .tags(BingoTags.OVERWORLD));
@@ -142,7 +147,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("never_wear_armor"))
             .criterion("equip", EquipItemTrigger.builder()
-                .newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR).build())
+                .newItem(ItemPredicate.Builder.item().of(ConventionalItemTags.ARMORS).build())
                 .slots(EquipmentSlot.Type.ARMOR)
                 .build()
             )
@@ -325,7 +330,12 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 new ItemIcon(makeItemWithGlint(Items.GOLDEN_SWORD)),
                 ItemPredicate.Builder.item()
                     .of(Items.GOLDEN_SWORD)
-                    .hasEnchantment(new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1)))
+                    .withSubPredicate(
+                        ItemSubPredicates.ENCHANTMENTS,
+                        ItemEnchantmentsPredicate.enchantments(List.of(
+                            new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1))
+                        ))
+                    )
             )
                 .name("enchanted_golden_sword")
         );
@@ -477,25 +487,19 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         );
         {
             final ItemStack shieldItem = new ItemStack(Items.SHIELD);
-            final ListTag patternsTag = new BannerPattern.Builder()
-                .addPattern(BannerPatterns.FLOWER, DyeColor.WHITE)
-                .toListTag();
-            BlockItem.setBlockEntityData(
-                shieldItem, BlockEntityType.BANNER,
-                BingoUtil.compound(Map.of(
-                    "Patterns", patternsTag,
-                    "Base", IntTag.valueOf(11)
-                ))
+            shieldItem.set(DataComponents.BASE_COLOR, DyeColor.BLUE);
+            shieldItem.set(
+                DataComponents.BANNER_PATTERNS,
+                new BannerPatternLayers.Builder()
+                    .add(bannerPatterns.getOrThrow(BannerPatterns.FLOWER), DyeColor.WHITE)
+                    .build()
             );
-            assert shieldItem.getTag() != null;
-            final CompoundTag itemNbt = shieldItem.getTag().copy();
-            itemNbt.remove("Damage");
             addGoal(
                 obtainItemGoal(
                     id("blue_shield_with_white_flower_charge"), shieldItem,
                     ItemPredicate.Builder.item()
                         .of(Items.SHIELD)
-                        .hasNbt(itemNbt)
+                        .hasComponents(DataComponentPredicate.allOf(shieldItem.getComponents()))
                 ).name(Component.translatable(
                     "bingo.goal.item_with_pattern",
                     Component.translatable(Items.SHIELD.getDescriptionId() + "." + DyeColor.BLUE.getName()),
@@ -635,12 +639,14 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM, BingoTags.COMBAT, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
             .name("pillager_crossbow")
             .icon(Items.CROSSBOW));
-        final ItemStack ominousBanner = simplifyBlockEntityStackData(Raid.getLeaderBannerInstance());
+        final ItemStack ominousBanner = Raid.getLeaderBannerInstance(bannerPatterns);
         addGoal(
             obtainItemGoal(
                 id("ominous_banner"),
                 ominousBanner,
-                ItemPredicate.Builder.item().of(ominousBanner.getItem()).hasNbt(ominousBanner.getTag())
+                ItemPredicate.Builder.item()
+                    .of(ominousBanner.getItem())
+                    .hasComponents(DataComponentPredicate.allOf(ominousBanner.getComponents()))
             )
             .antisynergy("ominous_banner")
             .name(Component.translatable("block.minecraft.ominous_banner"))
@@ -773,7 +779,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .name("never_place_torches")
             .tooltip("never_place_torches")
             .icon(Items.TORCH));
-        addGoal(obtainItemGoal(id("scute"), Items.SCUTE)
+        addGoal(obtainItemGoal(id("turtle_scute"), Items.TURTLE_SCUTE)
             .setAntisynergy("turtle_helmet")
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("all_different_armor"))
@@ -795,12 +801,22 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         );
     }
 
-    private BingoGoal.Builder potionGoal(String id, Potion... potions) {
-        ItemStack potionItem = PotionUtils.setPotion(new ItemStack(Items.POTION), potions[0]);
+    @SafeVarargs
+    private BingoGoal.Builder potionGoal(String id, Holder<Potion>... potions) {
+        ItemStack potionItem = BingoUtil.setPotion(new ItemStack(Items.POTION), potions[0]);
         BingoGoal.Builder builder = obtainItemGoal(
             id(id),
             potionItem,
-            Arrays.stream(potions).map(potion -> ItemPredicate.Builder.item().of(Items.POTION).isPotion(potion)).toArray(ItemPredicate.Builder[]::new))
+            Arrays.stream(potions)
+                .map(potion -> ItemPredicate.Builder.item()
+                    .of(Items.POTION)
+                    .withSubPredicate(
+                        ItemSubPredicates.POTIONS,
+                        new ItemPotionsPredicate(HolderSet.direct(potion))
+                    )
+                )
+                .toArray(ItemPredicate.Builder[]::new)
+        )
             .antisynergy(id)
             .name(Items.POTION.getName(potionItem))
             .infrequency(12)
@@ -814,7 +830,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
     private static GoalIcon createAllDifferentMaterialsIcon() {
         final int iterations = 4;
         final var armors = getArmors();
-        final List<ArmorMaterials> materials = ImmutableList.copyOf(armors.columnKeySet());
+        final List<ArmorMaterial> materials = ImmutableList.copyOf(armors.columnKeySet());
         final ImmutableList.Builder<GoalIcon> icons = ImmutableList.builderWithExpectedSize(iterations * armors.rowMap().size());
         int materialIndex = 0;
         for (int iteration = 0; iteration < iterations; iteration++) {
@@ -829,14 +845,13 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         return new CycleIcon(icons.build());
     }
 
-    private static Table<ArmorItem.Type, ArmorMaterials, ArmorItem> getArmors() {
-        final ImmutableTable.Builder<ArmorItem.Type, ArmorMaterials, ArmorItem> armors = ImmutableTable.builder();
+    private static Table<ArmorItem.Type, ArmorMaterial, ArmorItem> getArmors() {
+        final ImmutableTable.Builder<ArmorItem.Type, ArmorMaterial, ArmorItem> armors = ImmutableTable.builder();
         armors.orderRowsBy(Comparator.reverseOrder());
-        armors.orderColumnsBy(Comparator.naturalOrder());
+        armors.orderColumnsBy(Comparator.comparingInt(BuiltInRegistries.ARMOR_MATERIAL::getId));
         for (final Item item : BuiltInRegistries.ITEM) {
             if (!(item instanceof ArmorItem armorItem)) continue;
-            if (!(armorItem.getMaterial() instanceof ArmorMaterials vanillaMaterial)) continue;
-            armors.put(armorItem.getType(), vanillaMaterial, armorItem);
+            armors.put(armorItem.getType(), armorItem.getMaterial().value(), armorItem);
         }
         return armors.build();
     }

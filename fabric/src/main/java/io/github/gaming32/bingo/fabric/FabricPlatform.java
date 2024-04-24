@@ -23,26 +23,16 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -96,38 +86,7 @@ public class FabricPlatform extends BingoPlatform {
 
     @Override
     public void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
-        handler.accept((id, listener, dependencies) -> ResourceManagerHelper.get(PackType.SERVER_DATA)
-            .registerReloadListener(new IdentifiableResourceReloadListener() {
-                @Override
-                public ResourceLocation getFabricId() {
-                    return id;
-                }
-
-                @NotNull
-                @Override
-                public String getName() {
-                    return listener.getName();
-                }
-
-                @Override
-                public Collection<ResourceLocation> getFabricDependencies() {
-                    return dependencies;
-                }
-
-                @NotNull
-                @Override
-                public CompletableFuture<Void> reload(
-                    PreparationBarrier preparationBarrier,
-                    ResourceManager resourceManager,
-                    ProfilerFiller preparationsProfiler,
-                    ProfilerFiller reloadProfiler,
-                    Executor backgroundExecutor,
-                    Executor gameExecutor
-                ) {
-                    return listener.reload(preparationBarrier, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor);
-                }
-            })
-        );
+        FabricEvents.ADD_RELOAD_LISTENERS.register(handler);
     }
 
     @Override
@@ -165,11 +124,15 @@ public class FabricPlatform extends BingoPlatform {
             ClientEvents.RENDER_HUD.setRegistrar(handler -> HudRenderCallback.EVENT.register(handler::renderHud));
             ClientEvents.KEY_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
                 (client, screen, scaledWidth, scaledHeight) ->
-                    ScreenKeyboardEvents.allowKeyRelease(screen).register(handler::onKeyReleased)
+                    ScreenKeyboardEvents.allowKeyRelease(screen).register((screen1, key, scancode, modifiers) ->
+                        !handler.onKeyReleased(screen1, key, scancode, modifiers)
+                    )
             ));
             ClientEvents.MOUSE_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
                 (client, screen, scaledWidth, scaledHeight) ->
-                    ScreenMouseEvents.allowMouseRelease(screen).register(handler::onMouseReleased)
+                    ScreenMouseEvents.allowMouseRelease(screen).register((screen1, mouseX, mouseY, button) ->
+                        !handler.onMouseReleased(screen1, mouseX, mouseY, button)
+                    )
             ));
             ClientEvents.PLAYER_QUIT.setRegistrar(FabricClientEvents.PLAYER_QUIT::register);
             ClientEvents.CLIENT_TICK_START.setRegistrar(handler -> ClientTickEvents.START_CLIENT_TICK.register(handler::accept));

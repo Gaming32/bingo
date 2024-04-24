@@ -14,873 +14,797 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16383998
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16383998
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16383998
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16383998
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16383998
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16383998
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16383998
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16383998
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16351261
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16351261
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16351261
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16351261
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16351261
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16351261
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16351261
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16351261
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 13061821
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 13061821
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 13061821
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 13061821
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 13061821
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 13061821
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 13061821
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 13061821
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 3847130
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 3847130
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 3847130
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 3847130
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 3847130
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 3847130
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 3847130
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 3847130
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16701501
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16701501
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16701501
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16701501
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16701501
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16701501
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 16701501
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 16701501
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8439583
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8439583
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8439583
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8439583
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8439583
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8439583
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8439583
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8439583
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 15961002
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 15961002
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 15961002
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 15961002
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 15961002
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 15961002
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 15961002
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 15961002
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 4673362
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 4673362
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 4673362
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 4673362
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 4673362
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 4673362
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 4673362
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 4673362
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 10329495
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 10329495
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 10329495
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 10329495
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 10329495
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 10329495
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 10329495
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 10329495
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 1481884
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 1481884
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 1481884
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 1481884
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 1481884
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 1481884
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 1481884
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 1481884
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8991416
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8991416
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8991416
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8991416
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8991416
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8991416
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8991416
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8991416
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 3949738
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 3949738
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 3949738
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 3949738
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 3949738
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 3949738
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 3949738
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 3949738
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8606770
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8606770
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8606770
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8606770
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8606770
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8606770
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 8606770
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 8606770
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 6192150
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 6192150
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 6192150
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 6192150
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 6192150
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 6192150
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 6192150
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 6192150
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 11546150
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 11546150
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 11546150
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 11546150
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 11546150
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 11546150
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 11546150
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 11546150
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_helmet",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 1908001
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 1908001
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_helmet"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_chestplate",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 1908001
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 1908001
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_chestplate"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_leggings",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 1908001
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 1908001
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_leggings"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
-          "id": "minecraft:leather_boots",
-          "tag": {
-            "Damage": 0,
-            "display": {
-              "color": 1908001
+          "components": {
+            "minecraft:dyed_color": {
+              "rgb": 1908001
             }
-          }
+          },
+          "count": 4,
+          "id": "minecraft:leather_boots"
         }
       }
     ]

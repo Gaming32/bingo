@@ -1,12 +1,11 @@
 package io.github.gaming32.bingo.conditions;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.CustomEnumCodec;
 import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.level.ChunkPos;
@@ -21,12 +20,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public record VillagerOwnershipCondition(PoiManager.Occupancy occupancy, Optional<TagPredicate<PoiType>> tag) implements LootItemCondition {
-    public static final CustomEnumCodec<PoiManager.Occupancy> OCCUPANCY_CODEC = CustomEnumCodec.of(PoiManager.Occupancy.class);
-    public static final Codec<TagPredicate<PoiType>> TAG_CODEC = TagPredicate.codec(Registries.POINT_OF_INTEREST_TYPE);
-    public static final Codec<VillagerOwnershipCondition> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<VillagerOwnershipCondition> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
-            OCCUPANCY_CODEC.codec().fieldOf("occupancy").forGetter(VillagerOwnershipCondition::occupancy),
-            ExtraCodecs.strictOptionalField(TAG_CODEC, "tag").forGetter(VillagerOwnershipCondition::tag)
+            CustomEnumCodec.of(PoiManager.Occupancy.class).codec().fieldOf("occupancy").forGetter(VillagerOwnershipCondition::occupancy),
+            TagPredicate.codec(Registries.POINT_OF_INTEREST_TYPE).optionalFieldOf("tag").forGetter(VillagerOwnershipCondition::tag)
         ).apply(instance, VillagerOwnershipCondition::new)
     );
 

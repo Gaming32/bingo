@@ -8,7 +8,6 @@ import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -35,9 +34,9 @@ public class DestroyVehicleTrigger extends SimpleCriterionTrigger<DestroyVehicle
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "vehicle").forGetter(TriggerInstance::vehicle),
-                ExtraCodecs.strictOptionalField(DamageSourcePredicate.CODEC, "destroying_blow").forGetter(TriggerInstance::destroyingBlow)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("vehicle").forGetter(TriggerInstance::vehicle),
+                DamageSourcePredicate.CODEC.optionalFieldOf("destroying_blow").forGetter(TriggerInstance::destroyingBlow)
             ).apply(instance, TriggerInstance::new)
         );
 

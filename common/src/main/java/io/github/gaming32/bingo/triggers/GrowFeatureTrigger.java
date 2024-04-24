@@ -17,7 +17,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -69,9 +68,9 @@ public class GrowFeatureTrigger extends SimpleCriterionTrigger<GrowFeatureTrigge
             TagPredicate.codec(Registries.CONFIGURED_FEATURE).listOf();
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(LocationPredicate.CODEC, "location").forGetter(TriggerInstance::location),
-                ExtraCodecs.strictOptionalField(TAGS_CODEC, "tags", List.of()).forGetter(TriggerInstance::tags)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LocationPredicate.CODEC.optionalFieldOf("location").forGetter(TriggerInstance::location),
+                TAGS_CODEC.optionalFieldOf("tags", List.of()).forGetter(TriggerInstance::tags)
             ).apply(instance, TriggerInstance::new)
         );
 

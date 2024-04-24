@@ -30,6 +30,7 @@ public abstract class MixinServerPlayer extends MixinPlayer {
     }
 
     @Inject(method = "awardKillScore", at = @At("HEAD"))
+    @SuppressWarnings("UnreachableCode")
     private void killSelfTrigger(Entity killed, int scoreValue, DamageSource source, CallbackInfo ci) {
         if (killed == (Object)this) {
             BingoTriggers.KILL_SELF.get().trigger((ServerPlayer)killed, source);
@@ -40,6 +41,7 @@ public abstract class MixinServerPlayer extends MixinPlayer {
     private void deathTrigger(DamageSource damageSource, CallbackInfo ci) {
         BingoTriggers.DEATH.get().trigger((ServerPlayer)(Object)this, damageSource);
     }
+
     @Inject(
         method = "checkMovementStatistics",
         at = @At(
@@ -47,6 +49,7 @@ public abstract class MixinServerPlayer extends MixinPlayer {
             target = "Lnet/minecraft/stats/Stats;CROUCH_ONE_CM:Lnet/minecraft/resources/ResourceLocation;"
         )
     )
+    @SuppressWarnings("UnreachableCode")
     private void sneakingTrigger(double distanceX, double distanceY, double distanceZ, CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer serverPlayer) {
             if (bingo$startSneakingPos == null) {

@@ -6,9 +6,7 @@
         "items": [
           {
             "count": 12,
-            "items": [
-              "minecraft:ender_eye"
-            ]
+            "items": "minecraft:ender_eye"
           }
         ]
       },
@@ -19,7 +17,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 12,
+      "count": 12,
       "id": "minecraft:ender_eye"
     }
   },

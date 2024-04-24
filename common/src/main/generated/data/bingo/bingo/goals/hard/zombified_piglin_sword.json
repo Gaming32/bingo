@@ -13,9 +13,7 @@
                   "type": "minecraft:zombified_piglin"
                 },
                 "item": {
-                  "items": [
-                    "minecraft:golden_sword"
-                  ]
+                  "items": "minecraft:golden_sword"
                 }
               }
             }
@@ -29,11 +27,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:golden_sword",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:golden_sword"
     }
   },
   "name": {

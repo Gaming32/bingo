@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:scute"
-            ]
+            "items": "minecraft:turtle_scute"
           }
         ]
       },
@@ -18,12 +16,12 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:scute"
+      "count": 1,
+      "id": "minecraft:turtle_scute"
     }
   },
   "name": {
-    "translate": "item.minecraft.scute"
+    "translate": "item.minecraft.turtle_scute"
   },
   "progress": {
     "type": "bingo:criterion",

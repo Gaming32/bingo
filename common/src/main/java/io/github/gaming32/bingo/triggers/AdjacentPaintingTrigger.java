@@ -16,7 +16,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import org.jetbrains.annotations.NotNull;
@@ -46,10 +45,10 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "placed_painting").forGetter(TriggerInstance::placedPainting),
-                ExtraCodecs.strictOptionalField(TagPredicate.codec(Registries.PAINTING_VARIANT), "painting_variant").forGetter(TriggerInstance::paintingVariant),
-                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "count", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::count)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("placed_painting").forGetter(TriggerInstance::placedPainting),
+                TagPredicate.codec(Registries.PAINTING_VARIANT).optionalFieldOf("painting_variant").forGetter(TriggerInstance::paintingVariant),
+                MinMaxBounds.Ints.CODEC.optionalFieldOf("count", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::count)
             ).apply(instance, TriggerInstance::new)
         );
 

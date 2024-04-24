@@ -5,10 +5,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "value": {
-          "max_inclusive": 16,
-          "min_inclusive": 8
-        }
+        "max_inclusive": 16,
+        "min_inclusive": 8
       }
     }
   },
@@ -23,9 +21,7 @@
                 "key": "count"
               }
             },
-            "items": [
-              "minecraft:snowball"
-            ]
+            "items": "minecraft:snowball"
           }
         ]
       },
@@ -40,6 +36,7 @@
         "bingo_type": "bingo:sub",
         "key": "count"
       },
+      "count": 1,
       "id": "minecraft:snowball"
     }
   },

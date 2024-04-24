@@ -6,10 +6,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.util.BingoUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -29,7 +32,7 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
     public static final Codec<BingoDifficulty> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             ExtraCodecs.NON_NEGATIVE_INT.fieldOf("number").forGetter(BingoDifficulty::number),
-            ExtraCodecs.strictOptionalField(Codec.STRING, "fallback_name").forGetter(d -> Optional.ofNullable(d.fallbackName))
+            Codec.STRING.optionalFieldOf("fallback_name").forGetter(d -> Optional.ofNullable(d.fallbackName))
         ).apply(instance, BingoDifficulty::new)
     );
 
@@ -118,8 +121,11 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
         public static final ResourceLocation ID = new ResourceLocation("bingo:difficulties");
         private static final Gson GSON = new GsonBuilder().create();
 
-        public ReloadListener() {
+        private final HolderLookup.Provider registries;
+
+        public ReloadListener(HolderLookup.Provider registries) {
             super(GSON, "bingo/difficulties");
+            this.registries = registries;
         }
 
         @NotNull
@@ -130,6 +136,7 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
 
         @Override
         protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
+            final RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
             final ImmutableMap.Builder<ResourceLocation, Holder> byIdBuilder = ImmutableMap.builder();
             final ImmutableSortedMap.Builder<Integer, Holder> byNumberBuilder = ImmutableSortedMap.naturalOrder();
             for (final var entry : object.entrySet()) {

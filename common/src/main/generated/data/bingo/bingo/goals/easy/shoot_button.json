@@ -12,7 +12,7 @@
           }
         ],
         "button_or_plate": {
-          "tag": "minecraft:buttons"
+          "blocks": "#minecraft:buttons"
         }
       },
       "trigger": "bingo:arrow_press"
@@ -22,7 +22,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:oak_button"
     }
   },

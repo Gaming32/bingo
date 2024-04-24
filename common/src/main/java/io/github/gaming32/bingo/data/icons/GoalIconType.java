@@ -6,7 +6,7 @@ import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
 
 public interface GoalIconType<I extends GoalIcon> {
-    DeferredRegister<GoalIconType<?>> REGISTRAR = new RegistryBuilder("goal_icon_type")
+    DeferredRegister<GoalIconType<?>> REGISTER = new RegistryBuilder("goal_icon_type")
         .synced()
         .defaultId("empty")
         .build();
@@ -24,7 +24,7 @@ public interface GoalIconType<I extends GoalIcon> {
     MapCodec<I> codec();
 
     static <I extends GoalIcon> RegistryValue<GoalIconType<I>> register(String id, MapCodec<I> codec) {
-        return REGISTRAR.register(id, () -> new GoalIconType<>() {
+        return REGISTER.register(id, () -> new GoalIconType<>() {
             @Override
             public MapCodec<I> codec() {
                 return codec;

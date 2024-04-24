@@ -7,8 +7,8 @@ import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import org.jetbrains.annotations.NotNull;
@@ -34,13 +34,13 @@ public class BeaconEffectTrigger extends SimpleCriterionTrigger<BeaconEffectTrig
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(MobEffectsPredicate.CODEC, "effect").forGetter(TriggerInstance::effect),
-                ExtraCodecs.strictOptionalField(MobEffectsPredicate.CODEC, "total_effects").forGetter(TriggerInstance::totalEffects)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                MobEffectsPredicate.CODEC.optionalFieldOf("effect").forGetter(TriggerInstance::effect),
+                MobEffectsPredicate.CODEC.optionalFieldOf("total_effects").forGetter(TriggerInstance::totalEffects)
             ).apply(instance, TriggerInstance::new)
         );
 
-        public static Criterion<TriggerInstance> effectApplied(MobEffect effect) {
+        public static Criterion<TriggerInstance> effectApplied(Holder<MobEffect> effect) {
             return BingoTriggers.BEACON_EFFECT.get().createCriterion(
                 new TriggerInstance(
                     Optional.empty(),

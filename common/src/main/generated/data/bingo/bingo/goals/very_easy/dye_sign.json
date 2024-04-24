@@ -7,14 +7,14 @@
             "condition": "minecraft:location_check",
             "predicate": {
               "block": {
-                "tag": "minecraft:all_signs"
+                "blocks": "#minecraft:all_signs"
               }
             }
           },
           {
             "condition": "minecraft:match_tool",
             "predicate": {
-              "tag": "bingo:dyes"
+              "items": "#c:dyes"
             }
           }
         ]
@@ -26,7 +26,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:oak_sign"
     }
   },

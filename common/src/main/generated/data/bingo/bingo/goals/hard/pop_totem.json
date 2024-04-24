@@ -3,9 +3,7 @@
     "totem": {
       "conditions": {
         "item": {
-          "items": [
-            "minecraft:totem_of_undying"
-          ]
+          "items": "minecraft:totem_of_undying"
         }
       },
       "trigger": "minecraft:used_totem"
@@ -15,7 +13,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:totem_of_undying"
     }
   },

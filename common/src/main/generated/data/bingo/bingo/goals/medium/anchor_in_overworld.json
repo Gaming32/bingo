@@ -19,7 +19,7 @@
       }
     },
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:respawn_anchor"
     }
   },

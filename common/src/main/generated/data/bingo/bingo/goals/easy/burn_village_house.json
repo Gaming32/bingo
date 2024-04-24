@@ -6,7 +6,7 @@
           {
             "condition": "minecraft:match_tool",
             "predicate": {
-              "tag": "minecraft:creeper_igniters"
+              "items": "#minecraft:creeper_igniters"
             }
           },
           {
@@ -39,18 +39,15 @@
           }
         },
         "item": {
-          "Count": 1,
-          "id": "minecraft:flint_and_steel",
-          "tag": {
-            "Damage": 0
-          }
+          "count": 1,
+          "id": "minecraft:flint_and_steel"
         }
       },
       {
         "type": "bingo:entity",
         "entity": "minecraft:villager",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:villager_spawn_egg"
         }
       }

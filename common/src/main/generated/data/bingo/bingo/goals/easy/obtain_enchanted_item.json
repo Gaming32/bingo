@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "nbt": "{Enchantments:[{}]}"
+            "predicates": {
+              "minecraft:enchantments": []
+            }
           }
         ]
       },
@@ -15,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "nbt": "{StoredEnchantments:[{}]}"
+            "predicates": {
+              "minecraft:stored_enchantments": []
+            }
           }
         ]
       },
@@ -26,7 +30,7 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:enchanted_book"
     }
   },

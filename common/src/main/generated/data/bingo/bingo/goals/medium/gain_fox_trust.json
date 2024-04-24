@@ -20,7 +20,7 @@
     "type": "bingo:entity",
     "entity": "minecraft:fox",
     "item": {
-      "Count": 1,
+      "count": 1,
       "id": "minecraft:fox_spawn_egg"
     }
   },

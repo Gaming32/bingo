@@ -3,7 +3,6 @@ package io.github.gaming32.bingo.mixin.common;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -18,15 +17,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(RespawnAnchorBlock.class)
 public class MixinRespawnAnchorBlock {
     @Inject(
-        method = "use",
+        method = "useWithoutItem",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/block/RespawnAnchorBlock;explode(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V"
         )
     )
-    private void intentionalGameDesignTrigger(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
+    private void intentionalGameDesignTrigger(
+        BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult,
+        CallbackInfoReturnable<InteractionResult> cir
+    ) {
         if (player instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.INTENTIONAL_GAME_DESIGN.get().trigger(serverPlayer, pos);
+            BingoTriggers.INTENTIONAL_GAME_DESIGN.get().trigger(serverPlayer, blockPos);
         }
     }
 }

@@ -6,8 +6,10 @@ import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.util.BingoStreamCodecs;
 import net.minecraft.ChatFormatting;
-import net.minecraft.util.ExtraCodecs;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -235,7 +237,7 @@ public interface BingoGameMode {
         "blackout", BLACKOUT
     ));
 
-    Codec<BingoGameMode> PERSISTENCE_CODEC = ExtraCodecs.stringResolverCodec(BingoGameMode::getName, GAME_MODES::get);
+    Codec<BingoGameMode> PERSISTENCE_CODEC = Codec.stringResolver(BingoGameMode::getName, GAME_MODES::get);
 
     @Nullable
     default CommandSyntaxException checkAllowedConfig(GameConfig config) {
@@ -265,6 +267,8 @@ public interface BingoGameMode {
     }
 
     enum RenderMode {
-        FANCY, ALL_TEAMS
+        FANCY, ALL_TEAMS;
+
+        public static final StreamCodec<FriendlyByteBuf, RenderMode> STREAM_CODEC = BingoStreamCodecs.enum_(RenderMode.class);
     }
 }

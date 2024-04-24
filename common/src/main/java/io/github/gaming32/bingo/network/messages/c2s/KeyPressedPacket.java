@@ -3,13 +3,16 @@ package io.github.gaming32.bingo.network.messages.c2s;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class KeyPressedPacket extends AbstractCustomPayload {
-    public static final ResourceLocation ID = id("key_pressed");
+    public static final Type<KeyPressedPacket> TYPE = type("key_pressed");
+    public static final StreamCodec<ByteBuf, KeyPressedPacket> CODEC = ByteBufCodecs.STRING_UTF8
+        .map(KeyPressedPacket::new, p -> p.key);
 
     private final String key;
 
@@ -17,19 +20,10 @@ public class KeyPressedPacket extends AbstractCustomPayload {
         this.key = key;
     }
 
-    public KeyPressedPacket(FriendlyByteBuf buf) {
-        this.key = buf.readUtf();
-    }
-
     @NotNull
     @Override
-    public ResourceLocation id() {
-        return ID;
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buf) {
-         buf.writeUtf(key);
+    public Type<KeyPressedPacket> type() {
+        return TYPE;
     }
 
     @Override

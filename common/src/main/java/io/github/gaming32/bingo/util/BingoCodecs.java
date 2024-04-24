@@ -21,7 +21,6 @@ import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.util.ExtraCodecs;
 
 import java.lang.reflect.Array;
 import java.util.Objects;
@@ -69,8 +68,7 @@ public final class BingoCodecs {
     }
 
     public static Codec<Integer> atLeast(int minInclusive) {
-        return ExtraCodecs.validate(
-            Codec.INT,
+        return Codec.INT.validate(
             value -> value >= minInclusive
                 ? DataResult.success(value)
                 : DataResult.error(() -> "Value must be greater than " + minInclusive + ": " + value)
@@ -99,8 +97,7 @@ public final class BingoCodecs {
     }
 
     public static <A> Codec<A> exactly(A value, Codec<A> codec) {
-        return ExtraCodecs.validate(
-            codec,
+        return codec.validate(
             a -> Objects.equals(a, value)
                 ? DataResult.success(a)
                 : DataResult.error(() -> "Value must equal " + value + ". Got " + a));
@@ -111,8 +108,8 @@ public final class BingoCodecs {
     }
 
     /**
-     * {@link ExtraCodecs#withAlternative(Codec, Codec)} will always encode with {@code first}, which will trip any
-     * {@link ExtraCodecs#validate(Codec, Function)}. This codec will try to encode with both, and will return the
+     * {@link Codec#withAlternative(Codec, Codec)} will always encode with {@code first}, which will trip any
+     * {@link Codec#validate(Function)}. This codec will try to encode with both, and will return the
      * first successful encoding.
      */
     public static <A> Codec<A> firstValid(Codec<A> first, Codec<A> second) {
@@ -127,25 +124,25 @@ public final class BingoCodecs {
     }
 
     public static <A> MapCodec<Set<A>> minifiedSetField(Codec<A> elementCodec, String name) {
-        return ExtraCodecs.strictOptionalField(minifiedSet(elementCodec), name, ImmutableSet.of());
+        return minifiedSet(elementCodec).optionalFieldOf(name, ImmutableSet.of());
     }
 
     public static MapCodec<OptionalInt> optionalInt(String name) {
-        return ExtraCodecs.strictOptionalField(Codec.INT, name).xmap(
+        return Codec.INT.optionalFieldOf(name).xmap(
             opt -> opt.map(OptionalInt::of).orElseGet(OptionalInt::empty),
             opt -> opt.isPresent() ? Optional.of(opt.getAsInt()) : Optional.empty()
         );
     }
 
     public static MapCodec<Dynamic<?>> optionalDynamicField(String name) {
-        return ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, name).xmap(
+        return Codec.PASSTHROUGH.optionalFieldOf(name).xmap(
             opt -> opt.orElse(EMPTY_DYNAMIC),
             dyn -> dyn.getValue() == dyn.getOps().empty() ? Optional.empty() : Optional.of(dyn)
         );
     }
 
     public static MapCodec<Dynamic<?>> optionalDynamicField(String name, Dynamic<?> defaultValue) {
-        return ExtraCodecs.strictOptionalField(Codec.PASSTHROUGH, name).xmap(
+        return Codec.PASSTHROUGH.optionalFieldOf(name).xmap(
             opt -> opt.orElse(defaultValue),
             dyn -> dyn.convert(defaultValue.getOps()).getValue().equals(defaultValue.getValue()) ? Optional.empty() : Optional.of(dyn)
         );

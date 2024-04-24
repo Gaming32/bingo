@@ -8,7 +8,6 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -35,9 +34,9 @@ public class EnchantedItemTrigger extends SimpleCriterionTrigger<EnchantedItemTr
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
-                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "levels_spent", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::levelsSpent),
-                ExtraCodecs.strictOptionalField(MinMaxBounds.Ints.CODEC, "required_levels", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::requiredLevels)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                MinMaxBounds.Ints.CODEC.optionalFieldOf("levels_spent", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::levelsSpent),
+                MinMaxBounds.Ints.CODEC.optionalFieldOf("required_levels", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::requiredLevels)
             ).apply(instance, TriggerInstance::new)
         );
 

@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.conditions;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import io.github.gaming32.bingo.mixin.common.BaseFireBlockAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
@@ -16,7 +16,7 @@ import java.util.Set;
 public enum FlammableCondition implements LootItemCondition {
     INSTANCE;
 
-    public static final Codec<FlammableCondition> CODEC = Codec.unit(INSTANCE);
+    public static final MapCodec<FlammableCondition> CODEC = MapCodec.unit(INSTANCE);
 
     @NotNull
     @Override

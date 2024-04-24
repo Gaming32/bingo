@@ -8,16 +8,14 @@
             "predicate": {
               "position": {
                 "y": {
-                  "max": -58.0
+                  "max": -58
                 }
               }
             }
           },
           {
             "block": {
-              "blocks": [
-                "minecraft:scaffolding"
-              ]
+              "blocks": "minecraft:scaffolding"
             },
             "condition": "bingo:pillar",
             "min_height": 379
@@ -31,13 +29,11 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:scaffolding",
-      "tag": {
-        "Enchantments": [
-          {}
-        ]
-      }
+      "components": {
+        "minecraft:enchantment_glint_override": true
+      },
+      "count": 1,
+      "id": "minecraft:scaffolding"
     }
   },
   "name": {

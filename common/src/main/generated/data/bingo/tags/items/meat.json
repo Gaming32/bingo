@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     "minecraft:porkchop",
     "minecraft:cooked_porkchop",
@@ -14,8 +13,10 @@
     "minecraft:chicken",
     "minecraft:cooked_chicken",
     "minecraft:rotten_flesh",
+    "minecraft:spider_eye",
     "minecraft:rabbit",
     "minecraft:cooked_rabbit",
+    "minecraft:rabbit_stew",
     "minecraft:mutton",
     "minecraft:cooked_mutton"
   ]

@@ -4,10 +4,28 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:shield"
-            ],
-            "nbt": "{BlockEntityTag:{Base:11,Patterns:[{Color:0,Pattern:\"flo\"}],id:\"minecraft:banner\"}}"
+            "components": {
+              "minecraft:attribute_modifiers": {
+                "modifiers": []
+              },
+              "minecraft:banner_patterns": [
+                {
+                  "color": "white",
+                  "pattern": "minecraft:flower"
+                }
+              ],
+              "minecraft:base_color": "blue",
+              "minecraft:damage": 0,
+              "minecraft:enchantments": {
+                "levels": {}
+              },
+              "minecraft:lore": [],
+              "minecraft:max_damage": 336,
+              "minecraft:max_stack_size": 1,
+              "minecraft:rarity": "common",
+              "minecraft:repair_cost": 0
+            },
+            "items": "minecraft:shield"
           }
         ]
       },
@@ -18,21 +36,17 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:shield",
-      "tag": {
-        "BlockEntityTag": {
-          "Base": 11,
-          "Patterns": [
-            {
-              "Color": 0,
-              "Pattern": "flo"
-            }
-          ],
-          "id": "minecraft:banner"
-        },
-        "Damage": 0
-      }
+      "components": {
+        "minecraft:banner_patterns": [
+          {
+            "color": "white",
+            "pattern": "minecraft:flower"
+          }
+        ],
+        "minecraft:base_color": "blue"
+      },
+      "count": 1,
+      "id": "minecraft:shield"
     }
   },
   "name": {

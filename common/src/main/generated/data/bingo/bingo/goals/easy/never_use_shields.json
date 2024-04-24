@@ -3,7 +3,7 @@
     "use": {
       "conditions": {
         "item": {
-          "tag": "bingo:shields"
+          "items": "#c:tools/shields"
         }
       },
       "trigger": "minecraft:using_item"
@@ -13,11 +13,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:shield",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:shield"
     }
   },
   "name": {

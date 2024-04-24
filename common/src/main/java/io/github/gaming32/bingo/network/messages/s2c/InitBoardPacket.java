@@ -10,8 +10,10 @@ import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.ClientGoal;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import io.github.gaming32.bingo.util.BingoStreamCodecs;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +21,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
 public class InitBoardPacket extends AbstractCustomPayload {
-    public static final ResourceLocation ID = id("init_board");
+    public static final Type<InitBoardPacket> TYPE = type("init_board");
+    public static final StreamCodec<RegistryFriendlyByteBuf, InitBoardPacket> CODEC = StreamCodec.composite(
+        ByteBufCodecs.VAR_INT, p -> p.size,
+        ClientGoal.STREAM_CODEC.apply(BingoStreamCodecs.array(ClientGoal[]::new)), p -> p.goals,
+        BingoBoard.Teams.STREAM_CODEC.apply(BingoStreamCodecs.array(BingoBoard.Teams[]::new)), p -> p.states,
+        ByteBufCodecs.STRING_UTF8.apply(BingoStreamCodecs.array(String[]::new)), p -> p.teams,
+        BingoGameMode.RenderMode.STREAM_CODEC, p -> p.renderMode,
+        InitBoardPacket::new
+    );
 
     private final int size;
     private final ClientGoal[] goals;
@@ -42,27 +52,18 @@ public class InitBoardPacket extends AbstractCustomPayload {
         this.renderMode = game.getGameMode().getRenderMode();
     }
 
-    public InitBoardPacket(FriendlyByteBuf buf) {
-        size = buf.readVarInt();
-        goals = buf.readList(ClientGoal::new).toArray(ClientGoal[]::new);
-        states = buf.readList(b -> BingoBoard.Teams.fromBits(b.readVarInt())).toArray(BingoBoard.Teams[]::new);
-        teams = buf.readList(FriendlyByteBuf::readUtf).toArray(String[]::new);
-        renderMode = buf.readEnum(BingoGameMode.RenderMode.class);
+    private InitBoardPacket(int size, ClientGoal[] goals, BingoBoard.Teams[] states, String[] teams, BingoGameMode.RenderMode renderMode) {
+        this.size = size;
+        this.goals = goals;
+        this.states = states;
+        this.teams = teams;
+        this.renderMode = renderMode;
     }
 
     @NotNull
     @Override
-    public ResourceLocation id() {
-        return ID;
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeVarInt(size);
-        buf.writeCollection(Arrays.asList(goals), (b, v) -> v.serialize(b));
-        buf.writeCollection(Arrays.asList(states), (b, v) -> b.writeVarInt(v.toBits()));
-        buf.writeCollection(Arrays.asList(teams), FriendlyByteBuf::writeUtf);
-        buf.writeEnum(renderMode);
+    public Type<InitBoardPacket> type() {
+        return TYPE;
     }
 
     @Override
@@ -72,7 +73,7 @@ public class InitBoardPacket extends AbstractCustomPayload {
         for (int i = 0; i < teams.length; i++) {
             final PlayerTeam team = scoreboard.getPlayerTeam(teams[i]);
             if (team == null) {
-                Bingo.LOGGER.error("Unknown team " + teams[i]);
+                Bingo.LOGGER.error("Unknown team {}", teams[i]);
                 return;
             }
             playerTeams[i] = team;

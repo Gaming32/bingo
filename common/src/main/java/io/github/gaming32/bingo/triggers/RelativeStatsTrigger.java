@@ -21,7 +21,6 @@ import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
 import net.minecraft.stats.Stats;
 import net.minecraft.stats.StatsCounter;
-import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public class RelativeStatsTrigger extends SimpleProgressibleCriterionTrigger<Rel
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 PlayerPredicate.StatMatcher.CODEC.listOf().fieldOf("stats").forGetter(TriggerInstance::stats)
             ).apply(instance, TriggerInstance::new)
         );
@@ -71,7 +70,7 @@ public class RelativeStatsTrigger extends SimpleProgressibleCriterionTrigger<Rel
                     }
 
                     if (!stats.isEmpty()) {
-                        stats.get(0).range().min().ifPresent(min -> progressListener.update(this, min, min));
+                        stats.getFirst().range().min().ifPresent(min -> progressListener.update(this, min, min));
                     }
                 }
             }

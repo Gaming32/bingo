@@ -3,25 +3,22 @@ package io.github.gaming32.bingo.network.messages.s2c;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
 public class RemoveBoardPacket extends AbstractCustomPayload {
-    public static final ResourceLocation ID = id("remove_board");
+    public static final Type<RemoveBoardPacket> TYPE = type("remove_board");
     public static final RemoveBoardPacket INSTANCE = new RemoveBoardPacket();
+    public static final StreamCodec<ByteBuf, RemoveBoardPacket> CODEC = StreamCodec.unit(INSTANCE);
 
     private RemoveBoardPacket() {
     }
 
     @NotNull
     @Override
-    public ResourceLocation id() {
-        return ID;
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buf) {
+    public Type<RemoveBoardPacket> type() {
+        return TYPE;
     }
 
     @Override

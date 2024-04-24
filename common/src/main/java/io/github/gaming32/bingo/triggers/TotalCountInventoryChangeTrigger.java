@@ -10,7 +10,6 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +45,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleProgressibleCriterio
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(TriggerInstance::player),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 ItemPredicate.CODEC.listOf().fieldOf("items").forGetter(TriggerInstance::items)
             ).apply(instance, TriggerInstance::new)
         );
@@ -66,7 +65,7 @@ public class TotalCountInventoryChangeTrigger extends SimpleProgressibleCriterio
                     final int itemCount = item.getCount();
                     try {
                         item.setCount(predicate.count().min().orElse(1));
-                        if (predicate.matches(item)) {
+                        if (predicate.test(item)) {
                             counts[predicateIndex] += itemCount;
                         }
                     } finally {

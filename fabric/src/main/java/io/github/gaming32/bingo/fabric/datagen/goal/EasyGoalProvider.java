@@ -1,10 +1,25 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
-import io.github.gaming32.bingo.conditions.*;
+import io.github.gaming32.bingo.conditions.BlockPatternCondition;
+import io.github.gaming32.bingo.conditions.DistanceFromSpawnCondition;
+import io.github.gaming32.bingo.conditions.FlammableCondition;
+import io.github.gaming32.bingo.conditions.HasAnyEffectCondition;
+import io.github.gaming32.bingo.conditions.HasOnlyBeenDamagedByCondition;
+import io.github.gaming32.bingo.conditions.InStructureCondition;
+import io.github.gaming32.bingo.conditions.PassengersCondition;
+import io.github.gaming32.bingo.conditions.ToolDamageCondition;
+import io.github.gaming32.bingo.conditions.ToolIsEnchantedCondition;
+import io.github.gaming32.bingo.conditions.VillagerOwnershipCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
-import io.github.gaming32.bingo.data.icons.*;
+import io.github.gaming32.bingo.data.icons.BlockIcon;
+import io.github.gaming32.bingo.data.icons.CycleIcon;
+import io.github.gaming32.bingo.data.icons.EffectIcon;
+import io.github.gaming32.bingo.data.icons.EntityIcon;
+import io.github.gaming32.bingo.data.icons.EntityTypeTagCycleIcon;
+import io.github.gaming32.bingo.data.icons.ItemIcon;
+import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgressTracker;
 import io.github.gaming32.bingo.data.progresstrackers.GoalAchievedCountProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
@@ -13,14 +28,61 @@ import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.data.tags.BingoPaintingVariantTags;
-import io.github.gaming32.bingo.triggers.*;
+import io.github.gaming32.bingo.triggers.AdjacentPaintingTrigger;
+import io.github.gaming32.bingo.triggers.ArrowPressTrigger;
+import io.github.gaming32.bingo.triggers.BingoTriggers;
+import io.github.gaming32.bingo.triggers.ChickenHatchTrigger;
+import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
+import io.github.gaming32.bingo.triggers.DestroyVehicleTrigger;
+import io.github.gaming32.bingo.triggers.DifferentColoredShieldsTrigger;
+import io.github.gaming32.bingo.triggers.DoorOpenedByTargetTrigger;
+import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
+import io.github.gaming32.bingo.triggers.EquipItemTrigger;
+import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
+import io.github.gaming32.bingo.triggers.HasSomeFoodItemsTrigger;
+import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
+import io.github.gaming32.bingo.triggers.KeyPressedTrigger;
+import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
+import io.github.gaming32.bingo.triggers.ShootBellTrigger;
+import io.github.gaming32.bingo.triggers.UseGrindstoneTrigger;
+import io.github.gaming32.bingo.triggers.WearDifferentColoredArmorTrigger;
+import io.github.gaming32.bingo.triggers.ZombieDrownedTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.critereon.ConsumeItemTrigger;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DamagePredicate;
+import net.minecraft.advancements.critereon.DamageSourcePredicate;
+import net.minecraft.advancements.critereon.DistancePredicate;
+import net.minecraft.advancements.critereon.EffectsChangedTrigger;
+import net.minecraft.advancements.critereon.EntityFlagsPredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.EntityTypePredicate;
+import net.minecraft.advancements.critereon.FishingRodHookedTrigger;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.ItemSubPredicates;
+import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.MobEffectsPredicate;
+import net.minecraft.advancements.critereon.PickedUpItemTrigger;
+import net.minecraft.advancements.critereon.PlayerInteractTrigger;
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.critereon.SummonedEntityTrigger;
+import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.critereon.TameAnimalTrigger;
+import net.minecraft.advancements.critereon.TradeTrigger;
+import net.minecraft.advancements.critereon.UsingItemTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
@@ -28,19 +90,32 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.*;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.StructureTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.predicates.*;
+import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +131,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
     }
 
     @Override
-    public void addGoals() {
+    public void addGoals(HolderLookup.Provider registries) {
         addGoal(BingoGoal.builder(id("different_fish"))
             .sub("count", BingoSub.random(2, 4))
             .criterion("obtain",
@@ -126,7 +201,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("never_wear_chestplates"))
             .criterion("equip", EquipItemTrigger.builder()
-                .newItem(ItemPredicate.Builder.item().of(BingoItemTags.ARMOR_CHESTPLATES).build())
+                .newItem(ItemPredicate.Builder.item().of(ItemTags.CHEST_ARMOR).build())
                 .slots(EquipmentSlot.CHEST)
                 .build()
             )
@@ -139,7 +214,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .criterion("use", CriteriaTriggers.USING_ITEM.createCriterion(
                 new UsingItemTrigger.TriggerInstance(
                     Optional.empty(),
-                    Optional.of(ItemPredicate.Builder.item().of(BingoItemTags.SHIELDS).build())
+                    Optional.of(ItemPredicate.Builder.item().of(ConventionalItemTags.SHIELDS_TOOLS).build())
                 )
             ))
             .tags(BingoTags.NEVER)
@@ -506,16 +581,19 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .criterion("obtain", WearDifferentColoredArmorTrigger.builder(4).build())
             .progress("obtain")
             .name(Component.translatable("bingo.goal.wear_different_colored_armor", 4))
-            .icon(CycleIcon.infer(Stream.concat(Stream.of((DyeColor) null), Arrays.stream(DyeColor.values()))
-                .flatMap(color -> Stream.of(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS)
-                    .map(item -> {
-                        if (color == null) {
-                            return new ItemStack(item, 4);
-                        }
-                        ItemStack stack = DyeableLeatherItem.dyeArmor(new ItemStack(item), List.of(DyeItem.byColor(color)));
-                        stack.setCount(4);
-                        return stack;
-                    }))))
+            .icon(CycleIcon.infer(
+                Stream.concat(Stream.of((DyeColor) null), Arrays.stream(DyeColor.values()))
+                    .flatMap(color -> Stream.of(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS)
+                        .map(item -> {
+                            if (color == null) {
+                                return new ItemStack(item, 4);
+                            }
+                            ItemStack stack = DyedItemColor.applyDyes(new ItemStack(item), List.of(DyeItem.byColor(color)));
+                            stack.setCount(4);
+                            return stack;
+                        })
+                    )
+            ))
             .reactant("wear_armor")
             .tags(BingoTags.ITEM, BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("seagrass"), Items.SEAGRASS, 15, 32)
@@ -636,7 +714,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .criterion("repair2", UseGrindstoneTrigger.builder().secondItem(ContextAwarePredicate.create(new ToolDamageCondition(MinMaxBounds.Ints.atLeast(1)))).build())
             .requirements(AdvancementRequirements.Strategy.OR)
             .name("grindstone_repair")
-            .icon(CycleIcon.infer(Items.GRINDSTONE, ItemTags.TOOLS))
+            .icon(CycleIcon.infer(Items.GRINDSTONE, ConventionalItemTags.TOOLS))
             .tags(BingoTags.ACTION));
         addGoal(obtainItemGoal(id("sweet_berries"), Items.SWEET_BERRIES, 2, 6)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
@@ -749,8 +827,14 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(
                 id("obtain_enchanted_item"),
                 Items.ENCHANTED_BOOK,
-                ItemPredicate.Builder.item().hasNbt(BingoUtil.compound(Map.of("Enchantments", BingoUtil.list(List.of(new CompoundTag()))))),
-                ItemPredicate.Builder.item().hasNbt(BingoUtil.compound(Map.of("StoredEnchantments", BingoUtil.list(List.of(new CompoundTag())))))
+                ItemPredicate.Builder.item().withSubPredicate(
+                    ItemSubPredicates.ENCHANTMENTS,
+                    ItemEnchantmentsPredicate.enchantments(List.of())
+                ),
+                ItemPredicate.Builder.item().withSubPredicate(
+                    ItemSubPredicates.STORED_ENCHANTMENTS,
+                    ItemEnchantmentsPredicate.storedEnchantments(List.of())
+                )
             )
             .name("obtain_enchanted_item")
             .tooltip("obtain_enchanted_item")
@@ -774,7 +858,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .catalyst("eat_non_meat")
             .name("carnivore")
             .tooltip("carnivore")
-            .icon(new ItemTagCycleIcon(BingoItemTags.MEAT))
+            .icon(new ItemTagCycleIcon(ItemTags.MEAT))
         );
         // TODO: clean banner
         addGoal(obtainSomeItemsFromTag(id("gold_in_name"), BingoItemTags.GOLD_IN_NAME, "bingo.goal.gold_in_name", 5, 7)

@@ -7,9 +7,7 @@
             "condition": "minecraft:location_check",
             "predicate": {
               "block": {
-                "blocks": [
-                  "minecraft:soul_campfire"
-                ],
+                "blocks": "minecraft:soul_campfire",
                 "nbt": "{Items:[{Slot:0b,id:\"minecraft:porkchop\"},{Slot:1b,id:\"minecraft:porkchop\"},{Slot:2b,id:\"minecraft:porkchop\"},{Slot:3b,id:\"minecraft:porkchop\"}]}"
               }
             }
@@ -17,9 +15,7 @@
           {
             "condition": "minecraft:match_tool",
             "predicate": {
-              "items": [
-                "minecraft:porkchop"
-              ]
+              "items": "minecraft:porkchop"
             }
           }
         ]
@@ -34,14 +30,14 @@
       {
         "type": "bingo:item",
         "item": {
-          "Count": 1,
+          "count": 1,
           "id": "minecraft:soul_campfire"
         }
       },
       {
         "type": "bingo:item",
         "item": {
-          "Count": 4,
+          "count": 4,
           "id": "minecraft:porkchop"
         }
       }

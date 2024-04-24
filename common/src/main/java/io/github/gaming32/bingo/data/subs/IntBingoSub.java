@@ -10,8 +10,8 @@ import java.util.Map;
 
 public record IntBingoSub(IntProvider provider) implements BingoSub {
     public static final MapCodec<IntBingoSub> CODEC = IntProvider.CODEC
-        .xmap(IntBingoSub::new, IntBingoSub::provider)
-        .fieldOf("value");
+        .fieldOf("value")
+        .xmap(IntBingoSub::new, IntBingoSub::provider);
 
     @Override
     public Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand) {

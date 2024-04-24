@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:trident"
-            ]
+            "items": "minecraft:trident"
           }
         ]
       },
@@ -18,11 +16,8 @@
   "icon": {
     "type": "bingo:item",
     "item": {
-      "Count": 1,
-      "id": "minecraft:trident",
-      "tag": {
-        "Damage": 0
-      }
+      "count": 1,
+      "id": "minecraft:trident"
     }
   },
   "name": {
