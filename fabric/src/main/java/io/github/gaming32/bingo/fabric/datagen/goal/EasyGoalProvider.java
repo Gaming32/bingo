@@ -58,6 +58,7 @@ import net.minecraft.advancements.critereon.ConsumeItemTrigger;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DamagePredicate;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
+import net.minecraft.advancements.critereon.DefaultBlockInteractionTrigger;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.EffectsChangedTrigger;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
@@ -107,7 +108,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
@@ -982,8 +982,8 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                     .build();
             }
             ContextAwarePredicate location = ContextAwarePredicate.create(block);
-            builder.criterion("level_" + level, CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
-                new ItemUsedOnLocationTrigger.TriggerInstance(Optional.empty(), Optional.of(location))
+            builder.criterion("level_" + level, CriteriaTriggers.DEFAULT_BLOCK_USE.createCriterion(
+                new DefaultBlockInteractionTrigger.TriggerInstance(Optional.empty(), Optional.of(location))
             ));
         }
         return builder
