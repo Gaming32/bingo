@@ -12,7 +12,7 @@
           }
         ]
       },
-      "trigger": "minecraft:item_used_on_block"
+      "trigger": "minecraft:default_block_use"
     },
     "level_1": {
       "conditions": {
@@ -26,7 +26,7 @@
           }
         ]
       },
-      "trigger": "minecraft:item_used_on_block"
+      "trigger": "minecraft:default_block_use"
     },
     "level_2": {
       "conditions": {
@@ -40,7 +40,7 @@
           }
         ]
       },
-      "trigger": "minecraft:item_used_on_block"
+      "trigger": "minecraft:default_block_use"
     },
     "level_3": {
       "conditions": {
@@ -54,7 +54,7 @@
           }
         ]
       },
-      "trigger": "minecraft:item_used_on_block"
+      "trigger": "minecraft:default_block_use"
     },
     "level_4": {
       "conditions": {
@@ -68,7 +68,7 @@
           }
         ]
       },
-      "trigger": "minecraft:item_used_on_block"
+      "trigger": "minecraft:default_block_use"
     },
     "level_5": {
       "conditions": {
@@ -82,7 +82,7 @@
           }
         ]
       },
-      "trigger": "minecraft:item_used_on_block"
+      "trigger": "minecraft:default_block_use"
     },
     "level_6": {
       "conditions": {
@@ -93,7 +93,7 @@
           }
         ]
       },
-      "trigger": "minecraft:item_used_on_block"
+      "trigger": "minecraft:default_block_use"
     }
   },
   "difficulty": "bingo:easy",
@@ -106,6 +106,9 @@
   },
   "name": {
     "translate": "bingo.goal.eat_entire_cake"
+  },
+  "progress": {
+    "type": "bingo:achieved_requirements"
   },
   "reactant": "eat_non_meat",
   "requirements": [

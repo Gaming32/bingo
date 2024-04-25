@@ -987,6 +987,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ));
         }
         return builder
+            .progress(AchievedRequirementsProgressTracker.INSTANCE)
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("eat_entire_cake")
             .icon(Items.CAKE)
