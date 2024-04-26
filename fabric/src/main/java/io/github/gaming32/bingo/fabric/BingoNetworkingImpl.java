@@ -15,8 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-// This will be rewritten in 1.20.5, as Fabric's networking API will be much closer to Neo's.
-// https://hackmd.io/@KpoDyi5oQ2K9LWpmVPJnAg/HJ5vjHAta
 public class BingoNetworkingImpl extends BingoNetworking {
     BingoNetworkingImpl() {
     }
