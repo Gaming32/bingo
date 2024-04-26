@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.game;
 
-import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
@@ -605,8 +604,24 @@ public class BingoGame {
             }
             final BingoGame game = new BingoGame(board, gameMode, requireClient, true, teams);
 
-            merge(game.advancementProgress, advancementProgress);
-            merge(game.goalProgress, goalProgress);
+            for (final var entry : advancementProgress.entrySet()) {
+                final Map<ActiveGoal, AdvancementProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
+                for (final var subEntry : entry.getValue().int2ObjectEntrySet()) {
+                    final ActiveGoal goal = getGoal(subEntry.getIntKey());
+                    final AdvancementProgress progress = subEntry.getValue();
+                    progress.update(goal.goal().goal().getRequirements());
+                    subTarget.put(goal, progress);
+                }
+                game.advancementProgress.put(entry.getKey(), subTarget);
+            }
+
+            for (final var entry : goalProgress.entrySet()) {
+                final Map<ActiveGoal, GoalProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
+                for (final var subEntry : entry.getValue().int2ObjectEntrySet()) {
+                    subTarget.put(getGoal(subEntry.getIntKey()), subEntry.getValue());
+                }
+                game.goalProgress.put(entry.getKey(), subTarget);
+            }
 
             for (final var entry : goalAchievedCount.entrySet()) {
                 final Object2IntOpenHashMap<ActiveGoal> subTarget = new Object2IntOpenHashMap<>(entry.getValue().size());
@@ -629,22 +644,12 @@ public class BingoGame {
             return game;
         }
 
-        private <V> void merge(Map<UUID, Map<ActiveGoal, V>> target, Map<UUID, Int2ObjectMap<V>> source) {
-            for (final var entry : source.entrySet()) {
-                final Map<ActiveGoal, V> subTarget = Maps.newHashMapWithExpectedSize(entry.getValue().size());
-                for (final var subEntry : entry.getValue().int2ObjectEntrySet()) {
-                    subTarget.put(getGoal(subEntry.getIntKey()), subEntry.getValue());
-                }
-                target.put(entry.getKey(), subTarget);
-            }
-        }
-
         private ActiveGoal getGoal(int goal) {
             return board.getGoals()[goal];
         }
 
         private static PersistenceData create(BingoGame game) {
-            final Map<UUID, Int2IntMap> goalAchievedCount = Maps.newHashMapWithExpectedSize(game.goalAchievedCount.size());
+            final Map<UUID, Int2IntMap> goalAchievedCount = HashMap.newHashMap(game.goalAchievedCount.size());
             for (final var entry : game.goalAchievedCount.entrySet()) {
                 final Int2IntMap subTarget = new Int2IntOpenHashMap(entry.getValue().size());
                 for (final var subEntry : entry.getValue().object2IntEntrySet()) {
@@ -653,7 +658,7 @@ public class BingoGame {
                 goalAchievedCount.put(entry.getKey(), subTarget);
             }
 
-            final Map<UUID, IntList> queuedGoals = Maps.newHashMapWithExpectedSize(game.queuedGoals.size());
+            final Map<UUID, IntList> queuedGoals = HashMap.newHashMap(game.queuedGoals.size());
             for (final var entry : game.queuedGoals.entrySet()) {
                 final IntList subTarget = new IntArrayList(entry.getValue().size());
                 for (final ActiveGoal value : entry.getValue()) {
@@ -672,7 +677,7 @@ public class BingoGame {
         }
 
         private static <V> Map<UUID, Int2ObjectMap<V>> createMap(BingoGame game, Map<UUID, Map<ActiveGoal, V>> source) {
-            final Map<UUID, Int2ObjectMap<V>> target = Maps.newHashMapWithExpectedSize(source.size());
+            final Map<UUID, Int2ObjectMap<V>> target = HashMap.newHashMap(source.size());
             for (final var entry : source.entrySet()) {
                 final Int2ObjectMap<V> subTarget = new Int2ObjectOpenHashMap<>(entry.getValue().size());
                 for (final var subEntry : entry.getValue().entrySet()) {

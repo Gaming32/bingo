@@ -25,11 +25,12 @@ import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.Event;
 import io.github.gaming32.bingo.subpredicates.BingoSubPredicates;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
-import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -112,7 +113,9 @@ public class Bingo {
             LOGGER.info("Reading persisted Bingo game");
             try {
                 final CompoundTag tag = NbtIo.readCompressed(path, NbtAccounter.unlimitedHeap());
-                final BingoGame.PersistenceData data = BingoUtil.fromTag(BingoGame.PersistenceData.CODEC, tag);
+                final BingoGame.PersistenceData data = BingoGame.PersistenceData.CODEC.parse(
+                    instance.overworld().registryAccess().createSerializationContext(NbtOps.INSTANCE), tag
+                ).getOrThrow();
                 activeGame = data.createGame(instance.getScoreboard());
                 Files.deleteIfExists(path);
             } catch (Exception e) {
@@ -126,8 +129,14 @@ public class Bingo {
             final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
             try {
                 final BingoGame.PersistenceData data = activeGame.createPersistenceData();
-                final CompoundTag tag = BingoUtil.toCompoundTag(BingoGame.PersistenceData.CODEC, data);
-                NbtIo.writeCompressed(tag, path);
+                final Tag tag = BingoGame.PersistenceData.CODEC.encodeStart(
+                    instance.overworld().registryAccess().createSerializationContext(NbtOps.INSTANCE), data
+                ).getOrThrow();
+                if (tag instanceof CompoundTag compoundTag) {
+                    NbtIo.writeCompressed(compoundTag, path);
+                } else {
+                    throw new IllegalStateException("Bingo game didn't serialize to CompoundTag");
+                }
             } catch (Exception e) {
                 LOGGER.error("Failed to store persistent Bingo game", e);
             }
