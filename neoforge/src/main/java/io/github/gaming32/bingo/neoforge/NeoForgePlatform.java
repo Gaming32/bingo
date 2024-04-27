@@ -21,6 +21,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
@@ -28,13 +29,13 @@ import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.nio.file.Path;
@@ -153,11 +154,9 @@ public class NeoForgePlatform extends BingoPlatform {
         Event.EXPLOSION_START.setRegistrar(handler -> bus.addListener((ExplosionEvent.Start event) ->
             handler.accept(event.getLevel(), event.getExplosion())
         ));
-        Event.SERVER_TICK_END.setRegistrar(handler -> bus.addListener((TickEvent.ServerTickEvent event) -> {
-            if (event.phase == TickEvent.Phase.END) {
-                handler.accept(event.getServer());
-            }
-        }));
+        Event.SERVER_TICK_END.setRegistrar(handler -> bus.addListener((ServerTickEvent.Post event) ->
+            handler.accept(event.getServer())
+        ));
 
         if (isClient()) {
             ClientEvents.RENDER_HUD.setRegistrar(handler -> bus.addListener((RenderGuiEvent.Post event) ->
@@ -176,11 +175,9 @@ public class NeoForgePlatform extends BingoPlatform {
             ClientEvents.PLAYER_QUIT.setRegistrar(handler -> bus.addListener((ClientPlayerNetworkEvent.LoggingOut event) ->
                 handler.accept(event.getPlayer())
             ));
-            ClientEvents.CLIENT_TICK_START.setRegistrar(handler -> bus.addListener((TickEvent.ClientTickEvent event) -> {
-                if (event.phase == TickEvent.Phase.START) {
-                    handler.accept(Minecraft.getInstance());
-                }
-            }));
+            ClientEvents.CLIENT_TICK_START.setRegistrar(handler -> bus.addListener((ClientTickEvent.Post event) ->
+                handler.accept(Minecraft.getInstance())
+            ));
         }
     }
 }
