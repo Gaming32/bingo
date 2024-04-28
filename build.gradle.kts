@@ -4,6 +4,7 @@ plugins {
     java
     id("architectury-plugin") version "3.4.+"
     id("dev.architectury.loom") version "1.6.+" apply false
+    id("com.modrinth.minotaur") version "2.+" apply false
 }
 
 operator fun Project.get(key: String) = properties[key] as String

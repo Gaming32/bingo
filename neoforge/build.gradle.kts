@@ -1,6 +1,10 @@
+import com.modrinth.minotaur.ModrinthExtension
+
 plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
+
+apply(plugin = "com.modrinth.minotaur")
 
 operator fun Project.get(key: String) = properties[key] as String
 
@@ -64,4 +68,11 @@ tasks.sourcesJar {
     val commonSources by project(":common").tasks.sourcesJar
     dependsOn(commonSources)
     from(commonSources.archiveFile.map { zipTree(it) })
+}
+
+extensions.configure<ModrinthExtension>("modrinth") {
+    token.set(if (rootProject.hasProperty("modrinthKey")) rootProject["modrinthKey"] else System.getenv("MODRINTH_TOKEN"))
+    projectId.set("bingo-mod")
+    gameVersions.add(rootProject["minecraft_version"])
+    loaders.add("neoforge")
 }
