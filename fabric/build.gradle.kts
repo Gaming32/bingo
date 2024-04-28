@@ -87,6 +87,7 @@ tasks.sourcesJar {
 extensions.configure<ModrinthExtension>("modrinth") {
     token.set(if (rootProject.hasProperty("modrinthKey")) rootProject["modrinthKey"] else System.getenv("MODRINTH_TOKEN"))
     projectId.set("bingo-mod")
+    versionName.set("Bingo ${rootProject.version} for Fabric")
     uploadFile.set(tasks.remapJar)
     gameVersions.add(rootProject["minecraft_version"])
     loaders.add("fabric")
