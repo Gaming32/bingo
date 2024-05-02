@@ -561,14 +561,24 @@ public class BingoGame {
             winningTeams = newFinishers;
         }
 
-        if (!continueAfterWin || teams.length - finishedTeams.count() < 2) {
+        int remainingTeams = 0;
+        for (int i = 0; i < teams.length; i++) {
+            boolean isTeamActive = teams[i].getPlayers().stream().anyMatch(playerName -> playerList.getPlayerByName(playerName) != null);
+            if (isTeamActive && !finishedTeams.and(BingoBoard.Teams.fromOne(i))) {
+                remainingTeams++;
+            }
+        }
+
+        if (continueAfterWin) {
+            notifyFinishedTeam(playerList, newFinishers, place, remainingTeams);
+        }
+
+        if (!continueAfterWin || remainingTeams < 2) {
             endGame(playerList);
-        } else {
-            notifyFinishedTeam(playerList, newFinishers, place);
         }
     }
 
-    private void notifyFinishedTeam(PlayerList playerList, BingoBoard.Teams newFinishers, int place) {
+    private void notifyFinishedTeam(PlayerList playerList, BingoBoard.Teams newFinishers, int place, int remainingTeams) {
         Component message;
         if (newFinishers.one()) {
             final PlayerTeam playerTeam = getTeam(newFinishers);
@@ -600,6 +610,11 @@ public class BingoGame {
                 .append("]");
             message = Bingo.translatable("bingo.finished.tie", teamList, Bingo.ordinal(place));
         }
+
+        for (final ServerPlayer player : playerList.getPlayers()) {
+            player.playNotifySound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.MASTER, 1f, 1f);
+        }
+
         playerList.broadcastSystemMessage(message, false);
     }
 
