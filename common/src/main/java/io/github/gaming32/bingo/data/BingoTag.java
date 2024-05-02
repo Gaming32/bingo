@@ -169,15 +169,16 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
     }
 
     public enum SpecialType implements StringRepresentable {
-        NONE(0), NEVER(0xff5555), FINISH(0x5555ff);
+        NONE(null), NEVER(0xff5555), FINISH(0x5555ff);
 
         @SuppressWarnings("deprecation")
         public static final EnumCodec<SpecialType> CODEC = StringRepresentable.fromEnum(SpecialType::values);
         public static final StreamCodec<FriendlyByteBuf, SpecialType> STREAM_CODEC = BingoStreamCodecs.enum_(SpecialType.class);
 
-        public final int incompleteColor;
+        @Nullable
+        public final Integer incompleteColor;
 
-        SpecialType(int incompleteColor) {
+        SpecialType(@Nullable Integer incompleteColor) {
             this.incompleteColor = incompleteColor;
         }
 

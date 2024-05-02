@@ -212,18 +212,18 @@ public class BingoClient {
                 final BingoBoard.Teams state = clientGame.getState(sx, sy);
                 boolean isGoalCompleted = state.and(clientTeam);
 
-                final int color = switch (clientGame.renderMode()) {
-                    case FANCY -> isGoalCompleted ? 0x55ff55 : goal.specialType().incompleteColor;
+                final Integer color = switch (clientGame.renderMode()) {
+                    case FANCY -> isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor;
                     case ALL_TEAMS -> {
                         if (!state.any()) {
-                            yield 0;
+                            yield null;
                         }
                         final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
                         final Integer maybeColor = clientGame.teams()[team.getFirstIndex()].getColor().getColor();
                         yield maybeColor != null ? maybeColor : 0x55ff55;
                     }
                 };
-                if (color != 0) {
+                if (color != null) {
                     graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
                 }
 
