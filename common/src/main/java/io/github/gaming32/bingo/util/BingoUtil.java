@@ -19,6 +19,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -33,6 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -179,6 +181,23 @@ public class BingoUtil {
         }
     }
 
+    public static Component join(Iterable<? extends Component> components, String separator) {
+        return join(components, Component.literal(separator));
+    }
+
+    public static Component join(Iterable<? extends Component> components, Component separator) {
+        boolean first = true;
+        final MutableComponent result = Component.empty();
+        for (Component component : components) {
+            if (first) {
+                first = false;
+                result.append(separator.copy());
+            }
+            result.append(component);
+        }
+        return result;
+    }
+
     /**
      * @return Left is single player name, right is team name
      */
@@ -197,8 +216,12 @@ public class BingoUtil {
         return Either.right(team.getDisplayName());
     }
 
-    public static <T, R> Either<R, R> mapEither(Either<T, T> either, Function<T, R> mapper) {
+    public static <T, R> Either<R, R> mapEither(Either<? extends T, ? extends T> either, Function<? super T, ? extends R> mapper) {
         return either.mapBoth(mapper, mapper);
+    }
+
+    public static <T, R> R mapEitherToOne(Either<? extends T, ? extends T> either, Function<? super T, ? extends R> mapper) {
+        return either.map(mapper, mapper);
     }
 
     public static boolean isDyeableArmor(Item item) {

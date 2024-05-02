@@ -187,6 +187,11 @@ public interface BingoGameMode {
         }
 
         @Override
+        public boolean canFinishedTeamsGetMoreGoals() {
+            return false;
+        }
+
+        @Override
         public String getName() {
             return "lockout";
         }
@@ -259,6 +264,10 @@ public interface BingoGameMode {
 
     default boolean isLockout() {
         return false;
+    }
+
+    default boolean canFinishedTeamsGetMoreGoals() {
+        return true;
     }
 
     String getName();

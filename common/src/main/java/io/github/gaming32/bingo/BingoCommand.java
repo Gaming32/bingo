@@ -144,7 +144,7 @@ public class BingoCommand {
                     if (Bingo.activeGame == null) {
                         throw NO_GAME_RUNNING.create();
                     }
-                    Bingo.activeGame.endGame(ctx.getSource().getServer().getPlayerList(), Bingo.activeGame.getWinner(true));
+                    Bingo.activeGame.endGame(ctx.getSource().getServer().getPlayerList());
                     return Command.SINGLE_SUCCESS;
                 })
             )
@@ -406,6 +406,9 @@ public class BingoCommand {
                     .then(literal("--persistent")
                         .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                     )
+                    .then(literal("--continue-after-win")
+                        .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+                    )
                 )
             );
             CommandNode<CommandSourceStack> currentCommand = startCommand;
@@ -421,7 +424,7 @@ public class BingoCommand {
 
     private static int startGame(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         if (Bingo.activeGame != null) {
-            Bingo.activeGame.endGame(context.getSource().getServer().getPlayerList(), Bingo.activeGame.getWinner(true));
+            Bingo.activeGame.endGame(context.getSource().getServer().getPlayerList());
         }
 
         final ResourceLocation difficultyId = getArg(context, "difficulty", () -> BingoDifficulties.MEDIUM, ResourceLocationArgument::getId);
@@ -432,6 +435,7 @@ public class BingoCommand {
         final String gamemodeId = getArg(context, "gamemode", () -> "standard", StringArgumentType::getString);
         final boolean requireClient = hasNode(context, "--require-client");
         final boolean persistent = hasNode(context, "--persistent");
+        final boolean continueAfterWin = hasNode(context, "--continue-after-win");
 
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
         for (int i = 1; i <= 32; i++) {
@@ -504,7 +508,7 @@ public class BingoCommand {
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, persistent, teams.toArray(PlayerTeam[]::new));
+        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, persistent, continueAfterWin, teams.toArray(PlayerTeam[]::new));
         Bingo.updateCommandTree(playerList);
         new ArrayList<>(playerList.getPlayers()).forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(Bingo.translatable("bingo.started", difficulty.getDescription()), false);
@@ -513,7 +517,7 @@ public class BingoCommand {
 
     private static int resetGame(CommandContext<CommandSourceStack> context) {
         if (Bingo.activeGame != null) {
-            Bingo.activeGame.endGame(context.getSource().getServer().getPlayerList(), Bingo.activeGame.getWinner(true));
+            Bingo.activeGame.endGame(context.getSource().getServer().getPlayerList());
         }
         RemoveBoardPacket.INSTANCE.sendTo(context.getSource().getServer().getPlayerList().getPlayers());
         context.getSource().sendSuccess(() -> Bingo.translatable("bingo.reset.success"), true);

@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 public class BingoBoard {
     public static final int MIN_SIZE = 1;
@@ -401,15 +402,24 @@ public class BingoBoard {
         }
 
         public boolean all(int count) {
-            return Integer.bitCount(bits) >= count;
+            return count() >= count;
         }
 
         public boolean one() {
-            return Integer.bitCount(bits) == 1;
+            return count() == 1;
+        }
+
+        public int count() {
+            return Integer.bitCount(bits);
         }
 
         public int getFirstIndex() {
             return Integer.numberOfTrailingZeros(bits);
+        }
+
+        public IntStream stream() {
+            return IntStream.iterate(bits, i -> i != 0, i -> i & ~(1 << Integer.numberOfTrailingZeros(i)))
+                .map(Integer::numberOfTrailingZeros);
         }
 
         public Teams or(Teams other) {
