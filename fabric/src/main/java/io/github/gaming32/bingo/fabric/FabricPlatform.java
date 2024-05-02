@@ -12,7 +12,6 @@ import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
@@ -121,7 +120,6 @@ public class FabricPlatform extends BingoPlatform {
         Event.SERVER_TICK_END.setRegistrar(handler -> ServerTickEvents.END_SERVER_TICK.register(handler::accept));
 
         if (isClient()) {
-            ClientEvents.RENDER_HUD.setRegistrar(handler -> HudRenderCallback.EVENT.register(handler::renderHud));
             ClientEvents.KEY_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
                 (client, screen, scaledWidth, scaledHeight) ->
                     ScreenKeyboardEvents.allowKeyRelease(screen).register((screen1, key, scancode, modifiers) ->

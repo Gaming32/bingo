@@ -24,7 +24,6 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
@@ -159,9 +158,6 @@ public class NeoForgePlatform extends BingoPlatform {
         ));
 
         if (isClient()) {
-            ClientEvents.RENDER_HUD.setRegistrar(handler -> bus.addListener((RenderGuiEvent.Post event) ->
-                handler.renderHud(event.getGuiGraphics(), event.getPartialTick())
-            ));
             ClientEvents.KEY_RELEASED_PRE.setRegistrar(handler -> bus.addListener((ScreenEvent.KeyReleased.Pre event) -> {
                 if (handler.onKeyReleased(event.getScreen(), event.getKeyCode(), event.getScanCode(), event.getModifiers())) {
                     event.setCanceled(true);
