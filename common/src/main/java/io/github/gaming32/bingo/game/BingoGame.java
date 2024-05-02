@@ -611,8 +611,10 @@ public class BingoGame {
             message = Bingo.translatable("bingo.finished.tie", teamList, Bingo.ordinal(place));
         }
 
-        for (final ServerPlayer player : playerList.getPlayers()) {
-            player.playNotifySound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.MASTER, 1f, 1f);
+        if (remainingTeams > 1) {
+            for (final ServerPlayer player : playerList.getPlayers()) {
+                player.playNotifySound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.MASTER, 1f, 1f);
+            }
         }
 
         playerList.broadcastSystemMessage(message, false);
