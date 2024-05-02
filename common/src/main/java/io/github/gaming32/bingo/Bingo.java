@@ -237,14 +237,6 @@ public class Bingo {
         return component;
     }
 
-    public static MutableComponent ordinal(int n) {
-        if (n >= 1 && n <= 16) {
-            return translatable("bingo.ordinal." + n);
-        } else {
-            return translatable("bingo.ordinal.generic", n);
-        }
-    }
-
     public static boolean isInstalledOnClient(ServerPlayer player) {
         return BingoNetworking.instance().canPlayerReceive(player, InitBoardPacket.TYPE);
     }

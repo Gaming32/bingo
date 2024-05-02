@@ -10,6 +10,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
+import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -34,7 +35,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -181,21 +181,12 @@ public class BingoUtil {
         }
     }
 
-    public static Component join(Iterable<? extends Component> components, String separator) {
-        return join(components, Component.literal(separator));
-    }
-
-    public static Component join(Iterable<? extends Component> components, Component separator) {
-        boolean first = true;
-        final MutableComponent result = Component.empty();
-        for (Component component : components) {
-            if (first) {
-                first = false;
-                result.append(separator.copy());
-            }
-            result.append(component);
+    public static MutableComponent ordinal(int n) {
+        if (n >= 1 && n <= 16) {
+            return Bingo.translatable("bingo.ordinal." + n);
+        } else {
+            return Bingo.translatable("bingo.ordinal.generic", n);
         }
-        return result;
     }
 
     /**

@@ -33,6 +33,7 @@ import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -591,24 +592,19 @@ public class BingoGame {
                     return name;
                 }
             ).map(
-                playerName -> Bingo.translatable("bingo.finished.single", playerName, Bingo.ordinal(place)),
-                teamName -> Bingo.translatable("bingo.finished", teamName, Bingo.ordinal(place))
+                playerName -> Bingo.translatable("bingo.finished.single", playerName, BingoUtil.ordinal(place)),
+                teamName -> Bingo.translatable("bingo.finished", teamName, BingoUtil.ordinal(place))
             );
         } else {
-            Component teamList = Component.literal("[")
-                .append(BingoUtil.join(
-                    newFinishers.stream().mapToObj(teamIndex -> {
-                        final PlayerTeam team = getTeam(BingoBoard.Teams.fromOne(teamIndex));
-                        final Component name = BingoUtil.mapEitherToOne(BingoUtil.getDisplayName(team, playerList), Function.identity());
-                        if (team.getColor() != ChatFormatting.RESET) {
-                            return name.copy().withStyle(team.getColor());
-                        }
-                        return name;
-                    }).toList(),
-                    ", "
-                ))
-                .append("]");
-            message = Bingo.translatable("bingo.finished.tie", teamList, Bingo.ordinal(place));
+            Component teamList = ComponentUtils.wrapInSquareBrackets(ComponentUtils.formatList(newFinishers.stream().mapToObj(teamIndex -> {
+                final PlayerTeam team = getTeam(BingoBoard.Teams.fromOne(teamIndex));
+                final Component name = BingoUtil.mapEitherToOne(BingoUtil.getDisplayName(team, playerList), Function.identity());
+                if (team.getColor() != ChatFormatting.RESET) {
+                    return name.copy().withStyle(team.getColor());
+                }
+                return name;
+            }).toList(), Function.identity()));
+            message = Bingo.translatable("bingo.finished.tie", teamList, BingoUtil.ordinal(place));
         }
 
         if (remainingTeams > 1) {
