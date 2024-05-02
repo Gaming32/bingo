@@ -24,6 +24,7 @@ import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BingoGameMode;
+import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -146,6 +147,10 @@ public class BingoCommand {
                     Bingo.activeGame.endGame(ctx.getSource().getServer().getPlayerList(), Bingo.activeGame.getWinner(true));
                     return Command.SINGLE_SUCCESS;
                 })
+            )
+            .then(literal("reset")
+                .requires(source -> source.hasPermission(2))
+                .executes(BingoCommand::resetGame)
             )
             .then(literal("board")
                 .requires(source -> Bingo.activeGame != null)
@@ -503,6 +508,15 @@ public class BingoCommand {
         Bingo.updateCommandTree(playerList);
         new ArrayList<>(playerList.getPlayers()).forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(Bingo.translatable("bingo.started", difficulty.getDescription()), false);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int resetGame(CommandContext<CommandSourceStack> context) {
+        if (Bingo.activeGame != null) {
+            Bingo.activeGame.endGame(context.getSource().getServer().getPlayerList(), Bingo.activeGame.getWinner(true));
+        }
+        RemoveBoardPacket.INSTANCE.sendTo(context.getSource().getServer().getPlayerList().getPlayers());
+        context.getSource().sendSuccess(() -> Bingo.translatable("bingo.reset.success"), true);
         return Command.SINGLE_SUCCESS;
     }
 
