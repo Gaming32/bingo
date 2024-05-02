@@ -33,6 +33,7 @@ import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -63,6 +64,7 @@ public class BingoGame {
     private final BingoGameMode gameMode;
     private final boolean requireClient;
     private final boolean persistent;
+    private final boolean continueAfterWin;
     private final PlayerTeam[] teams;
 
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> advancementProgress = new HashMap<>();
@@ -70,12 +72,15 @@ public class BingoGame {
     private final Map<UUID, Object2IntOpenHashMap<ActiveGoal>> goalAchievedCount = new HashMap<>();
     private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
     private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
+    private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
+    private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean persistent, PlayerTeam... teams) {
+    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean persistent, boolean continueAfterWin, PlayerTeam... teams) {
         this.board = board;
         this.gameMode = gameMode;
         this.requireClient = requireClient;
         this.persistent = persistent;
+        this.continueAfterWin = continueAfterWin;
         this.teams = teams;
     }
 
@@ -93,6 +98,10 @@ public class BingoGame {
 
     public boolean isPersistent() {
         return persistent;
+    }
+
+    public boolean shouldContinueAfterWin() {
+        return continueAfterWin;
     }
 
     /**
@@ -167,14 +176,17 @@ public class BingoGame {
         return baseStats.get(player.getUUID());
     }
 
-    public void endGame(PlayerList playerList, BingoBoard.Teams winner) {
+    public void endGame(PlayerList playerList) {
         clearListeners(playerList);
         final Component message;
-        if (winner.any()) {
-            if (!winner.one()) {
+        if (!winningTeams.any()) {
+            winningTeams = getWinner(true);
+        }
+        if (winningTeams.any()) {
+            if (!winningTeams.one()) {
                 message = Bingo.translatable("bingo.ended.tie");
             } else {
-                final PlayerTeam playerTeam = getTeam(winner);
+                final PlayerTeam playerTeam = getTeam(winningTeams);
                 message = BingoUtil.mapEither(
                     BingoUtil.getDisplayName(playerTeam, playerList),
                     name -> {
@@ -412,6 +424,10 @@ public class BingoGame {
             }
             return;
         }
+        if (!gameMode.canFinishedTeamsGetMoreGoals() && finishedTeams.and(team)) {
+            return;
+        }
+
         final BingoBoard.Teams[] board = this.board.getStates();
         final int index = getBoardIndex(player, goal);
         if (index == -1) return;
@@ -534,9 +550,70 @@ public class BingoGame {
     }
 
     public void checkForWin(PlayerList playerList) {
-        final BingoBoard.Teams winner = getWinner(false);
-        if (!winner.any()) return;
-        endGame(playerList, winner);
+        final BingoBoard.Teams finishers = getWinner(false);
+        final BingoBoard.Teams newFinishers = finishers.andNot(finishedTeams);
+        if (!newFinishers.any()) {
+            return;
+        }
+
+        final int place = finishedTeams.count() + 1;
+        finishedTeams = finishedTeams.or(finishers);
+        if (place == 1) {
+            winningTeams = newFinishers;
+        }
+
+        int remainingTeams = 0;
+        for (int i = 0; i < teams.length; i++) {
+            boolean isTeamActive = teams[i].getPlayers().stream().anyMatch(playerName -> playerList.getPlayerByName(playerName) != null);
+            if (isTeamActive && !finishedTeams.and(BingoBoard.Teams.fromOne(i))) {
+                remainingTeams++;
+            }
+        }
+
+        if (continueAfterWin) {
+            notifyFinishedTeam(playerList, newFinishers, place, remainingTeams);
+        }
+
+        if (!continueAfterWin || remainingTeams < 2) {
+            endGame(playerList);
+        }
+    }
+
+    private void notifyFinishedTeam(PlayerList playerList, BingoBoard.Teams newFinishers, int place, int remainingTeams) {
+        Component message;
+        if (newFinishers.one()) {
+            final PlayerTeam playerTeam = getTeam(newFinishers);
+            message = BingoUtil.mapEither(
+                BingoUtil.getDisplayName(playerTeam, playerList),
+                name -> {
+                    if (playerTeam.getColor() != ChatFormatting.RESET) {
+                        return name.copy().withStyle(playerTeam.getColor());
+                    }
+                    return name;
+                }
+            ).map(
+                playerName -> Bingo.translatable("bingo.finished.single", playerName, BingoUtil.ordinal(place)),
+                teamName -> Bingo.translatable("bingo.finished", teamName, BingoUtil.ordinal(place))
+            );
+        } else {
+            Component teamList = ComponentUtils.wrapInSquareBrackets(ComponentUtils.formatList(newFinishers.stream().mapToObj(teamIndex -> {
+                final PlayerTeam team = getTeam(BingoBoard.Teams.fromOne(teamIndex));
+                final Component name = BingoUtil.mapEitherToOne(BingoUtil.getDisplayName(team, playerList), Function.identity());
+                if (team.getColor() != ChatFormatting.RESET) {
+                    return name.copy().withStyle(team.getColor());
+                }
+                return name;
+            }).toList(), Function.identity()));
+            message = Bingo.translatable("bingo.finished.tie", teamList, BingoUtil.ordinal(place));
+        }
+
+        if (remainingTeams > 1) {
+            for (final ServerPlayer player : playerList.getPlayers()) {
+                player.playNotifySound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.MASTER, 1f, 1f);
+            }
+        }
+
+        playerList.broadcastSystemMessage(message, false);
     }
 
     public BingoBoard.Teams getWinner(boolean tryHarder) {
@@ -562,12 +639,15 @@ public class BingoGame {
         BingoBoard board,
         BingoGameMode gameMode,
         boolean requireClient,
+        boolean continueAfterWin,
         List<String> teamNames,
         Map<UUID, Int2ObjectMap<AdvancementProgress>> advancementProgress,
         Map<UUID, Int2ObjectMap<GoalProgress>> goalProgress,
         Map<UUID, Int2IntMap> goalAchievedCount,
         Map<UUID, IntList> queuedGoals,
-        Map<UUID, Object2IntMap<Stat<?>>> baseStats
+        Map<UUID, Object2IntMap<Stat<?>>> baseStats,
+        BingoBoard.Teams winningTeams,
+        BingoBoard.Teams finsihedTeams
     ) {
         private static final Codec<Map<UUID, Int2ObjectMap<AdvancementProgress>>> ADVANCEMENT_PROGRESS_CODEC =
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.int2ObjectMap(AdvancementProgress.CODEC));
@@ -585,12 +665,15 @@ public class BingoGame {
                 BingoBoard.PERSISTENCE_CODEC.fieldOf("board").forGetter(PersistenceData::board),
                 BingoGameMode.PERSISTENCE_CODEC.fieldOf("game_mode").forGetter(PersistenceData::gameMode),
                 Codec.BOOL.fieldOf("require_client").forGetter(PersistenceData::requireClient),
+                Codec.BOOL.optionalFieldOf("continue_after_win", false).forGetter(PersistenceData::continueAfterWin),
                 Codec.STRING.listOf().fieldOf("team_names").forGetter(PersistenceData::teamNames),
                 ADVANCEMENT_PROGRESS_CODEC.fieldOf("advancement_progress").forGetter(PersistenceData::advancementProgress),
                 GOAL_PROGRESS_CODEC.fieldOf("goal_progress").forGetter(PersistenceData::goalProgress),
                 GOAL_ACHIEVED_COUNT_CODEC.fieldOf("goal_achieved_count").forGetter(PersistenceData::goalAchievedCount),
                 QUEUED_GOALS_CODEC.fieldOf("queued_goals").forGetter(PersistenceData::queuedGoals),
-                BASE_STATS_CODEC.fieldOf("base_stats").forGetter(PersistenceData::baseStats)
+                BASE_STATS_CODEC.fieldOf("base_stats").forGetter(PersistenceData::baseStats),
+                BingoBoard.Teams.CODEC.optionalFieldOf("winning_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::winningTeams),
+                BingoBoard.Teams.CODEC.optionalFieldOf("finished_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::finsihedTeams)
             ).apply(instance, PersistenceData::new)
         );
 
@@ -602,7 +685,7 @@ public class BingoGame {
                     throw new IllegalStateException("Team '" + teamNames.get(i) + "' no longer exists");
                 }
             }
-            final BingoGame game = new BingoGame(board, gameMode, requireClient, true, teams);
+            final BingoGame game = new BingoGame(board, gameMode, requireClient, true, continueAfterWin, teams);
 
             for (final var entry : advancementProgress.entrySet()) {
                 final Map<ActiveGoal, AdvancementProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
@@ -641,6 +724,9 @@ public class BingoGame {
 
             game.baseStats.putAll(baseStats);
 
+            game.winningTeams = winningTeams;
+            game.finishedTeams = finsihedTeams;
+
             return game;
         }
 
@@ -668,11 +754,12 @@ public class BingoGame {
             }
 
             return new PersistenceData(
-                game.board, game.gameMode, game.requireClient,
+                game.board, game.gameMode, game.requireClient, game.continueAfterWin,
                 Arrays.stream(game.teams).map(PlayerTeam::getName).toList(),
                 createMap(game, game.advancementProgress),
                 createMap(game, game.goalProgress),
-                goalAchievedCount, queuedGoals, game.baseStats
+                goalAchievedCount, queuedGoals, game.baseStats,
+                game.winningTeams, game.finishedTeams
             );
         }
 

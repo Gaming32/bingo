@@ -10,6 +10,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
+import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -19,6 +20,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -179,6 +181,14 @@ public class BingoUtil {
         }
     }
 
+    public static MutableComponent ordinal(int n) {
+        if (n >= 1 && n <= 16) {
+            return Bingo.translatable("bingo.ordinal." + n);
+        } else {
+            return Bingo.translatable("bingo.ordinal.generic", n);
+        }
+    }
+
     /**
      * @return Left is single player name, right is team name
      */
@@ -197,8 +207,12 @@ public class BingoUtil {
         return Either.right(team.getDisplayName());
     }
 
-    public static <T, R> Either<R, R> mapEither(Either<T, T> either, Function<T, R> mapper) {
+    public static <T, R> Either<R, R> mapEither(Either<? extends T, ? extends T> either, Function<? super T, ? extends R> mapper) {
         return either.mapBoth(mapper, mapper);
+    }
+
+    public static <T, R> R mapEitherToOne(Either<? extends T, ? extends T> either, Function<? super T, ? extends R> mapper) {
+        return either.map(mapper, mapper);
     }
 
     public static boolean isDyeableArmor(Item item) {
