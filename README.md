@@ -27,14 +27,13 @@ A Bingo mod that displays the bingo board on players' screens and tracks progres
 ### Fabric
 
 1. [Install Fabric](https://fabricmc.net/use/).
-2. Download [Fabric API](https://modrinth.com/mod/fabric-api) and [Architectury API](https://modrinth.com/mod/architectury-api) and put them in your mods folder.
+2. Download [Fabric API](https://modrinth.com/mod/fabric-api) and put it in your mods folder.
 3. Download the Bingo mod from [Modrinth](https://modrinth.com/mod/bingo-mod), and put it in your mods folder.
 
 ### NeoForge
 
 1. [Install NeoForge](https://neoforged.net/).
-2. Download [Architectury API](https://modrinth.com/mod/architectury-api) and put it in your mods folder.
-3. Download the Bingo mod from [Modrinth](https://modrinth.com/mod/bingo-mod), and put it in your mods folder.
+2. Download the Bingo mod from [Modrinth](https://modrinth.com/mod/bingo-mod), and put it in your mods folder.
 
 ## Usage
 
