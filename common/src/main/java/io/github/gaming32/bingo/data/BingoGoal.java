@@ -321,7 +321,7 @@ public class BingoGoal {
     }
 
     public MutableComponent buildName(Map<String, Dynamic<?>> referable, RandomSource rand) {
-        return Bingo.ensureHasFallback(BingoUtil.fromDynamic(
+        return BingoUtil.ensureHasFallback(BingoUtil.fromDynamic(
             ComponentSerialization.CODEC,
             performSubstitutions(name, referable, rand)
         ).copy());
@@ -332,7 +332,7 @@ public class BingoGoal {
             return Optional.empty();
         }
         return Optional.of(
-            Bingo.ensureHasFallback(BingoUtil.fromDynamic(
+            BingoUtil.ensureHasFallback(BingoUtil.fromDynamic(
                 ComponentSerialization.CODEC,
                 performSubstitutions(tooltip, referable, rand)
             ).copy())

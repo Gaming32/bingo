@@ -12,11 +12,15 @@ import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -31,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -150,6 +155,58 @@ public class BingoUtil {
         } else {
             return Bingo.translatable("bingo.ordinal.generic", n);
         }
+    }
+
+    public static MutableComponent ensureHasFallback(MutableComponent component) {
+        if (component.getContents() instanceof TranslatableContents translatable && translatable.getFallback() == null) {
+            final String fallbackText = Language.getInstance().getOrDefault(translatable.getKey(), null);
+
+            Object[] args = translatable.getArgs();
+            if (args.length > 0) {
+                args = args.clone();
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i] instanceof MutableComponent subComponent) {
+                        args[i] = ensureHasFallback(subComponent);
+                    }
+                }
+            }
+
+            Style style = component.getStyle();
+            if (style.getHoverEvent() != null) {
+                if (style.getHoverEvent().getAction() == HoverEvent.Action.SHOW_TEXT) {
+                    final Component hoverText = style.getHoverEvent().getValue(HoverEvent.Action.SHOW_TEXT);
+                    if (hoverText instanceof MutableComponent mutableComponent) {
+                        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, mutableComponent));
+                    }
+                } else if (style.getHoverEvent().getAction() == HoverEvent.Action.SHOW_ENTITY) {
+                    final HoverEvent.EntityTooltipInfo info = style.getHoverEvent().getValue(HoverEvent.Action.SHOW_ENTITY);
+                    assert info != null;
+                    if (info.name.orElse(null) instanceof MutableComponent mutableComponent) {
+                        style = style.withHoverEvent(new HoverEvent(
+                            HoverEvent.Action.SHOW_ENTITY,
+                            new HoverEvent.EntityTooltipInfo(info.type, info.id, ensureHasFallback(mutableComponent))
+                        ));
+                    }
+                }
+            }
+
+            List<Component> siblings = component.getSiblings();
+            if (!siblings.isEmpty()) {
+                siblings = new ArrayList<>(siblings);
+                for (int i = 0; i < siblings.size(); i++) {
+                    if (siblings.get(i) instanceof MutableComponent subComponent) {
+                        siblings.set(i, ensureHasFallback(subComponent));
+                    }
+                }
+            }
+
+            final MutableComponent result = Component.translatableWithFallback(
+                translatable.getKey(), fallbackText, args
+            ).setStyle(style);
+            result.getSiblings().addAll(siblings);
+            return result;
+        }
+        return component;
     }
 
     /**
