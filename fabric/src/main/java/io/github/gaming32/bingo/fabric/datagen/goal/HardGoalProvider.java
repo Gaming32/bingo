@@ -86,12 +86,12 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class HardGoalProvider extends DifficultyGoalProvider {
-    public HardGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
-        super(BingoDifficulties.HARD, goalAdder);
+    public HardGoalProvider(Consumer<BingoGoal.Holder> goalAdder, HolderLookup.Provider registries) {
+        super(BingoDifficulties.HARD, goalAdder, registries);
     }
 
     @Override
-    public void addGoals(HolderLookup.Provider registries) {
+    public void addGoals() {
         final var bannerPatterns = registries.lookupOrThrow(Registries.BANNER_PATTERN);
         addGoal(BingoGoal.builder(id("level_10_enchant"))
             .criterion("enchant", EnchantedItemTrigger.builder().requiredLevels(MinMaxBounds.Ints.atLeast(10)).build())

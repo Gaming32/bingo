@@ -49,12 +49,12 @@ import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class VeryEasyGoalProvider extends DifficultyGoalProvider {
-    public VeryEasyGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
-        super(BingoDifficulties.VERY_EASY, goalAdder);
+    public VeryEasyGoalProvider(Consumer<BingoGoal.Holder> goalAdder, HolderLookup.Provider registries) {
+        super(BingoDifficulties.VERY_EASY, goalAdder, registries);
     }
 
     @Override
-    public void addGoals(HolderLookup.Provider registries) {
+    public void addGoals() {
         addGoal(obtainItemGoal(id("cobblestone"), Items.COBBLESTONE, 32, 64)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("dirt"), Items.DIRT, 32, 64)

@@ -66,11 +66,17 @@ public abstract class DifficultyGoalProvider {
     private final ResourceLocation difficulty;
     private final String prefix;
     private final Consumer<BingoGoal.Holder> goalAdder;
+    protected final HolderLookup.Provider registries;
 
-    protected DifficultyGoalProvider(ResourceLocation difficulty, Consumer<BingoGoal.Holder> goalAdder) {
+    protected DifficultyGoalProvider(
+        ResourceLocation difficulty,
+        Consumer<BingoGoal.Holder> goalAdder,
+        HolderLookup.Provider registries
+    ) {
         this.difficulty = difficulty;
         this.prefix = difficulty.getPath() + '/';
         this.goalAdder = goalAdder;
+        this.registries = registries;
     }
 
     protected final void addGoal(BingoGoal.Builder goal) {
@@ -81,7 +87,7 @@ public abstract class DifficultyGoalProvider {
         goalAdder.accept(builtGoal);
     }
 
-    public abstract void addGoals(HolderLookup.Provider registries);
+    public abstract void addGoals();
 
     protected final ResourceLocation id(String path) {
         return new ResourceLocation(Bingo.MOD_ID, prefix + path);

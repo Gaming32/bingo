@@ -63,10 +63,10 @@ public class BingoGoalProvider implements DataProvider {
     }
 
     private void addGoals(Consumer<BingoGoal.Holder> goalAdder, HolderLookup.Provider registries) {
-        new VeryEasyGoalProvider(goalAdder).addGoals(registries);
-        new EasyGoalProvider(goalAdder).addGoals(registries);
-        new MediumGoalProvider(goalAdder).addGoals(registries);
-        new HardGoalProvider(goalAdder).addGoals(registries);
-        new VeryHardGoalProvider(goalAdder).addGoals(registries);
+        new VeryEasyGoalProvider(goalAdder, registries).addGoals();
+        new EasyGoalProvider(goalAdder, registries).addGoals();
+        new MediumGoalProvider(goalAdder, registries).addGoals();
+        new HardGoalProvider(goalAdder, registries).addGoals();
+        new VeryHardGoalProvider(goalAdder, registries).addGoals();
     }
 }

@@ -107,12 +107,12 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class MediumGoalProvider extends DifficultyGoalProvider {
-    public MediumGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
-        super(BingoDifficulties.MEDIUM, goalAdder);
+    public MediumGoalProvider(Consumer<BingoGoal.Holder> goalAdder, HolderLookup.Provider registries) {
+        super(BingoDifficulties.MEDIUM, goalAdder, registries);
     }
 
     @Override
-    public void addGoals(HolderLookup.Provider registries) {
+    public void addGoals() {
         final var bannerPatterns = registries.lookupOrThrow(Registries.BANNER_PATTERN);
         addGoal(obtainSomeEdibleItems(id("edible_items"), 6, 7).tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("beetroot_soup"), Items.BEETROOT_SOUP)

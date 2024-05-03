@@ -127,12 +127,12 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class EasyGoalProvider extends DifficultyGoalProvider {
-    public EasyGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
-        super(BingoDifficulties.EASY, goalAdder);
+    public EasyGoalProvider(Consumer<BingoGoal.Holder> goalAdder, HolderLookup.Provider registries) {
+        super(BingoDifficulties.EASY, goalAdder, registries);
     }
 
     @Override
-    public void addGoals(HolderLookup.Provider registries) {
+    public void addGoals() {
         addGoal(BingoGoal.builder(id("different_fish"))
             .sub("count", BingoSub.random(2, 4))
             .criterion("obtain",

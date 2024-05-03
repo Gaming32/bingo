@@ -66,12 +66,12 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class VeryHardGoalProvider extends DifficultyGoalProvider {
-    public VeryHardGoalProvider(Consumer<BingoGoal.Holder> goalAdder) {
-        super(BingoDifficulties.VERY_HARD, goalAdder);
+    public VeryHardGoalProvider(Consumer<BingoGoal.Holder> goalAdder, HolderLookup.Provider registries) {
+        super(BingoDifficulties.VERY_HARD, goalAdder, registries);
     }
 
     @Override
-    public void addGoals(HolderLookup.Provider registries) {
+    public void addGoals() {
         final var structures = registries.lookupOrThrow(Registries.STRUCTURE);
         addGoal(obtainSomeItemsFromTag(id("ores"), ConventionalItemTags.ORES, "bingo.goal.ores", 5, 7)
             .tooltip("ores")
