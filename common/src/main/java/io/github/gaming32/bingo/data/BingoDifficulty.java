@@ -5,11 +5,11 @@ import com.google.common.collect.ImmutableSortedMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
@@ -141,7 +141,7 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
             final ImmutableSortedMap.Builder<Integer, Holder> byNumberBuilder = ImmutableSortedMap.naturalOrder();
             for (final var entry : object.entrySet()) {
                 try {
-                    final BingoDifficulty difficulty = BingoUtil.fromJsonElement(CODEC, entry.getValue());
+                    final BingoDifficulty difficulty = CODEC.parse(ops, entry.getValue()).getOrThrow(JsonParseException::new);
                     final Holder holder = new Holder(entry.getKey(), difficulty);
                     byIdBuilder.put(holder.id, holder);
                     byNumberBuilder.put(difficulty.number, holder);

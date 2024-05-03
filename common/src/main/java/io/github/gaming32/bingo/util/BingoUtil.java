@@ -1,10 +1,7 @@
 package io.github.gaming32.bingo.util;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
@@ -17,7 +14,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -39,7 +35,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collector;
 
@@ -129,30 +124,6 @@ public class BingoUtil {
         return codec.encodeStart(JsonOps.INSTANCE, obj).getOrThrow();
     }
 
-    public static <T> JsonObject toJsonObject(Codec<T> codec, T obj) {
-        return toJsonElement(codec, obj).getAsJsonObject();
-    }
-
-    public static <T> T fromJsonElement(Codec<T> codec, JsonElement element) throws JsonParseException {
-        return codec.parse(JsonOps.INSTANCE, element).getOrThrow(JsonParseException::new);
-    }
-
-    public static <T> Tag toTag(Codec<T> codec, T obj) {
-        return codec.encodeStart(NbtOps.INSTANCE, obj).getOrThrow();
-    }
-
-    public static <T> CompoundTag toCompoundTag(Codec<T> codec, T obj) {
-        final Tag result = toTag(codec, obj);
-        if (!(result instanceof CompoundTag compound)) {
-            throw new IllegalStateException("Obj " + obj + " didn't serialize to CompoundTag");
-        }
-        return compound;
-    }
-
-    public static <T> T fromTag(Codec<T> codec, Tag tag) {
-        return codec.parse(NbtOps.INSTANCE, tag).getOrThrow(IllegalArgumentException::new);
-    }
-
     public static <T> Dynamic<?> toDynamic(Codec<T> codec, T obj) {
         return toDynamic(codec, obj, BingoCodecs.DEFAULT_OPS);
     }
@@ -163,14 +134,6 @@ public class BingoUtil {
 
     public static <T> T fromDynamic(Codec<T> codec, Dynamic<?> dynamic) throws IllegalArgumentException {
         return codec.parse(dynamic).getOrThrow(IllegalArgumentException::new);
-    }
-
-    public static <T> List<T> addToList(List<T> a, T b) {
-        return ImmutableList.<T>builderWithExpectedSize(a.size() + 1).addAll(a).add(b).build();
-    }
-
-    public static <T> Optional<T> fromOptionalJsonElement(Codec<T> codec, JsonElement element) {
-        return element == null || element.isJsonNull() ? Optional.empty() : Optional.of(fromJsonElement(codec, element));
     }
 
     public static <T extends Enum<T>> T valueOf(String name, @NotNull T defaultValue) {
