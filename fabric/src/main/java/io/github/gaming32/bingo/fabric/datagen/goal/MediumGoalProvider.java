@@ -47,10 +47,8 @@ import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.DistanceTrigger;
 import net.minecraft.advancements.critereon.EnchantedItemTrigger;
-import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
 import net.minecraft.advancements.critereon.ItemPotionsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicates;
@@ -330,12 +328,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 new ItemIcon(makeItemWithGlint(Items.GOLDEN_SWORD)),
                 ItemPredicate.Builder.item()
                     .of(Items.GOLDEN_SWORD)
-                    .withSubPredicate(
-                        ItemSubPredicates.ENCHANTMENTS,
-                        ItemEnchantmentsPredicate.enchantments(List.of(
-                            new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1))
-                        ))
-                    )
+                    .withSubPredicate(ItemSubPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement())
             )
                 .name("enchanted_golden_sword")
         );

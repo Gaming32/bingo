@@ -26,6 +26,8 @@ import io.github.gaming32.bingo.util.BlockPattern;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.critereon.EnchantmentPredicate;
+import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -54,6 +56,7 @@ import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -353,5 +356,17 @@ public abstract class DifficultyGoalProvider {
                 .map(ItemIcon::new)
                 .collect(ImmutableList.toImmutableList())
         );
+    }
+
+    protected static ItemEnchantmentsPredicate.Enchantments createAnyEnchantmentsRequirement() {
+        return ItemEnchantmentsPredicate.enchantments(List.of(
+            new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1))
+        ));
+    }
+
+    protected static ItemEnchantmentsPredicate.StoredEnchantments createAnyStoredEnchantmentsRequirement() {
+        return ItemEnchantmentsPredicate.storedEnchantments(List.of(
+            new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1))
+        ));
     }
 }

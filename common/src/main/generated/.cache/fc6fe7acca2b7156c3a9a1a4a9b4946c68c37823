@@ -1,4 +1,4 @@
-// 1.20.5	
+// 1.20.6	
 60933cb93b51bc5046fb820f19ed358af2699f4d data/bingo/bingo/goals/easy/3x3x3_glass_cube.json
 5330a9593cd38fc8aa8b8fcd6ac88540e1b1224b data/bingo/bingo/goals/easy/4x4_paintings.json
 86d1d398343deced49a4d91d7b0ca17274600842 data/bingo/bingo/goals/easy/acacia_log.json
@@ -109,7 +109,7 @@ be173b934559232ac715a664069bbe8878aa5cbd data/bingo/bingo/goals/easy/note_block.
 84f35d8dff8447c22efc0af4d8eb55986796b045 data/bingo/bingo/goals/easy/oak_log.json
 4773d719f9211401ecb4ada1159d12ec9ae22bc7 data/bingo/bingo/goals/easy/oak_planks.json
 bd09093a4c690acb09fb820373b817fdac4f9ea7 data/bingo/bingo/goals/easy/oak_wood.json
-1511ca58b5cf370df0536fc9be38fb41b04350d9 data/bingo/bingo/goals/easy/obtain_enchanted_item.json
+a831af66700a8ebee3f5c2e35f45f7c192478c00 data/bingo/bingo/goals/easy/obtain_enchanted_item.json
 20078682f8d1940f8704310fd238c3b54c3ef2fe data/bingo/bingo/goals/easy/open_door_with_target_from_ten_blocks.json
 0b5941c23908c31987a15bae6a7cbf4a75942740 data/bingo/bingo/goals/easy/orange_dye.json
 0c743dd38dd42f085d81a9315d01174fea81d559 data/bingo/bingo/goals/easy/paper.json

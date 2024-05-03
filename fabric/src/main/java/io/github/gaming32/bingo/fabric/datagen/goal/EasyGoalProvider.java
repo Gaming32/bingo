@@ -66,7 +66,6 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.advancements.critereon.FishingRodHookedTrigger;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicates;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
@@ -830,12 +829,10 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 id("obtain_enchanted_item"),
                 Items.ENCHANTED_BOOK,
                 ItemPredicate.Builder.item().withSubPredicate(
-                    ItemSubPredicates.ENCHANTMENTS,
-                    ItemEnchantmentsPredicate.enchantments(List.of())
+                    ItemSubPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement()
                 ),
                 ItemPredicate.Builder.item().withSubPredicate(
-                    ItemSubPredicates.STORED_ENCHANTMENTS,
-                    ItemEnchantmentsPredicate.storedEnchantments(List.of())
+                    ItemSubPredicates.STORED_ENCHANTMENTS, createAnyStoredEnchantmentsRequirement()
                 )
             )
             .name("obtain_enchanted_item")

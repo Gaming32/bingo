@@ -538,12 +538,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     Optional.empty(),
                     Optional.of(ItemPredicate.Builder.item()
                         .of(ItemTags.AXES)
-                        .withSubPredicate(
-                            ItemSubPredicates.ENCHANTMENTS,
-                            ItemEnchantmentsPredicate.enchantments(List.of(
-                                new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1))
-                            ))
-                        )
+                        .withSubPredicate(ItemSubPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement())
                         .build()
                     ),
                     Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity()

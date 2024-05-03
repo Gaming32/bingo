@@ -23,7 +23,8 @@ import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPacket;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePacket;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.Event;
-import io.github.gaming32.bingo.subpredicates.BingoSubPredicates;
+import io.github.gaming32.bingo.subpredicates.entity.BingoEntitySubPredicates;
+import io.github.gaming32.bingo.subpredicates.item.BingoItemSubPredicates;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
@@ -147,7 +148,8 @@ public class Bingo {
         GoalIconType.load();
         BingoSubType.load();
         ProgressTrackerType.load();
-        BingoSubPredicates.load();
+        BingoEntitySubPredicates.load();
+        BingoItemSubPredicates.load();
         BingoTriggers.load();
 
         BingoPlatform.platform.registerDataReloadListeners(registrar -> {
