@@ -38,10 +38,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
 
 public class BingoClient {
     private static final ResourceLocation BOARD_TEXTURE = ResourceLocations.bingo("board");
@@ -153,7 +150,7 @@ public class BingoClient {
 
             int totalScore = 0;
             for (final BingoBoard.Teams state : clientGame.states()) {
-                if (state.any()) {
+                if (state.count() == 1) {
                     totalScore++;
                     teams[state.getFirstIndex()].score++;
                 }
@@ -232,19 +229,22 @@ public class BingoClient {
                 final BingoBoard.Teams state = clientGame.getState(sx, sy);
                 boolean isGoalCompleted = state.and(clientTeam);
 
-                final Integer color = switch (clientGame.renderMode()) {
-                    case FANCY -> isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor;
+                final List<Integer> colors = switch (clientGame.renderMode()) {
+                    case FANCY -> Collections.singletonList(isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor);
                     case ALL_TEAMS -> {
                         if (!state.any()) {
-                            yield null;
+                            yield Collections.emptyList();
                         }
-                        final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
-                        final Integer maybeColor = clientGame.teams()[team.getFirstIndex()].getColor().getColor();
-                        yield maybeColor != null ? maybeColor : 0x55ff55;
+                        yield state.stream().map((team) -> clientGame.teams()[team].getColor().getColor()).boxed().toList();
                     }
                 };
-                if (color != null) {
-                    graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
+                for (int i = 0; i < colors.size(); ++i) {
+                    int color = colors.get(i);
+                    int start = 16 * i / colors.size();
+                    int end = 16 * (i + 1) / colors.size();
+                    int base = (colors.size() == 1) ? 0xA0000000 : 0x50000000;
+
+                    graphics.fill(slotX + start, slotY, slotX + end, slotY + 16, base | color);
                 }
 
                 GoalProgress progress = clientGame.getProgress(sx, sy);

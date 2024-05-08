@@ -21,6 +21,8 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface BingoGameMode {
     BingoGameMode STANDARD = new BingoGameMode() {
@@ -139,7 +141,7 @@ public interface BingoGameMode {
 
             int totalHeld = 0;
             for (final BingoBoard.Teams state : board.getStates()) {
-                if (state.any()) {
+                if (state.count() == 1) {
                     totalHeld++;
                     teams[state.getFirstIndex()].goalsHeld++;
                 }
@@ -168,12 +170,21 @@ public interface BingoGameMode {
 
         @Override
         public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever) {
-            return !board.getStates()[index].any();
+            if (!isNever)
+                return !board.getStates()[index].any();
+            else
+                return board.getStates()[index].and(team);
         }
 
         @Override
-        public boolean isGoalAllowed(BingoGoal.Holder goal) {
-            return goal.goal().getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
+        public boolean isGoalAllowed(BingoGoal.Holder goal, boolean allowNeverGoalsInLockout) {
+            return goal.goal().getTags().stream().allMatch((g) -> {
+                if (g.tag().specialType() == BingoTag.SpecialType.NONE)
+                    return true;
+                if (g.tag().specialType() == BingoTag.SpecialType.NEVER)
+                    return allowNeverGoalsInLockout;
+                return false;
+            });
         }
 
         @Override
@@ -226,7 +237,7 @@ public interface BingoGameMode {
         }
 
         @Override
-        public boolean isGoalAllowed(BingoGoal.Holder goal) {
+        public boolean isGoalAllowed(BingoGoal.Holder goal, boolean allowNeverGoalsInLockout) {
             return goal.goal().getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
         }
 
@@ -254,7 +265,7 @@ public interface BingoGameMode {
 
     boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever);
 
-    default boolean isGoalAllowed(BingoGoal.Holder goal) {
+    default boolean isGoalAllowed(BingoGoal.Holder goal, boolean allowNeverGoalsInLockout) {
         return true;
     }
 
