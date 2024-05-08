@@ -173,7 +173,7 @@ public interface BingoGameMode {
             if (!isNever)
                 return !board.getStates()[index].any();
             else
-                return board.getStates()[index].and(team);
+                return board.getStates()[index].count() > 1 && board.getStates()[index].and(team);
         }
 
         @Override
