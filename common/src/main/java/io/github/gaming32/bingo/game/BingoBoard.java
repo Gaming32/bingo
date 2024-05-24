@@ -74,7 +74,7 @@ public class BingoBoard {
 
     public static BingoBoard generate(
         int size,
-        int difficulty,
+        BingoDifficulty difficulty,
         int teamCount,
         RandomSource rand,
         Predicate<BingoGoal.Holder> isAllowedGoal,
@@ -108,7 +108,7 @@ public class BingoBoard {
 
     public static BingoGoal.Holder[] generateGoals(
         int size,
-        int difficulty,
+        BingoDifficulty difficulty,
         RandomSource rand,
         Predicate<BingoGoal.Holder> isAllowedGoal,
         List<BingoGoal.Holder> requiredGoals,
@@ -129,7 +129,7 @@ public class BingoBoard {
         final Set<String> catalysts = new HashSet<>();
 
         for (final BingoTag.Holder tag : excludedTags) {
-            tagCount.put(tag.id(), tag.tag().getMaxForDifficulty(difficulty, size));
+            tagCount.put(tag.id(), tag.tag().getMaxForDifficulty(difficulty.number(), size));
         }
 
         for (int i = 0; i < size * size; i++) {
@@ -186,7 +186,7 @@ public class BingoBoard {
 
                 if (!goalCandidate.goal().getTags().isEmpty()) {
                     for (final BingoTag.Holder tag : goalCandidate.goal().getTags()) {
-                        if (tagCount.getInt(tag.id()) >= tag.tag().getMaxForDifficulty(difficulty, size)) {
+                        if (tagCount.getInt(tag.id()) >= tag.tag().getMaxForDifficulty(difficulty.number(), size)) {
                             continue goalGen;
                         }
                     }
@@ -265,25 +265,35 @@ public class BingoBoard {
         return false;
     }
 
-    private static int[] generateDifficulty(int size, int difficulty, RandomSource rand) {
+    private static int[] generateDifficulty(int size, BingoDifficulty difficulty, RandomSource rand) {
         final int[] layout = new int[size * size];
 
-        final Iterator<Integer> available = BingoDifficulty.getNumbers()
-            .headSet(difficulty, true)
-            .descendingIterator();
-        if (!available.hasNext()) {
-            throw new IllegalArgumentException("No difficulty exists with number " + difficulty);
-        }
-        final int difficulty1 = available.next();
-        if (!available.hasNext()) {
-            Arrays.fill(layout, difficulty1);
+        if (difficulty.distribution() != null) {
+            List<Integer> scaledDistribution = difficulty.distribution().stream().map(f -> Math.round(f * size * size)).toList();
+            int p = 0;
+            for (int difficultyLevel = 0; difficultyLevel < scaledDistribution.size(); ++difficultyLevel) {
+                for (int i = 0; i < scaledDistribution.get(difficultyLevel) && p < layout.length; ++i)
+                    layout[p++] = difficultyLevel;
+            }
+            BingoUtil.shuffle(layout, rand);
         } else {
-            final int difficulty2 = available.next();
-            final int amountOf1 = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
-            final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(size * size), rand);
-            Arrays.fill(layout, difficulty2);
-            for (int i = 0; i < amountOf1; i++) {
-                layout[indices[i]] = difficulty1;
+            final Iterator<Integer> available = BingoDifficulty.getNumbers()
+                    .headSet(difficulty.number(), true)
+                    .descendingIterator();
+            if (!available.hasNext()) {
+                throw new IllegalArgumentException("No difficulty exists with number " + difficulty);
+            }
+            final int difficulty1 = available.next();
+            if (!available.hasNext()) {
+                Arrays.fill(layout, difficulty1);
+            } else {
+                final int difficulty2 = available.next();
+                final int amountOf1 = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
+                final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(size * size), rand);
+                Arrays.fill(layout, difficulty2);
+                for (int i = 0; i < amountOf1; i++) {
+                    layout[indices[i]] = difficulty1;
+                }
             }
         }
         return layout;
