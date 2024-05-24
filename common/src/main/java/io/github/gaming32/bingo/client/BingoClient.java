@@ -230,7 +230,7 @@ public class BingoClient {
                 boolean isGoalCompleted = state.and(clientTeam);
 
                 final List<Integer> colors = switch (clientGame.renderMode()) {
-                    case FANCY -> Collections.singletonList(isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor);
+                    case FANCY -> Collections.singletonList(isGoalCompleted ? Integer.valueOf(0x55ff55) : Objects.requireNonNullElse(goal.specialType().incompleteColor, 0));
                     case ALL_TEAMS -> {
                         if (!state.any()) {
                             yield Collections.emptyList();
