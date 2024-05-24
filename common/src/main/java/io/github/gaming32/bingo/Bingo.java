@@ -180,7 +180,11 @@ public class Bingo {
         playerList.getPlayers().forEach(playerList.getServer().getCommands()::sendCommands);
     }
 
-    public static MutableComponent translatable(@Translatable(allowArbitraryArgs = true) String key, Object... args) {
+    public static MutableComponent translatable(@Translatable String key, Object... args) {
+        return BingoUtil.ensureHasFallback(Component.translatable(key, args));
+    }
+
+    public static MutableComponent translatableEscape(@Translatable(allowArbitraryArgs = true) String key, Object... args) {
         return BingoUtil.ensureHasFallback(Component.translatableEscape(key, args));
     }
 

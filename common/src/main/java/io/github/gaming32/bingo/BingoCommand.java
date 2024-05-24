@@ -77,21 +77,21 @@ public class BingoCommand {
     private static final SimpleCommandExceptionType NO_GAME_RUNNING =
         new SimpleCommandExceptionType(Bingo.translatable("bingo.no_game_running"));
     private static final DynamicCommandExceptionType CANNOT_SHOW_BOARD =
-        new DynamicCommandExceptionType(size -> Bingo.translatable("bingo.cannot_show_board", size));
+        new DynamicCommandExceptionType(size -> Bingo.translatableEscape("bingo.cannot_show_board", size));
     private static final DynamicCommandExceptionType TEAM_ALREADY_EXISTS =
-        new DynamicCommandExceptionType(team -> Bingo.translatable(
+        new DynamicCommandExceptionType(team -> Bingo.translatableEscape(
             "bingo.team_already_exists", ((PlayerTeam)team).getFormattedDisplayName()
         ));
     private static final DynamicCommandExceptionType DUPLICATE_TEAMS =
-        new DynamicCommandExceptionType(team -> Bingo.translatable("bingo.duplicate_teams", ((PlayerTeam)team).getFormattedDisplayName()));
+        new DynamicCommandExceptionType(team -> Bingo.translatableEscape("bingo.duplicate_teams", ((PlayerTeam)team).getFormattedDisplayName()));
     private static final DynamicCommandExceptionType UNKNOWN_DIFFICULTY =
-        new DynamicCommandExceptionType(difficultyId -> Bingo.translatable("bingo.unknown_difficulty", difficultyId));
+        new DynamicCommandExceptionType(difficultyId -> Bingo.translatableEscape("bingo.unknown_difficulty", difficultyId));
     private static final DynamicCommandExceptionType UNKNOWN_GOAL =
-        new DynamicCommandExceptionType(goalId -> Bingo.translatable("bingo.unknown_goal", goalId));
+        new DynamicCommandExceptionType(goalId -> Bingo.translatableEscape("bingo.unknown_goal", goalId));
     private static final DynamicCommandExceptionType UNKNOWN_TAG =
-        new DynamicCommandExceptionType(tagId -> Bingo.translatable("bingo.unknown_tag", tagId));
+        new DynamicCommandExceptionType(tagId -> Bingo.translatableEscape("bingo.unknown_tag", tagId));
     private static final DynamicCommandExceptionType UNKNOWN_GAMEMODE =
-        new DynamicCommandExceptionType(gamemodeId -> Bingo.translatable("bingo.unknown_gamemode", gamemodeId));
+        new DynamicCommandExceptionType(gamemodeId -> Bingo.translatableEscape("bingo.unknown_gamemode", gamemodeId));
     private static final DynamicCommandExceptionType FAILED_TO_START =
         new DynamicCommandExceptionType(e ->
             Bingo.translatable(e instanceof IllegalArgumentException ? "bingo.start.invalid_goal" : "bingo.start.failed")
@@ -101,6 +101,7 @@ public class BingoCommand {
         );
     private static final SimpleCommandExceptionType NO_TEAMS =
         new SimpleCommandExceptionType(Bingo.translatable("bingo.no_teams"));
+
     private static final SuggestionProvider<CommandSourceStack> ACTIVE_GOAL_SUGGESTOR = (context, builder) -> {
         if (Bingo.activeGame == null) {
             return builder.buildFuture();
