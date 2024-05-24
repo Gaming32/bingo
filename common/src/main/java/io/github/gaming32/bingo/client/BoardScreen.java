@@ -1,27 +1,61 @@
 package io.github.gaming32.bingo.client;
 
+import io.github.gaming32.bingo.game.BingoBoard;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.scores.PlayerTeam;
 
 public class BoardScreen extends Screen {
+    private Button leftButton;
+    private Button rightButton;
+
     public BoardScreen() {
         super(BingoClient.BOARD_TITLE);
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
-        if (BingoClient.clientGame == null) return;
-        BingoClient.renderBingo(
-            graphics, true,
-            width / 2f - BingoClient.getBoardWidth() / 2f,
-            height / 2f - BingoClient.getBoardHeight() / 2f,
-            1f
+    protected void init() {
+        final int buttonY = height / 2 + BingoClient.getBoardHeight() / 2 + font.lineHeight + BingoClient.BOARD_OFFSET * 2;
+        leftButton = addRenderableWidget(
+            Button.builder(Component.literal("<"), b -> switchTeam(-1))
+                .width(Button.DEFAULT_HEIGHT)
+                .pos(width / 2 - Button.DEFAULT_HEIGHT - 4, buttonY)
+                .build()
         );
+        rightButton = addRenderableWidget(
+            Button.builder(Component.literal(">"), b -> switchTeam(1))
+                .width(Button.DEFAULT_HEIGHT)
+                .pos(width / 2 + 4, buttonY)
+                .build()
+        );
+        updateButtonVisibility();
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
+        if (BingoClient.clientGame == null) return;
+        final float x = width / 2f - BingoClient.getBoardWidth() / 2f;
+        final float y = height / 2f - BingoClient.getBoardHeight() / 2f;
+        BingoClient.renderBingo(graphics, true, x, y, 1f);
+        assert minecraft != null;
+        if (minecraft.player != null && minecraft.player.isSpectator()) {
+            final PlayerTeam team = BingoClient.clientGame.teams()[BingoClient.clientTeam.getFirstIndex()];
+            final Integer color = team.getColor().getColor();
+            graphics.drawCenteredString(
+                font,
+                BingoClient.getDisplayName(team),
+                width / 2, (int)y + BingoClient.getBoardHeight() + BingoClient.BOARD_OFFSET,
+                color != null ? color : 0xffffff
+            );
+        }
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        assert minecraft != null;
         if (BingoClient.clientGame != null && BingoClient.detectPress(
             keyCode, scanCode,
             width / 2f - BingoClient.getBoardWidth() / 2f,
@@ -29,6 +63,10 @@ public class BoardScreen extends Screen {
             1f
         )) {
             return true;
+        } else if (leftButton.visible && minecraft.options.keyLeft.matches(keyCode, scanCode)) {
+            switchTeam(-1);
+        } else if (rightButton.visible && minecraft.options.keyRight.matches(keyCode, scanCode)) {
+            switchTeam(-1);
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -48,13 +86,29 @@ public class BoardScreen extends Screen {
 
     @Override
     public void tick() {
-        if (BingoClient.clientGame == null && minecraft != null) {
+        if (minecraft == null) return;
+        if (BingoClient.clientGame == null) {
             minecraft.setScreen(null);
+        } else {
+            updateButtonVisibility();
         }
     }
 
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    private void updateButtonVisibility() {
+        assert minecraft != null;
+        final boolean isSpectator = minecraft.player != null && minecraft.player.isSpectator();
+        leftButton.visible = isSpectator;
+        rightButton.visible = isSpectator;
+    }
+
+    private void switchTeam(int dir) {
+        final int currentIndex = BingoClient.clientTeam.getFirstIndex();
+        final int newIndex = Math.floorMod(currentIndex + dir, BingoClient.clientGame.teams().length);
+        BingoClient.clientTeam = BingoBoard.Teams.fromOne(newIndex);
     }
 }
