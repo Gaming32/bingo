@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -96,7 +97,7 @@ public class Bingo {
 
         Event.SERVER_TICK_END.register(instance -> {
             if (activeGame != null && activeGame.isRequireClient()) {
-                for (final ServerPlayer player : instance.getPlayerList().getPlayers()) {
+                for (final ServerPlayer player : new ArrayList<>(instance.getPlayerList().getPlayers())) {
                     if (player.tickCount == 60 && !Bingo.isInstalledOnClient(player)) {
                         player.connection.disconnect(BingoGame.REQUIRED_CLIENT_KICK);
                     }
