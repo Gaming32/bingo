@@ -60,7 +60,7 @@ public class MixinServerScoreboard {
                 if (team.any()) {
                     Bingo.activeGame.flushQueuedGoals(player);
                 }
-                new ResyncStatesPacket(Bingo.activeGame.obfuscateTeam(team)).sendTo(player);
+                new ResyncStatesPacket(Bingo.activeGame.obfuscateTeam(team, player)).sendTo(player);
                 player.connection.send(new ClientboundUpdateAdvancementsPacket(
                     false,
                     List.of(),

@@ -40,6 +40,7 @@ import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stat;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import org.apache.commons.lang3.ArrayUtils;
@@ -128,7 +129,7 @@ public class BingoGame {
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamPacket(team).sendTo(player);
 
-        new InitBoardPacket(this, obfuscateTeam(team)).sendTo(player);
+        new InitBoardPacket(this, obfuscateTeam(team, player)).sendTo(player);
         player.connection.send(new ClientboundUpdateAdvancementsPacket(
             false,
             VanillaNetworking.generateAdvancements(board.getSize(), board.getGoals()),
@@ -148,8 +149,11 @@ public class BingoGame {
         }
     }
 
-    public BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam) {
+    public BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam, Player player) {
         final BingoBoard.Teams[] states = board.getStates();
+        if (player != null && player.isSpectator()) {
+            return states;
+        }
         if (Bingo.showOtherTeam || gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
             return states;
         }
@@ -478,8 +482,8 @@ public class BingoGame {
         }
         final BingoBoard.Teams boardState = board.getStates()[boardIndex];
         final boolean showOtherTeam = Bingo.showOtherTeam || gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS;
-        final UpdateStatePacket stateMessage = !showOtherTeam
-            ? new UpdateStatePacket(boardIndex, obfuscateTeam(team, boardState)) : null;
+        final UpdateStatePacket statePacket = new UpdateStatePacket(boardIndex, boardState);
+        final UpdateStatePacket obfuscatedStatePacket = new UpdateStatePacket(boardIndex, obfuscateTeam(team, boardState));
         final ClientboundUpdateAdvancementsPacket vanillaPacket = new ClientboundUpdateAdvancementsPacket(
             false,
             List.of(),
@@ -497,14 +501,14 @@ public class BingoGame {
                 SoundSource.MASTER,
                 isLoss ? 1f : 0.5f, 1f
             );
-            if (!showOtherTeam) {
-                stateMessage.sendTo(player);
+            if (!showOtherTeam && !player.isSpectator()) {
+                obfuscatedStatePacket.sendTo(player);
             }
             player.connection.send(vanillaPacket);
             player.sendSystemMessage(message);
         }
         if (showOtherTeam) {
-            new UpdateStatePacket(boardIndex, boardState).sendTo(playerList.getPlayers());
+            statePacket.sendTo(playerList.getPlayers());
             if (gameMode.isLockout()) {
                 Component teamComponent = BingoUtil.getDisplayName(playerTeam, playerList)
                     .map(Function.identity(), Function.identity());
@@ -519,6 +523,12 @@ public class BingoGame {
                     if (player.isAlliedTo(playerTeam)) continue;
                     player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.MASTER, 0.5f, 1f);
                     player.sendSystemMessage(lockoutMessage);
+                }
+            }
+        } else {
+            for (final ServerPlayer player : playerList.getPlayers()) {
+                if (player.isSpectator()) {
+                    statePacket.sendTo(player);
                 }
             }
         }

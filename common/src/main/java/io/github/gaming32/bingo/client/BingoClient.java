@@ -48,6 +48,7 @@ public class BingoClient {
     public static final int BOARD_OFFSET = 3;
 
     public static BingoBoard.Teams clientTeam = BingoBoard.Teams.NONE;
+    public static BingoBoard.Teams receivedClientTeam = BingoBoard.Teams.NONE;
     public static ClientGame clientGame;
 
     public static final BingoClientConfig CONFIG = new BingoClientConfig(
@@ -82,8 +83,14 @@ public class BingoClient {
         });
 
         ClientEvents.PLAYER_QUIT.register(player -> {
-            clientTeam = BingoBoard.Teams.NONE;
+            clientTeam = receivedClientTeam = BingoBoard.Teams.NONE;
             clientGame = null;
+        });
+
+        ClientEvents.CLIENT_TICK_END.register(minecraft -> {
+            if (minecraft.player == null || !minecraft.player.isSpectator()) {
+                clientTeam = receivedClientTeam;
+            }
         });
 
         DefaultIconRenderers.setup();
@@ -200,6 +207,7 @@ public class BingoClient {
         );
         graphics.drawString(minecraft.font, BOARD_TITLE, 8, 6, 0x404040, false);
 
+        final boolean spectator = minecraft.player != null && minecraft.player.isSpectator();
         for (int sx = 0; sx < clientGame.size(); sx++) {
             for (int sy = 0; sy < clientGame.size(); sy++) {
                 final ClientGoal goal = clientGame.getGoal(sx, sy);
@@ -228,7 +236,7 @@ public class BingoClient {
                 }
 
                 GoalProgress progress = clientGame.getProgress(sx, sy);
-                if (progress != null && !isGoalCompleted && progress.progress() > 0) {
+                if (progress != null && !isGoalCompleted && progress.progress() > 0 && !spectator) {
                     graphics.pose().pushPose();
                     graphics.pose().translate(0, 0, 200);
 

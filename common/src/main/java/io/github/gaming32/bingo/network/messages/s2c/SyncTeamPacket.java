@@ -27,6 +27,6 @@ public class SyncTeamPacket extends AbstractCustomPayload {
 
     @Override
     public void handle(BingoNetworking.Context context) {
-        BingoClient.clientTeam = team;
+        BingoClient.clientTeam = BingoClient.receivedClientTeam = team;
     }
 }

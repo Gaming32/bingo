@@ -171,7 +171,10 @@ public class NeoForgePlatform extends BingoPlatform {
             ClientEvents.PLAYER_QUIT.setRegistrar(handler -> bus.addListener((ClientPlayerNetworkEvent.LoggingOut event) ->
                 handler.accept(event.getPlayer())
             ));
-            ClientEvents.CLIENT_TICK_START.setRegistrar(handler -> bus.addListener((ClientTickEvent.Post event) ->
+            ClientEvents.CLIENT_TICK_START.setRegistrar(handler -> bus.addListener((ClientTickEvent.Pre event) ->
+                handler.accept(Minecraft.getInstance())
+            ));
+            ClientEvents.CLIENT_TICK_END.setRegistrar(handler -> bus.addListener((ClientTickEvent.Post event) ->
                 handler.accept(Minecraft.getInstance())
             ));
         }

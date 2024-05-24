@@ -317,6 +317,8 @@
   "bingo.board_corner.upper_right": "Upper-right",
   "bingo.board_corner.lower_left": "Lower-left",
   "bingo.board_corner.lower_right": "Lower-right",
+  "bingo.spectator.team_selection": "Choose Team Bingo Board",
+  "bingo.spectator.team_selection.prompt": "Select a Bingo board to view",
 
   "bingo.ordinal.1": "first",
   "bingo.ordinal.2": "second",

@@ -11,6 +11,7 @@ public class ClientEvents {
     public static final Event<MouseReleaseHandler> MOUSE_RELEASED_PRE = new Event<>();
     public static final Event<Consumer<LocalPlayer>> PLAYER_QUIT = new Event<>();
     public static final Event<Consumer<Minecraft>> CLIENT_TICK_START = new Event<>();
+    public static final Event<Consumer<Minecraft>> CLIENT_TICK_END = new Event<>();
 
     @FunctionalInterface
     public interface KeyReleaseHandler {

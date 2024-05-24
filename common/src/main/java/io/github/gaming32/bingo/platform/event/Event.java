@@ -1,9 +1,5 @@
 package io.github.gaming32.bingo.platform.event;
 
-import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -35,12 +31,4 @@ public class Event<T> {
         registrar.accept(handler);
     }
 
-    @FunctionalInterface
-    public interface CommandRegistrar {
-        void register(
-            CommandDispatcher<CommandSourceStack> dispatcher,
-            CommandBuildContext registry,
-            Commands.CommandSelection selection
-        );
-    }
 }
