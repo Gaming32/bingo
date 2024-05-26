@@ -16,6 +16,7 @@ import io.github.gaming32.bingo.network.ClientGoal;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -42,7 +43,7 @@ import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class BingoClient {
-    private static final ResourceLocation BOARD_TEXTURE = new ResourceLocation("bingo:board");
+    private static final ResourceLocation BOARD_TEXTURE = ResourceLocations.bingo("board");
     public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
 
     public static final int BOARD_OFFSET = 3;

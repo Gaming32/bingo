@@ -50,6 +50,7 @@ import io.github.gaming32.bingo.triggers.WearDifferentColoredArmorTrigger;
 import io.github.gaming32.bingo.triggers.ZombieDrownedTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -89,7 +90,6 @@ import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
@@ -449,7 +449,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tooltip("grass"));
 
         for (String dyeColor : List.of("cyan", "magenta", "red", "orange", "yellow", "green", "pink", "purple", "lime")) {
-            Item dyeItem = BuiltInRegistries.ITEM.get(new ResourceLocation(dyeColor + "_dye"));
+            Item dyeItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(dyeColor + "_dye"));
             addGoal(obtainItemGoal(id(dyeColor + "_dye"), dyeItem)
                 .infrequency(10)
                 .tags(BingoTags.OVERWORLD));
@@ -602,28 +602,28 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
 
         for (String woodType : List.of("oak", "spruce", "birch", "dark_oak", "acacia", "cherry")) {
-            Item planksItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_planks"));
+            Item planksItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(woodType + "_planks"));
             addGoal(obtainItemGoal(id(woodType + "_planks"), planksItem, 65, 128)
                 .tags(BingoTags.OVERWORLD)
                 .infrequency(25));
 
-            Item logItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_log"));
+            Item logItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(woodType + "_log"));
             addGoal(obtainItemGoal(id(woodType + "_log"), logItem, 16, 32)
                 .tags(BingoTags.OVERWORLD)
                 .infrequency(25));
 
-            Item woodItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_wood"));
+            Item woodItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(woodType + "_wood"));
             addGoal(obtainItemGoal(id(woodType + "_wood"), woodItem, 11, 20)
                 .infrequency(25)
                 .tags(BingoTags.OVERWORLD));
 
-            Item strippedWoodItem = BuiltInRegistries.ITEM.get(new ResourceLocation("stripped_" + woodType + "_wood"));
+            Item strippedWoodItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft("stripped_" + woodType + "_wood"));
             addGoal(obtainItemGoal(id("stripped_" + woodType + "_wood"), strippedWoodItem, 11, 20)
                 .reactant("axe_use")
                 .infrequency(25)
                 .tags(BingoTags.OVERWORLD));
 
-            Item strippedLogItem = BuiltInRegistries.ITEM.get(new ResourceLocation("stripped_" + woodType + "_log"));
+            Item strippedLogItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft("stripped_" + woodType + "_log"));
             addGoal(obtainItemGoal(id("stripped_" + woodType + "_log"), strippedLogItem, 16, 32)
                 .reactant("axe_use")
                 .infrequency(25)

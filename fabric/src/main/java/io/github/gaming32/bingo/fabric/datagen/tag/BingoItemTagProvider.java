@@ -3,12 +3,12 @@ package io.github.gaming32.bingo.fabric.datagen.tag;
 import io.github.gaming32.bingo.data.tags.BingoBlockTags;
 import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.BlockItem;
@@ -146,9 +146,9 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
         var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);
         for (DyeColor dyeColor : DyeColor.values()) {
-            Item glazedTerracotta = BuiltInRegistries.ITEM.get(new ResourceLocation(dyeColor.getName() + "_glazed_terracotta"));
+            Item glazedTerracotta = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(dyeColor.getName() + "_glazed_terracotta"));
             glazedTerracottaBuilder.add(glazedTerracotta);
-            Item concrete = BuiltInRegistries.ITEM.get(new ResourceLocation(dyeColor.getName() + "_concrete"));
+            Item concrete = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(dyeColor.getName() + "_concrete"));
             concreteBuilder.add(concrete);
         }
 

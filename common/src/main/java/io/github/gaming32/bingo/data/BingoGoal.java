@@ -26,6 +26,7 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
@@ -626,7 +627,7 @@ public class BingoGoal {
     }
 
     public static class ReloadListener extends SimpleJsonResourceReloadListener {
-        public static final ResourceLocation ID = new ResourceLocation("bingo:goals");
+        public static final ResourceLocation ID = ResourceLocations.bingo("goals");
         private static final Gson GSON = new GsonBuilder().create();
 
         private final HolderLookup.Provider registries;

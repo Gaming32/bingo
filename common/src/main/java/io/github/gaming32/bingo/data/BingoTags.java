@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.data;
 
-import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 
 public final class BingoTags {
@@ -23,6 +23,6 @@ public final class BingoTags {
     public static final ResourceLocation VILLAGE = create("village");
 
     private static ResourceLocation create(String name) {
-        return new ResourceLocation(Bingo.MOD_ID, name);
+        return ResourceLocations.bingo(name);
     }
 }

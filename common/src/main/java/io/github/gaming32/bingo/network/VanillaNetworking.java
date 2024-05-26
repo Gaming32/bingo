@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
@@ -27,14 +28,14 @@ import java.util.stream.IntStream;
 
 public class VanillaNetworking {
     public static final AdvancementHolder ROOT_ADVANCEMENT = new AdvancementHolder(
-        new ResourceLocation("bingo:generated/root"),
+        ResourceLocations.bingo("generated/root"),
         new Advancement(
             Optional.empty(),
             Optional.of(new DisplayInfo(
                 new ItemStack(Items.PLAYER_HEAD),
                 Bingo.translatable("bingo.board.title"),
                 CommonComponents.EMPTY,
-                Optional.of(new ResourceLocation("minecraft:textures/gui/advancements/backgrounds/stone.png")),
+                Optional.of(ResourceLocations.minecraft("textures/gui/advancements/backgrounds/stone.png")),
                 AdvancementType.TASK,
                 false,
                 false,

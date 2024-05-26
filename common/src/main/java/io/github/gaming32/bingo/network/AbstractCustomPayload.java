@@ -1,13 +1,12 @@
 package io.github.gaming32.bingo.network;
 
-import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public abstract class AbstractCustomPayload implements CustomPacketPayload {
     protected static <P extends AbstractCustomPayload> Type<P> type(String id) {
-        return new Type<>(new ResourceLocation(Bingo.MOD_ID, id));
+        return new Type<>(ResourceLocations.bingo(id));
     }
 
     public final void sendToServer() {

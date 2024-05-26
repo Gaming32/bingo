@@ -10,6 +10,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
@@ -118,7 +119,7 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
     }
 
     public static final class ReloadListener extends SimpleJsonResourceReloadListener {
-        public static final ResourceLocation ID = new ResourceLocation("bingo:difficulties");
+        public static final ResourceLocation ID = ResourceLocations.bingo("difficulties");
         private static final Gson GSON = new GsonBuilder().create();
 
         private final HolderLookup.Provider registries;

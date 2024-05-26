@@ -11,6 +11,7 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.util.BingoStreamCodecs;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.floats.FloatImmutableList;
 import it.unimi.dsi.fastutil.floats.FloatList;
@@ -134,7 +135,7 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
     }
 
     public static class ReloadListener extends SimpleJsonResourceReloadListener {
-        public static final ResourceLocation ID = new ResourceLocation("bingo:tags");
+        public static final ResourceLocation ID = ResourceLocations.bingo("tags");
         private static final Gson GSON = new GsonBuilder().create();
 
         private final HolderLookup.Provider registries;

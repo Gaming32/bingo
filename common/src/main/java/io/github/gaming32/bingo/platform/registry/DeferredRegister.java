@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.platform.registry;
 
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,6 @@ public interface DeferredRegister<T> {
     }
 
     static ResourceLocation id(String id) {
-        return new ResourceLocation(id.indexOf(':') < 0 ? "bingo:" + id : id);
+        return ResourceLocations.bingo(id);
     }
 }

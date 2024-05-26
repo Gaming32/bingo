@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import com.demonwav.mcdev.annotations.Translatable;
 import com.google.common.collect.ImmutableList;
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
@@ -23,6 +22,7 @@ import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.BlockPredicate;
@@ -90,7 +90,7 @@ public abstract class DifficultyGoalProvider {
     public abstract void addGoals();
 
     protected final ResourceLocation id(String path) {
-        return new ResourceLocation(Bingo.MOD_ID, prefix + path);
+        return ResourceLocations.bingo(prefix + path);
     }
 
     protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike item) {
@@ -196,7 +196,7 @@ public abstract class DifficultyGoalProvider {
                 .tags(BingoTags.ITEM)
                 .name(Component.translatable("bingo.goal.edible_items", minCount))
                 .tooltip("edible_items")
-                .tooltipIcon(new ResourceLocation("bingo:textures/gui/tooltips/raw_and_cooked.png"))
+                .tooltipIcon(ResourceLocations.bingo("textures/gui/tooltips/raw_and_cooked.png"))
                 .antisynergy("edible_items")
                 .infrequency(2)
                 .icon(new ItemTagCycleIcon(ConventionalItemTags.FOODS, minCount));
@@ -208,7 +208,7 @@ public abstract class DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .name(Component.translatable("bingo.goal.edible_items", 0), subber -> subber.sub("with.0", "count"))
             .tooltip("edible_items")
-            .tooltipIcon(new ResourceLocation("bingo:textures/gui/tooltips/raw_and_cooked.png"))
+            .tooltipIcon(ResourceLocations.bingo("textures/gui/tooltips/raw_and_cooked.png"))
             .antisynergy("edible_items")
             .infrequency(2)
             .icon(new ItemTagCycleIcon(ConventionalItemTags.FOODS), subber -> subber.sub("+count", "count"));

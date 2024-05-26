@@ -1,9 +1,9 @@
 package io.github.gaming32.bingo.triggers;
 
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -11,7 +11,6 @@ import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.DistanceTrigger;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
@@ -71,7 +70,7 @@ public class BingoTriggers {
     }
 
     private static <T extends CriterionTrigger<?>> RegistryValue<T> register(String name, Supplier<T> init) {
-        return REGISTER.register(new ResourceLocation(Bingo.MOD_ID, name), init);
+        return REGISTER.register(ResourceLocations.bingo(name), init);
     }
 
     public static Criterion<DistanceTrigger.TriggerInstance> crouch(DistancePredicate distance) {

@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.client.recipeviewer.jei;
 
+import io.github.gaming32.bingo.util.ResourceLocations;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.runtime.IJeiRuntime;
@@ -25,7 +26,7 @@ public class BingoJeiPlugin implements IModPlugin {
     @NotNull
     @Override
     public ResourceLocation getPluginUid() {
-        return new ResourceLocation("bingo:jei_plugin");
+        return ResourceLocations.bingo("jei_plugin");
     }
 
     @Override

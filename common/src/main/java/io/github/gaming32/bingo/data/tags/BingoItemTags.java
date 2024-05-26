@@ -1,8 +1,7 @@
 package io.github.gaming32.bingo.data.tags;
 
-import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
@@ -32,6 +31,6 @@ public final class BingoItemTags {
     public static final TagKey<Item> STAIRS = create("stairs");
 
     private static TagKey<Item> create(String name) {
-        return TagKey.create(Registries.ITEM, new ResourceLocation(Bingo.MOD_ID, name));
+        return TagKey.create(Registries.ITEM, ResourceLocations.bingo(name));
     }
 }

@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.fabric;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.BingoPlatform;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
@@ -12,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class BingoFabric implements ModInitializer {
-    public static final ResourceLocation PROTOCOL_VERSION_PACKET = new ResourceLocation("bingo:protocol_version");
+    public static final ResourceLocation PROTOCOL_VERSION_PACKET = ResourceLocations.bingo("protocol_version");
 
     @Override
     public void onInitialize() {

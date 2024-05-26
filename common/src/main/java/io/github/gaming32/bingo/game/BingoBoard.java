@@ -7,6 +7,7 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -360,7 +361,7 @@ public class BingoBoard {
     }
 
     public static ResourceLocation generateVanillaId(int index) {
-        return new ResourceLocation("bingo:generated/goal/" + index);
+        return ResourceLocations.bingo("generated/goal/" + index);
     }
 
     public static final class Teams {

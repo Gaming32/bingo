@@ -36,6 +36,7 @@ import io.github.gaming32.bingo.triggers.KillSelfTrigger;
 import io.github.gaming32.bingo.triggers.PulledByLeashTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.BlockPredicate;
@@ -72,7 +73,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
@@ -585,7 +585,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.NETHER, BingoTags.COMBAT)
         );
         addGoal(BingoGoal.builder(id("never_craft_sticks"))
-            .criterion("craft", RecipeCraftedTrigger.TriggerInstance.craftedItem(new ResourceLocation("stick")))
+            .criterion("craft", RecipeCraftedTrigger.TriggerInstance.craftedItem(ResourceLocations.minecraft("stick")))
             .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
             .name("never_craft_sticks")
             .icon(Items.STICK));
@@ -680,27 +680,27 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         );
 
         for (String woodType : List.of("warped", "crimson")) {
-            Item stemItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_stem"));
+            Item stemItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(woodType + "_stem"));
             addGoal(obtainItemGoal(id(woodType + "_stem"), stemItem, 16, 32)
                 .infrequency(25)
                 .tags(BingoTags.NETHER));
 
-            Item strippedStemItem = BuiltInRegistries.ITEM.get(new ResourceLocation("stripped_" + woodType + "_stem"));
+            Item strippedStemItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft("stripped_" + woodType + "_stem"));
             addGoal(obtainItemGoal(id("stripped_" + woodType + "_stem"), strippedStemItem, 16, 32)
                 .infrequency(25)
                 .tags(BingoTags.NETHER));
 
-            Item hyphaeItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_hyphae"));
+            Item hyphaeItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(woodType + "_hyphae"));
             addGoal(obtainItemGoal(id(woodType + "_hyphae"), hyphaeItem, 16, 32)
                 .infrequency(25)
                 .tags(BingoTags.NETHER));
 
-            Item strippedHyphaeItem = BuiltInRegistries.ITEM.get(new ResourceLocation("stripped_" + woodType + "_hyphae"));
+            Item strippedHyphaeItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft("stripped_" + woodType + "_hyphae"));
             addGoal(obtainItemGoal(id("stripped_" + woodType + "_hyphae"), strippedHyphaeItem, 16, 32)
                 .infrequency(25)
                 .tags(BingoTags.NETHER));
 
-            Item planksItem = BuiltInRegistries.ITEM.get(new ResourceLocation(woodType + "_planks"));
+            Item planksItem = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(woodType + "_planks"));
             addGoal(obtainItemGoal(id(woodType + "_planks"), planksItem, 16, 32)
                 .infrequency(25)
                 .tags(BingoTags.NETHER));

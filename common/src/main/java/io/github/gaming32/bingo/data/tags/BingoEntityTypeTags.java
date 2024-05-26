@@ -1,8 +1,7 @@
 package io.github.gaming32.bingo.data.tags;
 
-import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 
@@ -16,6 +15,6 @@ public final class BingoEntityTypeTags {
     public static final TagKey<EntityType<?>> HOSTILE = create("hostile");
 
     private static TagKey<EntityType<?>> create(String name) {
-        return TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(Bingo.MOD_ID, name));
+        return TagKey.create(Registries.ENTITY_TYPE, ResourceLocations.bingo(name));
     }
 }
