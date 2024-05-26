@@ -5,10 +5,10 @@ import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
-import io.github.gaming32.bingo.platform.registrar.AbstractKeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
+import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.minecraft.client.Minecraft;
@@ -84,11 +84,11 @@ public class NeoForgePlatform extends BingoPlatform {
 
     @Override
     public void registerKeyMappings(Consumer<KeyMappingBuilder> handler) {
-        final var builder = new AbstractKeyMappingBuilder() {
+        final KeyMappingBuilderImpl builder = new KeyMappingBuilderImpl() {
             @Override
-            public KeyMappingWithAction register(Consumer<Minecraft> action) {
-                final KeyMappingWithAction mapping = super.register(action);
-                mapping.mapping().setKeyConflictContext(KeyConflictContext.valueOf(conflictContext.name()));
+            public KeyMappingExt register(Consumer<Minecraft> action) {
+                final KeyMappingExt mapping = super.register(action);
+                mapping.mapping().setKeyConflictContext(KeyConflictContext.valueOf(mapping.conflictContext().name()));
                 return mapping;
             }
         };

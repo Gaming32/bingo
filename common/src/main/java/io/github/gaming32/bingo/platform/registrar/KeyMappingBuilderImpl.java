@@ -8,16 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class AbstractKeyMappingBuilder implements KeyMappingBuilder {
-    protected final List<KeyMappingWithAction> mappings = new ArrayList<>();
+public class KeyMappingBuilderImpl implements KeyMappingBuilder {
+    private final List<KeyMappingExt> mappings = new ArrayList<>();
 
-    protected String name;
-    protected String category;
-    protected InputConstants.Type keyType;
-    protected int keyCode;
-    protected ConflictContext conflictContext;
+    private String name;
+    private String category;
+    private InputConstants.Type keyType;
+    private int keyCode;
+    private ConflictContext conflictContext;
 
-    protected AbstractKeyMappingBuilder() {
+    public KeyMappingBuilderImpl() {
         reset();
     }
 
@@ -60,7 +60,7 @@ public abstract class AbstractKeyMappingBuilder implements KeyMappingBuilder {
     }
 
     @Override
-    public KeyMappingWithAction register(Consumer<Minecraft> action) {
+    public KeyMappingExt register(Consumer<Minecraft> action) {
         if (name == null) {
             throw new IllegalStateException("KeyMappingBuilder.name not set");
         }
@@ -70,17 +70,18 @@ public abstract class AbstractKeyMappingBuilder implements KeyMappingBuilder {
         if (action == null) {
             throw new IllegalStateException("KeyMappingBuilder.action not set");
         }
-        final var result = new KeyMappingWithAction(new KeyMapping(name, keyType, keyCode, category), action);
+        final KeyMappingExt result = new KeyMappingExt(new KeyMapping(name, keyType, keyCode, category), conflictContext, action);
+        reset();
         mappings.add(result);
         return result;
     }
 
     public void registerAll(Consumer<KeyMapping> consumer) {
-        mappings.stream().map(KeyMappingWithAction::mapping).forEach(consumer);
+        mappings.stream().map(KeyMappingExt::mapping).forEach(consumer);
     }
 
     public void handleAll(Minecraft minecraft) {
-        for (final KeyMappingWithAction mapping : mappings) {
+        for (final KeyMappingExt mapping : mappings) {
             while (mapping.mapping().consumeClick()) {
                 mapping.action().accept(minecraft);
             }

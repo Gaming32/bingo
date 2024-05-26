@@ -17,12 +17,12 @@ public interface KeyMappingBuilder {
 
     KeyMappingBuilder conflictContext(ConflictContext conflictContext);
 
-    KeyMappingWithAction register(Consumer<Minecraft> action);
+    KeyMappingExt register(Consumer<Minecraft> action);
 
     enum ConflictContext {
         UNIVERSAL, GUI, IN_GAME
     }
 
-    record KeyMappingWithAction(KeyMapping mapping, Consumer<Minecraft> action) {
+    record KeyMappingExt(KeyMapping mapping, ConflictContext conflictContext, Consumer<Minecraft> action) {
     }
 }
