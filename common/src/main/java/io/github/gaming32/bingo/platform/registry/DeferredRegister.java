@@ -15,10 +15,6 @@ public interface DeferredRegister<T> {
     <S extends T> RegistryValue<S> register(ResourceLocation location, Supplier<S> value);
 
     default <S extends T> RegistryValue<S> register(String id, Supplier<S> value) {
-        return register(id(id), value);
-    }
-
-    static ResourceLocation id(String id) {
-        return ResourceLocations.bingo(id);
+        return register(ResourceLocations.bingo(id), value);
     }
 }

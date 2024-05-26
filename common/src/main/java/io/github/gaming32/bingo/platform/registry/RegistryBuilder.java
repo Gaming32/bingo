@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.platform.registry;
 
 import io.github.gaming32.bingo.platform.BingoPlatform;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.resources.ResourceLocation;
 
 public class RegistryBuilder {
@@ -13,7 +14,7 @@ public class RegistryBuilder {
     }
 
     public RegistryBuilder(String id) {
-        this(DeferredRegister.id(id));
+        this(ResourceLocations.bingo(id));
     }
 
     public RegistryBuilder synced() {
@@ -27,7 +28,7 @@ public class RegistryBuilder {
     }
 
     public RegistryBuilder defaultId(String id) {
-        return defaultId(DeferredRegister.id(id));
+        return defaultId(ResourceLocations.bingo(id));
     }
 
     public <T> DeferredRegister<T> build() {
