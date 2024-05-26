@@ -2,7 +2,6 @@ package io.github.gaming32.bingo;
 
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
-import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.conditions.BingoParamSets;
 import io.github.gaming32.bingo.data.BingoDifficulty;
@@ -168,10 +167,6 @@ public class Bingo {
 
             registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.TYPE, KeyPressedPacket.CODEC);
         });
-
-        if (BingoPlatform.platform.isClient()) {
-            BingoClient.init();
-        }
 
         LOGGER.info("I got the diagonal!");
     }

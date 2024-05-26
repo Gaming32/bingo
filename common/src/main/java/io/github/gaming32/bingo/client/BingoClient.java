@@ -106,6 +106,8 @@ public class BingoClient {
         });
 
         BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
+
+        Bingo.LOGGER.info("Bongo");
     }
 
     public static RecipeViewerPlugin getRecipeViewerPlugin() {

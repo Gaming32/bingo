@@ -27,7 +27,7 @@ file = "META-INF/accesstransformer.cfg"
 [[dependencies.bingo]]
    modId="neoforge"
    type="required"
-   versionRange="[20.6.2-beta,20.7)"
+   versionRange="[20.6.84-beta,20.7)"
    ordering="NONE"
    side="BOTH"
 
