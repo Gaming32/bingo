@@ -60,6 +60,33 @@ public class Bingo {
     public static final Set<UUID> needAdvancementsClear = new HashSet<>();
 
     public static void init() {
+        registerEventHandlers();
+        initializeRegistries();
+
+        BingoPlatform.platform.registerDataReloadListeners(registrar -> {
+            registrar.register(BingoTag.ReloadListener.ID, new BingoTag.ReloadListener(registrar.registryAccess()));
+            registrar.register(BingoDifficulty.ReloadListener.ID, new BingoDifficulty.ReloadListener(registrar.registryAccess()));
+            registrar.register(
+                BingoGoal.ReloadListener.ID, new BingoGoal.ReloadListener(registrar.registryAccess()),
+                List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
+            );
+        });
+
+        BingoNetworking.instance().onRegister(registrar -> {
+            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPacket.TYPE, InitBoardPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPacket.TYPE, RemoveBoardPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPacket.TYPE, ResyncStatesPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPacket.TYPE, SyncTeamPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPacket.TYPE, UpdateProgressPacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePacket.TYPE, UpdateStatePacket.CODEC);
+
+            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.TYPE, KeyPressedPacket.CODEC);
+        });
+
+        LOGGER.info("I got the diagonal!");
+    }
+
+    private static void registerEventHandlers() {
         Event.REGISTER_COMMANDS.register(BingoCommand::register);
 
         Event.PLAYER_JOIN.register(player -> {
@@ -138,7 +165,9 @@ public class Bingo {
                 LOGGER.error("Failed to store persistent Bingo game", e);
             }
         });
+    }
 
+    private static void initializeRegistries() {
         BingoConditions.load();
         BingoParamSets.load();
         GoalIconType.load();
@@ -147,28 +176,6 @@ public class Bingo {
         BingoEntitySubPredicates.load();
         BingoItemSubPredicates.load();
         BingoTriggers.load();
-
-        BingoPlatform.platform.registerDataReloadListeners(registrar -> {
-            registrar.register(BingoTag.ReloadListener.ID, new BingoTag.ReloadListener(registrar.registryAccess()));
-            registrar.register(BingoDifficulty.ReloadListener.ID, new BingoDifficulty.ReloadListener(registrar.registryAccess()));
-            registrar.register(
-                BingoGoal.ReloadListener.ID, new BingoGoal.ReloadListener(registrar.registryAccess()),
-                List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
-            );
-        });
-
-        BingoNetworking.instance().onRegister(registrar -> {
-            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPacket.TYPE, InitBoardPacket.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPacket.TYPE, RemoveBoardPacket.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPacket.TYPE, ResyncStatesPacket.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPacket.TYPE, SyncTeamPacket.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPacket.TYPE, UpdateProgressPacket.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePacket.TYPE, UpdateStatePacket.CODEC);
-
-            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.TYPE, KeyPressedPacket.CODEC);
-        });
-
-        LOGGER.info("I got the diagonal!");
     }
 
     public static void updateCommandTree(PlayerList playerList) {

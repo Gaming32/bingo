@@ -5,9 +5,12 @@ import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
+import io.github.gaming32.bingo.platform.registrar.AbstractKeyMappingBuilder;
+import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
+import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
+import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
@@ -25,6 +28,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -79,8 +83,18 @@ public class NeoForgePlatform extends BingoPlatform {
     }
 
     @Override
-    public void registerKeyMappings(Consumer<Consumer<KeyMapping>> handler) {
-        modEventBus.addListener((RegisterKeyMappingsEvent event) -> handler.accept(event::register));
+    public void registerKeyMappings(Consumer<KeyMappingBuilder> handler) {
+        final var builder = new AbstractKeyMappingBuilder() {
+            @Override
+            public KeyMappingWithAction register(Consumer<Minecraft> action) {
+                final KeyMappingWithAction mapping = super.register(action);
+                mapping.mapping().setKeyConflictContext(KeyConflictContext.valueOf(conflictContext.name()));
+                return mapping;
+            }
+        };
+        handler.accept(builder);
+        modEventBus.addListener((RegisterKeyMappingsEvent event) -> builder.registerAll(event::register));
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> builder.handleAll(Minecraft.getInstance()));
     }
 
     @Override

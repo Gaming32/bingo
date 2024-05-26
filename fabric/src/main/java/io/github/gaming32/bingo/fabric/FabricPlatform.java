@@ -7,6 +7,10 @@ import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
+import io.github.gaming32.bingo.platform.registrar.AbstractKeyMappingBuilder;
+import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
+import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
+import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.fabricmc.api.EnvType;
@@ -23,7 +27,6 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -79,8 +82,11 @@ public class FabricPlatform extends BingoPlatform {
     }
 
     @Override
-    public void registerKeyMappings(Consumer<Consumer<KeyMapping>> handler) {
-        handler.accept(KeyBindingHelper::registerKeyBinding);
+    public void registerKeyMappings(Consumer<KeyMappingBuilder> handler) {
+        final var builder = new AbstractKeyMappingBuilder() {};
+        handler.accept(builder);
+        builder.registerAll(KeyBindingHelper::registerKeyBinding);
+        ClientTickEvents.END_CLIENT_TICK.register(builder::handleAll);
     }
 
     @Override

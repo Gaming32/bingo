@@ -15,10 +15,10 @@ import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.ClientGoal;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
+import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -60,6 +60,29 @@ public class BingoClient {
         CONFIG.load();
         CONFIG.save();
 
+        registerEventHandlers();
+
+        DefaultIconRenderers.setup();
+
+        BingoPlatform.platform.registerKeyMappings(builder -> {
+            builder
+                .name("bingo.key.board")
+                .category("bingo.key.category")
+                .keyCode(InputConstants.KEY_B)
+                .conflictContext(KeyMappingBuilder.ConflictContext.IN_GAME)
+                .register(minecraft -> {
+                    if (clientGame != null) {
+                        minecraft.setScreen(new BoardScreen());
+                    }
+                });
+        });
+
+        BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
+
+        Bingo.LOGGER.info("Bongo");
+    }
+
+    private static void registerEventHandlers() {
         ClientEvents.KEY_RELEASED_PRE.register((screen, keyCode, scanCode, modifiers) -> {
             if (clientGame == null || !(screen instanceof ChatScreen)) {
                 return false;
@@ -92,22 +115,6 @@ public class BingoClient {
                 clientTeam = receivedClientTeam;
             }
         });
-
-        DefaultIconRenderers.setup();
-
-        final KeyMapping boardKey = new KeyMapping("bingo.key.board", InputConstants.KEY_B, "bingo.key.category");
-        BingoPlatform.platform.registerKeyMappings(registrar -> registrar.accept(boardKey));
-        ClientEvents.CLIENT_TICK_START.register(minecraft -> {
-            while (boardKey.consumeClick()) {
-                if (clientGame != null) {
-                    minecraft.setScreen(new BoardScreen());
-                }
-            }
-        });
-
-        BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
-
-        Bingo.LOGGER.info("Bongo");
     }
 
     public static RecipeViewerPlugin getRecipeViewerPlugin() {

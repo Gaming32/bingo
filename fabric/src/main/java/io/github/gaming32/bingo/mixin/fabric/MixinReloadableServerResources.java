@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.mixin.fabric;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.gaming32.bingo.fabric.event.FabricEvents;
-import io.github.gaming32.bingo.platform.BingoPlatform;
+import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +36,7 @@ public class MixinReloadableServerResources {
         @Local ReloadableServerResources reloadableServerResources
     ) {
         final List<PreparableReloadListener> newListeners = new ArrayList<>(listeners);
-        FabricEvents.ADD_RELOAD_LISTENERS.invoker().accept(new BingoPlatform.DataReloadListenerRegistrar() {
+        FabricEvents.ADD_RELOAD_LISTENERS.invoker().accept(new DataReloadListenerRegistrar() {
             @Override
             public ReloadableServerResources serverResources() {
                 return reloadableServerResources;
