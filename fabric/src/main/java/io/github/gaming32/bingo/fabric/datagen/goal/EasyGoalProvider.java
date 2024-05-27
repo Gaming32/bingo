@@ -952,7 +952,10 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("never_walk_backwards"))
             .criterion("walk", KeyPressedTrigger.TriggerInstance.keyPressed(walkBackwards))
             .tags(BingoTags.ACTION, BingoTags.NEVER)
-            .name("never_walk_backwards")
+            .name(Component.translatable(
+                "bingo.goal.never_walk_backwards",
+                Component.keybind(walkBackwards.getName())
+            ))
             .infrequency(4)
             .icon(Items.DIRT_PATH)
         );

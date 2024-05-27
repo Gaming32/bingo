@@ -17,7 +17,12 @@
   },
   "infrequency": 4,
   "name": {
-    "translate": "bingo.goal.never_walk_backwards"
+    "translate": "bingo.goal.never_walk_backwards",
+    "with": [
+      {
+        "keybind": "key.back"
+      }
+    ]
   },
   "requirements": [
     [

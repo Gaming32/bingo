@@ -170,7 +170,7 @@
   "bingo.goal.never_use_buckets": "Never use Buckets",
   "bingo.goal.never_use_shields": "Never use Shields",
   "bingo.goal.never_use_shields.tooltip": "You can use Shields in crafting, but cannot use them for blocking",
-  "bingo.goal.never_walk_backwards": "Never walk backwards",
+  "bingo.goal.never_walk_backwards": "Never walk backwards using %s",
   "bingo.goal.never_wear_armor": "Never wear any Armor",
   "bingo.goal.never_wear_armor_or_use_shields": "Never wear Armor or use Shields",
   "bingo.goal.never_wear_armor_or_use_shields.tooltip": "You can use Armor/Shields in crafting, but cannot wear the Armor or block with Shields",
