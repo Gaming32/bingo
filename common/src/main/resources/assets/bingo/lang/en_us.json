@@ -296,6 +296,7 @@
   "bingo.formatting.italic": "Italic",
   "bingo.formatting.reset": "Reset",
   "bingo.board.title": "Bingo Board",
+  "bingo.board.title.short": "Bingo",
   "bingo.board.copy": "Copy board to clipboard",
   "bingo.key.board": "Show Bingo Board",
   "bingo.key.category": "Bingo",

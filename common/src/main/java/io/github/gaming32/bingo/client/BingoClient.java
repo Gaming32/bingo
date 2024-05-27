@@ -28,7 +28,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -45,6 +48,7 @@ import java.util.Objects;
 public class BingoClient {
     private static final ResourceLocation BOARD_TEXTURE = ResourceLocations.bingo("board");
     public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
+    public static final Component BOARD_TITLE_SHORT = Component.translatable("bingo.board.title.short");
 
     public static final int BOARD_OFFSET = 3;
 
@@ -215,7 +219,7 @@ public class BingoClient {
             7 + 18 * clientGame.size() + 7,
             17 + 18 * clientGame.size() + 7
         );
-        graphics.drawString(minecraft.font, BOARD_TITLE, 8, 6, 0x404040, false);
+        renderBoardTitle(graphics, minecraft.font);
 
         final boolean spectator = minecraft.player != null && minecraft.player.isSpectator();
         for (int sx = 0; sx < clientGame.size(); sx++) {
@@ -291,6 +295,24 @@ public class BingoClient {
             goal.tooltipIcon().map(IconTooltip::new).ifPresent(tooltip::add);
             tooltip.draw(minecraft.font, graphics, (int)mousePos.mouseX(), (int)mousePos.mouseY());
         }
+    }
+
+    private static void renderBoardTitle(GuiGraphics graphics, Font font) {
+        final int maxWidth = getBoardWidth() - 16;
+        final FormattedCharSequence title = font.width(BOARD_TITLE) > maxWidth
+            ? getVisualOrderWithEllipses(BOARD_TITLE_SHORT, font, maxWidth)
+            : BOARD_TITLE.getVisualOrderText();
+        graphics.drawString(font, title, 8, 6, 0x404040, false);
+    }
+
+    public static FormattedCharSequence getVisualOrderWithEllipses(Component text, Font font, int maxWidth) {
+        final int textWidth = font.width(text);
+        if (textWidth <= maxWidth) {
+            return text.getVisualOrderText();
+        }
+        final FormattedText shortText = font.substrByWidth(text, maxWidth - font.width(CommonComponents.ELLIPSIS));
+        final FormattedText combinedText = FormattedText.composite(shortText, CommonComponents.ELLIPSIS);
+        return Language.getInstance().getVisualOrder(combinedText);
     }
 
     public static boolean detectClick(int button, float x, float y, float scale) {
