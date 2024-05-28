@@ -13,7 +13,7 @@ public final class BingoConditions {
     private BingoConditions() {
     }
 
-    private static final DeferredRegister<LootItemConditionType> REGISTRAR =
+    private static final DeferredRegister<LootItemConditionType> REGISTER =
         BingoPlatform.platform.createDeferredRegister(BuiltInRegistries.LOOT_CONDITION_TYPE);
 
     public static final RegistryValue<LootItemConditionType> BLOCK_PATTERN = register("block_pattern", BlockPatternCondition.CODEC);
@@ -35,6 +35,6 @@ public final class BingoConditions {
     }
 
     private static RegistryValue<LootItemConditionType> register(String registryName, MapCodec<? extends LootItemCondition> codec) {
-        return REGISTRAR.register(ResourceLocations.bingo(registryName), () -> new LootItemConditionType(codec));
+        return REGISTER.register(ResourceLocations.bingo(registryName), () -> new LootItemConditionType(codec));
     }
 }
