@@ -92,22 +92,14 @@ public class BingoClient {
             if (clientGame == null || !(screen instanceof ChatScreen)) {
                 return false;
             }
-            final Window window = Minecraft.getInstance().getWindow();
-            final float scale = CONFIG.getBoardScale();
-            final float x = CONFIG.getBoardCorner().getX(window.getGuiScaledWidth(), scale);
-            final float y = CONFIG.getBoardCorner().getY(window.getGuiScaledHeight(), scale);
-            return detectPress(keyCode, scanCode, x, y, scale);
+            return detectPress(keyCode, scanCode, getBoardPosition());
         });
 
         ClientEvents.MOUSE_RELEASED_PRE.register((screen, mouseX, mouseY, button) -> {
             if (clientGame == null || !(screen instanceof ChatScreen)) {
                 return false;
             }
-            final Window window = Minecraft.getInstance().getWindow();
-            final float scale = CONFIG.getBoardScale();
-            final float x = CONFIG.getBoardCorner().getX(window.getGuiScaledWidth(), scale);
-            final float y = CONFIG.getBoardCorner().getY(window.getGuiScaledHeight(), scale);
-            return detectClick(button, x, y, scale);
+            return detectClick(button, getBoardPosition());
         });
 
         ClientEvents.PLAYER_QUIT.register(player -> {
@@ -122,6 +114,14 @@ public class BingoClient {
         });
     }
 
+    public static PositionAndScale getBoardPosition() {
+        final Window window = Minecraft.getInstance().getWindow();
+        final float scale = CONFIG.getBoardScale();
+        final float x = CONFIG.getBoardCorner().getX(window.getGuiScaledWidth(), scale);
+        final float y = CONFIG.getBoardCorner().getY(window.getGuiScaledHeight(), scale);
+        return new PositionAndScale(x, y, scale);
+    }
+
     public static RecipeViewerPlugin getRecipeViewerPlugin() {
         if (recipeViewerPlugin == null) {
             recipeViewerPlugin = RecipeViewerPlugin.detect();
@@ -133,10 +133,8 @@ public class BingoClient {
         if (clientGame == null || minecraft.getDebugOverlay().showDebugScreen() || minecraft.screen instanceof BoardScreen) {
             return;
         }
-        final float scale = CONFIG.getBoardScale();
-        final float x = CONFIG.getBoardCorner().getX(graphics.guiWidth(), scale);
-        final float y = CONFIG.getBoardCorner().getY(graphics.guiHeight(), scale);
-        renderBingo(graphics, minecraft.screen instanceof ChatScreen, x, y, scale);
+        final PositionAndScale pos = getBoardPosition();
+        renderBingo(graphics, minecraft.screen instanceof ChatScreen, pos);
 
         if (CONFIG.isShowScoreCounter() && clientGame.renderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
             class TeamValue {
@@ -164,12 +162,12 @@ public class BingoClient {
             Arrays.sort(teams, Comparator.comparing(v -> -v.score)); // Sort in reverse
 
             final Font font = minecraft.font;
-            final int scoreX = (int)(x * scale + getBoardWidth() * scale / 2);
+            final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
             int scoreY;
             if (CONFIG.getBoardCorner().isOnBottom) {
-                scoreY = (int)((y - BOARD_OFFSET) * scale - font.lineHeight);
+                scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
             } else {
-                scoreY = (int)(y * scale + (getBoardHeight() + BOARD_OFFSET) * scale);
+                scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
             }
             final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
             for (final TeamValue teamValue : teams) {
@@ -201,7 +199,7 @@ public class BingoClient {
         return 24 + 18 * clientGame.size();
     }
 
-    public static void renderBingo(GuiGraphics graphics, boolean mouseHover, float x, float y, float scale) {
+    public static void renderBingo(GuiGraphics graphics, boolean mouseHover, PositionAndScale pos) {
         if (clientGame == null) {
             Bingo.LOGGER.warn("BingoClient.renderBingo() called when Bingo.clientGame == null!");
             return;
@@ -209,10 +207,10 @@ public class BingoClient {
         final Minecraft minecraft = Minecraft.getInstance();
 
         graphics.pose().pushPose();
-        graphics.pose().scale(scale, scale, 1);
-        graphics.pose().translate(x, y, 0);
+        graphics.pose().scale(pos.scale(), pos.scale(), 1);
+        graphics.pose().translate(pos.x(), pos.y(), 0);
 
-        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientGame.size(), x, y, scale) : null;
+        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientGame.size(), pos) : null;
 
         graphics.blitSprite(
             BOARD_TEXTURE, 0, 0,
@@ -315,20 +313,20 @@ public class BingoClient {
         return Language.getInstance().getVisualOrder(combinedText);
     }
 
-    public static boolean detectClick(int button, float x, float y, float scale) {
-        return detectClickOrPress(InputConstants.Type.MOUSE.getOrCreate(button), x, y, scale);
+    public static boolean detectClick(int button, PositionAndScale boardPos) {
+        return detectClickOrPress(InputConstants.Type.MOUSE.getOrCreate(button), boardPos);
     }
 
-    public static boolean detectPress(int keyCode, int scanCode, float x, float y, float scale) {
-        return detectClickOrPress(InputConstants.getKey(keyCode, scanCode), x, y, scale);
+    public static boolean detectPress(int keyCode, int scanCode, PositionAndScale boardPos) {
+        return detectClickOrPress(InputConstants.getKey(keyCode, scanCode), boardPos);
     }
 
-    public static boolean detectClickOrPress(InputConstants.Key key, float x, float y, float scale) {
+    public static boolean detectClickOrPress(InputConstants.Key key, PositionAndScale boardPos) {
         if (clientGame == null) {
             return false;
         }
 
-        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), clientGame.size(), x, y, scale);
+        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), clientGame.size(), boardPos);
         if (!mousePos.hasSlotPos()) {
             return false;
         }

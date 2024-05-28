@@ -3,11 +3,11 @@ package io.github.gaming32.bingo.client;
 import net.minecraft.client.Minecraft;
 
 public record BingoMousePos(double mouseX, double mouseY, int slotIdX, int slotIdY) {
-    public static BingoMousePos getPos(Minecraft minecraft, int size, float x, float y, float scale) {
+    public static BingoMousePos getPos(Minecraft minecraft, int size, PositionAndScale boardPos) {
         final double mouseX = minecraft.mouseHandler.xpos() * minecraft.getWindow().getGuiScaledWidth() / minecraft.getWindow().getScreenWidth();
         final double mouseY = minecraft.mouseHandler.ypos() * minecraft.getWindow().getGuiScaledHeight() / minecraft.getWindow().getScreenHeight();
-        final double relX = (mouseX - x * scale) / scale;
-        final double relY = (mouseY - y * scale) / scale;
+        final double relX = (mouseX - boardPos.x() * boardPos.scale()) / boardPos.scale();
+        final double relY = (mouseY - boardPos.y() * boardPos.scale()) / boardPos.scale();
         final double slotIdXD = (relX - 7) / 18;
         final double slotIdYD = (relY - 17) / 18;
 

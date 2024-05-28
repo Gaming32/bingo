@@ -37,9 +37,8 @@ public class BoardScreen extends Screen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
         if (BingoClient.clientGame == null) return;
-        final float x = width / 2f - BingoClient.getBoardWidth() / 2f;
-        final float y = height / 2f - BingoClient.getBoardHeight() / 2f;
-        BingoClient.renderBingo(graphics, true, x, y, 1f);
+        final PositionAndScale pos = getPosition();
+        BingoClient.renderBingo(graphics, true, pos);
         assert minecraft != null;
         if (minecraft.player != null && minecraft.player.isSpectator()) {
             final PlayerTeam team = BingoClient.clientGame.teams()[BingoClient.clientTeam.getFirstIndex()];
@@ -47,7 +46,7 @@ public class BoardScreen extends Screen {
             graphics.drawCenteredString(
                 font,
                 BingoClient.getDisplayName(team),
-                width / 2, (int)y + BingoClient.getBoardHeight() + BingoClient.BOARD_OFFSET,
+                width / 2, (int)pos.y() + BingoClient.getBoardHeight() + BingoClient.BOARD_OFFSET,
                 color != null ? color : 0xffffff
             );
         }
@@ -56,12 +55,7 @@ public class BoardScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         assert minecraft != null;
-        if (BingoClient.clientGame != null && BingoClient.detectPress(
-            keyCode, scanCode,
-            width / 2f - BingoClient.getBoardWidth() / 2f,
-            height / 2f - BingoClient.getBoardHeight() / 2f,
-            1f
-        )) {
+        if (BingoClient.clientGame != null && BingoClient.detectPress(keyCode, scanCode, getPosition())) {
             return true;
         } else if (leftButton.visible && minecraft.options.keyLeft.matches(keyCode, scanCode)) {
             switchTeam(-1);
@@ -73,12 +67,7 @@ public class BoardScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (BingoClient.clientGame != null && BingoClient.detectClick(
-            button,
-            width / 2f - BingoClient.getBoardWidth() / 2f,
-            height / 2f - BingoClient.getBoardHeight() / 2f,
-            1f
-        )) {
+        if (BingoClient.clientGame != null && BingoClient.detectClick(button, getPosition())) {
             return true;
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -97,6 +86,14 @@ public class BoardScreen extends Screen {
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    public PositionAndScale getPosition() {
+        return new PositionAndScale(
+            width / 2f - BingoClient.getBoardWidth() / 2f,
+            height / 2f - BingoClient.getBoardHeight() / 2f,
+            1f
+        );
     }
 
     private void updateButtonVisibility() {
