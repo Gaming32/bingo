@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.platform.registrar;
+package io.github.gaming32.bingo.client.platform.registrar;
 
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;

@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.platform.registrar;
+package io.github.gaming32.bingo.client.platform.registrar;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;

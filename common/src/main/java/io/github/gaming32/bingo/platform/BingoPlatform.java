@@ -1,9 +1,7 @@
 package io.github.gaming32.bingo.platform;
 
 import io.github.gaming32.bingo.network.BingoNetworking;
-import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
-import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.minecraft.core.Registry;
@@ -21,10 +19,6 @@ public abstract class BingoPlatform {
     public abstract Path getConfigDir();
 
     public abstract boolean isModLoaded(String id);
-
-    public abstract void registerClientTooltips(Consumer<ClientTooltipRegistrar> handler);
-
-    public abstract void registerKeyMappings(Consumer<KeyMappingBuilder> handler);
 
     public abstract void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler);
 

@@ -1,8 +1,9 @@
-package io.github.gaming32.bingo.neoforge.client;
+package io.github.gaming32.bingo.client.neoforge;
 
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.client.config.BingoConfigScreen;
+import io.github.gaming32.bingo.client.platform.BingoClientPlatform;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -15,6 +16,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 @Mod(value = Bingo.MOD_ID, dist = Dist.CLIENT)
 public class BingoNeoForgeClient {
     public BingoNeoForgeClient(ModContainer mod, IEventBus bus) {
+        BingoClientPlatform.platform = new NeoForgeClientPlatform(bus);
         BingoClient.init();
 
         bus.addListener((RegisterGuiLayersEvent event) -> event.registerAboveAll(

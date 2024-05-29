@@ -1,7 +1,8 @@
-package io.github.gaming32.bingo.fabric.client;
+package io.github.gaming32.bingo.client.fabric;
 
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
+import io.github.gaming32.bingo.client.platform.BingoClientPlatform;
 import io.github.gaming32.bingo.fabric.BingoFabric;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import net.fabricmc.api.ClientModInitializer;
@@ -14,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
 public class BingoFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        BingoClientPlatform.platform = new FabricClientPlatform();
         BingoClient.init();
 
         ClientLoginNetworking.registerGlobalReceiver(BingoFabric.PROTOCOL_VERSION_PACKET, (client, handler, buf, listenerAdder) -> {

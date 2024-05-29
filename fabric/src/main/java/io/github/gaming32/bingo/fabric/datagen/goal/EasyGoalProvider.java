@@ -951,7 +951,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("pottery_sherd"));
         final KeyMapping walkBackwards = Minecraft.getInstance().options.keyDown;
         addGoal(BingoGoal.builder(id("never_walk_backwards"))
-            .criterion("walk", KeyPressedTrigger.TriggerInstance.keyPressed(walkBackwards))
+            .criterion("walk", KeyPressedTrigger.TriggerInstance.keyPressed(walkBackwards.getName()))
             .tags(BingoTags.ACTION, BingoTags.NEVER)
             .name(Component.translatable(
                 "bingo.goal.never_walk_backwards",

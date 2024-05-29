@@ -20,7 +20,7 @@
       "io.github.gaming32.bingo.fabric.BingoFabric"
     ],
     "client": [
-      "io.github.gaming32.bingo.fabric.client.BingoFabricClient"
+      "io.github.gaming32.bingo.client.fabric.BingoFabricClient"
     ],
     "fabric-datagen": [
       "io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric"
@@ -33,8 +33,9 @@
     ]
   },
   "mixins": [
-    "bingo.mixins.json",
-    "bingo-common.mixins.json"
+    "bingo-common.mixins.json",
+    "bingo-common-client.mixins.json",
+    "bingo-fabric.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.6",

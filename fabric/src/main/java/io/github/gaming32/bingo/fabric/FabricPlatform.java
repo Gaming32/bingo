@@ -1,22 +1,17 @@
 package io.github.gaming32.bingo.fabric;
 
+import io.github.gaming32.bingo.client.platform.event.ClientEvents;
 import io.github.gaming32.bingo.fabric.event.FabricClientEvents;
 import io.github.gaming32.bingo.fabric.event.FabricEvents;
 import io.github.gaming32.bingo.fabric.registry.FabricDeferredRegister;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.BingoPlatform;
-import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
-import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
-import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
-import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -27,16 +22,13 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class FabricPlatform extends BingoPlatform {
     private final BingoNetworking networking;
@@ -64,29 +56,6 @@ public class FabricPlatform extends BingoPlatform {
     @Override
     public boolean isModLoaded(String id) {
         return FabricLoader.getInstance().isModLoaded(id);
-    }
-
-    @Override
-    public void registerClientTooltips(Consumer<ClientTooltipRegistrar> handler) {
-        handler.accept(new ClientTooltipRegistrar() {
-            @Override
-            public <T extends TooltipComponent> void register(Class<T> clazz, Function<? super T, ? extends ClientTooltipComponent> factory) {
-                TooltipComponentCallback.EVENT.register(data -> {
-                    if (clazz.isInstance(data)) {
-                        return factory.apply(clazz.cast(data));
-                    }
-                    return null;
-                });
-            }
-        });
-    }
-
-    @Override
-    public void registerKeyMappings(Consumer<KeyMappingBuilder> handler) {
-        final KeyMappingBuilderImpl builder = new KeyMappingBuilderImpl();
-        handler.accept(builder);
-        builder.registerAll(KeyBindingHelper::registerKeyBinding);
-        ClientTickEvents.END_CLIENT_TICK.register(builder::handleAll);
     }
 
     @Override

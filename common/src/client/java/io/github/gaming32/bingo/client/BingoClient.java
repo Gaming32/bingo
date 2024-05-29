@@ -7,6 +7,9 @@ import io.github.gaming32.bingo.client.config.BingoClientConfig;
 import io.github.gaming32.bingo.client.icons.DefaultIconRenderers;
 import io.github.gaming32.bingo.client.icons.IconRenderer;
 import io.github.gaming32.bingo.client.icons.IconRenderers;
+import io.github.gaming32.bingo.client.platform.BingoClientPlatform;
+import io.github.gaming32.bingo.client.platform.event.ClientEvents;
+import io.github.gaming32.bingo.client.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.client.recipeviewer.RecipeViewerPlugin;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.game.BingoBoard;
@@ -15,11 +18,7 @@ import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.ClientGoal;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.github.gaming32.bingo.platform.BingoPlatform;
-import io.github.gaming32.bingo.platform.event.ClientEvents;
-import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.util.ResourceLocations;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -45,7 +44,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 
-@Environment(EnvType.CLIENT)
 public class BingoClient {
     private static final ResourceLocation BOARD_TEXTURE = ResourceLocations.bingo("board");
     public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
@@ -70,7 +68,7 @@ public class BingoClient {
 
         DefaultIconRenderers.setup();
 
-        BingoPlatform.platform.registerKeyMappings(builder -> {
+        BingoClientPlatform.platform.registerKeyMappings(builder -> {
             builder
                 .name("bingo.key.board")
                 .category("bingo.key.category")
@@ -83,7 +81,9 @@ public class BingoClient {
                 });
         });
 
-        BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
+        BingoClientPlatform.platform.registerClientTooltips(registrar -> {
+            registrar.register(IconTooltip.class, ClientIconTooltip::new);
+        });
 
         ClientPayloadHandler.init(new ClientPayloadHandlerImpl());
 

@@ -56,13 +56,6 @@
     "PlayerAdvancementsAccessor",
     "StatsCounterAccessor"
   ],
-  "client": [
-    "client.CameraAccessor",
-    "client.MixinGameRenderer",
-    "client.MixinGui",
-    "client.MixinKeyMapping",
-    "client.MixinRootSpectatorMenuCategory"
-  ],
   "injectors": {
     "defaultRequire": 1
   }

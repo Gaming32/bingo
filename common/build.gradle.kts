@@ -18,6 +18,15 @@ architectury {
 
 loom {
     accessWidenerPath = file("src/main/resources/bingo.accessWidener")
+
+    splitEnvironmentSourceSets()
+
+    mods {
+        val bingo by creating {
+            sourceSet(sourceSets.main.get())
+            sourceSet("client")
+        }
+    }
 }
 
 sourceSets {
@@ -26,6 +35,7 @@ sourceSets {
             srcDirs("src/main/generated")
         }
     }
+    val client by getting
 }
 
 tasks.processResources {

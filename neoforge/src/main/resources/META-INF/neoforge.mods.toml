@@ -19,7 +19,10 @@ A mod for playing bingo! Works best if on both client and server, but also has c
 config = "bingo-common.mixins.json"
 
 [[mixins]]
-config = "bingo.mixins.json"
+config = "bingo-common-client.mixins.json"
+
+[[mixins]]
+config = "bingo-neoforge.mixins.json"
 
 [[accessTransformers]]
 file = "META-INF/accesstransformer.cfg"
