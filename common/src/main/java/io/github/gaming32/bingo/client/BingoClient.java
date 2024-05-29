@@ -38,7 +38,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 public class BingoClient {
     private static final ResourceLocation BOARD_TEXTURE = ResourceLocations.bingo("board");
@@ -228,22 +233,17 @@ public class BingoClient {
                 renderer.renderDecorations(icon, minecraft.font, graphics, slotX, slotY);
                 final BingoBoard.Teams state = clientGame.getState(sx, sy);
                 boolean isGoalCompleted = state.and(clientTeam);
+                int incompleteColor = Objects.requireNonNullElse(goal.specialType().incompleteColor, 0);
 
-                final List<Integer> colors = switch (clientGame.renderMode()) {
-                    case FANCY -> Collections.singletonList(isGoalCompleted ? Integer.valueOf(0x55ff55) : Objects.requireNonNullElse(goal.specialType().incompleteColor, 0));
-                    case ALL_TEAMS -> {
-                        if (!state.any()) {
-                            yield Collections.emptyList();
-                        }
-                        yield state.stream().map((team) -> clientGame.teams()[team].getColor().getColor()).boxed().toList();
-                    }
+                final int[] colors = switch (clientGame.renderMode()) {
+                    case FANCY -> new int[] {(isGoalCompleted ? 0x55ff55 : incompleteColor)};
+                    case ALL_TEAMS -> state.stream().map((team) -> clientGame.teams()[team].getColor().getColor()).toArray();
                 };
-                for (int i = 0; i < colors.size(); ++i) {
-                    int color = colors.get(i);
-                    int start = 16 * i / colors.size();
-                    int end = 16 * (i + 1) / colors.size();
-                    int base = (colors.size() == 1) ? 0xA0000000 : 0x50000000;
-
+                for (int i = 0; i < colors.length; ++i) {
+                    int color = colors[i];
+                    int start = 16 * i / colors.length;
+                    int end = 16 * (i + 1) / colors.length;
+                    int base = (colors.length == 1) ? 0xA0000000 : 0x50000000;
                     graphics.fill(slotX + start, slotY, slotX + end, slotY + 16, base | color);
                 }
 

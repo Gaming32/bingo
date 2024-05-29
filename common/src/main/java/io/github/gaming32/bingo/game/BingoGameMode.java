@@ -170,10 +170,11 @@ public interface BingoGameMode {
 
         @Override
         public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever) {
-            if (!isNever)
+            if (!isNever) {
                 return !board.getStates()[index].any();
-            else
+            } else {
                 return board.getStates()[index].count() > 1 && board.getStates()[index].and(team);
+            }
         }
 
         @Override

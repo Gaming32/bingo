@@ -522,9 +522,9 @@ public class BingoGame {
                 for (final ServerPlayer player : playerList.getPlayers()) {
                     if (player.isAlliedTo(playerTeam)) continue;
                     player.playNotifySound(
-                            isLoss ? SoundEvents.NOTE_BLOCK_CHIME.value() : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(),
-                            SoundSource.MASTER,
-                            0.5f, 1f);
+                        isLoss ? SoundEvents.NOTE_BLOCK_CHIME.value() : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(),
+                        SoundSource.MASTER,
+                        0.5f, 1f);
                     player.sendSystemMessage(lockoutMessage);
                 }
             }
