@@ -28,6 +28,7 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 public record BingoDifficulty(int number, @Nullable String fallbackName) {
     public static final Codec<BingoDifficulty> CODEC = RecordCodecBuilder.create(instance ->
@@ -115,6 +116,11 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
                 Objects.requireNonNull(number, "number"),
                 fallbackName
             ));
+        }
+
+        public void build(BiConsumer<ResourceLocation, BingoDifficulty> adder) {
+            final Holder result = build();
+            adder.accept(result.id, result.difficulty);
         }
     }
 
