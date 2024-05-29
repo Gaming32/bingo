@@ -129,7 +129,7 @@ public class BingoGame {
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamPacket(team).sendTo(player);
 
-        new InitBoardPacket(this, obfuscateTeam(team, player)).sendTo(player);
+        InitBoardPacket.create(this, obfuscateTeam(team, player)).sendTo(player);
         player.connection.send(new ClientboundUpdateAdvancementsPacket(
             false,
             VanillaNetworking.generateAdvancements(board.getSize(), board.getGoals()),
