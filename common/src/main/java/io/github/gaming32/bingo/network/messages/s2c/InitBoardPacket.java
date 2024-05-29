@@ -1,21 +1,17 @@
 package io.github.gaming32.bingo.network.messages.s2c;
 
-import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.client.BingoClient;
-import io.github.gaming32.bingo.client.ClientGame;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BingoGameMode;
-import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.ClientGoal;
+import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.github.gaming32.bingo.util.BingoStreamCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraft.world.scores.Scoreboard;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -61,19 +57,6 @@ public record InitBoardPacket(
 
     @Override
     public void handle(BingoNetworking.Context context) {
-        final Scoreboard scoreboard = context.level().getScoreboard();
-        final PlayerTeam[] playerTeams = new PlayerTeam[teams.length];
-        for (int i = 0; i < teams.length; i++) {
-            final PlayerTeam team = scoreboard.getPlayerTeam(teams[i]);
-            if (team == null) {
-                Bingo.LOGGER.error("Unknown team {}", teams[i]);
-                return;
-            }
-            playerTeams[i] = team;
-        }
-
-        BingoClient.clientGame = new ClientGame(
-            size, states, goals, playerTeams, renderMode, new GoalProgress[size * size]
-        );
+        ClientPayloadHandler.get().handleInitBoard(this, context.level());
     }
 }

@@ -13,6 +13,7 @@ import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.ClientGoal;
+import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
@@ -83,6 +84,8 @@ public class BingoClient {
         });
 
         BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
+
+        ClientPayloadHandler.init(new ClientPayloadHandlerImpl());
 
         Bingo.LOGGER.info("Bongo");
     }

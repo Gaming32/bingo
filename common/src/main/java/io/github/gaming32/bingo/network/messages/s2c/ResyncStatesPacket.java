@@ -1,10 +1,9 @@
 package io.github.gaming32.bingo.network.messages.s2c;
 
-import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
+import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.github.gaming32.bingo.util.BingoStreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -24,10 +23,6 @@ public record ResyncStatesPacket(BingoBoard.Teams[] states) implements AbstractC
 
     @Override
     public void handle(BingoNetworking.Context context) {
-        if (BingoClient.clientGame == null) {
-            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling {}!", TYPE);
-            return;
-        }
-        System.arraycopy(states, 0, BingoClient.clientGame.states(), 0, BingoClient.clientGame.size() * BingoClient.clientGame.size());
+        ClientPayloadHandler.get().handleResyncStates(this);
     }
 }

@@ -1,10 +1,9 @@
 package io.github.gaming32.bingo.network.messages.s2c;
 
-import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
+import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -26,14 +25,6 @@ public record UpdateStatePacket(int index, BingoBoard.Teams newState) implements
 
     @Override
     public void handle(BingoNetworking.Context context) {
-        if (BingoClient.clientGame == null) {
-            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling {}!", TYPE);
-            return;
-        }
-        if (index < 0 || index >= BingoClient.clientGame.size() * BingoClient.clientGame.size()) {
-            Bingo.LOGGER.warn("Invalid {} packet: invalid board index {}", TYPE, index);
-            return;
-        }
-        BingoClient.clientGame.states()[index] = newState;
+        ClientPayloadHandler.get().handleUpdateState(this);
     }
 }

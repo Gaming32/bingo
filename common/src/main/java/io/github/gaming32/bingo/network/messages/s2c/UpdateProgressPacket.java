@@ -1,10 +1,8 @@
 package io.github.gaming32.bingo.network.messages.s2c;
 
-import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.client.BingoClient;
-import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
+import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -27,10 +25,6 @@ public record UpdateProgressPacket(int index, int progress, int maxProgress) imp
 
     @Override
     public void handle(BingoNetworking.Context context) {
-        if (BingoClient.clientGame == null) {
-            Bingo.LOGGER.warn("BingoClient.clientGame == null while handling {}!", TYPE);
-            return;
-        }
-        BingoClient.clientGame.progress()[index] = new GoalProgress(progress, maxProgress);
+        ClientPayloadHandler.get().handleUpdateProgress(this);
     }
 }
