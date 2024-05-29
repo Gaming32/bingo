@@ -38,17 +38,17 @@ public final class BingoNetworkingImpl extends BingoNetworking {
     }
 
     @Override
-    public void sendToServer(CustomPacketPayload packet) {
+    public void sendToServer(CustomPacketPayload payload) {
         final ClientPacketListener connection = Minecraft.getInstance().getConnection();
         if (connection == null) {
             throw new IllegalStateException("Not connected!");
         }
-        connection.send(packet);
+        connection.send(payload);
     }
 
     @Override
-    public void sendTo(ServerPlayer player, CustomPacketPayload packet) {
-        player.connection.send(packet);
+    public void sendTo(ServerPlayer player, CustomPacketPayload payload) {
+        player.connection.send(payload);
     }
 
     @Override

@@ -1,25 +1,25 @@
 package io.github.gaming32.bingo.network;
 
-import io.github.gaming32.bingo.network.messages.s2c.InitBoardPacket;
-import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPacket;
-import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPacket;
-import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPacket;
-import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePacket;
+import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
+import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
+import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import net.minecraft.world.level.Level;
 
 public interface ClientPayloadHandler {
-    void handleInitBoard(InitBoardPacket payload, Level level);
+    void handleInitBoard(InitBoardPayload payload, Level level);
 
     void handleRemoveBoard();
 
-    void handleResyncStates(ResyncStatesPacket packet);
+    void handleResyncStates(ResyncStatesPayload payload);
 
-    void handleSyncTeam(SyncTeamPacket packet);
+    void handleSyncTeam(SyncTeamPayload payload);
 
-    void handleUpdateProgress(UpdateProgressPacket packet);
+    void handleUpdateProgress(UpdateProgressPayload payload);
 
-    void handleUpdateState(UpdateStatePacket packet);
+    void handleUpdateState(UpdateStatePayload payload);
 
     static ClientPayloadHandler get() {
         if (Holder.instance == null) {

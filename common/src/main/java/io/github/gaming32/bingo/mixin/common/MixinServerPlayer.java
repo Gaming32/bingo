@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.BingoBoard;
-import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPacket;
+import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
@@ -88,7 +88,7 @@ public abstract class MixinServerPlayer extends MixinPlayer {
         if (newMode == GameType.SPECTATOR || oldMode.get() == GameType.SPECTATOR) {
             final ServerPlayer player = (ServerPlayer)(Object)this;
             final BingoBoard.Teams team = Bingo.activeGame.getTeam(player);
-            new ResyncStatesPacket(Bingo.activeGame.obfuscateTeam(team, player)).sendTo(player);
+            new ResyncStatesPayload(Bingo.activeGame.obfuscateTeam(team, player)).sendTo(player);
         }
     }
 }

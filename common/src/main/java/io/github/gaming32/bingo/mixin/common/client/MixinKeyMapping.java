@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.mixin.common.client;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.InputConstants;
 import io.github.gaming32.bingo.network.BingoNetworking;
-import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPacket;
+import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPayload;
 import net.minecraft.client.KeyMapping;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,8 +22,8 @@ public class MixinKeyMapping {
         )
     )
     private static void onKeyPress(InputConstants.Key key, CallbackInfo ci, @Local KeyMapping keyMapping) {
-        if (BingoNetworking.instance().canServerReceive(KeyPressedPacket.TYPE)) {
-            new KeyPressedPacket(keyMapping.getName()).sendToServer();
+        if (BingoNetworking.instance().canServerReceive(KeyPressedPayload.TYPE)) {
+            new KeyPressedPayload(keyMapping.getName()).sendToServer();
         }
     }
 }

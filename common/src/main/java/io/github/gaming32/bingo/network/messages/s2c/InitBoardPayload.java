@@ -16,24 +16,24 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public record InitBoardPacket(
+public record InitBoardPayload(
     int size,
     ClientGoal[] goals,
     BingoBoard.Teams[] states,
     String[] teams,
     BingoGameMode.RenderMode renderMode
 ) implements AbstractCustomPayload {
-    public static final Type<InitBoardPacket> TYPE = AbstractCustomPayload.type("init_board");
-    public static final StreamCodec<RegistryFriendlyByteBuf, InitBoardPacket> CODEC = StreamCodec.composite(
+    public static final Type<InitBoardPayload> TYPE = AbstractCustomPayload.type("init_board");
+    public static final StreamCodec<RegistryFriendlyByteBuf, InitBoardPayload> CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_INT, p -> p.size,
         ClientGoal.STREAM_CODEC.apply(BingoStreamCodecs.array(ClientGoal[]::new)), p -> p.goals,
         BingoBoard.Teams.STREAM_CODEC.apply(BingoStreamCodecs.array(BingoBoard.Teams[]::new)), p -> p.states,
         ByteBufCodecs.STRING_UTF8.apply(BingoStreamCodecs.array(String[]::new)), p -> p.teams,
         BingoGameMode.RenderMode.STREAM_CODEC, p -> p.renderMode,
-        InitBoardPacket::new
+        InitBoardPayload::new
     );
 
-    public static InitBoardPacket create(BingoGame game, BingoBoard.Teams[] states) {
+    public static InitBoardPayload create(BingoGame game, BingoBoard.Teams[] states) {
         final BingoBoard board = game.getBoard();
 
         final int size = board.getSize();
@@ -46,12 +46,12 @@ public record InitBoardPacket(
         final String[] teams = Arrays.stream(game.getTeams()).map(PlayerTeam::getName).toArray(String[]::new);
         final var renderMode = game.getGameMode().getRenderMode();
 
-        return new InitBoardPacket(size, goals, states, teams, renderMode);
+        return new InitBoardPayload(size, goals, states, teams, renderMode);
     }
 
     @NotNull
     @Override
-    public Type<InitBoardPacket> type() {
+    public Type<InitBoardPayload> type() {
         return TYPE;
     }
 

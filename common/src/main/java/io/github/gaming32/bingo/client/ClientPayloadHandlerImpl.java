@@ -3,11 +3,11 @@ package io.github.gaming32.bingo.client;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
-import io.github.gaming32.bingo.network.messages.s2c.InitBoardPacket;
-import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPacket;
-import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPacket;
-import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPacket;
-import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePacket;
+import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
+import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
+import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
@@ -15,9 +15,9 @@ import net.minecraft.world.scores.Scoreboard;
 
 public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
     @Override
-    public void handleInitBoard(InitBoardPacket packet, Level level) {
-        final int size = packet.size();
-        final String[] teams = packet.teams();
+    public void handleInitBoard(InitBoardPayload payload, Level level) {
+        final int size = payload.size();
+        final String[] teams = payload.teams();
 
         final Scoreboard scoreboard = level.getScoreboard();
         final PlayerTeam[] playerTeams = new PlayerTeam[teams.length];
@@ -32,10 +32,10 @@ public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
 
         BingoClient.clientGame = new ClientGame(
             size,
-            packet.states(),
-            packet.goals(),
+            payload.states(),
+            payload.goals(),
             playerTeams,
-            packet.renderMode(),
+            payload.renderMode(),
             new GoalProgress[size * size]
         );
     }
@@ -46,35 +46,35 @@ public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
     }
 
     @Override
-    public void handleResyncStates(ResyncStatesPacket packet) {
-        if (!checkGamePresent(packet)) return;
+    public void handleResyncStates(ResyncStatesPayload payload) {
+        if (!checkGamePresent(payload)) return;
         System.arraycopy(
-            packet.states(), 0,
+            payload.states(), 0,
             BingoClient.clientGame.states(), 0,
             BingoClient.clientGame.size() * BingoClient.clientGame.size()
         );
     }
 
     @Override
-    public void handleSyncTeam(SyncTeamPacket packet) {
-        BingoClient.clientTeam = BingoClient.receivedClientTeam = packet.team();
+    public void handleSyncTeam(SyncTeamPayload payload) {
+        BingoClient.clientTeam = BingoClient.receivedClientTeam = payload.team();
     }
 
     @Override
-    public void handleUpdateProgress(UpdateProgressPacket packet) {
-        if (!checkGamePresent(packet)) return;
-        BingoClient.clientGame.progress()[packet.index()] = new GoalProgress(packet.progress(), packet.maxProgress());
+    public void handleUpdateProgress(UpdateProgressPayload payload) {
+        if (!checkGamePresent(payload)) return;
+        BingoClient.clientGame.progress()[payload.index()] = new GoalProgress(payload.progress(), payload.maxProgress());
     }
 
     @Override
-    public void handleUpdateState(UpdateStatePacket packet) {
-        if (!checkGamePresent(packet)) return;
-        final int index = packet.index();
+    public void handleUpdateState(UpdateStatePayload payload) {
+        if (!checkGamePresent(payload)) return;
+        final int index = payload.index();
         if (index < 0 || index >= BingoClient.clientGame.size() * BingoClient.clientGame.size()) {
-            Bingo.LOGGER.warn("Invalid {} packet: invalid board index {}", UpdateStatePacket.TYPE, index);
+            Bingo.LOGGER.warn("Invalid {} payload: invalid board index {}", UpdateStatePayload.TYPE, index);
             return;
         }
-        BingoClient.clientGame.states()[index] = packet.newState();
+        BingoClient.clientGame.states()[index] = payload.newState();
     }
 
     private static boolean checkGamePresent(CustomPacketPayload payload) {

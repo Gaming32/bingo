@@ -7,15 +7,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
-public enum RemoveBoardPacket implements AbstractCustomPayload {
+public enum RemoveBoardPayload implements AbstractCustomPayload {
     INSTANCE;
 
-    public static final Type<RemoveBoardPacket> TYPE = AbstractCustomPayload.type("remove_board");
-    public static final StreamCodec<ByteBuf, RemoveBoardPacket> CODEC = StreamCodec.unit(INSTANCE);
+    public static final Type<RemoveBoardPayload> TYPE = AbstractCustomPayload.type("remove_board");
+    public static final StreamCodec<ByteBuf, RemoveBoardPayload> CODEC = StreamCodec.unit(INSTANCE);
 
     @NotNull
     @Override
-    public Type<RemoveBoardPacket> type() {
+    public Type<RemoveBoardPayload> type() {
         return TYPE;
     }
 

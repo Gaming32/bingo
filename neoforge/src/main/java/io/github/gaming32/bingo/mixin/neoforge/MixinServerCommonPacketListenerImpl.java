@@ -18,7 +18,7 @@ public class MixinServerCommonPacketListenerImpl {
         ),
         require = 0
     )
-    private boolean dontCheckBingoPackets(Packet<?> packet, ServerCommonPacketListener listener) {
+    private boolean dontCheckBingoPayloads(Packet<?> packet, ServerCommonPacketListener listener) {
         return !(packet instanceof ClientboundCustomPayloadPacket payloadPacket) ||
                !payloadPacket.payload().type().id().getNamespace().equals("bingo");
     }

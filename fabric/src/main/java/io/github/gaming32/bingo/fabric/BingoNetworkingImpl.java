@@ -25,13 +25,13 @@ public class BingoNetworkingImpl extends BingoNetworking {
     }
 
     @Override
-    public void sendToServer(CustomPacketPayload packet) {
-        ClientPlayNetworking.send(packet);
+    public void sendToServer(CustomPacketPayload payload) {
+        ClientPlayNetworking.send(payload);
     }
 
     @Override
-    public void sendTo(ServerPlayer player, CustomPacketPayload packet) {
-        ServerPlayNetworking.send(player, packet);
+    public void sendTo(ServerPlayer player, CustomPacketPayload payload) {
+        ServerPlayNetworking.send(player, payload);
     }
 
     @Override

@@ -6,12 +6,12 @@ import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
-import io.github.gaming32.bingo.network.messages.s2c.InitBoardPacket;
-import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPacket;
-import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPacket;
-import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPacket;
-import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPacket;
-import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePacket;
+import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
+import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
+import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
+import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import io.github.gaming32.bingo.triggers.progress.ProgressibleTrigger;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
@@ -114,7 +114,7 @@ public class BingoGame {
             return;
         }
 
-        RemoveBoardPacket.INSTANCE.sendTo(player);
+        RemoveBoardPayload.INSTANCE.sendTo(player);
         if (Bingo.needAdvancementsClear.remove(player.getUUID())) {
             player.connection.send(new ClientboundUpdateAdvancementsPacket(
                 false, List.of(), Set.of(VanillaNetworking.ROOT_ADVANCEMENT.id()), Map.of()
@@ -127,9 +127,9 @@ public class BingoGame {
         ));
 
         final BingoBoard.Teams team = getTeam(player);
-        new SyncTeamPacket(team).sendTo(player);
+        new SyncTeamPayload(team).sendTo(player);
 
-        InitBoardPacket.create(this, obfuscateTeam(team, player)).sendTo(player);
+        InitBoardPayload.create(this, obfuscateTeam(team, player)).sendTo(player);
         player.connection.send(new ClientboundUpdateAdvancementsPacket(
             false,
             VanillaNetworking.generateAdvancements(board.getSize(), board.getGoals()),
@@ -143,7 +143,7 @@ public class BingoGame {
             goalProgress.forEach((goal, progress) -> {
                 int goalIndex = getBoardIndex(player, goal);
                 if (goalIndex != -1) {
-                    new UpdateProgressPacket(goalIndex, progress.progress(), progress.maxProgress()).sendTo(player);
+                    new UpdateProgressPayload(goalIndex, progress.progress(), progress.maxProgress()).sendTo(player);
                 }
             });
         }
@@ -213,7 +213,7 @@ public class BingoGame {
         playerList.broadcastSystemMessage(message, false);
 
         Bingo.activeGame = null;
-        new ResyncStatesPacket(board.getStates()).sendTo(playerList.getPlayers());
+        new ResyncStatesPayload(board.getStates()).sendTo(playerList.getPlayers());
         Bingo.updateCommandTree(playerList);
     }
 
@@ -318,7 +318,7 @@ public class BingoGame {
             return;
         }
 
-        new UpdateProgressPacket(goalIndex, progress, maxProgress).sendTo(player);
+        new UpdateProgressPayload(goalIndex, progress, maxProgress).sendTo(player);
         goalProgress.put(goal, new GoalProgress(progress, maxProgress));
     }
 
@@ -482,8 +482,8 @@ public class BingoGame {
         }
         final BingoBoard.Teams boardState = board.getStates()[boardIndex];
         final boolean showOtherTeam = Bingo.showOtherTeam || gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS;
-        final UpdateStatePacket statePacket = new UpdateStatePacket(boardIndex, boardState);
-        final UpdateStatePacket obfuscatedStatePacket = new UpdateStatePacket(boardIndex, obfuscateTeam(team, boardState));
+        final UpdateStatePayload statePayload = new UpdateStatePayload(boardIndex, boardState);
+        final UpdateStatePayload obfuscatedStatePayload = new UpdateStatePayload(boardIndex, obfuscateTeam(team, boardState));
         final ClientboundUpdateAdvancementsPacket vanillaPacket = new ClientboundUpdateAdvancementsPacket(
             false,
             List.of(),
@@ -502,13 +502,13 @@ public class BingoGame {
                 isLoss ? 1f : 0.5f, 1f
             );
             if (!showOtherTeam && !player.isSpectator()) {
-                obfuscatedStatePacket.sendTo(player);
+                obfuscatedStatePayload.sendTo(player);
             }
             player.connection.send(vanillaPacket);
             player.sendSystemMessage(message);
         }
         if (showOtherTeam) {
-            statePacket.sendTo(playerList.getPlayers());
+            statePayload.sendTo(playerList.getPlayers());
             if (gameMode.isLockout()) {
                 Component teamComponent = BingoUtil.getDisplayName(playerTeam, playerList)
                     .map(Function.identity(), Function.identity());
@@ -528,7 +528,7 @@ public class BingoGame {
         } else {
             for (final ServerPlayer player : playerList.getPlayers()) {
                 if (player.isSpectator()) {
-                    statePacket.sendTo(player);
+                    statePayload.sendTo(player);
                 }
             }
         }

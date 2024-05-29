@@ -13,13 +13,13 @@ import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
 import io.github.gaming32.bingo.network.BingoNetworking;
-import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPacket;
-import io.github.gaming32.bingo.network.messages.s2c.InitBoardPacket;
-import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPacket;
-import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPacket;
-import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPacket;
-import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPacket;
-import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePacket;
+import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPayload;
+import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
+import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
+import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
+import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.Event;
 import io.github.gaming32.bingo.subpredicates.entity.BingoEntitySubPredicates;
@@ -73,14 +73,14 @@ public class Bingo {
         });
 
         BingoNetworking.instance().onRegister(registrar -> {
-            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPacket.TYPE, InitBoardPacket.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPacket.TYPE, RemoveBoardPacket.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPacket.TYPE, ResyncStatesPacket.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPacket.TYPE, SyncTeamPacket.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPacket.TYPE, UpdateProgressPacket.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePacket.TYPE, UpdateStatePacket.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPayload.TYPE, InitBoardPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPayload.TYPE, RemoveBoardPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPayload.TYPE, ResyncStatesPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPayload.TYPE, SyncTeamPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPayload.TYPE, UpdateProgressPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePayload.TYPE, UpdateStatePayload.CODEC);
 
-            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPacket.TYPE, KeyPressedPacket.CODEC);
+            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPayload.TYPE, KeyPressedPayload.CODEC);
         });
 
         LOGGER.info("I got the diagonal!");
@@ -191,6 +191,6 @@ public class Bingo {
     }
 
     public static boolean isInstalledOnClient(ServerPlayer player) {
-        return BingoNetworking.instance().canPlayerReceive(player, InitBoardPacket.TYPE);
+        return BingoNetworking.instance().canPlayerReceive(player, InitBoardPayload.TYPE);
     }
 }

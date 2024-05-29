@@ -22,13 +22,13 @@ public abstract class BingoNetworking {
 
     public abstract void onRegister(Consumer<Registrar> handler);
 
-    public abstract void sendToServer(CustomPacketPayload packet);
+    public abstract void sendToServer(CustomPacketPayload payload);
 
-    public abstract void sendTo(ServerPlayer player, CustomPacketPayload packet);
+    public abstract void sendTo(ServerPlayer player, CustomPacketPayload payload);
 
-    public void sendTo(Iterable<ServerPlayer> players, CustomPacketPayload packet) {
+    public void sendTo(Iterable<ServerPlayer> players, CustomPacketPayload payload) {
         for (final ServerPlayer player : players) {
-            sendTo(player, packet);
+            sendTo(player, payload);
         }
     }
 

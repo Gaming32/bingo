@@ -9,15 +9,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
-public record ResyncStatesPacket(BingoBoard.Teams[] states) implements AbstractCustomPayload {
-    public static final Type<ResyncStatesPacket> TYPE = AbstractCustomPayload.type("resync_states");
-    public static final StreamCodec<ByteBuf, ResyncStatesPacket> CODEC = BingoBoard.Teams.STREAM_CODEC
+public record ResyncStatesPayload(BingoBoard.Teams[] states) implements AbstractCustomPayload {
+    public static final Type<ResyncStatesPayload> TYPE = AbstractCustomPayload.type("resync_states");
+    public static final StreamCodec<ByteBuf, ResyncStatesPayload> CODEC = BingoBoard.Teams.STREAM_CODEC
         .apply(BingoStreamCodecs.array(BingoBoard.Teams[]::new))
-        .map(ResyncStatesPacket::new, p -> p.states);
+        .map(ResyncStatesPayload::new, p -> p.states);
 
     @NotNull
     @Override
-    public Type<ResyncStatesPacket> type() {
+    public Type<ResyncStatesPayload> type() {
         return TYPE;
     }
 

@@ -24,7 +24,7 @@ import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BingoGameMode;
-import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPacket;
+import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -504,7 +504,7 @@ public class BingoCommand {
         if (Bingo.activeGame != null) {
             Bingo.activeGame.endGame(context.getSource().getServer().getPlayerList());
         }
-        RemoveBoardPacket.INSTANCE.sendTo(context.getSource().getServer().getPlayerList().getPlayers());
+        RemoveBoardPayload.INSTANCE.sendTo(context.getSource().getServer().getPlayerList().getPlayers());
         context.getSource().sendSuccess(() -> Bingo.translatable("bingo.reset.success"), true);
         return Command.SINGLE_SUCCESS;
     }

@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.network.messages.s2c;
 
+import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
@@ -8,23 +9,22 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
-public record UpdateProgressPacket(int index, int progress, int maxProgress) implements AbstractCustomPayload {
-    public static final Type<UpdateProgressPacket> TYPE = AbstractCustomPayload.type("update_progress");
-    public static final StreamCodec<ByteBuf, UpdateProgressPacket> CODEC = StreamCodec.composite(
+public record UpdateStatePayload(int index, BingoBoard.Teams newState) implements AbstractCustomPayload {
+    public static final Type<UpdateStatePayload> TYPE = AbstractCustomPayload.type("update_state");
+    public static final StreamCodec<ByteBuf, UpdateStatePayload> CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_INT, p -> p.index,
-        ByteBufCodecs.VAR_INT, p -> p.progress,
-        ByteBufCodecs.VAR_INT, p -> p.maxProgress,
-        UpdateProgressPacket::new
+        BingoBoard.Teams.STREAM_CODEC, p -> p.newState,
+        UpdateStatePayload::new
     );
 
     @NotNull
     @Override
-    public Type<UpdateProgressPacket> type() {
+    public Type<UpdateStatePayload> type() {
         return TYPE;
     }
 
     @Override
     public void handle(BingoNetworking.Context context) {
-        ClientPayloadHandler.get().handleUpdateProgress(this);
+        ClientPayloadHandler.get().handleUpdateState(this);
     }
 }
