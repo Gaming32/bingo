@@ -47,7 +47,7 @@ tasks.processResources {
 }
 
 tasks.shadowJar {
-    exclude("fabric.mod.json", "bingo-common-refmap.json")
+    exclude("*-refmap.json")
 
     configurations = listOf(shadowCommon)
     archiveClassifier = "dev-shadow"
