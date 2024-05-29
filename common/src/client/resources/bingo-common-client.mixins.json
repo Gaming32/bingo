@@ -12,5 +12,6 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "refmap": "client-bingo-common-refmap.json"
 }

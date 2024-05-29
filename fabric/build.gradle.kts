@@ -73,6 +73,7 @@ tasks.processResources {
 }
 
 tasks.shadowJar {
+    from(sourceSets["client"].output)
     configurations = listOf(shadowCommon)
     archiveClassifier.set("dev-shadow")
 }
