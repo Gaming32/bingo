@@ -59,6 +59,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
@@ -83,10 +84,10 @@ import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class HardGoalProvider extends DifficultyGoalProvider {
-    public HardGoalProvider(Consumer<BingoGoal.Holder> goalAdder, HolderLookup.Provider registries) {
+    public HardGoalProvider(BiConsumer<ResourceLocation, BingoGoal> goalAdder, HolderLookup.Provider registries) {
         super(BingoDifficulties.HARD, goalAdder, registries);
     }
 

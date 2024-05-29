@@ -60,17 +60,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public abstract class DifficultyGoalProvider {
     private final ResourceLocation difficulty;
     private final String prefix;
-    private final Consumer<BingoGoal.Holder> goalAdder;
+    private final BiConsumer<ResourceLocation, BingoGoal> goalAdder;
     protected final HolderLookup.Provider registries;
 
     protected DifficultyGoalProvider(
         ResourceLocation difficulty,
-        Consumer<BingoGoal.Holder> goalAdder,
+        BiConsumer<ResourceLocation, BingoGoal> goalAdder,
         HolderLookup.Provider registries
     ) {
         this.difficulty = difficulty;
@@ -84,7 +84,7 @@ public abstract class DifficultyGoalProvider {
         if (!builtGoal.id().getPath().startsWith(prefix)) {
             throw new IllegalArgumentException("Goal ID does not start with " + prefix);
         }
-        goalAdder.accept(builtGoal);
+        goalAdder.accept(builtGoal.id(), builtGoal.goal());
     }
 
     public abstract void addGoals();
