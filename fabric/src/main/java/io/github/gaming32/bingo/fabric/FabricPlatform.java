@@ -1,7 +1,5 @@
 package io.github.gaming32.bingo.fabric;
 
-import io.github.gaming32.bingo.client.platform.event.ClientEvents;
-import io.github.gaming32.bingo.fabric.event.FabricClientEvents;
 import io.github.gaming32.bingo.fabric.event.FabricEvents;
 import io.github.gaming32.bingo.fabric.registry.FabricDeferredRegister;
 import io.github.gaming32.bingo.network.BingoNetworking;
@@ -11,10 +9,6 @@ import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -93,23 +87,5 @@ public class FabricPlatform extends BingoPlatform {
         }));
         Event.EXPLOSION_START.setRegistrar(FabricEvents.EXPLOSION::register);
         Event.SERVER_TICK_END.setRegistrar(handler -> ServerTickEvents.END_SERVER_TICK.register(handler::accept));
-
-        if (isClient()) {
-            ClientEvents.KEY_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
-                (client, screen, scaledWidth, scaledHeight) ->
-                    ScreenKeyboardEvents.allowKeyRelease(screen).register((screen1, key, scancode, modifiers) ->
-                        !handler.onKeyReleased(screen1, key, scancode, modifiers)
-                    )
-            ));
-            ClientEvents.MOUSE_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
-                (client, screen, scaledWidth, scaledHeight) ->
-                    ScreenMouseEvents.allowMouseRelease(screen).register((screen1, mouseX, mouseY, button) ->
-                        !handler.onMouseReleased(screen1, mouseX, mouseY, button)
-                    )
-            ));
-            ClientEvents.PLAYER_QUIT.setRegistrar(FabricClientEvents.PLAYER_QUIT::register);
-            ClientEvents.CLIENT_TICK_START.setRegistrar(handler -> ClientTickEvents.START_CLIENT_TICK.register(handler::accept));
-            ClientEvents.CLIENT_TICK_END.setRegistrar(handler -> ClientTickEvents.END_CLIENT_TICK.register(handler::accept));
-        }
     }
 }

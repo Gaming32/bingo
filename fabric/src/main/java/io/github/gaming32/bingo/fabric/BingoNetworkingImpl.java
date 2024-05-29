@@ -1,7 +1,6 @@
 package io.github.gaming32.bingo.fabric;
 
 import io.github.gaming32.bingo.network.BingoNetworking;
-import io.github.gaming32.bingo.platform.BingoPlatform;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -12,6 +11,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -45,6 +46,8 @@ public class BingoNetworkingImpl extends BingoNetworking {
     }
 
     public static final class RegistrarImpl extends Registrar {
+        private static final List<PayloadTypeAndHandler<?>> queuedClientHandlers = new ArrayList<>();
+
         private RegistrarImpl() {
         }
 
@@ -57,26 +60,24 @@ public class BingoNetworkingImpl extends BingoNetworking {
         ) {
             if (flow == null || flow == PacketFlow.CLIENTBOUND) {
                 PayloadTypeRegistry.playS2C().register(type, codec);
-                if (BingoPlatform.platform.isClient()) {
-                    ClientReceiverRegistrar.register(type, handler);
-                }
+                queuedClientHandlers.add(new PayloadTypeAndHandler<>(type, handler));
             }
             if (flow == null || flow == PacketFlow.SERVERBOUND) {
                 PayloadTypeRegistry.playC2S().register(type, codec);
-                ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
-                    handler.accept(payload, new Context(context.player(), context.responseSender()::sendPacket))
-                );
+                ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) -> handler.accept(
+                    payload, new Context(context.player(), context.responseSender()::sendPacket)
+                ));
             }
         }
 
-        private static class ClientReceiverRegistrar {
-            public static <P extends CustomPacketPayload> void register(
-                CustomPacketPayload.Type<P> type, BiConsumer<P, Context> handler
-            ) {
-                ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
-                    handler.accept(payload, new Context(context.player(), context.responseSender()::sendPacket))
-                );
-            }
+        public static void initClientHandlers(Consumer<PayloadTypeAndHandler<?>> initializer) {
+            queuedClientHandlers.forEach(initializer);
+            queuedClientHandlers.clear();
+        }
+
+        public record PayloadTypeAndHandler<P extends CustomPacketPayload>(
+            CustomPacketPayload.Type<P> type, BiConsumer<P, Context> handler
+        ) {
         }
     }
 }

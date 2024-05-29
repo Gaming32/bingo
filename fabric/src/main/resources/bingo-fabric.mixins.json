@@ -12,11 +12,6 @@
     "MixinReloadableServerResources",
     "brigadier.MixinCommandContext"
   ],
-  "client": [
-    "client.GuiAccessor",
-    "client.MixinLayeredDraw",
-    "client.MixinMinecraft"
-  ],
   "injectors": {
     "defaultRequire": 1
   }

@@ -23,19 +23,26 @@
       "io.github.gaming32.bingo.client.fabric.BingoFabricClient"
     ],
     "fabric-datagen": [
-      "io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric"
+      "io.github.gaming32.bingo.datagen.BingoDataGen"
     ],
     "jei_mod_plugin": [
       "io.github.gaming32.bingo.client.recipeviewer.jei.BingoJeiPlugin"
     ],
     "modmenu": [
-      "io.github.gaming32.bingo.fabric.compat.ModMenuCompat"
+      "io.github.gaming32.bingo.client.fabric.compat.ModMenuCompat"
     ]
   },
   "mixins": [
     "bingo-common.mixins.json",
-    "bingo-common-client.mixins.json",
-    "bingo-fabric.mixins.json"
+    {
+      "config": "bingo-common-client.mixins.json",
+      "environment": "client"
+    },
+    "bingo-fabric.mixins.json",
+    {
+      "config": "bingo-fabric-client.mixins.json",
+      "environment": "client"
+    }
   ],
   "depends": {
     "fabricloader": ">=0.15.6",

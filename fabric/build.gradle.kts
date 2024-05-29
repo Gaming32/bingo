@@ -15,6 +15,7 @@ architectury {
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
+
     runs {
         val client by getting
         val datagenClient by creating {
@@ -23,6 +24,15 @@ loom {
             vmArg("-Dfabric-api.datagen")
             vmArg("-Dfabric-api.datagen.output-dir=${project(":common").file("src/main/generated")}")
             vmArg("-Dfabric-api.datagen.modid=bingo")
+        }
+    }
+
+    splitEnvironmentSourceSets()
+
+    mods {
+        val bingo by creating {
+            sourceSet(sourceSets.main.get())
+            sourceSet("client")
         }
     }
 }
