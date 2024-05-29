@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, SpecialType specialType) {
@@ -131,6 +132,11 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
 
         public Holder build() {
             return new Holder(id, new BingoTag(new FloatImmutableList(difficultyMax), allowedOnSameLine, specialType));
+        }
+
+        public void build(BiConsumer<ResourceLocation, BingoTag> adder) {
+            final Holder result = build();
+            adder.accept(result.id, result.tag);
         }
     }
 
