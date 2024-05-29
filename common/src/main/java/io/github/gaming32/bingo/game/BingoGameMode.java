@@ -180,10 +180,12 @@ public interface BingoGameMode {
         @Override
         public boolean isGoalAllowed(BingoGoal.Holder goal, boolean allowNeverGoalsInLockout) {
             return goal.goal().getTags().stream().allMatch((g) -> {
-                if (g.tag().specialType() == BingoTag.SpecialType.NONE)
+                if (g.tag().specialType() == BingoTag.SpecialType.NONE) {
                     return true;
-                if (g.tag().specialType() == BingoTag.SpecialType.NEVER)
+                }
+                if (g.tag().specialType() == BingoTag.SpecialType.NEVER) {
                     return allowNeverGoalsInLockout;
+                }
                 return false;
             });
         }
