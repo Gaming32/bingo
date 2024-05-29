@@ -4,7 +4,8 @@
   "package": "io.github.gaming32.bingo.mixin.neoforge",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinBoneMealItem"
+    "MixinBoneMealItem",
+    "MixinServerCommonPacketListenerImpl"
   ],
   "client": [
   ],
