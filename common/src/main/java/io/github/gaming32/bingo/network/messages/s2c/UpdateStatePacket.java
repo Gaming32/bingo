@@ -10,21 +10,13 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
-public class UpdateStatePacket extends AbstractCustomPayload {
-    public static final Type<UpdateStatePacket> TYPE = type("update_state");
+public record UpdateStatePacket(int index, BingoBoard.Teams newState) implements AbstractCustomPayload {
+    public static final Type<UpdateStatePacket> TYPE = AbstractCustomPayload.type("update_state");
     public static final StreamCodec<ByteBuf, UpdateStatePacket> CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_INT, p -> p.index,
         BingoBoard.Teams.STREAM_CODEC, p -> p.newState,
         UpdateStatePacket::new
     );
-
-    private final int index;
-    private final BingoBoard.Teams newState;
-
-    public UpdateStatePacket(int index, BingoBoard.Teams newState) {
-        this.index = index;
-        this.newState = newState;
-    }
 
     @NotNull
     @Override

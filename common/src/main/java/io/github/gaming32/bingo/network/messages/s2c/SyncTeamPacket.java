@@ -8,16 +8,10 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
-public class SyncTeamPacket extends AbstractCustomPayload {
-    public static final Type<SyncTeamPacket> TYPE = type("sync_team");
+public record SyncTeamPacket(BingoBoard.Teams team) implements AbstractCustomPayload {
+    public static final Type<SyncTeamPacket> TYPE = AbstractCustomPayload.type("sync_team");
     public static final StreamCodec<ByteBuf, SyncTeamPacket> CODEC = BingoBoard.Teams.STREAM_CODEC
         .map(SyncTeamPacket::new, p -> p.team);
-
-    private final BingoBoard.Teams team;
-
-    public SyncTeamPacket(BingoBoard.Teams team) {
-        this.team = team;
-    }
 
     @NotNull
     @Override

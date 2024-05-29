@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public class InitBoardPacket extends AbstractCustomPayload {
-    public static final Type<InitBoardPacket> TYPE = type("init_board");
+public final class InitBoardPacket implements AbstractCustomPayload {
+    public static final Type<InitBoardPacket> TYPE = AbstractCustomPayload.type("init_board");
     public static final StreamCodec<RegistryFriendlyByteBuf, InitBoardPacket> CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_INT, p -> p.size,
         ClientGoal.STREAM_CODEC.apply(BingoStreamCodecs.array(ClientGoal[]::new)), p -> p.goals,

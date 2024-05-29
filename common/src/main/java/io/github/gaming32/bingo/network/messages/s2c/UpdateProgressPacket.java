@@ -10,24 +10,14 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
-public class UpdateProgressPacket extends AbstractCustomPayload {
-    public static final Type<UpdateProgressPacket> TYPE = type("update_progress");
+public record UpdateProgressPacket(int index, int progress, int maxProgress) implements AbstractCustomPayload {
+    public static final Type<UpdateProgressPacket> TYPE = AbstractCustomPayload.type("update_progress");
     public static final StreamCodec<ByteBuf, UpdateProgressPacket> CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_INT, p -> p.index,
         ByteBufCodecs.VAR_INT, p -> p.progress,
         ByteBufCodecs.VAR_INT, p -> p.maxProgress,
         UpdateProgressPacket::new
     );
-
-    private final int index;
-    private final int progress;
-    private final int maxProgress;
-
-    public UpdateProgressPacket(int index, int progress, int maxProgress) {
-        this.index = index;
-        this.progress = progress;
-        this.maxProgress = maxProgress;
-    }
 
     @NotNull
     @Override

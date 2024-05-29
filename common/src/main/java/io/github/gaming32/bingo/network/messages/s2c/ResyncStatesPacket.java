@@ -10,17 +10,11 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
-public class ResyncStatesPacket extends AbstractCustomPayload {
-    public static final Type<ResyncStatesPacket> TYPE = type("resync_states");
+public record ResyncStatesPacket(BingoBoard.Teams[] states) implements AbstractCustomPayload {
+    public static final Type<ResyncStatesPacket> TYPE = AbstractCustomPayload.type("resync_states");
     public static final StreamCodec<ByteBuf, ResyncStatesPacket> CODEC = BingoBoard.Teams.STREAM_CODEC
         .apply(BingoStreamCodecs.array(BingoBoard.Teams[]::new))
         .map(ResyncStatesPacket::new, p -> p.states);
-
-    private final BingoBoard.Teams[] states;
-
-    public ResyncStatesPacket(BingoBoard.Teams[] states) {
-        this.states = states;
-    }
 
     @NotNull
     @Override

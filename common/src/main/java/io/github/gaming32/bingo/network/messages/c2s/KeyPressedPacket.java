@@ -9,16 +9,10 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
-public class KeyPressedPacket extends AbstractCustomPayload {
-    public static final Type<KeyPressedPacket> TYPE = type("key_pressed");
+public record KeyPressedPacket(String key) implements AbstractCustomPayload {
+    public static final Type<KeyPressedPacket> TYPE = AbstractCustomPayload.type("key_pressed");
     public static final StreamCodec<ByteBuf, KeyPressedPacket> CODEC = ByteBufCodecs.STRING_UTF8
         .map(KeyPressedPacket::new, p -> p.key);
-
-    private final String key;
-
-    public KeyPressedPacket(String key) {
-        this.key = key;
-    }
 
     @NotNull
     @Override
