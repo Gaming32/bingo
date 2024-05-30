@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.game;
 
 import net.minecraft.resources.ResourceLocation;
 
-public class InvalidGoalException extends IllegalArgumentException {
+public class InvalidGoalException extends IllegalStateException {
     private final ResourceLocation goal;
     private final String reason;
 
