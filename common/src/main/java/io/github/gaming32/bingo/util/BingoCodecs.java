@@ -12,7 +12,10 @@ import com.mojang.serialization.Decoder;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.KeyCompressor;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.MapDecoder;
+import com.mojang.serialization.MapLike;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -28,6 +31,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public final class BingoCodecs {
     /**
@@ -85,7 +89,30 @@ public final class BingoCodecs {
                     return DataResult.error(e::getMessage);
                 }
             }
-        });
+        }, "CatchIAE[" + codec + "]");
+    }
+
+    public static <A> MapCodec<A> catchIAE(MapCodec<A> codec) {
+        return MapCodec.of(codec, new MapDecoder<>() {
+            @Override
+            public <T> DataResult<A> decode(DynamicOps<T> ops, MapLike<T> input) {
+                try {
+                    return codec.decode(ops, input);
+                } catch (IllegalArgumentException e) {
+                    return DataResult.error(e::getMessage);
+                }
+            }
+
+            @Override
+            public <T> KeyCompressor<T> compressor(DynamicOps<T> ops) {
+                return codec.compressor(ops);
+            }
+
+            @Override
+            public <T> Stream<T> keys(DynamicOps<T> ops) {
+                return codec.keys(ops);
+            }
+        }, () -> "CatchIAE[" + codec + "]");
     }
 
     public static <A> Codec<Set<A>> setOf(Codec<A> elementCodec) {

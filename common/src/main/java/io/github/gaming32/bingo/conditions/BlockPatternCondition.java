@@ -5,7 +5,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BlockPattern;
-import net.minecraft.Util;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.core.BlockPos;
@@ -19,22 +18,22 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class BlockPatternCondition implements LootItemCondition {
-    public static final MapCodec<BlockPatternCondition> CODEC = RecordCodecBuilder.mapCodec(instance ->
+    public static final MapCodec<BlockPatternCondition> CODEC = BingoCodecs.catchIAE(RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             Codec.STRING.listOf().listOf().fieldOf("aisles").forGetter(BlockPatternCondition::aisles),
             Codec.unboundedMap(BingoCodecs.CHAR, LocationPredicate.CODEC).fieldOf("where").forGetter(BlockPatternCondition::where),
             BlockPattern.Rotations.CODEC.optionalFieldOf("rotations", BlockPattern.Rotations.HORIZONTAL).forGetter(BlockPatternCondition::rotations)
         ).apply(instance, BlockPatternCondition::new)
-    );
+    ));
 
     private final List<List<String>> aisles;
     private final Map<Character, LocationPredicate> where;
@@ -55,14 +54,17 @@ public class BlockPatternCondition implements LootItemCondition {
 
     @SuppressWarnings("unchecked")
     private static BlockPattern buildBlockPattern(List<List<String>> patternChars, Map<Character, LocationPredicate> where) {
-        Map<Character, Predicate<BlockInWorld>> predicates = where.entrySet().stream()
-            .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(), new BlockPredicateAdapter(entry.getValue())))
-            .collect(Util.toMap());
+        Map<Character, Predicate<BlockInWorld>> predicates = where.entrySet()
+            .stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, e -> new BlockPredicateAdapter(e.getValue())));
+        if (predicates.containsKey(' ')) {
+            throw new IllegalArgumentException("Block predicate ' ' is predefined and may not be overridden");
+        }
         return new BlockPattern(patternChars.stream().map(aisle -> {
             Predicate<BlockInWorld>[][] aislePredicates = aisle.stream().map(row -> row.chars().mapToObj(ch -> {
                 Predicate<BlockInWorld> predicate = ch == ' ' ? blockInWorld -> true : predicates.get((char) ch);
                 if (predicate == null) {
-                    throw new IllegalStateException("Block pattern uses undefined char '" + (char) ch + "'");
+                    throw new IllegalArgumentException("Block pattern uses undefined char '" + (char) ch + "'");
                 }
                 return predicate;
             }).toArray(Predicate[]::new)).toArray(Predicate[][]::new);
