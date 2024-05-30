@@ -18,8 +18,6 @@ import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.util.ResourceLocations;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -45,7 +43,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 
-@Environment(EnvType.CLIENT)
 public class BingoClient {
     private static final ResourceLocation BOARD_TEXTURE = ResourceLocations.bingo("board");
     public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");

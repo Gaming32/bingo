@@ -2,13 +2,10 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,11 +48,6 @@ public class KeyPressedTrigger extends SimpleCriterionTrigger<KeyPressedTrigger.
             return BingoTriggers.KEY_PRESSED.get().createCriterion(new TriggerInstance(
                 Optional.empty(), Optional.of(key)
             ));
-        }
-
-        @Environment(EnvType.CLIENT)
-        public static Criterion<TriggerInstance> keyPressed(KeyMapping key) {
-            return keyPressed(key.getName());
         }
 
         public boolean matches(String key) {
