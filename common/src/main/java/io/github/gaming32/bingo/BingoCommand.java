@@ -24,6 +24,7 @@ import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BingoGameMode;
+import io.github.gaming32.bingo.game.InvalidGoalException;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
@@ -92,13 +93,14 @@ public class BingoCommand {
         new DynamicCommandExceptionType(tagId -> Bingo.translatableEscape("bingo.unknown_tag", tagId));
     private static final DynamicCommandExceptionType UNKNOWN_GAMEMODE =
         new DynamicCommandExceptionType(gamemodeId -> Bingo.translatableEscape("bingo.unknown_gamemode", gamemodeId));
+    private static final DynamicCommandExceptionType INVALID_GOAL =
+        new DynamicCommandExceptionType(e -> Bingo.translatable("bingo.start.invalid_goal").withStyle(s -> s
+            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.nullToEmpty(((InvalidGoalException)e).getMessage())))
+        ));
     private static final DynamicCommandExceptionType FAILED_TO_START =
-        new DynamicCommandExceptionType(e ->
-            Bingo.translatable(e instanceof IllegalArgumentException ? "bingo.start.invalid_goal" : "bingo.start.failed")
-                .withStyle(s -> s.withHoverEvent(new HoverEvent(
-                    HoverEvent.Action.SHOW_TEXT, Component.nullToEmpty(((Throwable)e).getMessage())
-                )))
-        );
+        new DynamicCommandExceptionType(e -> Bingo.translatable("bingo.start.failed").withStyle(s -> s
+            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.nullToEmpty(((Throwable)e).getMessage())))
+        ));
     private static final SimpleCommandExceptionType NO_TEAMS =
         new SimpleCommandExceptionType(Bingo.translatable("bingo.no_teams"));
 
@@ -487,8 +489,11 @@ public class BingoCommand {
                 requireClient,
                 server.reloadableRegistries().lookup()
             );
+        } catch (InvalidGoalException e) {
+            Bingo.LOGGER.error("Invalid goal encountered generating Bingo board", e);
+            throw INVALID_GOAL.create(e);
         } catch (Exception e) {
-            Bingo.LOGGER.error("Error generating bingo board", e);
+            Bingo.LOGGER.error("Error generating Bingo board", e);
             throw FAILED_TO_START.create(e);
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);

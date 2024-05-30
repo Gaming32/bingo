@@ -92,7 +92,7 @@ public class BingoBoard {
             try {
                 goal = board.goals[i] = generatedSheet[i].build(rand);
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Invalid goal " + generatedSheet[i].id() + ": " + e.getMessage(), e);
+                throw new InvalidGoalException(generatedSheet[i].id(), e);
             }
             if (registries != null) {
                 goal.validateAndLog(registries);
