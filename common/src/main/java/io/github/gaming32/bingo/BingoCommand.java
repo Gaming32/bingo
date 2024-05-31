@@ -171,7 +171,7 @@ public class BingoCommand {
                                 for (int y = 0; y < size; y++) {
                                     menu.getContainer().setItem(
                                         minX + y * 9 + x,
-                                        Bingo.activeGame.getBoard().getGoal(x, y).toSingleStack()
+                                        Bingo.activeGame.getBoard().getGoal(x, y).toItemStackWithComponents()
                                     );
                                 }
                             }

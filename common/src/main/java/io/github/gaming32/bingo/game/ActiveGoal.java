@@ -48,7 +48,7 @@ public record ActiveGoal(
         return goal.goal().getProgress() != null;
     }
 
-    public ItemStack toSingleStack() {
+    public ItemStack toItemStackWithComponents() {
         final ItemStack result = icon.item().copy();
         result.set(DataComponents.ITEM_NAME, name);
         result.set(DataComponents.RARITY, Rarity.COMMON);
