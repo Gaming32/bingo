@@ -13,7 +13,11 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.util.Unit;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemLore;
 
 import java.util.List;
@@ -47,7 +51,13 @@ public record ActiveGoal(
     public ItemStack toSingleStack() {
         final ItemStack result = icon.item().copy();
         result.set(DataComponents.ITEM_NAME, name);
+        result.set(DataComponents.RARITY, Rarity.COMMON);
+        result.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
+        if (result.getCount() > result.getMaxStackSize()) {
+            result.set(DataComponents.MAX_STACK_SIZE, Math.min(result.getCount(), Item.ABSOLUTE_MAX_STACK_SIZE));
+        }
         tooltip.ifPresent(component -> result.set(DataComponents.LORE, new ItemLore(List.of(component))));
+        result.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiers(List.of(), false));
         return result;
     }
 

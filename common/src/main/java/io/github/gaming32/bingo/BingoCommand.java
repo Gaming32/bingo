@@ -169,7 +169,10 @@ public class BingoCommand {
                             int minX = (9 - size) / 2;
                             for (int x = 0; x < size; x++) {
                                 for (int y = 0; y < size; y++) {
-                                    menu.getContainer().setItem(minX + y * 9 + x, Bingo.activeGame.getBoard().getGoal(x, y).toSingleStack());
+                                    menu.getContainer().setItem(
+                                        minX + y * 9 + x,
+                                        Bingo.activeGame.getBoard().getGoal(x, y).toSingleStack()
+                                    );
                                 }
                             }
                             return menu;
