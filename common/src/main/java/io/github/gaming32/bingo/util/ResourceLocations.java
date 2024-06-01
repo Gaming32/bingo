@@ -12,6 +12,6 @@ public final class ResourceLocations {
     }
 
     public static ResourceLocation minecraft(String path) {
-        return new ResourceLocation("minecraft", path);
+        return new ResourceLocation(ResourceLocation.DEFAULT_NAMESPACE, path);
     }
 }
