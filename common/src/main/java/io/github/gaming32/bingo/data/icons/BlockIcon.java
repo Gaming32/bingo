@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,6 +22,10 @@ public record BlockIcon(BlockState block, ItemStack item) implements GoalIcon {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public static BlockIcon ofFallbackItem(BlockState block, Optional<ItemStack> item) {
         return new BlockIcon(block, item.orElseGet(() -> stackFromBlock(block.getBlock())));
+    }
+
+    public static BlockIcon ofBlockAndItem(Block block, ItemLike item) {
+        return new BlockIcon(block.defaultBlockState(), new ItemStack(item));
     }
 
     public static BlockIcon ofBlock(BlockState block) {

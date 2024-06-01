@@ -43,7 +43,6 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -558,7 +557,7 @@ public class BingoGoal {
         }
 
         public Builder icon(Block icon, ItemLike fallback, Consumer<JsonSubber> subber) {
-            return icon(new BlockIcon(icon.defaultBlockState(), new ItemStack(fallback)), subber);
+            return icon(BlockIcon.ofBlockAndItem(icon, fallback), subber);
         }
 
         public Builder icon(GoalIcon icon) {

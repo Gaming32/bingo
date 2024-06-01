@@ -9,6 +9,7 @@ import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.icons.BlockIcon;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
@@ -315,7 +316,27 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 Component.translatable("bingo.goal.sized_nether_portal", 0, 0),
                 subber -> subber.sub("with.0", "width").sub("with.1", "height")
             )
-            .icon(Blocks.NETHER_PORTAL, Blocks.OBSIDIAN));
+            .icon(
+                new CycleIcon(
+                    BlockIcon.ofBlockAndItem(Blocks.NETHER_PORTAL, Blocks.OBSIDIAN),
+                    BlockIcon.ofBlock(Blocks.OBSIDIAN)
+                ),
+                subber -> subber
+                    .sub("icons.0.item.count", new CompoundBingoSub(
+                        CompoundBingoSub.ElementType.INT,
+                        CompoundBingoSub.Operator.MUL,
+                        new SubBingoSub("width"),
+                        new SubBingoSub("height")
+                    ))
+                    .sub("icons.1.item.count", new CompoundBingoSub(
+                        CompoundBingoSub.ElementType.INT,
+                        CompoundBingoSub.Operator.SUM,
+                        new SubBingoSub("width"),
+                        new SubBingoSub("width"),
+                        new SubBingoSub("height"),
+                        new SubBingoSub("height")
+                    ))
+            ));
         addGoal(obtainItemGoal(id("obsidian"), Items.OBSIDIAN, 3, 10));
         addGoal(obtainItemGoal(id("iron_block"), Items.IRON_BLOCK, 5, 7)
             .infrequency(2));

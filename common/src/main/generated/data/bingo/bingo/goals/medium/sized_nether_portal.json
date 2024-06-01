@@ -75,17 +75,66 @@
   },
   "difficulty": "bingo:medium",
   "icon": {
-    "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:nether_portal",
-      "Properties": {
-        "axis": "x"
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:block",
+        "block": {
+          "Name": "minecraft:nether_portal",
+          "Properties": {
+            "axis": "x"
+          }
+        },
+        "item": {
+          "count": {
+            "bingo_type": "bingo:compound",
+            "factors": [
+              {
+                "type": "bingo:sub",
+                "key": "width"
+              },
+              {
+                "type": "bingo:sub",
+                "key": "height"
+              }
+            ],
+            "operator": "mul"
+          },
+          "id": "minecraft:obsidian"
+        }
+      },
+      {
+        "type": "bingo:block",
+        "block": {
+          "Name": "minecraft:obsidian"
+        },
+        "item": {
+          "count": {
+            "bingo_type": "bingo:compound",
+            "factors": [
+              {
+                "type": "bingo:sub",
+                "key": "width"
+              },
+              {
+                "type": "bingo:sub",
+                "key": "width"
+              },
+              {
+                "type": "bingo:sub",
+                "key": "height"
+              },
+              {
+                "type": "bingo:sub",
+                "key": "height"
+              }
+            ],
+            "operator": "sum"
+          },
+          "id": "minecraft:obsidian"
+        }
       }
-    },
-    "item": {
-      "count": 1,
-      "id": "minecraft:obsidian"
-    }
+    ]
   },
   "name": {
     "translate": "bingo.goal.sized_nether_portal",
