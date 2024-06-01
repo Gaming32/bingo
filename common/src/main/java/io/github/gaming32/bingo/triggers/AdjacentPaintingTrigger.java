@@ -30,7 +30,7 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
     }
 
     public void trigger(ServerPlayer player, Painting painting) {
-        trigger(player, instance -> instance.matches(painting));
+        trigger(player, instance -> instance.matches(player, painting));
     }
 
     public static Builder builder() {
@@ -52,7 +52,10 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
             ).apply(instance, TriggerInstance::new)
         );
 
-        public boolean matches(Painting painting) {
+        public boolean matches(ServerPlayer player, Painting painting) {
+            if (placedPainting.isPresent() && !placedPainting.get().matches(EntityPredicate.createContext(player, painting))) {
+                return false;
+            }
             ObjectSet<Holder<PaintingVariant>> seenVariants = new ObjectOpenCustomHashSet<>(BingoUtil.holderStrategy());
             int count = countAdjacentPaintings(painting, seenVariants);
             return this.count.matches(count);
