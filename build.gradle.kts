@@ -1,3 +1,4 @@
+import com.modrinth.minotaur.ModrinthExtension
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
 
 plugins {
@@ -30,6 +31,26 @@ subprojects {
         })
 
         compileOnly("com.demonwav.mcdev:annotations:2.1.0")
+    }
+
+    if (name != "common") {
+        apply(plugin = "com.modrinth.minotaur")
+        extensions.configure<ModrinthExtension>("modrinth") {
+            token = if (rootProject.hasProperty("modrinthKey")) {
+                rootProject["modrinthKey"]
+            } else {
+                System.getenv("MODRINTH_TOKEN")
+            }
+            projectId = "bingo-mod"
+            val changelogFile = rootProject.file("changelogs/${rootProject.version}.md")
+            if (changelogFile.isFile) {
+                println("Setting changelog to file $changelogFile")
+                changelog = changelogFile.readText()
+            } else {
+                println("Changelog file $changelogFile doesn't exist!")
+            }
+            gameVersions.add(rootProject["minecraft_version"])
+        }
     }
 
     version = "${rootProject.version}+$name"
