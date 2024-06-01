@@ -21,10 +21,7 @@
               "min": {
                 "bingo_type": "bingo:compound",
                 "factors": [
-                  {
-                    "type": "bingo:sub",
-                    "key": "distance"
-                  },
+                  "distance",
                   {
                     "type": "bingo:int",
                     "value": 100

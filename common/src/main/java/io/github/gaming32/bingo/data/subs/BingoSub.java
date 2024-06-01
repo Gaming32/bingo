@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.data.subs;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import io.github.gaming32.bingo.util.BingoCodecs;
@@ -9,13 +10,21 @@ import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
 
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public interface BingoSub {
-    Codec<BingoSub> CODEC = BingoSubType.REGISTER
-        .registry()
-        .byNameCodec()
-        .dispatch(BingoSub::type, BingoSubType::codec);
+    Codec<BingoSub> CODEC = Codec.<String, BingoSub>either(
+        Codec.STRING,
+        BingoSubType.REGISTER
+            .registry()
+            .byNameCodec()
+            .dispatch(BingoSub::type, BingoSubType::codec)
+    ).xmap(
+        either -> either.map(SubBingoSub::new, Function.identity()),
+        sub -> sub instanceof SubBingoSub subSub ? Either.left(subSub.key()) : Either.right(sub)
+    );
+
     Codec<BingoSub> INNER_CODEC = BingoSubType.REGISTER
         .registry()
         .byNameCodec()

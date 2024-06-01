@@ -60,28 +60,19 @@
                                   "type": "bingo:wrap",
                                   "value": "#"
                                 },
-                                {
-                                  "type": "bingo:sub",
-                                  "key": "width"
-                                }
+                                "width"
                               ],
                               "operator": "mul"
                             }
                           ]
                         },
-                        {
-                          "type": "bingo:sub",
-                          "key": "height"
-                        }
+                        "height"
                       ],
                       "operator": "mul"
                     }
                   ]
                 },
-                {
-                  "type": "bingo:sub",
-                  "key": "depth"
-                }
+                "depth"
               ],
               "operator": "mul"
             },

@@ -42,19 +42,13 @@
                             "type": "bingo:wrap",
                             "value": "P"
                           },
-                          {
-                            "type": "bingo:sub",
-                            "key": "width"
-                          }
+                          "width"
                         ],
                         "operator": "mul"
                       }
                     ]
                   },
-                  {
-                    "type": "bingo:sub",
-                    "key": "height"
-                  }
+                  "height"
                 ],
                 "operator": "mul"
               }
@@ -89,14 +83,8 @@
           "count": {
             "bingo_type": "bingo:compound",
             "factors": [
-              {
-                "type": "bingo:sub",
-                "key": "width"
-              },
-              {
-                "type": "bingo:sub",
-                "key": "height"
-              }
+              "width",
+              "height"
             ],
             "operator": "mul"
           },
@@ -112,22 +100,10 @@
           "count": {
             "bingo_type": "bingo:compound",
             "factors": [
-              {
-                "type": "bingo:sub",
-                "key": "width"
-              },
-              {
-                "type": "bingo:sub",
-                "key": "width"
-              },
-              {
-                "type": "bingo:sub",
-                "key": "height"
-              },
-              {
-                "type": "bingo:sub",
-                "key": "height"
-              }
+              "width",
+              "width",
+              "height",
+              "height"
             ],
             "operator": "sum"
           },
