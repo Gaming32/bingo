@@ -85,6 +85,7 @@ tasks.sourcesJar {
 modrinth {
     versionName.set("Bingo ${rootProject.version} for Fabric")
     uploadFile.set(tasks.remapJar)
+    additionalFiles.add(tasks.sourcesJar)
     loaders.add("fabric")
     dependencies {
         required.project("fabric-api")

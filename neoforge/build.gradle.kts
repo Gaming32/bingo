@@ -71,5 +71,6 @@ tasks.sourcesJar {
 modrinth {
     versionName = "Bingo ${rootProject.version} for NeoForge"
     uploadFile.set(tasks.remapJar)
+    additionalFiles.add(tasks.sourcesJar)
     loaders.add("neoforge")
 }
