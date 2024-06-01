@@ -120,6 +120,11 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
             return this;
         }
 
+        public Builder markerTag() {
+            this.difficultyMax = FloatList.of(1f);
+            return this;
+        }
+
         public Builder disallowOnSameLine() {
             this.allowedOnSameLine = false;
             return this;
