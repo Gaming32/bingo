@@ -26,6 +26,7 @@
   ],
   "tags": [
     "bingo:never",
+    "bingo:stalemate",
     "bingo:action"
   ],
   "tooltip": {

@@ -31,6 +31,7 @@
   ],
   "tags": [
     "bingo:action",
-    "bingo:never"
+    "bingo:never",
+    "bingo:stalemate"
   ]
 }

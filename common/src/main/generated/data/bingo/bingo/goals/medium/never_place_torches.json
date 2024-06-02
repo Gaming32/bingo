@@ -29,7 +29,8 @@
     ]
   ],
   "tags": [
-    "bingo:never"
+    "bingo:never",
+    "bingo:stalemate"
   ],
   "tooltip": {
     "translate": "bingo.goal.never_place_torches.tooltip"

@@ -20,6 +20,7 @@ public final class BingoTags {
     public static final ResourceLocation OVERWORLD = create("overworld");
     public static final ResourceLocation RARE_BIOME = create("rare_biome");
     public static final ResourceLocation STAT = create("stat");
+    public static final ResourceLocation STALEMATE = create("stalemate");
     public static final ResourceLocation VILLAGE = create("village");
 
     private static ResourceLocation create(String name) {

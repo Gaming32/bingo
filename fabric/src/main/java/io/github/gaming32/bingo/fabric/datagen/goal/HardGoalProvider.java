@@ -264,7 +264,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 )
             ))
             .requirements(AdvancementRequirements.Strategy.OR)
-            .tags(BingoTags.NEVER)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE)
             .name("never_wear_armor_or_use_shields")
             .tooltip("never_wear_armor_or_use_shields")
             .icon(makeItemWithGlint(Items.SHIELD))
@@ -318,7 +318,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .criterion("use_on_entity", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(ItemPredicate.Builder.item().of(ConventionalItemTags.BUCKETS), Optional.empty()))
             .criterion("consume", ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(ConventionalItemTags.BUCKETS)))
             .requirements(AdvancementRequirements.Strategy.OR)
-            .tags(BingoTags.NEVER)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE)
             .catalyst("use_buckets")
             .name("never_use_buckets")
             .icon(Items.BUCKET));
@@ -426,7 +426,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(BingoGoal.builder(id("pacifist"))
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity())
-            .tags(BingoTags.NEVER, BingoTags.STAT)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE, BingoTags.STAT)
             .name("pacifist")
             .tooltip("pacifist")
             .icon(Items.DIAMOND_SWORD)

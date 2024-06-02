@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.util.BingoStreamCodecs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,8 +22,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public interface BingoGameMode {
     BingoGameMode STANDARD = new BingoGameMode() {
@@ -140,16 +139,30 @@ public interface BingoGameMode {
             }
 
             int totalHeld = 0;
-            for (final BingoBoard.Teams state : board.getStates()) {
-                if (state.count() == 1) {
-                    totalHeld++;
-                    teams[state.getFirstIndex()].goalsHeld++;
+            boolean nonStalemateGoalsLeft = false;
+            for (int x = 0; x < board.getSize(); x++) {
+                for (int y = 0; y < board.getSize(); y++) {
+                    BingoBoard.Teams state = board.getState(x, y);
+                    if (state.count() == 1) {
+                        totalHeld++;
+                        teams[state.getFirstIndex()].goalsHeld++;
+                    } else if (!nonStalemateGoalsLeft) {
+                        ActiveGoal activeGoal = board.getGoal(x, y);
+                        nonStalemateGoalsLeft = activeGoal.goal().goal().getTags().stream().noneMatch(
+                            holder -> holder.id().equals(BingoTags.STALEMATE)
+                        );
+                        activeGoal.goal().goal().getTags().forEach(holder -> {
+                            System.out.println(holder.id() + " vs " + BingoTags.STALEMATE);
+                        });
+                    }
                 }
             }
 
             Arrays.sort(teams, Comparator.comparing(v -> -v.goalsHeld)); // Sort in reverse
 
-            final int totalGoals = board.getSize() * board.getSize();
+            final int totalGoals = nonStalemateGoalsLeft ? board.getSize() * board.getSize() : totalHeld;
+            System.out.println("totalHeld: " + totalHeld);
+            System.out.println("totalGoals: " + totalGoals);
             if (totalGoals - totalHeld < teams[0].goalsHeld - teams[1].goalsHeld) {
                 return teams[0].team;
             }

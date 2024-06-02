@@ -151,7 +151,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 .slots(EquipmentSlot.Type.ARMOR)
                 .build()
             )
-            .tags(BingoTags.NEVER)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE)
             .name("never_wear_armor")
             .icon(Items.DIAMOND_CHESTPLATE)
             .antisynergy("never_wear_armor")
@@ -244,7 +244,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 ItemPredicate.Builder.item()
                     .of(BingoItemTags.MEAT)
             ))
-            .tags(BingoTags.NEVER, BingoTags.ACTION)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE, BingoTags.ACTION)
             .antisynergy("food")
             .catalyst("eat_meat")
             .name("vegetarian")
@@ -608,7 +608,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(BingoGoal.builder(id("never_craft_sticks"))
             .criterion("craft", RecipeCraftedTrigger.TriggerInstance.craftedItem(ResourceLocations.minecraft("stick")))
-            .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE, BingoTags.OVERWORLD)
             .name("never_craft_sticks")
             .icon(Items.STICK));
         // TODO: light campfire from 10 blocks away
@@ -790,7 +790,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         // TODO: put chest on donkey
         addGoal(BingoGoal.builder(id("never_place_torches"))
             .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(Blocks.TORCH))
-            .tags(BingoTags.NEVER)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE)
             .name("never_place_torches")
             .tooltip("never_place_torches")
             .icon(Items.TORCH));

@@ -37,7 +37,8 @@
     ]
   ],
   "tags": [
-    "bingo:never"
+    "bingo:never",
+    "bingo:stalemate"
   ],
   "tooltip": {
     "translate": "bingo.goal.never_pickup_crafting_tables.tooltip"

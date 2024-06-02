@@ -207,7 +207,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 .slots(EquipmentSlot.CHEST)
                 .build()
             )
-            .tags(BingoTags.NEVER)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE)
             .name("never_wear_chestplates")
             .icon(Items.IRON_CHESTPLATE)
             .antisynergy("never_wear_armor")
@@ -219,7 +219,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                     Optional.of(ItemPredicate.Builder.item().of(ConventionalItemTags.SHIELDS_TOOLS).build())
                 )
             ))
-            .tags(BingoTags.NEVER)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE)
             .name("never_use_shields")
             .tooltip("never_use_shields")
             .icon(Items.SHIELD));
@@ -458,7 +458,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
 
         addGoal(BingoGoal.builder(id("never_sleep"))
             .criterion("sleep", PlayerTrigger.TriggerInstance.sleptInBed())
-            .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE, BingoTags.OVERWORLD)
             .name("never_sleep")
             .icon(Items.RED_BED)
             .catalyst("sleep"));
@@ -651,7 +651,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                     ))
                 )
             ))
-            .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE, BingoTags.OVERWORLD)
             .name("never_use_boat")
             .icon(Items.OAK_BOAT));
         addGoal(BingoGoal.builder(id("place_fish_in_nether"))
@@ -853,7 +853,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 ItemPredicate.Builder.item()
                     .of(BingoItemTags.NOT_MEAT)
             ))
-            .tags(BingoTags.NEVER, BingoTags.ACTION)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE, BingoTags.ACTION)
             .antisynergy("food")
             .catalyst("eat_non_meat")
             .name("carnivore")
@@ -952,7 +952,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         final KeyMapping walkBackwards = Minecraft.getInstance().options.keyDown;
         addGoal(BingoGoal.builder(id("never_walk_backwards"))
             .criterion("walk", KeyPressedTrigger.TriggerInstance.keyPressed(walkBackwards.getName()))
-            .tags(BingoTags.ACTION, BingoTags.NEVER)
+            .tags(BingoTags.ACTION, BingoTags.NEVER, BingoTags.STALEMATE)
             .name(Component.translatable(
                 "bingo.goal.never_walk_backwards",
                 Component.keybind(walkBackwards.getName())
