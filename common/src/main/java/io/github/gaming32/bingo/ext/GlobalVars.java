@@ -33,6 +33,14 @@ public final class GlobalVars {
             return stack.get().peekLast();
         }
 
+        public E getOrElse(E fallback) {
+            final Deque<E> stack = this.stack.get();
+            if (stack.isEmpty()) {
+                return fallback;
+            }
+            return stack.getLast();
+        }
+
         public class PushContext implements AutoCloseable {
             private PushContext() {
             }

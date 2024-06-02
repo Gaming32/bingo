@@ -34,6 +34,7 @@ import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
 import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
 import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
 import io.github.gaming32.bingo.triggers.KillSelfTrigger;
+import io.github.gaming32.bingo.triggers.LeashedEntityTrigger;
 import io.github.gaming32.bingo.triggers.PulledByLeashTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
@@ -480,7 +481,18 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .icon(Items.BLUE_BANNER)
         );
         // TODO: water, lava, milk, fish bucket
-        // TODO: leash dolphin to fence
+        addGoal(BingoGoal.builder(id("leash_dolphin_to_fence"))
+            .criterion("leash", LeashedEntityTrigger.builder()
+                .mob(EntityPredicate.Builder.entity().of(EntityType.DOLPHIN).build())
+                .build()
+            )
+            .tags(BingoTags.ACTION, BingoTags.OCEAN, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .name("leash_dolphin_to_fence")
+            .icon(IndicatorIcon.infer(
+                CycleIcon.infer(Items.OAK_FENCE, EntityType.DOLPHIN),
+                Items.LEAD
+            ))
+        );
         addGoal(obtainItemGoal(id("dried_kelp_block"), Items.DRIED_KELP_BLOCK, 21, 32)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("gunpowder"), Items.GUNPOWDER, 6, 15)

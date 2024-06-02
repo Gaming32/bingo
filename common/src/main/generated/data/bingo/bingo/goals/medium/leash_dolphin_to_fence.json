@@ -1,0 +1,63 @@
+{
+  "criteria": {
+    "leash": {
+      "conditions": {
+        "mob": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:dolphin"
+            }
+          }
+        ]
+      },
+      "trigger": "bingo:leash_entity"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:indicator",
+    "base": {
+      "type": "bingo:cycle",
+      "icons": [
+        {
+          "type": "bingo:item",
+          "item": {
+            "count": 1,
+            "id": "minecraft:oak_fence"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:dolphin",
+          "item": {
+            "count": 1,
+            "id": "minecraft:dolphin_spawn_egg"
+          }
+        }
+      ]
+    },
+    "indicator": {
+      "type": "bingo:item",
+      "item": {
+        "count": 1,
+        "id": "minecraft:lead"
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.leash_dolphin_to_fence"
+  },
+  "requirements": [
+    [
+      "leash"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:ocean",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}
