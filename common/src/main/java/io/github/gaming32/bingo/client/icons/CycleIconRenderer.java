@@ -15,7 +15,6 @@ public class CycleIconRenderer implements AbstractCycleIconRenderer<CycleIcon> {
     @Override
     public void renderWithParentPeriod(int parentPeriod, CycleIcon icon, GuiGraphics graphics, int x, int y) {
         final List<GoalIcon> icons = icon.icons();
-        if (icons.isEmpty()) return;
         final GoalIcon subIcon = getIcon(icons, parentPeriod);
         IconRenderer<GoalIcon> subRenderer = IconRenderers.getRenderer(subIcon);
         if (subRenderer instanceof AbstractCycleIconRenderer<GoalIcon> subCycleRenderer) {
@@ -28,7 +27,6 @@ public class CycleIconRenderer implements AbstractCycleIconRenderer<CycleIcon> {
     @Override
     public void renderDecorationsWithParentPeriod(int parentPeriod, CycleIcon icon, Font font, GuiGraphics graphics, int x, int y) {
         final List<GoalIcon> icons = icon.icons();
-        if (icons.isEmpty()) return;
         final GoalIcon subIcon = getIcon(icons, parentPeriod);
         IconRenderer<GoalIcon> subRenderer = IconRenderers.getRenderer(subIcon);
         if (subRenderer instanceof AbstractCycleIconRenderer<GoalIcon> subCycleRenderer) {
@@ -41,9 +39,6 @@ public class CycleIconRenderer implements AbstractCycleIconRenderer<CycleIcon> {
     @Override
     public ItemStack getIconItemWithParentPeriod(int parentPeriod, CycleIcon icon) {
         final List<GoalIcon> icons = icon.icons();
-        if (icons.isEmpty()) {
-            return ItemStack.EMPTY;
-        }
         final GoalIcon subIcon = getIcon(icons, parentPeriod);
         IconRenderer<GoalIcon> subRenderer = IconRenderers.getRenderer(subIcon);
         if (subRenderer instanceof AbstractCycleIconRenderer<GoalIcon> subCycleRenderer) {
