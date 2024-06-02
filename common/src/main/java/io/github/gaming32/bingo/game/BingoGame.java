@@ -440,7 +440,7 @@ public class BingoGame {
             final boolean isLoss = isNever ^ revoke;
             board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);
             notifyTeam(player, team, goal, player.server.getPlayerList(), index, isLoss);
-            if (!isLoss) {
+            if (!isLoss || isNever) {
                 checkForWin(player.server.getPlayerList());
             }
         }
