@@ -68,6 +68,9 @@ public class BingoTagProvider extends FabricCodecDataProvider<BingoTag> {
         BingoTag.builder(BingoTags.STAT)
             .difficultyMax(5, 5, 5, 5, 5)
             .build(adder);
+        BingoTag.builder(BingoTags.STALEMATE)
+            .markerTag()
+            .build(adder);
         BingoTag.builder(BingoTags.VILLAGE)
             .difficultyMax(0, 1, 2, 3, 4)
             .build(adder);

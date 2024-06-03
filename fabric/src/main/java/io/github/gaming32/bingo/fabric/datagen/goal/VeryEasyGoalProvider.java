@@ -244,7 +244,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                     ItemEntityPredicate.item(ItemPredicate.Builder.item().of(Items.CRAFTING_TABLE).build())
                 ).build()
             ))
-            .tags(BingoTags.NEVER).name("never_pickup_crafting_tables")
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE).name("never_pickup_crafting_tables")
             .tooltip("never_pickup_crafting_tables")
             .icon(Items.CRAFTING_TABLE));
         addGoal(obtainSomeItemsFromTag(id("gold_in_name"), BingoItemTags.GOLD_IN_NAME, "bingo.goal.gold_in_name", 2, 4)
@@ -265,7 +265,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("never_fish"))
             .criterion("use", TryUseItemTrigger.builder().item(ItemPredicate.Builder.item().of(Items.FISHING_ROD).build()).build())
-            .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
+            .tags(BingoTags.NEVER, BingoTags.STALEMATE, BingoTags.OVERWORLD)
             .name("never_fish").tooltip("never_fish")
             .icon(Items.FISHING_ROD)
             .catalyst("fishing"));

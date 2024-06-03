@@ -46,7 +46,8 @@
     ]
   ],
   "tags": [
-    "bingo:never"
+    "bingo:never",
+    "bingo:stalemate"
   ],
   "tooltip": {
     "translate": "bingo.goal.never_wear_armor_or_use_shields.tooltip"
