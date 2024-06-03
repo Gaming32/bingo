@@ -35,6 +35,7 @@
   "bingo.goal.bounce_on_bed": "Bounce on a bed",
   "bingo.goal.bounce_on_slime": "Bounce on a %s",
   "bingo.goal.break_hoe": "Break a hoe",
+  "bingo.goal.break_diamond_sword": "Break a Diamond Sword",
   "bingo.goal.breed_mob_pair": "Breed a pair of mobs",
   "bingo.goal.breed_mobs": "Breed %s mobs",
   "bingo.goal.breed_mobs.tooltip": "Check the 'General' statistics screen!",

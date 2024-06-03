@@ -1,0 +1,33 @@
+{
+  "criteria": {
+    "break": {
+      "conditions": {
+        "item": {
+          "items": "minecraft:diamond_sword"
+        }
+      },
+      "trigger": "bingo:item_broken"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:diamond_sword"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.break_diamond_sword"
+  },
+  "reactant": "sword_use",
+  "requirements": [
+    [
+      "break"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:stat"
+  ]
+}

@@ -32,6 +32,7 @@ import io.github.gaming32.bingo.triggers.ExplosionTrigger;
 import io.github.gaming32.bingo.triggers.GrowBeeNestTreeTrigger;
 import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
 import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
+import io.github.gaming32.bingo.triggers.ItemBrokenTrigger;
 import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
 import io.github.gaming32.bingo.triggers.KillSelfTrigger;
 import io.github.gaming32.bingo.triggers.LeashedEntityTrigger;
@@ -462,7 +463,15 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .icon(Items.DIAMOND_PICKAXE)
         );
-        // TODO: deplete diamond sword
+        addGoal(BingoGoal.builder(id("break_diamond_sword"))
+            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(
+                ItemPredicate.Builder.item().of(Items.DIAMOND_SWORD).build()
+            ))
+            .name("break_diamond_sword")
+            .icon(Items.DIAMOND_SWORD)
+            .tags(BingoTags.ACTION, BingoTags.STAT)
+            .reactant("sword_use")
+        );
         addGoal(obtainItemGoal(id("saddle"), Items.SADDLE));
         // TODO: give mob hat
         addGoal(obtainItemGoal(id("heart_of_the_sea"), Items.HEART_OF_THE_SEA)
