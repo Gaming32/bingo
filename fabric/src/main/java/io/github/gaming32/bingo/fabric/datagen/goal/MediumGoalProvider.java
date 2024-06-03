@@ -664,18 +664,6 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         // TODO: ignite TNT with lectern
         addGoal(BingoGoal.builder(id("kill_hostile_with_berries"))
             .criterion("kill", EntityDieNearPlayerTrigger.builder()
-//                .entity(ContextAwarePredicate.create(
-//                    new LootItemEntityPropertyCondition(
-//                        Optional.of(EntityPredicate.Builder.entity()
-//                            .of(BingoEntityTypeTags.HOSTILE)
-//                            .build()
-//                        ),
-//                        LootContext.EntityTarget.THIS
-//                    ),
-//                    HasOnlyBeenDamagedByCondition.builder()
-//                        .damageTypeTag(BingoDamageTypeTags.BERRY_BUSH)
-//                        .build()
-//                ))
                 .entity(EntityPredicate.Builder.entity()
                     .of(BingoEntityTypeTags.HOSTILE)
                     .build()
