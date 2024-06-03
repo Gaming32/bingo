@@ -80,7 +80,10 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                 ItemPredicate.Builder.item().of(BingoItemTags.FISH_BUCKETS)
             )
             .name("fish_bucket")
-            .tooltip(Component.translatable("bingo.goal.fish_bucket.tooltip", Component.translatable("advancements.husbandry.tactical_fishing.title")))
+            .tooltip(Component.translatable(
+                "bingo.goal.fish_bucket.tooltip",
+                Component.translatable("advancements.husbandry.tactical_fishing.title")
+            ))
             .antisynergy("fish_bucket")
             .reactant("use_buckets")
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD)

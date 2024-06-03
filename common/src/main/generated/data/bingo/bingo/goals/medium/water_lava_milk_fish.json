@@ -1,0 +1,96 @@
+{
+  "antisynergy": [
+    "bucket_types",
+    "water_bucket",
+    "lava_bucket",
+    "milk_bucket",
+    "fish_bucket"
+  ],
+  "criteria": {
+    "buckets": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:water_bucket"
+          },
+          {
+            "items": "minecraft:lava_bucket"
+          },
+          {
+            "items": "minecraft:milk_bucket"
+          },
+          {
+            "items": "#bingo:fish_buckets"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:water_bucket"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:lava_bucket"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:milk_bucket"
+        }
+      },
+      {
+        "type": "bingo:item_tag_cycle",
+        "tag": "bingo:fish_buckets"
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.four",
+    "with": [
+      {
+        "translate": "item.minecraft.water_bucket"
+      },
+      {
+        "translate": "item.minecraft.lava_bucket"
+      },
+      {
+        "translate": "item.minecraft.milk_bucket"
+      },
+      {
+        "translate": "tag.item.bingo.fish_buckets"
+      }
+    ]
+  },
+  "reactant": "use_buckets",
+  "requirements": [
+    [
+      "buckets"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.fish_bucket.tooltip",
+    "with": [
+      {
+        "translate": "advancements.husbandry.tactical_fishing.title"
+      }
+    ]
+  }
+}

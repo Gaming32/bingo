@@ -304,6 +304,7 @@
   "bingo.sixteen_bang": "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, and %s!",
   "bingo.unclaimed": "Unclaimed",
   "bingo.three": "%s, %s, and %s",
+  "bingo.four": "%s, %s, %s, and %s",
   "bingo.spawner": "%s %s",
   "bingo.no_game_running": "No Bingo game is running!",
   "bingo.outdated_client": "Outdated Bingo client! Client version: %s. Server version: %s.",
@@ -321,6 +322,8 @@
   "bingo.board_corner.lower_right": "Lower-right",
   "bingo.spectator.team_selection": "Choose Team Bingo Board",
   "bingo.spectator.team_selection.prompt": "Select a Bingo board to view",
+
+  "tag.item.bingo.fish_buckets": "Fish Buckets",
 
   "bingo.ordinal.1": "first",
   "bingo.ordinal.2": "second",

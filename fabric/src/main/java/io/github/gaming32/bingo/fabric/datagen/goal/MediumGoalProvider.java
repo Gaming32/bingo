@@ -480,7 +480,34 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .name("marker_on_map")
             .icon(Items.BLUE_BANNER)
         );
-        // TODO: water, lava, milk, fish bucket
+        addGoal(BingoGoal.builder(id("water_lava_milk_fish"))
+            .criterion("buckets", InventoryChangeTrigger.TriggerInstance.hasItems(
+                ItemPredicate.Builder.item().of(Items.WATER_BUCKET),
+                ItemPredicate.Builder.item().of(Items.LAVA_BUCKET),
+                ItemPredicate.Builder.item().of(Items.MILK_BUCKET),
+                ItemPredicate.Builder.item().of(BingoItemTags.FISH_BUCKETS)
+            ))
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+            .name(Component.translatable(
+                "bingo.four",
+                Items.WATER_BUCKET.getDescription(),
+                Items.LAVA_BUCKET.getDescription(),
+                Items.MILK_BUCKET.getDescription(),
+                Component.translatable(BingoItemTags.FISH_BUCKETS.getTranslationKey())
+            ))
+            .tooltip(Component.translatable(
+                "bingo.goal.fish_bucket.tooltip",
+                Component.translatable("advancements.husbandry.tactical_fishing.title")
+            ))
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.WATER_BUCKET),
+                ItemIcon.ofItem(Items.LAVA_BUCKET),
+                ItemIcon.ofItem(Items.MILK_BUCKET),
+                new ItemTagCycleIcon(BingoItemTags.FISH_BUCKETS)
+            ))
+            .antisynergy("bucket_types", "water_bucket", "lava_bucket", "milk_bucket", "fish_bucket")
+            .reactant("use_buckets")
+        );
         addGoal(BingoGoal.builder(id("leash_dolphin_to_fence"))
             .criterion("leash", LeashedEntityTrigger.builder()
                 .mob(EntityPredicate.Builder.entity().of(EntityType.DOLPHIN).build())
