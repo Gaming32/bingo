@@ -110,6 +110,8 @@ public class BingoClient {
         ClientEvents.CLIENT_TICK_END.register(minecraft -> {
             if (minecraft.player == null || !minecraft.player.isSpectator()) {
                 clientTeam = receivedClientTeam;
+            } else if (minecraft.player.isSpectator() && !clientTeam.any()) {
+                clientTeam = BingoBoard.Teams.TEAM1;
             }
         });
     }
