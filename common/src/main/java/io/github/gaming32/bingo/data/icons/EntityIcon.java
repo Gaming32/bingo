@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -16,7 +17,7 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
         instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(EntityIcon::entity),
             CompoundTag.CODEC.optionalFieldOf("data", new CompoundTag()).forGetter(EntityIcon::data),
-            ItemStack.CODEC.fieldOf("item").forGetter(EntityIcon::item)
+            BingoCodecs.ITEM_STACK.fieldOf("item").forGetter(EntityIcon::item)
         ).apply(instance, EntityIcon::new)
     );
 

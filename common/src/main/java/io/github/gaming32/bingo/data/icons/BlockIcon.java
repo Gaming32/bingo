@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -15,7 +16,7 @@ public record BlockIcon(BlockState block, ItemStack item) implements GoalIcon {
     public static final MapCodec<BlockIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             BlockState.CODEC.fieldOf("block").forGetter(BlockIcon::block),
-            ItemStack.CODEC.optionalFieldOf("item").forGetter(i -> Optional.of(i.item))
+            BingoCodecs.ITEM_STACK.optionalFieldOf("item").forGetter(i -> Optional.of(i.item))
         ).apply(instance, BlockIcon::ofFallbackItem)
     );
 

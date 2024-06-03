@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.game;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
@@ -608,7 +609,7 @@ public class BingoGame {
         } else {
             Component teamList = ComponentUtils.wrapInSquareBrackets(ComponentUtils.formatList(newFinishers.stream().mapToObj(teamIndex -> {
                 final PlayerTeam team = getTeam(BingoBoard.Teams.fromOne(teamIndex));
-                final Component name = BingoUtil.mapEitherToOne(BingoUtil.getDisplayName(team, playerList), Function.identity());
+                final Component name = Either.unwrap(BingoUtil.getDisplayName(team, playerList));
                 if (team.getColor() != ChatFormatting.RESET) {
                     return name.copy().withStyle(team.getColor());
                 }

@@ -24,6 +24,7 @@ import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.world.item.ItemStack;
 
 import java.lang.reflect.Array;
 import java.util.Objects;
@@ -60,6 +61,7 @@ public final class BingoCodecs {
     public static final Codec<Int2IntMap> INT_2_INT_MAP = Codec.unboundedMap(INT_AS_STRING, Codec.INT)
         .xmap(Int2IntOpenHashMap::new, Function.identity());
     public static final Codec<IntList> INT_LIST = Codec.INT.listOf().xmap(IntImmutableList::new, Function.identity());
+    public static final Codec<ItemStack> ITEM_STACK = Codec.withAlternative(ItemStack.CODEC, ItemStack.SIMPLE_ITEM_CODEC);
 
     private BingoCodecs() {
     }

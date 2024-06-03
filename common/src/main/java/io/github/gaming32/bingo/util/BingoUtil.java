@@ -231,10 +231,6 @@ public class BingoUtil {
         return either.mapBoth(mapper, mapper);
     }
 
-    public static <T, R> R mapEitherToOne(Either<? extends T, ? extends T> either, Function<? super T, ? extends R> mapper) {
-        return either.map(mapper, mapper);
-    }
-
     public static boolean isDyeableArmor(Item item) {
         return item instanceof ArmorItem armor && armor.getMaterial()
             .value()
