@@ -267,13 +267,22 @@ public class BingoBoard {
 
     private static int[] generateDifficulty(int size, BingoDifficulty difficulty, RandomSource rand) {
         final int[] layout = new int[size * size];
-
         if (difficulty.distribution() != null) {
-            List<Integer> scaledDistribution = difficulty.distribution().stream().map(f -> Math.round(f * size * size)).toList();
-            int p = 0;
-            for (int difficultyLevel = 0; difficultyLevel < scaledDistribution.size(); ++difficultyLevel) {
-                for (int i = 0; i < scaledDistribution.get(difficultyLevel) && p < layout.length; ++i)
-                    layout[p++] = difficultyLevel;
+            Arrays.fill(layout, difficulty.number());
+            float[] cumDistribution = new float[difficulty.distribution().size()];
+            for (int d = 0; d < cumDistribution.length; d++) {
+                cumDistribution[d] = difficulty.distribution().get(d) * layout.length;
+                if (d > 0) {
+                    cumDistribution[d] += cumDistribution[d - 1];
+                }
+            }
+            for (int i = 0; i < layout.length; ++i) {
+                for (int d = 0; d < cumDistribution.length; d++) {
+                    if ((i + 1) <= cumDistribution[d]) {
+                        layout[i] = d;
+                        break;
+                    }
+                }
             }
             BingoUtil.shuffle(layout, rand);
         } else {
