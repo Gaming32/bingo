@@ -1,5 +1,9 @@
 {
   "values": [
+    "minecraft:lowmist",
+    "minecraft:changing",
+    "minecraft:finding",
+    "minecraft:passage",
     "minecraft:fighters"
   ]
 }

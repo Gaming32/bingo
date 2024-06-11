@@ -17,6 +17,7 @@ import net.fabricmc.fabric.api.datagen.v1.JsonKeySortOrderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -24,7 +25,6 @@ import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagFile;
 import net.minecraft.tags.TagKey;
-import net.minecraft.tags.TagManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -68,9 +68,9 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
         final IoSupplier<InputStream> resource = Minecraft.getInstance()
             .getVanillaPackResources()
             .getResource(
-                PackType.SERVER_DATA, new ResourceLocation(
+                PackType.SERVER_DATA, ResourceLocation.fromNamespaceAndPath(
                     tag.location().getNamespace(),
-                    TagManager.getTagDir(tag.registry()) + '/' + tag.location().getPath() + ".json"
+                    Registries.tagsDirPath(tag.registry()) + '/' + tag.location().getPath() + ".json"
                 )
             );
         if (resource == null) {

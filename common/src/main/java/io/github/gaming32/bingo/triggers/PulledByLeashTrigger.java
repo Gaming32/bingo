@@ -1,7 +1,9 @@
 package io.github.gaming32.bingo.triggers;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.ext.LeashFenceKnotEntityExt;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.CriterionValidator;
@@ -9,8 +11,9 @@ import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -25,11 +28,29 @@ public class PulledByLeashTrigger extends SimpleCriterionTrigger<PulledByLeashTr
         return TriggerInstance.CODEC;
     }
 
-    public void trigger(ServerPlayer player, PathfinderMob mob, @Nullable LeashFenceKnotEntity knot, Vec3 force) {
-        final LootContext mobContext = EntityPredicate.createContext(player, mob);
+    public void trigger(ServerPlayer player, Entity entity, @Nullable LeashFenceKnotEntity knot, Vec3 force) {
+        final LootContext mobContext = EntityPredicate.createContext(player, entity);
         final Optional<LootContext> knotContext = Optional.ofNullable(knot)
             .map(e -> EntityPredicate.createContext(player, e));
         trigger(player, instance -> instance.matches(mobContext, knotContext, force));
+    }
+
+    public void tryTrigger(Entity entity, Vec3 deltaMovement, Operation<Void> original, Entity leashHolder) {
+        final Vec3 force = deltaMovement.subtract(entity.getDeltaMovement());
+        original.call(entity, deltaMovement);
+        if (!(getLeashPlayer(leashHolder) instanceof ServerPlayer serverPlayer)) return;
+        trigger(serverPlayer, entity, leashHolder instanceof LeashFenceKnotEntity knot ? knot : null, force);
+    }
+
+    @Nullable
+    private static Player getLeashPlayer(Entity leashHolder) {
+        if (leashHolder instanceof Player player) {
+            return player;
+        }
+        if (leashHolder instanceof LeashFenceKnotEntityExt knot) {
+            return knot.bingo$getOwner();
+        }
+        return null;
     }
 
     public static Builder builder() {

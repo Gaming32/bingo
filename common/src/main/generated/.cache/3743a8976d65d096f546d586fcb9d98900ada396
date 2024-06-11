@@ -1,8 +1,10 @@
-// 1.20.6	
-77fa9f3bf12007498af847617ab854ba545c7b74 data/bingo/tags/painting_variant/size_1x1.json
-061926bcbd88027fd6ba63ee4404c20fbf8f22b7 data/bingo/tags/painting_variant/size_1x2.json
-e07e1f0a02921db27ca6cc2c813a3f79439243bd data/bingo/tags/painting_variant/size_2x1.json
-4c5711647b5228864180c4ec67c901202ea1edc7 data/bingo/tags/painting_variant/size_2x2.json
-b5a2c6b394b58ab068cf5ce2f7576560cc503f77 data/bingo/tags/painting_variant/size_4x2.json
-ad0abfefa2802c90c7f549b54b39cebe358dcfe5 data/bingo/tags/painting_variant/size_4x3.json
-a6cbb9062afadd58eec42b465bf368bce00a9f51 data/bingo/tags/painting_variant/size_4x4.json
+// 1.21 Release Candidate 1	
+6be613bf10ea627a2ef757b8e3486009aaf409b5 data/bingo/tags/painting_variant/size_1x1.json
+b50a9cabb4df2bcbd764150bd743c5cd56b6bb44 data/bingo/tags/painting_variant/size_1x2.json
+78c5cb723228e526222116c940b54076aed77446 data/bingo/tags/painting_variant/size_2x1.json
+d1647a849e9e3d22c2f26e3fe759e03c13dfcf4e data/bingo/tags/painting_variant/size_2x2.json
+4dce1b1cae0223e83c679d0e1e15a0ccb0f8dbad data/bingo/tags/painting_variant/size_3x3.json
+99746a6090b22f2a2c5a86a55d4da28ce5f74121 data/bingo/tags/painting_variant/size_3x4.json
+8c49abaed108b0521e8407e0b82c2d3b40a4bd49 data/bingo/tags/painting_variant/size_4x2.json
+a1a6662780cea4566b58a540ab577eeaf0051fb1 data/bingo/tags/painting_variant/size_4x3.json
+7f7de6375270b5711fa355db423f9bb1e8054baa data/bingo/tags/painting_variant/size_4x4.json

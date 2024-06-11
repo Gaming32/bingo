@@ -216,7 +216,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .criterion("use", CriteriaTriggers.USING_ITEM.createCriterion(
                 new UsingItemTrigger.TriggerInstance(
                     Optional.empty(),
-                    Optional.of(ItemPredicate.Builder.item().of(ConventionalItemTags.SHIELDS_TOOLS).build())
+                    Optional.of(ItemPredicate.Builder.item().of(ConventionalItemTags.SHIELD_TOOLS).build())
                 )
             ))
             .tags(BingoTags.NEVER)

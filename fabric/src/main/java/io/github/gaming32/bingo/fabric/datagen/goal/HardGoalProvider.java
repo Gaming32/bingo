@@ -20,7 +20,6 @@ import io.github.gaming32.bingo.triggers.EntityKilledPlayerTrigger;
 import io.github.gaming32.bingo.triggers.EntityTrigger;
 import io.github.gaming32.bingo.triggers.EquipItemTrigger;
 import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
-import io.github.gaming32.bingo.triggers.ItemBrokenTrigger;
 import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
 import io.github.gaming32.bingo.triggers.KillItemTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
@@ -41,7 +40,9 @@ import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.FilledBucketTrigger;
+import net.minecraft.advancements.critereon.ItemDurabilityTrigger;
 import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
+import net.minecraft.advancements.critereon.ItemJukeboxPlayablePredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicates;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
@@ -94,6 +95,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
     @Override
     public void addGoals() {
         final var bannerPatterns = registries.lookupOrThrow(Registries.BANNER_PATTERN);
+        final var enchantments = registries.lookupOrThrow(Registries.ENCHANTMENT);
+
         addGoal(BingoGoal.builder(id("level_10_enchant"))
             .criterion("enchant", EnchantedItemTrigger.builder().requiredLevels(MinMaxBounds.Ints.atLeast(10)).build())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
@@ -127,7 +130,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("listen_to_music"))
             .criterion("obtain", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(Blocks.JUKEBOX)),
-                ItemPredicate.Builder.item().of(ItemTags.MUSIC_DISCS)
+                ItemPredicate.Builder.item()
+                    .withSubPredicate(ItemSubPredicates.JUKEBOX_PLAYABLE, ItemJukeboxPlayablePredicate.any())
             ))
             .tags(BingoTags.ITEM)
             .name("listen_to_music")
@@ -254,13 +258,13 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("never_wear_armor_or_use_shields"))
             .criterion("equip", EquipItemTrigger.builder()
                 .newItem(ItemPredicate.Builder.item().of(ConventionalItemTags.ARMORS).build())
-                .slots(EquipmentSlot.Type.ARMOR)
+                .slots(EquipmentSlot.Type.HUMANOID_ARMOR)
                 .build()
             )
             .criterion("use", CriteriaTriggers.USING_ITEM.createCriterion(
                 new UsingItemTrigger.TriggerInstance(
                     Optional.empty(),
-                    Optional.of(ItemPredicate.Builder.item().of(ConventionalItemTags.SHIELDS_TOOLS).build())
+                    Optional.of(ItemPredicate.Builder.item().of(ConventionalItemTags.SHIELD_TOOLS).build())
                 )
             ))
             .requirements(AdvancementRequirements.Strategy.OR)
@@ -595,7 +599,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     .withSubPredicate(
                         ItemSubPredicates.STORED_ENCHANTMENTS,
                         ItemEnchantmentsPredicate.storedEnchantments(List.of(
-                            new EnchantmentPredicate(Enchantments.MENDING, MinMaxBounds.Ints.ANY)
+                            new EnchantmentPredicate(enchantments.getOrThrow(Enchantments.MENDING), MinMaxBounds.Ints.ANY)
                         ))
                     )
                     .build()
@@ -652,8 +656,9 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
         );
         addGoal(BingoGoal.builder(id("carrot_stick_to_rod"))
-            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(
-                ItemPredicate.Builder.item().of(Items.CARROT_ON_A_STICK).build()
+            .criterion("break", ItemDurabilityTrigger.TriggerInstance.changedDurability(
+                Optional.of(ItemPredicate.Builder.item().of(Items.CARROT_ON_A_STICK).build()),
+                MinMaxBounds.Ints.atMost(0)
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name(Component.translatable(

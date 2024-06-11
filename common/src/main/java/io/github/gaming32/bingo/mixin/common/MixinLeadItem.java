@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -59,19 +59,18 @@ public class MixinLeadItem {
         method = "bindPlayerMobs",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Mob;setLeashedTo(Lnet/minecraft/world/entity/Entity;Z)V"
+            target = "Lnet/minecraft/world/entity/Leashable;setLeashedTo(Lnet/minecraft/world/entity/Entity;Z)V"
         )
     )
     private static void triggerLeashedEntity(
-        Mob instance, Entity leashHolder, boolean broadcastPacket,
-        Operation<Void> original,
+        Leashable instance, Entity entity, boolean bl, Operation<Void> original,
         @Local(argsOnly = true) Player player,
         @Local(argsOnly = true) BlockPos pos
     ) {
-        original.call(instance, leashHolder, broadcastPacket);
+        original.call(instance, entity, bl);
         if (player instanceof ServerPlayer serverPlayer) {
             BingoTriggers.LEASHED_ENTITY.get().trigger(
-                serverPlayer, instance, leashHolder, pos,
+                serverPlayer, (Entity)instance, entity, pos,
                 GlobalVars.CURRENT_ITEM.getOrElse(ItemStack.EMPTY)
             );
         }

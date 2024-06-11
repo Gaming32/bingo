@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.mixin.common;
 import io.github.gaming32.bingo.ext.LeashFenceKnotEntityExt;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.decoration.BlockAttachedEntity;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.UUID;
 
 @Mixin(LeashFenceKnotEntity.class)
-public abstract class MixinLeashFenceKnotEntity extends HangingEntity implements LeashFenceKnotEntityExt {
+public abstract class MixinLeashFenceKnotEntity extends BlockAttachedEntity implements LeashFenceKnotEntityExt {
     @Unique
     private Player bingo$cachedOwner;
     @Unique

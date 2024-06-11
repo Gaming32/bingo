@@ -4,14 +4,16 @@ import io.github.gaming32.bingo.Bingo;
 import net.minecraft.resources.ResourceLocation;
 
 public final class ResourceLocations {
+    private static final ResourceLocation BINGO_PROTOTYPE = ResourceLocation.fromNamespaceAndPath(Bingo.MOD_ID, "");
+
     private ResourceLocations() {
     }
 
     public static ResourceLocation bingo(String path) {
-        return new ResourceLocation(Bingo.MOD_ID, path);
+        return BINGO_PROTOTYPE.withPath(path);
     }
 
     public static ResourceLocation minecraft(String path) {
-        return new ResourceLocation(ResourceLocation.DEFAULT_NAMESPACE, path);
+        return ResourceLocation.withDefaultNamespace(path);
     }
 }
