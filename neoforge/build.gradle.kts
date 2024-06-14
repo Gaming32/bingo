@@ -21,17 +21,6 @@ configurations {
     developmentNeoForge.extendsFrom(common)
 }
 
-// TODO: Remove
-repositories {
-    maven("https://prmaven.neoforged.net/NeoForge/pr1076") {
-        name = "Maven for PR #1076" // https://github.com/neoforged/NeoForge/pull/1076
-        content {
-            includeModule("net.neoforged", "testframework")
-            includeModule("net.neoforged", "neoforge")
-        }
-    }
-}
-
 dependencies {
     neoForge("net.neoforged:neoforge:${rootProject["neoforge_version"]}")
 
