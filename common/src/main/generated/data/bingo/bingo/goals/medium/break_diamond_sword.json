@@ -2,11 +2,14 @@
   "criteria": {
     "break": {
       "conditions": {
+        "durability": {
+          "max": 0
+        },
         "item": {
           "items": "minecraft:diamond_sword"
         }
       },
-      "trigger": "bingo:item_broken"
+      "trigger": "minecraft:item_durability_changed"
     }
   },
   "difficulty": "bingo:medium",

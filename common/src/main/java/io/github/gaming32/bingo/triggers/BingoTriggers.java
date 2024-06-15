@@ -45,7 +45,6 @@ public class BingoTriggers {
     public static final RegistryValue<HasSomeFoodItemsTrigger> HAS_SOME_FOOD_ITEMS = register("has_some_food_items", HasSomeFoodItemsTrigger::new);
     public static final RegistryValue<HasSomeItemsFromTagTrigger> HAS_SOME_ITEMS_FROM_TAG = register("has_some_items_from_tag", HasSomeItemsFromTagTrigger::new);
     public static final RegistryValue<IntentionalGameDesignTrigger> INTENTIONAL_GAME_DESIGN = register("intentional_game_design", IntentionalGameDesignTrigger::new);
-    public static final RegistryValue<ItemBrokenTrigger> ITEM_BROKEN = register("item_broken", ItemBrokenTrigger::new);
     public static final RegistryValue<ItemPickedUpTrigger> ITEM_PICKED_UP = register("item_picked_up", ItemPickedUpTrigger::new);
     public static final RegistryValue<KeyPressedTrigger> KEY_PRESSED = register("key_pressed", KeyPressedTrigger::new);
     public static final RegistryValue<KillItemTrigger> KILL_ITEM = register("kill_item", KillItemTrigger::new);

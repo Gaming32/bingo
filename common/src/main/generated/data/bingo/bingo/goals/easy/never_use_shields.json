@@ -3,7 +3,7 @@
     "use": {
       "conditions": {
         "item": {
-          "items": "#c:tools/shields"
+          "items": "#c:tools/shield"
         }
       },
       "trigger": "minecraft:using_item"

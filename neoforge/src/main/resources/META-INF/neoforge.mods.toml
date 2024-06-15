@@ -27,13 +27,13 @@ file = "META-INF/accesstransformer.cfg"
 [[dependencies.bingo]]
    modId="neoforge"
    type="required"
-   versionRange="[20.6.84-beta,20.7)"
+   versionRange="[21.0.0-beta,)"
    ordering="NONE"
    side="BOTH"
 
 [[dependencies.bingo]]
    modId="minecraft"
    type="required"
-   versionRange="[1.20.6,1.20.7)"
+   versionRange="[1.21,1.21.1)"
    ordering="NONE"
    side="BOTH"

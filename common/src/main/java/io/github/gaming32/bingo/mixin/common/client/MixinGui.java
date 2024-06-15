@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.mixin.common.client;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.client.BoardScreen;
 import io.github.gaming32.bingo.client.config.BoardCorner;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,7 +20,7 @@ public class MixinGui {
     @Shadow @Final private Minecraft minecraft;
 
     @Inject(method = "renderEffects", at = @At("HEAD"))
-    private void moveEffectsPre(GuiGraphics guiGraphics, float f, CallbackInfo ci) {
+    private void moveEffectsPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (bingo$effectsNeedMoving()) {
             final float scale = BingoClient.CONFIG.getBoardScale();
             guiGraphics.pose().pushPose();
@@ -31,7 +32,7 @@ public class MixinGui {
     }
 
     @Inject(method = "renderEffects", at = @At("RETURN"))
-    private void moveEffectsPost(GuiGraphics guiGraphics, float f, CallbackInfo ci) {
+    private void moveEffectsPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (bingo$effectsNeedMoving()) {
             guiGraphics.pose().popPose();
         }

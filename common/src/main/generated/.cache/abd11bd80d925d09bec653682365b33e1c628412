@@ -1,5 +1,5 @@
-// 1.20.6	
-28fdc2f8ec536db734910259f5df902d7e824d84 data/bingo/tags/entity_types/boats.json
-d6f2ba82f87a1bef3ee6d686b32e56f8d789efc9 data/bingo/tags/entity_types/hostile.json
-c32b895c9caf0e47d56aa324a6fe36ebb50f8754 data/bingo/tags/entity_types/passive.json
-98330efe44bb1f14c86f1b764de6b749e31e03b1 data/bingo/tags/entity_types/tamable.json
+// 1.21	
+28fdc2f8ec536db734910259f5df902d7e824d84 data/bingo/tags/entity_type/boats.json
+d6f2ba82f87a1bef3ee6d686b32e56f8d789efc9 data/bingo/tags/entity_type/hostile.json
+c32b895c9caf0e47d56aa324a6fe36ebb50f8754 data/bingo/tags/entity_type/passive.json
+98330efe44bb1f14c86f1b764de6b749e31e03b1 data/bingo/tags/entity_type/tamable.json

@@ -14,17 +14,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,9 +62,6 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
         );
 
         public boolean matches(ServerPlayer player, Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
-            final Container fakeFurnace = new SimpleContainer(3);
-            fakeFurnace.setItem(1, new ItemStack(Items.COAL));
-
             final Level level = player.level();
             final RecipeManager recipeManager = level.getRecipeManager();
 
@@ -81,8 +74,7 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
                 final FoodProperties food = item.get(DataComponents.FOOD);
                 if (food != null) {
                     // attempt to smelt the item
-                    fakeFurnace.setItem(0, item);
-                    Optional<RecipeHolder<SmeltingRecipe>> recipe = recipeManager.getRecipeFor(RecipeType.SMELTING, fakeFurnace, level);
+                    var recipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(item), level);
                     if (recipe.isPresent()) {
                         item = recipe.get().value().getResultItem(level.registryAccess());
                     }

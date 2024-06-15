@@ -32,7 +32,6 @@ import io.github.gaming32.bingo.triggers.ExplosionTrigger;
 import io.github.gaming32.bingo.triggers.GrowBeeNestTreeTrigger;
 import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
 import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
-import io.github.gaming32.bingo.triggers.ItemBrokenTrigger;
 import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
 import io.github.gaming32.bingo.triggers.KillSelfTrigger;
 import io.github.gaming32.bingo.triggers.LeashedEntityTrigger;
@@ -53,6 +52,7 @@ import net.minecraft.advancements.critereon.DistanceTrigger;
 import net.minecraft.advancements.critereon.EnchantedItemTrigger;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemDurabilityTrigger;
 import net.minecraft.advancements.critereon.ItemPotionsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicates;
@@ -150,7 +150,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("never_wear_armor"))
             .criterion("equip", EquipItemTrigger.builder()
                 .newItem(ItemPredicate.Builder.item().of(ConventionalItemTags.ARMORS).build())
-                .slots(EquipmentSlot.Type.ARMOR)
+                .slots(EquipmentSlot.Type.HUMANOID_ARMOR)
                 .build()
             )
             .tags(BingoTags.NEVER)
@@ -464,8 +464,9 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .icon(Items.DIAMOND_PICKAXE)
         );
         addGoal(BingoGoal.builder(id("break_diamond_sword"))
-            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(
-                ItemPredicate.Builder.item().of(Items.DIAMOND_SWORD).build()
+            .criterion("break", ItemDurabilityTrigger.TriggerInstance.changedDurability(
+                Optional.of(ItemPredicate.Builder.item().of(Items.DIAMOND_SWORD).build()),
+                MinMaxBounds.Ints.atMost(0)
             ))
             .name("break_diamond_sword")
             .icon(Items.DIAMOND_SWORD)

@@ -11,7 +11,6 @@ import io.github.gaming32.bingo.data.tags.BingoItemTags;
 import io.github.gaming32.bingo.subpredicates.entity.ItemEntityPredicate;
 import io.github.gaming32.bingo.triggers.AdjacentPaintingTrigger;
 import io.github.gaming32.bingo.triggers.BounceOnBlockTrigger;
-import io.github.gaming32.bingo.triggers.ItemBrokenTrigger;
 import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
 import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
 import io.github.gaming32.bingo.triggers.TryUseItemTrigger;
@@ -23,6 +22,7 @@ import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.BredAnimalsTrigger;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.ItemDurabilityTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -270,8 +270,9 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .icon(Items.FISHING_ROD)
             .catalyst("fishing"));
         addGoal(BingoGoal.builder(id("break_hoe"))
-            .criterion("break", ItemBrokenTrigger.TriggerInstance.itemBroken(
-                ItemPredicate.Builder.item().of(ItemTags.HOES).build()
+            .criterion("break", ItemDurabilityTrigger.TriggerInstance.changedDurability(
+                Optional.of(ItemPredicate.Builder.item().of(ItemTags.HOES).build()),
+                MinMaxBounds.Ints.atMost(0)
             ))
             .tags(BingoTags.ACTION, BingoTags.STAT)
             .name("break_hoe")

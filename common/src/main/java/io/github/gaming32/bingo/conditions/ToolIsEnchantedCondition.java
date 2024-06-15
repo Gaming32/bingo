@@ -2,10 +2,8 @@ package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.Holder;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -33,12 +31,13 @@ public record ToolIsEnchantedCondition(boolean nonCurse) implements LootItemCond
     @Override
     public boolean test(LootContext lootContext) {
         ItemStack tool = lootContext.getParam(LootContextParams.TOOL);
-        ItemEnchantments enchantments = tool.getEnchantments();
-        if (nonCurse) {
-            return !enchantments.keySet().stream().map(Holder::value).allMatch(Enchantment::isCurse);
-        } else {
-            return !enchantments.isEmpty();
+        if (!tool.isEnchanted()) {
+            return false;
         }
+        if (nonCurse && tool.getEnchantments().keySet().stream().anyMatch(e -> e.is(EnchantmentTags.CURSE))) {
+            return false;
+        }
+        return true;
     }
 
     @NotNull

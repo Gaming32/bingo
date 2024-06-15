@@ -16,6 +16,7 @@ import com.mojang.serialization.KeyCompressor;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.MapDecoder;
 import com.mojang.serialization.MapLike;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -24,6 +25,8 @@ import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 
 import java.lang.reflect.Array;
@@ -61,7 +64,14 @@ public final class BingoCodecs {
     public static final Codec<Int2IntMap> INT_2_INT_MAP = Codec.unboundedMap(INT_AS_STRING, Codec.INT)
         .xmap(Int2IntOpenHashMap::new, Function.identity());
     public static final Codec<IntList> INT_LIST = Codec.INT.listOf().xmap(IntImmutableList::new, Function.identity());
-    public static final Codec<ItemStack> ITEM_STACK = Codec.withAlternative(ItemStack.CODEC, ItemStack.SIMPLE_ITEM_CODEC);
+    public static final Codec<ItemStack> UNBOUNDED_ITEM_STACK = RecordCodecBuilder.create(
+        instance -> instance.group(
+            ItemStack.ITEM_NON_AIR_CODEC.fieldOf("id").forGetter(ItemStack::getItemHolder),
+            ExtraCodecs.POSITIVE_INT.fieldOf("count").orElse(1).forGetter(ItemStack::getCount),
+            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemStack::getComponentsPatch)
+        ).apply(instance, ItemStack::new)
+    );
+    public static final Codec<ItemStack> ITEM_STACK = Codec.withAlternative(UNBOUNDED_ITEM_STACK, ItemStack.SIMPLE_ITEM_CODEC);
 
     private BingoCodecs() {
     }

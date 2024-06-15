@@ -43,7 +43,7 @@ public class PartyParrotsTrigger extends SimpleCriterionTrigger<PartyParrotsTrig
         }
 
         public boolean matches(JukeboxBlockEntity blockEntity) {
-            if (!blockEntity.isRecordPlaying() || blockEntity.getLevel() == null) {
+            if (!blockEntity.getSongPlayer().isPlaying() || blockEntity.getLevel() == null) {
                 return false;
             }
             final Set<Parrot.Variant> parrotsNeeded = EnumSet.allOf(Parrot.Variant.class);

@@ -1,10 +1,11 @@
 {
   "values": [
-    "minecraft:kebab",
-    "minecraft:aztec",
     "minecraft:alban",
+    "minecraft:aztec",
     "minecraft:aztec2",
     "minecraft:bomb",
+    "minecraft:kebab",
+    "minecraft:meditative",
     "minecraft:plant",
     "minecraft:wasteland"
   ]
