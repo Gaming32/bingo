@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 
+import java.util.Comparator;
 import java.util.concurrent.CompletableFuture;
 
 public class BingoPaintingVariantTagProvider extends FabricTagProvider<PaintingVariant> {
@@ -16,10 +17,13 @@ public class BingoPaintingVariantTagProvider extends FabricTagProvider<PaintingV
 
     @Override
     protected void addTags(HolderLookup.Provider registries) {
-        registries.lookupOrThrow(Registries.PAINTING_VARIANT).listElements().forEach(variant -> {
-            int w = variant.value().width();
-            int h = variant.value().height();
-            getOrCreateTagBuilder(BingoPaintingVariantTags.create("size_" + w + "x" + h)).add(variant.key());
-        });
+        registries.lookupOrThrow(Registries.PAINTING_VARIANT)
+            .listElements()
+            .sorted(Comparator.comparing(h -> h.key().location()))
+            .forEach(variant -> {
+                int w = variant.value().width();
+                int h = variant.value().height();
+                getOrCreateTagBuilder(BingoPaintingVariantTags.create("size_" + w + "x" + h)).add(variant.key());
+            });
     }
 }

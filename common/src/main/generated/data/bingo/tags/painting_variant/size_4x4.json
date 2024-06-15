@@ -1,9 +1,9 @@
 {
   "values": [
     "minecraft:burning_skull",
-    "minecraft:pointer",
     "minecraft:orb",
     "minecraft:pigscene",
+    "minecraft:pointer",
     "minecraft:unpacked"
   ]
 }

@@ -1,12 +1,12 @@
 {
   "values": [
-    "minecraft:sunflowers",
-    "minecraft:endboss",
-    "minecraft:tides",
-    "minecraft:owlemons",
-    "minecraft:cavebird",
     "minecraft:bouquet",
+    "minecraft:cavebird",
     "minecraft:cotan",
-    "minecraft:fern"
+    "minecraft:endboss",
+    "minecraft:fern",
+    "minecraft:owlemons",
+    "minecraft:sunflowers",
+    "minecraft:tides"
   ]
 }
