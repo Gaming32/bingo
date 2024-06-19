@@ -254,7 +254,7 @@ public class BingoGame {
         criterion.trigger().addPlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
         if (criterion.trigger() instanceof ProgressibleTrigger<T> progressibleTrigger) {
             progressibleTrigger.addProgressListener(
-                player,
+                player.getAdvancements(),
                 new BingoGameProgressListener<>(this, goal, player, criterionId, criterion.triggerInstance())
             );
         }
@@ -266,7 +266,7 @@ public class BingoGame {
         criterion.trigger().removePlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
         if (criterion.trigger() instanceof ProgressibleTrigger<T> progressibleTrigger) {
             progressibleTrigger.removeProgressListener(
-                player,
+                player.getAdvancements(),
                 new BingoGameProgressListener<>(this, goal, player, criterionId, criterion.triggerInstance())
             );
         }
