@@ -95,7 +95,12 @@ public class Bingo {
             }
         });
 
-        Event.PLAYER_QUIT.register(player -> needAdvancementsClear.remove(player.getUUID()));
+        Event.PLAYER_QUIT.register(player -> {
+            needAdvancementsClear.remove(player.getUUID());
+            if (activeGame != null) {
+                activeGame.removePlayer(player);
+            }
+        });
 
         Event.SERVER_STOPPED.register(instance -> activeGame = null);
 

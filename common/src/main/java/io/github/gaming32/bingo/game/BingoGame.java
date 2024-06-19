@@ -150,6 +150,10 @@ public class BingoGame {
         }
     }
 
+    public void removePlayer(ServerPlayer player) {
+        unregisterListeners(player, true);
+    }
+
     public BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam, Player player) {
         final BingoBoard.Teams[] states = board.getStates();
         if (player != null && player.isSpectator()) {
@@ -277,6 +281,12 @@ public class BingoGame {
                     addListener(entry.getValue(), entry.getKey(), player, goal);
                 }
             }
+        }
+    }
+
+    private void unregisterListeners(ServerPlayer player, boolean force) {
+        for (final ActiveGoal goal : board.getGoals()) {
+            unregisterListeners(player, goal, force);
         }
     }
 
