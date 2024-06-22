@@ -28,5 +28,6 @@ public class MixinJukeboxPlayable {
         if (player instanceof ServerPlayer serverPlayer) {
             BingoTriggers.PARTY_PARROTS.get().trigger(serverPlayer, instance);
         }
+        original.call(instance, itemStack);
     }
 }
