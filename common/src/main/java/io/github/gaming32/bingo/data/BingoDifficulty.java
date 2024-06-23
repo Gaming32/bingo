@@ -11,6 +11,7 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.util.ResourceLocations;
+import it.unimi.dsi.fastutil.floats.FloatList;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
@@ -29,20 +30,22 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.List;
 
-public record BingoDifficulty(int number, @Nullable String fallbackName) {
+public record BingoDifficulty(int number, @Nullable String fallbackName, @Nullable List<Float> distribution) {
     public static final Codec<BingoDifficulty> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             ExtraCodecs.NON_NEGATIVE_INT.fieldOf("number").forGetter(BingoDifficulty::number),
-            Codec.STRING.optionalFieldOf("fallback_name").forGetter(d -> Optional.ofNullable(d.fallbackName))
+            Codec.STRING.optionalFieldOf("fallback_name").forGetter(d -> Optional.ofNullable(d.fallbackName)),
+            Codec.FLOAT.listOf().optionalFieldOf("distribution").forGetter(dist -> Optional.ofNullable(dist.distribution))
         ).apply(instance, BingoDifficulty::new)
     );
 
     private static Map<ResourceLocation, Holder> byId = Map.of();
     private static NavigableMap<Integer, Holder> byNumber = ImmutableSortedMap.of();
 
-    private BingoDifficulty(int number, Optional<String> fallbackName) {
-        this(number, fallbackName.orElse(null));
+    private BingoDifficulty(int number, Optional<String> fallbackName, Optional<List<Float>> distribution) {
+        this(number, fallbackName.orElse(null), distribution.orElse(null));
     }
 
     public static Builder builder(ResourceLocation id) {
@@ -96,6 +99,7 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
         private final ResourceLocation id;
         private Integer number;
         private String fallbackName;
+        private List<Float> distribution;
 
         private Builder(ResourceLocation id) {
             this.id = id;
@@ -111,10 +115,24 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
             return this;
         }
 
+        public Builder distribution(int... scaledBy5x5) {
+            final float[] unscaled = new float[scaledBy5x5.length];
+            for (int i = 0; i < scaledBy5x5.length; i++) {
+                unscaled[i] = scaledBy5x5[i] / 25f;
+            }
+            return this.distribution(unscaled);
+        }
+
+        public Builder distribution(float... unscaledDistribution) {
+            this.distribution = FloatList.of(unscaledDistribution);
+            return this;
+        }
+
         public Holder build() {
             return new Holder(id, new BingoDifficulty(
                 Objects.requireNonNull(number, "number"),
-                fallbackName
+                fallbackName,
+                distribution
             ));
         }
 

@@ -483,7 +483,7 @@ public class BingoCommand {
         try {
             board = BingoBoard.generate(
                 size,
-                difficulty.difficulty().number(),
+                difficulty.difficulty(),
                 teams.size(),
                 RandomSource.create(seed),
                 gamemode::isGoalAllowed,
