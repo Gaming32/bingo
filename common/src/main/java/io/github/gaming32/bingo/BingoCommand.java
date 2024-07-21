@@ -342,6 +342,22 @@ public class BingoCommand {
                     )
                 )
             )
+            .then(literal("time")
+                .requires(source -> source.hasPermission(2))
+                .then(literal("set")
+                    .then(argument("time", IntegerArgumentType.integer())
+                        .executes(context -> {
+                            if (Bingo.activeGame == null) {
+                                throw NO_GAME_RUNNING.create();
+                            }
+                            int time = IntegerArgumentType.getInteger(context, "time");
+                            Bingo.activeGame.setScheduledEndTime(time > 0 ? System.currentTimeMillis() + (long) time * 1000 * 60 : time);
+                            Bingo.activeGame.updateRemainingTime(context.getSource().getServer().getPlayerList());
+                            return 1;
+                        })
+                    )
+                )
+            )
         );
 
         {
@@ -399,6 +415,11 @@ public class BingoCommand {
                     .then(literal("--continue-after-win")
                         .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                     )
+                    .then(literal("--time")
+                        .then(argument("time", IntegerArgumentType.integer())
+                            .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+                        )
+                    )
                 )
             );
             CommandNode<CommandSourceStack> currentCommand = startCommand;
@@ -426,6 +447,7 @@ public class BingoCommand {
         final boolean requireClient = hasNode(context, "--require-client");
         final boolean persistent = hasNode(context, "--persistent");
         final boolean continueAfterWin = hasNode(context, "--continue-after-win");
+        final int time = getArg(context, "time", () -> -1, IntegerArgumentType::getInteger);
 
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
         for (int i = 1; i <= 32; i++) {
@@ -502,6 +524,9 @@ public class BingoCommand {
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
         Bingo.activeGame = new BingoGame(board, gamemode, requireClient, persistent, continueAfterWin, teams.toArray(PlayerTeam[]::new));
+        if (time > 0) {
+            Bingo.activeGame.setScheduledEndTime(System.currentTimeMillis() + (long) time * 1000 * 60);
+        }
         Bingo.updateCommandTree(playerList);
         new ArrayList<>(playerList.getPlayers()).forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(Bingo.translatable("bingo.started", difficulty.getDescription()), false);

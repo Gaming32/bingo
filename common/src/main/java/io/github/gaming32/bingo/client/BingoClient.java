@@ -17,6 +17,7 @@ import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -138,7 +139,31 @@ public class BingoClient {
         final PositionAndScale pos = getBoardPosition();
         renderBingo(graphics, minecraft.screen instanceof ChatScreen, pos);
 
-        if (CONFIG.isShowScoreCounter() && clientGame.renderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
+        final Font font = minecraft.font;
+        final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
+        int scoreY;
+        if (CONFIG.getBoardCorner().isOnBottom) {
+            scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
+        } else {
+            scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
+        }
+        final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
+
+        if (clientGame.getScheduledEndTime() > 0) {
+            long remainingTime = clientGame.getScheduledEndTime() - System.currentTimeMillis();
+            String formatedRemainingTime = " - " + BingoUtil.formatRemainingTime(remainingTime);
+            int color = 0xffffffff;
+            if (remainingTime < 30 * 60 * 1000)
+                color = 0xffffaf00;
+            if (remainingTime < 5 * 60 * 1000)
+                color = 0xffff0000;
+            final MutableComponent remainingTimeLabel = Component.translatable("bingo.remaining_time");
+            graphics.drawString(font, remainingTimeLabel, scoreX - font.width(remainingTimeLabel), scoreY, color);
+            graphics.drawString(font, Component.literal(formatedRemainingTime), scoreX, scoreY, color);
+            scoreY += shift;
+        }
+
+        if (CONFIG.isShowScoreCounter() && clientGame.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
             class TeamValue {
                 final BingoBoard.Teams team;
                 int score;
@@ -148,13 +173,13 @@ public class BingoClient {
                 }
             }
 
-            final TeamValue[] teams = new TeamValue[clientGame.teams().length];
+            final TeamValue[] teams = new TeamValue[clientGame.getTeams().length];
             for (int i = 0; i < teams.length; i++) {
                 teams[i] = new TeamValue(BingoBoard.Teams.fromOne(i));
             }
 
             int totalScore = 0;
-            for (final BingoBoard.Teams state : clientGame.states()) {
+            for (final BingoBoard.Teams state : clientGame.getStates()) {
                 if (state.any()) {
                     totalScore++;
                     teams[state.getFirstIndex()].score++;
@@ -163,18 +188,9 @@ public class BingoClient {
 
             Arrays.sort(teams, Comparator.comparing(v -> -v.score)); // Sort in reverse
 
-            final Font font = minecraft.font;
-            final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
-            int scoreY;
-            if (CONFIG.getBoardCorner().isOnBottom) {
-                scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
-            } else {
-                scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
-            }
-            final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
             for (final TeamValue teamValue : teams) {
                 if (teamValue.score == 0) break;
-                final PlayerTeam team = clientGame.teams()[teamValue.team.getFirstIndex()];
+                final PlayerTeam team = clientGame.getTeams()[teamValue.team.getFirstIndex()];
                 final MutableComponent leftText = getDisplayName(team).copy();
                 final MutableComponent rightText = Component.literal(" - " + teamValue.score);
                 if (team.getColor() != ChatFormatting.RESET) {
@@ -187,18 +203,18 @@ public class BingoClient {
             }
 
             final MutableComponent leftText = Component.translatable("bingo.unclaimed");
-            final MutableComponent rightText = Component.literal(" - " + (clientGame.states().length - totalScore));
+            final MutableComponent rightText = Component.literal(" - " + (clientGame.getStates().length - totalScore));
             graphics.drawString(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
             graphics.drawString(font, rightText, scoreX, scoreY, 0xffffffff);
         }
     }
 
     public static int getBoardWidth() {
-        return 14 + 18 * clientGame.size();
+        return 14 + 18 * clientGame.getSize();
     }
 
     public static int getBoardHeight() {
-        return 24 + 18 * clientGame.size();
+        return 24 + 18 * clientGame.getSize();
     }
 
     public static void renderBingo(GuiGraphics graphics, boolean mouseHover, PositionAndScale pos) {
@@ -212,18 +228,18 @@ public class BingoClient {
         graphics.pose().scale(pos.scale(), pos.scale(), 1);
         graphics.pose().translate(pos.x(), pos.y(), 0);
 
-        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientGame.size(), pos) : null;
+        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientGame.getSize(), pos) : null;
 
         graphics.blitSprite(
             BOARD_TEXTURE, 0, 0,
-            7 + 18 * clientGame.size() + 7,
-            17 + 18 * clientGame.size() + 7
+            7 + 18 * clientGame.getSize() + 7,
+            17 + 18 * clientGame.getSize() + 7
         );
         renderBoardTitle(graphics, minecraft.font);
 
         final boolean spectator = minecraft.player != null && minecraft.player.isSpectator();
-        for (int sx = 0; sx < clientGame.size(); sx++) {
-            for (int sy = 0; sy < clientGame.size(); sy++) {
+        for (int sx = 0; sx < clientGame.getSize(); sx++) {
+            for (int sy = 0; sy < clientGame.getSize(); sy++) {
                 final ClientGoal goal = clientGame.getGoal(sx, sy);
                 final int slotX = sx * 18 + 8;
                 final int slotY = sy * 18 + 18;
@@ -234,14 +250,14 @@ public class BingoClient {
                 final BingoBoard.Teams state = clientGame.getState(sx, sy);
                 boolean isGoalCompleted = state.and(clientTeam);
 
-                final Integer color = switch (clientGame.renderMode()) {
+                final Integer color = switch (clientGame.getRenderMode()) {
                     case FANCY -> isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor;
                     case ALL_TEAMS -> {
                         if (!state.any()) {
                             yield null;
                         }
                         final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
-                        final Integer maybeColor = clientGame.teams()[team.getFirstIndex()].getColor().getColor();
+                        final Integer maybeColor = clientGame.getTeams()[team.getFirstIndex()].getColor().getColor();
                         yield maybeColor != null ? maybeColor : 0x55ff55;
                     }
                 };
@@ -328,7 +344,7 @@ public class BingoClient {
             return false;
         }
 
-        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), clientGame.size(), boardPos);
+        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), clientGame.getSize(), boardPos);
         if (!mousePos.hasSlotPos()) {
             return false;
         }
