@@ -49,7 +49,7 @@ dependencies {
     include(implementation("com.electronwill.night-config:core:3.6.0")!!)
     include(implementation("com.electronwill.night-config:toml:3.6.0")!!)
 
-    modImplementation("com.terraformersmc:modmenu:11.0.0-beta.1")
+    modImplementation("com.terraformersmc:modmenu:12.0.0-beta.1")
 }
 
 tasks.processResources {
