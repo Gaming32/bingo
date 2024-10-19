@@ -64,10 +64,10 @@ public class Bingo {
         initializeRegistries();
 
         BingoPlatform.platform.registerDataReloadListeners(registrar -> {
-            registrar.register(BingoTag.ReloadListener.ID, new BingoTag.ReloadListener(registrar.registryAccess()));
-            registrar.register(BingoDifficulty.ReloadListener.ID, new BingoDifficulty.ReloadListener(registrar.registryAccess()));
+            registrar.register(BingoTag.ReloadListener.ID, BingoTag.ReloadListener::new);
+            registrar.register(BingoDifficulty.ReloadListener.ID, BingoDifficulty.ReloadListener::new);
             registrar.register(
-                BingoGoal.ReloadListener.ID, new BingoGoal.ReloadListener(registrar.registryAccess()),
+                BingoGoal.ReloadListener.ID, BingoGoal.ReloadListener::new,
                 List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
             );
         });

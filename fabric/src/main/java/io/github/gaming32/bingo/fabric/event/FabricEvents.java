@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.fabric.event;
 
-import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,14 +30,6 @@ public class FabricEvents {
         BiConsumer.class, handlers -> (level, explosion) -> {
             for (final var handler : handlers) {
                 handler.accept(level, explosion);
-            }
-        }
-    );
-
-    public static final Event<Consumer<DataReloadListenerRegistrar>> ADD_RELOAD_LISTENERS = EventFactory.createArrayBacked(
-        Consumer.class, handlers -> registrar -> {
-            for (final var handler : handlers) {
-                handler.accept(registrar);
             }
         }
     );

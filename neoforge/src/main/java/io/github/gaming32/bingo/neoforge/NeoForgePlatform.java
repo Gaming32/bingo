@@ -12,13 +12,9 @@ import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -42,7 +38,6 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.function.Consumer;
 
 public class NeoForgePlatform extends BingoPlatform {
@@ -100,22 +95,7 @@ public class NeoForgePlatform extends BingoPlatform {
     @Override
     public void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
         NeoForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> handler.accept(
-            new DataReloadListenerRegistrar() {
-                @Override
-                public ReloadableServerResources serverResources() {
-                    return event.getServerResources();
-                }
-
-                @Override
-                public HolderLookup.Provider registryAccess() {
-                    return event.getServerResources().getRegistryLookup();
-                }
-
-                @Override
-                public void register(ResourceLocation id, PreparableReloadListener listener, Collection<ResourceLocation> dependencies) {
-                    event.addListener(listener);
-                }
-            }
+            (id, listener, dependencies) -> event.addListener(listener.apply(event.getRegistryAccess()))
         ));
     }
 
