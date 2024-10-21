@@ -40,10 +40,7 @@ import io.github.gaming32.bingo.triggers.PulledByLeashTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.ResourceLocations;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.BredAnimalsTrigger;
@@ -97,8 +94,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.equipment.ArmorMaterial;
-import net.minecraft.world.item.equipment.ArmorMaterials;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
@@ -118,17 +113,6 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class MediumGoalProvider extends DifficultyGoalProvider {
-    private static final Reference2IntMap<ArmorMaterial> MATERIAL_INDICES = Util.make(new Reference2IntOpenHashMap<>(), map -> {
-        map.put(ArmorMaterials.LEATHER, 0);
-        map.put(ArmorMaterials.CHAINMAIL, 1);
-        map.put(ArmorMaterials.IRON, 2);
-        map.put(ArmorMaterials.GOLD, 3);
-        map.put(ArmorMaterials.DIAMOND, 4);
-        map.put(ArmorMaterials.TURTLE_SCUTE, 5);
-        map.put(ArmorMaterials.NETHERITE, 6);
-        map.put(ArmorMaterials.ARMADILLO_SCUTE, 7);
-    });
-
     public MediumGoalProvider(BiConsumer<ResourceLocation, BingoGoal> goalAdder, HolderLookup.Provider registries) {
         super(BingoDifficulties.MEDIUM, goalAdder, registries);
     }
@@ -932,7 +916,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
     private Table<EquipmentSlot, ResourceLocation, Item> getArmors() {
         final var armors = ImmutableTable.<EquipmentSlot, ResourceLocation, Item>builder();
         armors.orderRowsBy(Comparator.reverseOrder());
-        armors.orderColumnsBy(Comparator.comparingInt(MATERIAL_INDICES::getInt));
+        armors.orderColumnsBy(Comparator.naturalOrder());
         Stream.of(ItemTags.HEAD_ARMOR, ItemTags.CHEST_ARMOR, ItemTags.LEG_ARMOR, ItemTags.FOOT_ARMOR)
             .map(tag -> BingoDataGenFabric.loadVanillaTag(tag, registries))
             .flatMap(Collection::stream)
