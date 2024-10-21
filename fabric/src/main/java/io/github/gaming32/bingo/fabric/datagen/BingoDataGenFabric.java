@@ -63,7 +63,7 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
         callback.add("bingo_type", 0);
     }
 
-    public static <T> Set<T> loadTag(TagKey<T> tag, HolderLookup.Provider registries) {
+    public static <T> Set<T> loadVanillaTag(TagKey<T> tag, HolderLookup.Provider registries) {
         final var registry = registries.lookupOrThrow(tag.registry());
         final IoSupplier<InputStream> resource = Minecraft.getInstance()
             .getVanillaPackResources()
@@ -95,7 +95,7 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
                         @Nullable
                         @Override
                         public Collection<T> tag(ResourceLocation tagLocation) {
-                            return loadTag(TagKey.create(tag.registry(), tagLocation), registries);
+                            return loadVanillaTag(TagKey.create(tag.registry(), tagLocation), registries);
                         }
                     }, out
                 ))

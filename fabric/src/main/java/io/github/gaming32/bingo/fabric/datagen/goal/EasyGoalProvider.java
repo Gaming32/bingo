@@ -25,10 +25,10 @@ import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgre
 import io.github.gaming32.bingo.data.progresstrackers.GoalAchievedCountProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
-import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
-import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
-import io.github.gaming32.bingo.data.tags.BingoItemTags;
-import io.github.gaming32.bingo.data.tags.BingoPaintingVariantTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoEntityTypeTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoPaintingVariantTags;
 import io.github.gaming32.bingo.triggers.AdjacentPaintingTrigger;
 import io.github.gaming32.bingo.triggers.ArrowPressTrigger;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
@@ -543,7 +543,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.kill_passive_mobs_with_only_fire", 0), subber -> subber.sub("with.0", "count"))
             .tooltip("kill_passive_mobs_with_only_fire")
             .icon(new CycleIcon(
-                new EntityTypeTagCycleIcon(BingoEntityTypeTags.PASSIVE),
+                new EntityTypeTagCycleIcon(BingoEntityTypeTags.PASSIVE, 0),
                 new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStack(Items.FLINT_AND_STEEL, 1))
             ), subber -> subber.sub("icons.0.count", "count").sub("icons.1.item.count", "count"))
             .reactant("pacifist")

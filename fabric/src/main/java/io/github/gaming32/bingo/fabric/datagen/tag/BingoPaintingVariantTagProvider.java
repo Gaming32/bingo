@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.fabric.datagen.tag;
 
-import io.github.gaming32.bingo.data.tags.BingoPaintingVariantTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoPaintingVariantTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;

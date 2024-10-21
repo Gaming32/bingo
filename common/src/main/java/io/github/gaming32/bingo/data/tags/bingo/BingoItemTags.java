@@ -1,11 +1,9 @@
-package io.github.gaming32.bingo.data.tags;
+package io.github.gaming32.bingo.data.tags.bingo;
 
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-
-import java.util.List;
 
 public final class BingoItemTags {
     private BingoItemTags() {
@@ -32,32 +30,7 @@ public final class BingoItemTags {
     public static final TagKey<Item> SLABS = create("slabs");
     public static final TagKey<Item> STAIRS = create("stairs");
 
-    public static final TagKey<Item> ARMORS_LEATHER = createConvention("armors/leather");
-    public static final TagKey<Item> ARMORS_CHAINMAIL = createConvention("armors/chainmail");
-    public static final TagKey<Item> ARMORS_IRON = createConvention("armors/iron");
-    public static final TagKey<Item> ARMORS_GOLD = createConvention("armors/gold");
-    public static final TagKey<Item> ARMORS_DIAMOND = createConvention("armors/diamond");
-    public static final TagKey<Item> ARMORS_TURTLE_SCUTE = createConvention("armors/turtle_scute");
-    public static final TagKey<Item> ARMORS_NETHERITE = createConvention("armors/netherite");
-    public static final TagKey<Item> ARMORS_ARMADILLO_SCUTE = createConvention("armors/armadillo_scute");
-
-    public static final List<TagKey<Item>> ARMOR_TYPE_TAGS = List.of(
-        ARMORS_LEATHER,
-        ARMORS_CHAINMAIL,
-        ARMORS_IRON,
-        ARMORS_GOLD,
-        ARMORS_DIAMOND,
-        ARMORS_TURTLE_SCUTE,
-        ARMORS_NETHERITE,
-        ARMORS_ARMADILLO_SCUTE
-    );
-
     private static TagKey<Item> create(String name) {
         return TagKey.create(Registries.ITEM, ResourceLocations.bingo(name));
-    }
-
-    // Proposed convention tags
-    private static TagKey<Item> createConvention(String name) {
-        return TagKey.create(Registries.ITEM, ResourceLocations.c(name));
     }
 }

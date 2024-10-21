@@ -7,7 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:boat"
+              "type": "#minecraft:boat"
             }
           },
           {
@@ -43,12 +43,9 @@
     "type": "bingo:cycle",
     "icons": [
       {
-        "type": "bingo:entity",
-        "entity": "minecraft:boat",
-        "item": {
-          "count": 1,
-          "id": "minecraft:oak_boat"
-        }
+        "type": "bingo:entity_type_tag_cycle",
+        "base_item": "minecraft:oak_boat",
+        "tag": "minecraft:boat"
       },
       {
         "type": "bingo:entity",

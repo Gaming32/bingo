@@ -37,7 +37,7 @@
     "bingo-common.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.4",
+    "fabricloader": ">=0.16.7",
     "fabric-api": ">=0.106.0",
     "minecraft": ">=1.21.2- <1.21.3"
   },

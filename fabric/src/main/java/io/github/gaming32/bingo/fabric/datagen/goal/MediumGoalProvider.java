@@ -19,11 +19,12 @@ import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
-import io.github.gaming32.bingo.data.tags.BingoBlockTags;
-import io.github.gaming32.bingo.data.tags.BingoDamageTypeTags;
-import io.github.gaming32.bingo.data.tags.BingoEntityTypeTags;
-import io.github.gaming32.bingo.data.tags.BingoFeatureTags;
-import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoBlockTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoDamageTypeTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoEntityTypeTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
+import io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric;
 import io.github.gaming32.bingo.triggers.BounceOnBlockTrigger;
 import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
 import io.github.gaming32.bingo.triggers.EntityKilledPlayerTrigger;
@@ -85,7 +86,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
@@ -99,7 +99,6 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorMaterials;
-import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
@@ -110,11 +109,13 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 public class MediumGoalProvider extends DifficultyGoalProvider {
     private static final Reference2IntMap<ArmorMaterial> MATERIAL_INDICES = Util.make(new Reference2IntOpenHashMap<>(), map -> {
@@ -862,10 +863,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                     Optional.of(
                         ContextAwarePredicate.create(new WearingDifferentArmorCondition(
                             MinMaxBounds.Ints.atLeast(4),
-                            MinMaxBounds.Ints.atLeast(4),
-                            BingoItemTags.ARMOR_TYPE_TAGS.stream()
-                                .<HolderSet<Item>>map(items::getOrThrow)
-                                .toList()
+                            MinMaxBounds.Ints.atLeast(4)
                         ))
                     ),
                     InventoryChangeTrigger.TriggerInstance.Slots.ANY,
@@ -875,7 +873,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .reactant("wear_armor")
             .name(Component.translatable("bingo.goal.all_different_armor", 4))
-            .icon(createAllDifferentMaterialsIcon(items))
+            .icon(createAllDifferentMaterialsIcon())
         );
         addGoal(BingoGoal.builder(id("equip_wolf_armor"))
             .criterion("equip", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
@@ -913,9 +911,9 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         return builder;
     }
 
-    private static GoalIcon createAllDifferentMaterialsIcon(HolderLookup.RegistryLookup<Item> items) {
+    private GoalIcon createAllDifferentMaterialsIcon() {
         final int iterations = 4;
-        final var armors = getArmors(items);
+        final var armors = getArmors();
         final var materials = ImmutableList.copyOf(armors.columnKeySet());
         final ImmutableList.Builder<GoalIcon> icons = ImmutableList.builderWithExpectedSize(iterations * armors.rowMap().size());
         int materialIndex = 0;
@@ -931,38 +929,19 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         return new CycleIcon(icons.build());
     }
 
-    private static Table<ArmorType, TagKey<Item>, Item> getArmors(HolderLookup.RegistryLookup<Item> items) {
-        @SuppressWarnings("deprecation") final var typeToTag = Map.of(
-            ArmorType.HELMET, items.getOrThrow(ItemTags.HEAD_ARMOR),
-            ArmorType.CHESTPLATE, items.getOrThrow(ItemTags.HEAD_ARMOR),
-            ArmorType.LEGGINGS, items.getOrThrow(ItemTags.HEAD_ARMOR),
-            ArmorType.BOOTS, items.getOrThrow(ItemTags.HEAD_ARMOR),
-            ArmorType.BODY, HolderSet.direct(
-                Item::builtInRegistryHolder,
-                Items.WOLF_ARMOR,
-                Items.LEATHER_HORSE_ARMOR,
-                Items.IRON_HORSE_ARMOR,
-                Items.GOLDEN_HORSE_ARMOR,
-                Items.DIAMOND_HORSE_ARMOR
-            )
-        );
-
-        final ImmutableTable.Builder<ArmorType, TagKey<Item>, Item> armors = ImmutableTable.builder();
+    private Table<EquipmentSlot, ResourceLocation, Item> getArmors() {
+        final var armors = ImmutableTable.<EquipmentSlot, ResourceLocation, Item>builder();
         armors.orderRowsBy(Comparator.reverseOrder());
         armors.orderColumnsBy(Comparator.comparingInt(MATERIAL_INDICES::getInt));
-        for (final var tag : BingoItemTags.ARMOR_TYPE_TAGS) {
-            for (final var item : items.getOrThrow(tag)) {
-                ArmorType type = null;
-                for (final var entry : typeToTag.entrySet()) {
-                    if (entry.getValue().contains(item)) {
-                        type = entry.getKey();
-                        break;
-                    }
-                }
-                if (type == null) continue;
-                armors.put(type, tag, item.value());
-            }
-        }
+        Stream.of(ItemTags.HEAD_ARMOR, ItemTags.CHEST_ARMOR, ItemTags.LEG_ARMOR, ItemTags.FOOT_ARMOR)
+            .map(tag -> BingoDataGenFabric.loadVanillaTag(tag, registries))
+            .flatMap(Collection::stream)
+            .distinct()
+            .forEach(item -> {
+                final var equippable = item.components().get(DataComponents.EQUIPPABLE);
+                if (equippable == null || equippable.model().isEmpty()) return;
+                armors.put(equippable.slot(), equippable.model().get(), item);
+            });
         return armors.build();
     }
 }

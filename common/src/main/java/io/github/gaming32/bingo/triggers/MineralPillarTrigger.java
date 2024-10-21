@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.data.tags.BingoBlockTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoBlockTags;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;

@@ -1,11 +1,11 @@
-package io.github.gaming32.bingo.data.tags;
+package io.github.gaming32.bingo.data.tags.bingo;
 
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
-public class BingoBlockTags {
+public final class BingoBlockTags {
     private BingoBlockTags() {
     }
 

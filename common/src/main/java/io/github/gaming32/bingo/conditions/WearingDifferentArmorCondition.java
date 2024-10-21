@@ -1,57 +1,37 @@
 package io.github.gaming32.bingo.conditions;
 
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.util.BingoUtil;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import io.github.gaming32.bingo.data.tags.convention.ConventionItemTags;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 public record WearingDifferentArmorCondition(
     MinMaxBounds.Ints equippedArmor,
-    MinMaxBounds.Ints differentTypes,
-    List<HolderSet<Item>> armorTypes
+    MinMaxBounds.Ints differentTypes
 ) implements LootItemCondition {
-    public static final MapCodec<WearingDifferentArmorCondition> CODEC = RecordCodecBuilder.<WearingDifferentArmorCondition>mapCodec(instance ->
+    public static final MapCodec<WearingDifferentArmorCondition> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             MinMaxBounds.Ints.CODEC
                 .optionalFieldOf("equipped_armor", MinMaxBounds.Ints.ANY)
                 .forGetter(WearingDifferentArmorCondition::equippedArmor),
             MinMaxBounds.Ints.CODEC
                 .optionalFieldOf("different_types", MinMaxBounds.Ints.ANY)
-                .forGetter(WearingDifferentArmorCondition::differentTypes),
-            Ingredient.NON_AIR_HOLDER_SET_CODEC
-                .listOf()
-                .optionalFieldOf("armor_types", List.of())
-                .forGetter(WearingDifferentArmorCondition::armorTypes)
+                .forGetter(WearingDifferentArmorCondition::differentTypes)
         ).apply(instance, WearingDifferentArmorCondition::new)
-    ).validate(condition -> {
-        if (
-            condition.differentTypes.min().isPresent() &&
-            condition.differentTypes.min().get() > condition.armorTypes.size()
-        ) {
-            return DataResult.error(
-                () -> "wearing_different_armor condition is impossible, as more armor types are required than are specified.",
-                condition
-            );
-        }
-        return DataResult.success(condition);
-    });
+    );
 
     @NotNull
     @Override
@@ -66,17 +46,14 @@ public record WearingDifferentArmorCondition(
             return false;
         }
         int wearingCount = 0;
-        final var unmatchedTypes = new IntOpenHashSet(BingoUtil.generateIntArray(armorTypes.size()));
-        for (final ItemStack stack : livingEntity.getArmorAndBodyArmorSlots()) {
-            final var unmatchedIter = unmatchedTypes.iterator();
-            while (unmatchedIter.hasNext()) {
-                final var armorType = armorTypes.get(unmatchedIter.nextInt());
-                if (armorType.contains(stack.getItemHolder())) {
-                    unmatchedIter.remove();
-                }
-            }
+        final var models = HashSet.<ResourceLocation>newHashSet(4);
+        for (final var stack : livingEntity.getArmorSlots()) {
+            if (!stack.is(ConventionItemTags.ARMORS)) continue;
+            final var equippable = stack.get(DataComponents.EQUIPPABLE);
+            if (equippable == null) continue;
+            models.add(equippable.model().orElse(null));
         }
-        return equippedArmor.matches(wearingCount) && differentTypes.matches(armorTypes.size() - unmatchedTypes.size());
+        return equippedArmor.matches(wearingCount) && differentTypes.matches(models.size());
     }
 
     @NotNull

@@ -1,10 +1,11 @@
-package io.github.gaming32.bingo.data.tags;
+package io.github.gaming32.bingo.data.tags.bingo;
 
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 
+// TODO: Yeet
 public final class BingoPaintingVariantTags {
     private BingoPaintingVariantTags() {
     }
