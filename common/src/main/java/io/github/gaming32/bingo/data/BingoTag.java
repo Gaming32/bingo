@@ -1,13 +1,8 @@
 package io.github.gaming32.bingo.data;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.util.BingoStreamCodecs;
@@ -18,7 +13,6 @@ import it.unimi.dsi.fastutil.floats.FloatList;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -145,15 +139,11 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
         }
     }
 
-    public static class ReloadListener extends SimpleJsonResourceReloadListener {
+    public static class ReloadListener extends SimpleJsonResourceReloadListener<BingoTag> {
         public static final ResourceLocation ID = ResourceLocations.bingo("tags");
-        private static final Gson GSON = new GsonBuilder().create();
-
-        private final HolderLookup.Provider registries;
 
         public ReloadListener(HolderLookup.Provider registries) {
-            super(GSON, "bingo/tags");
-            this.registries = registries;
+            super(registries, CODEC, "bingo/tags");
         }
 
         @NotNull
@@ -163,20 +153,18 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
         }
 
         @Override
-        protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
-            final RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
+        protected void apply(Map<ResourceLocation, BingoTag> tags, ResourceManager resourceManager, ProfilerFiller profiler) {
             final ImmutableMap.Builder<ResourceLocation, Holder> result = ImmutableMap.builder();
-            for (final var entry : jsons.entrySet()) {
+            for (final var entry : tags.entrySet()) {
                 try {
-                    final BingoTag tag = CODEC.parse(ops, entry.getValue()).getOrThrow(JsonParseException::new);
-                    final Holder holder = new Holder(entry.getKey(), tag);
+                    final Holder holder = new Holder(entry.getKey(), entry.getValue());
                     result.put(holder.id, holder);
                 } catch (Exception e) {
                     Bingo.LOGGER.error("Parsing error in bingo tag {}: {}", entry.getKey(), e.getMessage());
                 }
             }
-            tags = result.build();
-            Bingo.LOGGER.info("Loaded {} bingo tags", tags.size());
+            BingoTag.tags = result.build();
+            Bingo.LOGGER.info("Loaded {} bingo tags", BingoTag.tags.size());
         }
     }
 

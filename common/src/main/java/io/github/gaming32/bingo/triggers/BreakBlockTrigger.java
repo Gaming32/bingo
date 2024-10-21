@@ -10,6 +10,7 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
@@ -101,12 +102,12 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
             return location(LocationPredicate.Builder.location().setBlock(block).build());
         }
 
-        public Builder block(Block block) {
-            return block(BlockPredicate.Builder.block().of(block));
+        public Builder block(HolderGetter<Block> blocks, Block block) {
+            return block(BlockPredicate.Builder.block().of(blocks, block));
         }
 
-        public Builder block(TagKey<Block> blockTag) {
-            return block(BlockPredicate.Builder.block().of(blockTag));
+        public Builder block(HolderGetter<Block> blocks, TagKey<Block> blockTag) {
+            return block(BlockPredicate.Builder.block().of(blocks, blockTag));
         }
 
         public Criterion<TriggerInstance> build() {

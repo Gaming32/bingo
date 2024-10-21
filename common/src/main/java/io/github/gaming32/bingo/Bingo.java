@@ -3,7 +3,7 @@ package io.github.gaming32.bingo;
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
 import io.github.gaming32.bingo.conditions.BingoConditions;
-import io.github.gaming32.bingo.conditions.BingoParamSets;
+import io.github.gaming32.bingo.conditions.BingoContextKeySets;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
@@ -11,7 +11,7 @@ import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
-import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
+import io.github.gaming32.bingo.mixin.common.ServerExplosionAccessor;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPayload;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
@@ -115,7 +115,7 @@ public class Bingo {
                 final ServerPlayer player;
                 if (explosion.getIndirectSourceEntity() instanceof ServerPlayer thePlayer) {
                     player = thePlayer;
-                } else if (((ExplosionAccessor)explosion).getDamageSource().getEntity() instanceof ServerPlayer thePlayer) {
+                } else if (((ServerExplosionAccessor)explosion).getDamageSource().getEntity() instanceof ServerPlayer thePlayer) {
                     player = thePlayer;
                 } else {
                     player = null;
@@ -174,7 +174,7 @@ public class Bingo {
 
     private static void initializeRegistries() {
         BingoConditions.load();
-        BingoParamSets.load();
+        BingoContextKeySets.load();
         GoalIconType.load();
         BingoSubType.load();
         ProgressTrackerType.load();

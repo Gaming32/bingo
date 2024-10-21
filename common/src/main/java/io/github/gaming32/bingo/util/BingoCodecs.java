@@ -27,6 +27,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.lang.reflect.Array;
@@ -66,7 +67,7 @@ public final class BingoCodecs {
     public static final Codec<IntList> INT_LIST = Codec.INT.listOf().xmap(IntImmutableList::new, Function.identity());
     public static final Codec<ItemStack> UNBOUNDED_ITEM_STACK = RecordCodecBuilder.create(
         instance -> instance.group(
-            ItemStack.ITEM_NON_AIR_CODEC.fieldOf("id").forGetter(ItemStack::getItemHolder),
+            Item.CODEC.fieldOf("id").forGetter(ItemStack::getItemHolder),
             ExtraCodecs.POSITIVE_INT.fieldOf("count").orElse(1).forGetter(ItemStack::getCount),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemStack::getComponentsPatch)
         ).apply(instance, ItemStack::new)

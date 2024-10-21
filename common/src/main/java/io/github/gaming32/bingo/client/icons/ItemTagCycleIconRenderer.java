@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ItemTagCycleIconRenderer implements AbstractCycleIconRenderer<ItemTagCycleIcon> {
     @Override
     public void renderWithParentPeriod(int parentPeriod, ItemTagCycleIcon icon, GuiGraphics graphics, int x, int y) {
-        final Optional<HolderSet.Named<Item>> items = BuiltInRegistries.ITEM.getTag(icon.tag());
+        final Optional<HolderSet.Named<Item>> items = BuiltInRegistries.ITEM.get(icon.tag());
         if (items.isEmpty() || items.get().size() == 0) return;
         graphics.renderFakeItem(new ItemStack(getIcon(items.get(), parentPeriod)), x, y);
     }
@@ -27,7 +27,7 @@ public class ItemTagCycleIconRenderer implements AbstractCycleIconRenderer<ItemT
 
     @Override
     public ItemStack getIconItemWithParentPeriod(int parentPeriod, ItemTagCycleIcon icon) {
-        final Optional<HolderSet.Named<Item>> items = BuiltInRegistries.ITEM.getTag(icon.tag());
+        final Optional<HolderSet.Named<Item>> items = BuiltInRegistries.ITEM.get(icon.tag());
         if (items.isEmpty() || items.get().size() == 0) {
             return ItemStack.EMPTY;
         }

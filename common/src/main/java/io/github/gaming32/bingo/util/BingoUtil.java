@@ -10,7 +10,6 @@ import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
@@ -21,13 +20,9 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -80,11 +75,6 @@ public class BingoUtil {
     @SuppressWarnings("unchecked")
     public static <T> Hash.Strategy<Holder<T>> holderStrategy() {
         return (Hash.Strategy<Holder<T>>) (Hash.Strategy<?>) HOLDER_STRATEGY;
-    }
-
-    public static <T> Holder<T> getBuiltInHolder(Registry<T> registry, T value) {
-        ResourceKey<T> key = registry.getResourceKey(value).orElseThrow();
-        return registry.getHolderOrThrow(key);
     }
 
     public static int[] generateIntArray(int length) {
@@ -229,14 +219,6 @@ public class BingoUtil {
 
     public static <T, R> Either<R, R> mapEither(Either<? extends T, ? extends T> either, Function<? super T, ? extends R> mapper) {
         return either.mapBoth(mapper, mapper);
-    }
-
-    public static boolean isDyeableArmor(Item item) {
-        return item instanceof ArmorItem armor && armor.getMaterial()
-            .value()
-            .layers()
-            .stream()
-            .anyMatch(ArmorMaterial.Layer::dyeable);
     }
 
     public static ItemStack setPotion(ItemStack stack, Holder<Potion> potion) {

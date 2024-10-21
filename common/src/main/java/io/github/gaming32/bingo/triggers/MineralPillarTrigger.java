@@ -52,7 +52,7 @@ public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTr
         );
 
         public boolean matches(BlockGetter level, BlockPos pos) {
-            final int required = BuiltInRegistries.BLOCK.getTag(tag).map(HolderSet::size).orElse(0);
+            final int required = BuiltInRegistries.BLOCK.get(tag).map(HolderSet::size).orElse(0);
 
             BlockState state = getState(level, pos);
             if (state.is(tag)) {

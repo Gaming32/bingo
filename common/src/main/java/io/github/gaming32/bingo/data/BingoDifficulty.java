@@ -2,18 +2,12 @@ package io.github.gaming32.bingo.data;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -124,15 +118,11 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
         }
     }
 
-    public static final class ReloadListener extends SimpleJsonResourceReloadListener {
+    public static final class ReloadListener extends SimpleJsonResourceReloadListener<BingoDifficulty> {
         public static final ResourceLocation ID = ResourceLocations.bingo("difficulties");
-        private static final Gson GSON = new GsonBuilder().create();
-
-        private final HolderLookup.Provider registries;
 
         public ReloadListener(HolderLookup.Provider registries) {
-            super(GSON, "bingo/difficulties");
-            this.registries = registries;
+            super(registries, CODEC, "bingo/difficulties");
         }
 
         @NotNull
@@ -142,16 +132,14 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
         }
 
         @Override
-        protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
-            final RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
+        protected void apply(Map<ResourceLocation, BingoDifficulty> difficulties, ResourceManager resourceManager, ProfilerFiller profiler) {
             final ImmutableMap.Builder<ResourceLocation, Holder> byIdBuilder = ImmutableMap.builder();
             final ImmutableSortedMap.Builder<Integer, Holder> byNumberBuilder = ImmutableSortedMap.naturalOrder();
-            for (final var entry : object.entrySet()) {
+            for (final var entry : difficulties.entrySet()) {
                 try {
-                    final BingoDifficulty difficulty = CODEC.parse(ops, entry.getValue()).getOrThrow(JsonParseException::new);
-                    final Holder holder = new Holder(entry.getKey(), difficulty);
+                    final Holder holder = new Holder(entry.getKey(), entry.getValue());
                     byIdBuilder.put(holder.id, holder);
-                    byNumberBuilder.put(difficulty.number, holder);
+                    byNumberBuilder.put(entry.getValue().number, holder);
                 } catch (Exception e) {
                     Bingo.LOGGER.error("Parsing error in bingo difficulty {}: {}", entry.getKey(), e.getMessage());
                 }

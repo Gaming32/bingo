@@ -2,9 +2,9 @@ package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -25,13 +25,13 @@ public record ToolDamageCondition(MinMaxBounds.Ints damage) implements LootItemC
 
     @Override
     public boolean test(LootContext lootContext) {
-        ItemStack tool = lootContext.getParam(LootContextParams.TOOL);
+        ItemStack tool = lootContext.getParameter(LootContextParams.TOOL);
         return tool.isDamageableItem() && damage.matches(tool.getDamageValue());
     }
 
     @NotNull
     @Override
-    public Set<LootContextParam<?>> getReferencedContextParams() {
+    public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.TOOL);
     }
 }

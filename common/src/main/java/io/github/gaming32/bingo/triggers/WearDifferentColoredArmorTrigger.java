@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
-import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.minecraft.advancements.Criterion;
@@ -13,9 +12,9 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,12 +57,11 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
 
         public boolean matches(Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
             final IntSet discovered = new IntOpenHashSet();
-            for (int i : Inventory.ALL_ARMOR_SLOTS) {
-                final ItemStack item = inventory.getArmor(i);
+            for (final var item : inventory.armor) {
                 if (itemPredicate.isPresent() && !itemPredicate.get().test(item)) {
                     continue;
                 }
-                if (BingoUtil.isDyeableArmor(item.getItem())) {
+                if (item.is(ItemTags.DYEABLE)) {
                     final DyedItemColor color = item.get(DataComponents.DYED_COLOR);
                     if (!allowUncolored && color == null) {
                         continue;

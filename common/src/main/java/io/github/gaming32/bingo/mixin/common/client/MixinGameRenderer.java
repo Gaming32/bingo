@@ -8,7 +8,7 @@ import io.github.gaming32.bingo.client.config.BingoClientConfig;
 import io.github.gaming32.bingo.client.config.BoardCorner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,35 +18,38 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(GameRenderer.class)
 public class MixinGameRenderer {
     @Shadow @Final
-    Minecraft minecraft;
+    private Minecraft minecraft;
 
     @WrapOperation(
         method = "render",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/components/toasts/ToastComponent;render(Lnet/minecraft/client/gui/GuiGraphics;)V")
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/components/toasts/ToastManager;render(Lnet/minecraft/client/gui/GuiGraphics;)V"
+        )
     )
-    private void moveToasts(ToastComponent instance, GuiGraphics guiGraphics, Operation<Void> original) {
+    private void moveToasts(ToastManager instance, GuiGraphics graphics, Operation<Void> original) {
         final BingoClientConfig config = BingoClient.CONFIG;
         if (
             BingoClient.clientGame == null || config.getBoardCorner() != BoardCorner.UPPER_RIGHT ||
                 minecraft.getDebugOverlay().showDebugScreen() || minecraft.screen instanceof BoardScreen
         ) {
-            original.call(instance, guiGraphics);
+            original.call(instance, graphics);
             return;
         }
 
         final float scale = config.getBoardScale();
-        guiGraphics.enableScissor(
+        graphics.enableScissor(
             0, 0,
-            (int)(guiGraphics.guiWidth() - (BingoClient.getBoardWidth() + BingoClient.BOARD_OFFSET) * scale),
-            guiGraphics.guiHeight()
+            (int)(graphics.guiWidth() - (BingoClient.getBoardWidth() + BingoClient.BOARD_OFFSET) * scale),
+            graphics.guiHeight()
         );
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(
+        graphics.pose().pushPose();
+        graphics.pose().translate(
             (-BingoClient.getBoardWidth() - BingoClient.BOARD_OFFSET) * scale,
             BingoClient.BOARD_OFFSET * scale, 0f
         );
-        original.call(instance, guiGraphics);
-        guiGraphics.pose().popPose();
-        guiGraphics.disableScissor();
+        original.call(instance, graphics);
+        graphics.pose().popPose();
+        graphics.disableScissor();
     }
 }

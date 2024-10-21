@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -35,7 +35,7 @@ public enum StairwayToHeavenCondition implements LootItemCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
-        final Entity thisEntity = lootContext.getParam(LootContextParams.THIS_ENTITY);
+        final Entity thisEntity = lootContext.getParameter(LootContextParams.THIS_ENTITY);
         final BlockPos origin = thisEntity.getOnPos();
         if (!(thisEntity.level() instanceof ServerLevel level)) {
             return false;
@@ -79,7 +79,7 @@ public enum StairwayToHeavenCondition implements LootItemCondition {
 
     @NotNull
     @Override
-    public Set<LootContextParam<?>> getReferencedContextParams() {
+    public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.THIS_ENTITY);
     }
 }

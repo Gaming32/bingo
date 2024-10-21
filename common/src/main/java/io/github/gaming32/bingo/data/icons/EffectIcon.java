@@ -18,7 +18,7 @@ public record EffectIcon(Holder<MobEffect> effect, Holder<Potion> potion) implem
 
     public static EffectIcon of(Holder<MobEffect> effect) {
         return new EffectIcon(
-            effect, BuiltInRegistries.POTION.holders()
+            effect, BuiltInRegistries.POTION.listElements()
                 .filter(p -> p.value().getEffects().stream().anyMatch(e -> e.getEffect() == effect))
                 .findFirst()
                 .map(h -> (Holder<Potion>)h)

@@ -7,7 +7,9 @@ import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTri
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
@@ -61,7 +63,7 @@ public class DifferentPotionsTrigger extends SimpleProgressibleCriterionTrigger<
                 if (item.getItem() instanceof PotionItem) {
                     final PotionContents potion = item.get(DataComponents.POTION_CONTENTS);
                     if (potion == null || potion.potion().isEmpty()) continue;
-                    if (discovered.add(Potion.getName(potion.potion(), "")) && discovered.size() >= minCount) {
+                    if (discovered.add(getName(potion.potion().get())) && discovered.size() >= minCount) {
                         progressListener.update(this, minCount, minCount);
                         return true;
                     }
@@ -69,6 +71,10 @@ public class DifferentPotionsTrigger extends SimpleProgressibleCriterionTrigger<
             }
             progressListener.update(this, discovered.size(), minCount);
             return false;
+        }
+
+        private static String getName(Holder<Potion> potion) {
+            return potion.unwrap().map(ResourceKey::location, Potion::name).toString();
         }
     }
 }

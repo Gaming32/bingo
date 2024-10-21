@@ -6,19 +6,25 @@ import io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
@@ -45,6 +51,8 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider registries) {
+        final var items = registries.lookupOrThrow(Registries.ITEM);
+
         getOrCreateTagBuilder(BingoItemTags.ALLOWED_HEADS).add(
             Items.SKELETON_SKULL,
             Items.PLAYER_HEAD,
@@ -146,9 +154,9 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
         var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);
         for (DyeColor dyeColor : DyeColor.values()) {
-            Item glazedTerracotta = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(dyeColor.getName() + "_glazed_terracotta"));
+            Item glazedTerracotta = BuiltInRegistries.ITEM.getValue(ResourceLocations.minecraft(dyeColor.getName() + "_glazed_terracotta"));
             glazedTerracottaBuilder.add(glazedTerracotta);
-            Item concrete = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(dyeColor.getName() + "_concrete"));
+            Item concrete = BuiltInRegistries.ITEM.getValue(ResourceLocations.minecraft(dyeColor.getName() + "_concrete"));
             concreteBuilder.add(concrete);
         }
 
@@ -164,7 +172,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         Pattern goldPattern = Pattern.compile("\\bGold(?:en)?\\b");
         Pattern diamondPattern = Pattern.compile("\\bDiamond\\b");
         for (Item item : BuiltInRegistries.ITEM) {
-            String itemName = item.getDescription().getString();
+            String itemName = item.getName().getString();
             if (goldPattern.matcher(itemName).find()) {
                 goldInNameBuilder.add(item);
             }
@@ -194,5 +202,27 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         copy(BingoBlockTags.BASIC_MINERAL_BLOCKS, BingoItemTags.BASIC_MINERAL_BLOCKS);
         copy(BingoBlockTags.ALL_MINERAL_BLOCKS, BingoItemTags.ALL_MINERAL_BLOCKS);
+
+        for (final var tag : List.of(
+            BingoItemTags.ARMORS_LEATHER,
+            BingoItemTags.ARMORS_CHAINMAIL,
+            BingoItemTags.ARMORS_IRON,
+            BingoItemTags.ARMORS_GOLD,
+            BingoItemTags.ARMORS_DIAMOND,
+            BingoItemTags.ARMORS_NETHERITE
+        )) {
+            var material = tag != BingoItemTags.ARMORS_GOLD
+                ? StringUtils.substringAfter(tag.location().getPath(), '/')
+                : "golden";
+            final var builder = getOrCreateTagBuilder(tag);
+            for (final var type : ArmorType.values()) {
+                final var typeName = type != ArmorType.BODY ? type.getName() : "horse_armor";
+                items.get(ResourceKey.create(
+                    Registries.ITEM, ResourceLocations.minecraft(material + '_' + typeName)
+                )).map(Holder.Reference::key).ifPresent(builder::add);
+            }
+        }
+        getOrCreateTagBuilder(BingoItemTags.ARMORS_TURTLE_SCUTE).add(Items.TURTLE_HELMET);
+        getOrCreateTagBuilder(BingoItemTags.ARMORS_ARMADILLO_SCUTE).add(Items.WOLF_ARMOR);
     }
 }

@@ -36,8 +36,7 @@ public class BlockIconRenderer implements IconRenderer<BlockIcon> {
         if (flatLight) {
             Lighting.setupForFlatItems();
         }
-        renderInGui(icon.block(), graphics.pose(), graphics.bufferSource(), model);
-        graphics.flush();
+        graphics.drawSpecial(bufferSource -> renderInGui(icon.block(), graphics.pose(), bufferSource, model));
         if (flatLight) {
             Lighting.setupFor3DItems();
         }
@@ -72,7 +71,7 @@ public class BlockIconRenderer implements IconRenderer<BlockIcon> {
         final float b = (color & 0xff) / 255f;
         minecraft.getBlockRenderer().getModelRenderer().renderModel(
             poseStack.last(),
-            buffer.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)),
+            buffer.getBuffer(ItemBlockRenderTypes.getRenderType(state)),
             state, model, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY
         );
     }

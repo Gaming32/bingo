@@ -6,12 +6,17 @@ import net.minecraft.resources.ResourceLocation;
 public final class ResourceLocations {
     // Using a prototype caches the validity check on the namespace
     private static final ResourceLocation BINGO_PROTOTYPE = ResourceLocation.fromNamespaceAndPath(Bingo.MOD_ID, "");
+    private static final ResourceLocation C_PROTOTYPE = ResourceLocation.fromNamespaceAndPath("c", "");
 
     private ResourceLocations() {
     }
 
     public static ResourceLocation bingo(String path) {
         return BINGO_PROTOTYPE.withPath(path);
+    }
+
+    public static ResourceLocation c(String path) {
+        return C_PROTOTYPE.withPath(path);
     }
 
     public static ResourceLocation minecraft(String path) {

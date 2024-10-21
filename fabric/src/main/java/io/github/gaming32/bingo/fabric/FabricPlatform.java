@@ -35,10 +35,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -118,16 +116,12 @@ public class FabricPlatform extends BingoPlatform {
                 public @NotNull CompletableFuture<Void> reload(
                     PreparationBarrier preparationBarrier,
                     ResourceManager resourceManager,
-                    ProfilerFiller preparationsProfiler,
-                    ProfilerFiller reloadProfiler,
                     Executor backgroundExecutor,
                     Executor gameExecutor
                 ) {
                     return vanilla.reload(
                         preparationBarrier,
                         resourceManager,
-                        preparationsProfiler,
-                        reloadProfiler,
                         backgroundExecutor,
                         gameExecutor
                     );
@@ -167,7 +161,7 @@ public class FabricPlatform extends BingoPlatform {
         Event.SERVER_STOPPED.setRegistrar(handler -> ServerLifecycleEvents.SERVER_STOPPED.register(handler::accept));
         Event.RIGHT_CLICK_ITEM.setRegistrar(handler -> UseItemCallback.EVENT.register((player, world, hand) -> {
             handler.accept(player, hand);
-            return InteractionResultHolder.pass(ItemStack.EMPTY);
+            return InteractionResult.PASS;
         }));
         Event.EXPLOSION_START.setRegistrar(FabricEvents.EXPLOSION::register);
         Event.SERVER_TICK_END.setRegistrar(handler -> ServerTickEvents.END_SERVER_TICK.register(handler::accept));

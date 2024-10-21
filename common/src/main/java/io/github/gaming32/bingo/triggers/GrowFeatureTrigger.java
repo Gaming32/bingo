@@ -44,8 +44,8 @@ public class GrowFeatureTrigger extends SimpleCriterionTrigger<GrowFeatureTrigge
     ) {
         boolean result = operation.call(feature, level, chunkGen, rand, pos);
         if (result && GlobalVars.CURRENT_PLAYER.get() instanceof ServerPlayer player) {
-            Registry<ConfiguredFeature<?, ?>> registry = level.registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE);
-            Holder<ConfiguredFeature<?, ?>> holder = registry.getHolderOrThrow(registry.getResourceKey(feature).orElseThrow());
+            Registry<ConfiguredFeature<?, ?>> registry = level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE);
+            Holder<ConfiguredFeature<?, ?>> holder = registry.getOrThrow(registry.getResourceKey(feature).orElseThrow());
             BingoTriggers.GROW_FEATURE.get().trigger(player, player.serverLevel(), pos, holder);
         }
         return result;

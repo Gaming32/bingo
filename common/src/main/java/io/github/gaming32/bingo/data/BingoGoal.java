@@ -4,10 +4,7 @@ import com.demonwav.mcdev.annotations.Translatable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -36,7 +33,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -175,7 +171,7 @@ public class BingoGoal {
             if (triggerKey.result().isEmpty()) continue;
             final DataResult<ResourceLocation> triggerId = ResourceLocation.read(triggerKey.result().get());
             if (triggerId.result().isEmpty()) continue;
-            final CriterionTrigger<?> trigger = BuiltInRegistries.TRIGGER_TYPES.get(triggerId.result().get());
+            final var trigger = BuiltInRegistries.TRIGGER_TYPES.getValue(triggerId.result().get());
             if (trigger != null && trigger.bingo$requiresClientCode()) {
                 requiresClient = true;
                 break;
@@ -200,7 +196,7 @@ public class BingoGoal {
                 return DataResult.error(triggerIdResult.error().get()::message);
             }
             final ResourceLocation triggerId = triggerIdResult.result().orElseThrow();
-            final CriterionTrigger<?> trigger = BuiltInRegistries.TRIGGER_TYPES.get(triggerId);
+            final CriterionTrigger<?> trigger = BuiltInRegistries.TRIGGER_TYPES.getValue(triggerId);
             if (trigger == null) {
                 return DataResult.error(() -> "Unknown criterion trigger id " + triggerId);
             }
@@ -625,15 +621,11 @@ public class BingoGoal {
 
     }
 
-    public static class ReloadListener extends SimpleJsonResourceReloadListener {
+    public static class ReloadListener extends SimpleJsonResourceReloadListener<BingoGoal> {
         public static final ResourceLocation ID = ResourceLocations.bingo("goals");
-        private static final Gson GSON = new GsonBuilder().create();
-
-        private final HolderLookup.Provider registries;
 
         public ReloadListener(HolderLookup.Provider registries) {
-            super(GSON, "bingo/goals");
-            this.registries = registries;
+            super(registries, CODEC, "bingo/goals");
         }
 
         @NotNull
@@ -643,28 +635,25 @@ public class BingoGoal {
         }
 
         @Override
-        protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager resourceManager, ProfilerFiller profiler) {
-            final RegistryOps<JsonElement> ops = registries.createSerializationContext(JsonOps.INSTANCE);
+        protected void apply(Map<ResourceLocation, BingoGoal> goals, ResourceManager resourceManager, ProfilerFiller profiler) {
             final ImmutableMap.Builder<ResourceLocation, Holder> result = ImmutableMap.builder();
             final Map<Integer, ImmutableList.Builder<Holder>> byDifficulty = new HashMap<>();
-            for (final var entry : jsons.entrySet()) {
-                try {
-                    final BingoGoal goal = CODEC.parse(ops, entry.getValue()).getOrThrow(JsonParseException::new);
-                    final Holder holder = new Holder(entry.getKey(), goal);
-                    result.put(holder.id, holder);
-                    byDifficulty.computeIfAbsent(goal.difficulty.difficulty().number(), k -> ImmutableList.builder()).add(holder);
-                } catch (Exception e) {
-                    Bingo.LOGGER.error("Parsing error in bingo goal {}: {}", entry.getKey(), e.getMessage());
-                }
+            for (final var entry : goals.entrySet()) {
+                final Holder holder = new Holder(entry.getKey(), entry.getValue());
+                result.put(holder.id, holder);
+                byDifficulty.computeIfAbsent(
+                    entry.getValue().difficulty.difficulty().number(),
+                    k -> ImmutableList.builder()
+                ).add(holder);
             }
-            goals = result.build();
+            BingoGoal.goals = result.build();
             goalsByDifficulty = byDifficulty.entrySet()
                 .stream()
                 .collect(ImmutableMap.toImmutableMap(
                     Map.Entry::getKey,
                     e -> e.getValue().build()
                 ));
-            Bingo.LOGGER.info("Loaded {} bingo goals", goals.size());
+            Bingo.LOGGER.info("Loaded {} bingo goals", BingoGoal.goals.size());
         }
     }
 }

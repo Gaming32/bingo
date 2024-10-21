@@ -35,7 +35,7 @@ public class StatCodecs {
                 if (typeKey.result().isEmpty()) {
                     return DataResult.error(typeKey.error().orElseThrow()::message);
                 }
-                final StatType<S> type = (StatType<S>)BuiltInRegistries.STAT_TYPE.get(typeKey.result().get());
+                final StatType<S> type = (StatType<S>)BuiltInRegistries.STAT_TYPE.getValue(typeKey.result().get());
                 if (type == null) {
                     return DataResult.error(() -> "Unknown stat_type " + typeKey.result().orElseThrow());
                 }
@@ -43,7 +43,7 @@ public class StatCodecs {
                 if (statKey.result().isEmpty()) {
                     return DataResult.error(statKey.error().orElseThrow()::message);
                 }
-                final S statId = type.getRegistry().get(statKey.result().get());
+                final S statId = type.getRegistry().getValue(statKey.result().get());
                 if (statId == null) {
                     return DataResult.error(() -> "Unknown " + typeKey.result().orElseThrow() + " " + statKey.result().orElseThrow());
                 }

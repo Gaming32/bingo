@@ -7,7 +7,6 @@
     "AdvancementProgressAccessor",
     "BaseFireBlockAccessor",
     "BounceOnBlockMixin",
-    "ExplosionAccessor",
     "MixinBasePressurePlateBlock",
     "MixinBeaconBlockEntity",
     "MixinBedBlock",
@@ -55,6 +54,7 @@
     "MixinVehicleEntity",
     "MixinZombie",
     "PlayerAdvancementsAccessor",
+    "ServerExplosionAccessor",
     "StatsCounterAccessor"
   ],
   "client": [

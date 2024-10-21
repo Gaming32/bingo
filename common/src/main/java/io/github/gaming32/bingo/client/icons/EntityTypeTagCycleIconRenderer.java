@@ -10,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,7 @@ public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer
 
     @Override
     public void renderWithParentPeriod(int parentPeriod, EntityTypeTagCycleIcon icon, GuiGraphics graphics, int x, int y) {
-        final var entityTypes = BuiltInRegistries.ENTITY_TYPE.getTag(icon.tag());
+        final var entityTypes = BuiltInRegistries.ENTITY_TYPE.get(icon.tag());
         if (entityTypes.isEmpty() || entityTypes.get().size() == 0) return;
         EntityType<?> entityType = getIcon(entityTypes.get(), parentPeriod).value();
 
@@ -32,7 +33,8 @@ public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer
         if (level == null) {
             return;
         }
-        Entity entity = ENTITIES.computeIfAbsent(level, k -> new HashMap<>()).computeIfAbsent(entityType, k -> entityType.create(level));
+        Entity entity = ENTITIES.computeIfAbsent(level, k -> new HashMap<>())
+            .computeIfAbsent(entityType, k -> entityType.create(level, EntitySpawnReason.LOAD));
         if (entity == null) {
             return;
         }
@@ -46,7 +48,7 @@ public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer
 
     @Override
     public ItemStack getIconItemWithParentPeriod(int parentPeriod, EntityTypeTagCycleIcon icon) {
-        final var entityTypes = BuiltInRegistries.ENTITY_TYPE.getTag(icon.tag());
+        final var entityTypes = BuiltInRegistries.ENTITY_TYPE.get(icon.tag());
         if (entityTypes.isEmpty() || entityTypes.get().size() == 0) {
             return ItemStack.EMPTY;
         }
