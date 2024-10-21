@@ -22,12 +22,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --stacktrace
       - name: Upload Fabric artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: fabric-jars
           path: fabric/build/libs
       - name: Upload NeoForge artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: neoforge-jars
           path: neoforge/build/libs
