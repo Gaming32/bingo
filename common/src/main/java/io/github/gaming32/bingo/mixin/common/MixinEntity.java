@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.mixin.common;
 
 import io.github.gaming32.bingo.ext.ItemEntityExt;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -40,10 +41,10 @@ public abstract class MixinEntity {
     }
 
     @Inject(
-        method = "spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;",
+        method = "spawnAtLocation(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;",
         at = @At("RETURN")
     )
-    private void setDroppedBy(ItemStack stack, float offsetY, CallbackInfoReturnable<ItemEntity> cir) {
+    private void setDroppedBy(ServerLevel serverLevel, ItemStack itemStack, float f, CallbackInfoReturnable<ItemEntity> cir) {
         if (cir.getReturnValue() instanceof ItemEntityExt itemEntity) {
             itemEntity.bingo$setDroppedBy((Entity)(Object)this);
         }

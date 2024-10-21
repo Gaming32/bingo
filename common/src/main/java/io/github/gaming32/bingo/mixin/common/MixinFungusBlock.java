@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(FungusBlock.class)
 public class MixinFungusBlock {
     @WrapOperation(
-        method = {"name=/^lambda\\$performBonemeal\\$\\d+$/", "method_46682", "m_254840_"},
+        method = {"lambda$performBonemeal$3", "method_46682"},
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/levelgen/feature/ConfiguredFeature;place(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;)Z",

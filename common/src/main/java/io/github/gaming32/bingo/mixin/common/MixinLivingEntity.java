@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.mixin.common;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import io.github.gaming32.bingo.ext.LivingEntityExt;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import io.github.gaming32.bingo.util.DamageEntry;
@@ -7,6 +8,7 @@ import net.minecraft.Optionull;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -21,7 +23,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -51,15 +52,19 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
     }
 
     @Inject(
-        method = "hurt",
+        method = "hurtServer",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;die(Lnet/minecraft/world/damagesource/DamageSource;)V"
-        ),
-        locals = LocalCapture.CAPTURE_FAILHARD
+        )
     )
-    private void onDeathFromDamageSource(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, float originalAmount, boolean blocked) {
-        BingoTriggers.ENTITY_DIE_NEAR_PLAYER.get().trigger((LivingEntity) (Object) this, source, originalAmount, amount, blocked);
+    private void onDeathFromDamageSource(
+        ServerLevel serverLevel, DamageSource damageSource, float taken,
+        CallbackInfoReturnable<Boolean> cir,
+        @Local(ordinal = 1) float dealt,
+        @Local(ordinal = 0) boolean blocked
+    ) {
+        BingoTriggers.ENTITY_DIE_NEAR_PLAYER.get().trigger((LivingEntity) (Object) this, damageSource, dealt, taken, blocked);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))

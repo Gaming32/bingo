@@ -163,7 +163,7 @@ public class FabricPlatform extends BingoPlatform {
             handler.accept(player, hand);
             return InteractionResult.PASS;
         }));
-        Event.EXPLOSION_START.setRegistrar(FabricEvents.EXPLOSION::register);
+        Event.SERVER_EXPLOSION_START.setRegistrar(FabricEvents.SERVER_EXPLOSION::register);
         Event.SERVER_TICK_END.setRegistrar(handler -> ServerTickEvents.END_SERVER_TICK.register(handler::accept));
 
         if (isClient()) {

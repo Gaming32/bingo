@@ -14,6 +14,7 @@ import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
@@ -144,8 +145,8 @@ public class NeoForgePlatform extends BingoPlatform {
         Event.RIGHT_CLICK_ITEM.setRegistrar(handler -> bus.addListener((PlayerInteractEvent.RightClickItem event) ->
             handler.accept(event.getEntity(), event.getHand())
         ));
-        Event.EXPLOSION_START.setRegistrar(handler -> bus.addListener((ExplosionEvent.Start event) ->
-            handler.accept(event.getLevel(), event.getExplosion())
+        Event.SERVER_EXPLOSION_START.setRegistrar(handler -> bus.addListener((ExplosionEvent.Start event) ->
+            handler.accept((ServerLevel)event.getLevel(), event.getExplosion())
         ));
         Event.SERVER_TICK_END.setRegistrar(handler -> bus.addListener((ServerTickEvent.Post event) ->
             handler.accept(event.getServer())

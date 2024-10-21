@@ -110,7 +110,7 @@ public class Bingo {
             }
         });
 
-        Event.EXPLOSION_START.register((level, explosion) -> {
+        Event.SERVER_EXPLOSION_START.register((level, explosion) -> {
             if (level instanceof ServerLevel serverLevel) {
                 final ServerPlayer player;
                 if (explosion.getIndirectSourceEntity() instanceof ServerPlayer thePlayer) {

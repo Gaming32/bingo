@@ -2,9 +2,9 @@ package io.github.gaming32.bingo.fabric.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerExplosion;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -26,7 +26,7 @@ public class FabricEvents {
         }
     );
 
-    public static final Event<BiConsumer<Level, Explosion>> EXPLOSION = EventFactory.createArrayBacked(
+    public static final Event<BiConsumer<ServerLevel, ServerExplosion>> SERVER_EXPLOSION = EventFactory.createArrayBacked(
         BiConsumer.class, handlers -> (level, explosion) -> {
             for (final var handler : handlers) {
                 handler.accept(level, explosion);
