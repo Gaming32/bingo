@@ -86,7 +86,7 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
                     new TagEntry.Lookup<>() {
                         @Nullable
                         @Override
-                        public T element(ResourceLocation elementLocation) {
+                        public T element(ResourceLocation elementLocation, boolean readOnly) {
                             return registry.get(ResourceKey.create(tag.registry(), elementLocation))
                                 .map(Holder.Reference::value)
                                 .orElse(null);

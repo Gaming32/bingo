@@ -17,7 +17,7 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
         instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(EntityIcon::entity),
             CompoundTag.CODEC.optionalFieldOf("data", new CompoundTag()).forGetter(EntityIcon::data),
-            BingoCodecs.ITEM_STACK.fieldOf("item").forGetter(EntityIcon::item)
+            BingoCodecs.LENIENT_ITEM_STACK.fieldOf("item").forGetter(EntityIcon::item)
         ).apply(instance, EntityIcon::new)
     );
 

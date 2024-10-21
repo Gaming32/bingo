@@ -9,7 +9,6 @@ public final class BingoEntityTypeTags {
     private BingoEntityTypeTags() {
     }
 
-    public static final TagKey<EntityType<?>> BOATS = create("boats");
     public static final TagKey<EntityType<?>> TAMABLE = create("tamable");
     public static final TagKey<EntityType<?>> PASSIVE = create("passive");
     public static final TagKey<EntityType<?>> HOSTILE = create("hostile");

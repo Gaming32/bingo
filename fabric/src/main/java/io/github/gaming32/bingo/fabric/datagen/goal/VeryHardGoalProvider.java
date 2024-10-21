@@ -39,7 +39,6 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPredicate;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -73,6 +72,9 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
     @Override
     public void addGoals() {
         final var structures = registries.lookupOrThrow(Registries.STRUCTURE);
+        final var items = registries.lookupOrThrow(Registries.ITEM);
+        final var entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
+
         addGoal(obtainSomeItemsFromTag(id("ores"), ConventionalItemTags.ORES, "bingo.goal.ores", 5, 7)
             .tooltip("ores")
             .tags(BingoTags.OVERWORLD));
@@ -103,6 +105,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             id("any_head"),
             new ItemStack(Items.ZOMBIE_HEAD),
             ItemPredicate.Builder.item().of(
+                items,
                 Items.SKELETON_SKULL,
                 Items.PLAYER_HEAD,
                 Items.ZOMBIE_HEAD,
@@ -121,7 +124,9 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .name("all_dyes")
             .tooltip(Component.translatable(
                 "bingo.sixteen_bang",
-                Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new)
+                Arrays.stream(DyeColor.values())
+                    .map(color -> Component.translatable("color.minecraft." + color.getName()))
+                    .toArray(Object[]::new)
             ))
             .icon(new CycleIcon(
                 Arrays.stream(DyeColor.values())
@@ -219,7 +224,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("shulker_in_overworld"))
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
                 EntityPredicate.Builder.entity()
-                    .of(EntityType.SHULKER)
+                    .of(entityTypes, EntityType.SHULKER)
                     .located(LocationPredicate.Builder.inDimension(Level.OVERWORLD))
             ))
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.END, BingoTags.OVERWORLD)
@@ -243,8 +248,8 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("panda_slime_ball"))
             // Currently untested. They have a 1/175,000 or a 1/2,100,000 chance to drop one on a tick.
             .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
-                ItemPredicate.Builder.item().of(Items.SLIME_BALL).build(),
-                EntityPredicate.Builder.entity().of(EntityType.PANDA).build()
+                ItemPredicate.Builder.item().of(items, Items.SLIME_BALL).build(),
+                EntityPredicate.Builder.entity().of(entityTypes, EntityType.PANDA).build()
             ))
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
             .name("panda_slime_ball")
@@ -301,16 +306,18 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION)
             .tooltip(Component.translatable(
                 "bingo.sixteen_bang",
-                Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new)
+                Arrays.stream(DyeColor.values())
+                    .map(color -> Component.translatable("color.minecraft." + color.getName()))
+                    .toArray(Object[]::new)
             ))
         );
         addGoal(BingoGoal.builder(id("kill_enderman_with_endermites"))
             .criterion("kill", EntityDieNearPlayerTrigger.builder()
                 .entity(ContextAwarePredicate.create(
-                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(EntityType.ENDERMAN)).build(),
+                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(entityTypes, EntityType.ENDERMAN)).build(),
                     HasOnlyBeenDamagedByCondition.builder().entityType(EntityType.ENDERMITE).build()
                 ))
-                .killingBlow(DamagePredicate.Builder.damageInstance().sourceEntity(EntityPredicate.Builder.entity().of(EntityType.ENDERMITE).build()).build())
+                .killingBlow(DamagePredicate.Builder.damageInstance().sourceEntity(EntityPredicate.Builder.entity().of(entityTypes, EntityType.ENDERMITE).build()).build())
                 .build()
             )
             .name("kill_enderman_with_endermites")
@@ -331,7 +338,11 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
     }
 
     private BingoGoal.Builder obtainAllGoatHorns() {
-        final Map<ResourceLocation, ItemStack> goatHorns = BuiltInRegistries.INSTRUMENT.holders()
+        final var items = registries.lookupOrThrow(Registries.ITEM);
+
+        // TODO: Actually make it check for all goat horns, with compatibility for datapacks adding horns
+        final Map<ResourceLocation, ItemStack> goatHorns = registries.lookupOrThrow(Registries.INSTRUMENT)
+            .listElements()
             .collect(ImmutableMap.toImmutableMap(
                 instrument -> instrument.key().location(),
                 instrument -> InstrumentItem.create(Items.GOAT_HORN, instrument)
@@ -341,7 +352,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             "obtain_" + instrument.getNamespace() + "_" + instrument.getPath(),
             InventoryChangeTrigger.TriggerInstance.hasItems(
                 ItemPredicate.Builder.item()
-                    .of(goatHorn.getItem())
+                    .of(items, goatHorn.getItem())
                     .hasComponents(DataComponentPredicate.allOf(goatHorn.getComponents()))
                     .build()
             )

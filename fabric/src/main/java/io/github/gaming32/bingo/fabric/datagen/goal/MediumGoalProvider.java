@@ -138,6 +138,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         final var entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
         final var items = registries.lookupOrThrow(Registries.ITEM);
         final var blocks = registries.lookupOrThrow(Registries.BLOCK);
+
         addGoal(obtainSomeEdibleItems(id("edible_items"), 6, 7).tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("beetroot_soup"), Items.BEETROOT_SOUP)
             .tags(BingoTags.OVERWORLD));

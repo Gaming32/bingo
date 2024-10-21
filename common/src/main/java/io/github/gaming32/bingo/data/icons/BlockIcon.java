@@ -16,7 +16,7 @@ public record BlockIcon(BlockState block, ItemStack item) implements GoalIcon {
     public static final MapCodec<BlockIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             BlockState.CODEC.fieldOf("block").forGetter(BlockIcon::block),
-            BingoCodecs.ITEM_STACK.optionalFieldOf("item").forGetter(i -> Optional.of(i.item))
+            BingoCodecs.LENIENT_ITEM_STACK.optionalFieldOf("item").forGetter(i -> Optional.of(i.item))
         ).apply(instance, BlockIcon::ofFallbackItem)
     );
 

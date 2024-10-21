@@ -72,7 +72,7 @@ public final class BingoCodecs {
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemStack::getComponentsPatch)
         ).apply(instance, ItemStack::new)
     );
-    public static final Codec<ItemStack> ITEM_STACK = Codec.withAlternative(UNBOUNDED_ITEM_STACK, ItemStack.SIMPLE_ITEM_CODEC);
+    public static final Codec<ItemStack> LENIENT_ITEM_STACK = Codec.withAlternative(UNBOUNDED_ITEM_STACK, ItemStack.SIMPLE_ITEM_CODEC);
 
     private BingoCodecs() {
     }

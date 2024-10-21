@@ -35,11 +35,6 @@ public class BingoEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
             EntityType.WOLF
         );
 
-        getOrCreateTagBuilder(BingoEntityTypeTags.BOATS).add(
-            EntityType.BOAT,
-            EntityType.CHEST_BOAT
-        );
-
         // find passive mobs
         final FabricTagBuilder passiveBuilder = getOrCreateTagBuilder(BingoEntityTypeTags.PASSIVE);
         final FabricTagBuilder hostileBuilder = getOrCreateTagBuilder(BingoEntityTypeTags.HOSTILE);

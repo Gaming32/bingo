@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
 public record ItemIcon(ItemStack item) implements GoalIcon {
-    public static final MapCodec<ItemIcon> CODEC = BingoCodecs.ITEM_STACK
+    public static final MapCodec<ItemIcon> CODEC = BingoCodecs.LENIENT_ITEM_STACK
         .fieldOf("item")
         .xmap(ItemIcon::new, ItemIcon::item);
 
