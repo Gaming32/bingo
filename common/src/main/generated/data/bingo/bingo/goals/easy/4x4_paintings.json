@@ -3,12 +3,21 @@
   "criteria": {
     "paintings": {
       "conditions": {
+        "adjacent_paintings": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "bingo:painting",
+                "height": 4,
+                "width": 4
+              }
+            }
+          }
+        ],
         "count": {
           "min": 3
-        },
-        "painting_variant": {
-          "expected": true,
-          "id": "bingo:size_4x4"
         }
       },
       "trigger": "bingo:adjacent_painting"

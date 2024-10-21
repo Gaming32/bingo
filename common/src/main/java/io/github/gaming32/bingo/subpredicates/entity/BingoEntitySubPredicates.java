@@ -14,6 +14,7 @@ public class BingoEntitySubPredicates {
 
     public static final RegistryValue<MapCodec<BingoPlayerPredicate>> PLAYER = register("player", BingoPlayerPredicate.CODEC);
     public static final RegistryValue<MapCodec<ItemEntityPredicate>> ITEM = register("item", ItemEntityPredicate.CODEC);
+    public static final RegistryValue<MapCodec<PaintingPredicate>> PAINTING = register("painting", PaintingPredicate.CODEC);
 
     public static void load() {
     }

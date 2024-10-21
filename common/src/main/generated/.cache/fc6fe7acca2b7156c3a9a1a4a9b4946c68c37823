@@ -1,6 +1,6 @@
 // 1.21.2 Release Candidate 1	
 60933cb93b51bc5046fb820f19ed358af2699f4d data/bingo/bingo/goals/easy/3x3x3_glass_cube.json
-5330a9593cd38fc8aa8b8fcd6ac88540e1b1224b data/bingo/bingo/goals/easy/4x4_paintings.json
+30e1190a5fd7a3f00303c3c97f150a13c6815ac7 data/bingo/bingo/goals/easy/4x4_paintings.json
 86d1d398343deced49a4d91d7b0ca17274600842 data/bingo/bingo/goals/easy/acacia_log.json
 c3c990e25a5d0e16a0dcf573a5eed4e23b9fc83c data/bingo/bingo/goals/easy/acacia_planks.json
 687d7707b41c707818a947e86be0bb5b62c4d318 data/bingo/bingo/goals/easy/acacia_wood.json
@@ -246,7 +246,7 @@ d8a7b4f4e70dde84cf6c93874497386f8415c3b3 data/bingo/bingo/goals/hard/terracotta.
 4f6d32841068f67f9d989a1b867cfe29ce1ef318 data/bingo/bingo/goals/hard/wither_skeleton_skull.json
 46fc04481d001113d821feeb491f4f380a14667d data/bingo/bingo/goals/hard/wool.json
 63abd6ba7ecd687e8c7f56d9a07c2db098a082e4 data/bingo/bingo/goals/hard/zombified_piglin_sword.json
-6ec0c3cf9b0833db24e8e68113c252c8dd974f55 data/bingo/bingo/goals/medium/all_different_armor.json
+7ac46d7d2864bb8c7200d0ef142bf50673237cbc data/bingo/bingo/goals/medium/all_different_armor.json
 2e4398c088e6cbf9464c1077612af4545137d928 data/bingo/bingo/goals/medium/anchor_in_overworld.json
 5a13acf39504c78c79a94bb96cb4a138399b2291 data/bingo/bingo/goals/medium/bamboo.json
 8658e55232362579ff1b85f994b78c43d4ebcc7b data/bingo/bingo/goals/medium/basic_mineral_blocks.json
@@ -451,7 +451,7 @@ b28f862fb113f6247d8a2da847f5f1a27b1fbb39 data/bingo/bingo/goals/very_hard/all_ch
 aadb91646053e74cb3514b476505a98861251673 data/bingo/bingo/goals/very_hard/all_climbables.json
 f4dc924d62430cb6cf2e94fcc474ed1b09b13278 data/bingo/bingo/goals/very_hard/all_diamond_craftables.json
 b3e51f0f2da51866b5c0e5c9a5bcb3e5a0c2c0a4 data/bingo/bingo/goals/very_hard/all_dyes.json
-15bdfb87a26ab5710255a7a38b925557825c38a1 data/bingo/bingo/goals/very_hard/all_goat_horns.json
+526f72272dfe39fc8b13ae2d029659ca6be4fec8 data/bingo/bingo/goals/very_hard/all_goat_horns.json
 1b5dcc05ad69d41307f26e44aec797f6ec8b6616 data/bingo/bingo/goals/very_hard/all_mineral_blocks.json
 23c837332ca49cc2bce7da669f49b653e3905efa data/bingo/bingo/goals/very_hard/any_head.json
 b93ef84e7054494eaa2c6a69758d72579a3e95ab data/bingo/bingo/goals/very_hard/armor_trims.json

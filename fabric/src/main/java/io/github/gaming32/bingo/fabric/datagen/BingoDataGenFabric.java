@@ -10,7 +10,6 @@ import io.github.gaming32.bingo.fabric.datagen.tag.BingoDamageTypeTagProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoEntityTypeTagProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoFeatureTagProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoItemTagProvider;
-import io.github.gaming32.bingo.fabric.datagen.tag.BingoPaintingVariantTagProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.JsonKeySortOrderCallback;
@@ -51,7 +50,6 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
         pack.addProvider(BingoEntityTypeTagProvider::new);
         pack.addProvider(BingoFeatureTagProvider::new);
         pack.addProvider(BingoDamageTypeTagProvider::new);
-        pack.addProvider(BingoPaintingVariantTagProvider::new);
 
         if (DUMP_BINGO_COMMAND) {
             pack.addProvider(BingoCommandDumper::new);

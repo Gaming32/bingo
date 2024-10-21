@@ -28,7 +28,7 @@ import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.data.tags.bingo.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
-import io.github.gaming32.bingo.data.tags.bingo.BingoPaintingVariantTags;
+import io.github.gaming32.bingo.subpredicates.entity.PaintingPredicate;
 import io.github.gaming32.bingo.triggers.AdjacentPaintingTrigger;
 import io.github.gaming32.bingo.triggers.ArrowPressTrigger;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
@@ -402,9 +402,14 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("egg"), Items.EGG, 16, 16));
         addGoal(BingoGoal.builder(id("4x4_paintings"))
             .criterion("paintings", AdjacentPaintingTrigger.builder()
-                .paintingVariant(BingoPaintingVariantTags.SIZE_4X4)
+                .adjacentPaintings(PaintingPredicate.builder()
+                    .width(MinMaxBounds.Ints.exactly(4))
+                    .height(MinMaxBounds.Ints.exactly(4))
+                    .build()
+                )
                 .count(MinMaxBounds.Ints.atLeast(3))
-                .build())
+                .build()
+            )
             .name("4x4_paintings")
             .icon(new ItemStack(Items.PAINTING, 3))
             .antisynergy("painting")
