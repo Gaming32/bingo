@@ -45,7 +45,5 @@
       "fill"
     ]
   ],
-  "tags": [
-    "bingo:overworld"
-  ]
+  "tags": "bingo:overworld"
 }

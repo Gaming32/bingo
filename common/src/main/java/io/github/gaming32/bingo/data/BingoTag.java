@@ -1,33 +1,22 @@
 package io.github.gaming32.bingo.data;
 
-import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.util.BingoStreamCodecs;
-import io.github.gaming32.bingo.util.ResourceLocations;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.floats.FloatImmutableList;
 import it.unimi.dsi.fastutil.floats.FloatList;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, SpecialType specialType) {
@@ -38,7 +27,6 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
                 : DataResult.error(() -> "Value in difficulty_max must be in range [0,1]")
         ).listOf()
     ).xmap(FloatImmutableList::new, Function.identity());
-
     public static final Codec<BingoTag> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             DIFFICULTY_MAX_CODEC.fieldOf("difficulty_max").forGetter(BingoTag::difficultyMax),
@@ -46,17 +34,7 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
             SpecialType.CODEC.optionalFieldOf("special_type", SpecialType.NONE).forGetter(BingoTag::specialType)
         ).apply(instance, BingoTag::new)
     );
-
-    private static Map<ResourceLocation, Holder> tags = Map.of();
-
-    @Nullable
-    public static Holder getTag(ResourceLocation id) {
-        return tags.get(id);
-    }
-
-    public static Set<ResourceLocation> getTags() {
-        return tags.keySet();
-    }
+    public static final Codec<BingoTag> NETWORK_CODEC = Codec.unit(new BingoTag(FloatList.of(), true, SpecialType.NONE));
 
     public float getUnscaledMaxForDifficulty(int difficulty) {
         if (difficulty < 0) {
@@ -70,35 +48,16 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
         return Mth.ceil(getUnscaledMaxForDifficulty(difficulty) * boardSize * boardSize);
     }
 
-    public static Builder builder(ResourceLocation id) {
-        return new Builder(id);
-    }
-
-    public record Holder(ResourceLocation id, BingoTag tag) {
-        @Override
-        public String toString() {
-            return id.toString();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof Holder h && id.equals(h.id);
-        }
-
-        @Override
-        public int hashCode() {
-            return id.hashCode();
-        }
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static final class Builder {
-        private final ResourceLocation id;
         private FloatList difficultyMax = new FloatArrayList();
         private boolean allowedOnSameLine = true;
         private SpecialType specialType = SpecialType.NONE;
 
-        private Builder(ResourceLocation id) {
-            this.id = id;
+        private Builder() {
         }
 
         public Builder difficultyMax(int... scaledBy5x5) {
@@ -129,42 +88,8 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
             return this;
         }
 
-        public Holder build() {
-            return new Holder(id, new BingoTag(new FloatImmutableList(difficultyMax), allowedOnSameLine, specialType));
-        }
-
-        public void build(BiConsumer<ResourceLocation, BingoTag> adder) {
-            final Holder result = build();
-            adder.accept(result.id, result.tag);
-        }
-    }
-
-    public static class ReloadListener extends SimpleJsonResourceReloadListener<BingoTag> {
-        public static final ResourceLocation ID = ResourceLocations.bingo("tags");
-
-        public ReloadListener(HolderLookup.Provider registries) {
-            super(registries, CODEC, "bingo/tags");
-        }
-
-        @NotNull
-        @Override
-        public String getName() {
-            return ID.toString();
-        }
-
-        @Override
-        protected void apply(Map<ResourceLocation, BingoTag> tags, ResourceManager resourceManager, ProfilerFiller profiler) {
-            final ImmutableMap.Builder<ResourceLocation, Holder> result = ImmutableMap.builder();
-            for (final var entry : tags.entrySet()) {
-                try {
-                    final Holder holder = new Holder(entry.getKey(), entry.getValue());
-                    result.put(holder.id, holder);
-                } catch (Exception e) {
-                    Bingo.LOGGER.error("Parsing error in bingo tag {}: {}", entry.getKey(), e.getMessage());
-                }
-            }
-            BingoTag.tags = result.build();
-            Bingo.LOGGER.info("Loaded {} bingo tags", BingoTag.tags.size());
+        public BingoTag build() {
+            return new BingoTag(new FloatImmutableList(difficultyMax), allowedOnSameLine, specialType);
         }
     }
 

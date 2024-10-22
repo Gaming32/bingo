@@ -25,9 +25,7 @@
       "use"
     ]
   ],
-  "tags": [
-    "bingo:never"
-  ],
+  "tags": "bingo:never",
   "tooltip": {
     "translate": "bingo.goal.never_use_shields.tooltip"
   }

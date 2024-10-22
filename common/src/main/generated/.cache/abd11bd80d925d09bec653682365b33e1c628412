@@ -1,4 +1,4 @@
-// 1.21.2 Release Candidate 1	
+// 1.21.2	Bingo/Tags for minecraft:entity_type
 d75e6edfc24a5cd791f808f13d958ee9146ad879 data/bingo/tags/entity_type/hostile.json
 c32b895c9caf0e47d56aa324a6fe36ebb50f8754 data/bingo/tags/entity_type/passive.json
 98330efe44bb1f14c86f1b764de6b749e31e03b1 data/bingo/tags/entity_type/tamable.json

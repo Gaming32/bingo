@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.fabric;
 
+import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.fabric.event.FabricClientEvents;
 import io.github.gaming32.bingo.fabric.event.FabricEvents;
 import io.github.gaming32.bingo.fabric.registry.FabricDeferredRegister;
@@ -9,6 +10,7 @@ import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
 import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
+import io.github.gaming32.bingo.platform.registrar.DatapackRegistryRegistrar;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
@@ -24,6 +26,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -136,16 +139,30 @@ public class FabricPlatform extends BingoPlatform {
     }
 
     @Override
+    public void registerDatapackRegistries(Consumer<DatapackRegistryRegistrar> handler) {
+        handler.accept(new DatapackRegistryRegistrar() {
+            @Override
+            public <T> void unsynced(ResourceKey<Registry<T>> registryKey, Codec<T> codec) {
+                DynamicRegistries.register(registryKey, codec);
+            }
+
+            @Override
+            public <T> void synced(ResourceKey<Registry<T>> registryKey, Codec<T> codec, Codec<T> networkCodec) {
+                DynamicRegistries.registerSynced(registryKey, codec, networkCodec);
+            }
+        });
+    }
+
+    @Override
     public <T> DeferredRegister<T> createDeferredRegister(Registry<T> registry) {
         return new FabricDeferredRegister<>(registry);
     }
 
     @Override
-    public <T> DeferredRegister<T> buildDeferredRegister(RegistryBuilder builder) {
-        final var registryKey = ResourceKey.<T>createRegistryKey(builder.getId());
+    public <T> DeferredRegister<T> buildDeferredRegister(RegistryBuilder<T> builder) {
         final var fabricBuilder = builder.getDefaultId() != null
-            ? FabricRegistryBuilder.createDefaulted(registryKey, builder.getDefaultId())
-            : FabricRegistryBuilder.createSimple(registryKey);
+            ? FabricRegistryBuilder.createDefaulted(builder.getKey(), builder.getDefaultId())
+            : FabricRegistryBuilder.createSimple(builder.getKey());
         if (builder.isSynced()) {
             fabricBuilder.attribute(RegistryAttribute.SYNCED);
         }

@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public record ActiveGoal(
-    BingoGoal.Holder goal,
+    BingoGoal.GoalHolder goal,
     Component name,
     Optional<Component> tooltip,
     GoalIcon icon,
@@ -36,7 +36,7 @@ public record ActiveGoal(
 ) {
     public static final Codec<ActiveGoal> PERSISTENCE_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            BingoGoal.Holder.PERSISTENCE_CODEC.fieldOf("goal").forGetter(ActiveGoal::goal),
+            BingoGoal.GoalHolder.PERSISTENCE_CODEC.fieldOf("goal").forGetter(ActiveGoal::goal),
             ComponentSerialization.CODEC.fieldOf("name").forGetter(ActiveGoal::name),
             ComponentSerialization.CODEC.optionalFieldOf("tooltip").forGetter(ActiveGoal::tooltip),
             GoalIcon.CODEC.fieldOf("icon").forGetter(ActiveGoal::icon),

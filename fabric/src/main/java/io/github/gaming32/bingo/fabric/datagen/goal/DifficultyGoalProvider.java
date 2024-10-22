@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 import com.demonwav.mcdev.annotations.Translatable;
 import com.google.common.collect.ImmutableList;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
+import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
@@ -39,6 +40,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
@@ -64,24 +66,24 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 
 public abstract class DifficultyGoalProvider {
-    private final ResourceLocation difficulty;
+    private final ResourceKey<BingoDifficulty> difficulty;
     private final String prefix;
     private final BiConsumer<ResourceLocation, BingoGoal> goalAdder;
     protected final HolderLookup.Provider registries;
 
     protected DifficultyGoalProvider(
-        ResourceLocation difficulty,
+        ResourceKey<BingoDifficulty> difficulty,
         BiConsumer<ResourceLocation, BingoGoal> goalAdder,
         HolderLookup.Provider registries
     ) {
         this.difficulty = difficulty;
-        this.prefix = difficulty.getPath() + '/';
+        this.prefix = difficulty.location().getPath() + '/';
         this.goalAdder = goalAdder;
         this.registries = registries;
     }
 
     protected final void addGoal(BingoGoal.Builder goal) {
-        BingoGoal.Holder builtGoal = goal.difficulty(difficulty).build();
+        BingoGoal.GoalHolder builtGoal = goal.difficulty(difficulty).build(registries);
         if (!builtGoal.id().getPath().startsWith(prefix)) {
             throw new IllegalArgumentException("Goal ID does not start with " + prefix);
         }

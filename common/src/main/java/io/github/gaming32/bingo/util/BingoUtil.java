@@ -10,6 +10,7 @@ import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -33,6 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 public class BingoUtil {
     private static final Hash.Strategy<Holder<?>> HOLDER_STRATEGY = new Hash.Strategy<>() {
@@ -242,5 +244,15 @@ public class BingoUtil {
         return squareRadius * sin <= squareRadius * cos
             ? squareRadius / cos
             : squareRadius / sin;
+    }
+
+    public static <T> HolderSet<T> concatHolderSets(HolderSet<T> a, HolderSet<T> b) {
+        if (a.size() == 0) {
+            return b;
+        }
+        if (b.size() == 0) {
+            return a;
+        }
+        return HolderSet.direct(Stream.concat(a.stream(), b.stream()).distinct().toList());
     }
 }

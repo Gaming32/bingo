@@ -36,9 +36,7 @@
       "pickup"
     ]
   ],
-  "tags": [
-    "bingo:never"
-  ],
+  "tags": "bingo:never",
   "tooltip": {
     "translate": "bingo.goal.never_pickup_crafting_tables.tooltip"
   }

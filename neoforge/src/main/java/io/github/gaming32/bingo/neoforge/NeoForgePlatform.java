@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.neoforge;
 
+import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.neoforge.registry.NeoForgeDeferredRegister;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.BingoPlatform;
@@ -7,6 +8,7 @@ import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
 import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
+import io.github.gaming32.bingo.platform.registrar.DatapackRegistryRegistrar;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
@@ -36,7 +38,9 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -101,6 +105,21 @@ public class NeoForgePlatform extends BingoPlatform {
     }
 
     @Override
+    public void registerDatapackRegistries(Consumer<DatapackRegistryRegistrar> handler) {
+        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) -> handler.accept(new DatapackRegistryRegistrar() {
+            @Override
+            public <T> void unsynced(ResourceKey<Registry<T>> registryKey, Codec<T> codec) {
+                event.dataPackRegistry(registryKey, codec);
+            }
+
+            @Override
+            public <T> void synced(ResourceKey<Registry<T>> registryKey, Codec<T> codec, @Nullable Codec<T> networkCodec) {
+                event.dataPackRegistry(registryKey, codec, networkCodec);
+            }
+        }));
+    }
+
+    @Override
     public <T> DeferredRegister<T> createDeferredRegister(Registry<T> registry) {
         final NeoForgeDeferredRegister<T> register = new NeoForgeDeferredRegister<>(registry);
         register.getDeferredRegister().register(modEventBus);
@@ -108,9 +127,9 @@ public class NeoForgePlatform extends BingoPlatform {
     }
 
     @Override
-    public <T> DeferredRegister<T> buildDeferredRegister(RegistryBuilder builder) {
+    public <T> DeferredRegister<T> buildDeferredRegister(RegistryBuilder<T> builder) {
         final Registry<T> registry =
-            new net.neoforged.neoforge.registries.RegistryBuilder<>(ResourceKey.<T>createRegistryKey(builder.getId()))
+            new net.neoforged.neoforge.registries.RegistryBuilder<>(builder.getKey())
                 .sync(builder.isSynced())
                 .defaultKey(builder.getDefaultId())
                 .create();

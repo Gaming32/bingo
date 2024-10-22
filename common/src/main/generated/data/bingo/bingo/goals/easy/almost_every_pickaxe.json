@@ -117,7 +117,5 @@
       "diamond"
     ]
   ],
-  "tags": [
-    "bingo:item"
-  ]
+  "tags": "bingo:item"
 }

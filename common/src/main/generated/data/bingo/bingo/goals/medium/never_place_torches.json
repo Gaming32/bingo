@@ -28,9 +28,7 @@
       "place"
     ]
   ],
-  "tags": [
-    "bingo:never"
-  ],
+  "tags": "bingo:never",
   "tooltip": {
     "translate": "bingo.goal.never_place_torches.tooltip"
   }

@@ -39,7 +39,5 @@
       "grow"
     ]
   ],
-  "tags": [
-    "bingo:action"
-  ]
+  "tags": "bingo:action"
 }

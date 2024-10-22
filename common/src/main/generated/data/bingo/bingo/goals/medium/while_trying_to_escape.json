@@ -36,9 +36,7 @@
       "die"
     ]
   ],
-  "tags": [
-    "bingo:action"
-  ],
+  "tags": "bingo:action",
   "tooltip": {
     "translate": "bingo.goal.while_trying_to_escape.tooltip"
   }

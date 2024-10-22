@@ -53,7 +53,5 @@
       "consume"
     ]
   ],
-  "tags": [
-    "bingo:never"
-  ]
+  "tags": "bingo:never"
 }

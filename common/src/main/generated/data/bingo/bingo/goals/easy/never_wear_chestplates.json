@@ -30,7 +30,5 @@
       "equip"
     ]
   ],
-  "tags": [
-    "bingo:never"
-  ]
+  "tags": "bingo:never"
 }

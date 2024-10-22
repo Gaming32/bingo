@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
@@ -11,7 +12,9 @@ import io.github.gaming32.bingo.util.ResourceLocations;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -26,6 +29,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -77,15 +81,22 @@ public class BingoBoard {
         int difficulty,
         int teamCount,
         RandomSource rand,
-        Predicate<BingoGoal.Holder> isAllowedGoal,
-        List<BingoGoal.Holder> requiredGoals,
-        Set<BingoTag.Holder> excludedTags,
+        Predicate<BingoGoal.GoalHolder> isAllowedGoal,
+        List<BingoGoal.GoalHolder> requiredGoals,
+        HolderSet<BingoTag> excludedTags,
         boolean allowsClientRequired,
-        @Nullable HolderGetter.Provider registries
+        HolderLookup.Provider registries
     ) {
         final BingoBoard board = new BingoBoard(size);
-        final BingoGoal.Holder[] generatedSheet = generateGoals(
-            size, difficulty, rand, isAllowedGoal, requiredGoals, excludedTags, allowsClientRequired
+        final BingoGoal.GoalHolder[] generatedSheet = generateGoals(
+            registries.lookupOrThrow(BingoRegistries.DIFFICULTY),
+            size,
+            difficulty,
+            rand,
+            isAllowedGoal,
+            requiredGoals,
+            excludedTags,
+            allowsClientRequired
         );
         for (int i = 0; i < size * size; i++) {
             final ActiveGoal goal;
@@ -106,44 +117,44 @@ public class BingoBoard {
         return board;
     }
 
-    public static BingoGoal.Holder[] generateGoals(
+    public static BingoGoal.GoalHolder[] generateGoals(
+        HolderLookup<BingoDifficulty> difficultyLookup,
         int size,
         int difficulty,
         RandomSource rand,
-        Predicate<BingoGoal.Holder> isAllowedGoal,
-        List<BingoGoal.Holder> requiredGoals,
-        Set<BingoTag.Holder> excludedTags,
+        Predicate<BingoGoal.GoalHolder> isAllowedGoal,
+        List<BingoGoal.GoalHolder> requiredGoals,
+        HolderSet<BingoTag> excludedTags,
         boolean allowsClientRequired
     ) {
-        final Queue<BingoGoal.Holder> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
+        final Queue<BingoGoal.GoalHolder> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
 
-        final BingoGoal.Holder[] generatedSheet = new BingoGoal.Holder[size * size];
+        final BingoGoal.GoalHolder[] generatedSheet = new BingoGoal.GoalHolder[size * size];
 
-        final int[] difficultyLayout = generateDifficulty(size, difficulty, rand);
+        final var difficulties = BingoDifficulty.getNumbers(difficultyLookup);
+        final int[] difficultyLayout = generateDifficulty(difficulties, size, difficulty, rand);
         final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(size * size), rand);
 
         final Set<ResourceLocation> usedGoals = new HashSet<>();
-        final Object2IntOpenHashMap<ResourceLocation> tagCount = new Object2IntOpenHashMap<>();
+        final Object2IntOpenHashMap<Holder<BingoTag>> tagCount = new Object2IntOpenHashMap<>();
         final Set<String> antisynergys = new HashSet<>();
         final Set<String> reactants = new HashSet<>();
         final Set<String> catalysts = new HashSet<>();
 
-        for (final BingoTag.Holder tag : excludedTags) {
-            tagCount.put(tag.id(), tag.tag().getMaxForDifficulty(difficulty, size));
+        for (final var tag : excludedTags) {
+            tagCount.put(tag, tag.value().getMaxForDifficulty(difficulty, size));
         }
 
         for (int i = 0; i < size * size; i++) {
-            final Iterator<Integer> difficultiesToTry = BingoDifficulty.getNumbers()
-                .headSet(difficultyLayout[i], true)
-                .descendingIterator();
+            final var difficultiesToTry = difficulties.headSet(difficultyLayout[i], true).descendingIterator();
             if (!difficultiesToTry.hasNext()) {
                 throw new IllegalArgumentException("No goals with difficulty " + difficultyLayout[i] + " or easier");
             }
 
-            List<BingoGoal.Holder> possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
+            List<BingoGoal.GoalHolder> possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
 
             int failSafe = 0;
-            BingoGoal.Holder goal;
+            BingoGoal.GoalHolder goal;
 
             goalGen:
             while (true) {
@@ -163,7 +174,7 @@ public class BingoBoard {
                     failSafe = 1;
                 }
 
-                final BingoGoal.Holder goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
+                final BingoGoal.GoalHolder goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
 
                 if (!isAllowedGoal.test(goalCandidate)) {
                     continue;
@@ -184,20 +195,20 @@ public class BingoBoard {
                     continue;
                 }
 
-                if (!goalCandidate.goal().getTags().isEmpty()) {
-                    for (final BingoTag.Holder tag : goalCandidate.goal().getResolvedTags()) {
-                        if (tagCount.getInt(tag.id()) >= tag.tag().getMaxForDifficulty(difficulty, size)) {
+                if (goalCandidate.goal().getTags().size() != 0) {
+                    for (final var tag : goalCandidate.goal().getTags()) {
+                        if (tagCount.getInt(tag) >= tag.value().getMaxForDifficulty(difficulty, size)) {
                             continue goalGen;
                         }
                     }
 
-                    if (goalCandidate.goal().getResolvedTags().stream().anyMatch(t -> !t.tag().allowedOnSameLine())) {
+                    if (goalCandidate.goal().getTags().stream().anyMatch(t -> !t.value().allowedOnSameLine())) {
                         for (int z = 0; z < i; z++) {
-                            final Set<BingoTag.Holder> tags = generatedSheet[indices[z]].goal().getResolvedTags();
-                            if (!tags.isEmpty() && isOnSameLine(size, indices[i], indices[z])) {
+                            final var tags = generatedSheet[indices[z]].goal().getTags();
+                            if (tags.size() > 0 && isOnSameLine(size, indices[i], indices[z])) {
                                 if (tags.stream().anyMatch(t ->
-                                    !t.tag().allowedOnSameLine() &&
-                                        goalCandidate.goal().getResolvedTags().stream().anyMatch(t2 -> t.id().equals(t2.id()))
+                                    !t.value().allowedOnSameLine() &&
+                                        goalCandidate.goal().getTags().stream().anyMatch(t::equals)
                                 )) {
                                     continue goalGen;
                                 }
@@ -226,8 +237,8 @@ public class BingoBoard {
                 break;
             }
 
-            for (final BingoTag.Holder tag : goal.goal().getResolvedTags()) {
-                tagCount.addTo(tag.id(), 1);
+            for (final var tag : goal.goal().getTags()) {
+                tagCount.addTo(tag, 1);
             }
             antisynergys.addAll(goal.goal().getAntisynergy());
             catalysts.addAll(goal.goal().getCatalyst());
@@ -265,12 +276,10 @@ public class BingoBoard {
         return false;
     }
 
-    private static int[] generateDifficulty(int size, int difficulty, RandomSource rand) {
+    private static int[] generateDifficulty(NavigableSet<Integer> difficulties, int size, int difficulty, RandomSource rand) {
         final int[] layout = new int[size * size];
 
-        final Iterator<Integer> available = BingoDifficulty.getNumbers()
-            .headSet(difficulty, true)
-            .descendingIterator();
+        final Iterator<Integer> available = difficulties.headSet(difficulty, true).descendingIterator();
         if (!available.hasNext()) {
             throw new IllegalArgumentException("No difficulty exists with number " + difficulty);
         }

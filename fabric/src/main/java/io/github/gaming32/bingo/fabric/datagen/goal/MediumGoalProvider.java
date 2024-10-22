@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Ordering;
 import com.google.common.collect.Table;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.OneByOneHoleCondition;
@@ -916,8 +917,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
 
     private Table<EquipmentSlot, ResourceLocation, Item> getArmors() {
         final var armors = ImmutableTable.<EquipmentSlot, ResourceLocation, Item>builder();
-        armors.orderRowsBy(Comparator.reverseOrder());
-        armors.orderColumnsBy(Comparator.naturalOrder());
+        armors.orderRowsBy(Ordering.natural());
+        armors.orderColumnsBy(Ordering.natural());
         Stream.of(ItemTags.HEAD_ARMOR, ItemTags.CHEST_ARMOR, ItemTags.LEG_ARMOR, ItemTags.FOOT_ARMOR)
             .map(tag -> BingoDataGenFabric.loadVanillaTag(tag, registries))
             .flatMap(Collection::stream)

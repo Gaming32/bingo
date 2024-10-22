@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.MapCodec;
+import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
@@ -8,7 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
 public interface GoalIconType<I extends GoalIcon> {
-    DeferredRegister<GoalIconType<?>> REGISTER = new RegistryBuilder("goal_icon_type")
+    DeferredRegister<GoalIconType<?>> REGISTER = new RegistryBuilder<>(BingoRegistries.GOAL_ICON_TYPE)
         .synced()
         .defaultId("empty")
         .build();

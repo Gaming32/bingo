@@ -55,9 +55,7 @@
       "obtain_1"
     ]
   ],
-  "tags": [
-    "bingo:item"
-  ],
+  "tags": "bingo:item",
   "tooltip": {
     "translate": "bingo.goal.obtain_enchanted_item.tooltip"
   }

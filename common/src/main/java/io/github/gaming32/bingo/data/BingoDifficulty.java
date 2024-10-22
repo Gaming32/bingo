@@ -1,28 +1,22 @@
 package io.github.gaming32.bingo.data;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Ordering;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import net.minecraft.Optionull;
+import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.profiling.ProfilerFiller;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.NavigableMap;
 import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiConsumer;
 
 public record BingoDifficulty(int number, @Nullable String fallbackName) {
     public static final Codec<BingoDifficulty> CODEC = RecordCodecBuilder.create(instance ->
@@ -31,68 +25,40 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
             Codec.STRING.optionalFieldOf("fallback_name").forGetter(d -> Optional.ofNullable(d.fallbackName))
         ).apply(instance, BingoDifficulty::new)
     );
-
-    private static Map<ResourceLocation, Holder> byId = Map.of();
-    private static NavigableMap<Integer, Holder> byNumber = ImmutableSortedMap.of();
+    public static final Codec<BingoDifficulty> NETWORK_CODEC = Codec.unit(new BingoDifficulty(0, Optional.empty()));
 
     private BingoDifficulty(int number, Optional<String> fallbackName) {
         this(number, fallbackName.orElse(null));
     }
 
-    public static Builder builder(ResourceLocation id) {
-        return new Builder(id);
+    public static NavigableSet<Integer> getNumbers(HolderLookup<BingoDifficulty> lookup) {
+        return lookup.listElements()
+            .map(Holder.Reference::value)
+            .map(BingoDifficulty::number)
+            .collect(ImmutableSortedSet.toImmutableSortedSet(Ordering.natural()));
     }
 
-    @Nullable
-    public static Holder byId(ResourceLocation id) {
-        return byId.get(id);
+    public static Builder builder() {
+        return new Builder();
     }
 
-    @Nullable
-    public static Holder byNumber(int number) {
-        return byNumber.get(number);
+    public static Component getDescription(Holder<BingoDifficulty> holder) {
+        return getDescription(holder.unwrapKey().orElse(null));
     }
 
-    public static Set<ResourceLocation> getIds() {
-        return byId.keySet();
+    public static Component getDescription(@Nullable ResourceKey<BingoDifficulty> id) {
+        return getDescription((ResourceLocation)Optionull.map(id, ResourceKey::location));
     }
 
-    public static NavigableSet<Integer> getNumbers() {
-        return byNumber.navigableKeySet();
-    }
-
-    private static Component getDescription(ResourceLocation id, String fallback) {
-        return Component.translatableWithFallback(id.toLanguageKey("bingo_difficulty"), fallback);
-    }
-
-    public record Holder(ResourceLocation id, BingoDifficulty difficulty) {
-        public Component getDescription() {
-            return BingoDifficulty.getDescription(id, difficulty.fallbackName);
-        }
-
-        @Override
-        public String toString() {
-            return id.toString();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof Holder h && id.equals(h.id);
-        }
-
-        @Override
-        public int hashCode() {
-            return id.hashCode();
-        }
+    public static Component getDescription(@Nullable ResourceLocation id) {
+        return Component.translatable(Util.makeDescriptionId("bingo_difficulty", id));
     }
 
     public static final class Builder {
-        private final ResourceLocation id;
         private Integer number;
         private String fallbackName;
 
-        private Builder(ResourceLocation id) {
-            this.id = id;
+        private Builder() {
         }
 
         public Builder number(int number) {
@@ -105,48 +71,11 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
             return this;
         }
 
-        public Holder build() {
-            return new Holder(id, new BingoDifficulty(
+        public BingoDifficulty build() {
+            return new BingoDifficulty(
                 Objects.requireNonNull(number, "number"),
                 fallbackName
-            ));
-        }
-
-        public void build(BiConsumer<ResourceLocation, BingoDifficulty> adder) {
-            final Holder result = build();
-            adder.accept(result.id, result.difficulty);
-        }
-    }
-
-    public static final class ReloadListener extends SimpleJsonResourceReloadListener<BingoDifficulty> {
-        public static final ResourceLocation ID = ResourceLocations.bingo("difficulties");
-
-        public ReloadListener(HolderLookup.Provider registries) {
-            super(registries, CODEC, "bingo/difficulties");
-        }
-
-        @NotNull
-        @Override
-        public String getName() {
-            return "Bingo Difficulties";
-        }
-
-        @Override
-        protected void apply(Map<ResourceLocation, BingoDifficulty> difficulties, ResourceManager resourceManager, ProfilerFiller profiler) {
-            final ImmutableMap.Builder<ResourceLocation, Holder> byIdBuilder = ImmutableMap.builder();
-            final ImmutableSortedMap.Builder<Integer, Holder> byNumberBuilder = ImmutableSortedMap.naturalOrder();
-            for (final var entry : difficulties.entrySet()) {
-                try {
-                    final Holder holder = new Holder(entry.getKey(), entry.getValue());
-                    byIdBuilder.put(holder.id, holder);
-                    byNumberBuilder.put(entry.getValue().number, holder);
-                } catch (Exception e) {
-                    Bingo.LOGGER.error("Parsing error in bingo difficulty {}: {}", entry.getKey(), e.getMessage());
-                }
-            }
-            byId = byIdBuilder.build();
-            byNumber = byNumberBuilder.buildOrThrow();
-            Bingo.LOGGER.info("Loaded {} bingo difficulties", byId.size());
+            );
         }
     }
 }

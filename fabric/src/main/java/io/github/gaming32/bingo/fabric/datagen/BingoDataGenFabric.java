@@ -4,6 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
+import io.github.gaming32.bingo.data.BingoDifficulties;
+import io.github.gaming32.bingo.data.BingoRegistries;
+import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.fabric.datagen.goal.BingoGoalProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoBlockTagProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoDamageTypeTagProvider;
@@ -16,6 +19,7 @@ import net.fabricmc.fabric.api.datagen.v1.JsonKeySortOrderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -42,8 +46,7 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         pack.addProvider(BingoGoalProvider::new);
-        pack.addProvider(BingoTagProvider::new);
-        pack.addProvider(BingoDifficultyProvider::new);
+        pack.addProvider(BingoRegistriesDatapackGenerator::new);
 
         final BingoBlockTagProvider blockTagProvider = pack.addProvider(BingoBlockTagProvider::new);
         pack.addProvider((output, registriesFuture) -> new BingoItemTagProvider(output, registriesFuture, blockTagProvider));
@@ -54,6 +57,12 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
         if (DUMP_BINGO_COMMAND) {
             pack.addProvider(BingoCommandDumper::new);
         }
+    }
+
+    @Override
+    public void buildRegistry(RegistrySetBuilder registryBuilder) {
+        registryBuilder.add(BingoRegistries.TAG, BingoTags::bootstrap);
+        registryBuilder.add(BingoRegistries.DIFFICULTY, BingoDifficulties::bootstrap);
     }
 
     @Override

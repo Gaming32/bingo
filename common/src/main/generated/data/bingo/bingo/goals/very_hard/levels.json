@@ -30,7 +30,5 @@
       "obtain"
     ]
   ],
-  "tags": [
-    "bingo:stat"
-  ]
+  "tags": "bingo:stat"
 }

@@ -53,7 +53,5 @@
       "repair2"
     ]
   ],
-  "tags": [
-    "bingo:action"
-  ]
+  "tags": "bingo:action"
 }

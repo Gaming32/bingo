@@ -64,7 +64,5 @@
       "armor"
     ]
   ],
-  "tags": [
-    "bingo:item"
-  ]
+  "tags": "bingo:item"
 }

@@ -6,6 +6,7 @@ import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.conditions.BingoContextKeySets;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
@@ -38,7 +39,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.level.storage.LevelResource;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 
 import java.nio.file.Files;
@@ -63,6 +63,7 @@ public class Bingo {
     public static void init() {
         registerEventHandlers();
         initializeRegistries();
+        registerDatapackRegistries();
         registerDataReloadListeners();
         registerPayloadHandlers();
 
@@ -155,8 +156,7 @@ public class Bingo {
         });
     }
 
-    @VisibleForTesting
-    public static void initializeRegistries() {
+    private static void initializeRegistries() {
         BingoConditions.load();
         BingoContextKeySets.load();
         GoalIconType.load();
@@ -167,15 +167,16 @@ public class Bingo {
         BingoTriggers.load();
     }
 
-    @VisibleForTesting
-    public static void registerDataReloadListeners() {
+    private static void registerDatapackRegistries() {
+        BingoPlatform.platform.registerDatapackRegistries(registrar -> {
+            registrar.unsynced(BingoRegistries.TAG, BingoTag.CODEC);
+            registrar.unsynced(BingoRegistries.DIFFICULTY, BingoDifficulty.CODEC);
+        });
+    }
+
+    private static void registerDataReloadListeners() {
         BingoPlatform.platform.registerDataReloadListeners(registrar -> {
-            registrar.register(BingoTag.ReloadListener.ID, BingoTag.ReloadListener::new);
-            registrar.register(BingoDifficulty.ReloadListener.ID, BingoDifficulty.ReloadListener::new);
-            registrar.register(
-                BingoGoal.ReloadListener.ID, BingoGoal.ReloadListener::new,
-                List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
-            );
+            registrar.register(BingoGoal.ReloadListener.ID, BingoGoal.ReloadListener::new);
         });
     }
 

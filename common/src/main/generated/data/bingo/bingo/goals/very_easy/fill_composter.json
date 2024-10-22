@@ -37,9 +37,7 @@
       "fill"
     ]
   ],
-  "tags": [
-    "bingo:action"
-  ],
+  "tags": "bingo:action",
   "tooltip": {
     "translate": "bingo.goal.fill_composter.tooltip"
   }
