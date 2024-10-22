@@ -6,19 +6,7 @@
         "items": [
           {
             "components": {
-              "minecraft:attribute_modifiers": {
-                "modifiers": []
-              },
-              "minecraft:enchantments": {
-                "levels": {}
-              },
-              "minecraft:instrument": "minecraft:admire_goat_horn",
-              "minecraft:item_model": "minecraft:goat_horn",
-              "minecraft:item_name": "{\"translate\":\"item.minecraft.goat_horn\"}",
-              "minecraft:lore": [],
-              "minecraft:max_stack_size": 1,
-              "minecraft:rarity": "uncommon",
-              "minecraft:repair_cost": 0
+              "minecraft:instrument": "minecraft:admire_goat_horn"
             },
             "items": "minecraft:goat_horn"
           }
@@ -31,19 +19,7 @@
         "items": [
           {
             "components": {
-              "minecraft:attribute_modifiers": {
-                "modifiers": []
-              },
-              "minecraft:enchantments": {
-                "levels": {}
-              },
-              "minecraft:instrument": "minecraft:call_goat_horn",
-              "minecraft:item_model": "minecraft:goat_horn",
-              "minecraft:item_name": "{\"translate\":\"item.minecraft.goat_horn\"}",
-              "minecraft:lore": [],
-              "minecraft:max_stack_size": 1,
-              "minecraft:rarity": "uncommon",
-              "minecraft:repair_cost": 0
+              "minecraft:instrument": "minecraft:call_goat_horn"
             },
             "items": "minecraft:goat_horn"
           }
@@ -56,19 +32,7 @@
         "items": [
           {
             "components": {
-              "minecraft:attribute_modifiers": {
-                "modifiers": []
-              },
-              "minecraft:enchantments": {
-                "levels": {}
-              },
-              "minecraft:instrument": "minecraft:dream_goat_horn",
-              "minecraft:item_model": "minecraft:goat_horn",
-              "minecraft:item_name": "{\"translate\":\"item.minecraft.goat_horn\"}",
-              "minecraft:lore": [],
-              "minecraft:max_stack_size": 1,
-              "minecraft:rarity": "uncommon",
-              "minecraft:repair_cost": 0
+              "minecraft:instrument": "minecraft:dream_goat_horn"
             },
             "items": "minecraft:goat_horn"
           }
@@ -81,19 +45,7 @@
         "items": [
           {
             "components": {
-              "minecraft:attribute_modifiers": {
-                "modifiers": []
-              },
-              "minecraft:enchantments": {
-                "levels": {}
-              },
-              "minecraft:instrument": "minecraft:feel_goat_horn",
-              "minecraft:item_model": "minecraft:goat_horn",
-              "minecraft:item_name": "{\"translate\":\"item.minecraft.goat_horn\"}",
-              "minecraft:lore": [],
-              "minecraft:max_stack_size": 1,
-              "minecraft:rarity": "uncommon",
-              "minecraft:repair_cost": 0
+              "minecraft:instrument": "minecraft:feel_goat_horn"
             },
             "items": "minecraft:goat_horn"
           }
@@ -106,19 +58,7 @@
         "items": [
           {
             "components": {
-              "minecraft:attribute_modifiers": {
-                "modifiers": []
-              },
-              "minecraft:enchantments": {
-                "levels": {}
-              },
-              "minecraft:instrument": "minecraft:ponder_goat_horn",
-              "minecraft:item_model": "minecraft:goat_horn",
-              "minecraft:item_name": "{\"translate\":\"item.minecraft.goat_horn\"}",
-              "minecraft:lore": [],
-              "minecraft:max_stack_size": 1,
-              "minecraft:rarity": "uncommon",
-              "minecraft:repair_cost": 0
+              "minecraft:instrument": "minecraft:ponder_goat_horn"
             },
             "items": "minecraft:goat_horn"
           }
@@ -131,19 +71,7 @@
         "items": [
           {
             "components": {
-              "minecraft:attribute_modifiers": {
-                "modifiers": []
-              },
-              "minecraft:enchantments": {
-                "levels": {}
-              },
-              "minecraft:instrument": "minecraft:seek_goat_horn",
-              "minecraft:item_model": "minecraft:goat_horn",
-              "minecraft:item_name": "{\"translate\":\"item.minecraft.goat_horn\"}",
-              "minecraft:lore": [],
-              "minecraft:max_stack_size": 1,
-              "minecraft:rarity": "uncommon",
-              "minecraft:repair_cost": 0
+              "minecraft:instrument": "minecraft:seek_goat_horn"
             },
             "items": "minecraft:goat_horn"
           }
@@ -156,19 +84,7 @@
         "items": [
           {
             "components": {
-              "minecraft:attribute_modifiers": {
-                "modifiers": []
-              },
-              "minecraft:enchantments": {
-                "levels": {}
-              },
-              "minecraft:instrument": "minecraft:sing_goat_horn",
-              "minecraft:item_model": "minecraft:goat_horn",
-              "minecraft:item_name": "{\"translate\":\"item.minecraft.goat_horn\"}",
-              "minecraft:lore": [],
-              "minecraft:max_stack_size": 1,
-              "minecraft:rarity": "uncommon",
-              "minecraft:repair_cost": 0
+              "minecraft:instrument": "minecraft:sing_goat_horn"
             },
             "items": "minecraft:goat_horn"
           }
@@ -181,19 +97,7 @@
         "items": [
           {
             "components": {
-              "minecraft:attribute_modifiers": {
-                "modifiers": []
-              },
-              "minecraft:enchantments": {
-                "levels": {}
-              },
-              "minecraft:instrument": "minecraft:yearn_goat_horn",
-              "minecraft:item_model": "minecraft:goat_horn",
-              "minecraft:item_name": "{\"translate\":\"item.minecraft.goat_horn\"}",
-              "minecraft:lore": [],
-              "minecraft:max_stack_size": 1,
-              "minecraft:rarity": "uncommon",
-              "minecraft:repair_cost": 0
+              "minecraft:instrument": "minecraft:yearn_goat_horn"
             },
             "items": "minecraft:goat_horn"
           }
@@ -215,22 +119,22 @@
   },
   "requirements": [
     [
+      "obtain_minecraft_admire_goat_horn"
+    ],
+    [
+      "obtain_minecraft_call_goat_horn"
+    ],
+    [
       "obtain_minecraft_dream_goat_horn"
     ],
     [
-      "obtain_minecraft_admire_goat_horn"
+      "obtain_minecraft_feel_goat_horn"
     ],
     [
       "obtain_minecraft_ponder_goat_horn"
     ],
     [
       "obtain_minecraft_seek_goat_horn"
-    ],
-    [
-      "obtain_minecraft_call_goat_horn"
-    ],
-    [
-      "obtain_minecraft_feel_goat_horn"
     ],
     [
       "obtain_minecraft_sing_goat_horn"
@@ -246,11 +150,19 @@
   "tooltip": {
     "extra": [
       {
+        "translate": "instrument.minecraft.admire_goat_horn"
+      },
+      ", ",
+      {
+        "translate": "instrument.minecraft.call_goat_horn"
+      },
+      ", ",
+      {
         "translate": "instrument.minecraft.dream_goat_horn"
       },
       ", ",
       {
-        "translate": "instrument.minecraft.admire_goat_horn"
+        "translate": "instrument.minecraft.feel_goat_horn"
       },
       ", ",
       {
@@ -259,14 +171,6 @@
       ", ",
       {
         "translate": "instrument.minecraft.seek_goat_horn"
-      },
-      ", ",
-      {
-        "translate": "instrument.minecraft.call_goat_horn"
-      },
-      ", ",
-      {
-        "translate": "instrument.minecraft.feel_goat_horn"
       },
       ", ",
       {

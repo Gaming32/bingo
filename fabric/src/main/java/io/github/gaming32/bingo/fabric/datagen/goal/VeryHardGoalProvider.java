@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedSet;
 import io.github.gaming32.bingo.conditions.HasOnlyBeenDamagedByCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
@@ -25,7 +25,6 @@ import io.github.gaming32.bingo.triggers.PartyParrotsTrigger;
 import io.github.gaming32.bingo.triggers.PowerConduitTrigger;
 import io.github.gaming32.bingo.triggers.ZombifyPigTrigger;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.Util;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -40,6 +39,7 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -49,7 +49,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -61,7 +60,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -342,29 +341,36 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
     private BingoGoal.Builder obtainAllGoatHorns() {
         final var items = registries.lookupOrThrow(Registries.ITEM);
 
-        // TODO: Actually make it check for all goat horns, with compatibility for datapacks adding horns
-        final Map<ResourceLocation, ItemStack> goatHorns = registries.lookupOrThrow(Registries.INSTRUMENT)
+        final var sortedInstruments = registries.lookupOrThrow(Registries.INSTRUMENT)
             .listElements()
-            .collect(ImmutableMap.toImmutableMap(
-                instrument -> instrument.key().location(),
-                instrument -> InstrumentItem.create(Items.GOAT_HORN, instrument)
+            .collect(ImmutableSortedSet.toImmutableSortedSet(
+                Comparator.comparing(e -> e.key().location())
             ));
+
         final BingoGoal.Builder builder = BingoGoal.builder(id("all_goat_horns"));
-        goatHorns.forEach((instrument, goatHorn) -> builder.criterion(
-            "obtain_" + instrument.getNamespace() + "_" + instrument.getPath(),
-            InventoryChangeTrigger.TriggerInstance.hasItems(
-                ItemPredicate.Builder.item()
-                    .of(items, goatHorn.getItem())
-                    .hasComponents(DataComponentPredicate.allOf(goatHorn.getComponents()))
-                    .build()
-            )
-        ));
+        for (final var instrument : sortedInstruments) {
+            final var location = instrument.key().location();
+            builder.criterion(
+                "obtain_" + location.getNamespace() + "_" + location.getPath(),
+                InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item()
+                        .of(items, Items.GOAT_HORN)
+                        .hasComponents(DataComponentPredicate.builder()
+                            .expect(DataComponents.INSTRUMENT, instrument)
+                            .build()
+                        )
+                        .build()
+                )
+            );
+        }
+
         return builder
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .name("all_goat_horns")
             .tooltip(ComponentUtils.formatList(
-                goatHorns.keySet(), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR,
-                location -> Component.translatable(Util.makeDescriptionId("instrument", location))
+                sortedInstruments,
+                ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR,
+                holder -> holder.value().description()
             ))
             .progress(AchievedRequirementsProgressTracker.INSTANCE)
             .icon(new InstrumentCycleIcon(Items.GOAT_HORN.builtInRegistryHolder()))
