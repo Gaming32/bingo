@@ -157,6 +157,7 @@ public class BingoCommand {
                         default -> throw CANNOT_SHOW_BOARD.create(size);
                     };
 
+                    final var registries = ctx.getSource().registryAccess();
                     ctx.getSource().getPlayerOrException().openMenu(new MenuProvider() {
                         @Override
                         public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
@@ -171,7 +172,9 @@ public class BingoCommand {
                                 for (int y = 0; y < size; y++) {
                                     menu.getContainer().setItem(
                                         minX + y * 9 + x,
-                                        Bingo.activeGame.getBoard().getGoal(x, y).toItemStackWithComponents()
+                                        Bingo.activeGame.getBoard()
+                                            .getGoal(x, y)
+                                            .getFallbackWithComponents(registries)
                                     );
                                 }
                             }

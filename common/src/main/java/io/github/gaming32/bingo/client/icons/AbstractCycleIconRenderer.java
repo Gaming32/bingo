@@ -1,11 +1,16 @@
 package io.github.gaming32.bingo.client.icons;
 
 import io.github.gaming32.bingo.data.icons.GoalIcon;
+import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.function.IntFunction;
+
 public interface AbstractCycleIconRenderer<I extends GoalIcon> extends IconRenderer<I> {
+    long TIME_PER_ICON = 2000;
+
     void renderWithParentPeriod(int parentPeriod, I icon, GuiGraphics graphics, int x, int y);
 
     @Override
@@ -26,4 +31,8 @@ public interface AbstractCycleIconRenderer<I extends GoalIcon> extends IconRende
     }
 
     ItemStack getIconItemWithParentPeriod(int parentPeriod, I icon);
+
+    static <T> T getIcon(IntFunction<T> getter, int size, int parentPeriod) {
+        return getter.apply((int)((Util.getMillis() / (TIME_PER_ICON * parentPeriod)) % size));
+    }
 }

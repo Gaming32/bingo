@@ -12,7 +12,7 @@ import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.Objects;
 
-public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item) implements GoalIcon {
+public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item) implements GoalIcon.WithoutContext {
     public static final MapCodec<EntityIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(EntityIcon::entity),
@@ -54,6 +54,11 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
 
     public static EntityIcon of(Entity entity, ItemStack item) {
         return new EntityIcon(entity.getType(), entity.saveWithoutId(new CompoundTag()), item);
+    }
+
+    @Override
+    public ItemStack getFallback() {
+        return item;
     }
 
     @Override

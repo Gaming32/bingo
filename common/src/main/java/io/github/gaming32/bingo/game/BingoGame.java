@@ -133,7 +133,7 @@ public class BingoGame {
         InitBoardPayload.create(this, obfuscateTeam(team, player)).sendTo(player);
         player.connection.send(new ClientboundUpdateAdvancementsPacket(
             false,
-            VanillaNetworking.generateAdvancements(board.getSize(), board.getGoals()),
+            VanillaNetworking.generateAdvancements(player.registryAccess(), board.getSize(), board.getGoals()),
             Set.of(),
             VanillaNetworking.generateProgressMap(board.getStates(), team)
         ));

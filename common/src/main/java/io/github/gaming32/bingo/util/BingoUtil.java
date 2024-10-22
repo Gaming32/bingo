@@ -10,7 +10,6 @@ import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -23,9 +22,6 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
@@ -219,11 +215,6 @@ public class BingoUtil {
 
     public static <T, R> Either<R, R> mapEither(Either<? extends T, ? extends T> either, Function<? super T, ? extends R> mapper) {
         return either.mapBoth(mapper, mapper);
-    }
-
-    public static ItemStack setPotion(ItemStack stack, Holder<Potion> potion) {
-        stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
-        return stack;
     }
 
     public static boolean collidesWithProjectedBox(Vec3 entityOrigin, Vec3 boxNormal, double boxWidth) {

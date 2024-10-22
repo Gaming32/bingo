@@ -87,7 +87,7 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
         if (compound.contains("bingo:damage_history", Tag.TAG_LIST)) {
             ListTag types = compound.getList("bingo:damage_history", Tag.TAG_COMPOUND);
             for (int i = 0; i < types.size(); i++) {
-                DamageEntry entry = DamageEntry.fromNbt(level().registryAccess(), types.getCompound(i));
+                DamageEntry entry = DamageEntry.fromNbt(registryAccess(), types.getCompound(i));
                 if (entry != null) {
                     bingo$damageHistory.add(entry);
                 }

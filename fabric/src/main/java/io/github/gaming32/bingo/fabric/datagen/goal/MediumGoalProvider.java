@@ -93,6 +93,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -871,7 +872,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
 
     @SafeVarargs
     private BingoGoal.Builder potionGoal(String id, Holder<Potion>... potions) {
-        ItemStack potionItem = BingoUtil.setPotion(new ItemStack(Items.POTION), potions[0]);
+        ItemStack potionItem = PotionContents.createItemStack(Items.POTION, potions[0]);
         BingoGoal.Builder builder = obtainItemGoal(
             id(id),
             potionItem,

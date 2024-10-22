@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.data.icons;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 
@@ -41,8 +42,8 @@ public record CycleIcon(List<GoalIcon> icons) implements GoalIcon {
     }
 
     @Override
-    public ItemStack item() {
-        return icons.getLast().item();
+    public ItemStack getFallback(RegistryAccess registries) {
+        return icons.getLast().getFallback(registries);
     }
 
     @Override

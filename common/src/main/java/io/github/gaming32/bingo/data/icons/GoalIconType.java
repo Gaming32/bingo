@@ -18,6 +18,7 @@ public interface GoalIconType<I extends GoalIcon> {
     RegistryValue<GoalIconType<EntityIcon>> ENTITY = register("entity", EntityIcon.CODEC);
     RegistryValue<GoalIconType<EntityTypeTagCycleIcon>> ENTITY_TYPE_TAG_CYCLE = register("entity_type_tag_cycle", EntityTypeTagCycleIcon.CODEC);
     RegistryValue<GoalIconType<IndicatorIcon>> INDICATOR = register("indicator", IndicatorIcon.CODEC);
+    RegistryValue<GoalIconType<InstrumentCycleIcon>> INSTRUMENT_CYCLE = register("instrument_cycle", InstrumentCycleIcon.CODEC);
     RegistryValue<GoalIconType<ItemIcon>> ITEM = register("item", ItemIcon.CODEC);
     RegistryValue<GoalIconType<ItemTagCycleIcon>> ITEM_TAG_CYCLE = register("item_tag_cycle", ItemTagCycleIcon.CODEC);
 

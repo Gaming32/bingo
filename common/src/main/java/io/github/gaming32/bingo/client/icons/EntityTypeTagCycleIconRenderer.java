@@ -1,7 +1,6 @@
 package io.github.gaming32.bingo.client.icons;
 
 import io.github.gaming32.bingo.data.icons.EntityTypeTagCycleIcon;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -57,6 +56,6 @@ public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer
     }
 
     private static Holder<EntityType<?>> getIcon(HolderSet.Named<EntityType<?>> icons, int parentPeriod) {
-        return icons.get((int)((Util.getMillis() / (CycleIconRenderer.TIME_PER_ICON * parentPeriod)) % icons.size()));
+        return AbstractCycleIconRenderer.getIcon(icons::get, icons.size(), parentPeriod);
     }
 }

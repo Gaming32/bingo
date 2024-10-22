@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
 
-public record BlockIcon(BlockState block, ItemStack item) implements GoalIcon {
+public record BlockIcon(BlockState block, ItemStack item) implements GoalIcon.WithoutContext {
     public static final MapCodec<BlockIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             BlockState.CODEC.fieldOf("block").forGetter(BlockIcon::block),
@@ -39,6 +39,11 @@ public record BlockIcon(BlockState block, ItemStack item) implements GoalIcon {
 
     private static ItemStack stackFromBlock(Block block) {
         return new ItemStack(block.asItem() != Items.AIR ? block : Blocks.STONE);
+    }
+
+    @Override
+    public ItemStack getFallback() {
+        return item;
     }
 
     @Override

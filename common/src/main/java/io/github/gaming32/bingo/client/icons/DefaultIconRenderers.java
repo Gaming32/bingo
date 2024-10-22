@@ -11,6 +11,7 @@ public class DefaultIconRenderers {
         IconRenderers.register(GoalIconType.ENTITY, new EntityIconRenderer());
         IconRenderers.register(GoalIconType.ENTITY_TYPE_TAG_CYCLE, new EntityTypeTagCycleIconRenderer());
         IconRenderers.register(GoalIconType.INDICATOR, new IndicatorIconRenderer());
+        IconRenderers.register(GoalIconType.INSTRUMENT_CYCLE, new InstrumentCycleIconRenderer());
         IconRenderers.register(GoalIconType.ITEM, (icon, graphics, x, y) -> graphics.renderFakeItem(icon.item(), x, y));
         IconRenderers.register(GoalIconType.ITEM_TAG_CYCLE, new ItemTagCycleIconRenderer());
     }

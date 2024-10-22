@@ -8,6 +8,7 @@ import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
+import io.github.gaming32.bingo.data.icons.InstrumentCycleIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgressTracker;
@@ -337,6 +338,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
     }
 
+    @SuppressWarnings("deprecation")
     private BingoGoal.Builder obtainAllGoatHorns() {
         final var items = registries.lookupOrThrow(Registries.ITEM);
 
@@ -365,12 +367,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 location -> Component.translatable(Util.makeDescriptionId("instrument", location))
             ))
             .progress(AchievedRequirementsProgressTracker.INSTANCE)
-            .icon(new CycleIcon(
-                goatHorns.values()
-                    .stream()
-                    .map(ItemIcon::new)
-                    .collect(ImmutableList.toImmutableList())
-            ))
+            .icon(new InstrumentCycleIcon(Items.GOAT_HORN.builtInRegistryHolder()))
             .antisynergy("goat_horn");
     }
 }

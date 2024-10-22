@@ -1,16 +1,16 @@
 package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.MapCodec;
-import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 
-public record EffectIcon(Holder<MobEffect> effect, Holder<Potion> potion) implements GoalIcon {
+public record EffectIcon(Holder<MobEffect> effect, Holder<Potion> potion) implements GoalIcon.WithoutContext {
     public static final MapCodec<EffectIcon> CODEC = BuiltInRegistries.MOB_EFFECT
         .holderByNameCodec()
         .fieldOf("effect")
@@ -27,8 +27,8 @@ public record EffectIcon(Holder<MobEffect> effect, Holder<Potion> potion) implem
     }
 
     @Override
-    public ItemStack item() {
-        return BingoUtil.setPotion(new ItemStack(Items.POTION), potion);
+    public ItemStack getFallback() {
+        return PotionContents.createItemStack(Items.POTION, potion);
     }
 
     @Override

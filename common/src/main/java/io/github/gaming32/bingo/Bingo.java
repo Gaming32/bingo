@@ -143,7 +143,7 @@ public class Bingo {
             try {
                 final CompoundTag tag = NbtIo.readCompressed(path, NbtAccounter.unlimitedHeap());
                 final BingoGame.PersistenceData data = BingoGame.PersistenceData.CODEC.parse(
-                    instance.overworld().registryAccess().createSerializationContext(NbtOps.INSTANCE), tag
+                    instance.registryAccess().createSerializationContext(NbtOps.INSTANCE), tag
                 ).getOrThrow();
                 activeGame = data.createGame(instance.getScoreboard());
                 Files.deleteIfExists(path);
@@ -159,7 +159,7 @@ public class Bingo {
             try {
                 final BingoGame.PersistenceData data = activeGame.createPersistenceData();
                 final Tag tag = BingoGame.PersistenceData.CODEC.encodeStart(
-                    instance.overworld().registryAccess().createSerializationContext(NbtOps.INSTANCE), data
+                    instance.registryAccess().createSerializationContext(NbtOps.INSTANCE), data
                 ).getOrThrow();
                 if (tag instanceof CompoundTag compoundTag) {
                     NbtIo.writeCompressed(compoundTag, path);

@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.client.icons;
 
 import io.github.gaming32.bingo.data.icons.GoalIcon;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +14,8 @@ public interface IconRenderer<I extends GoalIcon> {
     }
 
     default ItemStack getIconItem(I icon) {
-        return icon.item();
+        final var connection = Minecraft.getInstance().getConnection();
+        return connection != null ? icon.getFallback(connection.registryAccess()) : icon.getFallbackWithStaticContext();
     }
 
     static void renderCount(int count, Font font, GuiGraphics graphics, int x, int y) {

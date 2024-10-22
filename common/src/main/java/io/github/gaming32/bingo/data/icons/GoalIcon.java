@@ -2,6 +2,8 @@ package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -23,7 +25,11 @@ public interface GoalIcon {
     /**
      * Used for rendering count, as well as for a fallback for Vanilla clients.
      */
-    ItemStack item();
+    ItemStack getFallback(RegistryAccess registries);
+
+    default ItemStack getFallbackWithStaticContext() {
+        return getFallback(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+    }
 
     GoalIconType<?> type();
 
@@ -48,5 +54,19 @@ public interface GoalIcon {
             }
             default -> throw new IllegalArgumentException("Couldn't infer GoalIcon from " + obj);
         };
+    }
+
+    interface WithoutContext extends GoalIcon {
+        ItemStack getFallback();
+
+        @Override
+        default ItemStack getFallback(RegistryAccess registries) {
+            return getFallback();
+        }
+
+        @Override
+        default ItemStack getFallbackWithStaticContext() {
+            return getFallback();
+        }
     }
 }

@@ -9,6 +9,7 @@ import io.github.gaming32.bingo.data.icons.GoalIcon;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -48,8 +49,8 @@ public record ActiveGoal(
         return goal.goal().getProgress() != null;
     }
 
-    public ItemStack toItemStackWithComponents() {
-        final ItemStack result = icon.item().copy();
+    public ItemStack getFallbackWithComponents(RegistryAccess access) {
+        final ItemStack result = icon.getFallback(access);
         result.set(DataComponents.ITEM_NAME, name);
         result.set(DataComponents.RARITY, Rarity.COMMON);
         result.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);

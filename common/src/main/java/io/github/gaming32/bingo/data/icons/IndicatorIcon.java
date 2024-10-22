@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 
 public record IndicatorIcon(GoalIcon base, GoalIcon indicator) implements GoalIcon {
@@ -17,8 +18,8 @@ public record IndicatorIcon(GoalIcon base, GoalIcon indicator) implements GoalIc
     }
 
     @Override
-    public ItemStack item() {
-        return base.item();
+    public ItemStack getFallback(RegistryAccess registries) {
+        return base.getFallback(registries);
     }
 
     @Override

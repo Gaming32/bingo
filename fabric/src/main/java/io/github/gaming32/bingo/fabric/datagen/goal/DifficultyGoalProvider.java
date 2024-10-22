@@ -47,6 +47,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -362,7 +363,7 @@ public abstract class DifficultyGoalProvider {
         return new CycleIcon(
             BuiltInRegistries.POTION.listElements()
                 .filter(p -> encountered.add(p.value().name()))
-                .map(p -> BingoUtil.setPotion(new ItemStack(baseItem), p))
+                .map(p -> PotionContents.createItemStack(baseItem, p))
                 .map(ItemIcon::new)
                 .collect(ImmutableList.toImmutableList())
         );

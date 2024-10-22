@@ -17,7 +17,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
-public record EntityTypeTagCycleIcon(TagKey<EntityType<?>> tag, Optional<Holder<Item>> baseItem, int count) implements GoalIcon {
+public record EntityTypeTagCycleIcon(
+    TagKey<EntityType<?>> tag, Optional<Holder<Item>> baseItem, int count
+) implements GoalIcon.WithoutContext {
     public static final MapCodec<EntityTypeTagCycleIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             TagKey.codec(Registries.ENTITY_TYPE).fieldOf("tag").forGetter(EntityTypeTagCycleIcon::tag),
@@ -44,7 +46,7 @@ public record EntityTypeTagCycleIcon(TagKey<EntityType<?>> tag, Optional<Holder<
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemStack item() {
+    public ItemStack getFallback() {
         return new ItemStack(
             baseItem.orElseGet(() ->
                 StreamSupport.stream(BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(tag).spliterator(), false)
