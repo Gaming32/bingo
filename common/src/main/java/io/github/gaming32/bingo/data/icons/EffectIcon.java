@@ -3,6 +3,10 @@ package io.github.gaming32.bingo.data.icons;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -15,6 +19,8 @@ public record EffectIcon(Holder<MobEffect> effect, Holder<Potion> potion) implem
         .holderByNameCodec()
         .fieldOf("effect")
         .xmap(EffectIcon::of, EffectIcon::effect);
+    public static final StreamCodec<RegistryFriendlyByteBuf, EffectIcon> STREAM_CODEC =
+        ByteBufCodecs.holderRegistry(Registries.MOB_EFFECT).map(EffectIcon::of, EffectIcon::effect);
 
     public static EffectIcon of(Holder<MobEffect> effect) {
         return new EffectIcon(

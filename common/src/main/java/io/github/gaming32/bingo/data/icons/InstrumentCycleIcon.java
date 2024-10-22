@@ -6,6 +6,9 @@ import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -16,8 +19,13 @@ public record InstrumentCycleIcon(Holder<Item> instrumentItem, OptionalInt overr
     public static final MapCodec<InstrumentCycleIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             Item.CODEC.fieldOf("instrument_item").forGetter(InstrumentCycleIcon::instrumentItem),
-            BingoCodecs.optionalInt("override_count").forGetter(InstrumentCycleIcon::overrideCount)
+            BingoCodecs.optionalPositiveInt("override_count").forGetter(InstrumentCycleIcon::overrideCount)
         ).apply(instance, InstrumentCycleIcon::new)
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, InstrumentCycleIcon> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.holderRegistry(Registries.ITEM), InstrumentCycleIcon::instrumentItem,
+        ByteBufCodecs.OPTIONAL_VAR_INT, InstrumentCycleIcon::overrideCount,
+        InstrumentCycleIcon::new
     );
 
     public InstrumentCycleIcon(Holder<Item> instrumentItem) {

@@ -6,6 +6,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -26,6 +29,12 @@ public record EntityTypeTagCycleIcon(
             Item.CODEC.optionalFieldOf("base_item").forGetter(EntityTypeTagCycleIcon::baseItem),
             Codec.INT.optionalFieldOf("count", 1).forGetter(EntityTypeTagCycleIcon::count)
         ).apply(instance, EntityTypeTagCycleIcon::new)
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, EntityTypeTagCycleIcon> STREAM_CODEC = StreamCodec.composite(
+        TagKey.streamCodec(Registries.ENTITY_TYPE), EntityTypeTagCycleIcon::tag,
+        ByteBufCodecs.holderRegistry(Registries.ITEM).apply(ByteBufCodecs::optional), EntityTypeTagCycleIcon::baseItem,
+        ByteBufCodecs.VAR_INT, EntityTypeTagCycleIcon::count,
+        EntityTypeTagCycleIcon::new
     );
 
     public EntityTypeTagCycleIcon(TagKey<EntityType<?>> tag, Holder<Item> baseItem, int count) {

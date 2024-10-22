@@ -168,7 +168,15 @@ public final class BingoCodecs {
     }
 
     public static MapCodec<OptionalInt> optionalInt(String name) {
-        return Codec.INT.optionalFieldOf(name).xmap(
+        return optionalInt(Codec.INT.optionalFieldOf(name));
+    }
+
+    public static MapCodec<OptionalInt> optionalPositiveInt(String name) {
+        return optionalInt(ExtraCodecs.POSITIVE_INT.optionalFieldOf(name));
+    }
+
+    public static MapCodec<OptionalInt> optionalInt(MapCodec<Optional<Integer>> codec) {
+        return codec.xmap(
             opt -> opt.map(OptionalInt::of).orElseGet(OptionalInt::empty),
             opt -> opt.isPresent() ? Optional.of(opt.getAsInt()) : Optional.empty()
         );

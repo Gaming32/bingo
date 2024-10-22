@@ -4,7 +4,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +23,12 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
             CompoundTag.CODEC.optionalFieldOf("data", new CompoundTag()).forGetter(EntityIcon::data),
             BingoCodecs.LENIENT_ITEM_STACK.fieldOf("item").forGetter(EntityIcon::item)
         ).apply(instance, EntityIcon::new)
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, EntityIcon> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.registry(Registries.ENTITY_TYPE), EntityIcon::entity,
+        ByteBufCodecs.COMPOUND_TAG, EntityIcon::data,
+        ItemStack.STREAM_CODEC, EntityIcon::item,
+        EntityIcon::new
     );
 
     public static EntityIcon ofSpawnEgg(EntityType<?> entity, CompoundTag data, int count) {

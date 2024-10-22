@@ -3,6 +3,9 @@ package io.github.gaming32.bingo.data.icons;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoCodecs;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -18,6 +21,11 @@ public record BlockIcon(BlockState block, ItemStack item) implements GoalIcon.Wi
             BlockState.CODEC.fieldOf("block").forGetter(BlockIcon::block),
             BingoCodecs.LENIENT_ITEM_STACK.optionalFieldOf("item").forGetter(i -> Optional.of(i.item))
         ).apply(instance, BlockIcon::ofFallbackItem)
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlockIcon> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY), BlockIcon::block,
+        ItemStack.STREAM_CODEC, BlockIcon::item,
+        BlockIcon::new
     );
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")

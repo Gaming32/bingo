@@ -1,10 +1,10 @@
 package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
@@ -20,7 +20,8 @@ public interface GoalIcon {
         .registry()
         .byNameCodec()
         .dispatch(GoalIcon::type, GoalIconType::codec);
-    StreamCodec<ByteBuf, GoalIcon> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+    StreamCodec<RegistryFriendlyByteBuf, GoalIcon> STREAM_CODEC = ByteBufCodecs.registry(GoalIconType.REGISTER.registryKey())
+        .dispatch(GoalIcon::type, GoalIconType::streamCodec);
 
     /**
      * Used for rendering count, as well as for a fallback for Vanilla clients.
