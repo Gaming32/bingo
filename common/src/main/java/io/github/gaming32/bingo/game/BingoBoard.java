@@ -185,19 +185,19 @@ public class BingoBoard {
                 }
 
                 if (!goalCandidate.goal().getTags().isEmpty()) {
-                    for (final BingoTag.Holder tag : goalCandidate.goal().getTags()) {
+                    for (final BingoTag.Holder tag : goalCandidate.goal().getResolvedTags()) {
                         if (tagCount.getInt(tag.id()) >= tag.tag().getMaxForDifficulty(difficulty, size)) {
                             continue goalGen;
                         }
                     }
 
-                    if (goalCandidate.goal().getTags().stream().anyMatch(t -> !t.tag().allowedOnSameLine())) {
+                    if (goalCandidate.goal().getResolvedTags().stream().anyMatch(t -> !t.tag().allowedOnSameLine())) {
                         for (int z = 0; z < i; z++) {
-                            final Set<BingoTag.Holder> tags = generatedSheet[indices[z]].goal().getTags();
+                            final Set<BingoTag.Holder> tags = generatedSheet[indices[z]].goal().getResolvedTags();
                             if (!tags.isEmpty() && isOnSameLine(size, indices[i], indices[z])) {
                                 if (tags.stream().anyMatch(t ->
                                     !t.tag().allowedOnSameLine() &&
-                                        goalCandidate.goal().getTags().stream().anyMatch(t2 -> t.id().equals(t2.id()))
+                                        goalCandidate.goal().getResolvedTags().stream().anyMatch(t2 -> t.id().equals(t2.id()))
                                 )) {
                                     continue goalGen;
                                 }
@@ -226,7 +226,7 @@ public class BingoBoard {
                 break;
             }
 
-            for (final BingoTag.Holder tag : goal.goal().getTags()) {
+            for (final BingoTag.Holder tag : goal.goal().getResolvedTags()) {
                 tagCount.addTo(tag.id(), 1);
             }
             antisynergys.addAll(goal.goal().getAntisynergy());

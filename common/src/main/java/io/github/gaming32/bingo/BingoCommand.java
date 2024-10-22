@@ -214,7 +214,7 @@ public class BingoCommand {
                         final StringBuilder line = new StringBuilder(board.getSize());
                         for (int y = 0; y < board.getSize(); y++) {
                             for (int x = 0; x < board.getSize(); x++) {
-                                line.append(board.getGoal(x, y).goal().goal().getDifficulty().difficulty().number());
+                                line.append(board.getGoal(x, y).goal().goal().getResolvedDifficulty().difficulty().number());
                             }
                             ctx.getSource().sendSuccess(() -> Component.literal(line.toString()), false);
                             line.setLength(0);

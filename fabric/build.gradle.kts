@@ -14,13 +14,20 @@ architectury {
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
     runs {
-        val client by getting
         val datagenClient by creating {
-            inherit(client)
+            client()
             name("Data Generation")
             vmArg("-Dfabric-api.datagen")
             vmArg("-Dfabric-api.datagen.output-dir=${project(":common").file("src/main/generated")}")
             vmArg("-Dfabric-api.datagen.modid=bingo")
+        }
+
+        val gametest by creating {
+            server()
+            name("GameTest")
+            vmArg("-Dfabric-api.gametest")
+            vmArg("-Dfabric-api.gametest.report-file=${project.layout.buildDirectory.get()}/junit.xml")
+            runDir("build/gametest")
         }
     }
 }
@@ -32,6 +39,8 @@ configurations {
 
     compileClasspath.get().extendsFrom(common)
     runtimeClasspath.get().extendsFrom(common)
+    testCompileClasspath.get().extendsFrom(common)
+    testRuntimeClasspath.get().extendsFrom(common)
     developmentFabric.extendsFrom(common)
 }
 

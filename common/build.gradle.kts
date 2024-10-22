@@ -28,6 +28,10 @@ sourceSets {
     }
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 tasks.processResources {
     duplicatesStrategy = DuplicatesStrategy.WARN
 }

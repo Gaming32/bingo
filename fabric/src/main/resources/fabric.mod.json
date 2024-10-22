@@ -30,6 +30,8 @@
     ],
     "modmenu": [
       "io.github.gaming32.bingo.fabric.compat.ModMenuCompat"
+    ],
+    "fabric-gametest": [
     ]
   },
   "mixins": [

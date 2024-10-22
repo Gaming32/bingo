@@ -38,6 +38,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.level.storage.LevelResource;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 
 import java.nio.file.Files;
@@ -62,26 +63,8 @@ public class Bingo {
     public static void init() {
         registerEventHandlers();
         initializeRegistries();
-
-        BingoPlatform.platform.registerDataReloadListeners(registrar -> {
-            registrar.register(BingoTag.ReloadListener.ID, BingoTag.ReloadListener::new);
-            registrar.register(BingoDifficulty.ReloadListener.ID, BingoDifficulty.ReloadListener::new);
-            registrar.register(
-                BingoGoal.ReloadListener.ID, BingoGoal.ReloadListener::new,
-                List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
-            );
-        });
-
-        BingoNetworking.instance().onRegister(registrar -> {
-            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPayload.TYPE, InitBoardPayload.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPayload.TYPE, RemoveBoardPayload.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPayload.TYPE, ResyncStatesPayload.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPayload.TYPE, SyncTeamPayload.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPayload.TYPE, UpdateProgressPayload.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePayload.TYPE, UpdateStatePayload.CODEC);
-
-            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPayload.TYPE, KeyPressedPayload.CODEC);
-        });
+        registerDataReloadListeners();
+        registerPayloadHandlers();
 
         LOGGER.info("I got the diagonal!");
     }
@@ -172,7 +155,8 @@ public class Bingo {
         });
     }
 
-    private static void initializeRegistries() {
+    @VisibleForTesting
+    public static void initializeRegistries() {
         BingoConditions.load();
         BingoContextKeySets.load();
         GoalIconType.load();
@@ -181,6 +165,31 @@ public class Bingo {
         BingoEntitySubPredicates.load();
         BingoItemSubPredicates.load();
         BingoTriggers.load();
+    }
+
+    @VisibleForTesting
+    public static void registerDataReloadListeners() {
+        BingoPlatform.platform.registerDataReloadListeners(registrar -> {
+            registrar.register(BingoTag.ReloadListener.ID, BingoTag.ReloadListener::new);
+            registrar.register(BingoDifficulty.ReloadListener.ID, BingoDifficulty.ReloadListener::new);
+            registrar.register(
+                BingoGoal.ReloadListener.ID, BingoGoal.ReloadListener::new,
+                List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
+            );
+        });
+    }
+
+    private static void registerPayloadHandlers() {
+        BingoNetworking.instance().onRegister(registrar -> {
+            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPayload.TYPE, InitBoardPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPayload.TYPE, RemoveBoardPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPayload.TYPE, ResyncStatesPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPayload.TYPE, SyncTeamPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPayload.TYPE, UpdateProgressPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePayload.TYPE, UpdateStatePayload.CODEC);
+
+            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPayload.TYPE, KeyPressedPayload.CODEC);
+        });
     }
 
     public static void updateCommandTree(PlayerList playerList) {
