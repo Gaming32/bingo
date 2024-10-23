@@ -2,9 +2,22 @@
   "criteria": {
     "walk": {
       "conditions": {
-        "key": "key.back"
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "minecraft:player",
+                "input": {
+                  "backward": true
+                }
+              }
+            }
+          }
+        ]
       },
-      "trigger": "bingo:key_pressed"
+      "trigger": "minecraft:tick"
     }
   },
   "difficulty": "bingo:easy",

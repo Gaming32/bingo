@@ -43,7 +43,6 @@ import io.github.gaming32.bingo.triggers.FillBundleTrigger;
 import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
 import io.github.gaming32.bingo.triggers.HasSomeFoodItemsTrigger;
 import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
-import io.github.gaming32.bingo.triggers.KeyPressedTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.triggers.ShootBellTrigger;
 import io.github.gaming32.bingo.triggers.UseGrindstoneTrigger;
@@ -68,6 +67,7 @@ import net.minecraft.advancements.critereon.EntityFlagsPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.advancements.critereon.FishingRodHookedTrigger;
+import net.minecraft.advancements.critereon.InputPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicates;
@@ -77,6 +77,7 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
 import net.minecraft.advancements.critereon.PickedUpItemTrigger;
 import net.minecraft.advancements.critereon.PlayerInteractTrigger;
+import net.minecraft.advancements.critereon.PlayerPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.advancements.critereon.SummonedEntityTrigger;
@@ -517,11 +518,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(bedRowGoal(id("bed_row"), 3, 6));
         addGoal(BingoGoal.builder(id("finish_at_spawn"))
             .criterion("nearby", CriteriaTriggers.LOCATION.createCriterion(
-                new PlayerTrigger.TriggerInstance(
-                    Optional.of(ContextAwarePredicate.create(new DistanceFromSpawnCondition(
+                new PlayerTrigger.TriggerInstance(Optional.of(ContextAwarePredicate.create(
+                    new DistanceFromSpawnCondition(
                         Optional.of(DistancePredicate.horizontal(MinMaxBounds.Doubles.atMost(3)))
-                    )))
-                )
+                    )
+                )))
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.FINISH)
             .name(Component.translatable("bingo.goal.finish_at_spawn", Items.COMPASS.getName()))
@@ -980,7 +981,23 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("pottery_sherd"));
         final KeyMapping walkBackwards = Minecraft.getInstance().options.keyDown;
         addGoal(BingoGoal.builder(id("never_walk_backwards"))
-            .criterion("walk", KeyPressedTrigger.TriggerInstance.keyPressed(walkBackwards.getName()))
+            .criterion("walk", CriteriaTriggers.TICK.createCriterion(new PlayerTrigger.TriggerInstance(
+                Optional.of(EntityPredicate.wrap(
+                    EntityPredicate.Builder.entity()
+                        .subPredicate(PlayerPredicate.Builder.player()
+                            .hasInput(new InputPredicate(
+                                Optional.empty(), // forward
+                                Optional.of(true), // backward
+                                Optional.empty(), // left
+                                Optional.empty(), // right
+                                Optional.empty(), // jump
+                                Optional.empty(), // sneak
+                                Optional.empty() // sprint
+                            ))
+                            .build()
+                        )
+                ))
+            )))
             .tags(BingoTags.ACTION, BingoTags.NEVER)
             .name(Component.translatable(
                 "bingo.goal.never_walk_backwards",
