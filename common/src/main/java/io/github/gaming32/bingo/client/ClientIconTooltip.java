@@ -22,6 +22,6 @@ public record ClientIconTooltip(IconTooltip tooltip) implements ClientTooltipCom
     @Override
     public void renderImage(Font font, int x, int y, int width, int height, GuiGraphics guiGraphics) {
         Minecraft.getInstance().getTextureManager().getTexture(tooltip.icon()).setFilter(true, false);
-        guiGraphics.blit(RenderType::guiTextured, tooltip.icon(), x, y, SIZE, SIZE, 0, 0, SIZE, SIZE, SIZE, SIZE);
+        guiGraphics.blit(RenderType::guiTextured, tooltip.icon(), x, y, 0, 0, SIZE, SIZE, SIZE, SIZE);
     }
 }
