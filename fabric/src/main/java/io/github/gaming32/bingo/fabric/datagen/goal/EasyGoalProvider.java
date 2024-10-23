@@ -51,6 +51,7 @@ import io.github.gaming32.bingo.triggers.ZombieDrownedTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
 import io.github.gaming32.bingo.util.ResourceLocations;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -673,7 +674,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 new PlayerInteractTrigger.TriggerInstance(
                     Optional.empty(), Optional.empty(),
                     Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity()
-                        .entityType(EntityTypePredicate.of(entityTypes, EntityTypeTags.BOAT))
+                        .entityType(EntityTypePredicate.of(entityTypes, ConventionalEntityTypeTags.BOATS))
                         .build()
                     ))
                 )
