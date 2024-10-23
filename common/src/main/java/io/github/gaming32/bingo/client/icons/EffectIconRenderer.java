@@ -14,6 +14,6 @@ public class EffectIconRenderer implements IconRenderer<EffectIcon> {
     public void render(EffectIcon icon, GuiGraphics graphics, int x, int y) {
         var sprite = Minecraft.getInstance().getMobEffectTextures().get(icon.effect());
         graphics.blitSprite(RenderType::guiTextured, EFFECT_BACKGROUND_SPRITE, x, y, 16, 16);
-        graphics.blitSprite(RenderType::guiTextured, sprite, x + 2, y + 2, 0, 12, 12);
+        graphics.blitSprite(RenderType::guiTextured, sprite, x + 2, y + 2, 12, 12);
     }
 }
