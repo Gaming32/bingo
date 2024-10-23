@@ -1,4 +1,4 @@
-// 1.21.2	Bingo/Bingo goals
+// 1.21.3	Bingo/Bingo goals
 60933cb93b51bc5046fb820f19ed358af2699f4d data/bingo/bingo/goal/easy/3x3x3_glass_cube.json
 30e1190a5fd7a3f00303c3c97f150a13c6815ac7 data/bingo/bingo/goal/easy/4x4_paintings.json
 86d1d398343deced49a4d91d7b0ca17274600842 data/bingo/bingo/goal/easy/acacia_log.json
@@ -253,7 +253,7 @@ d8a7b4f4e70dde84cf6c93874497386f8415c3b3 data/bingo/bingo/goal/hard/terracotta.j
 41c4f2add1555414dadaad2c4c5996243053ef39 data/bingo/bingo/goal/medium/bed_row.json
 991120f4f2fa3ff71893d1fa3941b4d01a208990 data/bingo/bingo/goal/medium/beetroot_soup.json
 b2e2b6b5c2dec292c6200484de8e625145b7355d data/bingo/bingo/goal/medium/blaze_rod.json
-8b9a0aa6110f43a1eaaeaa81e0f3dec00de4c98b data/bingo/bingo/goal/medium/blue_shield_with_white_flower_charge.json
+c0db490ee12462ebe03377a72734efe1fb68bcdd data/bingo/bingo/goal/medium/blue_shield_with_white_flower_charge.json
 215b2897de031afa184e90ccd4eed848731c0741 data/bingo/bingo/goal/medium/bounce_on_slime.json
 ab75b54b9d4898ebda99f1b54682daec7bc855a4 data/bingo/bingo/goal/medium/break_diamond_sword.json
 7a7aefd5dae2432d11004c78ab2d5df2e7fcb39c data/bingo/bingo/goal/medium/breed_mobs.json
@@ -320,7 +320,7 @@ a29a2c33106259e1cd65fcd4198de72de8d0ce2e data/bingo/bingo/goal/medium/melon_slic
 179f9d3d0b34a765058124fa2dd8bdc73a6c6759 data/bingo/bingo/goal/medium/never_place_torches.json
 9cb23f0f09a7f34b90630d983adfd5537d00f896 data/bingo/bingo/goal/medium/never_wear_armor.json
 926d02d9395ecb9ee17323459ed60fa5b40505d4 data/bingo/bingo/goal/medium/obsidian.json
-8fc772f8dfd6e97e7d143333758d6da449fdb404 data/bingo/bingo/goal/medium/ominous_banner.json
+78a9e9f054936af048d9ac59acfd11833c43b5b5 data/bingo/bingo/goal/medium/ominous_banner.json
 3791fa69259f1af3b6c310067d640299b352bc15 data/bingo/bingo/goal/medium/one_by_one_hole.json
 9d7860670a2d01601b342e988cee0829412bf031 data/bingo/bingo/goal/medium/phantom_membrane.json
 c99de2a915e7412d904bec5a8b522011e007fbba data/bingo/bingo/goal/medium/pillager_crossbow.json

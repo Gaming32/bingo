@@ -569,7 +569,10 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                     id("blue_shield_with_white_flower_charge"), shieldItem,
                     ItemPredicate.Builder.item()
                         .of(items, Items.SHIELD)
-                        .hasComponents(DataComponentPredicate.allOf(shieldItem.getComponents()))
+                        .hasComponents(DataComponentPredicate.someOf(
+                            shieldItem.getComponents(),
+                            DataComponents.BASE_COLOR, DataComponents.BANNER_PATTERNS
+                        ))
                 ).name(Component.translatable(
                     "bingo.goal.item_with_pattern",
                     Component.translatable(Items.SHIELD.getDescriptionId() + "." + DyeColor.BLUE.getName()),
@@ -706,7 +709,10 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 ominousBanner,
                 ItemPredicate.Builder.item()
                     .of(items, ominousBanner.getItem())
-                    .hasComponents(DataComponentPredicate.allOf(ominousBanner.getComponents()))
+                    .hasComponents(DataComponentPredicate.someOf(
+                        ominousBanner.getComponents(),
+                        DataComponents.BANNER_PATTERNS, DataComponents.ITEM_NAME
+                    ))
             )
             .antisynergy("ominous_banner")
             .name(Component.translatable("block.minecraft.ominous_banner"))
