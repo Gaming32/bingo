@@ -8,9 +8,6 @@
     "MixinDyedItemColor",
     "MixinHashCache_ProviderCache",
     "MixinPlayerList",
-    "MixinRegistries",
-    "MixinRegistriesDatapackGenerator",
-    "MixinRegistryDataLoader",
     "MixinServerLevel",
     "brigadier.MixinCommandContext"
   ],

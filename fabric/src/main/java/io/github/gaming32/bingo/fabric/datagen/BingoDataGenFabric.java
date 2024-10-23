@@ -46,7 +46,7 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         pack.addProvider(BingoGoalProvider::new);
-        pack.addProvider(BingoRegistriesDatapackGenerator::new);
+        pack.addProvider(BingoDynamicRegistryProvider::new);
 
         final BingoBlockTagProvider blockTagProvider = pack.addProvider(BingoBlockTagProvider::new);
         pack.addProvider((output, registriesFuture) -> new BingoItemTagProvider(output, registriesFuture, blockTagProvider));
