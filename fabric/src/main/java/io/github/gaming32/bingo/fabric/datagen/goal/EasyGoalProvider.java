@@ -997,6 +997,13 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("brush_armadillo")
             .icon(IndicatorIcon.infer(EntityType.ARMADILLO, Items.BRUSH)));
+
+        addGoal(obtainItemGoal(id("crafter"), Items.CRAFTER)
+            .tags(BingoTags.OVERWORLD));
+
+        // TODO: put items in bundle instead of obtain?
+        addGoal(obtainItemGoal(id("bundle"), Items.BUNDLE)
+            .tags(BingoTags.OVERWORLD));
     }
 
     private BingoGoal.Builder eatEntireCake() {

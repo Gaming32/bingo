@@ -22,6 +22,7 @@ fbc9f80a4c8572b8dd12ac5e892a8fc0a9dfe470 data/bingo/bingo/goal/easy/bookshelf.js
 b4e141ebb8f19ff9a8c1972612e882284f0745d7 data/bingo/bingo/goal/easy/breed_mobs.json
 dae53aa4d51ae789997aa434b7fa87d213629096 data/bingo/bingo/goal/easy/bricks.json
 b82b7a4cde9cdbf572f556e2d54e068a6c70a02c data/bingo/bingo/goal/easy/brush_armadillo.json
+a3ccf91848bcb5bd3af4406ec3b77a78ce035290 data/bingo/bingo/goal/easy/bundle.json
 16ca88a5d6ce50e00c37c4ea32d68536752392a8 data/bingo/bingo/goal/easy/burn_village_house.json
 6a52cc839d1f4c38577fdc7d80296b8c1fa954c0 data/bingo/bingo/goal/easy/cactus.json
 f1d0445f586dd4904cbe95fb896cc980d1fd799e data/bingo/bingo/goal/easy/carnivore.json
@@ -37,6 +38,7 @@ a164b16d2492080bdb117029dfb27e0ccd5678e6 data/bingo/bingo/goal/easy/cod.json
 5a180a6f9bfb1c92f2d4a5f4de03f497bf30c988 data/bingo/bingo/goal/easy/common_mob_drops.json
 1f515eb981d2421b90850442de2daa26c811c47f data/bingo/bingo/goal/easy/complete_map.json
 88d679cb3fd63fcfd4579fdae50120925058a43d data/bingo/bingo/goal/easy/concrete.json
+21ef11e3abd5c914fcf6f552dd53ffc800488d2b data/bingo/bingo/goal/easy/crafter.json
 778c4fe3543fd4f885453778147c95fd34d7dce8 data/bingo/bingo/goal/easy/create_snow_golem.json
 31f900aa53d4b5458d7bb4dac758860ff41ce90b data/bingo/bingo/goal/easy/crouch_distance.json
 db609a040f6342c59be40ac8c35bd07bbc0174e9 data/bingo/bingo/goal/easy/cut_sandstone.json
@@ -212,6 +214,7 @@ e570a0405cecbdc7d86047e3352fb8d7da3a0503 data/bingo/bingo/goal/hard/jungle_log.j
 fc8e24d7f9c0481f01e71ee6dc35f04bc7692f30 data/bingo/bingo/goal/hard/level_10_enchant.json
 bf09e3822cfc7bc10565120a855669a74918cdab data/bingo/bingo/goal/hard/levels.json
 6de58b2edf93c0c2487f976211f6897126029552 data/bingo/bingo/goal/hard/listen_to_music.json
+8f9934002f3088d5fa6bbdbcc545d874fd95aa26 data/bingo/bingo/goal/hard/mace.json
 f5e49cbb47e5c6e973a49c9101e5e52aedb8c379 data/bingo/bingo/goal/hard/mega_jungle_tree.json
 f144f0d937e93c0fdb57c89e3e52cc57d4363a54 data/bingo/bingo/goal/hard/milk_mooshroom.json
 44f3f1a2b55ff69e5d994b787e0f554a0080b36d data/bingo/bingo/goal/hard/nametag_enderman.json

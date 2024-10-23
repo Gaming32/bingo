@@ -1,0 +1,39 @@
+{
+  "antisynergy": "mace",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:mace"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": "bingo:hard",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:mace"
+    }
+  },
+  "name": {
+    "translate": "item.minecraft.mace"
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

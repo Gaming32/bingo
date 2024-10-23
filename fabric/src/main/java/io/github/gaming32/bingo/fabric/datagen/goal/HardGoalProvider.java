@@ -688,5 +688,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .antisynergy("bonemealable"));
         addGoal(obtainSomeItemsFromTag(id("food"), ConventionalItemTags.FOODS, "bingo.goal.food", 15, 20)
             .antisynergy("food"));
+        addGoal(obtainItemGoal(id("mace"), Items.MACE)
+            .tags(BingoTags.OVERWORLD));
     }
 }

@@ -1,0 +1,39 @@
+{
+  "antisynergy": "crafter",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:crafter"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:crafter"
+    }
+  },
+  "name": {
+    "translate": "block.minecraft.crafter"
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}
