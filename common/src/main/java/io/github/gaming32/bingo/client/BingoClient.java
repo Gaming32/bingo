@@ -45,6 +45,8 @@ import java.util.Objects;
 
 public class BingoClient {
     private static final ResourceLocation BOARD_TEXTURE = ResourceLocations.bingo("board");
+    private static final ResourceLocation SLOT_HIGHLIGHT_BACK_SPRITE = ResourceLocations.minecraft("container/slot_highlight_back");
+    private static final ResourceLocation SLOT_HIGHLIGHT_FRONT_SPRITE = ResourceLocations.minecraft("container/slot_highlight_front");
     public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
     public static final Component BOARD_TITLE_SHORT = Component.translatable("bingo.board.title.short");
 
@@ -222,6 +224,14 @@ public class BingoClient {
         );
         renderBoardTitle(graphics, minecraft.font);
 
+        if (BingoMousePos.hasSlotPos(mousePos)) {
+            graphics.pose().pushPose();
+            final int slotX = mousePos.slotIdX() * 18 + 8;
+            final int slotY = mousePos.slotIdY() * 18 + 18;
+            graphics.blitSprite(RenderType::guiTextured, SLOT_HIGHLIGHT_BACK_SPRITE, slotX - 4, slotY - 4, 24, 24);
+            graphics.pose().popPose();
+        }
+
         final boolean spectator = minecraft.player != null && minecraft.player.isSpectator();
         for (int sx = 0; sx < clientGame.size(); sx++) {
             for (int sy = 0; sy < clientGame.size(); sy++) {
@@ -272,7 +282,7 @@ public class BingoClient {
             graphics.pose().translate(0f, 0f, 200f);
             final int slotX = mousePos.slotIdX() * 18 + 8;
             final int slotY = mousePos.slotIdY() * 18 + 18;
-            graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0x80ffffff);
+            graphics.blitSprite(RenderType::guiTexturedOverlay, SLOT_HIGHLIGHT_FRONT_SPRITE, slotX - 4, slotY - 4, 24, 24);
             graphics.pose().popPose();
         }
 
