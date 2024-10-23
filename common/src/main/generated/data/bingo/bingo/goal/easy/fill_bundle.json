@@ -1,0 +1,27 @@
+{
+  "criteria": {
+    "fill": {
+      "trigger": "bingo:fill_bundle"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:bundle"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.fill_bundle"
+  },
+  "requirements": [
+    [
+      "fill"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
+}

@@ -22,7 +22,6 @@ fbc9f80a4c8572b8dd12ac5e892a8fc0a9dfe470 data/bingo/bingo/goal/easy/bookshelf.js
 b4e141ebb8f19ff9a8c1972612e882284f0745d7 data/bingo/bingo/goal/easy/breed_mobs.json
 dae53aa4d51ae789997aa434b7fa87d213629096 data/bingo/bingo/goal/easy/bricks.json
 b82b7a4cde9cdbf572f556e2d54e068a6c70a02c data/bingo/bingo/goal/easy/brush_armadillo.json
-a3ccf91848bcb5bd3af4406ec3b77a78ce035290 data/bingo/bingo/goal/easy/bundle.json
 16ca88a5d6ce50e00c37c4ea32d68536752392a8 data/bingo/bingo/goal/easy/burn_village_house.json
 6a52cc839d1f4c38577fdc7d80296b8c1fa954c0 data/bingo/bingo/goal/easy/cactus.json
 f1d0445f586dd4904cbe95fb896cc980d1fd799e data/bingo/bingo/goal/easy/carnivore.json
@@ -64,6 +63,7 @@ f06b040eaf66fbfcb55f424625ccb440e0d155f6 data/bingo/bingo/goal/easy/drown_zombie
 e18c7b5fdfcca484f5fb2e6da93da8a2af69d976 data/bingo/bingo/goal/easy/ender_pearl.json
 f44d7c72b92caf7bc6def6d7a2bcf27ce78f89c5 data/bingo/bingo/goal/easy/feather.json
 18a0ea4bdbc00230ac5260d53b18c9350b3c1c19 data/bingo/bingo/goal/easy/fermented_spider_eye.json
+d99653aa4be89ffeeeed6fb67b8aea5d850fd05f data/bingo/bingo/goal/easy/fill_bundle.json
 d8841bf3176d1994f76649da1849c277786bcbf1 data/bingo/bingo/goal/easy/fill_water_cauldron.json
 4b2762344c72f0bf1cac950363fa0d5e3d0faa55 data/bingo/bingo/goal/easy/finish_at_spawn.json
 66d844b0c71416883190edafdd93bab00daa48d9 data/bingo/bingo/goal/easy/fish_treasure_junk.json

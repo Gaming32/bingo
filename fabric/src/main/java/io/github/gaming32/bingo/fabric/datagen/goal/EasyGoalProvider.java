@@ -39,6 +39,7 @@ import io.github.gaming32.bingo.triggers.DifferentColoredShieldsTrigger;
 import io.github.gaming32.bingo.triggers.DoorOpenedByTargetTrigger;
 import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
 import io.github.gaming32.bingo.triggers.EquipItemTrigger;
+import io.github.gaming32.bingo.triggers.FillBundleTrigger;
 import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
 import io.github.gaming32.bingo.triggers.HasSomeFoodItemsTrigger;
 import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
@@ -1001,9 +1002,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("crafter"), Items.CRAFTER)
             .tags(BingoTags.OVERWORLD));
 
-        // TODO: put items in bundle instead of obtain?
-        addGoal(obtainItemGoal(id("bundle"), Items.BUNDLE)
-            .tags(BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(id("fill_bundle"))
+            .criterion("fill", FillBundleTrigger.builder().build())
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+            .name("fill_bundle")
+            .icon(Items.BUNDLE));
     }
 
     private BingoGoal.Builder eatEntireCake() {
