@@ -34,7 +34,6 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
             SpecialType.CODEC.optionalFieldOf("special_type", SpecialType.NONE).forGetter(BingoTag::specialType)
         ).apply(instance, BingoTag::new)
     );
-    public static final Codec<BingoTag> NETWORK_CODEC = Codec.unit(new BingoTag(FloatList.of(), true, SpecialType.NONE));
 
     public float getUnscaledMaxForDifficulty(int difficulty) {
         if (difficulty < 0) {

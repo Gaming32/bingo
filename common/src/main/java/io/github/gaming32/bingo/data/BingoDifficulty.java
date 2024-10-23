@@ -25,7 +25,6 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
             Codec.STRING.optionalFieldOf("fallback_name").forGetter(d -> Optional.ofNullable(d.fallbackName))
         ).apply(instance, BingoDifficulty::new)
     );
-    public static final Codec<BingoDifficulty> NETWORK_CODEC = Codec.unit(new BingoDifficulty(0, Optional.empty()));
 
     private BingoDifficulty(int number, Optional<String> fallbackName) {
         this(number, fallbackName.orElse(null));
