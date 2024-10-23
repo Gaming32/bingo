@@ -63,6 +63,7 @@ import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.DefaultBlockInteractionTrigger;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.EffectsChangedTrigger;
+import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
@@ -118,6 +119,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -521,7 +523,23 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 new PlayerTrigger.TriggerInstance(Optional.of(ContextAwarePredicate.create(
                     new DistanceFromSpawnCondition(
                         Optional.of(DistancePredicate.horizontal(MinMaxBounds.Doubles.atMost(3)))
-                    )
+                    ),
+                    AnyOfCondition.anyOf(
+                        LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity()
+                            .equipment(EntityEquipmentPredicate.Builder.equipment()
+                                .mainhand(ItemPredicate.Builder.item()
+                                    .of(items, Items.COMPASS)
+                                )
+                            )
+                        ),
+                        LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity()
+                            .equipment(EntityEquipmentPredicate.Builder.equipment()
+                                .offhand(ItemPredicate.Builder.item()
+                                    .of(items, Items.COMPASS)
+                                )
+                            )
+                        )
+                    ).build()
                 )))
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.FINISH)
