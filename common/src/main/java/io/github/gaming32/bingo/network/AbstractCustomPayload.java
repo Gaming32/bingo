@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.ApiStatus;
 
 public interface AbstractCustomPayload extends CustomPacketPayload {
-    static <P extends AbstractCustomPayload> Type<P> type(String id) {
+    static <P extends CustomPacketPayload> Type<P> type(String id) {
         return new Type<>(ResourceLocations.bingo(id));
     }
 

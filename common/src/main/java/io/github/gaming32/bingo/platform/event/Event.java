@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 
 public class Event<T> {
     public static final Event<CommandRegistrar> REGISTER_COMMANDS = new Event<>();
+    public static final Event<Consumer<ConfigurationTaskRegistrar>> REGISTER_CONFIGURATION_TASKS = new Event<>();
     public static final Event<Consumer<ServerPlayer>> PLAYER_JOIN = new Event<>();
     public static final Event<Consumer<ServerPlayer>> PLAYER_QUIT = new Event<>();
     public static final Event<Consumer<MinecraftServer>> SERVER_STARTED = new Event<>();

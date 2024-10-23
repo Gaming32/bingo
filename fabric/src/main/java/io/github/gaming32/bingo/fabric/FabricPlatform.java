@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
@@ -171,6 +172,11 @@ public class FabricPlatform extends BingoPlatform {
 
     private void registerEvents() {
         Event.REGISTER_COMMANDS.setRegistrar(handler -> CommandRegistrationCallback.EVENT.register(handler::register));
+        Event.REGISTER_CONFIGURATION_TASKS.setRegistrar(handler -> ServerConfigurationConnectionEvents.CONFIGURE.register(
+            (packetListener, server) ->
+                handler.accept(new FabricConfigurationTaskRegistrar(packetListener))
+            )
+        );
         Event.PLAYER_JOIN.setRegistrar(FabricEvents.PLAYER_JOIN::register);
         Event.PLAYER_QUIT.setRegistrar(FabricEvents.PLAYER_QUIT::register);
         Event.SERVER_STARTED.setRegistrar(handler -> ServerLifecycleEvents.SERVER_STARTED.register(handler::accept));

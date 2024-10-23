@@ -1,11 +1,26 @@
 package io.github.gaming32.bingo.network;
 
+import dev.architectury.platform.Platform;
 import io.github.gaming32.bingo.platform.BingoPlatform;
+import net.fabricmc.api.EnvType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.DisconnectionDetails;
+import net.minecraft.network.PacketListener;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.common.ClientCommonPacketListener;
+import net.minecraft.network.protocol.common.ClientboundDisconnectPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.protocol.game.ServerPacketListener;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ConfigurationTask;
+import net.minecraft.server.network.ServerCommonPacketListenerImpl;
+import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -36,8 +51,18 @@ public abstract class BingoNetworking {
 
     public abstract boolean canPlayerReceive(ServerPlayer player, CustomPacketPayload.Type<?> type);
 
+    protected abstract void finishTask(ServerConfigurationPacketListenerImpl packetListener, ConfigurationTask.Type type);
+
+    public final void finishTask(Context context, ConfigurationTask.Type type) {
+        if (!(context.packetListener instanceof ServerConfigurationPacketListenerImpl packetListener)) {
+            throw new IllegalStateException("finishTask can only be called during the configuration phase");
+        }
+        finishTask(packetListener, type);
+    }
+
     public abstract static class Registrar {
         public abstract <P extends CustomPacketPayload> void register(
+            ConnectionProtocol protocol,
             @Nullable PacketFlow flow,
             CustomPacketPayload.Type<P> type,
             StreamCodec<? super RegistryFriendlyByteBuf, P> codec,
@@ -49,16 +74,55 @@ public abstract class BingoNetworking {
             CustomPacketPayload.Type<P> type,
             StreamCodec<? super RegistryFriendlyByteBuf, P> codec
         ) {
-            register(flow, type, codec, AbstractCustomPayload::handle);
+            register(ConnectionProtocol.PLAY, flow, type, codec, AbstractCustomPayload::handle);
         }
     }
 
-    public record Context(@Nullable Player player, Consumer<CustomPacketPayload> reply) {
+    public static final class Context {
+        @Nullable
+        private final Player player;
+        private final Consumer<CustomPacketPayload> reply;
+        private final PacketListener packetListener;
+
+        public Context(Player player, Consumer<CustomPacketPayload> reply, PacketListener packetListener) {
+            this.player = player;
+            this.reply = reply;
+            this.packetListener = packetListener;
+        }
+
+        @Nullable
+        public Player player() {
+            return player;
+        }
+
+        public Consumer<CustomPacketPayload> reply() {
+            return reply;
+        }
+
         public Level level() {
             if (player == null) {
                 return null;
             }
             return player.level();
+        }
+
+        public void disconnect(Component reason) {
+            if (packetListener instanceof ServerCommonPacketListenerImpl serverListener) {
+                serverListener.disconnect(reason);
+            } else if (Platform.getEnv() != EnvType.CLIENT || !ClientDisconnecter.disconnect(packetListener, reason)) {
+                throw new IllegalStateException("Cannot disconnect with listener " + packetListener.getClass().getName());
+            }
+        }
+
+        private static final class ClientDisconnecter {
+            static boolean disconnect(PacketListener packetListener, Component reason) {
+                if (packetListener instanceof ClientCommonPacketListenerImpl clientListener) {
+                    clientListener.handleDisconnect(new ClientboundDisconnectPacket(reason));
+                    return true;
+                }
+
+                return false;
+            }
         }
     }
 }

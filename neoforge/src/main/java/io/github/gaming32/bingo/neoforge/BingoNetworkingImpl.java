@@ -4,11 +4,15 @@ import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ConfigurationTask;
+import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -65,8 +69,13 @@ public final class BingoNetworkingImpl extends BingoNetworking {
         return player.connection.hasChannel(type);
     }
 
+    @Override
+    protected void finishTask(ServerConfigurationPacketListenerImpl packetListener, ConfigurationTask.Type type) {
+        packetListener.finishCurrentTask(type);
+    }
+
     private static Context convertContext(IPayloadContext neoforge) {
-        return new Context(neoforge.player(), neoforge::reply);
+        return new Context(neoforge.player(), neoforge::reply, neoforge.listener());
     }
 
     public static final class RegistrarImpl extends Registrar {
@@ -78,16 +87,31 @@ public final class BingoNetworkingImpl extends BingoNetworking {
 
         @Override
         public <P extends CustomPacketPayload> void register(
+            ConnectionProtocol protocol,
             @Nullable PacketFlow flow,
             CustomPacketPayload.Type<P> type,
             StreamCodec<? super RegistryFriendlyByteBuf, P> codec,
             BiConsumer<P, Context> handler
         ) {
             final IPayloadHandler<P> neoHandler = (payload, context) -> handler.accept(payload, convertContext(context));
-            switch (flow) {
-                case null -> inner.playBidirectional(type, codec, neoHandler);
-                case CLIENTBOUND -> inner.playToClient(type, codec, neoHandler);
-                case SERVERBOUND -> inner.playToServer(type, codec, neoHandler);
+            switch (protocol) {
+                case PLAY -> {
+                    switch (flow) {
+                        case null -> inner.playBidirectional(type, codec, neoHandler);
+                        case CLIENTBOUND -> inner.playToClient(type, codec, neoHandler);
+                        case SERVERBOUND -> inner.playToServer(type, codec, neoHandler);
+                    }
+                }
+                case CONFIGURATION -> {
+                    @SuppressWarnings("unchecked")
+                    final var castedCodec = (StreamCodec<? super FriendlyByteBuf, P>) codec;
+                    switch (flow) {
+                        case null -> inner.configurationBidirectional(type, castedCodec, neoHandler);
+                        case CLIENTBOUND -> inner.configurationToClient(type, castedCodec, neoHandler);
+                        case SERVERBOUND -> inner.configurationToServer(type, castedCodec, neoHandler);
+                    }
+                }
+                default -> throw new IllegalArgumentException("Cannot register for connection state: " + protocol);
             }
         }
     }

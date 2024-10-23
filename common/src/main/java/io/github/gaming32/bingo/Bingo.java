@@ -15,6 +15,8 @@ import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.mixin.common.ServerExplosionAccessor;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPayload;
+import io.github.gaming32.bingo.network.messages.configuration.ProtocolVersionConfigurationTask;
+import io.github.gaming32.bingo.network.messages.configuration.ProtocolVersionPayload;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
@@ -32,6 +34,7 @@ import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.PacketFlow;
@@ -180,7 +183,16 @@ public class Bingo {
     }
 
     private static void registerPayloadHandlers() {
+        Event.REGISTER_CONFIGURATION_TASKS.register(registrar -> {
+            if (registrar.canSend(ProtocolVersionPayload.TYPE)) {
+                registrar.addTask(ProtocolVersionConfigurationTask.INSTANCE);
+            }
+        });
+
         BingoNetworking.instance().onRegister(registrar -> {
+            registrar.register(ConnectionProtocol.CONFIGURATION, PacketFlow.CLIENTBOUND, ProtocolVersionPayload.TYPE, ProtocolVersionPayload.CODEC, ProtocolVersionPayload::handleClientbound);
+            registrar.register(ConnectionProtocol.CONFIGURATION, PacketFlow.SERVERBOUND, ProtocolVersionPayload.TYPE, ProtocolVersionPayload.CODEC, ProtocolVersionPayload::handleServerbound);
+
             registrar.register(PacketFlow.CLIENTBOUND, InitBoardPayload.TYPE, InitBoardPayload.CODEC);
             registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPayload.TYPE, RemoveBoardPayload.CODEC);
             registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPayload.TYPE, ResyncStatesPayload.CODEC);

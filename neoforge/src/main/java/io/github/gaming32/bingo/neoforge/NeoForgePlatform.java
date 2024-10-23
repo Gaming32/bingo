@@ -38,6 +38,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.jetbrains.annotations.Nullable;
@@ -141,6 +142,9 @@ public class NeoForgePlatform extends BingoPlatform {
         final IEventBus bus = NeoForge.EVENT_BUS;
         Event.REGISTER_COMMANDS.setRegistrar(handler -> bus.addListener((RegisterCommandsEvent event) ->
             handler.register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection())
+        ));
+        Event.REGISTER_CONFIGURATION_TASKS.setRegistrar(handler -> bus.addListener((RegisterConfigurationTasksEvent event) ->
+            handler.accept(new NeoForgeConfigurationTaskRegistrar(event))
         ));
         Event.PLAYER_JOIN.setRegistrar(handler -> bus.addListener((PlayerEvent.PlayerLoggedInEvent event) -> {
             if (event.getEntity() instanceof ServerPlayer serverPlayer) {
