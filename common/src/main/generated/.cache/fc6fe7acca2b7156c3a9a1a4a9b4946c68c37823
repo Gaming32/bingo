@@ -304,7 +304,7 @@ d2b0d6a8dd9714a472882be430c222fe5e9dfa96 data/bingo/bingo/goal/medium/iron_block
 7ecc63a47d4bf00f5b213f0b80520132c66e89a3 data/bingo/bingo/goal/medium/item_frame.json
 9f205d2007a3791aa17edf9007a23dfd8c54cf62 data/bingo/bingo/goal/medium/kill_golem.json
 8ab402836b2aa0e439183086ce11a00fd7f6f37d data/bingo/bingo/goal/medium/kill_hostile_with_berries.json
-eea754fc0a38c7f4254a324bd5fecf3c09dd0e7a data/bingo/bingo/goal/medium/kill_mobs.json
+242dca53b8ab66574739eda45b7e4b3a109f3f75 data/bingo/bingo/goal/medium/kill_mobs.json
 b04f0d5f09b51bf2f355fb424b6868fd022549b9 data/bingo/bingo/goal/medium/kill_self_with_arrow.json
 3b5fc34fac71fcd63d5c059ed20982f7443e724a data/bingo/bingo/goal/medium/kill_with_crystal.json
 3d89fa541171469d187a87186d3181d868e31717 data/bingo/bingo/goal/medium/lapis_block.json

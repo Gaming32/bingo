@@ -88,6 +88,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.raid.Raid;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -629,6 +630,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .icon(IndicatorIcon.infer(
                 new CycleIcon(
                     BuiltInRegistries.ENTITY_TYPE.stream()
+                        .filter(t -> !FeatureFlags.isExperimental(t.requiredFeatures()))
                         .filter(t -> t.getCategory() != MobCategory.MISC)
                         .filter(t -> SpawnEggItem.byId(t) != null)
                         .map(EntityIcon::ofSpawnEgg)
