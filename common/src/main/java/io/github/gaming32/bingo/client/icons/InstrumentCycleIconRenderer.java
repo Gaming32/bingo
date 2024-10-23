@@ -49,7 +49,7 @@ public class InstrumentCycleIconRenderer implements AbstractCycleIconRenderer<In
     }
 
     private static Holder<Instrument> getIcon(Registry<Instrument> icons, int parentPeriod) {
-        return AbstractCycleIconRenderer.getIcon(icons::get, icons.size(), parentPeriod)
+        return icons.get(AbstractCycleIconRenderer.getIconIndex(icons.size(), parentPeriod))
             .or(icons::getAny)
             .orElse(null);
     }

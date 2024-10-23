@@ -5,8 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -25,15 +23,16 @@ public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer
     @Override
     public void renderWithParentPeriod(int parentPeriod, EntityTypeTagCycleIcon icon, GuiGraphics graphics, int x, int y) {
         final var entityTypes = BuiltInRegistries.ENTITY_TYPE.get(icon.tag());
-        if (entityTypes.isEmpty() || entityTypes.get().size() == 0) return;
-        EntityType<?> entityType = getIcon(entityTypes.get(), parentPeriod).value();
+        if (entityTypes.isEmpty()) return;
+        final var entityType = AbstractCycleIconRenderer.getIconFromTag(entityTypes.get(), parentPeriod);
+        if (entityType.isEmpty()) return;
 
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) {
             return;
         }
         Entity entity = ENTITIES.computeIfAbsent(level, k -> new HashMap<>())
-            .computeIfAbsent(entityType, k -> entityType.create(level, EntitySpawnReason.LOAD));
+            .computeIfAbsent(entityType.get().value(), k -> k.create(level, EntitySpawnReason.LOAD));
         if (entity == null) {
             return;
         }
@@ -48,14 +47,14 @@ public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer
     @Override
     public ItemStack getIconItemWithParentPeriod(int parentPeriod, EntityTypeTagCycleIcon icon) {
         final var entityTypes = BuiltInRegistries.ENTITY_TYPE.get(icon.tag());
-        if (entityTypes.isEmpty() || entityTypes.get().size() == 0) {
+        if (entityTypes.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        final Item spawnEggItem = SpawnEggItem.byId(getIcon(entityTypes.get(), parentPeriod).value());
+        final var entityType = AbstractCycleIconRenderer.getIconFromTag(entityTypes.get(), parentPeriod);
+        if (entityType.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        final Item spawnEggItem = SpawnEggItem.byId(entityType.get().value());
         return spawnEggItem != null ? new ItemStack(spawnEggItem, icon.count()) : ItemStack.EMPTY;
-    }
-
-    private static Holder<EntityType<?>> getIcon(HolderSet.Named<EntityType<?>> icons, int parentPeriod) {
-        return AbstractCycleIconRenderer.getIcon(icons::get, icons.size(), parentPeriod);
     }
 }

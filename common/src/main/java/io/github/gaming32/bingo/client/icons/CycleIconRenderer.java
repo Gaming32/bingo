@@ -46,6 +46,6 @@ public class CycleIconRenderer implements AbstractCycleIconRenderer<CycleIcon> {
     }
 
     private static GoalIcon getIcon(List<GoalIcon> icons, int parentPeriod) {
-        return AbstractCycleIconRenderer.getIcon(icons::get, icons.size(), parentPeriod);
+        return icons.get(AbstractCycleIconRenderer.getIconIndex(icons.size(), parentPeriod));
     }
 }
