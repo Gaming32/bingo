@@ -5,7 +5,6 @@ import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
-import net.minecraft.core.registries.Registries;
 
 public interface BingoSubType<S extends BingoSub> {
     DeferredRegister<BingoSubType<?>> REGISTER = new RegistryBuilder<>(BingoRegistries.BINGO_SUB_TYPE)
