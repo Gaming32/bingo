@@ -143,7 +143,7 @@ public class NeoForgePlatform extends BingoPlatform {
         Event.REGISTER_COMMANDS.setRegistrar(handler -> bus.addListener((RegisterCommandsEvent event) ->
             handler.register(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection())
         ));
-        Event.REGISTER_CONFIGURATION_TASKS.setRegistrar(handler -> bus.addListener((RegisterConfigurationTasksEvent event) ->
+        Event.REGISTER_CONFIGURATION_TASKS.setRegistrar(handler -> modEventBus.addListener((RegisterConfigurationTasksEvent event) ->
             handler.accept(new NeoForgeConfigurationTaskRegistrar(event))
         ));
         Event.PLAYER_JOIN.setRegistrar(handler -> bus.addListener((PlayerEvent.PlayerLoggedInEvent event) -> {

@@ -7,18 +7,20 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import org.jetbrains.annotations.NotNull;
 
 public record ProtocolVersionPayload(int protocolVersion) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<ProtocolVersionPayload> TYPE = AbstractCustomPayload.type("version");
     public static final StreamCodec<ByteBuf, ProtocolVersionPayload> CODEC = ByteBufCodecs.VAR_INT.map(ProtocolVersionPayload::new, ProtocolVersionPayload::protocolVersion);
 
+    @NotNull
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
     public void handleClientbound(BingoNetworking.Context context) {
-        context.reply().accept(new ProtocolVersionPayload(BingoNetworking.PROTOCOL_VERSION));
+        context.reply(new ProtocolVersionPayload(BingoNetworking.PROTOCOL_VERSION));
     }
 
     public void handleServerbound(BingoNetworking.Context context) {

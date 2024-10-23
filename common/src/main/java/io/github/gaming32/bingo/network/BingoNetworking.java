@@ -3,20 +3,15 @@ package io.github.gaming32.bingo.network;
 import dev.architectury.platform.Platform;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import net.fabricmc.api.EnvType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.ConnectionProtocol;
-import net.minecraft.network.DisconnectionDetails;
 import net.minecraft.network.PacketListener;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
-import net.minecraft.network.protocol.common.ClientCommonPacketListener;
 import net.minecraft.network.protocol.common.ClientboundDisconnectPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.protocol.game.ServerPacketListener;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ConfigurationTask;
 import net.minecraft.server.network.ServerCommonPacketListenerImpl;
@@ -83,11 +78,13 @@ public abstract class BingoNetworking {
         private final Player player;
         private final Consumer<CustomPacketPayload> reply;
         private final PacketListener packetListener;
+        private final PacketFlow flow;
 
-        public Context(Player player, Consumer<CustomPacketPayload> reply, PacketListener packetListener) {
+        public Context(@Nullable Player player, Consumer<CustomPacketPayload> reply, PacketListener packetListener, PacketFlow flow) {
             this.player = player;
             this.reply = reply;
             this.packetListener = packetListener;
+            this.flow = flow;
         }
 
         @Nullable
@@ -95,8 +92,12 @@ public abstract class BingoNetworking {
             return player;
         }
 
-        public Consumer<CustomPacketPayload> reply() {
-            return reply;
+        public void reply(CustomPacketPayload payload) {
+            reply.accept(payload);
+        }
+
+        public PacketFlow flow() {
+            return flow;
         }
 
         public Level level() {

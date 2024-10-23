@@ -190,8 +190,12 @@ public class Bingo {
         });
 
         BingoNetworking.instance().onRegister(registrar -> {
-            registrar.register(ConnectionProtocol.CONFIGURATION, PacketFlow.CLIENTBOUND, ProtocolVersionPayload.TYPE, ProtocolVersionPayload.CODEC, ProtocolVersionPayload::handleClientbound);
-            registrar.register(ConnectionProtocol.CONFIGURATION, PacketFlow.SERVERBOUND, ProtocolVersionPayload.TYPE, ProtocolVersionPayload.CODEC, ProtocolVersionPayload::handleServerbound);
+            registrar.register(ConnectionProtocol.CONFIGURATION, null, ProtocolVersionPayload.TYPE, ProtocolVersionPayload.CODEC, (payload, context) -> {
+                switch (context.flow()) {
+                    case CLIENTBOUND -> payload.handleClientbound(context);
+                    case SERVERBOUND -> payload.handleServerbound(context);
+                }
+            });
 
             registrar.register(PacketFlow.CLIENTBOUND, InitBoardPayload.TYPE, InitBoardPayload.CODEC);
             registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPayload.TYPE, RemoveBoardPayload.CODEC);

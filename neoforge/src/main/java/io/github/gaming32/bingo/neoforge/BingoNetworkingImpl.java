@@ -75,7 +75,7 @@ public final class BingoNetworkingImpl extends BingoNetworking {
     }
 
     private static Context convertContext(IPayloadContext neoforge) {
-        return new Context(neoforge.player(), neoforge::reply, neoforge.listener());
+        return new Context(neoforge.player(), neoforge::reply, neoforge.listener(), neoforge.flow());
     }
 
     public static final class RegistrarImpl extends Registrar {

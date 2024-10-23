@@ -83,13 +83,23 @@ public class BingoNetworkingImpl extends BingoNetworking {
                     case PLAY -> {
                         PayloadTypeRegistry.playC2S().register(type, codec);
                         ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
-                            handler.accept(payload, new Context(context.player(), context.responseSender()::sendPacket, context.player().connection))
+                            handler.accept(payload, new Context(
+                                context.player(),
+                                context.responseSender()::sendPacket,
+                                context.player().connection,
+                                PacketFlow.SERVERBOUND
+                            ))
                         );
                     }
                     case CONFIGURATION -> {
                         PayloadTypeRegistry.configurationC2S().register(type, (StreamCodec<? super FriendlyByteBuf, P>) codec);
                         ServerConfigurationNetworking.registerGlobalReceiver(type, (payload, context) ->
-                            handler.accept(payload, new Context(null, context.responseSender()::sendPacket, context.networkHandler()))
+                            handler.accept(payload, new Context(
+                                null,
+                                context.responseSender()::sendPacket,
+                                context.networkHandler(),
+                                PacketFlow.SERVERBOUND
+                            ))
                         );
                     }
                     default -> throw new IllegalArgumentException("Cannot register for connection state: " + protocol);
@@ -103,10 +113,20 @@ public class BingoNetworkingImpl extends BingoNetworking {
             ) {
                 switch (protocol) {
                     case PLAY -> ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
-                        handler.accept(payload, new Context(context.player(), context.responseSender()::sendPacket, context.player().connection))
+                        handler.accept(payload, new Context(
+                            context.player(),
+                            context.responseSender()::sendPacket,
+                            context.player().connection,
+                            PacketFlow.CLIENTBOUND
+                        ))
                     );
                     case CONFIGURATION -> ClientConfigurationNetworking.registerGlobalReceiver(type, (payload, context) ->
-                        handler.accept(payload, new Context(null, context.responseSender()::sendPacket, context.networkHandler()))
+                        handler.accept(payload, new Context(
+                            null,
+                            context.responseSender()::sendPacket,
+                            context.networkHandler(),
+                            PacketFlow.CLIENTBOUND
+                        ))
                     );
                     default -> throw new IllegalArgumentException("Cannot register for connection state: " + protocol);
                 }
