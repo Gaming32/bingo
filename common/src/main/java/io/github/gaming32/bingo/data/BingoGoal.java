@@ -62,10 +62,9 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class BingoGoal {
-    private static final Codec<Map<String, BingoSub>> SUBS_CODEC = Codec.unboundedMap(Codec.STRING, BingoSub.CODEC);
     public static final Codec<BingoGoal> CODEC = RecordCodecBuilder.<BingoGoal>create(
         instance -> instance.group(
-            SUBS_CODEC.optionalFieldOf("bingo_subs", Map.of()).forGetter(BingoGoal::getSubs),
+            Codec.unboundedMap(Codec.STRING, BingoSub.CODEC).optionalFieldOf("bingo_subs", Map.of()).forGetter(BingoGoal::getSubs),
             Codec.unboundedMap(Codec.STRING, Codec.PASSTHROUGH).fieldOf("criteria").forGetter(BingoGoal::getCriteria),
             AdvancementRequirements.CODEC.optionalFieldOf("requirements").forGetter(g -> Optional.of(g.requirements)),
             ProgressTracker.CODEC.optionalFieldOf("progress", EmptyProgressTracker.INSTANCE).forGetter(BingoGoal::getProgress),
@@ -599,7 +598,7 @@ public class BingoGoal {
         public static final ResourceLocation ID = ResourceLocations.bingo("goals");
 
         public ReloadListener(HolderLookup.Provider registries) {
-            super(registries, CODEC, "bingo/goals");
+            super(registries, CODEC, "bingo/goal");
         }
 
         @NotNull
