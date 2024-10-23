@@ -4,9 +4,9 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -27,13 +27,13 @@ public record InStructureCondition(TagKey<Structure> structure) implements LootI
 
     @NotNull
     @Override
-    public Set<LootContextParam<?>> getReferencedContextParams() {
+    public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.ORIGIN);
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        final BlockPos pos = BlockPos.containing(lootContext.getParam(LootContextParams.ORIGIN));
+        final BlockPos pos = BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN));
         return lootContext.getLevel().structureManager().getStructureWithPieceAt(pos, structure).isValid();
     }
 }

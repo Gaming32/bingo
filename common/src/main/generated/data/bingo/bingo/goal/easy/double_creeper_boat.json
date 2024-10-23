@@ -1,0 +1,73 @@
+{
+  "criteria": {
+    "break": {
+      "conditions": {
+        "vehicle": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#minecraft:boat"
+            }
+          },
+          {
+            "condition": "bingo:passengers",
+            "passengers": [
+              [
+                {
+                  "condition": "minecraft:entity_properties",
+                  "entity": "this",
+                  "predicate": {
+                    "type": "minecraft:creeper"
+                  }
+                }
+              ],
+              [
+                {
+                  "condition": "minecraft:entity_properties",
+                  "entity": "this",
+                  "predicate": {
+                    "type": "minecraft:creeper"
+                  }
+                }
+              ]
+            ]
+          }
+        ]
+      },
+      "trigger": "bingo:destroy_vehicle"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:entity_type_tag_cycle",
+        "base_item": "minecraft:oak_boat",
+        "tag": "minecraft:boat"
+      },
+      {
+        "type": "bingo:entity",
+        "entity": "minecraft:creeper",
+        "item": {
+          "count": 2,
+          "id": "minecraft:creeper_spawn_egg"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.double_creeper_boat"
+  },
+  "requirements": [
+    [
+      "break"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:combat",
+    "bingo:overworld"
+  ]
+}

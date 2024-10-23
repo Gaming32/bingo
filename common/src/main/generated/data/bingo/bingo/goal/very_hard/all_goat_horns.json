@@ -1,0 +1,186 @@
+{
+  "antisynergy": "goat_horn",
+  "criteria": {
+    "obtain_minecraft_admire_goat_horn": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "minecraft:instrument": "minecraft:admire_goat_horn"
+            },
+            "items": "minecraft:goat_horn"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_minecraft_call_goat_horn": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "minecraft:instrument": "minecraft:call_goat_horn"
+            },
+            "items": "minecraft:goat_horn"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_minecraft_dream_goat_horn": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "minecraft:instrument": "minecraft:dream_goat_horn"
+            },
+            "items": "minecraft:goat_horn"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_minecraft_feel_goat_horn": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "minecraft:instrument": "minecraft:feel_goat_horn"
+            },
+            "items": "minecraft:goat_horn"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_minecraft_ponder_goat_horn": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "minecraft:instrument": "minecraft:ponder_goat_horn"
+            },
+            "items": "minecraft:goat_horn"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_minecraft_seek_goat_horn": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "minecraft:instrument": "minecraft:seek_goat_horn"
+            },
+            "items": "minecraft:goat_horn"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_minecraft_sing_goat_horn": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "minecraft:instrument": "minecraft:sing_goat_horn"
+            },
+            "items": "minecraft:goat_horn"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "obtain_minecraft_yearn_goat_horn": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "minecraft:instrument": "minecraft:yearn_goat_horn"
+            },
+            "items": "minecraft:goat_horn"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": "bingo:very_hard",
+  "icon": {
+    "type": "bingo:instrument_cycle",
+    "instrument_item": "minecraft:goat_horn"
+  },
+  "name": {
+    "translate": "bingo.goal.all_goat_horns"
+  },
+  "progress": {
+    "type": "bingo:achieved_requirements"
+  },
+  "requirements": [
+    [
+      "obtain_minecraft_admire_goat_horn"
+    ],
+    [
+      "obtain_minecraft_call_goat_horn"
+    ],
+    [
+      "obtain_minecraft_dream_goat_horn"
+    ],
+    [
+      "obtain_minecraft_feel_goat_horn"
+    ],
+    [
+      "obtain_minecraft_ponder_goat_horn"
+    ],
+    [
+      "obtain_minecraft_seek_goat_horn"
+    ],
+    [
+      "obtain_minecraft_sing_goat_horn"
+    ],
+    [
+      "obtain_minecraft_yearn_goat_horn"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "extra": [
+      {
+        "translate": "instrument.minecraft.admire_goat_horn"
+      },
+      ", ",
+      {
+        "translate": "instrument.minecraft.call_goat_horn"
+      },
+      ", ",
+      {
+        "translate": "instrument.minecraft.dream_goat_horn"
+      },
+      ", ",
+      {
+        "translate": "instrument.minecraft.feel_goat_horn"
+      },
+      ", ",
+      {
+        "translate": "instrument.minecraft.ponder_goat_horn"
+      },
+      ", ",
+      {
+        "translate": "instrument.minecraft.seek_goat_horn"
+      },
+      ", ",
+      {
+        "translate": "instrument.minecraft.sing_goat_horn"
+      },
+      ", ",
+      {
+        "translate": "instrument.minecraft.yearn_goat_horn"
+      }
+    ],
+    "text": ""
+  }
+}

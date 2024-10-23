@@ -1,0 +1,64 @@
+{
+  "antisynergy": "obsidian",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 10,
+        "min_inclusive": 3
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "bingo:sub",
+                "key": "count"
+              }
+            },
+            "items": "minecraft:obsidian"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      "id": "minecraft:obsidian"
+    }
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      {
+        "translate": "block.minecraft.obsidian"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": "bingo:item"
+}

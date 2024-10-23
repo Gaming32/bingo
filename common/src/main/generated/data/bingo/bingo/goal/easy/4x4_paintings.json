@@ -1,0 +1,46 @@
+{
+  "antisynergy": "painting",
+  "criteria": {
+    "paintings": {
+      "conditions": {
+        "adjacent_paintings": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "bingo:painting",
+                "height": 4,
+                "width": 4
+              }
+            }
+          }
+        ],
+        "count": {
+          "min": 3
+        }
+      },
+      "trigger": "bingo:adjacent_painting"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 3,
+      "id": "minecraft:painting"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.4x4_paintings"
+  },
+  "requirements": [
+    [
+      "paintings"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

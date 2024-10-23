@@ -1,0 +1,20 @@
+// 1.21.3	Bingo/Bingo registries
+70eae90dabaea0746b30b2aba3a3558dfbd1c823 data/bingo/bingo/difficulty/easy.json
+84bd30615c75b22bf89554fd62f2248e236f95f4 data/bingo/bingo/difficulty/hard.json
+dec2eb7ebfc17c087213fcc8035f94eaf811f326 data/bingo/bingo/difficulty/medium.json
+4fbe746afb472f065d99d7aed66b135682f9d270 data/bingo/bingo/difficulty/very_easy.json
+b01d0ebfae7d17a0bc155532c7a2169ac0f5c091 data/bingo/bingo/difficulty/very_hard.json
+e0e1dcbc8d0051dfd2185f9902fef371ba7e7ff0 data/bingo/bingo/tag/action.json
+e0e1dcbc8d0051dfd2185f9902fef371ba7e7ff0 data/bingo/bingo/tag/build.json
+49f52b336c4e5c7fef99c12998045950679e4d33 data/bingo/bingo/tag/color.json
+67e436bf80277ed1d6de65bad8eb57f689f9dde0 data/bingo/bingo/tag/combat.json
+ec0fed5926df047e2433eb011817907108d7bf88 data/bingo/bingo/tag/end.json
+e3afeb62cdd4266a49147832aa67f9e14d2f7246 data/bingo/bingo/tag/finish.json
+f8ad1ef69be0bbac9da8bba2cf794b6a6519e50c data/bingo/bingo/tag/item.json
+ddddf8256baebcc4d250a5006d09d57acbb4ba8c data/bingo/bingo/tag/nether.json
+8039ae633d3d0066f7387790117273e7f6f2c64e data/bingo/bingo/tag/never.json
+70db5d2846993435adc1455b5d3829590162a48e data/bingo/bingo/tag/ocean.json
+3dafbb47fb6c43ec7b065c450f6d799804231051 data/bingo/bingo/tag/overworld.json
+77a3f77e2658f9c3e982b6ce158e1bede82b2183 data/bingo/bingo/tag/rare_biome.json
+70db5d2846993435adc1455b5d3829590162a48e data/bingo/bingo/tag/stat.json
+f6924ef8e53c7f1da6ed02f75b4dd1d97a52fd6b data/bingo/bingo/tag/village.json

@@ -1,0 +1,57 @@
+{
+  "antisynergy": "edible_items",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 3,
+        "min_inclusive": 2
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": {
+          "bingo_type": "bingo:sub",
+          "key": "count"
+        }
+      },
+      "trigger": "bingo:has_some_food_items"
+    }
+  },
+  "difficulty": "bingo:very_easy",
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "count": {
+      "bingo_type": "bingo:sub",
+      "key": "count"
+    },
+    "tag": "c:foods"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.edible_items",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": "bingo:item",
+  "tooltip": {
+    "translate": "bingo.goal.edible_items.tooltip"
+  },
+  "tooltip_icon": "bingo:textures/gui/tooltips/raw_and_cooked.png"
+}

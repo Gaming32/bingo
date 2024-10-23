@@ -24,7 +24,7 @@ public class BingoGoalProvider extends FabricCodecDataProvider<BingoGoal> {
     );
 
     public BingoGoalProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries, PackOutput.Target.DATA_PACK, "bingo/goals", BingoGoal.CODEC);
+        super(output, registries, PackOutput.Target.DATA_PACK, "bingo/goal", BingoGoal.CODEC);
     }
 
     @Override

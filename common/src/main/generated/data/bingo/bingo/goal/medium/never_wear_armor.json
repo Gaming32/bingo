@@ -1,0 +1,37 @@
+{
+  "antisynergy": "never_wear_armor",
+  "catalyst": "wear_armor",
+  "criteria": {
+    "equip": {
+      "conditions": {
+        "new_item": {
+          "items": "#c:armors"
+        },
+        "slots": [
+          "feet",
+          "legs",
+          "chest",
+          "head"
+        ]
+      },
+      "trigger": "bingo:equip_item"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:diamond_chestplate"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.never_wear_armor"
+  },
+  "requirements": [
+    [
+      "equip"
+    ]
+  ],
+  "tags": "bingo:never"
+}

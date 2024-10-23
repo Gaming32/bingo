@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen.tag;
 
-import io.github.gaming32.bingo.data.tags.BingoBlockTags;
-import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoBlockTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
 import io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -146,13 +146,13 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
         var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);
         for (DyeColor dyeColor : DyeColor.values()) {
-            Item glazedTerracotta = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(dyeColor.getName() + "_glazed_terracotta"));
+            Item glazedTerracotta = BuiltInRegistries.ITEM.getValue(ResourceLocations.minecraft(dyeColor.getName() + "_glazed_terracotta"));
             glazedTerracottaBuilder.add(glazedTerracotta);
-            Item concrete = BuiltInRegistries.ITEM.get(ResourceLocations.minecraft(dyeColor.getName() + "_concrete"));
+            Item concrete = BuiltInRegistries.ITEM.getValue(ResourceLocations.minecraft(dyeColor.getName() + "_concrete"));
             concreteBuilder.add(concrete);
         }
 
-        final var vanillaMeatTag = BingoDataGenFabric.loadTag(ItemTags.MEAT, registries);
+        final var vanillaMeatTag = BingoDataGenFabric.loadVanillaTag(ItemTags.MEAT, registries);
 
         var goldInNameBuilder = getOrCreateTagBuilder(BingoItemTags.GOLD_IN_NAME);
         var diamondInNameBuilder = getOrCreateTagBuilder(BingoItemTags.DIAMOND_IN_NAME);
@@ -164,7 +164,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         Pattern goldPattern = Pattern.compile("\\bGold(?:en)?\\b");
         Pattern diamondPattern = Pattern.compile("\\bDiamond\\b");
         for (Item item : BuiltInRegistries.ITEM) {
-            String itemName = item.getDescription().getString();
+            String itemName = item.getName().getString();
             if (goldPattern.matcher(itemName).find()) {
                 goldInNameBuilder.add(item);
             }

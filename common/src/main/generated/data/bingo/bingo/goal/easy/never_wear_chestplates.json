@@ -1,0 +1,34 @@
+{
+  "antisynergy": "never_wear_armor",
+  "catalyst": "wear_armor",
+  "criteria": {
+    "equip": {
+      "conditions": {
+        "new_item": {
+          "items": "#minecraft:chest_armor"
+        },
+        "slots": [
+          "chest"
+        ]
+      },
+      "trigger": "bingo:equip_item"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:iron_chestplate"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.never_wear_chestplates"
+  },
+  "requirements": [
+    [
+      "equip"
+    ]
+  ],
+  "tags": "bingo:never"
+}

@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,8 +61,8 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
         );
 
         public boolean matches(ServerPlayer player, Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
-            final Level level = player.level();
-            final RecipeManager recipeManager = level.getRecipeManager();
+            final var level = player.serverLevel();
+            final RecipeManager recipeManager = level.getServer().getRecipeManager();
 
             Set<Item> foundItems = Sets.newIdentityHashSet();
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
@@ -74,9 +73,10 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
                 final FoodProperties food = item.get(DataComponents.FOOD);
                 if (food != null) {
                     // attempt to smelt the item
-                    var recipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(item), level);
+                    final var input = new SingleRecipeInput(item);
+                    var recipe = recipeManager.getRecipeFor(RecipeType.SMELTING, input, level);
                     if (recipe.isPresent()) {
-                        item = recipe.get().value().getResultItem(level.registryAccess());
+                        item = recipe.get().value().assemble(input, level.registryAccess());
                     }
 
                     if (foundItems.add(item.getItem()) && foundItems.size() >= requiredCount) {

@@ -1,0 +1,151 @@
+{
+  "criteria": {
+    "armor": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "bingo:wearing_different_armor",
+            "different_types": {
+              "min": 4
+            },
+            "equipped_armor": {
+              "min": 4
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:chainmail_boots"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:diamond_leggings"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:golden_chestplate"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:iron_helmet"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:leather_boots"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:netherite_leggings"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:chainmail_chestplate"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:diamond_helmet"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:golden_boots"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:iron_leggings"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:netherite_helmet"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:chainmail_boots"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:diamond_leggings"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:golden_chestplate"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:iron_helmet"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.all_different_armor",
+    "with": [
+      4
+    ]
+  },
+  "reactant": "wear_armor",
+  "requirements": [
+    [
+      "armor"
+    ]
+  ],
+  "tags": "bingo:item"
+}

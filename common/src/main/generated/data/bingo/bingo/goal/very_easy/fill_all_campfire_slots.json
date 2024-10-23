@@ -1,0 +1,49 @@
+{
+  "criteria": {
+    "place": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": "minecraft:campfire",
+                "nbt": "{Items:[{Slot:0b},{Slot:1b},{Slot:2b},{Slot:3b}]}"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {}
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": "bingo:very_easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "components": {
+        "minecraft:enchantment_glint_override": true
+      },
+      "count": 1,
+      "id": "minecraft:campfire"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.fill_all_campfire_slots",
+    "with": [
+      {
+        "translate": "block.minecraft.campfire"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "place"
+    ]
+  ],
+  "tags": "bingo:action"
+}

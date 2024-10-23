@@ -1,0 +1,64 @@
+{
+  "antisynergy": "iron_nugget",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 64,
+        "min_inclusive": 32
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "bingo:sub",
+                "key": "count"
+              }
+            },
+            "items": "minecraft:iron_nugget"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      "id": "minecraft:iron_nugget"
+    }
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      {
+        "translate": "item.minecraft.iron_nugget"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": "bingo:item"
+}

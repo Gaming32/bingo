@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
+import io.github.gaming32.bingo.mixin.common.ServerExplosionAccessor;
 import io.github.gaming32.bingo.util.CustomEnumCodec;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -29,7 +29,8 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
     }
 
     public void trigger(ServerPlayer player, ServerLevel level, Explosion explosion) {
-        final Optional<LootContext> source = Optional.ofNullable(explosion.source).map(s -> EntityPredicate.createContext(player, s));
+        final Optional<LootContext> source = Optional.ofNullable(explosion.getDirectSourceEntity())
+            .map(s -> EntityPredicate.createContext(player, s));
         final Vec3 location = explosion.center();
         trigger(player, instance -> instance.matches(source, level, location, explosion));
     }
@@ -65,7 +66,7 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
             if (this.location.isPresent() && !this.location.get().matches(level, location.x, location.y, location.z)) {
                 return false;
             }
-            if (this.damageSource.isPresent() && !this.damageSource.get().matches(level, location, ((ExplosionAccessor)explosion).getDamageSource())) {
+            if (this.damageSource.isPresent() && !this.damageSource.get().matches(level, location, ((ServerExplosionAccessor)explosion).getDamageSource())) {
                 return false;
             }
             if (this.blockInteraction.isPresent() && this.blockInteraction.get() != explosion.getBlockInteraction()) {

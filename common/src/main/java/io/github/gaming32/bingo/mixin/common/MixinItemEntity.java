@@ -58,7 +58,7 @@ public abstract class MixinItemEntity extends Entity implements ItemEntityExt {
     }
 
     @Inject(
-        method = "hurt",
+        method = "hurtServer",
         at = {
             @At(
                 value = "INVOKE",
@@ -68,10 +68,11 @@ public abstract class MixinItemEntity extends Entity implements ItemEntityExt {
                 value = "INVOKE",
                 target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;Lnet/minecraft/world/damagesource/DamageSource;)V"
             )
-        }
+        },
+        allow = 1
     )
-    @SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"})
-    private void onKilled(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @SuppressWarnings({"UnresolvedMixinReference", "MixinAnnotationTarget"})
+    private void onKilled(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         BingoTriggers.KILL_ITEM.get().trigger((ItemEntity) (Object) this, source, amount);
     }
 }

@@ -4,7 +4,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -12,13 +16,19 @@ import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.Objects;
 
-public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item) implements GoalIcon {
+public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item) implements GoalIcon.WithoutContext {
     public static final MapCodec<EntityIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(EntityIcon::entity),
             CompoundTag.CODEC.optionalFieldOf("data", new CompoundTag()).forGetter(EntityIcon::data),
-            BingoCodecs.ITEM_STACK.fieldOf("item").forGetter(EntityIcon::item)
+            BingoCodecs.LENIENT_ITEM_STACK.fieldOf("item").forGetter(EntityIcon::item)
         ).apply(instance, EntityIcon::new)
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, EntityIcon> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.registry(Registries.ENTITY_TYPE), EntityIcon::entity,
+        ByteBufCodecs.COMPOUND_TAG, EntityIcon::data,
+        ItemStack.STREAM_CODEC, EntityIcon::item,
+        EntityIcon::new
     );
 
     public static EntityIcon ofSpawnEgg(EntityType<?> entity, CompoundTag data, int count) {
@@ -54,6 +64,11 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
 
     public static EntityIcon of(Entity entity, ItemStack item) {
         return new EntityIcon(entity.getType(), entity.saveWithoutId(new CompoundTag()), item);
+    }
+
+    @Override
+    public ItemStack getFallback() {
+        return item;
     }
 
     @Override

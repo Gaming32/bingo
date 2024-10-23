@@ -3,15 +3,16 @@ package io.github.gaming32.bingo;
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
 import io.github.gaming32.bingo.conditions.BingoConditions;
-import io.github.gaming32.bingo.conditions.BingoParamSets;
+import io.github.gaming32.bingo.conditions.BingoContextKeySets;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
-import io.github.gaming32.bingo.mixin.common.ExplosionAccessor;
+import io.github.gaming32.bingo.mixin.common.ServerExplosionAccessor;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.messages.c2s.KeyPressedPayload;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
@@ -44,7 +45,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -62,26 +62,9 @@ public class Bingo {
     public static void init() {
         registerEventHandlers();
         initializeRegistries();
-
-        BingoPlatform.platform.registerDataReloadListeners(registrar -> {
-            registrar.register(BingoTag.ReloadListener.ID, BingoTag.ReloadListener::new);
-            registrar.register(BingoDifficulty.ReloadListener.ID, BingoDifficulty.ReloadListener::new);
-            registrar.register(
-                BingoGoal.ReloadListener.ID, BingoGoal.ReloadListener::new,
-                List.of(BingoTag.ReloadListener.ID, BingoDifficulty.ReloadListener.ID)
-            );
-        });
-
-        BingoNetworking.instance().onRegister(registrar -> {
-            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPayload.TYPE, InitBoardPayload.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPayload.TYPE, RemoveBoardPayload.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPayload.TYPE, ResyncStatesPayload.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPayload.TYPE, SyncTeamPayload.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPayload.TYPE, UpdateProgressPayload.CODEC);
-            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePayload.TYPE, UpdateStatePayload.CODEC);
-
-            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPayload.TYPE, KeyPressedPayload.CODEC);
-        });
+        registerDatapackRegistries();
+        registerDataReloadListeners();
+        registerPayloadHandlers();
 
         LOGGER.info("I got the diagonal!");
     }
@@ -110,12 +93,12 @@ public class Bingo {
             }
         });
 
-        Event.EXPLOSION_START.register((level, explosion) -> {
+        Event.SERVER_EXPLOSION_START.register((level, explosion) -> {
             if (level instanceof ServerLevel serverLevel) {
                 final ServerPlayer player;
                 if (explosion.getIndirectSourceEntity() instanceof ServerPlayer thePlayer) {
                     player = thePlayer;
-                } else if (((ExplosionAccessor)explosion).getDamageSource().getEntity() instanceof ServerPlayer thePlayer) {
+                } else if (((ServerExplosionAccessor)explosion).getDamageSource().getEntity() instanceof ServerPlayer thePlayer) {
                     player = thePlayer;
                 } else {
                     player = null;
@@ -143,7 +126,7 @@ public class Bingo {
             try {
                 final CompoundTag tag = NbtIo.readCompressed(path, NbtAccounter.unlimitedHeap());
                 final BingoGame.PersistenceData data = BingoGame.PersistenceData.CODEC.parse(
-                    instance.overworld().registryAccess().createSerializationContext(NbtOps.INSTANCE), tag
+                    instance.registryAccess().createSerializationContext(NbtOps.INSTANCE), tag
                 ).getOrThrow();
                 activeGame = data.createGame(instance.getScoreboard());
                 Files.deleteIfExists(path);
@@ -159,7 +142,7 @@ public class Bingo {
             try {
                 final BingoGame.PersistenceData data = activeGame.createPersistenceData();
                 final Tag tag = BingoGame.PersistenceData.CODEC.encodeStart(
-                    instance.overworld().registryAccess().createSerializationContext(NbtOps.INSTANCE), data
+                    instance.registryAccess().createSerializationContext(NbtOps.INSTANCE), data
                 ).getOrThrow();
                 if (tag instanceof CompoundTag compoundTag) {
                     NbtIo.writeCompressed(compoundTag, path);
@@ -174,13 +157,39 @@ public class Bingo {
 
     private static void initializeRegistries() {
         BingoConditions.load();
-        BingoParamSets.load();
+        BingoContextKeySets.load();
         GoalIconType.load();
         BingoSubType.load();
         ProgressTrackerType.load();
         BingoEntitySubPredicates.load();
         BingoItemSubPredicates.load();
         BingoTriggers.load();
+    }
+
+    private static void registerDatapackRegistries() {
+        BingoPlatform.platform.registerDatapackRegistries(registrar -> {
+            registrar.unsynced(BingoRegistries.TAG, BingoTag.CODEC);
+            registrar.unsynced(BingoRegistries.DIFFICULTY, BingoDifficulty.CODEC);
+        });
+    }
+
+    private static void registerDataReloadListeners() {
+        BingoPlatform.platform.registerDataReloadListeners(registrar -> {
+            registrar.register(BingoGoal.ReloadListener.ID, BingoGoal.ReloadListener::new);
+        });
+    }
+
+    private static void registerPayloadHandlers() {
+        BingoNetworking.instance().onRegister(registrar -> {
+            registrar.register(PacketFlow.CLIENTBOUND, InitBoardPayload.TYPE, InitBoardPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, RemoveBoardPayload.TYPE, RemoveBoardPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, ResyncStatesPayload.TYPE, ResyncStatesPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPayload.TYPE, SyncTeamPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPayload.TYPE, UpdateProgressPayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePayload.TYPE, UpdateStatePayload.CODEC);
+
+            registrar.register(PacketFlow.SERVERBOUND, KeyPressedPayload.TYPE, KeyPressedPayload.CODEC);
+        });
     }
 
     public static void updateCommandTree(PlayerList playerList) {

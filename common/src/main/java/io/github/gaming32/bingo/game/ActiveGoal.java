@@ -9,6 +9,7 @@ import io.github.gaming32.bingo.data.icons.GoalIcon;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -26,7 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public record ActiveGoal(
-    BingoGoal.Holder goal,
+    BingoGoal.GoalHolder goal,
     Component name,
     Optional<Component> tooltip,
     GoalIcon icon,
@@ -35,7 +36,7 @@ public record ActiveGoal(
 ) {
     public static final Codec<ActiveGoal> PERSISTENCE_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            BingoGoal.Holder.PERSISTENCE_CODEC.fieldOf("goal").forGetter(ActiveGoal::goal),
+            BingoGoal.GoalHolder.PERSISTENCE_CODEC.fieldOf("goal").forGetter(ActiveGoal::goal),
             ComponentSerialization.CODEC.fieldOf("name").forGetter(ActiveGoal::name),
             ComponentSerialization.CODEC.optionalFieldOf("tooltip").forGetter(ActiveGoal::tooltip),
             GoalIcon.CODEC.fieldOf("icon").forGetter(ActiveGoal::icon),
@@ -48,8 +49,8 @@ public record ActiveGoal(
         return goal.goal().getProgress() != null;
     }
 
-    public ItemStack toItemStackWithComponents() {
-        final ItemStack result = icon.item().copy();
+    public ItemStack getFallbackWithComponents(RegistryAccess access) {
+        final ItemStack result = icon.getFallback(access);
         result.set(DataComponents.ITEM_NAME, name);
         result.set(DataComponents.RARITY, Rarity.COMMON);
         result.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);

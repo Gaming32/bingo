@@ -1,0 +1,67 @@
+{
+  "criteria": {
+    "armor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:leather_helmet"
+          },
+          {
+            "items": "minecraft:leather_chestplate"
+          },
+          {
+            "items": "minecraft:leather_leggings"
+          },
+          {
+            "items": "minecraft:leather_boots"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:leather_helmet"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:leather_chestplate"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:leather_leggings"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:leather_boots"
+        }
+      }
+    ]
+  },
+  "infrequency": 3,
+  "name": {
+    "translate": "bingo.goal.full_leather_armor"
+  },
+  "requirements": [
+    [
+      "armor"
+    ]
+  ],
+  "tags": "bingo:item"
+}

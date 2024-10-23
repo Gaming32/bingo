@@ -1,0 +1,52 @@
+{
+  "antisynergy": "never_wear_armor",
+  "catalyst": "wear_armor",
+  "criteria": {
+    "equip": {
+      "conditions": {
+        "new_item": {
+          "items": "#c:armors"
+        },
+        "slots": [
+          "feet",
+          "legs",
+          "chest",
+          "head"
+        ]
+      },
+      "trigger": "bingo:equip_item"
+    },
+    "use": {
+      "conditions": {
+        "item": {
+          "items": "#c:tools/shield"
+        }
+      },
+      "trigger": "minecraft:using_item"
+    }
+  },
+  "difficulty": "bingo:hard",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "components": {
+        "minecraft:enchantment_glint_override": true
+      },
+      "count": 1,
+      "id": "minecraft:shield"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.never_wear_armor_or_use_shields"
+  },
+  "requirements": [
+    [
+      "equip",
+      "use"
+    ]
+  ],
+  "tags": "bingo:never",
+  "tooltip": {
+    "translate": "bingo.goal.never_wear_armor_or_use_shields.tooltip"
+  }
+}

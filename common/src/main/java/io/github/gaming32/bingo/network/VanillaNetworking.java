@@ -12,6 +12,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -51,18 +52,22 @@ public class VanillaNetworking {
     public static final String CRITERION = "criterion";
     public static final AdvancementRequirements REQUIREMENTS = AdvancementRequirements.allOf(List.of(CRITERION));
 
-    public static List<AdvancementHolder> generateAdvancements(int size, ActiveGoal[] goals) {
+    public static List<AdvancementHolder> generateAdvancements(
+        RegistryAccess registries, int size, ActiveGoal[] goals
+    ) {
         final List<AdvancementHolder> result = new ArrayList<>(1 + goals.length);
         result.add(ROOT_ADVANCEMENT);
         for (int i = 0; i < goals.length; i++) {
-            result.add(generateAdvancement(i, goals[i], i % size, i / size));
+            result.add(generateAdvancement(registries, i, goals[i], i % size, i / size));
         }
         return result;
     }
 
-    public static AdvancementHolder generateAdvancement(int index, ActiveGoal goal, int x, int y) {
+    public static AdvancementHolder generateAdvancement(
+        RegistryAccess registries, int index, ActiveGoal goal, int x, int y
+    ) {
         final DisplayInfo displayInfo = new DisplayInfo(
-            goal.icon().item(),
+            goal.icon().getFallback(registries),
             goal.name(),
             goal.tooltip().orElse(CommonComponents.EMPTY),
             Optional.empty(),

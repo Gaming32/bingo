@@ -1,0 +1,121 @@
+{
+  "antisynergy": "all_swords",
+  "criteria": {
+    "diamond": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:diamond_sword"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "gold": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:golden_sword"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "iron": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:iron_sword"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "stone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:stone_sword"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "wood": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:wooden_sword"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:wooden_sword"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:stone_sword"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:golden_sword"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:iron_sword"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:diamond_sword"
+        }
+      }
+    ]
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.almost_every_sword"
+  },
+  "progress": {
+    "type": "bingo:achieved_requirements"
+  },
+  "requirements": [
+    [
+      "wood"
+    ],
+    [
+      "stone"
+    ],
+    [
+      "gold"
+    ],
+    [
+      "iron"
+    ],
+    [
+      "diamond"
+    ]
+  ],
+  "tags": "bingo:item"
+}

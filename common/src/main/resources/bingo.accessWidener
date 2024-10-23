@@ -1,8 +1,7 @@
 accessWidener	v2	named
 accessible	class	net/minecraft/advancements/critereon/PlayerPredicate$StatMatcher
-accessible	method	net/minecraft/client/gui/GuiGraphics	renderTooltipInternal	(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;)V
-accessible  method  net/minecraft/world/level/storage/loot/parameters/LootContextParamSets  register    (Ljava/lang/String;Ljava/util/function/Consumer;)Lnet/minecraft/world/level/storage/loot/parameters/LootContextParamSet;
+accessible	method	net/minecraft/client/gui/GuiGraphics	renderTooltipInternal	(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/ResourceLocation;)V
+accessible	method	net/minecraft/commands/arguments/ResourceKeyArgument	resolveKey	(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;Lnet/minecraft/resources/ResourceKey;Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;)Lnet/minecraft/core/Holder$Reference;
+accessible  method  net/minecraft/world/level/storage/loot/parameters/LootContextParamSets  register    (Ljava/lang/String;Ljava/util/function/Consumer;)Lnet/minecraft/util/context/ContextKeySet;
 accessible  field   net/minecraft/world/inventory/GrindstoneMenu    repairSlots Lnet/minecraft/world/Container;
 accessible	method	net/minecraft/world/level/storage/LevelResource	<init>	(Ljava/lang/String;)V
-accessible	field	net/minecraft/server/ReloadableServerResources	registryLookup	Lnet/minecraft/server/ReloadableServerResources$ConfigurableRegistryLookup;
-accessible	field	net/minecraft/world/level/Explosion	source	Lnet/minecraft/world/entity/Entity;

@@ -61,7 +61,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleProgressibleCriterionTrigg
         public boolean matches(Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
             int requiredCount = this.requiredCount;
             if (requiredCount == ALL) {
-                var tag = BuiltInRegistries.ITEM.getTag(this.tag);
+                var tag = BuiltInRegistries.ITEM.get(this.tag);
                 if (tag.isEmpty()) {
                     return false;
                 }

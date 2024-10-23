@@ -172,8 +172,8 @@ public interface BingoGameMode {
         }
 
         @Override
-        public boolean isGoalAllowed(BingoGoal.Holder goal) {
-            return goal.goal().getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
+        public boolean isGoalAllowed(BingoGoal.GoalHolder goal) {
+            return goal.goal().getTags().stream().allMatch(g -> g.value().specialType() == BingoTag.SpecialType.NONE);
         }
 
         @Override
@@ -226,8 +226,8 @@ public interface BingoGameMode {
         }
 
         @Override
-        public boolean isGoalAllowed(BingoGoal.Holder goal) {
-            return goal.goal().getTags().stream().allMatch(g -> g.tag().specialType() == BingoTag.SpecialType.NONE);
+        public boolean isGoalAllowed(BingoGoal.GoalHolder goal) {
+            return goal.goal().getTags().stream().allMatch(g -> g.value().specialType() == BingoTag.SpecialType.NONE);
         }
 
         @Override
@@ -254,7 +254,7 @@ public interface BingoGameMode {
 
     boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever);
 
-    default boolean isGoalAllowed(BingoGoal.Holder goal) {
+    default boolean isGoalAllowed(BingoGoal.GoalHolder goal) {
         return true;
     }
 

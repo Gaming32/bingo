@@ -56,7 +56,7 @@ public record DamageEntry(
             return null;
         }
         ResourceKey<DamageType> key = ResourceKey.create(Registries.DAMAGE_TYPE, location);
-        var holder = registryAccess.registryOrThrow(Registries.DAMAGE_TYPE).getHolder(key);
+        var holder = registryAccess.lookupOrThrow(Registries.DAMAGE_TYPE).get(key);
         if (holder.isEmpty()) {
             return null;
         }

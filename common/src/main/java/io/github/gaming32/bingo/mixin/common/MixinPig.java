@@ -6,9 +6,10 @@ import com.llamalad7.mixinextras.sugar.Local;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.level.Level;
@@ -25,22 +26,27 @@ public abstract class MixinPig extends Animal {
         method = "thunderHit",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/server/level/ServerLevel;addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"
+            target = "Lnet/minecraft/world/entity/animal/Pig;convertTo(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/ConversionParams;Lnet/minecraft/world/entity/ConversionParams$AfterConversion;)Lnet/minecraft/world/entity/Mob;"
         )
     )
-    private boolean zombifyPigTrigger(ServerLevel instance, Entity entity, Operation<Boolean> original, @Local(argsOnly = true) LightningBolt lightning) {
-        final boolean result = original.call(instance, entity);
-        if (result) {
+    private Mob zombifyPigTrigger(
+        Pig instance, EntityType<?> entityType, ConversionParams conversionParams, ConversionParams.AfterConversion<?> afterConversion,
+        Operation<Mob> original,
+        @Local(argsOnly = true) ServerLevel level,
+        @Local(argsOnly = true) LightningBolt lightning
+    ) {
+        final var newEntity = original.call(instance, entityType, conversionParams, afterConversion);
+        if (newEntity != null) {
             if (lightning.getCause() != null) {
-                BingoTriggers.ZOMBIFY_PIG.get().trigger(lightning.getCause(), (Pig)(Object)this, entity, true);
+                BingoTriggers.ZOMBIFY_PIG.get().trigger(lightning.getCause(), (Pig)(Object)this, newEntity, true);
             } else {
-                for (ServerPlayer player : instance.players()) {
+                for (ServerPlayer player : level.players()) {
                     if (player.distanceTo(lightning) < 256f) {
-                        BingoTriggers.ZOMBIFY_PIG.get().trigger(player, (Pig)(Object)this, entity, false);
+                        BingoTriggers.ZOMBIFY_PIG.get().trigger(player, (Pig)(Object)this, newEntity, false);
                     }
                 }
             }
         }
-        return result;
+        return newEntity;
     }
 }

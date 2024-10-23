@@ -5,9 +5,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -33,7 +33,7 @@ public record OneByOneHoleCondition(int bottom, int top, BlockPredicate predicat
     @Override
     public boolean test(LootContext lootContext) {
         final ServerLevel level = lootContext.getLevel();
-        final BlockPos.MutableBlockPos pos = BlockPos.containing(lootContext.getParam(LootContextParams.ORIGIN)).mutable();
+        final BlockPos.MutableBlockPos pos = BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN)).mutable();
         for (int y = bottom; y <= top; y++) {
             if (!predicate.test(level, pos.setY(y))) {
                 return false;
@@ -44,7 +44,7 @@ public record OneByOneHoleCondition(int bottom, int top, BlockPredicate predicat
 
     @NotNull
     @Override
-    public Set<LootContextParam<?>> getReferencedContextParams() {
+    public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.ORIGIN);
     }
 }

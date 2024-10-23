@@ -2,6 +2,10 @@ package io.github.gaming32.bingo.data.icons;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 
@@ -15,6 +19,8 @@ public record CycleIcon(List<GoalIcon> icons) implements GoalIcon {
     public static final MapCodec<CycleIcon> CODEC = ExtraCodecs.nonEmptyList(GoalIcon.CODEC.listOf())
         .fieldOf("icons")
         .xmap(CycleIcon::new, CycleIcon::icons);
+    public static final StreamCodec<RegistryFriendlyByteBuf, CycleIcon> STREAM_CODEC =
+        GoalIcon.STREAM_CODEC.apply(ByteBufCodecs.list()).map(CycleIcon::new, CycleIcon::icons);
 
     public CycleIcon {
         icons = ImmutableList.copyOf(icons);
@@ -41,8 +47,8 @@ public record CycleIcon(List<GoalIcon> icons) implements GoalIcon {
     }
 
     @Override
-    public ItemStack item() {
-        return icons.getLast().item();
+    public ItemStack getFallback(RegistryAccess registries) {
+        return icons.getLast().getFallback(registries);
     }
 
     @Override

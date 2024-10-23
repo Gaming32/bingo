@@ -13,7 +13,6 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +60,7 @@ public class DifferentPotionsTrigger extends SimpleProgressibleCriterionTrigger<
                 if (item.getItem() instanceof PotionItem) {
                     final PotionContents potion = item.get(DataComponents.POTION_CONTENTS);
                     if (potion == null || potion.potion().isEmpty()) continue;
-                    if (discovered.add(Potion.getName(potion.potion(), "")) && discovered.size() >= minCount) {
+                    if (discovered.add(potion.potion().get().value().name()) && discovered.size() >= minCount) {
                         progressListener.update(this, minCount, minCount);
                         return true;
                     }

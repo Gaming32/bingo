@@ -98,7 +98,7 @@ public class RelativeStatsTrigger extends SimpleProgressibleCriterionTrigger<Rel
         public Builder stat(ResourceLocation customStat, MinMaxBounds.Ints range) {
             return stat(
                 Stats.CUSTOM,
-                BuiltInRegistries.CUSTOM_STAT.getHolderOrThrow(ResourceKey.create(
+                BuiltInRegistries.CUSTOM_STAT.getOrThrow(ResourceKey.create(
                     Registries.CUSTOM_STAT, customStat
                 )),
                 range

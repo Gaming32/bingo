@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -67,7 +68,7 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         renderDispatcher.setRenderShadow(false);
 
         final MultiBufferSource.BufferSource bufferSource = minecraft.renderBuffers().bufferSource();
-        renderDispatcher.render(entity, 0, 0, 0, -150f, 1f, pose, bufferSource, LightTexture.FULL_BRIGHT);
+        renderDispatcher.render(entity, 0, 0, 0, -150f, pose, bufferSource, LightTexture.FULL_BRIGHT);
         bufferSource.endBatch();
 
         renderDispatcher.setRenderShadow(true);
@@ -92,7 +93,7 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         if (level == null) {
             return null;
         }
-        final Entity entity = icon.entity().create(level);
+        final Entity entity = icon.entity().create(level, EntitySpawnReason.LOAD);
         if (entity != null) {
             entity.load(icon.data());
         }

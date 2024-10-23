@@ -4,19 +4,22 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
+import io.github.gaming32.bingo.data.BingoDifficulties;
+import io.github.gaming32.bingo.data.BingoRegistries;
+import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.fabric.datagen.goal.BingoGoalProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoBlockTagProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoDamageTypeTagProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoEntityTypeTagProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoFeatureTagProvider;
 import io.github.gaming32.bingo.fabric.datagen.tag.BingoItemTagProvider;
-import io.github.gaming32.bingo.fabric.datagen.tag.BingoPaintingVariantTagProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.JsonKeySortOrderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -43,15 +46,13 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
         pack.addProvider(BingoGoalProvider::new);
-        pack.addProvider(BingoTagProvider::new);
-        pack.addProvider(BingoDifficultyProvider::new);
+        pack.addProvider(BingoDynamicRegistryProvider::new);
 
         final BingoBlockTagProvider blockTagProvider = pack.addProvider(BingoBlockTagProvider::new);
         pack.addProvider((output, registriesFuture) -> new BingoItemTagProvider(output, registriesFuture, blockTagProvider));
         pack.addProvider(BingoEntityTypeTagProvider::new);
         pack.addProvider(BingoFeatureTagProvider::new);
         pack.addProvider(BingoDamageTypeTagProvider::new);
-        pack.addProvider(BingoPaintingVariantTagProvider::new);
 
         if (DUMP_BINGO_COMMAND) {
             pack.addProvider(BingoCommandDumper::new);
@@ -59,11 +60,17 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     }
 
     @Override
+    public void buildRegistry(RegistrySetBuilder registryBuilder) {
+        registryBuilder.add(BingoRegistries.TAG, BingoTags::bootstrap);
+        registryBuilder.add(BingoRegistries.DIFFICULTY, BingoDifficulties::bootstrap);
+    }
+
+    @Override
     public void addJsonKeySortOrders(JsonKeySortOrderCallback callback) {
         callback.add("bingo_type", 0);
     }
 
-    public static <T> Set<T> loadTag(TagKey<T> tag, HolderLookup.Provider registries) {
+    public static <T> Set<T> loadVanillaTag(TagKey<T> tag, HolderLookup.Provider registries) {
         final var registry = registries.lookupOrThrow(tag.registry());
         final IoSupplier<InputStream> resource = Minecraft.getInstance()
             .getVanillaPackResources()
@@ -86,7 +93,7 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
                     new TagEntry.Lookup<>() {
                         @Nullable
                         @Override
-                        public T element(ResourceLocation elementLocation) {
+                        public T element(ResourceLocation elementLocation, boolean readOnly) {
                             return registry.get(ResourceKey.create(tag.registry(), elementLocation))
                                 .map(Holder.Reference::value)
                                 .orElse(null);
@@ -95,7 +102,7 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
                         @Nullable
                         @Override
                         public Collection<T> tag(ResourceLocation tagLocation) {
-                            return loadTag(TagKey.create(tag.registry(), tagLocation), registries);
+                            return loadVanillaTag(TagKey.create(tag.registry(), tagLocation), registries);
                         }
                     }, out
                 ))

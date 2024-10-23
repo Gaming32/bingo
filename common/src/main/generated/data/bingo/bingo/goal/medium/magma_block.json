@@ -1,0 +1,64 @@
+{
+  "antisynergy": "magma_block",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 30,
+        "min_inclusive": 10
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "bingo:sub",
+                "key": "count"
+              }
+            },
+            "items": "minecraft:magma_block"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      "id": "minecraft:magma_block"
+    }
+  },
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      {
+        "translate": "block.minecraft.magma_block"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": "bingo:item"
+}

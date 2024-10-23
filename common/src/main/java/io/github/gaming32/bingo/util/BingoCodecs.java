@@ -27,6 +27,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.lang.reflect.Array;
@@ -66,12 +67,12 @@ public final class BingoCodecs {
     public static final Codec<IntList> INT_LIST = Codec.INT.listOf().xmap(IntImmutableList::new, Function.identity());
     public static final Codec<ItemStack> UNBOUNDED_ITEM_STACK = RecordCodecBuilder.create(
         instance -> instance.group(
-            ItemStack.ITEM_NON_AIR_CODEC.fieldOf("id").forGetter(ItemStack::getItemHolder),
+            Item.CODEC.fieldOf("id").forGetter(ItemStack::getItemHolder),
             ExtraCodecs.POSITIVE_INT.fieldOf("count").orElse(1).forGetter(ItemStack::getCount),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemStack::getComponentsPatch)
         ).apply(instance, ItemStack::new)
     );
-    public static final Codec<ItemStack> ITEM_STACK = Codec.withAlternative(UNBOUNDED_ITEM_STACK, ItemStack.SIMPLE_ITEM_CODEC);
+    public static final Codec<ItemStack> LENIENT_ITEM_STACK = Codec.withAlternative(UNBOUNDED_ITEM_STACK, ItemStack.SIMPLE_ITEM_CODEC);
 
     private BingoCodecs() {
     }
@@ -167,7 +168,15 @@ public final class BingoCodecs {
     }
 
     public static MapCodec<OptionalInt> optionalInt(String name) {
-        return Codec.INT.optionalFieldOf(name).xmap(
+        return optionalInt(Codec.INT.optionalFieldOf(name));
+    }
+
+    public static MapCodec<OptionalInt> optionalPositiveInt(String name) {
+        return optionalInt(ExtraCodecs.POSITIVE_INT.optionalFieldOf(name));
+    }
+
+    public static MapCodec<OptionalInt> optionalInt(MapCodec<Optional<Integer>> codec) {
+        return codec.xmap(
             opt -> opt.map(OptionalInt::of).orElseGet(OptionalInt::empty),
             opt -> opt.isPresent() ? Optional.of(opt.getAsInt()) : Optional.empty()
         );

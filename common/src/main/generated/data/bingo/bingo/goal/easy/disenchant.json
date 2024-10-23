@@ -1,0 +1,56 @@
+{
+  "criteria": {
+    "disenchant1": {
+      "conditions": {
+        "first_item": [
+          {
+            "condition": "bingo:tool_is_enchanted",
+            "non_curse": true
+          }
+        ]
+      },
+      "trigger": "bingo:use_grindstone"
+    },
+    "disenchant2": {
+      "conditions": {
+        "second_item": [
+          {
+            "condition": "bingo:tool_is_enchanted",
+            "non_curse": true
+          }
+        ]
+      },
+      "trigger": "bingo:use_grindstone"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:grindstone"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:enchanted_book"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.disenchant"
+  },
+  "requirements": [
+    [
+      "disenchant1",
+      "disenchant2"
+    ]
+  ],
+  "tags": "bingo:action"
+}

@@ -1,19 +1,20 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedSet;
 import io.github.gaming32.bingo.conditions.HasOnlyBeenDamagedByCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
+import io.github.gaming32.bingo.data.icons.InstrumentCycleIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.progresstrackers.AchievedRequirementsProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
-import io.github.gaming32.bingo.data.tags.BingoBlockTags;
-import io.github.gaming32.bingo.data.tags.BingoItemTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoBlockTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
 import io.github.gaming32.bingo.triggers.BeaconEffectTrigger;
 import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
 import io.github.gaming32.bingo.triggers.DifferentPotionsTrigger;
@@ -24,7 +25,6 @@ import io.github.gaming32.bingo.triggers.PartyParrotsTrigger;
 import io.github.gaming32.bingo.triggers.PowerConduitTrigger;
 import io.github.gaming32.bingo.triggers.ZombifyPigTrigger;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.Util;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -39,7 +39,7 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPredicate;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -49,7 +49,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -61,7 +60,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -73,6 +72,9 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
     @Override
     public void addGoals() {
         final var structures = registries.lookupOrThrow(Registries.STRUCTURE);
+        final var items = registries.lookupOrThrow(Registries.ITEM);
+        final var entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
+
         addGoal(obtainSomeItemsFromTag(id("ores"), ConventionalItemTags.ORES, "bingo.goal.ores", 5, 7)
             .tooltip("ores")
             .tags(BingoTags.OVERWORLD));
@@ -103,6 +105,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             id("any_head"),
             new ItemStack(Items.ZOMBIE_HEAD),
             ItemPredicate.Builder.item().of(
+                items,
                 Items.SKELETON_SKULL,
                 Items.PLAYER_HEAD,
                 Items.ZOMBIE_HEAD,
@@ -121,7 +124,9 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .name("all_dyes")
             .tooltip(Component.translatable(
                 "bingo.sixteen_bang",
-                Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new)
+                Arrays.stream(DyeColor.values())
+                    .map(color -> Component.translatable("color.minecraft." + color.getName()))
+                    .toArray(Object[]::new)
             ))
             .icon(new CycleIcon(
                 Arrays.stream(DyeColor.values())
@@ -219,7 +224,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("shulker_in_overworld"))
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
                 EntityPredicate.Builder.entity()
-                    .of(EntityType.SHULKER)
+                    .of(entityTypes, EntityType.SHULKER)
                     .located(LocationPredicate.Builder.inDimension(Level.OVERWORLD))
             ))
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.END, BingoTags.OVERWORLD)
@@ -243,8 +248,8 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("panda_slime_ball"))
             // Currently untested. They have a 1/175,000 or a 1/2,100,000 chance to drop one on a tick.
             .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
-                ItemPredicate.Builder.item().of(Items.SLIME_BALL).build(),
-                EntityPredicate.Builder.entity().of(EntityType.PANDA).build()
+                ItemPredicate.Builder.item().of(items, Items.SLIME_BALL).build(),
+                EntityPredicate.Builder.entity().of(entityTypes, EntityType.PANDA).build()
             ))
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
             .name("panda_slime_ball")
@@ -301,16 +306,18 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION)
             .tooltip(Component.translatable(
                 "bingo.sixteen_bang",
-                Arrays.stream(DyeColor.values()).map(color -> Component.translatable("color.minecraft." + color.getName())).toArray(Object[]::new)
+                Arrays.stream(DyeColor.values())
+                    .map(color -> Component.translatable("color.minecraft." + color.getName()))
+                    .toArray(Object[]::new)
             ))
         );
         addGoal(BingoGoal.builder(id("kill_enderman_with_endermites"))
             .criterion("kill", EntityDieNearPlayerTrigger.builder()
                 .entity(ContextAwarePredicate.create(
-                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(EntityType.ENDERMAN)).build(),
+                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(entityTypes, EntityType.ENDERMAN)).build(),
                     HasOnlyBeenDamagedByCondition.builder().entityType(EntityType.ENDERMITE).build()
                 ))
-                .killingBlow(DamagePredicate.Builder.damageInstance().sourceEntity(EntityPredicate.Builder.entity().of(EntityType.ENDERMITE).build()).build())
+                .killingBlow(DamagePredicate.Builder.damageInstance().sourceEntity(EntityPredicate.Builder.entity().of(entityTypes, EntityType.ENDERMITE).build()).build())
                 .build()
             )
             .name("kill_enderman_with_endermites")
@@ -330,36 +337,43 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
     }
 
+    @SuppressWarnings("deprecation")
     private BingoGoal.Builder obtainAllGoatHorns() {
-        final Map<ResourceLocation, ItemStack> goatHorns = BuiltInRegistries.INSTRUMENT.holders()
-            .collect(ImmutableMap.toImmutableMap(
-                instrument -> instrument.key().location(),
-                instrument -> InstrumentItem.create(Items.GOAT_HORN, instrument)
+        final var items = registries.lookupOrThrow(Registries.ITEM);
+
+        final var sortedInstruments = registries.lookupOrThrow(Registries.INSTRUMENT)
+            .listElements()
+            .collect(ImmutableSortedSet.toImmutableSortedSet(
+                Comparator.comparing(e -> e.key().location())
             ));
+
         final BingoGoal.Builder builder = BingoGoal.builder(id("all_goat_horns"));
-        goatHorns.forEach((instrument, goatHorn) -> builder.criterion(
-            "obtain_" + instrument.getNamespace() + "_" + instrument.getPath(),
-            InventoryChangeTrigger.TriggerInstance.hasItems(
-                ItemPredicate.Builder.item()
-                    .of(goatHorn.getItem())
-                    .hasComponents(DataComponentPredicate.allOf(goatHorn.getComponents()))
-                    .build()
-            )
-        ));
+        for (final var instrument : sortedInstruments) {
+            final var location = instrument.key().location();
+            builder.criterion(
+                "obtain_" + location.getNamespace() + "_" + location.getPath(),
+                InventoryChangeTrigger.TriggerInstance.hasItems(
+                    ItemPredicate.Builder.item()
+                        .of(items, Items.GOAT_HORN)
+                        .hasComponents(DataComponentPredicate.builder()
+                            .expect(DataComponents.INSTRUMENT, instrument)
+                            .build()
+                        )
+                        .build()
+                )
+            );
+        }
+
         return builder
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .name("all_goat_horns")
             .tooltip(ComponentUtils.formatList(
-                goatHorns.keySet(), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR,
-                location -> Component.translatable(Util.makeDescriptionId("instrument", location))
+                sortedInstruments,
+                ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR,
+                holder -> holder.value().description()
             ))
             .progress(AchievedRequirementsProgressTracker.INSTANCE)
-            .icon(new CycleIcon(
-                goatHorns.values()
-                    .stream()
-                    .map(ItemIcon::new)
-                    .collect(ImmutableList.toImmutableList())
-            ))
+            .icon(new InstrumentCycleIcon(Items.GOAT_HORN.builtInRegistryHolder()))
             .antisynergy("goat_horn");
     }
 }

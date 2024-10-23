@@ -1,0 +1,42 @@
+{
+  "criteria": {
+    "extinguish": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": "minecraft:campfire"
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": "#minecraft:shovels"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": "bingo:very_easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:campfire"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.extinguish_campfire"
+  },
+  "requirements": [
+    [
+      "extinguish"
+    ]
+  ],
+  "tags": "bingo:action"
+}

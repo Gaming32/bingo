@@ -3,17 +3,16 @@ package io.github.gaming32.bingo.conditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.ext.LivingEntityExt;
-import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -50,18 +49,18 @@ public record HasOnlyBeenDamagedByCondition(
 
     @Override
     public boolean test(LootContext lootContext) {
-        Entity entity = lootContext.getParam(LootContextParams.THIS_ENTITY);
+        Entity entity = lootContext.getParameter(LootContextParams.THIS_ENTITY);
         return entity instanceof LivingEntityExt living && living.bingo$hasOnlyBeenDamagedBy(damageEntry -> {
             if (this.entityType.isPresent() && damageEntry.entityType() != this.entityType.get()) {
                 return false;
             }
-            if (this.entityTypeTag.isPresent() && (damageEntry.entityType() == null || !this.entityTypeTag.get().matches(BingoUtil.getBuiltInHolder(BuiltInRegistries.ENTITY_TYPE, damageEntry.entityType())))) {
+            if (this.entityTypeTag.isPresent() && (damageEntry.entityType() == null || !this.entityTypeTag.get().matches(BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(damageEntry.entityType())))) {
                 return false;
             }
             if (this.directEntityType.isPresent() && damageEntry.directEntityType() != this.directEntityType.get()) {
                 return false;
             }
-            if (this.directEntityTypeTag.isPresent() && (damageEntry.directEntityType() == null || !this.directEntityTypeTag.get().matches(BingoUtil.getBuiltInHolder(BuiltInRegistries.ENTITY_TYPE, damageEntry.directEntityType())))) {
+            if (this.directEntityTypeTag.isPresent() && (damageEntry.directEntityType() == null || !this.directEntityTypeTag.get().matches(BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(damageEntry.directEntityType())))) {
                 return false;
             }
             if (this.damageType.isPresent() && !damageEntry.damageType().is(this.damageType.get())) {
@@ -76,7 +75,7 @@ public record HasOnlyBeenDamagedByCondition(
 
     @NotNull
     @Override
-    public Set<LootContextParam<?>> getReferencedContextParams() {
+    public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.THIS_ENTITY);
     }
 

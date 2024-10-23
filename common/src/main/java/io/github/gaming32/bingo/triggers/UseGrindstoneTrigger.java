@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.conditions.BingoParamSets;
+import io.github.gaming32.bingo.conditions.BingoContextKeySets;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.CriterionValidator;
@@ -55,10 +55,10 @@ public class UseGrindstoneTrigger extends SimpleCriterionTrigger<UseGrindstoneTr
             if (location.isPresent() && !location.get().matches(player.serverLevel(), x, y, z)) {
                 return false;
             }
-            if (this.firstItem.isPresent() && !this.firstItem.get().matches(BingoParamSets.wrapTool(player, firstItem))) {
+            if (this.firstItem.isPresent() && !this.firstItem.get().matches(BingoContextKeySets.wrapTool(player, firstItem))) {
                 return false;
             }
-            if (this.secondItem.isPresent() && !this.secondItem.get().matches(BingoParamSets.wrapTool(player, secondItem))) {
+            if (this.secondItem.isPresent() && !this.secondItem.get().matches(BingoContextKeySets.wrapTool(player, secondItem))) {
                 return false;
             }
             return true;
@@ -67,8 +67,8 @@ public class UseGrindstoneTrigger extends SimpleCriterionTrigger<UseGrindstoneTr
         @Override
         public void validate(CriterionValidator validator) {
             SimpleInstance.super.validate(validator);
-            firstItem.ifPresent(p -> validator.validate(p, BingoParamSets.TOOL, ".first_item"));
-            secondItem.ifPresent(p -> validator.validate(p, BingoParamSets.TOOL, ".second_item"));
+            firstItem.ifPresent(p -> validator.validate(p, BingoContextKeySets.TOOL_ONLY, ".first_item"));
+            secondItem.ifPresent(p -> validator.validate(p, BingoContextKeySets.TOOL_ONLY, ".second_item"));
         }
     }
 

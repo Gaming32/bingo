@@ -1,7 +1,7 @@
-// 1.21	
+// 1.21.3	Bingo/Tags for minecraft:item
 b6112420422099eed7aaae79f801a0250bf8764a data/bingo/tags/item/all_mineral_blocks.json
 849681cfac44a9f01a440afc75340e33bcdd9c4f data/bingo/tags/item/allowed_heads.json
-a8b1e3b829ab78073246ae428bf5836f88dad642 data/bingo/tags/item/banner_patterns.json
+b8fb8aac34ee76a18519bf8341cc6965f6fc775f data/bingo/tags/item/banner_patterns.json
 50d93d5dff6f31f99f861c2df7c4e2dc1ec86e4b data/bingo/tags/item/basic_mineral_blocks.json
 72ee76c8c074ccc46fb422ca6f71e0db6eac67b1 data/bingo/tags/item/bonemealable.json
 fd55d4f9e6c3005580bc3aed7e6c8a10dfdf5a91 data/bingo/tags/item/climbable.json
@@ -16,6 +16,6 @@ c05e998c718feb7c79e577ca9f09edc7225b3d22 data/bingo/tags/item/flowers.json
 fadcbb38e7665bed6ea2c1b8876f4954189179c5 data/bingo/tags/item/gold_in_name.json
 1d06a2ee122e3edcd98600fe98e131c26392d4bf data/bingo/tags/item/living_coral_blocks.json
 76ff0180f4ac33ecd2e129331abfc90bb84adad2 data/bingo/tags/item/meat.json
-085879b3966fa2b81ee5d552455c5a238c0419ae data/bingo/tags/item/not_meat.json
-002cb871d0959e8ffd4cd0a7c52e8bed9800b392 data/bingo/tags/item/slabs.json
-79abb83176b057e09e9904aca8bcef5879d64bb2 data/bingo/tags/item/stairs.json
+86894fcb39eb59a6350754e0397f720fe8f95ba6 data/bingo/tags/item/not_meat.json
+48828d4be77f045e1a0ff9bb1a7ae16d73d0c2fe data/bingo/tags/item/slabs.json
+089d3c92d1c3cec83e79681b2d921d41af15170c data/bingo/tags/item/stairs.json

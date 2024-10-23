@@ -1,0 +1,49 @@
+{
+  "criteria": {
+    "fill": {
+      "conditions": {
+        "location": [
+          {
+            "block": "minecraft:water_cauldron",
+            "condition": "minecraft:block_state_property",
+            "properties": {
+              "level": "3"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:block",
+    "block": {
+      "Name": "minecraft:water_cauldron",
+      "Properties": {
+        "level": "3"
+      }
+    },
+    "item": {
+      "count": 1,
+      "id": "minecraft:cauldron"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.fill_water_cauldron",
+    "with": [
+      {
+        "translate": "block.minecraft.cauldron"
+      },
+      {
+        "translate": "block.minecraft.water"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "fill"
+    ]
+  ],
+  "tags": "bingo:overworld"
+}

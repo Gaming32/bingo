@@ -1,0 +1,65 @@
+{
+  "antisynergy": "diamond_block",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 10,
+        "min_inclusive": 5
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "bingo:sub",
+                "key": "count"
+              }
+            },
+            "items": "minecraft:diamond_block"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": "bingo:very_hard",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      "id": "minecraft:diamond_block"
+    }
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      {
+        "translate": "block.minecraft.diamond_block"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": "bingo:item"
+}

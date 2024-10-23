@@ -6,6 +6,7 @@ import com.google.common.hash.HashCode;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -25,9 +26,10 @@ public class MixinHashCache_ProviderCache {
     )
     private void skipDate(BufferedWriter instance, String str, Operation<Void> original, @Local(argsOnly = true) String date) {
         //noinspection StringEquality
-        if (str != date) {
-            original.call(instance, str);
+        if (str == date) {
+            str = StringUtils.substringAfter(str, '\t');
         }
+        original.call(instance, str);
     }
 
     @WrapOperation(

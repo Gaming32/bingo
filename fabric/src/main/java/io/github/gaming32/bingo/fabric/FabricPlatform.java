@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.fabric;
 
+import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.fabric.event.FabricClientEvents;
 import io.github.gaming32.bingo.fabric.event.FabricEvents;
 import io.github.gaming32.bingo.fabric.registry.FabricDeferredRegister;
@@ -9,6 +10,7 @@ import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.event.Event;
 import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
+import io.github.gaming32.bingo.platform.registrar.DatapackRegistryRegistrar;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
@@ -24,6 +26,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -35,10 +38,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -118,16 +119,12 @@ public class FabricPlatform extends BingoPlatform {
                 public @NotNull CompletableFuture<Void> reload(
                     PreparationBarrier preparationBarrier,
                     ResourceManager resourceManager,
-                    ProfilerFiller preparationsProfiler,
-                    ProfilerFiller reloadProfiler,
                     Executor backgroundExecutor,
                     Executor gameExecutor
                 ) {
                     return vanilla.reload(
                         preparationBarrier,
                         resourceManager,
-                        preparationsProfiler,
-                        reloadProfiler,
                         backgroundExecutor,
                         gameExecutor
                     );
@@ -142,16 +139,30 @@ public class FabricPlatform extends BingoPlatform {
     }
 
     @Override
+    public void registerDatapackRegistries(Consumer<DatapackRegistryRegistrar> handler) {
+        handler.accept(new DatapackRegistryRegistrar() {
+            @Override
+            public <T> void unsynced(ResourceKey<Registry<T>> registryKey, Codec<T> codec) {
+                DynamicRegistries.register(registryKey, codec);
+            }
+
+            @Override
+            public <T> void synced(ResourceKey<Registry<T>> registryKey, Codec<T> codec, Codec<T> networkCodec) {
+                DynamicRegistries.registerSynced(registryKey, codec, networkCodec);
+            }
+        });
+    }
+
+    @Override
     public <T> DeferredRegister<T> createDeferredRegister(Registry<T> registry) {
         return new FabricDeferredRegister<>(registry);
     }
 
     @Override
-    public <T> DeferredRegister<T> buildDeferredRegister(RegistryBuilder builder) {
-        final var registryKey = ResourceKey.<T>createRegistryKey(builder.getId());
+    public <T> DeferredRegister<T> buildDeferredRegister(RegistryBuilder<T> builder) {
         final var fabricBuilder = builder.getDefaultId() != null
-            ? FabricRegistryBuilder.createDefaulted(registryKey, builder.getDefaultId())
-            : FabricRegistryBuilder.createSimple(registryKey);
+            ? FabricRegistryBuilder.createDefaulted(builder.getKey(), builder.getDefaultId())
+            : FabricRegistryBuilder.createSimple(builder.getKey());
         if (builder.isSynced()) {
             fabricBuilder.attribute(RegistryAttribute.SYNCED);
         }
@@ -167,9 +178,9 @@ public class FabricPlatform extends BingoPlatform {
         Event.SERVER_STOPPED.setRegistrar(handler -> ServerLifecycleEvents.SERVER_STOPPED.register(handler::accept));
         Event.RIGHT_CLICK_ITEM.setRegistrar(handler -> UseItemCallback.EVENT.register((player, world, hand) -> {
             handler.accept(player, hand);
-            return InteractionResultHolder.pass(ItemStack.EMPTY);
+            return InteractionResult.PASS;
         }));
-        Event.EXPLOSION_START.setRegistrar(FabricEvents.EXPLOSION::register);
+        Event.SERVER_EXPLOSION_START.setRegistrar(FabricEvents.SERVER_EXPLOSION::register);
         Event.SERVER_TICK_END.setRegistrar(handler -> ServerTickEvents.END_SERVER_TICK.register(handler::accept));
 
         if (isClient()) {

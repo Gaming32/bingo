@@ -10,10 +10,11 @@ import net.minecraft.client.gui.spectator.SpectatorMenu;
 import net.minecraft.client.gui.spectator.SpectatorMenuCategory;
 import net.minecraft.client.gui.spectator.SpectatorMenuItem;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.scores.PlayerTeam;
@@ -74,8 +75,11 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
     }
 
     @Override
-    public void renderIcon(GuiGraphics graphics, float shadeColor, int alpha) {
-        graphics.blitSprite(CATEGORY_SPRITE, 0, 0, 16, 16);
+    public void renderIcon(GuiGraphics graphics, float brightness, float alpha) {
+        graphics.blitSprite(
+            RenderType::guiTextured, CATEGORY_SPRITE, 0, 0, 16, 16,
+            ARGB.colorFromFloat(alpha, brightness, brightness, brightness)
+        );
     }
 
     @Override
@@ -141,7 +145,7 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
         }
 
         @Override
-        public void renderIcon(GuiGraphics graphics, float shadeColor, int alpha) {
+        public void renderIcon(GuiGraphics graphics, float brightness, float alpha) {
             final Integer color = playerTeam.getColor().getColor();
             if (color != null) {
                 final float red = (color >> 16 & 0xff) / 255f;
@@ -149,14 +153,12 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
                 final float blue = (color & 0xff) / 255f;
                 graphics.fill(
                     1, 1, 15, 15,
-                    Mth.color(red * shadeColor, green * shadeColor, blue * shadeColor) | alpha << 24
+                    ARGB.colorFromFloat(alpha, red * brightness, green * brightness, blue * brightness)
                 );
             }
 
             if (iconSkin != null) {
-                graphics.setColor(shadeColor, shadeColor, shadeColor, alpha / 255f);
-                PlayerFaceRenderer.draw(graphics, iconSkin.get(), 2, 2, 12);
-                graphics.setColor(1f, 1f, 1f, 1f);
+                PlayerFaceRenderer.draw(graphics, iconSkin.get(), 2, 2, 12, ARGB.white(alpha));
             }
         }
 

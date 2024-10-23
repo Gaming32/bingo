@@ -1,12 +1,13 @@
 package io.github.gaming32.bingo.data.subs;
 
 import com.mojang.serialization.MapCodec;
+import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
 
 public interface BingoSubType<S extends BingoSub> {
-    DeferredRegister<BingoSubType<?>> REGISTER = new RegistryBuilder("bingo_sub_type")
+    DeferredRegister<BingoSubType<?>> REGISTER = new RegistryBuilder<>(BingoRegistries.BINGO_SUB_TYPE)
         .build();
 
     RegistryValue<BingoSubType<CompoundBingoSub>> COMPOUND = register("compound", CompoundBingoSub.CODEC);

@@ -1,0 +1,34 @@
+{
+  "antisynergy": "armor_trims",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": 5,
+        "tag": "minecraft:trim_templates"
+      },
+      "trigger": "bingo:has_some_items_from_tag"
+    }
+  },
+  "difficulty": "bingo:very_hard",
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "count": 5,
+    "tag": "minecraft:trim_templates"
+  },
+  "name": {
+    "translate": "bingo.goal.armor_trims",
+    "with": [
+      5
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": "bingo:item"
+}

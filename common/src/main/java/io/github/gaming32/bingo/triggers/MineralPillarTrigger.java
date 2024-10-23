@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.data.tags.BingoBlockTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoBlockTags;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -52,7 +52,7 @@ public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTr
         );
 
         public boolean matches(BlockGetter level, BlockPos pos) {
-            final int required = BuiltInRegistries.BLOCK.getTag(tag).map(HolderSet::size).orElse(0);
+            final int required = BuiltInRegistries.BLOCK.get(tag).map(HolderSet::size).orElse(0);
 
             BlockState state = getState(level, pos);
             if (state.is(tag)) {

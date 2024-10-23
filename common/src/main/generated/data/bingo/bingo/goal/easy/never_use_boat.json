@@ -1,0 +1,38 @@
+{
+  "criteria": {
+    "use": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#c:boats"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:oak_boat"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.never_use_boat"
+  },
+  "requirements": [
+    [
+      "use"
+    ]
+  ],
+  "tags": [
+    "bingo:never",
+    "bingo:overworld"
+  ]
+}

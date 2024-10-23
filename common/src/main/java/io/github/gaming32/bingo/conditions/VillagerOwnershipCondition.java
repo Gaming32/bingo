@@ -6,11 +6,11 @@ import io.github.gaming32.bingo.util.CustomEnumCodec;
 import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -37,14 +37,14 @@ public record VillagerOwnershipCondition(PoiManager.Occupancy occupancy, Optiona
     public boolean test(LootContext lootContext) {
         return lootContext.getLevel().getPoiManager().getInChunk(
             type -> tag.isEmpty() || tag.get().matches(type),
-            new ChunkPos(BlockPos.containing(lootContext.getParam(LootContextParams.ORIGIN))),
+            new ChunkPos(BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN))),
             occupancy
         ).anyMatch(r -> true);
     }
 
     @NotNull
     @Override
-    public Set<LootContextParam<?>> getReferencedContextParams() {
+    public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.ORIGIN);
     }
 }

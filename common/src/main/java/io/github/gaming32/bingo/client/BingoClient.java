@@ -215,6 +215,7 @@ public class BingoClient {
         final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientGame.size(), pos) : null;
 
         graphics.blitSprite(
+            RenderType::guiTextured,
             BOARD_TEXTURE, 0, 0,
             7 + 18 * clientGame.size() + 7,
             17 + 18 * clientGame.size() + 7

@@ -7,8 +7,8 @@
     "MixinBoneMealItem",
     "MixinDyedItemColor",
     "MixinHashCache_ProviderCache",
-    "MixinLevel",
     "MixinPlayerList",
+    "MixinServerLevel",
     "brigadier.MixinCommandContext"
   ],
   "client": [

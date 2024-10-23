@@ -30,6 +30,8 @@
     ],
     "modmenu": [
       "io.github.gaming32.bingo.fabric.compat.ModMenuCompat"
+    ],
+    "fabric-gametest": [
     ]
   },
   "mixins": [
@@ -37,9 +39,9 @@
     "bingo-common.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.4",
+    "fabricloader": ">=0.16.7",
     "fabric-api": ">=0.106.0",
-    "minecraft": ">=1.21- <1.21.2"
+    "minecraft": ">=1.21.2 <1.21.4"
   },
   "custom": {
     "loom:injected_interfaces": {

@@ -7,7 +7,7 @@
     "AdvancementProgressAccessor",
     "BaseFireBlockAccessor",
     "BounceOnBlockMixin",
-    "ExplosionAccessor",
+    "MixinAbstractBoat",
     "MixinBasePressurePlateBlock",
     "MixinBeaconBlockEntity",
     "MixinBedBlock",
@@ -15,7 +15,6 @@
     "MixinBellBlock",
     "MixinBlock",
     "MixinBlockItem",
-    "MixinBoat",
     "MixinButtonBlock",
     "MixinCombatTracker",
     "MixinCommandSourceStack",
@@ -55,6 +54,7 @@
     "MixinVehicleEntity",
     "MixinZombie",
     "PlayerAdvancementsAccessor",
+    "ServerExplosionAccessor",
     "StatsCounterAccessor"
   ],
   "client": [

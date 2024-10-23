@@ -1,12 +1,13 @@
 package io.github.gaming32.bingo.data.progresstrackers;
 
 import com.mojang.serialization.MapCodec;
+import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
 
 public interface ProgressTrackerType<P extends ProgressTracker> {
-    DeferredRegister<ProgressTrackerType<?>> REGISTER = new RegistryBuilder("progress_tracker_type")
+    DeferredRegister<ProgressTrackerType<?>> REGISTER = new RegistryBuilder<>(BingoRegistries.PROGRESS_TRACKER_TYPE)
         .defaultId("empty")
         .build();
 

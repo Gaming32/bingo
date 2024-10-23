@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.subpredicates.entity.PaintingPredicate;
 import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
@@ -11,11 +12,8 @@ import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import org.jetbrains.annotations.NotNull;
@@ -40,14 +38,14 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
     public record TriggerInstance(
         Optional<ContextAwarePredicate> player,
         Optional<ContextAwarePredicate> placedPainting,
-        Optional<TagPredicate<PaintingVariant>> paintingVariant,
+        Optional<ContextAwarePredicate> adjacentPaintings,
         MinMaxBounds.Ints count
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                 EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("placed_painting").forGetter(TriggerInstance::placedPainting),
-                TagPredicate.codec(Registries.PAINTING_VARIANT).optionalFieldOf("painting_variant").forGetter(TriggerInstance::paintingVariant),
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("adjacent_paintings").forGetter(TriggerInstance::adjacentPaintings),
                 MinMaxBounds.Ints.CODEC.optionalFieldOf("count", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::count)
             ).apply(instance, TriggerInstance::new)
         );
@@ -57,21 +55,28 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
                 return false;
             }
             ObjectSet<Holder<PaintingVariant>> seenVariants = new ObjectOpenCustomHashSet<>(BingoUtil.holderStrategy());
-            int count = countAdjacentPaintings(painting, seenVariants);
+            int count = countAdjacentPaintings(player, painting, seenVariants);
             return this.count.matches(count);
         }
 
-        private int countAdjacentPaintings(Painting painting, ObjectSet<Holder<PaintingVariant>> seenVariants) {
+        private int countAdjacentPaintings(
+            ServerPlayer player,
+            Painting painting,
+            ObjectSet<Holder<PaintingVariant>> seenVariants
+        ) {
             if (!seenVariants.add(painting.getVariant())) {
                 return 0;
             }
 
             int count = 1;
             for (Painting otherPainting : painting.level().getEntitiesOfClass(Painting.class, painting.getBoundingBox().inflate(0.25))) {
-                if (otherPainting != painting) {
-                    if (paintingVariant.isEmpty() || paintingVariant.get().matches(painting.getVariant())) {
-                        count += countAdjacentPaintings(otherPainting, seenVariants);
-                    }
+                if (
+                    otherPainting != painting && (
+                        adjacentPaintings.isEmpty() ||
+                        adjacentPaintings.get().matches(EntityPredicate.createContext(player, otherPainting))
+                    )
+                ) {
+                    count += countAdjacentPaintings(player, otherPainting, seenVariants);
                 }
             }
 
@@ -82,13 +87,14 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
         public void validate(CriterionValidator criterionValidator) {
             SimpleInstance.super.validate(criterionValidator);
             criterionValidator.validateEntity(placedPainting, ".placed_painting");
+            criterionValidator.validateEntity(adjacentPaintings, ".adjacent_paintings");
         }
     }
 
     public static final class Builder {
         private Optional<ContextAwarePredicate> player = Optional.empty();
         private Optional<ContextAwarePredicate> placedPainting = Optional.empty();
-        private Optional<TagPredicate<PaintingVariant>> paintingVariant = Optional.empty();
+        private Optional<ContextAwarePredicate> adjacentPaintings = Optional.empty();
         private MinMaxBounds.Ints count = MinMaxBounds.Ints.ANY;
 
         private Builder() {
@@ -103,22 +109,36 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
             return this;
         }
 
-        public Builder placedPainting(EntityPredicate placedPainting) {
-            return placedPainting(EntityPredicate.wrap(placedPainting));
-        }
-
         public Builder placedPainting(ContextAwarePredicate placedPainting) {
             this.placedPainting = Optional.of(placedPainting);
             return this;
         }
 
-        public Builder paintingVariant(TagKey<PaintingVariant> paintingVariant) {
-            return paintingVariant(TagPredicate.is(paintingVariant));
+        public Builder placedPainting(EntityPredicate placedPainting) {
+            return placedPainting(EntityPredicate.wrap(placedPainting));
         }
 
-        public Builder paintingVariant(TagPredicate<PaintingVariant> paintingVariant) {
-            this.paintingVariant = Optional.of(paintingVariant);
+        public Builder placedPainting(PaintingPredicate placedPainting) {
+            return placedPainting(EntityPredicate.Builder.entity()
+                .subPredicate(placedPainting)
+                .build()
+            );
+        }
+
+        public Builder adjacentPaintings(ContextAwarePredicate adjacentPaintings) {
+            this.adjacentPaintings = Optional.of(adjacentPaintings);
             return this;
+        }
+
+        public Builder adjacentPaintings(EntityPredicate adjacentPaintings) {
+            return adjacentPaintings(EntityPredicate.wrap(adjacentPaintings));
+        }
+
+        public Builder adjacentPaintings(PaintingPredicate adjacentPaintings) {
+            return adjacentPaintings(EntityPredicate.Builder.entity()
+                .subPredicate(adjacentPaintings)
+                .build()
+            );
         }
 
         public Builder count(MinMaxBounds.Ints count) {
@@ -128,7 +148,7 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
 
         public Criterion<TriggerInstance> build() {
             return BingoTriggers.ADJACENT_PAINTING.get().createCriterion(
-                new TriggerInstance(player, placedPainting, paintingVariant, count)
+                new TriggerInstance(player, placedPainting, adjacentPaintings, count)
             );
         }
     }

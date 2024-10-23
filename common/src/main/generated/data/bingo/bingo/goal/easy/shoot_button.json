@@ -1,0 +1,38 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "arrow": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#minecraft:arrows"
+            }
+          }
+        ],
+        "button_or_plate": {
+          "blocks": "#minecraft:buttons"
+        }
+      },
+      "trigger": "bingo:arrow_press"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:oak_button"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.shoot_button"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": "bingo:action"
+}
