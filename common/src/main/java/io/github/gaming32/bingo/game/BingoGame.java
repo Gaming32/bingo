@@ -26,6 +26,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
+import net.minecraft.SharedConstants;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.Criterion;
@@ -56,6 +57,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
@@ -64,7 +66,7 @@ public class BingoGame {
     public static final Component REQUIRED_CLIENT_KICK = Component.literal(
         "This bingo game requires the Bingo mod to be installed on the client. Please install it before joining."
     );
-    public static final int DEFAULT_AUTO_RESIGN_TICKS = 2 * 60 * 20; // 2 minutes
+    public static final int DEFAULT_AUTO_RESIGN_TICKS = 2 * SharedConstants.TICKS_PER_MINUTE; // 2 minutes
 
     private final BingoBoard board;
     private final BingoGameMode gameMode;
@@ -79,7 +81,7 @@ public class BingoGame {
     private final Map<UUID, Object2IntOpenHashMap<ActiveGoal>> goalAchievedCount = new HashMap<>();
     private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
     private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
-    private long @Nullable [] lastActiveTimes = null;
+    private final OptionalLong[] lastActiveTimes;
     private BingoBoard.Teams remainingTeams;
     private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
@@ -92,6 +94,8 @@ public class BingoGame {
         this.continueAfterWin = continueAfterWin;
         this.autoResignTicks = autoResignTicks;
         this.teams = teams;
+        this.lastActiveTimes = new OptionalLong[teams.length];
+        Arrays.fill(this.lastActiveTimes, OptionalLong.empty());
         this.remainingTeams = BingoBoard.Teams.fromAll(teams.length);
     }
 
@@ -244,20 +248,18 @@ public class BingoGame {
         }
 
         if (autoResignTicks > 0 && server.getTickCount() % 20 == 0) {
-            boolean autoResignThisTick = lastActiveTimes != null;
-            if (lastActiveTimes == null) {
-                lastActiveTimes = new long[teams.length];
-            }
-
             long gameTime = server.overworld().getGameTime();
             for (int i = 0; i < teams.length; i++) {
                 BingoBoard.Teams team = BingoBoard.Teams.fromOne(i);
                 if (remainingTeams.and(team)) {
                     boolean isTeamActive = teams[i].getPlayers().stream().anyMatch(playerName -> server.getPlayerList().getPlayerByName(playerName) != null);
                     if (isTeamActive) {
-                        lastActiveTimes[i] = gameTime;
-                    } else if (autoResignThisTick && (gameTime - lastActiveTimes[i]) >= autoResignTicks) {
-                        resign(server.getPlayerList(), team);
+                        lastActiveTimes[i] = OptionalLong.of(gameTime);
+                    } else {
+                        OptionalLong lastActiveTime = lastActiveTimes[i];
+                        if (lastActiveTime.isPresent() && (gameTime - lastActiveTime.getAsLong()) >= autoResignTicks) {
+                            resign(server.getPlayerList(), team);
+                        }
                     }
                 }
             }
