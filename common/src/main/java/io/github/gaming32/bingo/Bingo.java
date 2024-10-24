@@ -112,12 +112,8 @@ public class Bingo {
         });
 
         Event.SERVER_TICK_END.register(instance -> {
-            if (activeGame != null && activeGame.isRequireClient()) {
-                for (final ServerPlayer player : new ArrayList<>(instance.getPlayerList().getPlayers())) {
-                    if (player.tickCount == 60 && !Bingo.isInstalledOnClient(player)) {
-                        player.connection.disconnect(BingoGame.REQUIRED_CLIENT_KICK);
-                    }
-                }
+            if (activeGame != null) {
+                activeGame.tick(instance);
             }
         });
 
