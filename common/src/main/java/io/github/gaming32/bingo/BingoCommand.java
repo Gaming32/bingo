@@ -112,8 +112,8 @@ public class BingoCommand {
         new SimpleCommandExceptionType(Bingo.translatable("bingo.no_teams"));
     private static final SimpleCommandExceptionType NOT_IN_TEAM =
         new SimpleCommandExceptionType(Bingo.translatable("bingo.not_in_team"));
-    private static final SimpleCommandExceptionType RESIGN_ALREADY_FINISHED =
-        new SimpleCommandExceptionType(Bingo.translatable("bingo.resign.already_finished"));
+    private static final SimpleCommandExceptionType FORFEIT_ALREADY_FINISHED =
+        new SimpleCommandExceptionType(Bingo.translatable("bingo.forfeit.already_finished"));
     private static final DynamicCommandExceptionType TEAM_NOT_PLAYING =
         new DynamicCommandExceptionType(team -> Bingo.translatableEscape("bingo.team_not_playing", team));
 
@@ -157,12 +157,12 @@ public class BingoCommand {
                 .requires(source -> source.hasPermission(2))
                 .executes(BingoCommand::resetGame)
             )
-            .then(literal("resign")
+            .then(literal("forfeit")
                 .requires(source -> Bingo.activeGame != null)
-                .executes(ctx -> resign(ctx.getSource()))
+                .executes(ctx -> forfeit(ctx.getSource()))
                 .then(argument("team", TeamArgument.team())
                     .requires(source -> source.hasPermission(2) && Bingo.activeGame != null)
-                    .executes(ctx -> resign(ctx.getSource(), TeamArgument.getTeam(ctx, "team")))
+                    .executes(ctx -> forfeit(ctx.getSource(), TeamArgument.getTeam(ctx, "team")))
                 )
             )
             .then(literal("board")
@@ -422,8 +422,8 @@ public class BingoCommand {
                     .then(literal("--continue-after-win")
                         .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                     )
-                    .then(literal("--auto-resign-time")
-                        .then(argument("auto_resign_time", TimeArgument.time(0))
+                    .then(literal("--auto-forfeit-time")
+                        .then(argument("auto_forfeit_time", TimeArgument.time(0))
                             .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                         )
                     )
@@ -461,7 +461,7 @@ public class BingoCommand {
         final boolean requireClient = hasNode(context, "--require-client");
         final boolean persistent = hasNode(context, "--persistent");
         final boolean continueAfterWin = hasNode(context, "--continue-after-win");
-        final int autoResignTicks = getArg(context, "auto_resign_time", () -> BingoGame.DEFAULT_AUTO_RESIGN_TICKS, IntegerArgumentType::getInteger);
+        final int autoForfeitTicks = getArg(context, "auto_forfeit_time", () -> BingoGame.DEFAULT_AUTO_FORFEIT_TICKS, IntegerArgumentType::getInteger);
 
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
         for (int i = 1; i <= 32; i++) {
@@ -524,7 +524,7 @@ public class BingoCommand {
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, persistent, continueAfterWin, autoResignTicks, teams.toArray(PlayerTeam[]::new));
+        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, persistent, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
         Bingo.updateCommandTree(playerList);
         new ArrayList<>(playerList.getPlayers()).forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(
@@ -543,7 +543,7 @@ public class BingoCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static int resign(CommandSourceStack source) throws CommandSyntaxException {
+    private static int forfeit(CommandSourceStack source) throws CommandSyntaxException {
         if (Bingo.activeGame == null) {
             throw NO_GAME_RUNNING.create();
         }
@@ -552,15 +552,15 @@ public class BingoCommand {
         if (!team.any()) {
             throw NOT_IN_TEAM.create();
         }
-        if (Bingo.activeGame.resign(source.getServer().getPlayerList(), team)) {
-            source.sendSuccess(() -> Bingo.translatable("bingo.resign.success"), false);
+        if (Bingo.activeGame.forfeit(source.getServer().getPlayerList(), team)) {
+            source.sendSuccess(() -> Bingo.translatable("bingo.forfeit.success"), false);
             return Command.SINGLE_SUCCESS;
         } else {
-            throw RESIGN_ALREADY_FINISHED.create();
+            throw FORFEIT_ALREADY_FINISHED.create();
         }
     }
 
-    private static int resign(CommandSourceStack source, PlayerTeam team) throws CommandSyntaxException {
+    private static int forfeit(CommandSourceStack source, PlayerTeam team) throws CommandSyntaxException {
         if (Bingo.activeGame == null) {
             throw NO_GAME_RUNNING.create();
         }
@@ -568,11 +568,11 @@ public class BingoCommand {
         if (teamIndex == -1) {
             throw TEAM_NOT_PLAYING.create(team.getFormattedDisplayName());
         }
-        if (Bingo.activeGame.resign(source.getServer().getPlayerList(), BingoBoard.Teams.fromOne(teamIndex))) {
-            source.sendSuccess(() -> Bingo.translatable("bingo.resign.success.team", team.getFormattedDisplayName()), true);
+        if (Bingo.activeGame.forfeit(source.getServer().getPlayerList(), BingoBoard.Teams.fromOne(teamIndex))) {
+            source.sendSuccess(() -> Bingo.translatable("bingo.forfeit.success.team", team.getFormattedDisplayName()), true);
             return Command.SINGLE_SUCCESS;
         } else {
-            throw RESIGN_ALREADY_FINISHED.create();
+            throw FORFEIT_ALREADY_FINISHED.create();
         }
     }
 

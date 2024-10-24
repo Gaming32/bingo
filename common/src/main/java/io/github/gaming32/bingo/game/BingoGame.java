@@ -66,14 +66,14 @@ public class BingoGame {
     public static final Component REQUIRED_CLIENT_KICK = Component.literal(
         "This bingo game requires the Bingo mod to be installed on the client. Please install it before joining."
     );
-    public static final int DEFAULT_AUTO_RESIGN_TICKS = 2 * SharedConstants.TICKS_PER_MINUTE; // 2 minutes
+    public static final int DEFAULT_AUTO_FORFEIT_TICKS = 2 * SharedConstants.TICKS_PER_MINUTE; // 2 minutes
 
     private final BingoBoard board;
     private final BingoGameMode gameMode;
     private final boolean requireClient;
     private final boolean persistent;
     private final boolean continueAfterWin;
-    private final int autoResignTicks;
+    private final int autoForfeitTicks;
     private final PlayerTeam[] teams;
 
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> advancementProgress = new HashMap<>();
@@ -86,13 +86,13 @@ public class BingoGame {
     private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean persistent, boolean continueAfterWin, int autoResignTicks, PlayerTeam... teams) {
+    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean persistent, boolean continueAfterWin, int autoForfeitTicks, PlayerTeam... teams) {
         this.board = board;
         this.gameMode = gameMode;
         this.requireClient = requireClient;
         this.persistent = persistent;
         this.continueAfterWin = continueAfterWin;
-        this.autoResignTicks = autoResignTicks;
+        this.autoForfeitTicks = autoForfeitTicks;
         this.teams = teams;
         this.lastActiveTimes = new OptionalLong[teams.length];
         Arrays.fill(this.lastActiveTimes, OptionalLong.empty());
@@ -247,7 +247,7 @@ public class BingoGame {
             }
         }
 
-        if (autoResignTicks > 0 && server.getTickCount() % 20 == 0) {
+        if (autoForfeitTicks > 0 && server.getTickCount() % 20 == 0) {
             long gameTime = server.overworld().getGameTime();
             for (int i = 0; i < teams.length; i++) {
                 BingoBoard.Teams team = BingoBoard.Teams.fromOne(i);
@@ -257,8 +257,8 @@ public class BingoGame {
                         lastActiveTimes[i] = OptionalLong.of(gameTime);
                     } else {
                         OptionalLong lastActiveTime = lastActiveTimes[i];
-                        if (lastActiveTime.isPresent() && (gameTime - lastActiveTime.getAsLong()) >= autoResignTicks) {
-                            resign(server.getPlayerList(), team);
+                        if (lastActiveTime.isPresent() && (gameTime - lastActiveTime.getAsLong()) >= autoForfeitTicks) {
+                            forfeit(server.getPlayerList(), team);
                         }
                     }
                 }
@@ -266,7 +266,7 @@ public class BingoGame {
         }
     }
 
-    public boolean resign(PlayerList playerList, BingoBoard.Teams team) {
+    public boolean forfeit(PlayerList playerList, BingoBoard.Teams team) {
         if (!remainingTeams.and(team)) {
             return false;
         }
@@ -282,8 +282,8 @@ public class BingoGame {
                 return name;
             }
         ).map(
-            playerName -> Bingo.translatable("bingo.resigned.single", playerName),
-            teamName -> Bingo.translatable("bingo.resigned", teamName)
+            playerName -> Bingo.translatable("bingo.forfeited.single", playerName),
+            teamName -> Bingo.translatable("bingo.forfeited", teamName)
         );
         playerList.broadcastSystemMessage(message, false);
 
@@ -516,7 +516,7 @@ public class BingoGame {
             return;
         }
 
-        // resigned teams can't obtain goals
+        // forfeited teams can't obtain goals
         if (!remainingTeams.and(team) && !finishedTeams.and(team)) {
             return;
         }
@@ -737,7 +737,7 @@ public class BingoGame {
         BingoGameMode gameMode,
         boolean requireClient,
         boolean continueAfterWin,
-        int autoResignTicks,
+        int autoForfeitTicks,
         List<String> teamNames,
         Map<UUID, Int2ObjectMap<AdvancementProgress>> advancementProgress,
         Map<UUID, Int2ObjectMap<GoalProgress>> goalProgress,
@@ -765,7 +765,7 @@ public class BingoGame {
                 BingoGameMode.PERSISTENCE_CODEC.fieldOf("game_mode").forGetter(PersistenceData::gameMode),
                 Codec.BOOL.fieldOf("require_client").forGetter(PersistenceData::requireClient),
                 Codec.BOOL.optionalFieldOf("continue_after_win", false).forGetter(PersistenceData::continueAfterWin),
-                ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("auto_resign_ticks", DEFAULT_AUTO_RESIGN_TICKS).forGetter(PersistenceData::autoResignTicks),
+                ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("auto_forfeit_ticks", DEFAULT_AUTO_FORFEIT_TICKS).forGetter(PersistenceData::autoForfeitTicks),
                 Codec.STRING.listOf().fieldOf("team_names").forGetter(PersistenceData::teamNames),
                 ADVANCEMENT_PROGRESS_CODEC.fieldOf("advancement_progress").forGetter(PersistenceData::advancementProgress),
                 GOAL_PROGRESS_CODEC.fieldOf("goal_progress").forGetter(PersistenceData::goalProgress),
@@ -786,7 +786,7 @@ public class BingoGame {
                     throw new IllegalStateException("Team '" + teamNames.get(i) + "' no longer exists");
                 }
             }
-            final BingoGame game = new BingoGame(board, gameMode, requireClient, true, continueAfterWin, autoResignTicks, teams);
+            final BingoGame game = new BingoGame(board, gameMode, requireClient, true, continueAfterWin, autoForfeitTicks, teams);
 
             for (final var entry : advancementProgress.entrySet()) {
                 final Map<ActiveGoal, AdvancementProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
@@ -856,7 +856,7 @@ public class BingoGame {
             }
 
             return new PersistenceData(
-                game.board, game.gameMode, game.requireClient, game.continueAfterWin, game.autoResignTicks,
+                game.board, game.gameMode, game.requireClient, game.continueAfterWin, game.autoForfeitTicks,
                 Arrays.stream(game.teams).map(PlayerTeam::getName).toList(),
                 createMap(game, game.advancementProgress),
                 createMap(game, game.goalProgress),
