@@ -36,6 +36,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.TeamArgument;
+import net.minecraft.commands.arguments.TimeArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -60,6 +61,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,6 +110,12 @@ public class BingoCommand {
         ));
     private static final SimpleCommandExceptionType NO_TEAMS =
         new SimpleCommandExceptionType(Bingo.translatable("bingo.no_teams"));
+    private static final SimpleCommandExceptionType NOT_IN_TEAM =
+        new SimpleCommandExceptionType(Bingo.translatable("bingo.not_in_team"));
+    private static final SimpleCommandExceptionType FORFEIT_ALREADY_FINISHED =
+        new SimpleCommandExceptionType(Bingo.translatable("bingo.forfeit.already_finished"));
+    private static final DynamicCommandExceptionType TEAM_NOT_PLAYING =
+        new DynamicCommandExceptionType(team -> Bingo.translatableEscape("bingo.team_not_playing", team));
 
     private static final SuggestionProvider<CommandSourceStack> ACTIVE_GOAL_SUGGESTOR = (context, builder) -> {
         if (Bingo.activeGame == null) {
@@ -148,6 +156,14 @@ public class BingoCommand {
             .then(literal("reset")
                 .requires(source -> source.hasPermission(2))
                 .executes(BingoCommand::resetGame)
+            )
+            .then(literal("forfeit")
+                .requires(source -> Bingo.activeGame != null)
+                .executes(ctx -> forfeit(ctx.getSource()))
+                .then(argument("team", TeamArgument.team())
+                    .requires(source -> source.hasPermission(2) && Bingo.activeGame != null)
+                    .executes(ctx -> forfeit(ctx.getSource(), TeamArgument.getTeam(ctx, "team")))
+                )
             )
             .then(literal("board")
                 .requires(source -> Bingo.activeGame != null)
@@ -406,6 +422,11 @@ public class BingoCommand {
                     .then(literal("--continue-after-win")
                         .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                     )
+                    .then(literal("--auto-forfeit-time")
+                        .then(argument("auto_forfeit_time", TimeArgument.time(0))
+                            .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+                        )
+                    )
                 )
             );
             CommandNode<CommandSourceStack> currentCommand = startCommand;
@@ -440,15 +461,20 @@ public class BingoCommand {
         final boolean requireClient = hasNode(context, "--require-client");
         final boolean persistent = hasNode(context, "--persistent");
         final boolean continueAfterWin = hasNode(context, "--continue-after-win");
+        final int autoForfeitTicks = getArg(context, "auto_forfeit_time", () -> BingoGame.DEFAULT_AUTO_FORFEIT_TICKS, IntegerArgumentType::getInteger);
 
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
         for (int i = 1; i <= 32; i++) {
             final String argName = "team" + i;
             if (!hasArg(context, argName)) break;
             final PlayerTeam team = TeamArgument.getTeam(context, argName);
-            if (!teams.add(team)) {
+            boolean hasAnyActivePlayers = team.getPlayers().stream().anyMatch(playerName -> context.getSource().getServer().getPlayerList().getPlayerByName(playerName) != null);
+            if (hasAnyActivePlayers && !teams.add(team)) {
                 throw DUPLICATE_TEAMS.create(team);
             }
+        }
+        if (teams.isEmpty()) {
+            throw NO_TEAMS.create();
         }
 
         final List<BingoGoal.GoalHolder> requiredGoals = requiredGoalIds.stream()
@@ -498,7 +524,7 @@ public class BingoCommand {
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, persistent, continueAfterWin, teams.toArray(PlayerTeam[]::new));
+        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, persistent, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
         Bingo.updateCommandTree(playerList);
         new ArrayList<>(playerList.getPlayers()).forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(
@@ -515,6 +541,39 @@ public class BingoCommand {
         RemoveBoardPayload.INSTANCE.sendTo(context.getSource().getServer().getPlayerList().getPlayers());
         context.getSource().sendSuccess(() -> Bingo.translatable("bingo.reset.success"), true);
         return Command.SINGLE_SUCCESS;
+    }
+
+    private static int forfeit(CommandSourceStack source) throws CommandSyntaxException {
+        if (Bingo.activeGame == null) {
+            throw NO_GAME_RUNNING.create();
+        }
+        ServerPlayer player = source.getPlayerOrException();
+        BingoBoard.Teams team = Bingo.activeGame.getTeam(player);
+        if (!team.any()) {
+            throw NOT_IN_TEAM.create();
+        }
+        if (Bingo.activeGame.forfeit(source.getServer().getPlayerList(), team)) {
+            source.sendSuccess(() -> Bingo.translatable("bingo.forfeit.success"), false);
+            return Command.SINGLE_SUCCESS;
+        } else {
+            throw FORFEIT_ALREADY_FINISHED.create();
+        }
+    }
+
+    private static int forfeit(CommandSourceStack source, PlayerTeam team) throws CommandSyntaxException {
+        if (Bingo.activeGame == null) {
+            throw NO_GAME_RUNNING.create();
+        }
+        int teamIndex = ArrayUtils.indexOf(Bingo.activeGame.getTeams(), team);
+        if (teamIndex == -1) {
+            throw TEAM_NOT_PLAYING.create(team.getFormattedDisplayName());
+        }
+        if (Bingo.activeGame.forfeit(source.getServer().getPlayerList(), BingoBoard.Teams.fromOne(teamIndex))) {
+            source.sendSuccess(() -> Bingo.translatable("bingo.forfeit.success.team", team.getFormattedDisplayName()), true);
+            return Command.SINGLE_SUCCESS;
+        } else {
+            throw FORFEIT_ALREADY_FINISHED.create();
+        }
     }
 
     private static int randomizeTeams(
