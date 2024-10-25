@@ -74,7 +74,7 @@ public class BingoGoal {
             BingoCodecs.optionalDynamicField("tooltip").forGetter(BingoGoal::getTooltip),
             ResourceLocation.CODEC.optionalFieldOf("tooltip_icon").forGetter(BingoGoal::getTooltipIcon),
             BingoCodecs.optionalDynamicField("icon").forGetter(BingoGoal::getIcon),
-            BingoCodecs.optionalInt("infrequency").forGetter(BingoGoal::getInfrequency),
+            BingoCodecs.optionalPositiveInt("infrequency").forGetter(BingoGoal::getInfrequency),
             BingoCodecs.minifiedSetField(Codec.STRING, "antisynergy").forGetter(BingoGoal::getAntisynergy),
             BingoCodecs.minifiedSetField(Codec.STRING, "catalyst").forGetter(BingoGoal::getCatalyst),
             BingoCodecs.minifiedSetField(Codec.STRING, "reactant").forGetter(BingoGoal::getReactant),
