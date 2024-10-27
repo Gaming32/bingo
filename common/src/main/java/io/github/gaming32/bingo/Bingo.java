@@ -3,7 +3,6 @@ package io.github.gaming32.bingo;
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
 import io.github.gaming32.bingo.conditions.BingoConditions;
-import io.github.gaming32.bingo.conditions.BingoContextKeySets;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoRegistries;
@@ -45,7 +44,6 @@ import org.slf4j.Logger;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -73,6 +71,12 @@ public class Bingo {
 
     private static void registerEventHandlers() {
         Event.REGISTER_COMMANDS.register(BingoCommand::register);
+
+        Event.REGISTER_CONFIGURATION_TASKS.register(registrar -> {
+            if (registrar.canSend(ProtocolVersionPayload.TYPE)) {
+                registrar.addTask(ProtocolVersionConfigurationTask.INSTANCE);
+            }
+        });
 
         Event.PLAYER_JOIN.register(player -> {
             if (activeGame != null) {
@@ -155,7 +159,6 @@ public class Bingo {
 
     private static void initializeRegistries() {
         BingoConditions.load();
-        BingoContextKeySets.load();
         GoalIconType.load();
         BingoSubType.load();
         ProgressTrackerType.load();
@@ -178,12 +181,6 @@ public class Bingo {
     }
 
     private static void registerPayloadHandlers() {
-        Event.REGISTER_CONFIGURATION_TASKS.register(registrar -> {
-            if (registrar.canSend(ProtocolVersionPayload.TYPE)) {
-                registrar.addTask(ProtocolVersionConfigurationTask.INSTANCE);
-            }
-        });
-
         BingoNetworking.instance().onRegister(registrar -> {
             registrar.register(ConnectionProtocol.CONFIGURATION, null, ProtocolVersionPayload.TYPE, ProtocolVersionPayload.CODEC, (payload, context) -> {
                 switch (context.flow()) {
