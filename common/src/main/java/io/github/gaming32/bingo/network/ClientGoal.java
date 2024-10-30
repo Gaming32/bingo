@@ -32,12 +32,12 @@ public record ClientGoal(
 
     public ClientGoal(ActiveGoal goal) {
         this(
-            goal.goal().id(),
+            goal.id(),
             goal.name(),
             goal.tooltip(),
-            goal.goal().goal().getTooltipIcon(),
+            goal.tooltipIcon(),
             goal.icon(),
-            goal.goal().goal().getSpecialType()
+            goal.specialType()
         );
     }
 }

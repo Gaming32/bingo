@@ -16,7 +16,7 @@ public enum AchievedRequirementsProgressTracker implements ProgressTracker {
     public void criterionChanged(BingoGame game, ServerPlayer player, ActiveGoal goal, String criterion, boolean complete) {
         final AdvancementProgress progress = game.getOrStartProgress(player, goal);
         final int completed = ((AdvancementProgressAccessor)progress).callCountCompletedRequirements();
-        final int total = goal.goal().goal().getRequirements().size();
+        final int total = goal.requirements().size();
         game.updateProgress(player, goal, completed, total);
     }
 

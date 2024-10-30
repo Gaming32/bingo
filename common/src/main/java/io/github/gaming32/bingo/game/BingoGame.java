@@ -381,7 +381,7 @@ public class BingoGame {
         AdvancementProgress progress = map.get(goal);
         if (progress == null) {
             progress = new AdvancementProgress();
-            progress.update(goal.goal().goal().getRequirements());
+            progress.update(goal.requirements());
             map.put(goal, progress);
         }
         return progress;
@@ -414,7 +414,7 @@ public class BingoGame {
     }
 
     public boolean award(ServerPlayer player, ActiveGoal goal, String criterion, int count) {
-        if (goal.goal().goal().getSpecialType() == BingoTag.SpecialType.FINISH) {
+        if (goal.specialType() == BingoTag.SpecialType.FINISH) {
             final BingoBoard.Teams team = getTeam(player);
             final BingoBoard.Teams[] board = this.board.getStates();
             final int index = getBoardIndex(player, goal);
@@ -441,7 +441,7 @@ public class BingoGame {
             if (completedCount > goal.requiredCount()) {
                 completedCount = goal.requiredCount();
             }
-            goal.goal().goal().getProgress().onGoalCompleted(this, player, goal, completedCount);
+            goal.progress().onGoalCompleted(this, player, goal, completedCount);
             if (completedCount == goal.requiredCount()) {
                 updateTeamBoard(player, goal, false);
             } else {
@@ -452,7 +452,7 @@ public class BingoGame {
                 registerListeners(player, goal);
             }
         }
-        goal.goal().goal().getProgress().criterionChanged(this, player, goal, criterion, true);
+        goal.progress().criterionChanged(this, player, goal, criterion, true);
         return awarded;
     }
 
@@ -479,7 +479,7 @@ public class BingoGame {
         if (wasDone && !progress.isDone()) {
             updateTeamBoard(player, goal, true);
         }
-        goal.goal().goal().getProgress().criterionChanged(this, player, goal, criterion, false);
+        goal.progress().criterionChanged(this, player, goal, criterion, false);
         return revoked;
     }
 
@@ -529,7 +529,7 @@ public class BingoGame {
         final BingoBoard.Teams[] board = this.board.getStates();
         final int index = getBoardIndex(player, goal);
         if (index == -1) return;
-        final boolean isNever = goal.goal().goal().getSpecialType() == BingoTag.SpecialType.NEVER;
+        final boolean isNever = goal.specialType() == BingoTag.SpecialType.NEVER;
         if (revoke || gameMode.canGetGoal(this.board, index, team, isNever)) {
             final boolean isLoss = isNever ^ revoke;
             board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);
@@ -545,7 +545,7 @@ public class BingoGame {
         if (index == -1) {
             Bingo.LOGGER.warn(
                 "Player {} got a goal ({}) from a previous game! This should not happen.",
-                player.getScoreboardName(), goal.goal().id()
+                player.getScoreboardName(), goal.id()
             );
         }
         return index;
@@ -727,7 +727,7 @@ public class BingoGame {
         @Override
         public void update(T triggerInstance, int progress, int maxProgress) {
             if (triggerInstance == this.triggerInstance) {
-                goal.goal().goal().getProgress().goalProgressChanged(game, player, goal, criterionId, progress, maxProgress);
+                goal.progress().goalProgressChanged(game, player, goal, criterionId, progress, maxProgress);
             }
         }
     }
@@ -793,7 +793,7 @@ public class BingoGame {
                 for (final var subEntry : entry.getValue().int2ObjectEntrySet()) {
                     final ActiveGoal goal = getGoal(subEntry.getIntKey());
                     final AdvancementProgress progress = subEntry.getValue();
-                    progress.update(goal.goal().goal().getRequirements());
+                    progress.update(goal.requirements());
                     subTarget.put(goal, progress);
                 }
                 game.advancementProgress.put(entry.getKey(), subTarget);

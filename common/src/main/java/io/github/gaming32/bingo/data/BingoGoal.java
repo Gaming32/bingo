@@ -362,13 +362,6 @@ public class BingoGoal {
     }
 
     public record GoalHolder(ResourceLocation id, BingoGoal goal) {
-        public static final Codec<GoalHolder> PERSISTENCE_CODEC = RecordCodecBuilder.create(
-            instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("id").forGetter(GoalHolder::id),
-                BingoGoal.CODEC.fieldOf("goal").forGetter(GoalHolder::goal)
-            ).apply(instance, GoalHolder::new)
-        );
-
         public ActiveGoal build(RandomSource rand) {
             final Map<String, Dynamic<?>> subs = goal.buildSubs(rand);
             final Optional<Component> tooltip = goal.buildTooltip(subs, rand);
@@ -377,10 +370,15 @@ public class BingoGoal {
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, t))
             ));
             return new ActiveGoal(
-                this, name, tooltip,
+                id, name, tooltip,
                 goal.buildIcon(subs, rand),
                 goal.buildCriteria(subs, rand),
-                goal.buildRequiredCount(subs, rand)
+                goal.buildRequiredCount(subs, rand),
+                Optional.of(goal.difficulty),
+                goal.requirements,
+                goal.specialType,
+                goal.progress,
+                goal.tooltipIcon
             );
         }
 

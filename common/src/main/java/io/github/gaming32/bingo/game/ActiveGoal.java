@@ -4,15 +4,23 @@ import com.google.common.collect.Multimap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.data.BingoDifficulty;
+import io.github.gaming32.bingo.data.BingoRegistries;
+import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
+import io.github.gaming32.bingo.data.progresstrackers.ProgressTracker;
+import io.github.gaming32.bingo.util.BingoCodecs;
+import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.CriterionValidator;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.resources.RegistryFixedCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.Item;
@@ -27,27 +35,35 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public record ActiveGoal(
-    BingoGoal.GoalHolder goal,
+    ResourceLocation id,
     Component name,
     Optional<Component> tooltip,
     GoalIcon icon,
     Map<String, Criterion<?>> criteria,
-    int requiredCount
+    int requiredCount,
+    Optional<Holder<BingoDifficulty>> difficulty,
+    AdvancementRequirements requirements,
+    BingoTag.SpecialType specialType,
+    ProgressTracker progress,
+    Optional<ResourceLocation> tooltipIcon
 ) {
     public static final Codec<ActiveGoal> PERSISTENCE_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            BingoGoal.GoalHolder.PERSISTENCE_CODEC.fieldOf("goal").forGetter(ActiveGoal::goal),
+            ResourceLocation.CODEC.fieldOf("id").forGetter(ActiveGoal::id),
             ComponentSerialization.CODEC.fieldOf("name").forGetter(ActiveGoal::name),
             ComponentSerialization.CODEC.optionalFieldOf("tooltip").forGetter(ActiveGoal::tooltip),
             GoalIcon.CODEC.fieldOf("icon").forGetter(ActiveGoal::icon),
             Codec.unboundedMap(Codec.STRING, Criterion.CODEC).fieldOf("criteria").forGetter(ActiveGoal::criteria),
-            Codec.INT.fieldOf("required_count").forGetter(ActiveGoal::requiredCount)
+            Codec.INT.fieldOf("required_count").forGetter(ActiveGoal::requiredCount),
+            BingoCodecs.notOptional(RegistryFixedCodec.create(BingoRegistries.DIFFICULTY))
+                .fieldOf("difficulty")
+                .forGetter(ActiveGoal::difficulty),
+            AdvancementRequirements.CODEC.fieldOf("requirements").forGetter(ActiveGoal::requirements),
+            BingoTag.SpecialType.CODEC.fieldOf("special_type").forGetter(ActiveGoal::specialType),
+            ProgressTracker.CODEC.fieldOf("progress").forGetter(ActiveGoal::progress),
+            ResourceLocation.CODEC.optionalFieldOf("tooltip_icon").forGetter(ActiveGoal::tooltipIcon)
         ).apply(instance, ActiveGoal::new)
     );
-
-    public boolean hasProgress() {
-        return goal.goal().getProgress() != null;
-    }
 
     public ItemStack getFallbackWithComponents(RegistryAccess access) {
         final ItemStack result = icon.getFallback(access);
@@ -72,7 +88,7 @@ public record ActiveGoal(
                 .stream()
                 .map(entry -> "  at " + entry.getKey() + ": " + String.join("; ", entry.getValue()))
                 .collect(Collectors.joining("\n"));
-            Bingo.LOGGER.warn("Found validation problems in goal {}:\n{}", goal.id(), message);
+            Bingo.LOGGER.warn("Found validation problems in goal {}:\n{}", id, message);
         }
     }
 
@@ -85,11 +101,11 @@ public record ActiveGoal(
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof ActiveGoal g && goal.equals(g.goal);
+        return obj instanceof ActiveGoal g && id.equals(g.id);
     }
 
     @Override
     public int hashCode() {
-        return goal.hashCode();
+        return id.hashCode();
     }
 }
