@@ -8,6 +8,7 @@ import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
+import io.github.gaming32.bingo.data.progresstrackers.EmptyProgressTracker;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTracker;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -17,8 +18,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ProblemReporter;
@@ -38,20 +42,21 @@ public record ActiveGoal(
     ResourceLocation id,
     Component name,
     Optional<Component> tooltip,
+    Optional<ResourceLocation> tooltipIcon,
     GoalIcon icon,
     Map<String, Criterion<?>> criteria,
     int requiredCount,
     Optional<Holder<BingoDifficulty>> difficulty,
     AdvancementRequirements requirements,
     BingoTag.SpecialType specialType,
-    ProgressTracker progress,
-    Optional<ResourceLocation> tooltipIcon
+    ProgressTracker progress
 ) {
     public static final Codec<ActiveGoal> PERSISTENCE_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(ActiveGoal::id),
             ComponentSerialization.CODEC.fieldOf("name").forGetter(ActiveGoal::name),
             ComponentSerialization.CODEC.optionalFieldOf("tooltip").forGetter(ActiveGoal::tooltip),
+            ResourceLocation.CODEC.optionalFieldOf("tooltip_icon").forGetter(ActiveGoal::tooltipIcon),
             GoalIcon.CODEC.fieldOf("icon").forGetter(ActiveGoal::icon),
             Codec.unboundedMap(Codec.STRING, Criterion.CODEC).fieldOf("criteria").forGetter(ActiveGoal::criteria),
             Codec.INT.fieldOf("required_count").forGetter(ActiveGoal::requiredCount),
@@ -60,10 +65,34 @@ public record ActiveGoal(
                 .forGetter(ActiveGoal::difficulty),
             AdvancementRequirements.CODEC.fieldOf("requirements").forGetter(ActiveGoal::requirements),
             BingoTag.SpecialType.CODEC.fieldOf("special_type").forGetter(ActiveGoal::specialType),
-            ProgressTracker.CODEC.fieldOf("progress").forGetter(ActiveGoal::progress),
-            ResourceLocation.CODEC.optionalFieldOf("tooltip_icon").forGetter(ActiveGoal::tooltipIcon)
+            ProgressTracker.CODEC.fieldOf("progress").forGetter(ActiveGoal::progress)
         ).apply(instance, ActiveGoal::new)
     );
+    public static final StreamCodec<RegistryFriendlyByteBuf, ActiveGoal> STREAM_CODEC = StreamCodec.composite(
+        ResourceLocation.STREAM_CODEC, ActiveGoal::id,
+        ComponentSerialization.TRUSTED_STREAM_CODEC, ActiveGoal::name,
+        ComponentSerialization.TRUSTED_OPTIONAL_STREAM_CODEC, ActiveGoal::tooltip,
+        ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional), ActiveGoal::tooltipIcon,
+        GoalIcon.STREAM_CODEC, ActiveGoal::icon,
+        BingoTag.SpecialType.STREAM_CODEC, ActiveGoal::specialType,
+        ActiveGoal::forClient
+    );
+
+    public static ActiveGoal forClient(
+        ResourceLocation id,
+        Component name,
+        Optional<Component> tooltip,
+        Optional<ResourceLocation> tooltipIcon,
+        GoalIcon icon,
+        BingoTag.SpecialType specialType
+    ) {
+        return new ActiveGoal(
+            id, name, tooltip, tooltipIcon, icon,
+            Map.of(), 1, Optional.empty(), AdvancementRequirements.EMPTY,
+            specialType,
+            EmptyProgressTracker.INSTANCE
+        );
+    }
 
     public ItemStack getFallbackWithComponents(RegistryAccess access) {
         final ItemStack result = icon.getFallback(access);

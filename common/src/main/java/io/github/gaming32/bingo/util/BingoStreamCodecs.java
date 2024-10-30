@@ -16,4 +16,8 @@ public class BingoStreamCodecs {
     public static <B extends ByteBuf, V> StreamCodec.CodecOperation<B, V, V[]> array(IntFunction<V[]> factory) {
         return codec -> codec.apply(ByteBufCodecs.list()).map(l -> l.toArray(factory), Arrays::asList);
     }
+
+    public static <B, V> StreamCodec<B, V> uncheckedUnit(V value) {
+        return StreamCodec.of((buf, ignored) -> {}, buf -> value);
+    }
 }

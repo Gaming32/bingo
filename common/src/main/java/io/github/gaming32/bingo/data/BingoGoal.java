@@ -370,15 +370,15 @@ public class BingoGoal {
                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, t))
             ));
             return new ActiveGoal(
-                id, name, tooltip,
+                id, name,
+                tooltip, goal.tooltipIcon,
                 goal.buildIcon(subs, rand),
                 goal.buildCriteria(subs, rand),
                 goal.buildRequiredCount(subs, rand),
                 Optional.of(goal.difficulty),
                 goal.requirements,
                 goal.specialType,
-                goal.progress,
-                goal.tooltipIcon
+                goal.progress
             );
         }
 

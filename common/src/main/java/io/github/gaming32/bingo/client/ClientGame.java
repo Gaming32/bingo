@@ -1,16 +1,16 @@
 package io.github.gaming32.bingo.client;
 
+import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.game.GoalProgress;
-import io.github.gaming32.bingo.network.ClientGoal;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.Nullable;
 
 public record ClientGame(
     int size,
     BingoBoard.Teams[] states,
-    ClientGoal[] goals,
+    ActiveGoal[] goals,
     PlayerTeam[] teams,
     BingoGameMode.RenderMode renderMode,
     @Nullable GoalProgress[] progress
@@ -19,7 +19,7 @@ public record ClientGame(
         return states[getIndex(x, y)];
     }
 
-    public ClientGoal getGoal(int x, int y) {
+    public ActiveGoal getGoal(int x, int y) {
         return goals[getIndex(x, y)];
     }
 
