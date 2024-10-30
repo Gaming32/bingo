@@ -64,8 +64,12 @@ public record ActiveGoal(
                 .fieldOf("difficulty")
                 .forGetter(ActiveGoal::difficulty),
             AdvancementRequirements.CODEC.fieldOf("requirements").forGetter(ActiveGoal::requirements),
-            BingoTag.SpecialType.CODEC.fieldOf("special_type").forGetter(ActiveGoal::specialType),
-            ProgressTracker.CODEC.fieldOf("progress").forGetter(ActiveGoal::progress)
+            BingoTag.SpecialType.CODEC
+                .optionalFieldOf("special_type", BingoTag.SpecialType.NONE)
+                .forGetter(ActiveGoal::specialType),
+            ProgressTracker.CODEC
+                .optionalFieldOf("progress", EmptyProgressTracker.INSTANCE)
+                .forGetter(ActiveGoal::progress)
         ).apply(instance, ActiveGoal::new)
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, ActiveGoal> STREAM_CODEC = StreamCodec.composite(
