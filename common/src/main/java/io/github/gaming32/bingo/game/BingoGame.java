@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
-import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
@@ -24,6 +23,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
@@ -136,9 +136,6 @@ public class BingoGame {
         }
 
         registerListeners(player);
-        baseStats.computeIfAbsent(player.getUUID(), k -> new Object2IntOpenHashMap<>(
-            ((StatsCounterAccessor)player.getStats()).getStats()
-        ));
 
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamPayload(team).sendTo(player);
@@ -194,8 +191,12 @@ public class BingoGame {
         return state.and(playerTeam) ? playerTeam : BingoBoard.Teams.NONE;
     }
 
-    public Object2IntMap<Stat<?>> getBaseStats(ServerPlayer player) {
-        return baseStats.get(player.getUUID());
+    public Object2IntMap<Stat<?>> getBaseStats(Player player) {
+        return baseStats.getOrDefault(player.getUUID(), Object2IntMaps.emptyMap());
+    }
+
+    public Object2IntMap<Stat<?>> getOrCreateBaseStats(Player player) {
+        return baseStats.computeIfAbsent(player.getUUID(), k -> new Object2IntOpenHashMap<>());
     }
 
     public void endGame(PlayerList playerList) {
@@ -746,7 +747,7 @@ public class BingoGame {
         Map<UUID, Object2IntMap<Stat<?>>> baseStats,
         Optional<BingoBoard.Teams> playingTeams,
         BingoBoard.Teams winningTeams,
-        BingoBoard.Teams finsihedTeams
+        BingoBoard.Teams finishedTeams
     ) {
         private static final Codec<Map<UUID, Int2ObjectMap<AdvancementProgress>>> ADVANCEMENT_PROGRESS_CODEC =
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.int2ObjectMap(AdvancementProgress.CODEC));
@@ -774,7 +775,7 @@ public class BingoGame {
                 BASE_STATS_CODEC.fieldOf("base_stats").forGetter(PersistenceData::baseStats),
                 BingoBoard.Teams.CODEC.optionalFieldOf("playing_teams").forGetter(PersistenceData::playingTeams),
                 BingoBoard.Teams.CODEC.optionalFieldOf("winning_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::winningTeams),
-                BingoBoard.Teams.CODEC.optionalFieldOf("finished_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::finsihedTeams)
+                BingoBoard.Teams.CODEC.optionalFieldOf("finished_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::finishedTeams)
             ).apply(instance, PersistenceData::new)
         );
 
@@ -827,7 +828,7 @@ public class BingoGame {
 
             game.remainingTeams = playingTeams.orElseGet(() -> BingoBoard.Teams.fromAll(teams.length));
             game.winningTeams = winningTeams;
-            game.finishedTeams = finsihedTeams;
+            game.finishedTeams = finishedTeams;
 
             return game;
         }
