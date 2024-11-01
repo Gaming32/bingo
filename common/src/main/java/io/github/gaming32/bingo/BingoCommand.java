@@ -413,9 +413,6 @@ public class BingoCommand {
                     .then(literal("--require-client")
                         .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                     )
-                    .then(literal("--persistent")
-                        .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
-                    )
                     .then(literal("--continue-after-win")
                         .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                     )
@@ -456,7 +453,6 @@ public class BingoCommand {
         final int size = getArg(context, "size", () -> BingoBoard.DEFAULT_SIZE, IntegerArgumentType::getInteger);
         final String gamemodeId = getArg(context, "gamemode", () -> "standard", StringArgumentType::getString);
         final boolean requireClient = hasNode(context, "--require-client");
-        final boolean persistent = hasNode(context, "--persistent");
         final boolean continueAfterWin = hasNode(context, "--continue-after-win");
         final int autoForfeitTicks = getArg(context, "auto_forfeit_time", () -> BingoGame.DEFAULT_AUTO_FORFEIT_TICKS, IntegerArgumentType::getInteger);
 
@@ -521,7 +517,7 @@ public class BingoCommand {
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, persistent, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
+        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
         Bingo.updateCommandTree(playerList);
         new ArrayList<>(playerList.getPlayers()).forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(

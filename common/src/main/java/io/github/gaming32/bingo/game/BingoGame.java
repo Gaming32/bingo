@@ -71,7 +71,6 @@ public class BingoGame {
     private final BingoBoard board;
     private final BingoGameMode gameMode;
     private final boolean requireClient;
-    private final boolean persistent;
     private final boolean continueAfterWin;
     private final int autoForfeitTicks;
     private final PlayerTeam[] teams;
@@ -86,11 +85,10 @@ public class BingoGame {
     private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean persistent, boolean continueAfterWin, int autoForfeitTicks, PlayerTeam... teams) {
+    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean continueAfterWin, int autoForfeitTicks, PlayerTeam... teams) {
         this.board = board;
         this.gameMode = gameMode;
         this.requireClient = requireClient;
-        this.persistent = persistent;
         this.continueAfterWin = continueAfterWin;
         this.autoForfeitTicks = autoForfeitTicks;
         this.teams = teams;
@@ -109,10 +107,6 @@ public class BingoGame {
 
     public boolean isRequireClient() {
         return requireClient;
-    }
-
-    public boolean isPersistent() {
-        return persistent;
     }
 
     public boolean shouldContinueAfterWin() {
@@ -787,7 +781,7 @@ public class BingoGame {
                     throw new IllegalStateException("Team '" + teamNames.get(i) + "' no longer exists");
                 }
             }
-            final BingoGame game = new BingoGame(board, gameMode, requireClient, true, continueAfterWin, autoForfeitTicks, teams);
+            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, autoForfeitTicks, teams);
 
             for (final var entry : advancementProgress.entrySet()) {
                 final Map<ActiveGoal, AdvancementProgress> subTarget = HashMap.newHashMap(entry.getValue().size());

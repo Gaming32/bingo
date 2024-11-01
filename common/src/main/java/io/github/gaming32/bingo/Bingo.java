@@ -133,7 +133,7 @@ public class Bingo {
         });
 
         Event.SERVER_STOPPING.register(instance -> {
-            if (activeGame == null || !activeGame.isPersistent()) return;
+            if (activeGame == null) return;
             LOGGER.info("Storing persistent Bingo game");
             final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
             try {
