@@ -11,6 +11,7 @@ import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
+import io.github.gaming32.bingo.game.persistence.PersistenceManager;
 import io.github.gaming32.bingo.mixin.common.ServerExplosionAccessor;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.messages.configuration.ProtocolVersionConfigurationTask;
@@ -27,11 +28,8 @@ import io.github.gaming32.bingo.subpredicates.entity.BingoEntitySubPredicates;
 import io.github.gaming32.bingo.subpredicates.item.BingoItemSubPredicates;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import io.github.gaming32.bingo.util.BingoUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -126,11 +124,8 @@ public class Bingo {
             if (!Files.isRegularFile(path)) return;
             LOGGER.info("Reading persisted Bingo game");
             try {
-                final CompoundTag tag = NbtIo.readCompressed(path, NbtAccounter.unlimitedHeap());
-                final BingoGame.PersistenceData data = BingoGame.PersistenceData.CODEC.parse(
-                    instance.registryAccess().createSerializationContext(NbtOps.INSTANCE), tag
-                ).getOrThrow();
-                activeGame = data.createGame(instance.getScoreboard());
+                final var tag = NbtIo.readCompressed(path, NbtAccounter.unlimitedHeap());
+                activeGame = PersistenceManager.deserialize(instance.registryAccess(), tag, instance.getScoreboard());
                 Files.deleteIfExists(path);
             } catch (Exception e) {
                 LOGGER.error("Failed to load persisted Bingo game", e);
@@ -142,15 +137,8 @@ public class Bingo {
             LOGGER.info("Storing persistent Bingo game");
             final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
             try {
-                final BingoGame.PersistenceData data = activeGame.createPersistenceData();
-                final Tag tag = BingoGame.PersistenceData.CODEC.encodeStart(
-                    instance.registryAccess().createSerializationContext(NbtOps.INSTANCE), data
-                ).getOrThrow();
-                if (tag instanceof CompoundTag compoundTag) {
-                    NbtIo.writeCompressed(compoundTag, path);
-                } else {
-                    throw new IllegalStateException("Bingo game didn't serialize to CompoundTag");
-                }
+                final var tag = PersistenceManager.serialize(instance.registryAccess(), activeGame);
+                NbtIo.writeCompressed(tag, path);
             } catch (Exception e) {
                 LOGGER.error("Failed to store persistent Bingo game", e);
             }
