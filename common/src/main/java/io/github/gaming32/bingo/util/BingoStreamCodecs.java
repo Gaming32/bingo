@@ -17,6 +17,13 @@ public class BingoStreamCodecs {
         return codec -> codec.apply(ByteBufCodecs.list()).map(l -> l.toArray(factory), Arrays::asList);
     }
 
+    /**
+     * Creates a {@link StreamCodec} that encodes to nothing, and decodes to the specified value. It differs from
+     * {@link StreamCodec#unit} in that it doesn't check that the encoded value matches the specified
+     * value.
+     *
+     * @see StreamCodec#unit
+     */
     public static <B, V> StreamCodec<B, V> uncheckedUnit(V value) {
         return StreamCodec.of((buf, ignored) -> {}, buf -> value);
     }
