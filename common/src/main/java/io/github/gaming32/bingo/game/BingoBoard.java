@@ -105,9 +105,7 @@ public class BingoBoard {
             } catch (IllegalArgumentException e) {
                 throw new InvalidGoalException(generatedSheet[i].id(), e);
             }
-            if (registries != null) {
-                goal.validateAndLog(registries);
-            }
+            goal.validateAndLog(registries);
             if (generatedSheet[i].goal().getSpecialType() == BingoTag.SpecialType.NEVER) {
                 board.states[i] = Teams.fromAll(teamCount);
             }

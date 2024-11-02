@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Decoder;
@@ -75,13 +74,6 @@ public final class BingoCodecs {
     public static final Codec<ItemStack> LENIENT_ITEM_STACK = Codec.withAlternative(UNBOUNDED_ITEM_STACK, ItemStack.SIMPLE_ITEM_CODEC);
 
     private BingoCodecs() {
-    }
-
-    public static <T> Codec<Optional<T>> optional(Codec<T> codec) {
-        return Codec.either(Codec.EMPTY.codec(), codec).xmap(
-            either -> either.map(u -> Optional.empty(), Optional::of),
-            value -> value.<Either<Unit, T>>map(Either::right).orElseGet(() -> Either.left(Unit.INSTANCE))
-        );
     }
 
     public static Codec<Integer> atLeast(int minInclusive) {
@@ -210,6 +202,15 @@ public final class BingoCodecs {
 
     public static <K> Codec<Object2IntMap<K>> object2IntMap(Codec<K> keyCodec) {
         return Codec.unboundedMap(keyCodec, Codec.INT).xmap(Object2IntOpenHashMap::new, Function.identity());
+    }
+
+    public static <A> Codec<Optional<A>> notOptional(Codec<A> innerCodec) {
+        return innerCodec.flatComapMap(
+            Optional::of,
+            opt -> opt
+                .map(DataResult::success)
+                .orElseGet(() -> DataResult.error(() -> "Value was not present for encoding"))
+        );
     }
 
     public static final class FirstValidCodec<A> implements Codec<A> {

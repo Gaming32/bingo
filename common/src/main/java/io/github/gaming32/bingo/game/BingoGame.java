@@ -5,7 +5,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
-import io.github.gaming32.bingo.mixin.common.StatsCounterAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
@@ -24,6 +23,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
@@ -71,7 +71,6 @@ public class BingoGame {
     private final BingoBoard board;
     private final BingoGameMode gameMode;
     private final boolean requireClient;
-    private final boolean persistent;
     private final boolean continueAfterWin;
     private final int autoForfeitTicks;
     private final PlayerTeam[] teams;
@@ -86,11 +85,10 @@ public class BingoGame {
     private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean persistent, boolean continueAfterWin, int autoForfeitTicks, PlayerTeam... teams) {
+    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean continueAfterWin, int autoForfeitTicks, PlayerTeam... teams) {
         this.board = board;
         this.gameMode = gameMode;
         this.requireClient = requireClient;
-        this.persistent = persistent;
         this.continueAfterWin = continueAfterWin;
         this.autoForfeitTicks = autoForfeitTicks;
         this.teams = teams;
@@ -109,10 +107,6 @@ public class BingoGame {
 
     public boolean isRequireClient() {
         return requireClient;
-    }
-
-    public boolean isPersistent() {
-        return persistent;
     }
 
     public boolean shouldContinueAfterWin() {
@@ -136,9 +130,6 @@ public class BingoGame {
         }
 
         registerListeners(player);
-        baseStats.computeIfAbsent(player.getUUID(), k -> new Object2IntOpenHashMap<>(
-            ((StatsCounterAccessor)player.getStats()).getStats()
-        ));
 
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamPayload(team).sendTo(player);
@@ -194,8 +185,12 @@ public class BingoGame {
         return state.and(playerTeam) ? playerTeam : BingoBoard.Teams.NONE;
     }
 
-    public Object2IntMap<Stat<?>> getBaseStats(ServerPlayer player) {
-        return baseStats.get(player.getUUID());
+    public Object2IntMap<Stat<?>> getBaseStats(Player player) {
+        return baseStats.getOrDefault(player.getUUID(), Object2IntMaps.emptyMap());
+    }
+
+    public Object2IntMap<Stat<?>> getOrCreateBaseStats(Player player) {
+        return baseStats.computeIfAbsent(player.getUUID(), k -> new Object2IntOpenHashMap<>());
     }
 
     public void endGame(PlayerList playerList) {
@@ -381,7 +376,7 @@ public class BingoGame {
         AdvancementProgress progress = map.get(goal);
         if (progress == null) {
             progress = new AdvancementProgress();
-            progress.update(goal.goal().goal().getRequirements());
+            progress.update(goal.requirements());
             map.put(goal, progress);
         }
         return progress;
@@ -414,7 +409,7 @@ public class BingoGame {
     }
 
     public boolean award(ServerPlayer player, ActiveGoal goal, String criterion, int count) {
-        if (goal.goal().goal().getSpecialType() == BingoTag.SpecialType.FINISH) {
+        if (goal.specialType() == BingoTag.SpecialType.FINISH) {
             final BingoBoard.Teams team = getTeam(player);
             final BingoBoard.Teams[] board = this.board.getStates();
             final int index = getBoardIndex(player, goal);
@@ -441,7 +436,7 @@ public class BingoGame {
             if (completedCount > goal.requiredCount()) {
                 completedCount = goal.requiredCount();
             }
-            goal.goal().goal().getProgress().onGoalCompleted(this, player, goal, completedCount);
+            goal.progress().onGoalCompleted(this, player, goal, completedCount);
             if (completedCount == goal.requiredCount()) {
                 updateTeamBoard(player, goal, false);
             } else {
@@ -452,7 +447,7 @@ public class BingoGame {
                 registerListeners(player, goal);
             }
         }
-        goal.goal().goal().getProgress().criterionChanged(this, player, goal, criterion, true);
+        goal.progress().criterionChanged(this, player, goal, criterion, true);
         return awarded;
     }
 
@@ -479,7 +474,7 @@ public class BingoGame {
         if (wasDone && !progress.isDone()) {
             updateTeamBoard(player, goal, true);
         }
-        goal.goal().goal().getProgress().criterionChanged(this, player, goal, criterion, false);
+        goal.progress().criterionChanged(this, player, goal, criterion, false);
         return revoked;
     }
 
@@ -529,7 +524,7 @@ public class BingoGame {
         final BingoBoard.Teams[] board = this.board.getStates();
         final int index = getBoardIndex(player, goal);
         if (index == -1) return;
-        final boolean isNever = goal.goal().goal().getSpecialType() == BingoTag.SpecialType.NEVER;
+        final boolean isNever = goal.specialType() == BingoTag.SpecialType.NEVER;
         if (revoke || gameMode.canGetGoal(this.board, index, team, isNever)) {
             final boolean isLoss = isNever ^ revoke;
             board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);
@@ -545,7 +540,7 @@ public class BingoGame {
         if (index == -1) {
             Bingo.LOGGER.warn(
                 "Player {} got a goal ({}) from a previous game! This should not happen.",
-                player.getScoreboardName(), goal.goal().id()
+                player.getScoreboardName(), goal.id()
             );
         }
         return index;
@@ -727,7 +722,7 @@ public class BingoGame {
         @Override
         public void update(T triggerInstance, int progress, int maxProgress) {
             if (triggerInstance == this.triggerInstance) {
-                goal.goal().goal().getProgress().goalProgressChanged(game, player, goal, criterionId, progress, maxProgress);
+                goal.progress().goalProgressChanged(game, player, goal, criterionId, progress, maxProgress);
             }
         }
     }
@@ -746,7 +741,7 @@ public class BingoGame {
         Map<UUID, Object2IntMap<Stat<?>>> baseStats,
         Optional<BingoBoard.Teams> playingTeams,
         BingoBoard.Teams winningTeams,
-        BingoBoard.Teams finsihedTeams
+        BingoBoard.Teams finishedTeams
     ) {
         private static final Codec<Map<UUID, Int2ObjectMap<AdvancementProgress>>> ADVANCEMENT_PROGRESS_CODEC =
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.int2ObjectMap(AdvancementProgress.CODEC));
@@ -774,7 +769,7 @@ public class BingoGame {
                 BASE_STATS_CODEC.fieldOf("base_stats").forGetter(PersistenceData::baseStats),
                 BingoBoard.Teams.CODEC.optionalFieldOf("playing_teams").forGetter(PersistenceData::playingTeams),
                 BingoBoard.Teams.CODEC.optionalFieldOf("winning_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::winningTeams),
-                BingoBoard.Teams.CODEC.optionalFieldOf("finished_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::finsihedTeams)
+                BingoBoard.Teams.CODEC.optionalFieldOf("finished_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::finishedTeams)
             ).apply(instance, PersistenceData::new)
         );
 
@@ -786,14 +781,14 @@ public class BingoGame {
                     throw new IllegalStateException("Team '" + teamNames.get(i) + "' no longer exists");
                 }
             }
-            final BingoGame game = new BingoGame(board, gameMode, requireClient, true, continueAfterWin, autoForfeitTicks, teams);
+            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, autoForfeitTicks, teams);
 
             for (final var entry : advancementProgress.entrySet()) {
                 final Map<ActiveGoal, AdvancementProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
                 for (final var subEntry : entry.getValue().int2ObjectEntrySet()) {
                     final ActiveGoal goal = getGoal(subEntry.getIntKey());
                     final AdvancementProgress progress = subEntry.getValue();
-                    progress.update(goal.goal().goal().getRequirements());
+                    progress.update(goal.requirements());
                     subTarget.put(goal, progress);
                 }
                 game.advancementProgress.put(entry.getKey(), subTarget);
@@ -827,7 +822,7 @@ public class BingoGame {
 
             game.remainingTeams = playingTeams.orElseGet(() -> BingoBoard.Teams.fromAll(teams.length));
             game.winningTeams = winningTeams;
-            game.finishedTeams = finsihedTeams;
+            game.finishedTeams = finishedTeams;
 
             return game;
         }

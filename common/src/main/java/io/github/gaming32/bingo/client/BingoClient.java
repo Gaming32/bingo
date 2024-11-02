@@ -12,7 +12,6 @@ import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.game.GoalProgress;
-import io.github.gaming32.bingo.network.ClientGoal;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
@@ -235,7 +234,7 @@ public class BingoClient {
         final boolean spectator = minecraft.player != null && minecraft.player.isSpectator();
         for (int sx = 0; sx < clientGame.size(); sx++) {
             for (int sy = 0; sy < clientGame.size(); sy++) {
-                final ClientGoal goal = clientGame.getGoal(sx, sy);
+                final var goal = clientGame.getGoal(sx, sy);
                 final int slotX = sx * 18 + 8;
                 final int slotY = sy * 18 + 18;
                 final GoalIcon icon = goal.icon();
@@ -288,7 +287,7 @@ public class BingoClient {
 
         graphics.pose().popPose();
         if (BingoMousePos.hasSlotPos(mousePos)) {
-            final ClientGoal goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
+            final var goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
             final GoalProgress progress = clientGame.getProgress(mousePos.slotIdX(), mousePos.slotIdY());
             final TooltipBuilder tooltip = new TooltipBuilder();
             tooltip.add(goal.name());
@@ -344,7 +343,7 @@ public class BingoClient {
             return false;
         }
 
-        final ClientGoal goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
+        final var goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
 
         final RecipeViewerPlugin plugin = getRecipeViewerPlugin();
         if (plugin.isViewRecipe(key)) {

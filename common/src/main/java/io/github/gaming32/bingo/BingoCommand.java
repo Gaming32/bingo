@@ -122,10 +122,7 @@ public class BingoCommand {
             return builder.buildFuture();
         }
         return SharedSuggestionProvider.suggestResource(
-            Arrays.stream(Bingo.activeGame.getBoard().getGoals())
-                .map(ActiveGoal::goal)
-                .map(BingoGoal.GoalHolder::id),
-            builder
+            Arrays.stream(Bingo.activeGame.getBoard().getGoals()).map(ActiveGoal::id), builder
         );
     };
 
@@ -240,7 +237,7 @@ public class BingoCommand {
                         final StringBuilder line = new StringBuilder(board.getSize());
                         for (int y = 0; y < board.getSize(); y++) {
                             for (int x = 0; x < board.getSize(); x++) {
-                                line.append(board.getGoal(x, y).goal().goal().getDifficulty().value().number());
+                                line.append(board.getGoal(x, y).difficulty().orElseThrow().value().number());
                             }
                             ctx.getSource().sendSuccess(() -> Component.literal(line.toString()), false);
                             line.setLength(0);
@@ -264,7 +261,7 @@ public class BingoCommand {
 
                                 int success = 0;
                                 for (final ActiveGoal goal : Bingo.activeGame.getBoard().getGoals()) {
-                                    if (goal.goal().id().equals(goalId)) {
+                                    if (goal.id().equals(goalId)) {
                                         for (final ServerPlayer player : players) {
                                             if (Bingo.activeGame.award(player, goal)) {
                                                 success++;
@@ -293,7 +290,7 @@ public class BingoCommand {
 
                                 int success = 0;
                                 for (final ActiveGoal goal : Bingo.activeGame.getBoard().getGoals()) {
-                                    if (goal.goal().id().equals(goalId)) {
+                                    if (goal.id().equals(goalId)) {
                                         for (final ServerPlayer player : players) {
                                             if (Bingo.activeGame.revoke(player, goal)) {
                                                 success++;
@@ -416,9 +413,6 @@ public class BingoCommand {
                     .then(literal("--require-client")
                         .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                     )
-                    .then(literal("--persistent")
-                        .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
-                    )
                     .then(literal("--continue-after-win")
                         .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                     )
@@ -459,7 +453,6 @@ public class BingoCommand {
         final int size = getArg(context, "size", () -> BingoBoard.DEFAULT_SIZE, IntegerArgumentType::getInteger);
         final String gamemodeId = getArg(context, "gamemode", () -> "standard", StringArgumentType::getString);
         final boolean requireClient = hasNode(context, "--require-client");
-        final boolean persistent = hasNode(context, "--persistent");
         final boolean continueAfterWin = hasNode(context, "--continue-after-win");
         final int autoForfeitTicks = getArg(context, "auto_forfeit_time", () -> BingoGame.DEFAULT_AUTO_FORFEIT_TICKS, IntegerArgumentType::getInteger);
 
@@ -524,7 +517,7 @@ public class BingoCommand {
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, persistent, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
+        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
         Bingo.updateCommandTree(playerList);
         new ArrayList<>(playerList.getPlayers()).forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(

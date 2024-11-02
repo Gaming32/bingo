@@ -40,14 +40,13 @@ public record BingoPlayerPredicate(
         final BingoGame game = Bingo.activeGame;
         if (game != null) {
             final Object2IntMap<Stat<?>> baseStats = game.getBaseStats(player);
-            if (baseStats != null) {
-                final StatsCounter currentStats = player.getStats();
-                for (final PlayerPredicate.StatMatcher<?> matcher : relativeStats) {
-                    final Stat<?> stat = matcher.stat().get();
-                    final int value = currentStats.getValue(stat) - baseStats.getInt(stat);
-                    if (!matcher.range().matches(value)) {
-                        return false;
-                    }
+            final StatsCounter currentStats = player.getStats();
+            for (final PlayerPredicate.StatMatcher<?> matcher : relativeStats) {
+                final Stat<?> stat = matcher.stat().get();
+                final var currentValue = currentStats.getValue(stat);
+                final int value = currentValue - baseStats.getOrDefault(stat, currentValue);
+                if (!matcher.range().matches(value)) {
+                    return false;
                 }
             }
         }
