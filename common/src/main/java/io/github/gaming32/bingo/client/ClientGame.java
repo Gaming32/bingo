@@ -2,8 +2,8 @@ package io.github.gaming32.bingo.client;
 
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
-import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.game.GoalProgress;
+import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.Nullable;
 

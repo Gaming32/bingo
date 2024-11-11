@@ -4,7 +4,6 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -17,14 +16,13 @@ import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoRegistries;
-import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.ext.CommandContextExt;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
-import io.github.gaming32.bingo.game.BingoGameMode;
 import io.github.gaming32.bingo.game.InvalidGoalException;
+import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
@@ -125,11 +123,6 @@ public class BingoCommand {
             Arrays.stream(Bingo.activeGame.getBoard().getGoals()).map(ActiveGoal::id), builder
         );
     };
-
-    private static final ArgGetter<Holder.Reference<BingoTag>> TAG_ARG_GETTER =
-        ArgGetter.forResource(BingoRegistries.TAG, UNKNOWN_TAG);
-    private static final ArgGetter<Holder.Reference<BingoDifficulty>> DIFFICULTY_ARG_GETTER =
-        ArgGetter.forResource(BingoRegistries.DIFFICULTY, UNKNOWN_DIFFICULTY);
 
     public static void register(
         CommandDispatcher<CommandSourceStack> dispatcher,
@@ -403,10 +396,7 @@ public class BingoCommand {
                         )
                     )
                     .then(literal("--gamemode")
-                        .then(argument("gamemode", StringArgumentType.word())
-                            .suggests((context, builder) -> SharedSuggestionProvider.suggest(
-                                BingoGameMode.GAME_MODES.keySet(), builder
-                            ))
+                        .then(argument("gamemode", ResourceKeyArgument.key(BingoRegistries.GAME_MODE))
                             .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                         )
                     )
@@ -443,18 +433,16 @@ public class BingoCommand {
         }
         final var registries = context.getSource().registryAccess();
 
-        final var difficulty = getArg(
-            context, "difficulty",
-            () -> registries.lookupOrThrow(BingoRegistries.DIFFICULTY).getOrThrow(BingoDifficulties.MEDIUM),
-            DIFFICULTY_ARG_GETTER
+        final var difficulty = getResourceArg(
+            context, "difficulty", BingoRegistries.DIFFICULTY, BingoDifficulties.MEDIUM, UNKNOWN_DIFFICULTY
         );
         final long seed = getArg(context, "seed", RandomSupport::generateUniqueSeed, LongArgumentType::getLong);
         final var requiredGoalIds = getArgs(context, "required_goal", ResourceLocationArgument::getId, HashSet::new);
-        final var excludedTags = HolderSet.direct(
-            (List<Holder.Reference<BingoTag>>)getArgs(context, "excluded_tag", TAG_ARG_GETTER, ArrayList::new)
-        );
+        final var excludedTags = getResourceArgs(context, "excluded_tag", BingoRegistries.TAG, UNKNOWN_TAG);
         final int size = getArg(context, "size", () -> BingoBoard.DEFAULT_SIZE, IntegerArgumentType::getInteger);
-        final String gamemodeId = getArg(context, "gamemode", () -> "standard", StringArgumentType::getString);
+        final var gamemode = getResourceArg(
+            context, "gamemode", BingoRegistries.GAME_MODE, BingoGameMode.STANDARD.key(), UNKNOWN_GAMEMODE
+        ).value();
         final boolean requireClient = hasNode(context, "--require-client");
         final boolean continueAfterWin = hasNode(context, "--continue-after-win");
         final boolean includeInactiveTeams = hasNode(context, "--include-inactive-teams");
@@ -492,11 +480,6 @@ public class BingoCommand {
                 return goal;
             })
             .toList();
-
-        final BingoGameMode gamemode = BingoGameMode.GAME_MODES.get(gamemodeId);
-        if (gamemode == null) {
-            throw UNKNOWN_GAMEMODE.create(gamemodeId);
-        }
 
         final CommandSyntaxException configError = gamemode.checkAllowedConfig(
             new BingoGameMode.GameConfig(gamemode, size, teams)
@@ -608,6 +591,26 @@ public class BingoCommand {
             true
         );
         return players.size();
+    }
+
+    private static <T> Holder.Reference<T> getResourceArg(
+        CommandContext<CommandSourceStack> context, String arg, ResourceKey<Registry<T>> registry,
+        ResourceKey<T> defaultValue, DynamicCommandExceptionType exceptionType
+    ) throws CommandSyntaxException {
+        return getArg(
+            context, arg,
+            () -> context.getSource().registryAccess().lookupOrThrow(registry).getOrThrow(defaultValue),
+            ArgGetter.forResource(registry, exceptionType)
+        );
+    }
+
+    private static <T> HolderSet<T> getResourceArgs(
+        CommandContext<CommandSourceStack> context, String arg, ResourceKey<Registry<T>> registry,
+        DynamicCommandExceptionType exceptionType
+    ) throws CommandSyntaxException {
+        return HolderSet.direct(
+            (List<Holder.Reference<T>>)getArgs(context, arg, ArgGetter.forResource(registry, exceptionType), ArrayList::new)
+        );
     }
 
     private static <T> T getArg(

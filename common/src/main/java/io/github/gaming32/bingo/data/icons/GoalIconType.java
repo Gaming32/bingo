@@ -29,7 +29,7 @@ public interface GoalIconType<I extends GoalIcon> {
 
     StreamCodec<? super RegistryFriendlyByteBuf, I> streamCodec();
 
-    static <I extends GoalIcon> RegistryValue<GoalIconType<I>> register(
+    private static <I extends GoalIcon> RegistryValue<GoalIconType<I>> register(
         String id,
         MapCodec<I> codec,
         StreamCodec<? super RegistryFriendlyByteBuf, I> streamCodec

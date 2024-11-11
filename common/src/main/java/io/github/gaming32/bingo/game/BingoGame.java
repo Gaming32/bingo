@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;

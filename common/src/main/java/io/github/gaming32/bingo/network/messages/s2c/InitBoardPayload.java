@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.network.messages.s2c;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
-import io.github.gaming32.bingo.game.BingoGameMode;
+import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;

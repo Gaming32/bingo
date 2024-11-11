@@ -18,7 +18,7 @@ public interface ProgressTrackerType<P extends ProgressTracker> {
 
     MapCodec<P> codec();
 
-    static <P extends ProgressTracker> RegistryValue<ProgressTrackerType<P>> register(String id, MapCodec<P> codec) {
+    private static <P extends ProgressTracker> RegistryValue<ProgressTrackerType<P>> register(String id, MapCodec<P> codec) {
         return REGISTER.register(id, () -> new ProgressTrackerType<>() {
             @Override
             public MapCodec<P> codec() {

@@ -11,6 +11,7 @@ import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.BingoGame;
+import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.game.persistence.PersistenceManager;
 import io.github.gaming32.bingo.mixin.common.ServerExplosionAccessor;
 import io.github.gaming32.bingo.network.BingoNetworking;
@@ -146,10 +147,12 @@ public class Bingo {
     }
 
     private static void initializeRegistries() {
-        BingoConditions.load();
+        BingoGameMode.load();
         GoalIconType.load();
-        BingoSubType.load();
         ProgressTrackerType.load();
+        BingoSubType.load();
+
+        BingoConditions.load();
         BingoEntitySubPredicates.load();
         BingoItemSubPredicates.load();
         BingoTriggers.load();
