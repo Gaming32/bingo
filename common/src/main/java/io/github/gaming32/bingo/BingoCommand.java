@@ -421,6 +421,9 @@ public class BingoCommand {
                             .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
                         )
                     )
+                    .then(literal("--include-inactive-teams")
+                        .redirect(startCommand, CommandSourceStackExt.COPY_CONTEXT)
+                    )
                 )
             );
             CommandNode<CommandSourceStack> currentCommand = startCommand;
@@ -454,6 +457,7 @@ public class BingoCommand {
         final String gamemodeId = getArg(context, "gamemode", () -> "standard", StringArgumentType::getString);
         final boolean requireClient = hasNode(context, "--require-client");
         final boolean continueAfterWin = hasNode(context, "--continue-after-win");
+        final boolean includeInactiveTeams = hasNode(context, "--include-inactive-teams");
         final int autoForfeitTicks = getArg(context, "auto_forfeit_time", () -> BingoGame.DEFAULT_AUTO_FORFEIT_TICKS, IntegerArgumentType::getInteger);
 
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
@@ -461,8 +465,17 @@ public class BingoCommand {
             final String argName = "team" + i;
             if (!hasArg(context, argName)) break;
             final PlayerTeam team = TeamArgument.getTeam(context, argName);
-            boolean hasAnyActivePlayers = team.getPlayers().stream().anyMatch(playerName -> context.getSource().getServer().getPlayerList().getPlayerByName(playerName) != null);
-            if (hasAnyActivePlayers && !teams.add(team)) {
+            boolean teamActive =
+                includeInactiveTeams ||
+                team.getPlayers()
+                    .stream()
+                    .anyMatch(playerName ->
+                        context.getSource()
+                            .getServer()
+                            .getPlayerList()
+                            .getPlayerByName(playerName) != null
+                    );
+            if (teamActive && !teams.add(team)) {
                 throw DUPLICATE_TEAMS.create(team);
             }
         }
