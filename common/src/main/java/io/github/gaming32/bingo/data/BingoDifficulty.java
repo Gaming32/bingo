@@ -42,15 +42,15 @@ public record BingoDifficulty(int number, @Nullable String fallbackName) {
     }
 
     public static Component getDescription(Holder<BingoDifficulty> holder) {
-        return getDescription(holder.unwrapKey().orElse(null));
+        return getDescription(holder.unwrapKey().orElse(null), holder.value().fallbackName);
     }
 
-    public static Component getDescription(@Nullable ResourceKey<BingoDifficulty> id) {
-        return getDescription((ResourceLocation)Optionull.map(id, ResourceKey::location));
+    public static Component getDescription(@Nullable ResourceKey<BingoDifficulty> id, @Nullable String fallback) {
+        return getDescription((ResourceLocation)Optionull.map(id, ResourceKey::location), fallback);
     }
 
-    public static Component getDescription(@Nullable ResourceLocation id) {
-        return Component.translatable(Util.makeDescriptionId("bingo_difficulty", id));
+    public static Component getDescription(@Nullable ResourceLocation id, @Nullable String fallback) {
+        return Component.translatableWithFallback(Util.makeDescriptionId("bingo_difficulty", id), fallback);
     }
 
     public static final class Builder {

@@ -148,6 +148,7 @@ public final class BingoCodecs {
         return new FirstValidCodec<>(first, second);
     }
 
+    // TODO: Use ExtraCodecs.compactListCodec
     public static <A> Codec<Set<A>> minifiedSet(Codec<A> elementCodec) {
         return Codec.either(setOf(elementCodec), elementCodec).xmap(
             either -> either.map(Function.identity(), ImmutableSet::of),
