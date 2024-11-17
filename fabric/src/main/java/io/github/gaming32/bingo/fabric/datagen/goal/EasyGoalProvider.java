@@ -407,6 +407,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("egg"), Items.EGG, 16, 16));
         addGoal(BingoGoal.builder(id("4x4_paintings"))
             .criterion("paintings", AdjacentPaintingTrigger.builder()
+                .placedPainting(PaintingPredicate.builder()
+                    .width(MinMaxBounds.Ints.exactly(4))
+                    .height(MinMaxBounds.Ints.exactly(4))
+                    .build()
+                )
                 .adjacentPaintings(PaintingPredicate.builder()
                     .width(MinMaxBounds.Ints.exactly(4))
                     .height(MinMaxBounds.Ints.exactly(4))

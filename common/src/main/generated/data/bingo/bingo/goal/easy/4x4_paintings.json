@@ -18,7 +18,20 @@
         ],
         "count": {
           "min": 3
-        }
+        },
+        "placed_painting": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "bingo:painting",
+                "height": 4,
+                "width": 4
+              }
+            }
+          }
+        ]
       },
       "trigger": "bingo:adjacent_painting"
     }
