@@ -89,7 +89,6 @@ import net.minecraft.advancements.critereon.UsingItemTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
@@ -172,7 +171,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .antisynergy("terracotta_color")
             .infrequency(4)
         );
-        addGoal(obtainItemGoal(id("mushroom_stew"), Items.MUSHROOM_STEW, 2, 5));
+        addGoal(obtainItemGoal(id("mushroom_stew"), items, Items.MUSHROOM_STEW, 2, 5));
         addGoal(BingoGoal.builder(id("shoot_button"))
             .criterion("obtain", ArrowPressTrigger.builder()
                 .arrow(EntityPredicate.Builder.entity().of(entityTypes, EntityTypeTags.ARROWS).build())
@@ -182,11 +181,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION)
             .name("shoot_button")
             .icon(Items.OAK_BUTTON));
-        addGoal(obtainItemGoal(id("writable_book"), Items.WRITABLE_BOOK)
+        addGoal(obtainItemGoal(id("writable_book"), items, Items.WRITABLE_BOOK)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("flint"), Items.FLINT, 16, 64));
+        addGoal(obtainItemGoal(id("flint"), items, Items.FLINT, 16, 64));
         addGoal(eatEntireCake());
-        addGoal(obtainItemGoal(id("pumpkin_pie"), Items.PUMPKIN_PIE)
+        addGoal(obtainItemGoal(id("pumpkin_pie"), items, Items.PUMPKIN_PIE)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("fish_treasure_junk"))
             .criterion("treasure", FishingRodHookedTrigger.TriggerInstance.fishedItem(
@@ -202,16 +201,16 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(makeItemWithGlint(Items.FISHING_ROD))
             .reactant("fishing")
         );
-        addGoal(obtainItemGoal(id("coarse_dirt"), Items.COARSE_DIRT, 16, 64)
+        addGoal(obtainItemGoal(id("coarse_dirt"), items, Items.COARSE_DIRT, 16, 64)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("clock"), Items.CLOCK, 2, 3)
+        addGoal(obtainItemGoal(id("clock"), items, Items.CLOCK, 2, 3)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("iron_block"), Items.IRON_BLOCK, 2, 4)
+        addGoal(obtainItemGoal(id("iron_block"), items, Items.IRON_BLOCK, 2, 4)
             .infrequency(2));
-        addGoal(obtainItemGoal(id("gold_block"), Items.GOLD_BLOCK)
+        addGoal(obtainItemGoal(id("gold_block"), items, Items.GOLD_BLOCK)
             .infrequency(2));
-        addGoal(obtainItemGoal(id("golden_apple"), Items.GOLDEN_APPLE));
-        addGoal(obtainItemGoal(id("bookshelf"), Items.BOOKSHELF, 2, 4)
+        addGoal(obtainItemGoal(id("golden_apple"), items, Items.GOLDEN_APPLE));
+        addGoal(obtainItemGoal(id("bookshelf"), items, Items.BOOKSHELF, 2, 4)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("never_wear_chestplates"))
             .criterion("equip", EquipItemTrigger.builder()
@@ -235,7 +234,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("never_use_shields")
             .tooltip("never_use_shields")
             .icon(Items.SHIELD));
-        addGoal(obtainItemGoal(id("jukebox"), Items.JUKEBOX));
+        addGoal(obtainItemGoal(id("jukebox"), items, Items.JUKEBOX));
         addGoal(BingoGoal.builder(id("3x3x3_glass_cube"))
             .criterion("build", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
                 LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.GLASS)
@@ -255,11 +254,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.BUILD, BingoTags.OVERWORLD)
         );
-        addGoal(obtainItemGoal(id("mossy_cobblestone"), Items.MOSSY_COBBLESTONE, 16, 32)
+        addGoal(obtainItemGoal(id("mossy_cobblestone"), items, Items.MOSSY_COBBLESTONE, 16, 32)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("cactus"), Items.CACTUS, 5, 15)
+        addGoal(obtainItemGoal(id("cactus"), items, Items.CACTUS, 5, 15)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("tnt"), Items.TNT, 2, 3)
+        addGoal(obtainItemGoal(id("tnt"), items, Items.TNT, 2, 3)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainLevelsGoal(id("levels"), 8, 15));
         addGoal(BingoGoal.builder(id("create_snow_golem"))
@@ -270,23 +269,23 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.create_snow_golem", EntityType.SNOW_GOLEM.getDescription()))
             .icon(EntityIcon.ofSpawnEgg(EntityType.SNOW_GOLEM))
         );
-        addGoal(obtainItemGoal(id("note_block"), Items.NOTE_BLOCK, 5, 15)
+        addGoal(obtainItemGoal(id("note_block"), items, Items.NOTE_BLOCK, 5, 15)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("ink_sac"), Items.INK_SAC, 5, 15)
+        addGoal(obtainItemGoal(id("ink_sac"), items, Items.INK_SAC, 5, 15)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("bread"), Items.BREAD, 6, 10)
+        addGoal(obtainItemGoal(id("bread"), items, Items.BREAD, 6, 10)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("hay_block"), Items.HAY_BLOCK, 2, 3)
+        addGoal(obtainItemGoal(id("hay_block"), items, Items.HAY_BLOCK, 2, 3)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainSomeItemsFromTag(id("wool_colors"), ItemTags.WOOL, "bingo.goal.wool_colors", 5, 8)
             .antisynergy("wool_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("piston"), Items.PISTON)
+        addGoal(obtainItemGoal(id("piston"), items, Items.PISTON)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("full_iron_armor"))
             .criterion("armor", InventoryChangeTrigger.TriggerInstance.hasItems(
@@ -345,15 +344,15 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("complete_map")
             .icon(Items.FILLED_MAP)
             .antisynergy("complete_map"));
-        addGoal(obtainItemGoal(id("soul_sand"), Items.SOUL_SAND, 5, 10)
+        addGoal(obtainItemGoal(id("soul_sand"), items, Items.SOUL_SAND, 5, 10)
             .tags(BingoTags.NETHER));
-        addGoal(obtainItemGoal(id("soul_soil"), Items.SOUL_SOIL, 5, 10)
+        addGoal(obtainItemGoal(id("soul_soil"), items, Items.SOUL_SOIL, 5, 10)
             .tags(BingoTags.NETHER));
-        addGoal(obtainItemGoal(id("pumpkin"), Items.PUMPKIN, 5, 10)
+        addGoal(obtainItemGoal(id("pumpkin"), items, Items.PUMPKIN, 5, 10)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("carved_pumpkin"), Items.CARVED_PUMPKIN, 2, 5)
+        addGoal(obtainItemGoal(id("carved_pumpkin"), items, Items.CARVED_PUMPKIN, 2, 5)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("vine"), Items.VINE, 10, 30)
+        addGoal(obtainItemGoal(id("vine"), items, Items.VINE, 10, 30)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
         addGoal(obtainSomeItemsFromTag(id("different_slabs"), BingoItemTags.SLABS, "bingo.goal.different_slabs", 5, 7)
             .antisynergy("slabs")
@@ -382,13 +381,13 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .antisynergy("all_pickaxes")
             .infrequency(2)
             .tags(BingoTags.ITEM));
-        addGoal(obtainItemGoal(id("bricks"), Items.BRICKS, 16, 64)
+        addGoal(obtainItemGoal(id("bricks"), items, Items.BRICKS, 16, 64)
             .reactant("use_furnace")
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("nether_bricks"), Items.NETHER_BRICKS, 16, 32)
+        addGoal(obtainItemGoal(id("nether_bricks"), items, Items.NETHER_BRICKS, 16, 32)
             .reactant("use_furnace")
             .tags(BingoTags.NETHER));
-        addGoal(obtainItemGoal(id("arrow"), Items.ARROW, 16, 64));
+        addGoal(obtainItemGoal(id("arrow"), items, Items.ARROW, 16, 64));
         addGoal(BingoGoal.builder(id("sleep_in_nether"))
             .criterion("sleep", IntentionalGameDesignTrigger.TriggerInstance.clicked(
                 LocationPredicate.Builder.inDimension(Level.NETHER).build()
@@ -397,14 +396,14 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("sleep_in_nether")
             .icon(Items.PURPLE_BED)
         );
-        addGoal(obtainItemGoal(id("fermented_spider_eye"), Items.FERMENTED_SPIDER_EYE)
+        addGoal(obtainItemGoal(id("fermented_spider_eye"), items, Items.FERMENTED_SPIDER_EYE)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainSomeItemsFromTag(id("different_stairs"), BingoItemTags.STAIRS, "bingo.goal.different_stairs", 5, 7)
             .antisynergy("stairs")
             .infrequency(2));
-        addGoal(obtainItemGoal(id("ender_pearl"), Items.ENDER_PEARL, 2, 3)
+        addGoal(obtainItemGoal(id("ender_pearl"), items, Items.ENDER_PEARL, 2, 3)
             .infrequency(2));
-        addGoal(obtainItemGoal(id("egg"), Items.EGG, 16, 16));
+        addGoal(obtainItemGoal(id("egg"), items, Items.EGG, 16, 16));
         addGoal(BingoGoal.builder(id("4x4_paintings"))
             .criterion("paintings", AdjacentPaintingTrigger.builder()
                 .adjacentPaintings(PaintingPredicate.builder()
@@ -419,7 +418,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(new ItemStack(Items.PAINTING, 3))
             .antisynergy("painting")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("bone_block"), Items.BONE_BLOCK, 5, 10));
+        addGoal(obtainItemGoal(id("bone_block"), items, Items.BONE_BLOCK, 5, 10));
         addGoal(BingoGoal.builder(id("double_creeper_boat"))
             .criterion("break", BingoTriggers.DESTROY_VEHICLE.get().createCriterion(new DestroyVehicleTrigger.TriggerInstance(
                 Optional.empty(),
@@ -461,16 +460,13 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 }
             })
             .tags(BingoTags.ITEM, BingoTags.COLOR, BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("dead_bush"), Items.DEAD_BUSH)
+        addGoal(obtainItemGoal(id("dead_bush"), items, Items.DEAD_BUSH)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
-        addGoal(obtainItemGoal(id("grass"), Items.SHORT_GRASS, 15, 32) // FIXME: Support TALL_GRASS too
+        addGoal(obtainItemGoal(id("grass"), items, Items.SHORT_GRASS, 15, 32) // FIXME: Support TALL_GRASS too
             .tooltip("grass"));
 
         for (String dyeColor : List.of("cyan", "magenta", "red", "orange", "yellow", "green", "pink", "purple", "lime")) {
-            var dyeItem = items.getOrThrow(ResourceKey.create(
-                Registries.ITEM, ResourceLocations.minecraft(dyeColor + "_dye")
-            )).value();
-            addGoal(obtainItemGoal(id(dyeColor + "_dye"), dyeItem)
+            addGoal(obtainItemGoal(id(dyeColor + "_dye"), items, itemResource(dyeColor + "_dye"))
                 .infrequency(10)
                 .tags(BingoTags.OVERWORLD));
         }
@@ -547,7 +543,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tooltip("finish_at_spawn")
             .icon(Items.COMPASS)
         );
-        addGoal(obtainItemGoal(id("stone"), Items.STONE, 32, 64)
+        addGoal(obtainItemGoal(id("stone"), items, Items.STONE, 32, 64)
             .tooltip("stone")
             .infrequency(2)
             .reactant("use_furnace")
@@ -587,14 +583,14 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(CycleIcon.infer(EntityType.CREEPER, Blocks.FIRE))
             .reactant("pacifist")
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("iron_nugget"), Items.IRON_NUGGET, 32, 64));
-        addGoal(obtainItemGoal(id("gold_nugget"), Items.GOLD_NUGGET, 32, 64));
-        addGoal(obtainItemGoal(id("rotten_flesh"), Items.ROTTEN_FLESH, 16, 32)
+        addGoal(obtainItemGoal(id("iron_nugget"), items, Items.IRON_NUGGET, 32, 64));
+        addGoal(obtainItemGoal(id("gold_nugget"), items, Items.GOLD_NUGGET, 32, 64));
+        addGoal(obtainItemGoal(id("rotten_flesh"), items, Items.ROTTEN_FLESH, 16, 32)
             .infrequency(2));
-        addGoal(obtainItemGoal(id("redstone"), Items.REDSTONE, 16, 64)
+        addGoal(obtainItemGoal(id("redstone"), items, Items.REDSTONE, 16, 64)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("golden_carrot"), Items.GOLDEN_CARROT)
+        addGoal(obtainItemGoal(id("golden_carrot"), items, Items.GOLDEN_CARROT)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("common_mob_drops"))
             .criterion("rotten_flesh", InventoryChangeTrigger.TriggerInstance.hasItems(Items.ROTTEN_FLESH))
@@ -611,11 +607,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 Items.ENDER_PEARL.getName()))
             .icon(CycleIcon.infer(Items.ROTTEN_FLESH, Items.SPIDER_EYE, Items.BONE, Items.GUNPOWDER, Items.ENDER_PEARL))
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("feather"), Items.FEATHER, 32, 64)
+        addGoal(obtainItemGoal(id("feather"), items, Items.FEATHER, 32, 64)
             .infrequency(2));
-        addGoal(obtainItemGoal(id("lily_pad"), Items.LILY_PAD, 2, 10)
+        addGoal(obtainItemGoal(id("lily_pad"), items, Items.LILY_PAD, 2, 10)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
-        addGoal(obtainItemGoal(id("stick"), Items.STICK, 65, 128)
+        addGoal(obtainItemGoal(id("stick"), items, Items.STICK, 65, 128)
             .infrequency(2));
         addGoal(BingoGoal.builder(id("wear_different_colored_armor"))
             .criterion("obtain", WearDifferentColoredArmorTrigger.builder(4).build())
@@ -636,7 +632,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .reactant("wear_armor")
             .tags(BingoTags.ITEM, BingoTags.COLOR, BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("seagrass"), Items.SEAGRASS, 15, 32)
+        addGoal(obtainItemGoal(id("seagrass"), items, Items.SEAGRASS, 15, 32)
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
 
@@ -644,28 +640,28 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             Item planksItem = items.getOrThrow(ResourceKey.create(
                 Registries.ITEM, ResourceLocations.minecraft(woodType + "_planks")
             )).value();
-            addGoal(obtainItemGoal(id(woodType + "_planks"), planksItem, 65, 128)
+            addGoal(obtainItemGoal(id(woodType + "_planks"), items, planksItem, 65, 128)
                 .tags(BingoTags.OVERWORLD)
                 .infrequency(25));
 
             Item logItem = items.getOrThrow(ResourceKey.create(
                 Registries.ITEM, ResourceLocations.minecraft(woodType + "_log")
             )).value();
-            addGoal(obtainItemGoal(id(woodType + "_log"), logItem, 16, 32)
+            addGoal(obtainItemGoal(id(woodType + "_log"), items, logItem, 16, 32)
                 .tags(BingoTags.OVERWORLD)
                 .infrequency(25));
 
             Item woodItem = items.getOrThrow(ResourceKey.create(
                 Registries.ITEM, ResourceLocations.minecraft(woodType + "_wood")
             )).value();
-            addGoal(obtainItemGoal(id(woodType + "_wood"), woodItem, 11, 20)
+            addGoal(obtainItemGoal(id(woodType + "_wood"), items, woodItem, 11, 20)
                 .infrequency(25)
                 .tags(BingoTags.OVERWORLD));
 
             Item strippedWoodItem = items.getOrThrow(ResourceKey.create(
                 Registries.ITEM, ResourceLocations.minecraft("stripped_" + woodType + "_wood")
             )).value();
-            addGoal(obtainItemGoal(id("stripped_" + woodType + "_wood"), strippedWoodItem, 11, 20)
+            addGoal(obtainItemGoal(id("stripped_" + woodType + "_wood"), items, strippedWoodItem, 11, 20)
                 .reactant("axe_use")
                 .infrequency(25)
                 .tags(BingoTags.OVERWORLD));
@@ -673,20 +669,20 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             Item strippedLogItem = items.getOrThrow(ResourceKey.create(
                 Registries.ITEM, ResourceLocations.minecraft("stripped_" + woodType + "_log")
             )).value();
-            addGoal(obtainItemGoal(id("stripped_" + woodType + "_log"), strippedLogItem, 16, 32)
+            addGoal(obtainItemGoal(id("stripped_" + woodType + "_log"), items, strippedLogItem, 16, 32)
                 .reactant("axe_use")
                 .infrequency(25)
                 .tags(BingoTags.OVERWORLD));
         }
 
-        addGoal(obtainItemGoal(id("tropical_fish"), Items.TROPICAL_FISH)
+        addGoal(obtainItemGoal(id("tropical_fish"), items, Items.TROPICAL_FISH)
             .tags(BingoTags.OVERWORLD, BingoTags.OCEAN));
-        addGoal(obtainItemGoal(id("pufferfish"), Items.PUFFERFISH)
+        addGoal(obtainItemGoal(id("pufferfish"), items, Items.PUFFERFISH)
             .tags(BingoTags.OVERWORLD, BingoTags.OCEAN));
-        addGoal(obtainItemGoal(id("cod"), Items.COD, 6, 15)
+        addGoal(obtainItemGoal(id("cod"), items, Items.COD, 6, 15)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD, BingoTags.OCEAN));
-        addGoal(obtainItemGoal(id("salmon"), Items.SALMON, 4, 7)
+        addGoal(obtainItemGoal(id("salmon"), items, Items.SALMON, 4, 7)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD, BingoTags.OCEAN));
         addGoal(BingoGoal.builder(id("never_use_boat"))
@@ -715,7 +711,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .antisynergy("pacifist")
             .tags(BingoTags.NETHER, BingoTags.ACTION, BingoTags.OVERWORLD)
         );
-        addGoal(obtainItemGoal(id("dried_kelp_block"), Items.DRIED_KELP_BLOCK, 11, 20)
+        addGoal(obtainItemGoal(id("dried_kelp_block"), items, Items.DRIED_KELP_BLOCK, 11, 20)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("drown_zombie"))
             .criterion("drown", ZombieDrownedTrigger.builder().build())
@@ -723,9 +719,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tooltip("drown_zombie")
             .icon(CycleIcon.infer(EntityType.ZOMBIE, EntityType.DROWNED))
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("gunpowder"), Items.GUNPOWDER, 2, 5)
+        addGoal(obtainItemGoal(id("gunpowder"), items, Items.GUNPOWDER, 2, 5)
             .infrequency(2));
-        addGoal(obtainItemGoal(id("spider_eye"), Items.SPIDER_EYE, 2, 5)
+        addGoal(obtainItemGoal(id("spider_eye"), items, Items.SPIDER_EYE, 2, 5)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainSomeEdibleItems(id("edible_items"), 4, 5).tags(BingoTags.OVERWORLD));
@@ -766,11 +762,12 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("grindstone_repair")
             .icon(CycleIcon.infer(Items.GRINDSTONE, ConventionalItemTags.TOOLS))
             .tags(BingoTags.ACTION));
-        addGoal(obtainItemGoal(id("sweet_berries"), Items.SWEET_BERRIES, 2, 6)
+        addGoal(obtainItemGoal(id("sweet_berries"), items, Items.SWEET_BERRIES, 2, 6)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
         addGoal(
             obtainItemGoal(
                 id("banner_pattern"),
+                items,
                 new ItemTagCycleIcon(BingoItemTags.BANNER_PATTERNS),
                 ItemPredicate.Builder.item().of(items, BingoItemTags.BANNER_PATTERNS)
             )
@@ -803,19 +800,19 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
         );
-        addGoal(obtainItemGoal(id("honey_bottle"), Items.HONEY_BOTTLE)
+        addGoal(obtainItemGoal(id("honey_bottle"), items, Items.HONEY_BOTTLE)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("honeycomb"), Items.HONEYCOMB, 3, 3)
+        addGoal(obtainItemGoal(id("honeycomb"), items, Items.HONEYCOMB, 3, 3)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("basalt"), Items.BASALT, 2, 6)
+        addGoal(obtainItemGoal(id("basalt"), items, Items.BASALT, 2, 6)
             .tags(BingoTags.NETHER));
-        addGoal(obtainItemGoal(id("blackstone"), Items.BLACKSTONE, 2, 6)
+        addGoal(obtainItemGoal(id("blackstone"), items, Items.BLACKSTONE, 2, 6)
             .tags(BingoTags.NETHER));
         {
             final List<CompoundTag> slots = IntStream.range(0, 4).mapToObj(slot -> BingoUtil.compound(Map.of(
-                "id", StringTag.valueOf(BuiltInRegistries.ITEM.getKey(Items.PORKCHOP).toString()),
+                "id", StringTag.valueOf(Items.PORKCHOP.builtInRegistryHolder().key().location().toString()),
                 "Slot", ByteTag.valueOf((byte) slot)
             ))).toList();
             addGoal(BingoGoal.builder(id("porkchops_in_soul_campfire"))
@@ -841,7 +838,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.COMBAT)
             );
         }
-        addGoal(obtainItemGoal(id("soul_lantern"), Items.SOUL_LANTERN)
+        addGoal(obtainItemGoal(id("soul_lantern"), items, Items.SOUL_LANTERN)
             .tags(BingoTags.NETHER));
         addGoal(BingoGoal.builder(id("open_door_with_target_from_ten_blocks"))
             .criterion("open_door", DoorOpenedByTargetTrigger.builder()
@@ -854,7 +851,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(CycleIcon.infer(Items.ARROW, new ItemStack(Items.TARGET, 10), Items.OAK_DOOR))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
         );
-        addGoal(obtainItemGoal(id("carrot_on_a_stick"), Items.CARROT_ON_A_STICK)
+        addGoal(obtainItemGoal(id("carrot_on_a_stick"), items, Items.CARROT_ON_A_STICK)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("barter_with_piglin"))
             .criterion("barter", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(new PickedUpItemTrigger.TriggerInstance(
@@ -876,6 +873,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM, BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(
                 id("obtain_enchanted_item"),
+                items,
                 Items.ENCHANTED_BOOK,
                 ItemPredicate.Builder.item().withSubPredicate(
                     ItemSubPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement()
@@ -912,22 +910,22 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainSomeItemsFromTag(id("gold_in_name"), BingoItemTags.GOLD_IN_NAME, "bingo.goal.gold_in_name", 5, 7)
             .tooltip("gold_in_name")
             .antisynergy("gold_items"));
-        addGoal(obtainItemGoal(id("sand"), Items.SAND, 33, 64)
+        addGoal(obtainItemGoal(id("sand"), items, Items.SAND, 33, 64)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("sandstone"), Items.SANDSTONE, 11, 32)
+        addGoal(obtainItemGoal(id("sandstone"), items, Items.SANDSTONE, 11, 32)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("cut_sandstone"), Items.CUT_SANDSTONE, 11, 32)
+        addGoal(obtainItemGoal(id("cut_sandstone"), items, Items.CUT_SANDSTONE, 11, 32)
             .setAntisynergy("sandstone")
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("paper"), Items.PAPER, 6, 15)
+        addGoal(obtainItemGoal(id("paper"), items, Items.PAPER, 6, 15)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("coal_block"), Items.COAL_BLOCK, 3, 6)
+        addGoal(obtainItemGoal(id("coal_block"), items, Items.COAL_BLOCK, 3, 6)
             .reactant("never_coal"));
-        addGoal(obtainItemGoal(id("apple"), Items.APPLE, 2, 5)
+        addGoal(obtainItemGoal(id("apple"), items, Items.APPLE, 2, 5)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("tame_horse"))
             .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(
@@ -976,7 +974,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 EntityType.VILLAGER
             ))
         );
-        addGoal(obtainItemGoal(id("emerald"), Items.EMERALD)
+        addGoal(obtainItemGoal(id("emerald"), items, Items.EMERALD)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("milk_cure"))
             .criterion("cure", CriteriaTriggers.CONSUME_ITEM.createCriterion(
@@ -994,7 +992,13 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("milk_cure")
             .icon(Items.MILK_BUCKET)
         );
-        addGoal(obtainItemGoal(id("pottery_sherd"), new ItemTagCycleIcon(ItemTags.DECORATED_POT_SHERDS), ItemPredicate.Builder.item().of(items, ItemTags.DECORATED_POT_SHERDS))
+        addGoal(
+            obtainItemGoal(
+                id("pottery_sherd"),
+                items,
+                new ItemTagCycleIcon(ItemTags.DECORATED_POT_SHERDS),
+                ItemPredicate.Builder.item().of(items, ItemTags.DECORATED_POT_SHERDS)
+            )
             .tags(BingoTags.OVERWORLD)
             .name("pottery_sherd"));
         final KeyMapping walkBackwards = Minecraft.getInstance().options.keyDown;
@@ -1034,7 +1038,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("brush_armadillo")
             .icon(IndicatorIcon.infer(EntityType.ARMADILLO, Items.BRUSH)));
 
-        addGoal(obtainItemGoal(id("crafter"), Items.CRAFTER)
+        addGoal(obtainItemGoal(id("crafter"), items, Items.CRAFTER)
             .tags(BingoTags.OVERWORLD));
 
         addGoal(BingoGoal.builder(id("fill_bundle"))

@@ -4,7 +4,7 @@ import io.github.gaming32.bingo.data.tags.bingo.BingoEntityTypeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
@@ -16,7 +16,9 @@ public class BingoEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider arg) {
+    protected void addTags(HolderLookup.Provider registries) {
+        final var entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
+
         getOrCreateTagBuilder(BingoEntityTypeTags.TAMABLE).add(
             EntityType.ALLAY,
             EntityType.AXOLOTL,
@@ -38,13 +40,13 @@ public class BingoEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
         // find passive mobs
         final FabricTagBuilder passiveBuilder = getOrCreateTagBuilder(BingoEntityTypeTags.PASSIVE);
         final FabricTagBuilder hostileBuilder = getOrCreateTagBuilder(BingoEntityTypeTags.HOSTILE);
-        for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
-            if (isPassive(entityType)) {
-                passiveBuilder.add(entityType);
-            } else if (!entityType.getCategory().isFriendly()) {
-                hostileBuilder.add(entityType);
+        entityTypes.listElements().forEach(type -> {
+            if (isPassive(type.value())) {
+                passiveBuilder.add(type.key());
+            } else if (!type.value().getCategory().isFriendly()) {
+                hostileBuilder.add(type.key());
             }
-        }
+        });
     }
 
     public static boolean isPassive(EntityType<?> entityType) {

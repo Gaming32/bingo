@@ -8,7 +8,8 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.BlockItem;
@@ -45,6 +46,8 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider registries) {
+        final var items = registries.lookupOrThrow(Registries.ITEM);
+
         getOrCreateTagBuilder(BingoItemTags.ALLOWED_HEADS).add(
             Items.SKELETON_SKULL,
             Items.PLAYER_HEAD,
@@ -146,10 +149,8 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
         var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);
         for (DyeColor dyeColor : DyeColor.values()) {
-            Item glazedTerracotta = BuiltInRegistries.ITEM.getValue(ResourceLocations.minecraft(dyeColor.getName() + "_glazed_terracotta"));
-            glazedTerracottaBuilder.add(glazedTerracotta);
-            Item concrete = BuiltInRegistries.ITEM.getValue(ResourceLocations.minecraft(dyeColor.getName() + "_concrete"));
-            concreteBuilder.add(concrete);
+            glazedTerracottaBuilder.add(item(dyeColor.getName() + "_glazed_terracotta"));
+            concreteBuilder.add(item(dyeColor.getName() + "_concrete"));
         }
 
         final var vanillaMeatTag = BingoDataGenFabric.loadVanillaTag(ItemTags.MEAT, registries);
@@ -163,36 +164,40 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         var stairsBuilder = getOrCreateTagBuilder(BingoItemTags.STAIRS);
         Pattern goldPattern = Pattern.compile("\\bGold(?:en)?\\b");
         Pattern diamondPattern = Pattern.compile("\\bDiamond\\b");
-        for (Item item : BuiltInRegistries.ITEM) {
-            String itemName = item.getName().getString();
+        items.listElements().forEach(item -> {
+            String itemName = item.value().getName().getString();
             if (goldPattern.matcher(itemName).find()) {
-                goldInNameBuilder.add(item);
+                goldInNameBuilder.add(item.key());
             }
             if (diamondPattern.matcher(itemName).find()) {
-                diamondInNameBuilder.add(item);
+                diamondInNameBuilder.add(item.key());
             }
-            if (item.components().has(DataComponents.FOOD)) {
-                if (vanillaMeatTag.contains(item) || FORCED_MEAT.contains(item)) {
-                    meatBuilder.add(item);
+            if (item.value().components().has(DataComponents.FOOD)) {
+                if (vanillaMeatTag.contains(item) || FORCED_MEAT.contains(item.value())) {
+                    meatBuilder.add(item.key());
                 } else {
-                    notMeatBuilder.add(item);
+                    notMeatBuilder.add(item.key());
                 }
             }
-            switch (item) {
-                case BannerPatternItem ignored -> bannerPatternsBuilder.add(item);
+            switch (item.value()) {
+                case BannerPatternItem ignored -> bannerPatternsBuilder.add(item.key());
                 case BlockItem blockItem -> {
                     Block block = blockItem.getBlock();
                     if (block instanceof SlabBlock) {
-                        slabBuilder.add(item);
+                        slabBuilder.add(item.key());
                     } else if (block instanceof StairBlock) {
-                        stairsBuilder.add(item);
+                        stairsBuilder.add(item.key());
                     }
                 }
                 default -> {}
             }
-        }
+        });
 
         copy(BingoBlockTags.BASIC_MINERAL_BLOCKS, BingoItemTags.BASIC_MINERAL_BLOCKS);
         copy(BingoBlockTags.ALL_MINERAL_BLOCKS, BingoItemTags.ALL_MINERAL_BLOCKS);
+    }
+
+    private static ResourceKey<Item> item(String path) {
+        return ResourceKey.create(Registries.ITEM, ResourceLocations.minecraft(path));
     }
 }

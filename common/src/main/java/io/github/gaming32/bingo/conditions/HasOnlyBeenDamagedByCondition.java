@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.Set;
 
+// TODO: Remove TagPredicate conditions, and use EntityTypePredicates instead
 public record HasOnlyBeenDamagedByCondition(
     Optional<EntityType<?>> entityType,
     Optional<TagPredicate<EntityType<?>>> entityTypeTag,

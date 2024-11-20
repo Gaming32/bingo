@@ -6,6 +6,7 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.JsonSubber;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
@@ -36,7 +37,6 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
@@ -49,6 +49,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -64,6 +65,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public abstract class DifficultyGoalProvider {
     private final ResourceKey<BingoDifficulty> difficulty;
@@ -96,21 +98,31 @@ public abstract class DifficultyGoalProvider {
         return ResourceLocations.bingo(prefix + path);
     }
 
-    protected BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike item) {
-        return obtainItemGoal(id, item, ItemPredicate.Builder.item().of(registries.lookupOrThrow(Registries.ITEM), item))
-            .antisynergy(BuiltInRegistries.ITEM.getKey(item.asItem()).getPath())
+    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ResourceKey<Item> item) {
+        return obtainItemGoal(id, items, items.getOrThrow(item).value());
+    }
+
+    @SuppressWarnings("deprecation")
+    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike item) {
+        return obtainItemGoal(id, items, item, ItemPredicate.Builder.item().of(items, item))
+            .antisynergy(item.asItem().builtInRegistryHolder().key().location().getPath())
             .name(item.asItem().getName());
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike icon, ItemPredicate.Builder... oneOfThese) {
-        return obtainItemGoal(id, ItemIcon.ofItem(icon), oneOfThese);
+    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike icon, ItemPredicate.Builder... oneOfThese) {
+        return obtainItemGoal(id, items, ItemIcon.ofItem(icon), oneOfThese);
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemStack icon, ItemPredicate.Builder... oneOfThese) {
-        return obtainItemGoal(id, new ItemIcon(icon), oneOfThese);
+    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemStack icon, ItemPredicate.Builder... oneOfThese) {
+        return obtainItemGoal(id, items, new ItemIcon(icon), oneOfThese);
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, GoalIcon icon, ItemPredicate.Builder... oneOfThese) {
+    protected static BingoGoal.Builder obtainItemGoal(
+        ResourceLocation id,
+        @SuppressWarnings("unused") HolderLookup<Item> items, // Unused, but present for consistency
+        GoalIcon icon,
+        ItemPredicate.Builder... oneOfThese
+    ) {
         BingoGoal.Builder builder = BingoGoal.builder(id);
         if (oneOfThese.length == 1) {
             builder.criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(oneOfThese[0].build()).build())
@@ -126,17 +138,19 @@ public abstract class DifficultyGoalProvider {
             .icon(icon);
     }
 
-    protected BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike item, int minCount, int maxCount) {
-        final var items = registries.lookupOrThrow(Registries.ITEM);
-        if (minCount == maxCount) {
-            return obtainItemGoal(id, item, ItemPredicate.Builder.item().of(items, item), minCount, maxCount)
-                .antisynergy(BuiltInRegistries.ITEM.getKey(item.asItem()).getPath())
-                .name(Component.translatable("bingo.count", minCount, item.asItem().getName()));
-        }
+    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ResourceKey<Item> item, int minCount, int maxCount) {
+        return obtainItemGoal(id, items, items.getOrThrow(item).value(), minCount, maxCount);
+    }
+
+    @SuppressWarnings("deprecation")
+    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike item, int minCount, int maxCount) {
+        final var realItem = item.asItem();
+        final Consumer<JsonSubber> subFunction = minCount == maxCount
+            ? subber -> {}
+            : subber -> subber.sub("with.0", "count");
         return obtainItemGoal(id, item, ItemPredicate.Builder.item().of(items, item), minCount, maxCount)
-            .antisynergy(BuiltInRegistries.ITEM.getKey(item.asItem()).getPath())
-            .name(Component.translatable("bingo.count", 0, item.asItem().getName()),
-                subber -> subber.sub("with.0", "count"));
+            .antisynergy(realItem.builtInRegistryHolder().key().location().getPath())
+            .name(Component.translatable("bingo.count", minCount, realItem.getName()), subFunction);
     }
 
     protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike icon, ItemPredicate.Builder item, int minCount, int maxCount) {
@@ -348,22 +362,27 @@ public abstract class DifficultyGoalProvider {
         return stack;
     }
 
-    protected BlockPredicate.Builder spawnerPredicate(EntityType<?> entityType) {
+    @SuppressWarnings("deprecation")
+    protected static BlockPredicate.Builder spawnerPredicate(
+        HolderLookup<Block> blocks,
+        @SuppressWarnings("unused") HolderLookup<EntityType<?>> entityTypes,
+        EntityType<?> entityType
+    ) {
         return BlockPredicate.Builder.block()
-            .of(registries.lookupOrThrow(Registries.BLOCK), Blocks.SPAWNER)
+            .of(blocks, Blocks.SPAWNER)
             .hasNbt(BingoUtil.compound(Map.of(
                 "SpawnData", BingoUtil.compound(Map.of(
                     "entity", BingoUtil.compound(Map.of(
-                        "id", StringTag.valueOf(BuiltInRegistries.ENTITY_TYPE.getKey(entityType).toString())
+                        "id", StringTag.valueOf(entityType.builtInRegistryHolder().key().location().toString())
                     ))
                 ))
             )));
     }
 
-    protected static GoalIcon createPotionsIcon(Item baseItem) {
+    protected static GoalIcon createPotionsIcon(HolderLookup<Potion> potions, Item baseItem) {
         final Set<String> encountered = new HashSet<>();
         return new CycleIcon(
-            BuiltInRegistries.POTION.listElements()
+            potions.listElements()
                 .filter(p -> encountered.add(p.value().name()))
                 .map(p -> PotionContents.createItemStack(baseItem, p))
                 .map(ItemIcon::new)
@@ -381,5 +400,9 @@ public abstract class DifficultyGoalProvider {
         return ItemEnchantmentsPredicate.storedEnchantments(List.of(
             new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1))
         ));
+    }
+
+    protected static ResourceKey<Item> itemResource(String path) {
+        return ResourceKey.create(Registries.ITEM, ResourceLocations.minecraft(path));
     }
 }

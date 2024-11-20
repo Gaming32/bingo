@@ -74,6 +74,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         final var structures = registries.lookupOrThrow(Registries.STRUCTURE);
         final var items = registries.lookupOrThrow(Registries.ITEM);
         final var entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
+        final var potions = registries.lookupOrThrow(Registries.POTION);
 
         addGoal(obtainSomeItemsFromTag(id("ores"), ConventionalItemTags.ORES, "bingo.goal.ores", 5, 7)
             .tooltip("ores")
@@ -93,7 +94,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             )
             .tooltip("different_potions")
             .icon(
-                createPotionsIcon(Items.POTION),
+                createPotionsIcon(potions, Items.POTION),
                 subber -> subber.sub("icons.*.item.count", "count")
             )
         );
@@ -103,6 +104,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(obtainItemGoal(
             id("any_head"),
+            items,
             new ItemStack(Items.ZOMBIE_HEAD),
             ItemPredicate.Builder.item().of(
                 items,
@@ -145,10 +147,10 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .icon(new ItemStack(Items.EXPERIENCE_BOTTLE, 50))
             .infrequency(2)
             .antisynergy("levels"));
-        addGoal(obtainItemGoal(id("tipped_arrow"), Items.TIPPED_ARROW, 16, 32)
+        addGoal(obtainItemGoal(id("tipped_arrow"), items, Items.TIPPED_ARROW, 16, 32)
             .tags(BingoTags.NETHER, BingoTags.OVERWORLD)
             .icon(
-                createPotionsIcon(Items.TIPPED_ARROW),
+                createPotionsIcon(potions, Items.TIPPED_ARROW),
                 subber -> subber.sub("icons.*.item.count", "count")
             )
         );
@@ -171,7 +173,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name("sleep_in_mansion")
             .icon(Items.BROWN_BED));
-        addGoal(obtainItemGoal(id("mycelium"), Items.MYCELIUM, 10, 32)
+        addGoal(obtainItemGoal(id("mycelium"), items, Items.MYCELIUM, 10, 32)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("coral_blocks"))
             .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
@@ -188,7 +190,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 ItemIcon.ofItem(Items.HORN_CORAL_BLOCK)
             ))
         );
-        addGoal(obtainItemGoal(id("blue_ice"), Items.BLUE_ICE, 32, 64)
+        addGoal(obtainItemGoal(id("blue_ice"), items, Items.BLUE_ICE, 32, 64)
             .tags(BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("full_power_conduit"))
             .criterion("power", PowerConduitTrigger.TriggerInstance.powerConduit(MinMaxBounds.Ints.exactly(6)))
@@ -231,7 +233,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .name("shulker_in_overworld")
             .icon(Items.SHULKER_SHELL)
             .reactant("pacifist"));
-        addGoal(obtainItemGoal(id("diamond_block"), Items.DIAMOND_BLOCK, 5, 10)
+        addGoal(obtainItemGoal(id("diamond_block"), items, Items.DIAMOND_BLOCK, 5, 10)
             .infrequency(2));
         addGoal(BingoGoal.builder(id("complete_full_size_end_map"))
             .criterion("complete", CompleteMapTrigger.TriggerInstance.completeMap(
@@ -242,7 +244,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .name("complete_full_size_end_map")
             .icon(Items.FILLED_MAP)
             .antisynergy("complete_map"));
-        addGoal(obtainItemGoal(id("wither_rose"), Items.WITHER_ROSE, 32, 64)
+        addGoal(obtainItemGoal(id("wither_rose"), items, Items.WITHER_ROSE, 32, 64)
             .reactant("pacifist")
             .tags(BingoTags.NETHER, BingoTags.COMBAT));
         addGoal(BingoGoal.builder(id("panda_slime_ball"))
@@ -254,7 +256,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
             .name("panda_slime_ball")
             .icon(Items.SLIME_BALL));
-        addGoal(obtainItemGoal(id("netherite_block"), Items.NETHERITE_BLOCK, 2, 2)
+        addGoal(obtainItemGoal(id("netherite_block"), items, Items.NETHERITE_BLOCK, 2, 2)
             .tags(BingoTags.NETHER));
         addGoal(BingoGoal.builder(id("full_netherite_armor_and_tools"))
             .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
@@ -292,7 +294,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .name("zombify_pig")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .icon(Items.COOKED_PORKCHOP));
-        addGoal(obtainItemGoal(id("trident"), Items.TRIDENT)
+        addGoal(obtainItemGoal(id("trident"), items, Items.TRIDENT)
             .tags(BingoTags.OCEAN, BingoTags.COMBAT, BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(id("party_parrots"))
             .criterion("party", PartyParrotsTrigger.TriggerInstance.partyParrots())

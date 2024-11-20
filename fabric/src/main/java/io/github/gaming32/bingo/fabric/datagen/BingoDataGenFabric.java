@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.datagen.v1.JsonKeySortOrderCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -37,6 +38,7 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class BingoDataGenFabric implements DataGeneratorEntrypoint {
@@ -70,7 +72,11 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
         callback.add("bingo_type", 0);
     }
 
-    public static <T> Set<T> loadVanillaTag(TagKey<T> tag, HolderLookup.Provider registries) {
+    public static <T> HolderSet.Direct<T> loadVanillaTag(TagKey<T> tag, HolderLookup.Provider registries) {
+        return HolderSet.direct(Function.identity(), loadVanillaTagInternal(tag, registries));
+    }
+
+    private static <T> Set<Holder<T>> loadVanillaTagInternal(TagKey<T> tag, HolderLookup.Provider registries) {
         final var registry = registries.lookupOrThrow(tag.registry());
         final IoSupplier<InputStream> resource = Minecraft.getInstance()
             .getVanillaPackResources()
@@ -89,20 +95,18 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
                 .getOrThrow(JsonParseException::new);
             return file.entries()
                 .stream()
-                .<T>mapMulti((entry, out) -> entry.build(
+                .<Holder<T>>mapMulti((entry, out) -> entry.build(
                     new TagEntry.Lookup<>() {
                         @Nullable
                         @Override
-                        public T element(ResourceLocation elementLocation, boolean readOnly) {
-                            return registry.get(ResourceKey.create(tag.registry(), elementLocation))
-                                .map(Holder.Reference::value)
-                                .orElse(null);
+                        public Holder<T> element(ResourceLocation elementLocation, boolean readOnly) {
+                            return registry.get(ResourceKey.create(tag.registry(), elementLocation)).orElse(null);
                         }
 
                         @Nullable
                         @Override
-                        public Collection<T> tag(ResourceLocation tagLocation) {
-                            return loadVanillaTag(TagKey.create(tag.registry(), tagLocation), registries);
+                        public Collection<Holder<T>> tag(ResourceLocation tagLocation) {
+                            return loadVanillaTagInternal(TagKey.create(tag.registry(), tagLocation), registries);
                         }
                     }, out
                 ))
