@@ -1,7 +1,9 @@
 package io.github.gaming32.bingo.data;
 
 import io.github.gaming32.bingo.util.ResourceLocations;
+import net.minecraft.Util;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 
 public final class BingoDifficulties {
@@ -15,11 +17,17 @@ public final class BingoDifficulties {
     }
 
     public static void bootstrap(BootstrapContext<BingoDifficulty> context) {
-        context.register(VERY_EASY, BingoDifficulty.builder().number(0).build());
-        context.register(EASY, BingoDifficulty.builder().number(1).build());
-        context.register(MEDIUM, BingoDifficulty.builder().number(2).build());
-        context.register(HARD, BingoDifficulty.builder().number(3).build());
-        context.register(VERY_HARD, BingoDifficulty.builder().number(4).build());
+        register(context, VERY_EASY, 0);
+        register(context, EASY, 1);
+        register(context, MEDIUM, 2);
+        register(context, HARD, 3);
+        register(context, VERY_HARD, 4);
+    }
+
+    private static void register(BootstrapContext<BingoDifficulty> context, ResourceKey<BingoDifficulty> key, int number) {
+        context.register(key, new BingoDifficulty(
+            Component.translatable(Util.makeDescriptionId("bingo_difficulty", key.location())), number
+        ));
     }
 
     private static ResourceKey<BingoDifficulty> createKey(String name) {

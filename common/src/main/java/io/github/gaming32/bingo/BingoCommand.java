@@ -13,7 +13,6 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.gaming32.bingo.data.BingoDifficulties;
-import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.ext.CommandContextExt;
@@ -517,7 +516,7 @@ public class BingoCommand {
         Bingo.updateCommandTree(playerList);
         new ArrayList<>(playerList.getPlayers()).forEach(Bingo.activeGame::addPlayer);
         playerList.broadcastSystemMessage(
-            Bingo.translatable("bingo.started", BingoDifficulty.getDescription(difficulty)),
+            Bingo.translatable("bingo.started", difficulty.value().description()),
             false
         );
         return Command.SINGLE_SUCCESS;

@@ -1,9 +1,9 @@
 // 1.21.3	Bingo/Bingo registries
-70eae90dabaea0746b30b2aba3a3558dfbd1c823 data/bingo/bingo/difficulty/easy.json
-84bd30615c75b22bf89554fd62f2248e236f95f4 data/bingo/bingo/difficulty/hard.json
-dec2eb7ebfc17c087213fcc8035f94eaf811f326 data/bingo/bingo/difficulty/medium.json
-4fbe746afb472f065d99d7aed66b135682f9d270 data/bingo/bingo/difficulty/very_easy.json
-b01d0ebfae7d17a0bc155532c7a2169ac0f5c091 data/bingo/bingo/difficulty/very_hard.json
+a9f72075009412853f311f802e5a8cc82026e3b1 data/bingo/bingo/difficulty/easy.json
+c9569c8872f3f25555109253e266f5c683ed2377 data/bingo/bingo/difficulty/hard.json
+de8a0760a96282ce0120de5a0068c43bd439bbbe data/bingo/bingo/difficulty/medium.json
+674aed9a15f847b4e6da2b2c78dde0adbe773caa data/bingo/bingo/difficulty/very_easy.json
+77b7cd8b559a8797dabf755e76f38c8b7d0ad832 data/bingo/bingo/difficulty/very_hard.json
 e0e1dcbc8d0051dfd2185f9902fef371ba7e7ff0 data/bingo/bingo/tag/action.json
 e0e1dcbc8d0051dfd2185f9902fef371ba7e7ff0 data/bingo/bingo/tag/build.json
 49f52b336c4e5c7fef99c12998045950679e4d33 data/bingo/bingo/tag/color.json
