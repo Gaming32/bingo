@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
+import io.github.gaming32.bingo.mixin.common.PlayerAdvancementsAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
@@ -136,13 +137,9 @@ public class BingoGame {
         new SyncTeamPayload(team).sendTo(player);
 
         InitBoardPayload.create(this, obfuscateTeam(team, player)).sendTo(player);
-        player.connection.send(new ClientboundUpdateAdvancementsPacket(
-            false,
-            VanillaNetworking.generateAdvancements(player.registryAccess(), board.getSize(), board.getGoals()),
-            Set.of(),
-            VanillaNetworking.generateProgressMap(board.getStates(), team)
-        ));
-        Bingo.needAdvancementsClear.add(player.getUUID());
+        if (!((PlayerAdvancementsAccessor)player.getAdvancements()).getIsFirstPacket()) {
+            syncAdvancementsTo(player);
+        }
 
         Map<ActiveGoal, GoalProgress> goalProgress = this.goalProgress.get(player.getUUID());
         if (goalProgress != null) {
@@ -153,6 +150,16 @@ public class BingoGame {
                 }
             });
         }
+    }
+
+    public void syncAdvancementsTo(ServerPlayer player) {
+        player.connection.send(new ClientboundUpdateAdvancementsPacket(
+            false,
+            VanillaNetworking.generateAdvancements(player.registryAccess(), board.getSize(), board.getGoals()),
+            Set.of(),
+            VanillaNetworking.generateProgressMap(board.getStates(), getTeam(player))
+        ));
+        Bingo.needAdvancementsClear.add(player.getUUID());
     }
 
     public void removePlayer(ServerPlayer player) {

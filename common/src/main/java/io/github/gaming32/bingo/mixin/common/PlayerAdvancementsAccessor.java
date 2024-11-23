@@ -9,4 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface PlayerAdvancementsAccessor {
     @Accessor
     ServerPlayer getPlayer();
+
+    @Accessor
+    boolean getIsFirstPacket();
 }
