@@ -5,12 +5,10 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.gaming32.bingo.commandswitch.CommandSwitch;
 import io.github.gaming32.bingo.data.BingoDifficulties;
@@ -18,7 +16,6 @@ import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
-import io.github.gaming32.bingo.ext.CommandContextExt;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
@@ -414,8 +411,9 @@ public class BingoCommand {
 
             CommandNode<CommandSourceStack> currentCommand = startCommand;
             for (int i = 1; i <= 32; i++) {
+                final var teamCount = i;
                 final CommandNode<CommandSourceStack> subCommand = argument("team" + i, TeamArgument.team())
-                    .executes(BingoCommand::startGame)
+                    .executes(context -> startGame(context, teamCount))
                     .build();
                 currentCommand.addChild(subCommand);
                 currentCommand = subCommand;
@@ -423,7 +421,7 @@ public class BingoCommand {
         }
     }
 
-    private static int startGame(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int startGame(CommandContext<CommandSourceStack> context, int teamCount) throws CommandSyntaxException {
         if (Bingo.activeGame != null) {
             Bingo.activeGame.endGame(context.getSource().getServer().getPlayerList());
         }
@@ -441,9 +439,8 @@ public class BingoCommand {
         final int autoForfeitTicks = AUTO_FORFEIT_TIME.get(context);
 
         final Set<PlayerTeam> teams = new LinkedHashSet<>();
-        for (int i = 1; i <= 32; i++) {
+        for (int i = 1; i <= teamCount; i++) {
             final String argName = "team" + i;
-            if (!hasArg(context, argName)) break;
             final PlayerTeam team = TeamArgument.getTeam(context, argName);
             boolean teamActive =
                 includeInactiveTeams ||
@@ -583,18 +580,6 @@ public class BingoCommand {
             true
         );
         return players.size();
-    }
-
-    private static boolean hasArg(CommandContext<?> context, String name) {
-        if (context instanceof CommandContextExt ext) { // false on NeoForge (for now?)
-            return ext.bingo$hasArg(name);
-        }
-        for (final ParsedCommandNode<?> node : context.getNodes()) {
-            if (node.getNode() instanceof ArgumentCommandNode<?, ?> argument && argument.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @SuppressWarnings("unchecked")

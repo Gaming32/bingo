@@ -8,8 +8,7 @@
     "MixinDyedItemColor",
     "MixinHashCache_ProviderCache",
     "MixinPlayerList",
-    "MixinServerLevel",
-    "brigadier.MixinCommandContext"
+    "MixinServerLevel"
   ],
   "client": [
     "client.GuiAccessor",
