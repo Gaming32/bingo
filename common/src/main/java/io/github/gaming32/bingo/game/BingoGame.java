@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.ext.ServerPlayerExt;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.mixin.common.PlayerAdvancementsAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
@@ -125,7 +126,7 @@ public class BingoGame {
         }
 
         RemoveBoardPayload.INSTANCE.sendTo(player);
-        if (Bingo.needAdvancementsClear.remove(player.getUUID())) {
+        if (((ServerPlayerExt)player).bingo$clearAdvancementsNeedClearing()) {
             player.connection.send(new ClientboundUpdateAdvancementsPacket(
                 false, List.of(), Set.of(VanillaNetworking.ROOT_ADVANCEMENT.id()), Map.of()
             ));
@@ -159,7 +160,7 @@ public class BingoGame {
             Set.of(),
             VanillaNetworking.generateProgressMap(board.getStates(), getTeam(player))
         ));
-        Bingo.needAdvancementsClear.add(player.getUUID());
+        ((ServerPlayerExt)player).bingo$markAdvancementsNeedClearing();
     }
 
     public void removePlayer(ServerPlayer player) {

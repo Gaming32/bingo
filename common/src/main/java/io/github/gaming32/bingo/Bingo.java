@@ -10,6 +10,7 @@ import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
+import io.github.gaming32.bingo.ext.ServerPlayerExt;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.game.persistence.PersistenceManager;
@@ -43,9 +44,6 @@ import org.slf4j.Logger;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 public class Bingo {
     public static final String MOD_ID = "bingo";
@@ -56,7 +54,6 @@ public class Bingo {
     public static boolean showOtherTeam;
 
     public static BingoGame activeGame;
-    public static final Set<UUID> needAdvancementsClear = new HashSet<>();
 
     public static void init() {
         registerEventHandlers();
@@ -84,11 +81,12 @@ public class Bingo {
         });
 
         Event.PLAYER_QUIT.register(player -> {
-            needAdvancementsClear.remove(player.getUUID());
             if (activeGame != null) {
                 activeGame.removePlayer(player);
             }
         });
+
+        Event.COPY_PLAYER.register((from, to) -> ((ServerPlayerExt)from).bingo$copyAdvancementsNeedClearingTo(to));
 
         Event.SERVER_STOPPED.register(instance -> activeGame = null);
 

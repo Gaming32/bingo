@@ -15,6 +15,7 @@ public class Event<T> {
     public static final Event<Consumer<ConfigurationTaskRegistrar>> REGISTER_CONFIGURATION_TASKS = new Event<>();
     public static final Event<Consumer<ServerPlayer>> PLAYER_JOIN = new Event<>();
     public static final Event<Consumer<ServerPlayer>> PLAYER_QUIT = new Event<>();
+    public static final Event<BiConsumer<ServerPlayer, ServerPlayer>> COPY_PLAYER = new Event<>();
     public static final Event<Consumer<MinecraftServer>> SERVER_STARTED = new Event<>();
     public static final Event<Consumer<MinecraftServer>> SERVER_STOPPING = new Event<>();
     public static final Event<Consumer<MinecraftServer>> SERVER_STOPPED = new Event<>();

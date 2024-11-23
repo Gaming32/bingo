@@ -156,6 +156,9 @@ public class NeoForgePlatform extends BingoPlatform {
                 handler.accept(serverPlayer);
             }
         }));
+        Event.COPY_PLAYER.setRegistrar(handler -> bus.addListener((PlayerEvent.Clone event) ->
+            handler.accept((ServerPlayer)event.getOriginal(), (ServerPlayer)event.getEntity())
+        ));
         Event.SERVER_STARTED.setRegistrar(handler -> bus.addListener((ServerStartedEvent event) ->
             handler.accept(event.getServer())
         ));

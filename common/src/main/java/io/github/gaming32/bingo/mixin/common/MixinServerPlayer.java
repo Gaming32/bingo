@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.mixin.common;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.ext.ServerPlayerExt;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
@@ -15,14 +16,18 @@ import net.minecraft.world.level.GameType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayer.class)
-public abstract class MixinServerPlayer extends MixinPlayer {
+public abstract class MixinServerPlayer extends MixinPlayer implements ServerPlayerExt {
     @Shadow @Final public ServerPlayerGameMode gameMode;
+
+    @Unique
+    private boolean bingo$advancementsNeedClearing;
 
     @Inject(
         method = "doTick",
@@ -90,5 +95,22 @@ public abstract class MixinServerPlayer extends MixinPlayer {
             final BingoBoard.Teams team = Bingo.activeGame.getTeam(player);
             new ResyncStatesPayload(Bingo.activeGame.obfuscateTeam(team, player)).sendTo(player);
         }
+    }
+
+    @Override
+    public void bingo$markAdvancementsNeedClearing() {
+        bingo$advancementsNeedClearing = true;
+    }
+
+    @Override
+    public boolean bingo$clearAdvancementsNeedClearing() {
+        final var result = bingo$advancementsNeedClearing;
+        bingo$advancementsNeedClearing = false;
+        return result;
+    }
+
+    @Override
+    public void bingo$copyAdvancementsNeedClearingTo(ServerPlayer toPlayer) {
+        ((MixinServerPlayer)(ServerPlayerExt)toPlayer).bingo$advancementsNeedClearing = bingo$advancementsNeedClearing;
     }
 }
