@@ -1,5 +1,8 @@
 package io.github.gaming32.bingo.util;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Either;
@@ -32,6 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
@@ -254,5 +258,13 @@ public class BingoUtil {
             return a;
         }
         return HolderSet.direct(Stream.concat(a.stream(), b.stream()).distinct().toList());
+    }
+
+    public static <T> Set<T> copyAndAdd(Set<T> set, T value) {
+        return ImmutableSet.<T>builderWithExpectedSize(set.size() + 1).addAll(set).add(value).build();
+    }
+
+    public static <K, V> Multimap<K, V> copyAndPut(Multimap<K, V> map, K k, V v) {
+        return ImmutableMultimap.<K, V>builder().putAll(map).put(k, v).build();
     }
 }
