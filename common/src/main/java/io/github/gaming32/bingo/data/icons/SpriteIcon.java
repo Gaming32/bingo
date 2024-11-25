@@ -8,22 +8,22 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public record SpriteIcon(ResourceLocation sprite, ItemStack fallback) implements GoalIcon.WithoutContext {
+public record SpriteIcon(ResourceLocation sprite, ItemStack item) implements GoalIcon.WithoutContext {
     public static final MapCodec<SpriteIcon> CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("sprite").forGetter(SpriteIcon::sprite),
-            BingoCodecs.LENIENT_ITEM_STACK.fieldOf("fallback").forGetter(SpriteIcon::fallback)
+            BingoCodecs.LENIENT_ITEM_STACK.fieldOf("item").forGetter(SpriteIcon::item)
         ).apply(instance, SpriteIcon::new)
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, SpriteIcon> STREAM_CODEC = StreamCodec.composite(
         ResourceLocation.STREAM_CODEC, SpriteIcon::sprite,
-        ItemStack.STREAM_CODEC, SpriteIcon::fallback,
+        ItemStack.STREAM_CODEC, SpriteIcon::item,
         SpriteIcon::new
     );
 
     @Override
     public ItemStack getFallback() {
-        return fallback;
+        return item;
     }
 
     @Override
