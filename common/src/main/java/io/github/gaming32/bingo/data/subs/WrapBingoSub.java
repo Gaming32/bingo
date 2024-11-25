@@ -5,8 +5,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
-import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.JsonSubber;
+import io.github.gaming32.bingo.data.goal.GoalSubstitutionSystem;
 import net.minecraft.Util;
 import net.minecraft.util.RandomSource;
 
@@ -24,7 +24,7 @@ public record WrapBingoSub(Dynamic<?> value) implements BingoSub {
 
     @Override
     public Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand) {
-        return BingoGoal.performSubstitutions(value, referable, rand);
+        return GoalSubstitutionSystem.performSubstitutions(value, referable, rand);
     }
 
     @Override

@@ -4,9 +4,11 @@ import com.demonwav.mcdev.annotations.Translatable;
 import com.google.common.collect.ImmutableList;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.data.BingoDifficulty;
-import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.data.JsonSubber;
+import io.github.gaming32.bingo.data.goal.BingoGoal;
+import io.github.gaming32.bingo.data.goal.GoalBuilder;
+import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
@@ -84,8 +86,8 @@ public abstract class DifficultyGoalProvider {
         this.registries = registries;
     }
 
-    protected final void addGoal(BingoGoal.Builder goal) {
-        BingoGoal.GoalHolder builtGoal = goal.difficulty(difficulty).build(registries);
+    protected final void addGoal(GoalBuilder goal) {
+        GoalHolder builtGoal = goal.difficulty(difficulty).build(registries);
         if (!builtGoal.id().getPath().startsWith(prefix)) {
             throw new IllegalArgumentException("Goal ID does not start with " + prefix);
         }
@@ -98,32 +100,32 @@ public abstract class DifficultyGoalProvider {
         return ResourceLocations.bingo(prefix + path);
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ResourceKey<Item> item) {
+    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ResourceKey<Item> item) {
         return obtainItemGoal(id, items, items.getOrThrow(item).value());
     }
 
     @SuppressWarnings("deprecation")
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike item) {
+    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike item) {
         return obtainItemGoal(id, items, item, ItemPredicate.Builder.item().of(items, item))
             .antisynergy(item.asItem().builtInRegistryHolder().key().location().getPath())
             .name(item.asItem().getName());
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike icon, ItemPredicate.Builder... oneOfThese) {
+    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike icon, ItemPredicate.Builder... oneOfThese) {
         return obtainItemGoal(id, items, ItemIcon.ofItem(icon), oneOfThese);
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemStack icon, ItemPredicate.Builder... oneOfThese) {
+    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemStack icon, ItemPredicate.Builder... oneOfThese) {
         return obtainItemGoal(id, items, new ItemIcon(icon), oneOfThese);
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(
+    protected static GoalBuilder obtainItemGoal(
         ResourceLocation id,
         @SuppressWarnings("unused") HolderLookup<Item> items, // Unused, but present for consistency
         GoalIcon icon,
         ItemPredicate.Builder... oneOfThese
     ) {
-        BingoGoal.Builder builder = BingoGoal.builder(id);
+        GoalBuilder builder = BingoGoal.builder(id);
         if (oneOfThese.length == 1) {
             builder.criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(oneOfThese[0].build()).build())
                 .progress("obtain");
@@ -138,12 +140,12 @@ public abstract class DifficultyGoalProvider {
             .icon(icon);
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ResourceKey<Item> item, int minCount, int maxCount) {
+    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ResourceKey<Item> item, int minCount, int maxCount) {
         return obtainItemGoal(id, items, items.getOrThrow(item).value(), minCount, maxCount);
     }
 
     @SuppressWarnings("deprecation")
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike item, int minCount, int maxCount) {
+    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike item, int minCount, int maxCount) {
         final var realItem = item.asItem();
         final Consumer<JsonSubber> subFunction = minCount == maxCount
             ? subber -> {}
@@ -153,7 +155,7 @@ public abstract class DifficultyGoalProvider {
             .name(Component.translatable("bingo.count", minCount, realItem.getName()), subFunction);
     }
 
-    protected static BingoGoal.Builder obtainItemGoal(ResourceLocation id, ItemLike icon, ItemPredicate.Builder item, int minCount, int maxCount) {
+    protected static GoalBuilder obtainItemGoal(ResourceLocation id, ItemLike icon, ItemPredicate.Builder item, int minCount, int maxCount) {
         if (minCount == maxCount) {
             return BingoGoal.builder(id)
                 .criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(item.withCount(MinMaxBounds.Ints.exactly(minCount)).build()).build())
@@ -171,7 +173,7 @@ public abstract class DifficultyGoalProvider {
             .icon(icon, subber -> subber.sub("item.count", "count"));
     }
 
-    protected static BingoGoal.Builder obtainSomeItemsFromTag(
+    protected static GoalBuilder obtainSomeItemsFromTag(
         ResourceLocation id, TagKey<Item> tag, @Translatable String translationKey,
         int minCount, int maxCount
     ) {
@@ -196,7 +198,7 @@ public abstract class DifficultyGoalProvider {
             .icon(new ItemTagCycleIcon(tag), subber -> subber.sub("+count", "count"));
     }
 
-    protected BingoGoal.Builder obtainAllItemsFromTag(TagKey<Item> tag, @Translatable(prefix = "bingo.goal.all_somethings.") String what) {
+    protected GoalBuilder obtainAllItemsFromTag(TagKey<Item> tag, @Translatable(prefix = "bingo.goal.all_somethings.") String what) {
         return BingoGoal.builder(id("all_" + what))
             .criterion("obtain", HasSomeItemsFromTagTrigger.builder().tag(tag).requiresAll().build())
             .progress("obtain")
@@ -206,7 +208,7 @@ public abstract class DifficultyGoalProvider {
             .icon(new ItemTagCycleIcon(tag));
     }
 
-    protected static BingoGoal.Builder obtainSomeEdibleItems(ResourceLocation id, int minCount, int maxCount) {
+    protected static GoalBuilder obtainSomeEdibleItems(ResourceLocation id, int minCount, int maxCount) {
         if (minCount == maxCount) {
             return BingoGoal.builder(id)
                 .criterion("obtain", HasSomeFoodItemsTrigger.builder().requiredCount(minCount).build())
@@ -232,7 +234,7 @@ public abstract class DifficultyGoalProvider {
             .icon(new ItemTagCycleIcon(ConventionalItemTags.FOODS), subber -> subber.sub("+count", "count"));
     }
 
-    protected static BingoGoal.Builder obtainLevelsGoal(ResourceLocation id, int minLevels, int maxLevels) {
+    protected static GoalBuilder obtainLevelsGoal(ResourceLocation id, int minLevels, int maxLevels) {
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minLevels, maxLevels))
             .criterion("obtain", ExperienceChangeTrigger.builder().levels(MinMaxBounds.Ints.atLeast(0)).build(),
@@ -244,7 +246,7 @@ public abstract class DifficultyGoalProvider {
             .antisynergy("levels");
     }
 
-    protected static BingoGoal.Builder crouchDistanceGoal(ResourceLocation id, int minDistance, int maxDistance) {
+    protected static GoalBuilder crouchDistanceGoal(ResourceLocation id, int minDistance, int maxDistance) {
         return BingoGoal.builder(id)
             .sub("distance", BingoSub.random(minDistance, maxDistance))
             .criterion(
@@ -270,7 +272,7 @@ public abstract class DifficultyGoalProvider {
             .icon(Items.LEATHER_BOOTS, subber -> subber.sub("item.count", "distance"));
     }
 
-    protected static BingoGoal.Builder bedRowGoal(ResourceLocation id, int minCount, int maxCount) {
+    protected static GoalBuilder bedRowGoal(ResourceLocation id, int minCount, int maxCount) {
         if (minCount == maxCount) {
             return BingoGoal.builder(id)
                 .criterion("obtain", BedRowTrigger.create(minCount))
@@ -290,13 +292,13 @@ public abstract class DifficultyGoalProvider {
             .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
     }
 
-    protected static BingoGoal.Builder mineralPillarGoal(ResourceLocation id, TagKey<Block> tag) {
+    protected static GoalBuilder mineralPillarGoal(ResourceLocation id, TagKey<Block> tag) {
         return BingoGoal.builder(id)
             .criterion("pillar", MineralPillarTrigger.pillar(tag))
             .tags(BingoTags.BUILD);
     }
 
-    protected BingoGoal.Builder blockCubeGoal(ResourceLocation id, Object icon, TagKey<Block> blockTag, Component tagName) {
+    protected GoalBuilder blockCubeGoal(ResourceLocation id, Object icon, TagKey<Block> blockTag, Component tagName) {
         final var blocks = registries.lookupOrThrow(Registries.BLOCK);
         return BingoGoal.builder(id)
             .sub("width", BingoSub.random(2, 4))

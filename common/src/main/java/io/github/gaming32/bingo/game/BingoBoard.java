@@ -3,9 +3,10 @@ package io.github.gaming32.bingo.game;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.data.BingoDifficulty;
-import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.goal.GoalHolder;
+import io.github.gaming32.bingo.data.goal.GoalManager;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.ResourceLocations;
@@ -81,14 +82,14 @@ public class BingoBoard {
         int difficulty,
         int teamCount,
         RandomSource rand,
-        Predicate<BingoGoal.GoalHolder> isAllowedGoal,
-        List<BingoGoal.GoalHolder> requiredGoals,
+        Predicate<GoalHolder> isAllowedGoal,
+        List<GoalHolder> requiredGoals,
         HolderSet<BingoTag> excludedTags,
         boolean allowsClientRequired,
         HolderLookup.Provider registries
     ) {
         final BingoBoard board = new BingoBoard(size);
-        final BingoGoal.GoalHolder[] generatedSheet = generateGoals(
+        final GoalHolder[] generatedSheet = generateGoals(
             registries.lookupOrThrow(BingoRegistries.DIFFICULTY),
             size,
             difficulty,
@@ -115,19 +116,19 @@ public class BingoBoard {
         return board;
     }
 
-    public static BingoGoal.GoalHolder[] generateGoals(
+    public static GoalHolder[] generateGoals(
         HolderLookup<BingoDifficulty> difficultyLookup,
         int size,
         int difficulty,
         RandomSource rand,
-        Predicate<BingoGoal.GoalHolder> isAllowedGoal,
-        List<BingoGoal.GoalHolder> requiredGoals,
+        Predicate<GoalHolder> isAllowedGoal,
+        List<GoalHolder> requiredGoals,
         HolderSet<BingoTag> excludedTags,
         boolean allowsClientRequired
     ) {
-        final Queue<BingoGoal.GoalHolder> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
+        final Queue<GoalHolder> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
 
-        final BingoGoal.GoalHolder[] generatedSheet = new BingoGoal.GoalHolder[size * size];
+        final GoalHolder[] generatedSheet = new GoalHolder[size * size];
 
         final var difficulties = BingoDifficulty.getNumbers(difficultyLookup);
         final int[] difficultyLayout = generateDifficulty(difficulties, size, difficulty, rand);
@@ -149,10 +150,10 @@ public class BingoBoard {
                 throw new IllegalArgumentException("No goals with difficulty " + difficultyLayout[i] + " or easier");
             }
 
-            List<BingoGoal.GoalHolder> possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
+            List<GoalHolder> possibleGoals = GoalManager.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
 
             int failSafe = 0;
-            BingoGoal.GoalHolder goal;
+            GoalHolder goal;
 
             goalGen:
             while (true) {
@@ -168,11 +169,11 @@ public class BingoBoard {
                         throw new IllegalArgumentException("No valid board layout was found for the specified size and difficulty");
                     }
 
-                    possibleGoals = BingoGoal.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
+                    possibleGoals = GoalManager.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
                     failSafe = 1;
                 }
 
-                final BingoGoal.GoalHolder goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
+                final GoalHolder goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
 
                 if (!isAllowedGoal.test(goalCandidate)) {
                     continue;

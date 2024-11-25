@@ -11,8 +11,9 @@ import io.github.gaming32.bingo.conditions.ToolDamageCondition;
 import io.github.gaming32.bingo.conditions.ToolIsEnchantedCondition;
 import io.github.gaming32.bingo.conditions.VillagerOwnershipCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
-import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.goal.BingoGoal;
+import io.github.gaming32.bingo.data.goal.GoalBuilder;
 import io.github.gaming32.bingo.data.icons.BlockIcon;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EffectIcon;
@@ -1053,8 +1054,8 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(Items.BUNDLE));
     }
 
-    private BingoGoal.Builder eatEntireCake() {
-        BingoGoal.Builder builder = BingoGoal.builder(id("eat_entire_cake"));
+    private GoalBuilder eatEntireCake() {
+        GoalBuilder builder = BingoGoal.builder(id("eat_entire_cake"));
         for (int level = 0; level < 7; level++) {
             LootItemCondition block;
             if (level == 6) {

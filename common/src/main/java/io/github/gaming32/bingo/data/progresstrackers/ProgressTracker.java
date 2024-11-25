@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.data.progresstrackers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import io.github.gaming32.bingo.data.BingoGoal;
+import io.github.gaming32.bingo.data.goal.BingoGoal;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.GoalProgress;

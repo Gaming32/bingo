@@ -3,8 +3,8 @@ package io.github.gaming32.bingo.game.mode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.gaming32.bingo.Bingo;
-import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.game.BingoBoard;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.scores.PlayerTeam;
@@ -95,7 +95,7 @@ public class LockoutGameMode implements BingoGameMode {
     }
 
     @Override
-    public boolean isGoalAllowed(BingoGoal.GoalHolder goal) {
+    public boolean isGoalAllowed(GoalHolder goal) {
         return goal.goal().getTags().stream().allMatch(g -> g.value().specialType() == BingoTag.SpecialType.NONE);
     }
 

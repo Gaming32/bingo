@@ -8,8 +8,9 @@ import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.OneByOneHoleCondition;
 import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
-import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.goal.BingoGoal;
+import io.github.gaming32.bingo.data.goal.GoalBuilder;
 import io.github.gaming32.bingo.data.icons.BlockIcon;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
@@ -877,9 +878,9 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
     }
 
     @SafeVarargs
-    private BingoGoal.Builder potionGoal(String id, HolderLookup<Item> items, Holder<Potion>... potions) {
+    private GoalBuilder potionGoal(String id, HolderLookup<Item> items, Holder<Potion>... potions) {
         ItemStack potionItem = PotionContents.createItemStack(Items.POTION, potions[0]);
-        BingoGoal.Builder builder = obtainItemGoal(
+        GoalBuilder builder = obtainItemGoal(
             id(id),
             items,
             potionItem,

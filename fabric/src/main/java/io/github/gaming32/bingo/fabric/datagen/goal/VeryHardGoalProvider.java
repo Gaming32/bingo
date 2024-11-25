@@ -4,8 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 import io.github.gaming32.bingo.conditions.HasOnlyBeenDamagedByCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
-import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.goal.BingoGoal;
+import io.github.gaming32.bingo.data.goal.GoalBuilder;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.data.icons.InstrumentCycleIcon;
@@ -340,7 +341,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
     }
 
     @SuppressWarnings("deprecation")
-    private BingoGoal.Builder obtainAllGoatHorns() {
+    private GoalBuilder obtainAllGoatHorns() {
         final var items = registries.lookupOrThrow(Registries.ITEM);
 
         final var sortedInstruments = registries.lookupOrThrow(Registries.INSTRUMENT)
@@ -349,7 +350,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 Comparator.comparing(e -> e.key().location())
             ));
 
-        final BingoGoal.Builder builder = BingoGoal.builder(id("all_goat_horns"));
+        final GoalBuilder builder = BingoGoal.builder(id("all_goat_horns"));
         for (final var instrument : sortedInstruments) {
             final var location = instrument.key().location();
             builder.criterion(

@@ -14,9 +14,10 @@ import com.mojang.brigadier.tree.CommandNode;
 import io.github.gaming32.bingo.commandswitch.CommandSwitch;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoDifficulty;
-import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.goal.GoalHolder;
+import io.github.gaming32.bingo.data.goal.GoalManager;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
@@ -148,7 +149,7 @@ public class BingoCommand {
         CommandSwitch.argument("--require-goal", ResourceLocationArgument.id())
             .getter(ResourceLocationArgument::getId)
             .suggests((context, builder) -> SharedSuggestionProvider.suggestResource(
-                BingoGoal.getGoalIds(), builder
+                GoalManager.getGoalIds(), builder
             ))
             .buildRepeatable(HashSet::new);
     private static final CommandSwitch<HolderSet<BingoTag>> EXCLUDE_TAG =
@@ -419,9 +420,9 @@ public class BingoCommand {
             throw NO_TEAMS.create();
         }
 
-        final List<BingoGoal.GoalHolder> requiredGoals = requiredGoalIds.stream()
+        final List<GoalHolder> requiredGoals = requiredGoalIds.stream()
             .map(id -> {
-                final BingoGoal.GoalHolder goal = BingoGoal.getGoal(id);
+                final GoalHolder goal = GoalManager.getGoal(id);
                 if (goal == null) {
                     throwInBlock(UNKNOWN_GOAL.create(id));
                 }

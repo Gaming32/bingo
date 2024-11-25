@@ -4,9 +4,9 @@ import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
 import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.data.BingoDifficulty;
-import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.goal.GoalManager;
 import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
@@ -162,7 +162,7 @@ public class Bingo {
 
     private static void registerDataReloadListeners() {
         BingoPlatform.platform.registerDataReloadListeners(registrar -> {
-            registrar.register(BingoGoal.ReloadListener.ID, BingoGoal.ReloadListener::new);
+            registrar.register(GoalManager.ID, GoalManager::new);
         });
     }
 

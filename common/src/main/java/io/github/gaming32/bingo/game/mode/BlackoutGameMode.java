@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.game.mode;
 
-import io.github.gaming32.bingo.data.BingoGoal;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.game.BingoBoard;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +34,7 @@ public class BlackoutGameMode implements BingoGameMode {
     }
 
     @Override
-    public boolean isGoalAllowed(BingoGoal.GoalHolder goal) {
+    public boolean isGoalAllowed(GoalHolder goal) {
         return goal.goal().getTags().stream().allMatch(g -> g.value().specialType() == BingoTag.SpecialType.NONE);
     }
 }
