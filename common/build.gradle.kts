@@ -5,7 +5,7 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation("net.fabricmc:fabric-loader:${rootProject["fabric_loader_version"]}")
 
-    implementation("com.electronwill.night-config:toml:3.6.0")
+    implementation("com.electronwill.night-config:toml:3.8.1")
 
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:16.0.783")
     modCompileOnly("mezz.jei:jei-1.21.1-common-api:19.21.0.246")

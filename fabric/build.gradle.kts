@@ -56,7 +56,7 @@ dependencies {
     }
 
     include(implementation("com.electronwill.night-config:core:3.6.0")!!)
-    include(implementation("com.electronwill.night-config:toml:3.6.0")!!)
+    include(implementation("com.electronwill.night-config:toml:3.8.1")!!)
 
     modImplementation("com.terraformersmc:modmenu:12.0.0-beta.1")
 }
