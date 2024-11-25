@@ -1,18 +1,19 @@
 package io.github.gaming32.bingo.game;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.data.goal.GoalManager;
-import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -41,12 +42,8 @@ public class BingoBoard {
     public static final int MAX_SIZE = 7;
     public static final int DEFAULT_SIZE = 5;
 
-    public static final Codec<BingoBoard> PERSISTENCE_CODEC = RecordCodecBuilder.create(
-        instance -> instance.group(
-            Codec.INT.fieldOf("size").forGetter(BingoBoard::getSize),
-            BingoCodecs.array(Teams.CODEC, Teams.class).fieldOf("states").forGetter(BingoBoard::getStates),
-            BingoCodecs.array(ActiveGoal.PERSISTENCE_CODEC, ActiveGoal.class).fieldOf("goals").forGetter(BingoBoard::getGoals)
-        ).apply(instance, BingoBoard::create)
+    public static final Codec<BingoBoard> PERSISTENCE_CODEC = PartiallyParsed.CODEC.xmap(
+        BingoBoard::create, PartiallyParsed::create
     );
 
     private final int size;
@@ -66,11 +63,13 @@ public class BingoBoard {
         toGoalIndex.defaultReturnValue(-1);
     }
 
-    private static BingoBoard create(int size, Teams[] states, ActiveGoal[] goals) {
+    private static BingoBoard create(PartiallyParsed parsed) {
+        final var size = parsed.size;
         final BingoBoard board = new BingoBoard(size);
-        System.arraycopy(states, 0, board.states, 0, size * size);
+        parsed.states.toArray(board.states);
+        parsed.goals.toArray(board.goals);
         for (int i = 0; i < size * size; i++) {
-            final ActiveGoal goal = board.goals[i] = goals[i]; // TODO: Fix AIOOBE in exceptional cases
+            final ActiveGoal goal = board.goals[i];
             board.byVanillaId.put(generateVanillaId(i), goal);
             board.toGoalIndex.put(goal, i);
         }
@@ -456,6 +455,29 @@ public class BingoBoard {
         @Override
         public String toString() {
             return "Teams[" + Integer.toBinaryString(bits) + "]";
+        }
+    }
+
+    private record PartiallyParsed(int size, List<Teams> states, List<ActiveGoal> goals) {
+        static final Codec<PartiallyParsed> CODEC = RecordCodecBuilder.<PartiallyParsed>create(
+            instance -> instance.group(
+                Codec.INT.fieldOf("size").forGetter(PartiallyParsed::size),
+                Teams.CODEC.listOf().fieldOf("states").forGetter(PartiallyParsed::states),
+                ActiveGoal.PERSISTENCE_CODEC.listOf().fieldOf("goals").forGetter(PartiallyParsed::goals)
+            ).apply(instance, PartiallyParsed::new)
+        ).validate(PartiallyParsed::validate);
+
+        static PartiallyParsed create(BingoBoard board) {
+            return new PartiallyParsed(board.size, List.of(board.states), List.of(board.goals));
+        }
+
+        private DataResult<PartiallyParsed> validate() {
+            // fixedSize does create a shortened partial result, but we only care about it having a partial, as the
+            // shortening is also handled in create() above.
+            var result = DataResult.success(this);
+            result = BingoUtil.combineError(result, Util.fixedSize(states, size * size));
+            result = BingoUtil.combineError(result, Util.fixedSize(goals, size * size));
+            return result;
         }
     }
 }

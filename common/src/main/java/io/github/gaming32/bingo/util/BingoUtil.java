@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
@@ -37,6 +38,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
@@ -266,5 +268,13 @@ public class BingoUtil {
 
     public static <K, V> Multimap<K, V> copyAndPut(Multimap<K, V> map, K k, V v) {
         return ImmutableMultimap.<K, V>builder().putAll(map).put(k, v).build();
+    }
+
+    public static <A> DataResult<A> combineError(DataResult<A> current, DataResult<?> other) {
+        return current.apply2((a, b) -> a, other);
+    }
+
+    public static <A> DataResult<A> combineError(DataResult<A> current, Supplier<String> error) {
+        return combineError(current, DataResult.error(error));
     }
 }

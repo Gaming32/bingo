@@ -1,11 +1,9 @@
 package io.github.gaming32.bingo.data.subs;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.util.RandomSource;
-
-import java.util.Map;
 
 public record SubBingoSub(String key) implements BingoSub {
     public static final MapCodec<SubBingoSub> CODEC = Codec.STRING
@@ -13,12 +11,20 @@ public record SubBingoSub(String key) implements BingoSub {
         .xmap(SubBingoSub::new, SubBingoSub::key);
 
     @Override
-    public Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand) {
-        final Dynamic<?> value = referable.get(key);
+    public Dynamic<?> substitute(SubstitutionContext context) {
+        final Dynamic<?> value = context.referable().get(key);
         if (value == null) {
             throw new IllegalArgumentException("Unresolved reference in bingo goal: " + key);
         }
         return value;
+    }
+
+    @Override
+    public DataResult<BingoSub> validate(SubstitutionContext context) {
+        if (!context.referable().containsKey(key)) {
+            return DataResult.error(() -> "Unresolved reference in bingo goal: " + key);
+        }
+        return DataResult.success(this);
     }
 
     @Override

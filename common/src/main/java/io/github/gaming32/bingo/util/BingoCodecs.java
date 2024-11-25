@@ -30,6 +30,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.lang.reflect.Array;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -189,9 +190,13 @@ public final class BingoCodecs {
         );
     }
 
-    @SuppressWarnings("unchecked")
     public static <A> Codec<A[]> array(Codec<A> elementCodec, Class<A> aClass) {
-        return elementCodec.listOf().xmap(
+        return arrayFromList(elementCodec.listOf(), aClass);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <A> Codec<A[]> arrayFromList(Codec<List<A>> listCodec, Class<A> aClass) {
+        return listCodec.xmap(
             list -> list.toArray((A[])Array.newInstance(aClass, list.size())),
             ImmutableList::copyOf
         );

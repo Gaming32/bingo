@@ -2,18 +2,18 @@ package io.github.gaming32.bingo.data.subs;
 
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multisets;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -36,13 +36,20 @@ public record CompoundBingoSub(ElementType elementType, Operator operator, List<
     }
 
     @Override
-    public Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand) {
+    public Dynamic<?> substitute(SubstitutionContext context) {
         final var op = elementType.accumulator.apply(operator);
-        Dynamic<?> result = factors.getFirst().substitute(referable, rand);
+        Dynamic<?> result = factors.getFirst().substitute(context);
         for (int i = 1; i < factors.size(); i++) {
-            result = op.apply(result, factors.get(i).substitute(referable, rand));
+            result = op.apply(result, factors.get(i).substitute(context));
         }
         return result;
+    }
+
+    @Override
+    public DataResult<BingoSub> validate(SubstitutionContext context) {
+        return factors.stream()
+            .map(sub -> sub.validate(context))
+            .reduce(DataResult.success(this), BingoUtil::combineError, (a, b) -> a);
     }
 
     @Override

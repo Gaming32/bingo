@@ -12,13 +12,13 @@ import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.JsonSubber;
 import io.github.gaming32.bingo.data.icons.BlockIcon;
+import io.github.gaming32.bingo.data.icons.EmptyIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.progresstrackers.CriterionProgressTracker;
 import io.github.gaming32.bingo.data.progresstrackers.EmptyProgressTracker;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
-import io.github.gaming32.bingo.util.BingoCodecs;
-import io.github.gaming32.bingo.util.BingoUtil;
+import io.github.gaming32.bingo.data.subs.ParsedOrSub;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.core.HolderLookup;
@@ -28,10 +28,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.Consumer;
@@ -39,18 +39,23 @@ import java.util.function.Consumer;
 public final class GoalBuilder {
     public static final ThreadLocal<DynamicOps<JsonElement>> JSON_OPS = ThreadLocal.withInitial(() -> JsonOps.INSTANCE);
 
+    private static final ParsedOrSub<Integer> DEFAULT_REQUIRED_COUNT =
+        ParsedOrSub.fromParsed(ExtraCodecs.POSITIVE_INT, 1);
+    private static final ParsedOrSub<GoalIcon> DEFAULT_ICON =
+        ParsedOrSub.fromParsed(GoalIcon.CODEC, EmptyIcon.INSTANCE);
+
     private final ResourceLocation id;
     private final ImmutableMap.Builder<String, BingoSub> subs = ImmutableMap.builder();
-    private final ImmutableMap.Builder<String, Dynamic<?>> criteria = ImmutableMap.builder();
+    private final ImmutableMap.Builder<String, ParsedOrSub<Criterion<?>>> criteria = ImmutableMap.builder();
     private Optional<AdvancementRequirements> requirements = Optional.empty();
     private ProgressTracker progress = EmptyProgressTracker.INSTANCE;
-    private Dynamic<?> requiredCount = BingoCodecs.EMPTY_DYNAMIC.createInt(1);
+    private ParsedOrSub<Integer> requiredCount = DEFAULT_REQUIRED_COUNT;
     private AdvancementRequirements.Strategy requirementsStrategy = AdvancementRequirements.Strategy.AND;
     private final ImmutableSet.Builder<ResourceKey<BingoTag>> tags = ImmutableSet.builder();
-    private Optional<Dynamic<?>> name = Optional.empty();
-    private Dynamic<?> tooltip = BingoCodecs.EMPTY_DYNAMIC;
+    private Optional<ParsedOrSub<Component>> name = Optional.empty();
+    private Optional<ParsedOrSub<Component>> tooltip = Optional.empty();
     private Optional<ResourceLocation> tooltipIcon = Optional.empty();
-    private Dynamic<?> icon = BingoCodecs.EMPTY_DYNAMIC;
+    private ParsedOrSub<GoalIcon> icon = DEFAULT_ICON;
     private OptionalInt infrequency = OptionalInt.empty();
     private ImmutableSet.Builder<String> antisynergy = ImmutableSet.builder();
     private final ImmutableSet.Builder<String> catalyst = ImmutableSet.builder();
@@ -67,14 +72,14 @@ public final class GoalBuilder {
     }
 
     public GoalBuilder criterion(String key, Criterion<?> criterion) {
-        return criterion(key, criterion, subber -> {
-        });
+        criteria.put(key, ParsedOrSub.fromParsed(Criterion.CODEC, criterion, JSON_OPS.get()));
+        return this;
     }
 
     public GoalBuilder criterion(String key, Criterion<?> criterion, Consumer<JsonSubber> subber) {
         JsonSubber json = new JsonSubber(Criterion.CODEC.encodeStart(JSON_OPS.get(), criterion).getOrThrow());
         subber.accept(json);
-        this.criteria.put(key, new Dynamic<>(JsonOps.INSTANCE, json.json()));
+        this.criteria.put(key, ParsedOrSub.parse(Criterion.CODEC, new Dynamic<>(JsonOps.INSTANCE, json.json())));
         return this;
     }
 
@@ -98,12 +103,12 @@ public final class GoalBuilder {
     }
 
     public GoalBuilder requiredCount(int requiredCount) {
-        this.requiredCount = BingoCodecs.EMPTY_DYNAMIC.createInt(requiredCount);
+        this.requiredCount = ParsedOrSub.fromParsed(ExtraCodecs.POSITIVE_INT, requiredCount, JSON_OPS.get());
         return this;
     }
 
     public GoalBuilder requiredCount(BingoSub requiredCountSub) {
-        this.requiredCount = BingoUtil.toDynamic(BingoSub.INNER_CODEC, requiredCountSub);
+        this.requiredCount = ParsedOrSub.fromSub(requiredCountSub, ExtraCodecs.POSITIVE_INT, JSON_OPS.get());
         return this;
     }
 
@@ -118,14 +123,14 @@ public final class GoalBuilder {
     }
 
     public GoalBuilder name(Component name) {
-        return this.name(name, subber -> {
-        });
+        this.name = Optional.of(ParsedOrSub.fromParsed(ComponentSerialization.CODEC, name, JSON_OPS.get()));
+        return this;
     }
 
     public GoalBuilder name(Component name, Consumer<JsonSubber> subber) {
         JsonSubber json = new JsonSubber(ComponentSerialization.CODEC.encodeStart(JSON_OPS.get(), name).getOrThrow());
         subber.accept(json);
-        this.name = Optional.of(new Dynamic<>(JsonOps.INSTANCE, json.json()));
+        this.name = Optional.of(ParsedOrSub.parse(ComponentSerialization.CODEC, new Dynamic<>(JsonOps.INSTANCE, json.json())));
         return this;
     }
 
@@ -134,14 +139,14 @@ public final class GoalBuilder {
     }
 
     public GoalBuilder tooltip(Component tooltip) {
-        return this.tooltip(tooltip, subber -> {
-        });
+        this.tooltip = Optional.of(ParsedOrSub.fromParsed(ComponentSerialization.CODEC, tooltip, JSON_OPS.get()));
+        return this;
     }
 
     public GoalBuilder tooltip(Component tooltip, Consumer<JsonSubber> subber) {
         JsonSubber json = new JsonSubber(ComponentSerialization.CODEC.encodeStart(JSON_OPS.get(), tooltip).getOrThrow());
         subber.accept(json);
-        this.tooltip = new Dynamic<>(JsonOps.INSTANCE, json.json());
+        this.tooltip = Optional.of(ParsedOrSub.parse(ComponentSerialization.CODEC, new Dynamic<>(JsonOps.INSTANCE, json.json())));
         return this;
     }
 
@@ -151,8 +156,7 @@ public final class GoalBuilder {
     }
 
     public GoalBuilder icon(Object icon) {
-        return icon(icon, subber -> {
-        });
+        return icon(GoalIcon.infer(icon));
     }
 
     public GoalBuilder icon(Object icon, Consumer<JsonSubber> subber) {
@@ -160,8 +164,7 @@ public final class GoalBuilder {
     }
 
     public GoalBuilder icon(Block icon, ItemLike fallback) {
-        return icon(icon, fallback, subber -> {
-        });
+        return icon(BlockIcon.ofBlockAndItem(icon, fallback));
     }
 
     public GoalBuilder icon(Block icon, ItemLike fallback, Consumer<JsonSubber> subber) {
@@ -169,14 +172,14 @@ public final class GoalBuilder {
     }
 
     public GoalBuilder icon(GoalIcon icon) {
-        return icon(icon, subber -> {
-        });
+        this.icon = ParsedOrSub.fromParsed(GoalIcon.CODEC, icon, JSON_OPS.get());
+        return this;
     }
 
     public GoalBuilder icon(GoalIcon icon, Consumer<JsonSubber> subber) {
         JsonSubber jsonSubber = new JsonSubber(GoalIcon.CODEC.encodeStart(JSON_OPS.get(), icon).getOrThrow());
         subber.accept(jsonSubber);
-        this.icon = new Dynamic<>(JsonOps.INSTANCE, jsonSubber.json());
+        this.icon = ParsedOrSub.parse(GoalIcon.CODEC, new Dynamic<>(JsonOps.INSTANCE, jsonSubber.json()));
         return this;
     }
 
@@ -211,7 +214,7 @@ public final class GoalBuilder {
     }
 
     public GoalHolder build(HolderLookup.Provider registries) {
-        final Map<String, Dynamic<?>> criteria = this.criteria.build();
+        final var criteria = this.criteria.build();
         return new GoalHolder(id, new BingoGoal(
             subs.buildOrThrow(),
             criteria,

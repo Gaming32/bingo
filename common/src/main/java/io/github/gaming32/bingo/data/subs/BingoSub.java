@@ -2,14 +2,13 @@ package io.github.gaming32.bingo.data.subs;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
 
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -22,7 +21,7 @@ public interface BingoSub {
             .dispatch(BingoSub::type, BingoSubType::codec)
     ).xmap(
         either -> either.map(SubBingoSub::new, Function.identity()),
-        sub -> sub instanceof SubBingoSub subSub ? Either.left(subSub.key()) : Either.right(sub)
+        sub -> sub instanceof SubBingoSub(String key) ? Either.left(key) : Either.right(sub)
     );
 
     Codec<BingoSub> INNER_CODEC = BingoSubType.REGISTER
@@ -30,7 +29,11 @@ public interface BingoSub {
         .byNameCodec()
         .dispatch("bingo_type", BingoSub::type, BingoSubType::codec);
 
-    Dynamic<?> substitute(Map<String, Dynamic<?>> referable, RandomSource rand);
+    Dynamic<?> substitute(SubstitutionContext context);
+
+    default DataResult<BingoSub> validate(SubstitutionContext context) {
+        return DataResult.success(this);
+    }
 
     BingoSubType<?> type();
 

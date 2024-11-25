@@ -14,6 +14,8 @@ import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.progresstrackers.EmptyProgressTracker;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
+import io.github.gaming32.bingo.data.subs.ParsedOrSub;
+import io.github.gaming32.bingo.data.subs.SubstitutionContext;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -32,9 +34,9 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.util.RandomSource;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -45,15 +47,15 @@ public class BingoGoal {
     public static final Codec<BingoGoal> CODEC = RecordCodecBuilder.<BingoGoal>create(
         instance -> instance.group(
             Codec.unboundedMap(Codec.STRING, BingoSub.CODEC).optionalFieldOf("bingo_subs", Map.of()).forGetter(BingoGoal::getSubs),
-            Codec.unboundedMap(Codec.STRING, Codec.PASSTHROUGH).fieldOf("criteria").forGetter(BingoGoal::getCriteria),
+            Codec.unboundedMap(Codec.STRING, ParsedOrSub.codec(Criterion.CODEC)).fieldOf("criteria").forGetter(BingoGoal::getCriteria),
             AdvancementRequirements.CODEC.optionalFieldOf("requirements").forGetter(g -> Optional.of(g.requirements)),
             ProgressTracker.CODEC.optionalFieldOf("progress", EmptyProgressTracker.INSTANCE).forGetter(BingoGoal::getProgress),
-            BingoCodecs.optionalDynamicField("required_count", BingoCodecs.EMPTY_DYNAMIC.createInt(1)).forGetter(BingoGoal::getRequiredCount),
+            ParsedOrSub.optionalCodec(ExtraCodecs.POSITIVE_INT, "required_count", 1).forGetter(BingoGoal::getRequiredCount),
             RegistryCodecs.homogeneousList(BingoRegistries.TAG).optionalFieldOf("tags", HolderSet.empty()).forGetter(BingoGoal::getTags),
-            Codec.PASSTHROUGH.fieldOf("name").forGetter(BingoGoal::getName),
-            BingoCodecs.optionalDynamicField("tooltip").forGetter(BingoGoal::getTooltip),
+            ParsedOrSub.codec(ComponentSerialization.CODEC).fieldOf("name").forGetter(BingoGoal::getName),
+            ParsedOrSub.codec(ComponentSerialization.CODEC).optionalFieldOf("tooltip").forGetter(BingoGoal::getTooltip),
             ResourceLocation.CODEC.optionalFieldOf("tooltip_icon").forGetter(BingoGoal::getTooltipIcon),
-            BingoCodecs.optionalDynamicField("icon").forGetter(BingoGoal::getIcon),
+            ParsedOrSub.optionalCodec(GoalIcon.CODEC, "icon", EmptyIcon.INSTANCE).forGetter(BingoGoal::getIcon),
             BingoCodecs.optionalPositiveInt("infrequency").forGetter(BingoGoal::getInfrequency),
             BingoCodecs.minifiedSetField(Codec.STRING, "antisynergy").forGetter(BingoGoal::getAntisynergy),
             BingoCodecs.minifiedSetField(Codec.STRING, "catalyst").forGetter(BingoGoal::getCatalyst),
@@ -64,15 +66,15 @@ public class BingoGoal {
     ).validate(BingoGoal::validate);
 
     private final Map<String, BingoSub> subs;
-    private final Map<String, Dynamic<?>> criteria;
+    private final Map<String, ParsedOrSub<Criterion<?>>> criteria;
     private final AdvancementRequirements requirements;
     private final ProgressTracker progress;
-    private final Dynamic<?> requiredCount;
+    private final ParsedOrSub<Integer> requiredCount;
     private final HolderSet<BingoTag> tags;
-    private final Dynamic<?> name;
-    private final Dynamic<?> tooltip;
+    private final ParsedOrSub<Component> name;
+    private final Optional<ParsedOrSub<Component>> tooltip;
     private final Optional<ResourceLocation> tooltipIcon;
-    private final Dynamic<?> icon;
+    private final ParsedOrSub<GoalIcon> icon;
     private final OptionalInt infrequency;
     private final Set<String> antisynergy;
     private final Set<String> catalyst;
@@ -84,15 +86,15 @@ public class BingoGoal {
 
     public BingoGoal(
         Map<String, BingoSub> subs,
-        Map<String, Dynamic<?>> criteria,
+        Map<String, ParsedOrSub<Criterion<?>>> criteria,
         Optional<AdvancementRequirements> requirements,
         ProgressTracker progress,
-        Dynamic<?> requiredCount,
+        ParsedOrSub<Integer> requiredCount,
         HolderSet<BingoTag> tags,
-        Dynamic<?> name,
-        Dynamic<?> tooltip,
+        ParsedOrSub<Component> name,
+        Optional<ParsedOrSub<Component>> tooltip,
         Optional<ResourceLocation> tooltipIcon,
-        Dynamic<?> icon,
+        ParsedOrSub<GoalIcon> icon,
         OptionalInt infrequency,
         Collection<String> antisynergy,
         Collection<String> catalyst,
@@ -127,8 +129,10 @@ public class BingoGoal {
 
         boolean requiresClient = false;
         final var triggerCodec = ResourceKey.codec(Registries.TRIGGER_TYPE);
-        for (final Dynamic<?> criterion : criteria.values()) {
-            final var triggerKey = criterion.get("trigger")
+        for (final var criterion : criteria.values()) {
+            final var triggerKey = criterion
+                .serialized()
+                .get("trigger")
                 .flatMap(triggerCodec::parse)
                 .result()
                 .orElse(null);
@@ -143,43 +147,52 @@ public class BingoGoal {
     }
 
     public DataResult<BingoGoal> validate() {
-        final DataResult<AdvancementRequirements> requirementsResult = requirements.validate(criteria.keySet());
-        if (requirementsResult.error().isPresent()) {
-            return DataResult.error(requirementsResult.error().get()::message);
+        var result = DataResult.success(this);
+
+        final var availableSubs = HashSet.<String>newHashSet(subs.size());
+        var substitutionContext = SubstitutionContext.createValidationContext(availableSubs);
+        for (final var sub : subs.entrySet()) {
+            result = BingoUtil.combineError(result, sub.getValue().validate(substitutionContext));
+            availableSubs.add(sub.getKey());
         }
 
         final var triggerCodec = ResourceKey.codec(Registries.TRIGGER_TYPE);
-        for (final Dynamic<?> criterion : criteria.values()) {
-            final var triggerKey = criterion.get("trigger").flatMap(triggerCodec::parse);
-            if (triggerKey.isError()) {
-                //noinspection OptionalGetWithoutIsPresent
-                return DataResult.error(triggerKey.error().get().messageSupplier());
-            }
+        for (final var criterion : criteria.values()) {
+            result = BingoUtil.combineError(result, criterion.serialized().get("trigger").flatMap(triggerCodec::parse));
+            result = BingoUtil.combineError(result, criterion.validate(substitutionContext));
         }
+
+        result = BingoUtil.combineError(result, requirements.validate(criteria.keySet()));
+        result = BingoUtil.combineError(result, progress.validate(this));
+        result = BingoUtil.combineError(result, requiredCount.validate(substitutionContext));
 
         for (final var tag : tags) {
             final BingoTag.SpecialType type = tag.value().specialType();
             if (type != BingoTag.SpecialType.NONE && type != specialType) {
-                return DataResult.error(() -> "Inconsistent specialTypes: " + type + " does not match " + specialType);
+                result = BingoUtil.combineError(result, () -> "Inconsistent specialTypes: " + type + " does not match " + specialType);
             }
         }
+
+        result = BingoUtil.combineError(result, name.validate(substitutionContext));
+
+        if (tooltip.isPresent()) {
+            result = BingoUtil.combineError(result, tooltip.get().validate(substitutionContext));
+        }
+
+        result = BingoUtil.combineError(result, icon.validate(substitutionContext));
+
         if (specialType == BingoTag.SpecialType.FINISH && requirements.size() != 1) {
-            return DataResult.error(() -> "\"finish\" goals must have only ORed requirements");
+            result = BingoUtil.combineError(result, () -> "\"finish\" goals must have only ORed requirements");
         }
 
-        final DataResult<ProgressTracker> progressResult = progress.validate(this);
-        if (progressResult.error().isPresent()) {
-            return DataResult.error(progressResult.error().get()::message);
-        }
-
-        return DataResult.success(this);
+        return result;
     }
 
     public Map<String, BingoSub> getSubs() {
         return subs;
     }
 
-    public Map<String, Dynamic<?>> getCriteria() {
+    public Map<String, ParsedOrSub<Criterion<?>>> getCriteria() {
         return criteria;
     }
 
@@ -191,7 +204,7 @@ public class BingoGoal {
         return progress;
     }
 
-    public Dynamic<?> getRequiredCount() {
+    public ParsedOrSub<Integer> getRequiredCount() {
         return requiredCount;
     }
 
@@ -199,11 +212,11 @@ public class BingoGoal {
         return tags;
     }
 
-    public Dynamic<?> getName() {
+    public ParsedOrSub<Component> getName() {
         return name;
     }
 
-    public Dynamic<?> getTooltip() {
+    public Optional<ParsedOrSub<Component>> getTooltip() {
         return tooltip;
     }
 
@@ -211,7 +224,7 @@ public class BingoGoal {
         return tooltipIcon;
     }
 
-    public Dynamic<?> getIcon() {
+    public ParsedOrSub<GoalIcon> getIcon() {
         return icon;
     }
 
@@ -243,50 +256,36 @@ public class BingoGoal {
         return requiredOnClient;
     }
 
-    public Map<String, Dynamic<?>> buildSubs(RandomSource rand) {
+    public Map<String, Dynamic<?>> buildSubs(SubstitutionContext context) {
         final Map<String, Dynamic<?>> result = new LinkedHashMap<>();
         for (final var entry : subs.entrySet()) {
-            result.put(entry.getKey(), entry.getValue().substitute(result, rand));
+            result.put(entry.getKey(), entry.getValue().substitute(context));
         }
         return ImmutableMap.copyOf(result);
     }
 
-    public MutableComponent buildName(Map<String, Dynamic<?>> referable, RandomSource rand) {
-        return BingoUtil.ensureHasFallback(BingoUtil.fromDynamic(
-            ComponentSerialization.CODEC,
-            GoalSubstitutionSystem.performSubstitutions(name, referable, rand)
-        ).copy());
+    public MutableComponent buildName(SubstitutionContext context) {
+        return BingoUtil.ensureHasFallback(name.substituteOrThrow(context).copy());
     }
 
-    public Optional<Component> buildTooltip(Map<String, Dynamic<?>> referable, RandomSource rand) {
-        if (tooltip.getValue() == tooltip.getOps().empty()) {
-            return Optional.empty();
-        }
-        return Optional.of(
-            BingoUtil.ensureHasFallback(BingoUtil.fromDynamic(
-                ComponentSerialization.CODEC,
-                GoalSubstitutionSystem.performSubstitutions(tooltip, referable, rand)
-            ).copy())
-        );
+    public Optional<Component> buildTooltip(SubstitutionContext context) {
+        return tooltip.map(t -> BingoUtil.ensureHasFallback(t.substituteOrThrow(context).copy()));
     }
 
-    public GoalIcon buildIcon(Map<String, Dynamic<?>> referable, RandomSource rand) {
-        if (icon.getValue() == icon.getOps().empty()) {
-            return EmptyIcon.INSTANCE;
-        }
-        return BingoUtil.fromDynamic(GoalIcon.CODEC, GoalSubstitutionSystem.performSubstitutions(icon, referable, rand));
+    public GoalIcon buildIcon(SubstitutionContext context) {
+        return icon.substituteOrThrow(context);
     }
 
-    public Map<String, Criterion<?>> buildCriteria(Map<String, Dynamic<?>> referable, RandomSource rand) {
+    public Map<String, Criterion<?>> buildCriteria(SubstitutionContext context) {
         final ImmutableMap.Builder<String, Criterion<?>> result = ImmutableMap.builderWithExpectedSize(criteria.size());
         for (final var entry : criteria.entrySet()) {
-            result.put(entry.getKey(), BingoUtil.fromDynamic(Criterion.CODEC, GoalSubstitutionSystem.performSubstitutions(entry.getValue(), referable, rand)));
+            result.put(entry.getKey(), entry.getValue().substituteOrThrow(context));
         }
         return result.build();
     }
 
-    public int buildRequiredCount(Map<String, Dynamic<?>> referable, RandomSource rand) {
-        return BingoUtil.fromDynamic(ExtraCodecs.POSITIVE_INT, GoalSubstitutionSystem.performSubstitutions(requiredCount, referable, rand));
+    public int buildRequiredCount(SubstitutionContext context) {
+        return requiredCount.substituteOrThrow(context);
     }
 
     public static GoalBuilder builder(ResourceLocation id) {
