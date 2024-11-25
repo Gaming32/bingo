@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -55,7 +54,7 @@ public class RelativeStatsTrigger extends SimpleProgressibleCriterionTrigger<Rel
         );
 
         public boolean matches(ServerPlayer player, ProgressListener<TriggerInstance> progressListener) {
-            final BingoGame game = Bingo.activeGame;
+            final BingoGame game = player.server.bingo$getGame();
             if (game != null) {
                 final Object2IntMap<Stat<?>> baseStats = game.getBaseStats(player);
                 final StatsCounter currentStats = player.getStats();

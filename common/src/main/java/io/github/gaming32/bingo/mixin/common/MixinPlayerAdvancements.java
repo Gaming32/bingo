@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.mixin.common;
 
-import io.github.gaming32.bingo.Bingo;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,8 +21,10 @@ public class MixinPlayerAdvancements {
         )
     )
     private void syncBingoAdvancements(ServerPlayer serverPlayer, CallbackInfo ci) {
-        if (isFirstPacket && Bingo.activeGame != null) {
-            Bingo.activeGame.syncAdvancementsTo(serverPlayer);
+        if (!isFirstPacket) return;
+        final var game = serverPlayer.server.bingo$getGame();
+        if (game != null) {
+            game.syncAdvancementsTo(serverPlayer);
         }
     }
 }

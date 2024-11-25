@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.mixin.common;
 
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.CriterionTrigger;
@@ -20,10 +19,12 @@ public class MixinCriterionTrigger_Listener {
 
     @Inject(method = "run", at = @At("HEAD"), cancellable = true)
     private void listenForGoalCompletion(PlayerAdvancements playerAdvancements, CallbackInfo ci) {
-        if (Bingo.activeGame == null) return;
-        final ActiveGoal goal = Bingo.activeGame.getBoard().byVanillaId(advancement.id());
+        final var player = ((PlayerAdvancementsAccessor)playerAdvancements).getPlayer();
+        final var game = player.server.bingo$getGame();
+        if (game == null) return;
+        final ActiveGoal goal = game.getBoard().byVanillaId(advancement.id());
         if (goal == null) return;
-        Bingo.activeGame.award(((PlayerAdvancementsAccessor)playerAdvancements).getPlayer(), goal, criterion);
+        game.award(player, goal, criterion);
         ci.cancel();
     }
 }

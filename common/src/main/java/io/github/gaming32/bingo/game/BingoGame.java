@@ -234,7 +234,7 @@ public class BingoGame {
         }
         playerList.broadcastSystemMessage(message, false);
 
-        Bingo.activeGame = null;
+        playerList.getServer().bingo$setGame(null);
         new ResyncStatesPayload(board.getStates()).sendTo(playerList.getPlayers());
         Bingo.updateCommandTree(playerList);
     }

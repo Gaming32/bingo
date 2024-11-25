@@ -36,6 +36,7 @@
     "MixinLivingEntity",
     "MixinLootContextParamSets",
     "MixinMapItem",
+    "MixinMinecraftServer",
     "MixinMushroomBlock",
     "MixinOcelot",
     "MixinPig",

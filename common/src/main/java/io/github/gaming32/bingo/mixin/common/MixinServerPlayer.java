@@ -1,12 +1,13 @@
 package io.github.gaming32.bingo.mixin.common;
 
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.ext.ServerPlayerExt;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,12 +21,12 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayer.class)
 public abstract class MixinServerPlayer extends MixinPlayer implements ServerPlayerExt {
     @Shadow @Final public ServerPlayerGameMode gameMode;
 
+    @Shadow @Final public MinecraftServer server;
     @Unique
     private boolean bingo$advancementsNeedClearing;
 
@@ -76,25 +77,19 @@ public abstract class MixinServerPlayer extends MixinPlayer implements ServerPla
         }
     }
 
-    @Inject(method = "setGameMode", at = @At("HEAD"))
-    private void storeOldGameMode(
-        GameType newMode, CallbackInfoReturnable<Boolean> cir,
-        @Share("oldMode") LocalRef<GameType> oldMode
-    ) {
-        oldMode.set(gameMode.getGameModeForPlayer());
-    }
-
-    @Inject(method = "setGameMode", at = @At("RETURN"))
-    private void onSetGameMode(
-        GameType newMode, CallbackInfoReturnable<Boolean> cir,
-        @Share("oldMode") LocalRef<GameType> oldMode
-    ) {
-        if (!cir.getReturnValueZ() || Bingo.activeGame == null) return;
-        if (newMode == GameType.SPECTATOR || oldMode.get() == GameType.SPECTATOR) {
-            final ServerPlayer player = (ServerPlayer)(Object)this;
-            final BingoBoard.Teams team = Bingo.activeGame.getTeam(player);
-            new ResyncStatesPayload(Bingo.activeGame.obfuscateTeam(team, player)).sendTo(player);
+    @WrapMethod(method = "setGameMode")
+    private boolean onSetGameMode(GameType newMode, Operation<Boolean> original) {
+        final var oldMode = gameMode.getGameModeForPlayer();
+        if (!original.call(newMode)) {
+            return false;
         }
+        final var game = server.bingo$getGame();
+        if (game != null && (newMode == GameType.SPECTATOR || oldMode == GameType.SPECTATOR)) {
+            final ServerPlayer player = (ServerPlayer)(Object)this;
+            final BingoBoard.Teams team = game.getTeam(player);
+            new ResyncStatesPayload(game.obfuscateTeam(team, player)).sendTo(player);
+        }
+        return true;
     }
 
     @Override

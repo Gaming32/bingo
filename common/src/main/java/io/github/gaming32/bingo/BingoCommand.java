@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo;
 
+import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -42,7 +43,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -55,6 +55,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -106,11 +107,12 @@ public class BingoCommand {
         new DynamicCommandExceptionType(team -> Bingo.translatableEscape("bingo.team_not_playing", team));
 
     private static final SuggestionProvider<CommandSourceStack> ACTIVE_GOAL_SUGGESTOR = (context, builder) -> {
-        if (Bingo.activeGame == null) {
+        final var game = context.getSource().getServer().bingo$getGame();
+        if (game == null) {
             return builder.buildFuture();
         }
         return SharedSuggestionProvider.suggestResource(
-            Arrays.stream(Bingo.activeGame.getBoard().getGoals()).map(ActiveGoal::id), builder
+            Arrays.stream(game.getBoard().getGoals()).map(ActiveGoal::id), builder
         );
     };
 
@@ -164,12 +166,13 @@ public class BingoCommand {
                 .requires(source -> source.hasPermission(2))
             )
             .then(literal("stop")
-                .requires(source -> source.hasPermission(2) && Bingo.activeGame != null)
+                .requires(source -> source.hasPermission(2) && source.getServer().bingo$getGame() != null)
                 .executes(ctx -> {
-                    if (Bingo.activeGame == null) {
+                    final var game = ctx.getSource().getServer().bingo$getGame();
+                    if (game == null) {
                         throw NO_GAME_RUNNING.create();
                     }
-                    Bingo.activeGame.endGame(ctx.getSource().getServer().getPlayerList());
+                    game.endGame(ctx.getSource().getServer().getPlayerList());
                     return Command.SINGLE_SUCCESS;
                 })
             )
@@ -178,20 +181,21 @@ public class BingoCommand {
                 .executes(BingoCommand::resetGame)
             )
             .then(literal("forfeit")
-                .requires(source -> Bingo.activeGame != null)
+                .requires(source -> source.getServer().bingo$getGame() != null)
                 .executes(ctx -> forfeit(ctx.getSource()))
                 .then(argument("team", TeamArgument.team())
-                    .requires(source -> source.hasPermission(2) && Bingo.activeGame != null)
+                    .requires(source -> source.hasPermission(2) && source.getServer().bingo$getGame() != null)
                     .executes(ctx -> forfeit(ctx.getSource(), TeamArgument.getTeam(ctx, "team")))
                 )
             )
             .then(literal("board")
-                .requires(source -> Bingo.activeGame != null)
+                .requires(source -> source.getServer().bingo$getGame() != null)
                 .executes(ctx -> {
-                    if (Bingo.activeGame == null) {
+                    final var game = ctx.getSource().getServer().bingo$getGame();
+                    if (game == null) {
                         throw NO_GAME_RUNNING.create();
                     }
-                    int size = Bingo.activeGame.getBoard().getSize();
+                    int size = game.getBoard().getSize();
 
                     MenuType<?> menuType = switch (size) {
                         case 1 -> MenuType.GENERIC_9x1;
@@ -218,7 +222,7 @@ public class BingoCommand {
                                 for (int y = 0; y < size; y++) {
                                     menu.getContainer().setItem(
                                         minX + y * 9 + x,
-                                        Bingo.activeGame.getBoard()
+                                        game.getBoard()
                                             .getGoal(x, y)
                                             .getFallbackWithComponents(registries)
                                     );
@@ -237,7 +241,8 @@ public class BingoCommand {
                 })
                 .then(literal("copy")
                     .executes(ctx -> {
-                        if (Bingo.activeGame == null) {
+                        final var game = ctx.getSource().getServer().bingo$getGame();
+                        if (game == null) {
                             throw NO_GAME_RUNNING.create();
                         }
                         ctx.getSource().sendSuccess(() -> ComponentUtils.wrapInSquareBrackets(
@@ -245,7 +250,7 @@ public class BingoCommand {
                         ).withStyle(s -> s
                             .withColor(ChatFormatting.GREEN)
                             .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Bingo.translatable("chat.copy.click")))
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, Bingo.activeGame.getBoard().toString())) // TODO: I18n?
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, game.getBoard().toString())) // TODO: I18n?
                         ), false);
                         return Command.SINGLE_SUCCESS;
                     })
@@ -253,10 +258,11 @@ public class BingoCommand {
                 .then(literal("difficulties")
                     .requires(source -> source.hasPermission(2))
                     .executes(ctx -> {
-                        if (Bingo.activeGame == null) {
+                        final var game = ctx.getSource().getServer().bingo$getGame();
+                        if (game == null) {
                             throw NO_GAME_RUNNING.create();
                         }
-                        final BingoBoard board = Bingo.activeGame.getBoard();
+                        final BingoBoard board = game.getBoard();
                         final StringBuilder line = new StringBuilder(board.getSize());
                         for (int y = 0; y < board.getSize(); y++) {
                             for (int x = 0; x < board.getSize(); x++) {
@@ -270,64 +276,18 @@ public class BingoCommand {
                 )
             )
             .then(literal("goals")
-                .requires(source -> source.hasPermission(2) && Bingo.activeGame != null)
+                .requires(source -> source.hasPermission(2) && source.getServer().bingo$getGame() != null)
                 .then(argument("players", EntityArgument.players())
                     .then(literal("award")
                         .then(argument("goal", ResourceLocationArgument.id())
                             .suggests(ACTIVE_GOAL_SUGGESTOR)
-                            .executes(context -> {
-                                if (Bingo.activeGame == null) {
-                                    throw NO_GAME_RUNNING.create();
-                                }
-                                final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
-                                final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
-
-                                int success = 0;
-                                for (final ActiveGoal goal : Bingo.activeGame.getBoard().getGoals()) {
-                                    if (goal.id().equals(goalId)) {
-                                        for (final ServerPlayer player : players) {
-                                            if (Bingo.activeGame.award(player, goal)) {
-                                                success++;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                final int fSuccess = success;
-                                context.getSource().sendSuccess(() -> Bingo.translatable(
-                                    "bingo.award.success", players.size(), fSuccess
-                                ), true);
-                                return success;
-                            })
+                            .executes(ctx -> awardOrRevoke(ctx, BingoGame::award, "bingo.award.success"))
                         )
                     )
                     .then(literal("revoke")
                         .then(argument("goal", ResourceLocationArgument.id())
                             .suggests(ACTIVE_GOAL_SUGGESTOR)
-                            .executes(context -> {
-                                if (Bingo.activeGame == null) {
-                                    throw NO_GAME_RUNNING.create();
-                                }
-                                final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
-                                final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
-
-                                int success = 0;
-                                for (final ActiveGoal goal : Bingo.activeGame.getBoard().getGoals()) {
-                                    if (goal.id().equals(goalId)) {
-                                        for (final ServerPlayer player : players) {
-                                            if (Bingo.activeGame.revoke(player, goal)) {
-                                                success++;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                final int fSuccess = success;
-                                context.getSource().sendSuccess(() -> Bingo.translatable(
-                                    "bingo.revoke.success", fSuccess, players.size()
-                                ), true);
-                                return success;
-                            })
+                            .executes(ctx -> awardOrRevoke(ctx, BingoGame::revoke, "bingo.revoke.success"))
                         )
                     )
                 )
@@ -422,8 +382,12 @@ public class BingoCommand {
     }
 
     private static int startGame(CommandContext<CommandSourceStack> context, int teamCount) throws CommandSyntaxException {
-        if (Bingo.activeGame != null) {
-            Bingo.activeGame.endGame(context.getSource().getServer().getPlayerList());
+        final MinecraftServer server = context.getSource().getServer();
+        final var playerList = server.getPlayerList();
+
+        final var existingGame = server.bingo$getGame();
+        if (existingGame != null) {
+            existingGame.endGame(playerList);
         }
         final var registries = context.getSource().registryAccess();
 
@@ -446,12 +410,7 @@ public class BingoCommand {
                 includeInactiveTeams ||
                 team.getPlayers()
                     .stream()
-                    .anyMatch(playerName ->
-                        context.getSource()
-                            .getServer()
-                            .getPlayerList()
-                            .getPlayerByName(playerName) != null
-                    );
+                    .anyMatch(playerName -> playerList.getPlayerByName(playerName) != null);
             if (teamActive && !teams.add(team)) {
                 throw DUPLICATE_TEAMS.create(team);
             }
@@ -477,9 +436,6 @@ public class BingoCommand {
             throw configError;
         }
 
-        final MinecraftServer server = context.getSource().getServer();
-        final PlayerList playerList = server.getPlayerList();
-
         final BingoBoard board;
         try {
             board = BingoBoard.generate(
@@ -502,9 +458,10 @@ public class BingoCommand {
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        Bingo.activeGame = new BingoGame(board, gamemode, requireClient, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
+        final var game = new BingoGame(board, gamemode, requireClient, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
+        server.bingo$setGame(game);
         Bingo.updateCommandTree(playerList);
-        new ArrayList<>(playerList.getPlayers()).forEach(Bingo.activeGame::addPlayer);
+        new ArrayList<>(playerList.getPlayers()).forEach(game::addPlayer);
         playerList.broadcastSystemMessage(
             Bingo.translatable("bingo.started", difficulty.value().description()),
             false
@@ -513,24 +470,27 @@ public class BingoCommand {
     }
 
     private static int resetGame(CommandContext<CommandSourceStack> context) {
-        if (Bingo.activeGame != null) {
-            Bingo.activeGame.endGame(context.getSource().getServer().getPlayerList());
+        final var server = context.getSource().getServer();
+        final var game = server.bingo$getGame();
+        if (game != null) {
+            game.endGame(server.getPlayerList());
         }
-        RemoveBoardPayload.INSTANCE.sendTo(context.getSource().getServer().getPlayerList().getPlayers());
+        RemoveBoardPayload.INSTANCE.sendTo(server.getPlayerList().getPlayers());
         context.getSource().sendSuccess(() -> Bingo.translatable("bingo.reset.success"), true);
         return Command.SINGLE_SUCCESS;
     }
 
     private static int forfeit(CommandSourceStack source) throws CommandSyntaxException {
-        if (Bingo.activeGame == null) {
+        final var game = source.getServer().bingo$getGame();
+        if (game == null) {
             throw NO_GAME_RUNNING.create();
         }
         ServerPlayer player = source.getPlayerOrException();
-        BingoBoard.Teams team = Bingo.activeGame.getTeam(player);
+        BingoBoard.Teams team = game.getTeam(player);
         if (!team.any()) {
             throw NOT_IN_TEAM.create();
         }
-        if (Bingo.activeGame.forfeit(source.getServer().getPlayerList(), team)) {
+        if (game.forfeit(source.getServer().getPlayerList(), team)) {
             source.sendSuccess(() -> Bingo.translatable("bingo.forfeit.success"), false);
             return Command.SINGLE_SUCCESS;
         } else {
@@ -539,19 +499,48 @@ public class BingoCommand {
     }
 
     private static int forfeit(CommandSourceStack source, PlayerTeam team) throws CommandSyntaxException {
-        if (Bingo.activeGame == null) {
+        final var game = source.getServer().bingo$getGame();
+        if (game == null) {
             throw NO_GAME_RUNNING.create();
         }
-        int teamIndex = ArrayUtils.indexOf(Bingo.activeGame.getTeams(), team);
+        int teamIndex = ArrayUtils.indexOf(game.getTeams(), team);
         if (teamIndex == -1) {
             throw TEAM_NOT_PLAYING.create(team.getFormattedDisplayName());
         }
-        if (Bingo.activeGame.forfeit(source.getServer().getPlayerList(), BingoBoard.Teams.fromOne(teamIndex))) {
+        if (game.forfeit(source.getServer().getPlayerList(), BingoBoard.Teams.fromOne(teamIndex))) {
             source.sendSuccess(() -> Bingo.translatable("bingo.forfeit.success.team", team.getFormattedDisplayName()), true);
             return Command.SINGLE_SUCCESS;
         } else {
             throw FORFEIT_ALREADY_FINISHED.create();
         }
+    }
+
+    private static int awardOrRevoke(
+        CommandContext<CommandSourceStack> context,
+        TriFunction<BingoGame, ServerPlayer, ActiveGoal, Boolean> action,
+        @Translatable String resultKey
+    ) throws CommandSyntaxException {
+        final var game = context.getSource().getServer().bingo$getGame();
+        if (game == null) {
+            throw NO_GAME_RUNNING.create();
+        }
+        final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
+        final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
+
+        int success = 0;
+        for (final ActiveGoal goal : game.getBoard().getGoals()) {
+            if (goal.id().equals(goalId)) {
+                for (final ServerPlayer player : players) {
+                    if (action.apply(game, player, goal)) {
+                        success++;
+                    }
+                }
+            }
+        }
+
+        final int fSuccess = success;
+        context.getSource().sendSuccess(() -> Bingo.translatable(resultKey, players.size(), fSuccess), true);
+        return success;
     }
 
     private static int randomizeTeams(

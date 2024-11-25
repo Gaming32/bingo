@@ -11,7 +11,6 @@ import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.ext.ServerPlayerExt;
-import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.game.persistence.PersistenceManager;
 import io.github.gaming32.bingo.mixin.common.ServerExplosionAccessor;
@@ -51,8 +50,6 @@ public class Bingo {
 
     public static final LevelResource PERSISTED_BINGO_GAME = new LevelResource("persisted_bingo_game.dat");
 
-    public static BingoGame activeGame;
-
     public static void init() {
         registerEventHandlers();
         initializeRegistries();
@@ -73,20 +70,20 @@ public class Bingo {
         });
 
         Event.PLAYER_JOIN.register(player -> {
-            if (activeGame != null) {
-                activeGame.addPlayer(player);
+            final var game = player.server.bingo$getGame();
+            if (game != null) {
+                game.addPlayer(player);
             }
         });
 
         Event.PLAYER_QUIT.register(player -> {
-            if (activeGame != null) {
-                activeGame.removePlayer(player);
+            final var game = player.server.bingo$getGame();
+            if (game != null) {
+                game.removePlayer(player);
             }
         });
 
         Event.COPY_PLAYER.register((from, to) -> ((ServerPlayerExt)from).bingo$copyAdvancementsNeedClearingTo(to));
-
-        Event.SERVER_STOPPED.register(instance -> activeGame = null);
 
         Event.RIGHT_CLICK_ITEM.register((player, hand) -> {
             if (player instanceof ServerPlayer serverPlayer) {
@@ -111,8 +108,9 @@ public class Bingo {
         });
 
         Event.SERVER_TICK_END.register(instance -> {
-            if (activeGame != null) {
-                activeGame.tick(instance);
+            final var game = instance.bingo$getGame();
+            if (game != null) {
+                game.tick(instance);
             }
         });
 
@@ -122,7 +120,7 @@ public class Bingo {
             LOGGER.info("Reading persisted Bingo game");
             try {
                 final var tag = NbtIo.readCompressed(path, NbtAccounter.unlimitedHeap());
-                activeGame = PersistenceManager.deserialize(instance.registryAccess(), tag, instance.getScoreboard());
+                instance.bingo$setGame(PersistenceManager.deserialize(instance.registryAccess(), tag, instance.getScoreboard()));
                 Files.deleteIfExists(path);
             } catch (Exception e) {
                 LOGGER.error("Failed to load persisted Bingo game", e);
@@ -130,11 +128,12 @@ public class Bingo {
         });
 
         Event.SERVER_STOPPING.register(instance -> {
-            if (activeGame == null) return;
+            final var game = instance.bingo$getGame();
+            if (game == null) return;
             LOGGER.info("Storing persistent Bingo game");
             final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
             try {
-                final var tag = PersistenceManager.serialize(instance.registryAccess(), activeGame);
+                final var tag = PersistenceManager.serialize(instance.registryAccess(), game);
                 NbtIo.writeCompressed(tag, path);
             } catch (Exception e) {
                 LOGGER.error("Failed to store persistent Bingo game", e);

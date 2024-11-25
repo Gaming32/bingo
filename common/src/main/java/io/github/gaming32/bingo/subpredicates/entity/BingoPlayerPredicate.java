@@ -3,7 +3,6 @@ package io.github.gaming32.bingo.subpredicates.entity;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.BingoGame;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
@@ -37,7 +36,7 @@ public record BingoPlayerPredicate(
         if (!(entity instanceof ServerPlayer player)) {
             return false;
         }
-        final BingoGame game = Bingo.activeGame;
+        final BingoGame game = level.getServer().bingo$getGame();
         if (game != null) {
             final Object2IntMap<Stat<?>> baseStats = game.getBaseStats(player);
             final StatsCounter currentStats = player.getStats();

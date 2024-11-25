@@ -50,6 +50,9 @@
       ],
       "net/minecraft/class_2168": [
         "io/github/gaming32/bingo/ext/CommandSourceStackExt"
+      ],
+      "net/minecraft/server/MinecraftServer": [
+        "io/github/gaming32/bingo/ext/MinecraftServerExt"
       ]
     }
   }

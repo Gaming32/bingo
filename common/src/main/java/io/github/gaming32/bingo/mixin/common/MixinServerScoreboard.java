@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.mixin.common;
 
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
@@ -52,22 +51,22 @@ public class MixinServerScoreboard {
 
     @Unique
     private void bingo$syncTeam(String playerName) {
-        if (Bingo.activeGame != null) {
-            final ServerPlayer player = server.getPlayerList().getPlayerByName(playerName);
-            if (player != null) {
-                final BingoBoard.Teams team = Bingo.activeGame.getTeam(player);
-                new SyncTeamPayload(team).sendTo(player);
-                if (team.any()) {
-                    Bingo.activeGame.flushQueuedGoals(player);
-                }
-                new ResyncStatesPayload(Bingo.activeGame.obfuscateTeam(team, player)).sendTo(player);
-                player.connection.send(new ClientboundUpdateAdvancementsPacket(
-                    false,
-                    List.of(),
-                    Set.of(),
-                    VanillaNetworking.generateProgressMap(Bingo.activeGame.getBoard().getStates(), team)
-                ));
+        final var game = server.bingo$getGame();
+        if (game == null) return;
+        final ServerPlayer player = server.getPlayerList().getPlayerByName(playerName);
+        if (player != null) {
+            final BingoBoard.Teams team = game.getTeam(player);
+            new SyncTeamPayload(team).sendTo(player);
+            if (team.any()) {
+                game.flushQueuedGoals(player);
             }
+            new ResyncStatesPayload(game.obfuscateTeam(team, player)).sendTo(player);
+            player.connection.send(new ClientboundUpdateAdvancementsPacket(
+                false,
+                List.of(),
+                Set.of(),
+                VanillaNetworking.generateProgressMap(game.getBoard().getStates(), team)
+            ));
         }
     }
 }
