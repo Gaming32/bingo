@@ -172,7 +172,7 @@ public class BingoGame {
         if (player != null && player.isSpectator()) {
             return states;
         }
-        if (Bingo.showOtherTeam || gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
+        if (gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
             return states;
         }
         if (!playerTeam.any()) {
@@ -188,9 +188,6 @@ public class BingoGame {
     }
 
     public static BingoBoard.Teams obfuscateTeam(BingoBoard.Teams playerTeam, BingoBoard.Teams state) {
-        if (Bingo.showOtherTeam) {
-            return state;
-        }
         return state.and(playerTeam) ? playerTeam : BingoBoard.Teams.NONE;
     }
 
@@ -579,7 +576,7 @@ public class BingoGame {
             );
         }
         final BingoBoard.Teams boardState = board.getStates()[boardIndex];
-        final boolean showOtherTeam = Bingo.showOtherTeam || gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS;
+        final boolean showOtherTeam = gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS;
         final UpdateStatePayload statePayload = new UpdateStatePayload(boardIndex, boardState);
         final UpdateStatePayload obfuscatedStatePayload = new UpdateStatePayload(boardIndex, obfuscateTeam(team, boardState));
         final ClientboundUpdateAdvancementsPacket vanillaPacket = new ClientboundUpdateAdvancementsPacket(

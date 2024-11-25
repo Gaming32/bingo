@@ -51,8 +51,6 @@ public class Bingo {
 
     public static final LevelResource PERSISTED_BINGO_GAME = new LevelResource("persisted_bingo_game.dat");
 
-    public static boolean showOtherTeam;
-
     public static BingoGame activeGame;
 
     public static void init() {
