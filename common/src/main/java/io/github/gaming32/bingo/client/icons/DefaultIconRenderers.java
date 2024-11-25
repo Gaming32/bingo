@@ -14,5 +14,6 @@ public class DefaultIconRenderers {
         IconRenderers.register(GoalIconType.INSTRUMENT_CYCLE, new InstrumentCycleIconRenderer());
         IconRenderers.register(GoalIconType.ITEM, (icon, graphics, x, y) -> graphics.renderFakeItem(icon.item(), x, y));
         IconRenderers.register(GoalIconType.ITEM_TAG_CYCLE, new ItemTagCycleIconRenderer());
+        IconRenderers.register(GoalIconType.SPRITE, new SpriteIconRenderer());
     }
 }

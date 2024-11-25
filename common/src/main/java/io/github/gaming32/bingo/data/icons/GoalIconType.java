@@ -24,6 +24,7 @@ public interface GoalIconType<I extends GoalIcon> {
     RegistryValue<GoalIconType<InstrumentCycleIcon>> INSTRUMENT_CYCLE = register("instrument_cycle", InstrumentCycleIcon.CODEC, InstrumentCycleIcon.STREAM_CODEC);
     RegistryValue<GoalIconType<ItemIcon>> ITEM = register("item", ItemIcon.CODEC, ItemIcon.STREAM_CODEC);
     RegistryValue<GoalIconType<ItemTagCycleIcon>> ITEM_TAG_CYCLE = register("item_tag_cycle", ItemTagCycleIcon.CODEC, ItemTagCycleIcon.STREAM_CODEC);
+    RegistryValue<GoalIconType<SpriteIcon>> SPRITE = register("sprite", SpriteIcon.CODEC, SpriteIcon.STREAM_CODEC);
 
     MapCodec<I> codec();
 
