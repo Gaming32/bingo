@@ -133,7 +133,7 @@ public class BingoGoal {
             final var triggerKey = criterion
                 .serialized()
                 .get("trigger")
-                .flatMap(triggerCodec::parse)
+                .read(triggerCodec)
                 .result()
                 .orElse(null);
             if (triggerKey == null) continue;
@@ -158,7 +158,7 @@ public class BingoGoal {
 
         final var triggerCodec = ResourceKey.codec(Registries.TRIGGER_TYPE);
         for (final var criterion : criteria.values()) {
-            result = BingoUtil.combineError(result, criterion.serialized().get("trigger").flatMap(triggerCodec::parse));
+            result = BingoUtil.combineError(result, criterion.serialized().get("trigger").read(triggerCodec));
             result = BingoUtil.combineError(result, criterion.validate(substitutionContext));
         }
 

@@ -9,17 +9,20 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class SubstitutionEngine {
+public final class SubstitutionEngine {
     private static final String TYPE_FIELD = "bingo_type";
 
+    private SubstitutionEngine() {
+    }
+
     public static boolean hasSubstitutions(Dynamic<?> value) {
+        if (value.get(TYPE_FIELD).result().isPresent()) {
+            return true;
+        }
+
         final var asList = value.asStreamOpt();
         if (asList.result().isPresent()) {
             return asList.result().get().anyMatch(SubstitutionEngine::hasSubstitutions);
-        }
-
-        if (value.get(TYPE_FIELD).result().isPresent()) {
-            return true;
         }
 
         return value.asMapOpt()
@@ -31,15 +34,15 @@ public class SubstitutionEngine {
     }
 
     public static Dynamic<?> performSubstitutions(Dynamic<?> value, SubstitutionContext context) {
+        if (value.get(TYPE_FIELD).result().isPresent()) {
+            return BingoUtil.fromDynamic(BingoSub.INNER_CODEC, value).substitute(context);
+        }
+
         final var asList = value.asStreamOpt();
         if (asList.result().isPresent()) {
             return value.createList(
                 asList.result().get().map(d -> performSubstitutions(d, context).convert(d.getOps()))
             );
-        }
-
-        if (value.get(TYPE_FIELD).result().isPresent()) {
-            return BingoUtil.fromDynamic(BingoSub.INNER_CODEC, value).substitute(context);
         }
 
         return value.updateMapValues(pair -> pair.mapSecond(subValue ->
@@ -48,15 +51,15 @@ public class SubstitutionEngine {
     }
 
     public static DataResult<Dynamic<?>> validateSubstitutions(Dynamic<?> value, SubstitutionContext context) {
-        final var asList = value.asStreamOpt();
-        if (asList.result().isPresent()) {
-            return validateStream(asList.result().get(), context).map(x -> value);
-        }
-
         if (value.get(TYPE_FIELD).result().isPresent()) {
             return BingoSub.INNER_CODEC.parse(value)
                 .flatMap(sub -> sub.validate(context))
                 .map(x -> value);
+        }
+
+        final var asList = value.asStreamOpt();
+        if (asList.result().isPresent()) {
+            return validateStream(asList.result().get(), context).map(x -> value);
         }
 
         final var asMap = value.asMapOpt();
