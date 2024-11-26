@@ -14,25 +14,29 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public record CompoundBingoSub(ElementType elementType, Operator operator, List<BingoSub> factors) implements BingoSub {
-    public static final MapCodec<CompoundBingoSub> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-        ElementType.CODEC.optionalFieldOf("element_type", ElementType.INT).forGetter(CompoundBingoSub::elementType),
-        Operator.CODEC.fieldOf("operator").forGetter(CompoundBingoSub::operator),
-        ExtraCodecs.nonEmptyList(BingoSub.CODEC.listOf()).fieldOf("factors").forGetter(CompoundBingoSub::factors)
-    ).apply(instance, CompoundBingoSub::new));
-
-    public CompoundBingoSub {
-        if (factors.isEmpty()) {
-            throw new IllegalArgumentException("factors is empty!");
-        }
-    }
+    public static final MapCodec<CompoundBingoSub> CODEC = RecordCodecBuilder.<CompoundBingoSub>mapCodec(
+        instance -> instance.group(
+            ElementType.CODEC.optionalFieldOf("element_type", ElementType.INT).forGetter(CompoundBingoSub::elementType),
+            Operator.CODEC.fieldOf("operator").forGetter(CompoundBingoSub::operator),
+            ExtraCodecs.nonEmptyList(BingoSub.CODEC.listOf()).fieldOf("factors").forGetter(CompoundBingoSub::factors)
+        ).apply(instance, CompoundBingoSub::new)
+    ).validate(CompoundBingoSub::validate);
 
     public CompoundBingoSub(ElementType elementType, Operator operator, BingoSub... factors) {
         this(elementType, operator, List.of(factors));
+    }
+
+    private DataResult<CompoundBingoSub> validate() {
+        if (!elementType.supportedOperators.contains(operator)) {
+            return DataResult.error(() -> "operator " + operator + " not supported on element_type " + elementType);
+        }
+        return DataResult.success(this);
     }
 
     @Override
@@ -74,7 +78,7 @@ public record CompoundBingoSub(ElementType elementType, Operator operator, List<
             case SUM -> (a, b) -> a.createString(a.asString("") + b.asString(""));
             case MUL -> (a, b) -> a.createString(a.asString("").repeat(b.asInt(1)));
             default -> throw new UnsupportedOperationException(op + " on STRING");
-        }),
+        }, Operator.SUM, Operator.MUL),
         ARRAY(op -> switch (op) {
             case SUM -> (a, b) -> a.createList(Stream.concat(a.asStream(), b.asStream()));
             case MUL -> (a, b) -> a.createList(
@@ -87,15 +91,21 @@ public record CompoundBingoSub(ElementType elementType, Operator operator, List<
                 ImmutableMultiset.copyOf(b.asStream().iterator())
             ).stream());
             default -> throw new UnsupportedOperationException(op + " on ARRAY");
-        });
+        }, Operator.SUM, Operator.MUL, Operator.SUB);
 
         @SuppressWarnings("deprecation")
         public static final EnumCodec<ElementType> CODEC = StringRepresentable.fromEnum(ElementType::values);
 
         public final Function<Operator, BinaryOperator<Dynamic<?>>> accumulator;
+        public final Set<Operator> supportedOperators;
 
         ElementType(Function<Operator, BinaryOperator<Dynamic<?>>> accumulator) {
+            this(accumulator, Operator.values());
+        }
+
+        ElementType(Function<Operator, BinaryOperator<Dynamic<?>>> accumulator, Operator... supportedOperators) {
             this.accumulator = accumulator;
+            this.supportedOperators = Set.of(supportedOperators);
         }
 
         @NotNull
