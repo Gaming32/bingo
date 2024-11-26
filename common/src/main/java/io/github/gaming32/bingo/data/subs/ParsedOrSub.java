@@ -9,11 +9,21 @@ import com.mojang.serialization.MapCodec;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 public record ParsedOrSub<T>(Dynamic<?> serialized, Either<DataResult<T>, Codec<T>> valueOrCodec) {
     public static <T> MapCodec<ParsedOrSub<T>> optionalCodec(Codec<T> valueCodec, String key, T defaultValue) {
-        return codec(valueCodec).optionalFieldOf(key, fromParsed(valueCodec, defaultValue));
+        final var parsedDefault = fromParsed(valueCodec, defaultValue);
+        return codec(valueCodec).optionalFieldOf(key).xmap(
+            optional -> optional.orElse(parsedDefault),
+            value -> {
+                final var parsedValue = value.valueOrCodec.left().flatMap(DataResult::result);
+                return parsedValue.isPresent() && parsedValue.get().equals(defaultValue)
+                    ? Optional.empty()
+                    : Optional.of(value);
+            }
+        );
     }
 
     public static <T> Codec<ParsedOrSub<T>> codec(Codec<T> valueCodec) {
