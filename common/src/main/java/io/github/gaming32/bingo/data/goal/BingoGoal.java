@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoRegistries;
@@ -34,10 +33,11 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.RandomSource;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -149,7 +149,7 @@ public class BingoGoal {
     public DataResult<BingoGoal> validate() {
         var result = DataResult.success(this);
 
-        final var availableSubs = HashSet.<String>newHashSet(subs.size());
+        final var availableSubs = LinkedHashSet.<String>newLinkedHashSet(subs.size());
         var substitutionContext = SubstitutionContext.createValidationContext(availableSubs);
         for (final var sub : subs.entrySet()) {
             result = BingoUtil.combineError(result, sub.getValue().validate(substitutionContext));
@@ -256,12 +256,12 @@ public class BingoGoal {
         return requiredOnClient;
     }
 
-    public Map<String, Dynamic<?>> buildSubs(SubstitutionContext context) {
-        final Map<String, Dynamic<?>> result = new LinkedHashMap<>();
+    public SubstitutionContext buildSubstitutionContext(RandomSource rand) {
+        final var result = new SubstitutionContext(new LinkedHashMap<>(), rand);
         for (final var entry : subs.entrySet()) {
-            result.put(entry.getKey(), entry.getValue().substitute(context));
+            result.referable().put(entry.getKey(), entry.getValue().substitute(result));
         }
-        return ImmutableMap.copyOf(result);
+        return result.harden();
     }
 
     public MutableComponent buildName(SubstitutionContext context) {

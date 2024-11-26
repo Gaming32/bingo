@@ -1,7 +1,5 @@
 package io.github.gaming32.bingo.data.goal;
 
-import com.mojang.serialization.Dynamic;
-import io.github.gaming32.bingo.data.subs.SubstitutionContext;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -9,14 +7,11 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 
-import java.util.Map;
 import java.util.Optional;
 
 public record GoalHolder(ResourceLocation id, BingoGoal goal) {
     public ActiveGoal build(RandomSource rand) {
-        final Map<String, Dynamic<?>> subs = goal.buildSubs(new SubstitutionContext(Map.of(), rand));
-        final var context = new SubstitutionContext(subs, rand);
-
+        final var context = goal.buildSubstitutionContext(rand);
         final Optional<Component> tooltip = goal.buildTooltip(context);
         final MutableComponent name = goal.buildName(context);
         tooltip.ifPresent(t -> name.withStyle(s -> s

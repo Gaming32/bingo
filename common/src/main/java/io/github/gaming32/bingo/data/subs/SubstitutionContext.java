@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.data.subs;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.Dynamic;
 import io.github.gaming32.bingo.util.BingoCodecs;
@@ -18,5 +19,9 @@ public record SubstitutionContext(Map<String, Dynamic<?>> referable, RandomSourc
 
     public Dynamic<?> getFactoryDynamic() {
         return referable.isEmpty() ? BingoCodecs.EMPTY_DYNAMIC : referable.values().iterator().next();
+    }
+
+    public SubstitutionContext harden() {
+        return new SubstitutionContext(ImmutableMap.copyOf(referable), rand);
     }
 }
