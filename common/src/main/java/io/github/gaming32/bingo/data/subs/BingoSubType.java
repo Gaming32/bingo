@@ -11,6 +11,7 @@ public interface BingoSubType<S extends BingoSub> {
         .build();
 
     RegistryValue<BingoSubType<CompoundBingoSub>> COMPOUND = register("compound", CompoundBingoSub.CODEC);
+    RegistryValue<BingoSubType<FloatBingoSub>> FLOAT = register("float", FloatBingoSub.CODEC);
     RegistryValue<BingoSubType<IntBingoSub>> INT = register("int", IntBingoSub.CODEC);
     RegistryValue<BingoSubType<SubBingoSub>> SUB = register("sub", SubBingoSub.CODEC);
     RegistryValue<BingoSubType<WrapBingoSub>> WRAP = register("wrap", WrapBingoSub.CODEC);
