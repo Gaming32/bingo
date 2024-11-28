@@ -75,6 +75,13 @@ allprojects {
             name = "TerraformersMC"
         }
         maven("https://maven.neoforged.net/releases/")
+        maven("https://prmaven.neoforged.net/NeoForge/pr1590") {
+            name = "Maven for PR #1717" // https://github.com/neoforged/NeoForge/pull/1717
+            content {
+                includeModule("net.neoforged", "neoforge")
+                includeModule("net.neoforged", "testframework")
+            }
+        }
     }
 
     tasks.withType<JavaCompile> {
