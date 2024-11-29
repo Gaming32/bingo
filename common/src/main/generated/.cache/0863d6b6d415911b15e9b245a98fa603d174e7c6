@@ -1,9 +1,9 @@
-// 1.21.3	Bingo/Tags for minecraft:item
+// 1.21.4 Release Candidate 1	Bingo/Tags for minecraft:item
 b6112420422099eed7aaae79f801a0250bf8764a data/bingo/tags/item/all_mineral_blocks.json
 849681cfac44a9f01a440afc75340e33bcdd9c4f data/bingo/tags/item/allowed_heads.json
 b8fb8aac34ee76a18519bf8341cc6965f6fc775f data/bingo/tags/item/banner_patterns.json
 50d93d5dff6f31f99f861c2df7c4e2dc1ec86e4b data/bingo/tags/item/basic_mineral_blocks.json
-72ee76c8c074ccc46fb422ca6f71e0db6eac67b1 data/bingo/tags/item/bonemealable.json
+cd2afed4cf4cca46f9e57cd552ce33cf5e2f75d2 data/bingo/tags/item/bonemealable.json
 fd55d4f9e6c3005580bc3aed7e6c8a10dfdf5a91 data/bingo/tags/item/climbable.json
 c882f1fc924c7ace24f2ece6ec48f727ede793e9 data/bingo/tags/item/concrete.json
 a8e3cdd07707862c9287a13bbcb1ad927c21bde8 data/bingo/tags/item/dead_coral_blocks.json
@@ -11,11 +11,13 @@ a8e3cdd07707862c9287a13bbcb1ad927c21bde8 data/bingo/tags/item/dead_coral_blocks.
 edc1d7ae236968dab44675ce2726aa8177c35461 data/bingo/tags/item/fish_buckets.json
 cffae9219a2ffab50a7f48a5083429e6aaaa85f0 data/bingo/tags/item/fishing_junk.json
 e69e73d172c40891d65fb28f3dbbc50a77c89c3c data/bingo/tags/item/fishing_treasure.json
-c05e998c718feb7c79e577ca9f09edc7225b3d22 data/bingo/tags/item/flowers.json
+cefd6a45729a4b211703ecfb540481fc6931c7c6 data/bingo/tags/item/flowers.json
 84ca487e773b4a6e5d2dfb9c9a4e6a7d99f6f480 data/bingo/tags/item/glazed_terracotta.json
 fadcbb38e7665bed6ea2c1b8876f4954189179c5 data/bingo/tags/item/gold_in_name.json
 1d06a2ee122e3edcd98600fe98e131c26392d4bf data/bingo/tags/item/living_coral_blocks.json
 76ff0180f4ac33ecd2e129331abfc90bb84adad2 data/bingo/tags/item/meat.json
 86894fcb39eb59a6350754e0397f720fe8f95ba6 data/bingo/tags/item/not_meat.json
-48828d4be77f045e1a0ff9bb1a7ae16d73d0c2fe data/bingo/tags/item/slabs.json
-089d3c92d1c3cec83e79681b2d921d41af15170c data/bingo/tags/item/stairs.json
+8507c2b2fef6ee4a8d7612f9a88bdbcc5ee49ba2 data/bingo/tags/item/slabs.json
+fa0e5bbc7baa2a87b08d4ff060afbe8add649491 data/bingo/tags/item/stairs.json
+292d60df471fb3e6039b68cd562d7197fd5b980a data/bingo/tags/item/tall_flowers.json
+3d04b6a728cd0032981b253212c9037e5d66cc22 data/bingo/tags/item/trim_templates.json

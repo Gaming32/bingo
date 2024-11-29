@@ -4,7 +4,7 @@
     "obtain": {
       "conditions": {
         "required_count": 3,
-        "tag": "minecraft:trim_templates"
+        "tag": "bingo:trim_templates"
       },
       "trigger": "bingo:has_some_items_from_tag"
     }
@@ -13,7 +13,7 @@
   "icon": {
     "type": "bingo:item_tag_cycle",
     "count": 3,
-    "tag": "minecraft:trim_templates"
+    "tag": "bingo:trim_templates"
   },
   "name": {
     "translate": "bingo.goal.armor_trims",

@@ -149,6 +149,14 @@
         },
         {
           "type": "bingo:entity",
+          "entity": "minecraft:creaking",
+          "item": {
+            "count": 1,
+            "id": "minecraft:creaking_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
           "entity": "minecraft:creeper",
           "item": {
             "count": 1,
