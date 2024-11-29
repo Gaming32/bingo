@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.data.goal;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +25,7 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
     private static Map<Integer, List<GoalHolder>> goalsByDifficulty = Map.of();
 
     public GoalManager(HolderLookup.Provider registries) {
-        super(registries, BingoGoal.CODEC, "bingo/goal");
+        super(registries, BingoGoal.CODEC, BingoRegistries.GOAL);
     }
 
     public static Set<ResourceLocation> getGoalIds() {

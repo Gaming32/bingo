@@ -45,7 +45,7 @@ public class BlockIconRenderer implements IconRenderer<BlockIcon> {
 
     private static void renderInGui(BlockState state, PoseStack poseStack, MultiBufferSource buffer, BakedModel model) {
         poseStack.pushPose();
-        ItemTransform transform = model.getTransforms().gui;
+        ItemTransform transform = model.getTransforms().gui();
         if (transform == ItemTransform.NO_TRANSFORM) {
             transform = DEFAULT_TRANSFORM;
         }

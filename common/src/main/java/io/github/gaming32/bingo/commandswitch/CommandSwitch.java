@@ -8,9 +8,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.CommandNode;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.ResourceKeyArgument;
-import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.commands.arguments.ResourceOrTagKeyArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -71,15 +72,10 @@ public sealed interface CommandSwitch<T> permits ArgumentSwitch, ConstantSwitch,
     }
 
     final class ArgumentSwitchBuilder<A, T> {
-        private static final Function<CommandContext<CommandSourceStack>, ?> ALWAYS_NULL = context -> null;
-
         private final String name;
         private final ArgumentType<A> type;
         private String argName;
         private ArgGetter<T> getter;
-        @SuppressWarnings("unchecked")
-        private Function<CommandContext<CommandSourceStack>, T> defaultValue =
-            (Function<CommandContext<CommandSourceStack>, T>)ALWAYS_NULL;
         private SuggestionProvider<CommandSourceStack> suggests = null;
 
         private ArgumentSwitchBuilder(String name, ArgumentType<A> type) {
@@ -102,36 +98,31 @@ public sealed interface CommandSwitch<T> permits ArgumentSwitch, ConstantSwitch,
             return this;
         }
 
-        public ArgumentSwitchBuilder<A, T> defaultValue(Function<CommandContext<CommandSourceStack>, T> function) {
-            this.defaultValue = function;
-            return this;
-        }
-
-        public ArgumentSwitchBuilder<A, T> defaultValue(Supplier<T> supplier) {
-            return defaultValue(context -> supplier.get());
-        }
-
-        public ArgumentSwitchBuilder<A, T> defaultValue(T value) {
-            return defaultValue(context -> value);
-        }
-
         public ArgumentSwitchBuilder<A, T> suggests(SuggestionProvider<CommandSourceStack> suggests) {
             this.suggests = suggests;
             return this;
         }
 
-        public CommandSwitch<T> build() {
-            return buildInner();
+        public CommandSwitch<T> build(Function<CommandContext<CommandSourceStack>, T> defaultValue) {
+            return buildInner(defaultValue);
+        }
+
+        public CommandSwitch<T> build(Supplier<T> defaultSupplier) {
+            return buildInner(ctx -> defaultSupplier.get());
+        }
+
+        public CommandSwitch<T> build(T defaultValue) {
+            return buildInner(ctx -> defaultValue);
         }
 
         public <C> CommandSwitch<C> buildRepeatable(Function<Collection<T>, C> collectionFunction) {
-            if (defaultValue != ALWAYS_NULL) {
-                throw new IllegalArgumentException("Cannot specify default value with buildRepeatable()");
-            }
-            return new RepeatableArgumentSwitch<>(buildInner(), collectionFunction);
+            return new RepeatableArgumentSwitch<>(
+                buildInner(context -> null),
+                (context, values) -> collectionFunction.apply(values)
+            );
         }
 
-        private ArgumentSwitch<A, T> buildInner() {
+        private ArgumentSwitch<A, T> buildInner(Function<CommandContext<CommandSourceStack>, T> defaultValue) {
             return new ArgumentSwitch<>(
                 name, argName, type,
                 Objects.requireNonNull(getter, "Must specify a getter() for a argument()"),
@@ -144,7 +135,6 @@ public sealed interface CommandSwitch<T> permits ArgumentSwitch, ConstantSwitch,
         private final String name;
         private final ResourceKey<Registry<T>> registry;
         private String argName;
-        private ResourceKey<T> defaultValue;
         private DynamicCommandExceptionType unknownExceptionType;
 
         private ResourceArgumentSwitchBuilder(String name, ResourceKey<Registry<T>> registry) {
@@ -158,53 +148,54 @@ public sealed interface CommandSwitch<T> permits ArgumentSwitch, ConstantSwitch,
             return this;
         }
 
-        public ResourceArgumentSwitchBuilder<T> defaultValue(ResourceKey<T> defaultValue) {
-            this.defaultValue = defaultValue;
-            return this;
-        }
-
         public ResourceArgumentSwitchBuilder<T> unknownExceptionType(DynamicCommandExceptionType type) {
             unknownExceptionType = type;
             return this;
         }
 
-        public CommandSwitch<Holder.Reference<T>> build() {
-            return buildInner();
-        }
-
-        public CommandSwitch<HolderSet<T>> buildRepeatable() {
-            if (defaultValue != null) {
-                throw new IllegalArgumentException("Cannot specify default value with buildRepeatable()");
-            }
-            return new RepeatableArgumentSwitch<>(
-                buildInner(),
-                values -> HolderSet.direct(values.stream().distinct().toList())
-            );
-        }
-
-        private ArgumentSwitch<ResourceKey<T>, Holder.Reference<T>> buildInner() {
+        public CommandSwitch<Holder.Reference<T>> build(ResourceKey<T> defaultValue) {
             final var registryKey = this.registry;
-            final var defaultKey = this.defaultValue;
+            final var exceptionType =
+                Objects.requireNonNull(unknownExceptionType, "unknownExceptionType() must be called");
             return new ArgumentSwitch<>(
                 name, argName,
                 ResourceKeyArgument.key(registryKey),
-                ArgGetter.forResource(
-                    registryKey,
-                    Objects.requireNonNull(unknownExceptionType, "unknownExceptionType() must be called")
-                ),
-                context -> {
-                    final var registry = context.getSource().registryAccess().lookupOrThrow(registryKey);
-                    final ResourceKey<T> key;
-                    if (defaultKey != null) {
-                        key = defaultKey;
-                    } else if (registry instanceof DefaultedRegistry<T> defaulted) {
-                        key = ResourceKey.create(registryKey, defaulted.getDefaultKey());
-                    } else {
-                        throw new IllegalArgumentException("defaultValue() must be specified for non-defaulted registry");
-                    }
-                    return registry.getOrThrow(key);
-                },
+                (context, arg) -> ResourceKeyArgument.resolveKey(context, arg, registry, exceptionType),
+                context -> context
+                    .getSource()
+                    .registryAccess()
+                    .lookupOrThrow(registryKey)
+                    .getOrThrow(defaultValue),
                 null
+            );
+        }
+
+        public CommandSwitch<HolderSet<T>> buildRepeatable() {
+            final var registryKey = this.registry;
+            final var exceptionType =
+                Objects.requireNonNull(unknownExceptionType, "unknownExceptionType() must be called");
+            return new RepeatableArgumentSwitch<>(
+                new ArgumentSwitch<>(
+                    name, argName,
+                    ResourceOrTagKeyArgument.resourceOrTagKey(registryKey),
+                    (context, arg) ->
+                        ResourceOrTagKeyArgument.getResourceOrTagKey(context, arg, registryKey, exceptionType),
+                    context -> null, null
+                ),
+                (context, values) -> {
+                    final var registry = context.getSource().registryAccess().lookupOrThrow(registryKey);
+                    return switch (values.size()) {
+                        case 0 -> HolderSet.empty();
+                        case 1 -> BingoUtil.toHolderSet(registry, values.iterator().next());
+                        default -> HolderSet.direct(
+                            values.stream()
+                                .map(result -> BingoUtil.toHolderSet(registry, result))
+                                .flatMap(HolderSet::stream)
+                                .distinct()
+                                .toList()
+                        );
+                    };
+                }
             );
         }
     }

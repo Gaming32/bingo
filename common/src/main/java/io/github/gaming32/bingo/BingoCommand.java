@@ -16,6 +16,7 @@ import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.goal.BingoGoal;
 import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.data.goal.GoalManager;
 import io.github.gaming32.bingo.game.ActiveGoal;
@@ -31,6 +32,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ColorArgument;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.TeamArgument;
 import net.minecraft.commands.arguments.TimeArgument;
@@ -40,6 +42,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerScoreboard;
@@ -63,7 +66,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -121,41 +123,40 @@ public class BingoCommand {
     private static final CommandSwitch<Boolean> CONTINUE_AFTER_WIN = CommandSwitch.storeTrue("--continue-after-win");
     private static final CommandSwitch<Boolean> INCLUDE_INACTIVE_TEAMS = CommandSwitch.storeTrue("--include-inactive-teams");
 
-    private static final CommandSwitch<Integer> SIZE =
-        CommandSwitch.argument("--size", IntegerArgumentType.integer(BingoBoard.MIN_SIZE, BingoBoard.MAX_SIZE))
-            .defaultValue(BingoBoard.DEFAULT_SIZE)
-            .build();
-    private static final CommandSwitch<Long> SEED =
-        CommandSwitch.argument("--seed", LongArgumentType.longArg())
-            .defaultValue(RandomSupport::generateUniqueSeed)
-            .build();
-    private static final CommandSwitch<Integer> AUTO_FORFEIT_TIME =
-        CommandSwitch.argument("--auto-forfeit-time", TimeArgument.time(0))
-            .getter(IntegerArgumentType::getInteger)
-            .defaultValue(BingoGame.DEFAULT_AUTO_FORFEIT_TICKS)
-            .build();
-    private static final CommandSwitch<Holder.Reference<BingoDifficulty>> DIFFICULTY =
-        CommandSwitch.resource("--difficulty", BingoRegistries.DIFFICULTY)
-            .defaultValue(BingoDifficulties.MEDIUM)
-            .unknownExceptionType(UNKNOWN_DIFFICULTY)
-            .build();
-    private static final CommandSwitch<Holder.Reference<BingoGameMode>> GAMEMODE =
-        CommandSwitch.resource("--gamemode", BingoRegistries.GAME_MODE)
-            .defaultValue(BingoGameMode.STANDARD.key())
-            .unknownExceptionType(UNKNOWN_GAMEMODE)
-            .build();
+    private static final CommandSwitch<Integer> SIZE = CommandSwitch
+        .argument("--size", IntegerArgumentType.integer(BingoBoard.MIN_SIZE, BingoBoard.MAX_SIZE))
+        .build(BingoBoard.DEFAULT_SIZE);
+    private static final CommandSwitch<Long> SEED = CommandSwitch
+        .argument("--seed", LongArgumentType.longArg())
+        .build(RandomSupport::generateUniqueSeed);
+    private static final CommandSwitch<Integer> AUTO_FORFEIT_TIME = CommandSwitch
+        .argument("--auto-forfeit-time", TimeArgument.time(0))
+        .getter(IntegerArgumentType::getInteger)
+        .build(BingoGame.DEFAULT_AUTO_FORFEIT_TICKS);
+    private static final CommandSwitch<Holder.Reference<BingoDifficulty>> DIFFICULTY = CommandSwitch
+        .resource("--difficulty", BingoRegistries.DIFFICULTY)
+        .unknownExceptionType(UNKNOWN_DIFFICULTY)
+        .build(BingoDifficulties.MEDIUM);
+    private static final CommandSwitch<Holder.Reference<BingoGameMode>> GAMEMODE = CommandSwitch
+        .resource("--gamemode", BingoRegistries.GAME_MODE)
+        .unknownExceptionType(UNKNOWN_GAMEMODE)
+        .build(BingoGameMode.STANDARD.key());
 
-    private static final CommandSwitch<Set<ResourceLocation>> REQUIRE_GOAL =
-        CommandSwitch.argument("--require-goal", ResourceLocationArgument.id())
-            .getter(ResourceLocationArgument::getId)
-            .suggests((context, builder) -> SharedSuggestionProvider.suggestResource(
-                GoalManager.getGoalIds(), builder
-            ))
-            .buildRepeatable(HashSet::new);
-    private static final CommandSwitch<HolderSet<BingoTag>> EXCLUDE_TAG =
-        CommandSwitch.resource("--exclude-tag", BingoRegistries.TAG)
-            .unknownExceptionType(UNKNOWN_TAG)
-            .buildRepeatable();
+    private static final CommandSwitch<Set<GoalHolder>> REQUIRE_GOAL = CommandSwitch
+        .<ResourceKey<BingoGoal>, GoalHolder>specialArgument("--require-goal", ResourceKeyArgument.key(BingoRegistries.GOAL))
+        .getter((context, arg) -> {
+            final var key = ResourceKeyArgument.getRegistryKey(context, arg, BingoRegistries.GOAL, INVALID_GOAL);
+            final var goal = GoalManager.getGoal(key.location());
+            if (goal == null) {
+                throw UNKNOWN_GOAL.create(key.location());
+            }
+            return goal;
+        })
+        .buildRepeatable(LinkedHashSet::new);
+    private static final CommandSwitch<HolderSet<BingoTag>> EXCLUDE_TAG = CommandSwitch
+        .resource("--exclude-tag", BingoRegistries.TAG)
+        .unknownExceptionType(UNKNOWN_TAG)
+        .buildRepeatable();
 
     public static void register(
         CommandDispatcher<CommandSourceStack> dispatcher,
@@ -394,7 +395,7 @@ public class BingoCommand {
 
         final var difficulty = DIFFICULTY.get(context);
         final long seed = SEED.get(context);
-        final var requiredGoalIds = REQUIRE_GOAL.get(context);
+        final var requiredGoals = REQUIRE_GOAL.get(context);
         final var excludedTags = EXCLUDE_TAG.get(context);
         final int size = SIZE.get(context);
         final var gamemode = GAMEMODE.get(context).value();
@@ -419,16 +420,6 @@ public class BingoCommand {
         if (teams.isEmpty()) {
             throw NO_TEAMS.create();
         }
-
-        final List<GoalHolder> requiredGoals = requiredGoalIds.stream()
-            .map(id -> {
-                final GoalHolder goal = GoalManager.getGoal(id);
-                if (goal == null) {
-                    throwInBlock(UNKNOWN_GOAL.create(id));
-                }
-                return goal;
-            })
-            .toList();
 
         final CommandSyntaxException configError = gamemode.checkAllowedConfig(
             new BingoGameMode.GameConfig(gamemode, size, teams)
@@ -570,10 +561,5 @@ public class BingoCommand {
             true
         );
         return players.size();
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Throwable> void throwInBlock(Throwable t) throws T {
-        throw (T)t;
     }
 }
