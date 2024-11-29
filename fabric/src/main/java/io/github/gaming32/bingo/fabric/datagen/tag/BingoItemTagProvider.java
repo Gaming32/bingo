@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerPatternItem;
@@ -104,7 +105,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(BingoItemTags.BONEMEALABLE)
             .forceAddTag(ItemTags.VILLAGER_PLANTABLE_SEEDS)
             .forceAddTag(ItemTags.SAPLINGS)
-            .forceAddTag(ItemTags.TALL_FLOWERS)
+            .forceAddTag(BingoItemTags.TALL_FLOWERS)
             .add(
                 Items.BAMBOO,
                 Items.BIG_DRIPLEAF,
@@ -135,8 +136,9 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 Items.WEEPING_VINES
             );
 
-        // The vanilla flower tag contains weird stuff like cherry leaves that bees are attracted to, but they are not flowers
-        getOrCreateTagBuilder(BingoItemTags.FLOWERS).forceAddTag(ItemTags.SMALL_FLOWERS).forceAddTag(ItemTags.TALL_FLOWERS);
+        getOrCreateTagBuilder(BingoItemTags.FLOWERS)
+            .forceAddTag(ItemTags.SMALL_FLOWERS)
+            .addTag(BingoItemTags.TALL_FLOWERS);
 
         getOrCreateTagBuilder(BingoItemTags.DEAD_CORAL_BLOCKS).add(
             Items.DEAD_BRAIN_CORAL_BLOCK,
@@ -145,6 +147,19 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.DEAD_HORN_CORAL_BLOCK,
             Items.DEAD_TUBE_CORAL_BLOCK
         );
+
+        getOrCreateTagBuilder(BingoItemTags.TALL_FLOWERS).add(
+            Items.LILAC,
+            Items.PEONY,
+            Items.PITCHER_PLANT,
+            Items.ROSE_BUSH,
+            Items.SUNFLOWER
+        );
+
+        final var trimTemplatesBuilder = getOrCreateTagBuilder(BingoItemTags.TRIM_TEMPLATES);
+        VanillaRecipeProvider.smithingTrims()
+            .map(VanillaRecipeProvider.TrimTemplate::template)
+            .forEach(trimTemplatesBuilder::add);
 
         var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
         var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);

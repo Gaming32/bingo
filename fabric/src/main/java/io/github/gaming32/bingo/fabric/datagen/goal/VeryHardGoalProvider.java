@@ -333,7 +333,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .name("beacon_regen")
             .icon(Blocks.BEACON)
             .reactant("pacifist"));
-        addGoal(obtainSomeItemsFromTag(id("armor_trims"), ItemTags.TRIM_TEMPLATES, "bingo.goal.armor_trims", 5, 5)
+        addGoal(obtainSomeItemsFromTag(id("armor_trims"), BingoItemTags.TRIM_TEMPLATES, "bingo.goal.armor_trims", 5, 5)
             .antisynergy("armor_trims"));
         addGoal(obtainAllGoatHorns());
         addGoal(obtainAllItemsFromTag(BingoItemTags.CLIMBABLE, "climbables")

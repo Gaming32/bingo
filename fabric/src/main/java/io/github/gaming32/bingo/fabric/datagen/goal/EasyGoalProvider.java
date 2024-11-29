@@ -507,7 +507,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .antisynergy("bucket_types", "water_bucket", "lava_bucket", "milk_bucket")
             .reactant("use_buckets"));
-        addGoal(obtainSomeItemsFromTag(id("different_flowers"), ItemTags.FLOWERS, "bingo.goal.different_flowers", 5, 7)
+        addGoal(obtainSomeItemsFromTag(id("different_flowers"), BingoItemTags.FLOWERS, "bingo.goal.different_flowers", 5, 7)
             .antisynergy("flowers")
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
