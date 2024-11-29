@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+// FIXME: Broken until https://github.com/FabricMC/fabric/pull/4180 is merged
 public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
     public static final ResourceLocation ID = ResourceLocations.bingo("goals");
 
