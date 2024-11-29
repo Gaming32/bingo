@@ -32,3 +32,7 @@ jobs:
         with:
           name: neoforge-jars
           path: neoforge/build/libs
+      - name: Run datagen
+        run: ./gradlew :fabric:runDatagenClient
+      - name: Verify datagen up-to-date
+        run: git diff --exit-code
