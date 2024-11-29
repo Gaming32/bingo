@@ -57,8 +57,7 @@
     "MixinZombie",
     "PlayerAdvancementsAccessor",
     "ServerExplosionAccessor",
-    "StatsCounterAccessor",
-    "commandswitch.MixinCommandSourceStack"
+    "StatsCounterAccessor"
   ],
   "client": [
     "client.CameraAccessor",
