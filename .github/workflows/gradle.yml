@@ -35,4 +35,4 @@ jobs:
       - name: Run datagen
         run: ./gradlew :fabric:runDatagenClient
       - name: Verify datagen up-to-date
-        run: git diff --exit-code
+        run: git diff --color=always --exit-code
