@@ -5,10 +5,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.data.tags.convention.ConventionItemTags;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -46,12 +47,12 @@ public record WearingDifferentArmorCondition(
             return false;
         }
         int wearingCount = 0;
-        final var models = HashSet.<ResourceLocation>newHashSet(4);
+        final var models = HashSet.<ResourceKey<EquipmentAsset>>newHashSet(4);
         for (final var stack : livingEntity.getArmorSlots()) {
             if (!stack.is(ConventionItemTags.ARMORS)) continue;
             final var equippable = stack.get(DataComponents.EQUIPPABLE);
             if (equippable == null) continue;
-            models.add(equippable.model().orElse(null));
+            equippable.assetId().ifPresent(models::add);
         }
         return equippedArmor.matches(wearingCount) && differentTypes.matches(models.size());
     }

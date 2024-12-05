@@ -2,9 +2,7 @@ package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.util.context.ContextKey;
-import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -29,11 +27,7 @@ public record DistanceFromSpawnCondition(Optional<DistancePredicate> distance) i
     @Override
     public boolean test(LootContext lootContext) {
         final Vec3 origin = lootContext.getParameter(LootContextParams.ORIGIN);
-        final GlobalPos spawnPoint = CompassItem.getSpawnPosition(lootContext.getLevel());
-        if (spawnPoint == null || spawnPoint.dimension() != lootContext.getLevel().dimension()) { // Maybe some mod does something interesting?
-            return false;
-        }
-        final Vec3 spawnVec = Vec3.atCenterOf(spawnPoint.pos());
+        final Vec3 spawnVec = Vec3.atCenterOf(lootContext.getLevel().getSharedSpawnPos());
         return distance.isEmpty() || distance.get().matches(
             origin.x, origin.y, origin.z,
             spawnVec.x, spawnVec.y, spawnVec.z

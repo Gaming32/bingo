@@ -384,7 +384,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(bedRowGoal(id("bed_row"), 7, 10));
         // TODO: power redstone lamp
-        addGoal(obtainSomeItemsFromTag(id("different_flowers"), ItemTags.FLOWERS, "bingo.goal.different_flowers", 8, 10)
+        addGoal(obtainSomeItemsFromTag(id("different_flowers"), BingoItemTags.FLOWERS, "bingo.goal.different_flowers", 8, 10)
             .antisynergy("flowers")
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
@@ -933,8 +933,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .map(Holder::value)
             .forEach(item -> {
                 final var equippable = item.components().get(DataComponents.EQUIPPABLE);
-                if (equippable == null || equippable.model().isEmpty()) return;
-                armors.put(equippable.slot(), equippable.model().get(), item);
+                if (equippable == null || equippable.assetId().isEmpty()) return;
+                armors.put(equippable.slot(), equippable.assetId().get().location(), item);
             });
         return armors.build();
     }

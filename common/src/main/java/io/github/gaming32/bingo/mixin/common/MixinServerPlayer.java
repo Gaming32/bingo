@@ -48,7 +48,7 @@ public abstract class MixinServerPlayer extends MixinPlayer implements ServerPla
 
     @Inject(method = "awardKillScore", at = @At("HEAD"))
     @SuppressWarnings("UnreachableCode")
-    private void killSelfTrigger(Entity killed, int scoreValue, DamageSource source, CallbackInfo ci) {
+    private void killSelfTrigger(Entity killed, DamageSource source, CallbackInfo ci) {
         if (killed == (Object)this) {
             BingoTriggers.KILL_SELF.get().trigger((ServerPlayer)killed, source);
         }

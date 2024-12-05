@@ -4,6 +4,12 @@
       "conditions": {
         "player": [
           {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "dimension": "minecraft:overworld"
+            }
+          },
+          {
             "condition": "bingo:distance_from_spawn",
             "distance": {
               "horizontal": {

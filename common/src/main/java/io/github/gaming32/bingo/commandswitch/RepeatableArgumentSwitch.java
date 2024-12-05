@@ -5,11 +5,11 @@ import com.mojang.brigadier.tree.CommandNode;
 import net.minecraft.commands.CommandSourceStack;
 
 import java.util.Collection;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 record RepeatableArgumentSwitch<A, T, C>(
     ArgumentSwitch<A, T> inner,
-    Function<Collection<T>, C> collectionFunction
+    BiFunction<CommandContext<CommandSourceStack>, Collection<T>, C> collectionFunction
 ) implements CommandSwitch<C> {
     @Override
     public String name() {
@@ -23,6 +23,6 @@ record RepeatableArgumentSwitch<A, T, C>(
 
     @Override
     public C get(CommandContext<CommandSourceStack> context) {
-        return collectionFunction.apply(context.getSource().bingo$getRepeatableArgument(inner));
+        return collectionFunction.apply(context, context.getSource().bingo$getRepeatableArgument(inner));
     }
 }

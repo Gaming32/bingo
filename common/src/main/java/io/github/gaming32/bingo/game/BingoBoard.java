@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -82,7 +83,7 @@ public class BingoBoard {
         int teamCount,
         RandomSource rand,
         Predicate<GoalHolder> isAllowedGoal,
-        List<GoalHolder> requiredGoals,
+        Collection<GoalHolder> requiredGoals,
         HolderSet<BingoTag> excludedTags,
         boolean allowsClientRequired,
         HolderLookup.Provider registries
@@ -121,7 +122,7 @@ public class BingoBoard {
         int difficulty,
         RandomSource rand,
         Predicate<GoalHolder> isAllowedGoal,
-        List<GoalHolder> requiredGoals,
+        Collection<GoalHolder> requiredGoals,
         HolderSet<BingoTag> excludedTags,
         boolean allowsClientRequired
     ) {

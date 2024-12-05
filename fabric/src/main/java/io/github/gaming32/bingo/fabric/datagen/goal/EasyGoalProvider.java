@@ -89,6 +89,7 @@ import net.minecraft.advancements.critereon.TradeTrigger;
 import net.minecraft.advancements.critereon.UsingItemTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ByteTag;
@@ -506,7 +507,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .antisynergy("bucket_types", "water_bucket", "lava_bucket", "milk_bucket")
             .reactant("use_buckets"));
-        addGoal(obtainSomeItemsFromTag(id("different_flowers"), ItemTags.FLOWERS, "bingo.goal.different_flowers", 5, 7)
+        addGoal(obtainSomeItemsFromTag(id("different_flowers"), BingoItemTags.FLOWERS, "bingo.goal.different_flowers", 5, 7)
             .antisynergy("flowers")
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
@@ -523,6 +524,10 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("finish_at_spawn"))
             .criterion("nearby", CriteriaTriggers.LOCATION.createCriterion(
                 new PlayerTrigger.TriggerInstance(Optional.of(ContextAwarePredicate.create(
+                    new LocationCheck(
+                        Optional.of(LocationPredicate.Builder.inDimension(Level.OVERWORLD).build()),
+                        BlockPos.ZERO
+                    ),
                     new DistanceFromSpawnCondition(
                         Optional.of(DistancePredicate.horizontal(MinMaxBounds.Doubles.atMost(3)))
                     ),

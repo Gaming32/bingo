@@ -58,7 +58,7 @@ public abstract class MixinEntity {
             shift = At.Shift.AFTER
         )
     )
-    private void customTrigger(Entity killed, int scoreValue, DamageSource source, CallbackInfo ci) {
+    private void customTrigger(Entity killed, DamageSource source, CallbackInfo ci) {
         BingoTriggers.ENTITY_KILLED_PLAYER.get().trigger((ServerPlayer)killed, (Entity)(Object)this, source);
     }
 }
