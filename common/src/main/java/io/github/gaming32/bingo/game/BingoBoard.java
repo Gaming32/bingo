@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -206,8 +207,7 @@ public class BingoBoard {
                             final var tags = generatedSheet[indices[z]].goal().getTags();
                             if (tags.size() > 0 && isOnSameLine(size, indices[i], indices[z])) {
                                 if (tags.stream().anyMatch(t ->
-                                    !t.value().allowedOnSameLine() &&
-                                        goalCandidate.goal().getTags().stream().anyMatch(t::equals)
+                                    !t.value().allowedOnSameLine() && goalCandidate.goal().getTags().contains(t)
                                 )) {
                                     continue goalGen;
                                 }
@@ -216,21 +216,9 @@ public class BingoBoard {
                     }
                 }
 
-                if (!goalCandidate.goal().getAntisynergy().isEmpty()) {
-                    if (goalCandidate.goal().getAntisynergy().stream().anyMatch(antisynergys::contains)) {
-                        continue;
-                    }
-                }
-                if (!goalCandidate.goal().getCatalyst().isEmpty()) {
-                    if (goalCandidate.goal().getCatalyst().stream().anyMatch(reactants::contains)) {
-                        continue;
-                    }
-                }
-                if (!goalCandidate.goal().getReactant().isEmpty()) {
-                    if (goalCandidate.goal().getReactant().stream().anyMatch(catalysts::contains)) {
-                        continue;
-                    }
-                }
+                if (!Collections.disjoint(goalCandidate.goal().getAntisynergy(), antisynergys)) continue;
+                if (!Collections.disjoint(goalCandidate.goal().getCatalyst(), catalysts)) continue;
+                if (!Collections.disjoint(goalCandidate.goal().getReactant(), reactants)) continue;
 
                 goal = goalCandidate;
                 break;
