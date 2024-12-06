@@ -216,9 +216,9 @@ public class BingoBoard {
                     }
                 }
 
-                if (!Collections.disjoint(goalCandidate.goal().getAntisynergy(), antisynergys)) continue;
-                if (!Collections.disjoint(goalCandidate.goal().getCatalyst(), catalysts)) continue;
-                if (!Collections.disjoint(goalCandidate.goal().getReactant(), reactants)) continue;
+                if (!Collections.disjoint(antisynergys, goalCandidate.goal().getAntisynergy())) continue;
+                if (!Collections.disjoint(reactants, goalCandidate.goal().getCatalyst())) continue;
+                if (!Collections.disjoint(catalysts, goalCandidate.goal().getReactant())) continue;
 
                 goal = goalCandidate;
                 break;
