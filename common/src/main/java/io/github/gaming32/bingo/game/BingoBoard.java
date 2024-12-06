@@ -340,8 +340,7 @@ public class BingoBoard {
 
         for (int y = 0; y < size; y++) {
             for (int column = 0; column < size; column++) {
-                result.append('+');
-                result.append("-".repeat(boxWidth - 1));
+                result.append('+').repeat('-', boxWidth - 1);
             }
             result.append("+\n");
 
@@ -353,15 +352,14 @@ public class BingoBoard {
             for (int line = 0; line < boxHeight - 1; line++) {
                 for (int x = 0; x < size; x++) {
                     final String box = line < texts[x].length ? texts[x][line] : "";
-                    result.append("| ").append(box).append(" ".repeat(boxWidth - box.length() - 2));
+                    result.append("| ").append(box).repeat(' ', boxWidth - box.length() - 2);
                 }
                 result.append("|\n");
             }
         }
 
         for (int column = 0; column < size; column++) {
-            result.append('+');
-            result.append("-".repeat(boxWidth - 1));
+            result.append('+').repeat('-', boxWidth - 1);
         }
         result.append('+');
 
