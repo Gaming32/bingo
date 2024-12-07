@@ -6,7 +6,6 @@
   "mixins": [
     "MixinBoneMealItem",
     "MixinDyedItemColor",
-    "MixinHashCache_ProviderCache",
     "MixinPlayerList",
     "MixinServerLevel"
   ],
