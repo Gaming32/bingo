@@ -2,11 +2,10 @@ package io.github.gaming32.bingo.data.goal;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -26,9 +25,7 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
     private static Map<Integer, List<GoalHolder>> goalsByDifficulty = Map.of();
 
     public GoalManager(HolderLookup.Provider registries) {
-        // FIXME: Switch to (HolderLookup.Provider, Codec, ResourceKey) overload and remove the AW once
-        // https://github.com/FabricMC/fabric/pull/4180 is merged
-        super(registries.createSerializationContext(JsonOps.INSTANCE), BingoGoal.CODEC, FileToIdConverter.json("bingo/goal"));
+        super(registries, BingoGoal.CODEC, BingoRegistries.GOAL);
     }
 
     public static Set<ResourceLocation> getGoalIds() {
