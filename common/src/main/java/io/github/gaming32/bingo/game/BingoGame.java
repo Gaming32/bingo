@@ -378,7 +378,9 @@ public class BingoGame {
     }
 
     public AdvancementProgress getOrStartProgress(ServerPlayer player, ActiveGoal goal) {
-        final Map<ActiveGoal, AdvancementProgress> map = advancementProgress.computeIfAbsent(player.getUUID(), k -> new HashMap<>());
+        final var map = advancementProgress.computeIfAbsent(
+            player.getUUID(), k -> HashMap.newHashMap(board.getGoals().length)
+        );
         AdvancementProgress progress = map.get(goal);
         if (progress == null) {
             progress = new AdvancementProgress();
@@ -400,7 +402,9 @@ public class BingoGame {
             return;
         }
 
-        Map<ActiveGoal, GoalProgress> goalProgress = this.goalProgress.computeIfAbsent(player.getUUID(), k -> new HashMap<>());
+        var goalProgress = this.goalProgress.computeIfAbsent(
+            player.getUUID(), k -> HashMap.newHashMap(board.getGoals().length)
+        );
         GoalProgress existingProgress = goalProgress.get(goal);
         if (existingProgress != null && existingProgress.progress() == progress && existingProgress.maxProgress() == maxProgress) {
             return;

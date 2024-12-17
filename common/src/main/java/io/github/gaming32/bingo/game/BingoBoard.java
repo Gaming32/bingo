@@ -58,7 +58,7 @@ public class BingoBoard {
         this.size = size;
         this.states = new Teams[size * size];
         this.goals = new ActiveGoal[size * size];
-        this.byVanillaId = new HashMap<>(size * size);
+        this.byVanillaId = HashMap.newHashMap(size * size);
         this.toGoalIndex = new Object2IntOpenHashMap<>(size * size);
 
         Arrays.fill(states, Teams.NONE);
@@ -135,7 +135,7 @@ public class BingoBoard {
         final int[] difficultyLayout = generateDifficulty(difficulties, size, difficulty, rand);
         final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(size * size), rand);
 
-        final Set<ResourceLocation> usedGoals = new HashSet<>();
+        final Set<ResourceLocation> usedGoals = HashSet.newHashSet(size * size);
         final Object2IntOpenHashMap<Holder<BingoTag>> tagCount = new Object2IntOpenHashMap<>();
         final Set<String> antisynergys = new HashSet<>();
         final Set<String> reactants = new HashSet<>();

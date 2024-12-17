@@ -93,7 +93,7 @@ public class VanillaNetworking {
     public static Map<ResourceLocation, AdvancementProgress> generateProgressMap(
         BingoBoard.Teams[] board, BingoBoard.Teams playerTeam
     ) {
-        final Map<ResourceLocation, AdvancementProgress> result = new HashMap<>(board.length);
+        final Map<ResourceLocation, AdvancementProgress> result = HashMap.newHashMap(board.length);
         for (int i = 0; i < board.length; i++) {
             result.put(BingoBoard.generateVanillaId(i), generateProgress(board[i].and(playerTeam)));
         }
@@ -111,7 +111,7 @@ public class VanillaNetworking {
     }
 
     public static Set<ResourceLocation> generateAdvancementIds(int count) {
-        final Set<ResourceLocation> result = new HashSet<>(1 + count);
+        final Set<ResourceLocation> result = HashSet.newHashSet(1 + count);
         result.add(ROOT_ADVANCEMENT.id());
         IntStream.range(0, count)
             .mapToObj(BingoBoard::generateVanillaId)

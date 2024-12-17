@@ -54,7 +54,7 @@ public class DifferentPotionsTrigger extends SimpleProgressibleCriterionTrigger<
         }
 
         public boolean matches(Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
-            final Set<String> discovered = new HashSet<>();
+            final Set<String> discovered = HashSet.newHashSet(minCount);
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 final ItemStack item = inventory.getItem(i);
                 if (item.getItem() instanceof PotionItem) {

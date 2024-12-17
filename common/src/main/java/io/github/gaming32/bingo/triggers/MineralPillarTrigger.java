@@ -63,7 +63,7 @@ public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTr
                 return required == 0;
             }
 
-            final Set<BlockState> found = new HashSet<>();
+            final Set<BlockState> found = HashSet.newHashSet(required);
             found.add(state);
 
             final BlockPos.MutableBlockPos currentPos = pos.mutable();

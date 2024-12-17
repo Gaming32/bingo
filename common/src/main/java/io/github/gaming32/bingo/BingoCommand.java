@@ -404,7 +404,7 @@ public class BingoCommand {
         final boolean includeInactiveTeams = INCLUDE_INACTIVE_TEAMS.get(context);
         final int autoForfeitTicks = AUTO_FORFEIT_TIME.get(context);
 
-        final Set<PlayerTeam> teams = new LinkedHashSet<>();
+        final Set<PlayerTeam> teams = LinkedHashSet.newLinkedHashSet(teamCount);
         for (int i = 1; i <= teamCount; i++) {
             final String argName = "team" + i;
             final PlayerTeam team = TeamArgument.getTeam(context, argName);

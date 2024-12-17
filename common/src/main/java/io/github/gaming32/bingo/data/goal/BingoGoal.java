@@ -257,7 +257,7 @@ public class BingoGoal {
     }
 
     public SubstitutionContext buildSubstitutionContext(RandomSource rand) {
-        final var result = new SubstitutionContext(new LinkedHashMap<>(), rand);
+        final var result = new SubstitutionContext(LinkedHashMap.newLinkedHashMap(subs.size()), rand);
         for (final var entry : subs.entrySet()) {
             result.referable().put(entry.getKey(), entry.getValue().substitute(result));
         }

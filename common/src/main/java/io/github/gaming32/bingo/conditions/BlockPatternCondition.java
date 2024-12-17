@@ -1,5 +1,7 @@
 package io.github.gaming32.bingo.conditions;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -18,8 +20,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -119,8 +119,8 @@ public class BlockPatternCondition implements LootItemCondition {
     }
 
     public static final class Builder implements LootItemCondition.Builder {
-        private final List<List<String>> aisles = new ArrayList<>();
-        private final Map<Character, LocationPredicate> predicatesByChar = new LinkedHashMap<>();
+        private final ImmutableList.Builder<List<String>> aisles = ImmutableList.builder();
+        private final ImmutableMap.Builder<Character, LocationPredicate> predicatesByChar = ImmutableMap.builder();
         private BlockPattern.Rotations rotations = BlockPattern.Rotations.HORIZONTAL;
 
         private Builder() {
@@ -148,7 +148,7 @@ public class BlockPatternCondition implements LootItemCondition {
         @Override
         @NotNull
         public BlockPatternCondition build() {
-            return new BlockPatternCondition(List.copyOf(aisles), predicatesByChar, rotations);
+            return new BlockPatternCondition(aisles.build(), predicatesByChar.build(), rotations);
         }
     }
 }
