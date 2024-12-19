@@ -20,6 +20,7 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
@@ -33,6 +34,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.RandomSource;
 
 import java.util.Collection;
@@ -186,6 +188,13 @@ public class BingoGoal {
         }
 
         return result;
+    }
+
+    public void validateParsedCriteria(ProblemReporter reporter, HolderGetter.Provider lootData) {
+        criteria.forEach((key, criterionOrSub) -> criterionOrSub.ifParsed(criterion -> {
+            final CriterionValidator validator = new CriterionValidator(reporter.forChild(key), lootData);
+            criterion.triggerInstance().validate(validator);
+        }));
     }
 
     public Map<String, BingoSub> getSubs() {

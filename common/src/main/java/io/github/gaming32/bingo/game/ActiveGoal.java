@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.game;
 
-import com.google.common.collect.Multimap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
@@ -36,7 +35,6 @@ import net.minecraft.world.item.component.ItemLore;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public record ActiveGoal(
     ResourceLocation id,
@@ -112,20 +110,14 @@ public record ActiveGoal(
     }
 
     public void validateAndLog(HolderGetter.Provider lootData) {
-        final ProblemReporter.Collector collector = new ProblemReporter.Collector();
+        final var collector = new ProblemReporter.Collector();
         validate(collector, lootData);
-        final Multimap<String, String> errors = collector.get();
-        if (!errors.isEmpty()) {
-            final String message = errors.asMap()
-                .entrySet()
-                .stream()
-                .map(entry -> "  at " + entry.getKey() + ": " + String.join("; ", entry.getValue()))
-                .collect(Collectors.joining("\n"));
-            Bingo.LOGGER.warn("Found validation problems in goal {}:\n{}", id, message);
-        }
+        collector.getReport().ifPresent(report ->
+            Bingo.LOGGER.warn("Found validation problems in goal {}:\n{}", id, report)
+        );
     }
 
-    public void validate(ProblemReporter reporter, HolderGetter.Provider lootData) {
+    private void validate(ProblemReporter reporter, HolderGetter.Provider lootData) {
         criteria.forEach((key, criterion) -> {
             final CriterionValidator validator = new CriterionValidator(reporter.forChild(key), lootData);
             criterion.triggerInstance().validate(validator);

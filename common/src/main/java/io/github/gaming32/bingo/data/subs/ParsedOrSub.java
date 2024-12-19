@@ -10,6 +10,7 @@ import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public record ParsedOrSub<T>(Dynamic<?> serialized, Either<DataResult<T>, Codec<T>> valueOrCodec) {
@@ -69,5 +70,9 @@ public record ParsedOrSub<T>(Dynamic<?> serialized, Either<DataResult<T>, Codec<
 
     public T substituteOrThrow(SubstitutionContext context) {
         return substitute(context).getOrThrow(IllegalArgumentException::new);
+    }
+
+    public void ifParsed(Consumer<T> consumer) {
+        valueOrCodec.left().flatMap(DataResult::result).ifPresent(consumer);
     }
 }

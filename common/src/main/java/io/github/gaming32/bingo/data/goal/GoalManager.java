@@ -9,6 +9,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,6 +62,7 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
         for (final var entry : goals.entrySet()) {
             final var goal = entry.getValue();
             final GoalHolder holder = new GoalHolder(entry.getKey(), goal);
+            validate(holder);
             result.put(holder.id(), holder);
             byDifficulty.computeIfAbsent(goal.getDifficulty().value().number(), k -> ImmutableList.builder()).add(holder);
         }
@@ -72,5 +74,13 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
                 e -> e.getValue().build()
             ));
         Bingo.LOGGER.info("Loaded {} bingo goals", GoalManager.goals.size());
+    }
+
+    private void validate(GoalHolder holder) {
+        final var collector = new ProblemReporter.Collector();
+        holder.goal().validateParsedCriteria(collector, registries);
+        collector.getReport().ifPresent(report ->
+            Bingo.LOGGER.warn("Found validation problems in goal {}:\n{}", holder.id(), report)
+        );
     }
 }
