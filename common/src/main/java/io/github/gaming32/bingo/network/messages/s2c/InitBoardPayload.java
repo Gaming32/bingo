@@ -25,11 +25,11 @@ public record InitBoardPayload(
 ) implements AbstractCustomPayload {
     public static final Type<InitBoardPayload> TYPE = AbstractCustomPayload.type("init_board");
     public static final StreamCodec<RegistryFriendlyByteBuf, InitBoardPayload> CODEC = StreamCodec.composite(
-        ByteBufCodecs.VAR_INT, p -> p.size,
-        ActiveGoal.STREAM_CODEC.apply(BingoStreamCodecs.array(ActiveGoal[]::new)), p -> p.goals,
-        BingoBoard.Teams.STREAM_CODEC.apply(BingoStreamCodecs.array(BingoBoard.Teams[]::new)), p -> p.states,
-        ByteBufCodecs.STRING_UTF8.apply(BingoStreamCodecs.array(String[]::new)), p -> p.teams,
-        BingoGameMode.RenderMode.STREAM_CODEC, p -> p.renderMode,
+        ByteBufCodecs.VAR_INT, InitBoardPayload::size,
+        ActiveGoal.STREAM_CODEC.apply(BingoStreamCodecs.array(ActiveGoal[]::new)), InitBoardPayload::goals,
+        BingoBoard.Teams.STREAM_CODEC.apply(BingoStreamCodecs.array(BingoBoard.Teams[]::new)), InitBoardPayload::states,
+        ByteBufCodecs.STRING_UTF8.apply(BingoStreamCodecs.array(String[]::new)), InitBoardPayload::teams,
+        BingoGameMode.RenderMode.STREAM_CODEC, InitBoardPayload::renderMode,
         InitBoardPayload::new
     );
 
