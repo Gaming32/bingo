@@ -27,7 +27,7 @@ subprojects {
             officialMojangMappings {
                 nameSyntheticMembers = true
             }
-            parchment("org.parchmentmc.data:parchment-1.21.4:2025.01.05@zip")
+            parchment("org.parchmentmc.data:parchment-1.21.4:2025.01.19@zip")
         })
 
         compileOnly("com.demonwav.mcdev:annotations:2.1.0")
