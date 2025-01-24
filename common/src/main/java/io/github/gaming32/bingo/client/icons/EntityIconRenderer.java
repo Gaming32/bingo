@@ -55,8 +55,7 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         pose.scale(size, size, size);
 
         final Quaternionf xRot = Axis.XP.rotationDegrees(-10f);
-        final Quaternionf yRot = Axis.YP.rotationDegrees(-30f);
-        pose.mulPose(Axis.ZP.rotationDegrees(180f).mul(xRot).mul(yRot));
+        pose.mulPose(Axis.ZP.rotationDegrees(180f).mul(xRot));
         entity.tickCount = minecraft.player.tickCount;
         entity.setYRot(-150f);
         entity.setYHeadRot(-150f);
@@ -70,7 +69,7 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         renderDispatcher.setRenderShadow(false);
 
         final MultiBufferSource.BufferSource bufferSource = minecraft.renderBuffers().bufferSource();
-        renderDispatcher.render(entity, 0, 0, 0, -150f, pose, bufferSource, LightTexture.FULL_BRIGHT);
+        renderDispatcher.render(entity, 0, 0, 0, 1f, pose, bufferSource, LightTexture.FULL_BRIGHT);
         bufferSource.endBatch();
 
         renderDispatcher.setRenderShadow(true);
