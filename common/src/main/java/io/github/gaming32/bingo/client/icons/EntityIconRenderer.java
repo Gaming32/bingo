@@ -55,7 +55,8 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         pose.scale(size, size, size);
 
         final Quaternionf xRot = Axis.XP.rotationDegrees(-10f);
-        pose.mulPose(Axis.ZP.rotationDegrees(180f).mul(xRot));
+        final Quaternionf yRot = Axis.YP.rotationDegrees(-30f);
+        pose.mulPose(Axis.ZP.rotationDegrees(180f).mul(xRot).mul(yRot));
         entity.tickCount = minecraft.player.tickCount;
         entity.setYRot(-150f);
         entity.setYHeadRot(-150f);
