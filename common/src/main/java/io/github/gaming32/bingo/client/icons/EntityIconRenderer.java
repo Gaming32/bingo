@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class EntityIconRenderer implements IconRenderer<EntityIcon> {
+    // TODO: Make this a CacheSlot<ClientLevel, Map<...>> in 1.21.5
     private static final Map<ClientLevel, Map<EntityIcon, Entity>> ENTITIES = new WeakHashMap<>();
 
     @Override

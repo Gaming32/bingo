@@ -3,6 +3,7 @@ accessible	class	net/minecraft/advancements/critereon/PlayerPredicate$StatMatche
 
 accessible	method	net/minecraft/client/gui/GuiGraphics	renderTooltipInternal	(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/ResourceLocation;)V
 
+# TODO: Remove getRegistryKey widener in 1.21.5
 accessible	method	net/minecraft/commands/arguments/ResourceKeyArgument	getRegistryKey	(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;Lnet/minecraft/resources/ResourceKey;Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;)Lnet/minecraft/resources/ResourceKey;
 accessible	method	net/minecraft/commands/arguments/ResourceKeyArgument	resolveKey	(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;Lnet/minecraft/resources/ResourceKey;Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;)Lnet/minecraft/core/Holder$Reference;
 

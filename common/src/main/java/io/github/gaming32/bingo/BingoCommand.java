@@ -410,9 +410,10 @@ public class BingoCommand {
             final PlayerTeam team = TeamArgument.getTeam(context, argName);
             boolean teamActive =
                 includeInactiveTeams ||
-                team.getPlayers()
+                playerList.getPlayers()
                     .stream()
-                    .anyMatch(playerName -> playerList.getPlayerByName(playerName) != null);
+                    .map(Player::getScoreboardName)
+                    .anyMatch(team.getPlayers()::contains);
             if (teamActive && !teams.add(team)) {
                 throw DUPLICATE_TEAMS.create(team);
             }
