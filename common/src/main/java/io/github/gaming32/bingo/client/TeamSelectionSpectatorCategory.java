@@ -45,7 +45,7 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
             return List.of();
         }
         final MutableInt teamId = new MutableInt();
-        return Arrays.stream(game.teams())
+        return Arrays.stream(game.getTeams())
             .map(team -> TeamSelectionItem.create(game, team, BingoBoard.Teams.fromOne(teamId.getAndIncrement())))
             .filter(Objects::nonNull)
             .toList();
@@ -107,9 +107,9 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
 
             if (onlinePlayers.isEmpty()) {
                 boolean hasAnyGoals = false;
-                for (int i = 0; i < game.states().length; i++) {
-                    boolean hasGoal = game.states()[i].and(teamId);
-                    if (game.goals()[i].specialType() == BingoTag.SpecialType.NEVER) {
+                for (int i = 0; i < game.getStates().length; i++) {
+                    boolean hasGoal = game.getStates()[i].and(teamId);
+                    if (game.getGoals()[i].specialType() == BingoTag.SpecialType.NEVER) {
                         hasGoal = !hasGoal;
                     }
                     if (hasGoal) {
