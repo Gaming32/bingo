@@ -550,7 +550,7 @@ public class BingoGame {
             board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);
             MinecraftServer server = player.level().getServer();
             notifyTeam(player, team, goal, server.getPlayerList(), index, isLoss);
-            if (!isLoss) {
+            if (!isLoss || isNever) {
                 checkForWin(server.getPlayerList());
             }
         }
@@ -631,14 +631,15 @@ public class BingoGame {
                     teamComponent = teamComponent.copy().withStyle(playerTeam.getColor());
                 }
                 final Component lockoutMessage = Bingo.translatable(
-                    "bingo.goal_lost.lockout",
+                    isLoss ? "bingo.goal_lost_other.lockout" : "bingo.goal_obtained.lockout",
                     teamComponent, goal.name().copy().withStyle(ChatFormatting.GOLD)
                 );
                 for (final ServerPlayer player : playerList.getPlayers()) {
                     if (player.isAlliedTo(playerTeam)) continue;
                     if (announceGoal) {
                         player.connection.send(new ClientboundSoundEntityPacket(
-                            SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.MASTER,
+                            isLoss ? Holder.direct(SoundEvents.NOTE_BLOCK_CHIME.value()) : SoundEvents.RESPAWN_ANCHOR_DEPLETE,
+                            SoundSource.MASTER,
                             player, 0.5f, 1f, player.getRandom().nextLong()
                         ));
                         player.sendSystemMessage(lockoutMessage);

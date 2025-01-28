@@ -133,6 +133,7 @@ public class BingoCommand {
         );
     };
 
+    private static final CommandSwitch<Boolean> ALLOW_NEVER_GOALS_IN_LOCKOUT = CommandSwitch.storeTrue("--allow-never-goals-in-lockout");
     private static final CommandSwitch<Boolean> REQUIRE_CLIENT = CommandSwitch.storeTrue("--require-client");
     private static final CommandSwitch<Boolean> CONTINUE_AFTER_WIN = CommandSwitch.storeTrue("--continue-after-win");
     private static final CommandSwitch<Boolean> INCLUDE_INACTIVE_TEAMS = CommandSwitch.storeTrue("--include-inactive-teams");
@@ -415,6 +416,7 @@ public class BingoCommand {
         {
             final CommandNode<CommandSourceStack> startCommand = bingoCommand.getChild("start");
 
+            ALLOW_NEVER_GOALS_IN_LOCKOUT.addTo(startCommand);
             REQUIRE_CLIENT.addTo(startCommand);
             CONTINUE_AFTER_WIN.addTo(startCommand);
             INCLUDE_INACTIVE_TEAMS.addTo(startCommand);
@@ -462,6 +464,7 @@ public class BingoCommand {
             throw INVALID_SIZE.create(size, shape.getMinSize(), shape.getMaxSize());
         }
         final var gamemode = GAMEMODE.get(context).value();
+        final boolean allowNeverGoalsInLockout = ALLOW_NEVER_GOALS_IN_LOCKOUT.get(context);
         final boolean requireClient = REQUIRE_CLIENT.get(context);
         final boolean continueAfterWin = CONTINUE_AFTER_WIN.get(context);
         final boolean includeInactiveTeams = INCLUDE_INACTIVE_TEAMS.get(context);
@@ -503,6 +506,7 @@ public class BingoCommand {
                 gamemode::isGoalAllowed,
                 requiredGoals,
                 excludedTags,
+                allowNeverGoalsInLockout,
                 requireClient,
                 registries
             );
