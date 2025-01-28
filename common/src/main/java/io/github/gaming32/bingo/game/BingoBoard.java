@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Queue;
 import java.util.Set;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 import java.util.stream.IntStream;
 
 public class BingoBoard {
@@ -83,9 +83,10 @@ public class BingoBoard {
         int difficulty,
         int teamCount,
         RandomSource rand,
-        Predicate<GoalHolder> isAllowedGoal,
+        BiPredicate<GoalHolder, Boolean> isAllowedGoal,
         Collection<GoalHolder> requiredGoals,
         HolderSet<BingoTag> excludedTags,
+        boolean allowNeverGoalsInLockout,
         boolean allowsClientRequired,
         HolderLookup.Provider registries
     ) {
@@ -98,6 +99,7 @@ public class BingoBoard {
             isAllowedGoal,
             requiredGoals,
             excludedTags,
+            allowNeverGoalsInLockout,
             allowsClientRequired
         );
         for (int i = 0; i < size * size; i++) {
@@ -122,9 +124,10 @@ public class BingoBoard {
         int size,
         int difficulty,
         RandomSource rand,
-        Predicate<GoalHolder> isAllowedGoal,
+        BiPredicate<GoalHolder, Boolean> isAllowedGoal,
         Collection<GoalHolder> requiredGoals,
         HolderSet<BingoTag> excludedTags,
+        boolean allowNeverGoalsInLockout,
         boolean allowsClientRequired
     ) {
         final Queue<GoalHolder> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
@@ -176,7 +179,7 @@ public class BingoBoard {
 
                 final GoalHolder goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
 
-                if (!isAllowedGoal.test(goalCandidate)) {
+                if (!isAllowedGoal.test(goalCandidate, allowNeverGoalsInLockout)) {
                     continue;
                 }
 

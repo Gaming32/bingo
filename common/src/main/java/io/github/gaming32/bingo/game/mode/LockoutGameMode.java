@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.goal.GoalHolder;
+import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.scores.PlayerTeam;
@@ -61,16 +62,23 @@ public class LockoutGameMode implements BingoGameMode {
         }
 
         int totalHeld = 0;
-        for (final BingoBoard.Teams state : board.getStates()) {
-            if (state.any()) {
-                totalHeld++;
-                teams[state.getFirstIndex()].goalsHeld++;
+        boolean nonStalemateGoalsLeft = false;
+        for (int x = 0; x < board.getSize(); x++) {
+            for (int y = 0; y < board.getSize(); y++) {
+                BingoBoard.Teams state = board.getState(x, y);
+                if (state.count() == 1) {
+                    totalHeld++;
+                    teams[state.getFirstIndex()].goalsHeld++;
+                } else if (!nonStalemateGoalsLeft) {
+                    ActiveGoal activeGoal = board.getGoal(x, y);
+                    nonStalemateGoalsLeft = activeGoal.specialType() == BingoTag.SpecialType.NEVER && !activeGoal.isLockoutInflictable();
+                }
             }
         }
 
         Arrays.sort(teams, Comparator.comparing(v -> -v.goalsHeld)); // Sort in reverse
 
-        final int totalGoals = board.getSize() * board.getSize();
+        final int totalGoals = nonStalemateGoalsLeft ? board.getSize() * board.getSize() : totalHeld;
         if (totalGoals - totalHeld < teams[0].goalsHeld - teams[1].goalsHeld) {
             return teams[0].team;
         }
@@ -91,12 +99,24 @@ public class LockoutGameMode implements BingoGameMode {
 
     @Override
     public boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever) {
-        return !board.getStates()[index].any();
+        if (!isNever) {
+            return !board.getStates()[index].any();
+        } else {
+            return board.getStates()[index].count() > 1 && board.getStates()[index].and(team);
+        }
     }
 
     @Override
-    public boolean isGoalAllowed(GoalHolder goal) {
-        return goal.goal().getTags().stream().allMatch(g -> g.value().specialType() == BingoTag.SpecialType.NONE);
+    public boolean isGoalAllowed(GoalHolder goal, boolean allowNeverGoalsInLockout) {
+        return goal.goal().getTags().stream().allMatch((g) -> {
+            if (g.value().specialType() == BingoTag.SpecialType.NONE) {
+                return true;
+            }
+            if (g.value().specialType() == BingoTag.SpecialType.NEVER) {
+                return allowNeverGoalsInLockout;
+            }
+            return false;
+        });
     }
 
     @Override

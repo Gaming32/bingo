@@ -34,7 +34,7 @@ public class BlackoutGameMode implements BingoGameMode {
     }
 
     @Override
-    public boolean isGoalAllowed(GoalHolder goal) {
+    public boolean isGoalAllowed(GoalHolder goal, boolean allowNeverGoalsInLockout) {
         return goal.goal().getTags().stream().allMatch(g -> g.value().specialType() == BingoTag.SpecialType.NONE);
     }
 }

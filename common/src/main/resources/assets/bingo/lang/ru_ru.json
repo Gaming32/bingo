@@ -251,6 +251,7 @@
   "bingo.goal_obtained": "%s получил цель %s для вашей команды.",
   "bingo.goal_lost": "%s потерял цель %s для вашей команды.",
   "bingo.goal_lost.lockout": "%s получил цель %s.",
+  "bingo.goal_lost_other.lockout": "%s потерял цель %s.",
   "bingo.duplicate_teams": "Нельзя дважды начинать игру в бинго с одной и той же командой (%s)!",
   "bingo.unknown_difficulty": "Неизвестная сложность %s",
   "bingo.unknown_goal": "Неизвестная цель %s",
