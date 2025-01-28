@@ -21,6 +21,7 @@ import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateEndTimePayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import io.github.gaming32.bingo.platform.BingoPlatform;
@@ -181,6 +182,7 @@ public class Bingo {
             registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPayload.TYPE, SyncTeamPayload.CODEC);
             registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPayload.TYPE, UpdateProgressPayload.CODEC);
             registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePayload.TYPE, UpdateStatePayload.CODEC);
+            registrar.register(PacketFlow.CLIENTBOUND, UpdateEndTimePayload.TYPE, UpdateEndTimePayload.CODEC);
         });
     }
 

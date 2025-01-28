@@ -13,6 +13,7 @@ import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateEndTimePayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import io.github.gaming32.bingo.triggers.progress.ProgressibleTrigger;
@@ -41,12 +42,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stat;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
@@ -83,10 +86,12 @@ public class BingoGame {
     private final Map<UUID, Object2IntOpenHashMap<ActiveGoal>> goalAchievedCount = new HashMap<>();
     private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
     private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
+    private final ServerBossEvent vanillaRemainingTime = new ServerBossEvent(Bingo.translatable("bingo.remaining_time"), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS);
     private final OptionalLong[] lastActiveTimes;
     private BingoBoard.Teams remainingTeams;
     private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
+    private long scheduledEndTime = -1;
 
     public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean continueAfterWin, int autoForfeitTicks, PlayerTeam... teams) {
         this.board = board;
@@ -114,6 +119,14 @@ public class BingoGame {
 
     public boolean shouldContinueAfterWin() {
         return continueAfterWin;
+    }
+
+    public void setScheduledEndTime(long endTime) {
+        this.scheduledEndTime = endTime;
+    }
+
+    public long getScheduledEndTime() {
+        return scheduledEndTime;
     }
 
     /**
@@ -151,6 +164,14 @@ public class BingoGame {
                 }
             });
         }
+
+        if (scheduledEndTime > 0) {
+            if (Bingo.isInstalledOnClient(player)) {
+                new UpdateEndTimePayload(scheduledEndTime).sendTo(player);
+            } else {
+                vanillaRemainingTime.addPlayer(player);
+            }
+        }
     }
 
     public void syncAdvancementsTo(ServerPlayer player) {
@@ -165,6 +186,30 @@ public class BingoGame {
 
     public void removePlayer(ServerPlayer player) {
         unregisterListeners(player, true);
+        vanillaRemainingTime.removePlayer(player);
+    }
+
+    public void updateRemainingTime(PlayerList playerList) {
+        for (ServerPlayer player : playerList.getPlayers()) {
+            if (Bingo.isInstalledOnClient(player)) {
+                new UpdateEndTimePayload(scheduledEndTime).sendTo(player);
+            }
+        }
+        updateVanillaRemainingTime();
+    }
+
+    public void updateVanillaRemainingTime() {
+        if (vanillaRemainingTime.getPlayers().isEmpty())
+            return;
+        long remainingTime = getScheduledEndTime() - System.currentTimeMillis();
+        String formatedRemainingTime = BingoUtil.formatRemainingTime(remainingTime);
+        BossEvent.BossBarColor color = BossEvent.BossBarColor.WHITE;
+        if (remainingTime < 30 * 60 * 1000)
+            color = BossEvent.BossBarColor.PURPLE;
+        if (remainingTime < 5 * 60 * 1000)
+            color = BossEvent.BossBarColor.RED;
+        vanillaRemainingTime.setName(Bingo.translatable("bingo.remaining_time_with_value", formatedRemainingTime));
+        vanillaRemainingTime.setColor(color);
     }
 
     public BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam, Player player) {
@@ -263,6 +308,14 @@ public class BingoGame {
                         }
                     }
                 }
+            }
+        }
+
+        if (server.getTickCount() % 20 == 0 && getScheduledEndTime() > 0) {
+            if (System.currentTimeMillis() > getScheduledEndTime()) {
+                endGame(server.getPlayerList());
+            } else {
+                updateVanillaRemainingTime();
             }
         }
     }
