@@ -132,7 +132,7 @@ public class BingoCommand {
     private static final CommandSwitch<Integer> TIME = CommandSwitch
         .argument("--time", IntegerArgumentType.integer())
         .getter(IntegerArgumentType::getInteger)
-        .build(() -> 1);
+        .build(() -> -1);
     private static final CommandSwitch<Integer> AUTO_FORFEIT_TIME = CommandSwitch
         .argument("--auto-forfeit-time", TimeArgument.time(0))
         .getter(IntegerArgumentType::getInteger)
