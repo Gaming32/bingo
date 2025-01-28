@@ -71,7 +71,7 @@ public class LockoutGameMode implements BingoGameMode {
                     teams[state.getFirstIndex()].goalsHeld++;
                 } else if (!nonStalemateGoalsLeft) {
                     ActiveGoal activeGoal = board.getGoal(x, y);
-                    nonStalemateGoalsLeft = activeGoal.specialType() == BingoTag.SpecialType.NEVER && !activeGoal.isLockoutInflictable();
+                    nonStalemateGoalsLeft = activeGoal.specialType() != BingoTag.SpecialType.NEVER || activeGoal.isLockoutInflictable();
                 }
             }
         }
