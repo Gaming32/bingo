@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.data.goal;
 
+import io.github.gaming32.bingo.data.BingoTags;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -26,6 +27,7 @@ public record GoalHolder(ResourceLocation id, BingoGoal goal) {
             goal.buildRequiredCount(context),
             Optional.of(goal.getDifficulty()),
             goal.getRequirements(),
+            goal.getTags().stream().anyMatch(holder -> holder.is(BingoTags.LOCKOUT_INFLICTABLE)),
             goal.getSpecialType(),
             goal.getProgress()
         );
