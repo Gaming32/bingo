@@ -617,7 +617,7 @@ public class BingoGame {
                     teamComponent = teamComponent.copy().withStyle(playerTeam.getColor());
                 }
                 final Component lockoutMessage = Bingo.translatable(
-                    isLoss ? "bingo.goal_lost_other.lockout" : "bingo.goal_obtained.lockout",
+                    isLoss ? "bingo.goal_lost_other.lockout" : "bingo.goal_lost.lockout",
                     teamComponent, goal.name().copy().withStyle(ChatFormatting.GOLD)
                 );
                 for (final ServerPlayer player : playerList.getPlayers()) {
