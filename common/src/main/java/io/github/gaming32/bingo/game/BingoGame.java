@@ -190,24 +190,24 @@ public class BingoGame {
         vanillaRemainingTime.removePlayer(player);
     }
 
-    public void updateRemainingTime(PlayerList playerList) {
-        for (ServerPlayer player : playerList.getPlayers()) {
+    public void updateRemainingTime(MinecraftServer server) {
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (Bingo.isInstalledOnClient(player)) {
                 new UpdateEndTimePayload(scheduledEndTime).sendTo(player);
             }
         }
-        updateVanillaRemainingTime();
+        updateVanillaRemainingTime(server);
     }
 
-    public void updateVanillaRemainingTime() {
+    public void updateVanillaRemainingTime(MinecraftServer server) {
         if (vanillaRemainingTime.getPlayers().isEmpty())
             return;
-        long remainingTime = getScheduledEndTime() - System.currentTimeMillis();
-        String formatedRemainingTime = BingoUtil.formatRemainingTime(remainingTime);
+        long remainingTimeTicks = getScheduledEndTime() - server.overworld().getGameTime();
+        String formatedRemainingTime = BingoUtil.formatRemainingTime(remainingTimeTicks);
         BossEvent.BossBarColor color = BossEvent.BossBarColor.WHITE;
-        if (remainingTime < 30 * 60 * 1000)
+        if (remainingTimeTicks < 30 * 60 * 20)
             color = BossEvent.BossBarColor.PURPLE;
-        if (remainingTime < 5 * 60 * 1000)
+        if (remainingTimeTicks < 5 * 60 * 20)
             color = BossEvent.BossBarColor.RED;
         vanillaRemainingTime.setName(Bingo.translatable("bingo.remaining_time_with_value", formatedRemainingTime));
         vanillaRemainingTime.setColor(color);
@@ -282,6 +282,10 @@ public class BingoGame {
 
         playerList.getServer().bingo$setGame(null);
         new ResyncStatesPayload(board.getStates()).sendTo(playerList.getPlayers());
+        if (getScheduledEndTime() > 0) {
+            setScheduledEndTime(-1);
+            updateRemainingTime(playerList.getServer());
+        }
         Bingo.updateCommandTree(playerList);
     }
 
@@ -312,11 +316,11 @@ public class BingoGame {
             }
         }
 
-        if (server.getTickCount() % 20 == 0 && getScheduledEndTime() > 0) {
-            if (System.currentTimeMillis() > getScheduledEndTime()) {
+        if (getScheduledEndTime() > 0 && server.getTickCount() % 20 == 0) {
+            if (server.overworld().getGameTime() > getScheduledEndTime()) {
                 endGame(server.getPlayerList());
             } else {
-                updateVanillaRemainingTime();
+                updateVanillaRemainingTime(server);
             }
         }
     }

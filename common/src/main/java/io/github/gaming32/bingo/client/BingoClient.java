@@ -151,12 +151,16 @@ public class BingoClient {
         final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
 
         if (clientGame.getScheduledEndTime() > 0) {
-            long remainingTime = clientGame.getScheduledEndTime() - System.currentTimeMillis();
-            String formatedRemainingTime = " - " + BingoUtil.formatRemainingTime(remainingTime);
+            long serverTime = 0;
+            if (minecraft.level instanceof ClientLevel clientLevel) {
+                serverTime = clientLevel.getGameTime();
+            }
+            long remainingTimeTicks = clientGame.getScheduledEndTime() - serverTime;
+            String formatedRemainingTime = " - " + BingoUtil.formatRemainingTime(remainingTimeTicks);
             int color = 0xffffffff;
-            if (remainingTime < 30 * 60 * 1000)
+            if (remainingTimeTicks < 30 * 60 * 20)
                 color = 0xffffaf00;
-            if (remainingTime < 5 * 60 * 1000)
+            if (remainingTimeTicks < 5 * 60 * 20)
                 color = 0xffff0000;
             final MutableComponent remainingTimeLabel = Component.translatable("bingo.remaining_time");
             graphics.drawString(font, remainingTimeLabel, scoreX - font.width(remainingTimeLabel), scoreY, color);

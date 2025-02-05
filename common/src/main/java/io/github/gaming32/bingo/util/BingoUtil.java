@@ -216,12 +216,12 @@ public class BingoUtil {
         return Either.right(team.getDisplayName());
     }
 
-    public static String formatRemainingTime(long remainingTime) {
-        if (remainingTime < 0)
-            remainingTime = 0;
-        int hours = (int) (remainingTime / 1000 / 60 / 60);
-        int minutes = (int) (remainingTime / 1000 / 60 % 60);
-        int seconds = (int) (remainingTime / 1000 % 60);
+    public static String formatRemainingTime(long remainingTimeTicks) {
+        if (remainingTimeTicks < 0)
+            remainingTimeTicks = 0;
+        int hours = (int) (remainingTimeTicks / 20 / 60 / 60);
+        int minutes = (int) (remainingTimeTicks / 20 / 60 % 60);
+        int seconds = (int) (remainingTimeTicks / 20 % 60);
         StringBuilder sb = new StringBuilder();
         if (hours > 0) {
             sb.append(hours);
