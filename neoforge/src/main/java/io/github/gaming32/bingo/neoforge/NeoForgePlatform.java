@@ -29,7 +29,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -100,8 +100,13 @@ public class NeoForgePlatform extends BingoPlatform {
 
     @Override
     public void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
-        NeoForge.EVENT_BUS.addListener((AddReloadListenerEvent event) -> handler.accept(
-            (id, listener, dependencies) -> event.addListener(listener.apply(event.getRegistryAccess()))
+        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> handler.accept(
+            (id, listener, dependencies) -> {
+                event.addListener(id, listener.apply(event.getRegistryAccess()));
+                for (final var dependency : dependencies) {
+                    event.addDependency(dependency, id);
+                }
+            }
         ));
     }
 
