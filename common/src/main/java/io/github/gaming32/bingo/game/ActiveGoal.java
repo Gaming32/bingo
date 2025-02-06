@@ -46,6 +46,7 @@ public record ActiveGoal(
     int requiredCount,
     Optional<Holder<BingoDifficulty>> difficulty,
     AdvancementRequirements requirements,
+    Boolean isLockoutInflictable,
     BingoTag.SpecialType specialType,
     ProgressTracker progress
 ) {
@@ -62,6 +63,7 @@ public record ActiveGoal(
                 .fieldOf("difficulty")
                 .forGetter(ActiveGoal::difficulty),
             AdvancementRequirements.CODEC.fieldOf("requirements").forGetter(ActiveGoal::requirements),
+            Codec.BOOL.fieldOf("isLockoutInflictable").forGetter(ActiveGoal::isLockoutInflictable),
             BingoTag.SpecialType.CODEC
                 .optionalFieldOf("special_type", BingoTag.SpecialType.NONE)
                 .forGetter(ActiveGoal::specialType),
@@ -76,6 +78,7 @@ public record ActiveGoal(
         ComponentSerialization.TRUSTED_OPTIONAL_STREAM_CODEC, ActiveGoal::tooltip,
         ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional), ActiveGoal::tooltipIcon,
         GoalIcon.STREAM_CODEC, ActiveGoal::icon,
+        ByteBufCodecs.BOOL, ActiveGoal::isLockoutInflictable,
         BingoTag.SpecialType.STREAM_CODEC, ActiveGoal::specialType,
         ActiveGoal::forClient
     );
@@ -86,12 +89,13 @@ public record ActiveGoal(
         Optional<Component> tooltip,
         Optional<ResourceLocation> tooltipIcon,
         GoalIcon icon,
+        boolean isLockoutInflictable,
         BingoTag.SpecialType specialType
     ) {
         return new ActiveGoal(
             id, name, tooltip, tooltipIcon, icon,
             Map.of(), 1, Optional.empty(), AdvancementRequirements.EMPTY,
-            specialType,
+            isLockoutInflictable, specialType,
             EmptyProgressTracker.INSTANCE
         );
     }
