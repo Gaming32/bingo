@@ -200,15 +200,21 @@ public class BingoGame {
     }
 
     public void updateVanillaRemainingTime(MinecraftServer server) {
-        if (vanillaRemainingTime.getPlayers().isEmpty())
+        if (vanillaRemainingTime.getPlayers().isEmpty()) {
             return;
+        }
         long remainingTimeTicks = getScheduledEndTime() - server.overworld().getGameTime();
         String formatedRemainingTime = BingoUtil.formatRemainingTime(remainingTimeTicks);
+        if (remainingTimeTicks <= 0) {
+            vanillaRemainingTime.removeAllPlayers();
+            return;
+        }
         BossEvent.BossBarColor color = BossEvent.BossBarColor.WHITE;
-        if (remainingTimeTicks < 30 * 60 * 20)
-            color = BossEvent.BossBarColor.PURPLE;
-        if (remainingTimeTicks < 5 * 60 * 20)
+        if (remainingTimeTicks < 5 * 60 * 20) {
             color = BossEvent.BossBarColor.RED;
+        } else if (remainingTimeTicks < 30 * 60 * 20) {
+            color = BossEvent.BossBarColor.PURPLE;
+        }
         vanillaRemainingTime.setName(Bingo.translatable("bingo.remaining_time_with_value", formatedRemainingTime));
         vanillaRemainingTime.setColor(color);
     }
