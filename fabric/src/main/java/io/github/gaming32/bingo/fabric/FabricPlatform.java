@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.fabric;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.fabric.event.FabricClientEvents;
 import io.github.gaming32.bingo.fabric.event.FabricEvents;
@@ -81,17 +82,21 @@ public class FabricPlatform extends BingoPlatform {
 
     @Override
     public void registerClientTooltips(Consumer<ClientTooltipRegistrar> handler) {
+        final var factories = ImmutableMap.<Class<? extends TooltipComponent>, Function<TooltipComponent, ClientTooltipComponent>>builder();
         handler.accept(new ClientTooltipRegistrar() {
             @Override
+            @SuppressWarnings("unchecked")
             public <T extends TooltipComponent> void register(Class<T> clazz, Function<? super T, ? extends ClientTooltipComponent> factory) {
-                TooltipComponentCallback.EVENT.register(data -> {
-                    if (clazz.isInstance(data)) {
-                        return factory.apply(clazz.cast(data));
-                    }
-                    return null;
-                });
+                factories.put(clazz, (Function<TooltipComponent, ClientTooltipComponent>) factory);
             }
         });
+        final var builtFactories = factories.build();
+        if (!builtFactories.isEmpty()) {
+            TooltipComponentCallback.EVENT.register(component -> {
+                final var factory = builtFactories.get(component.getClass());
+                return factory != null ? factory.apply(component) : null;
+            });
+        }
     }
 
     @Override
