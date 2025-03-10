@@ -4,7 +4,7 @@ import net.fabricmc.loom.api.LoomGradleExtensionAPI
 plugins {
     java
     id("architectury-plugin") version "3.4.161"
-    id("dev.architectury.loom") version "1.9.426" apply false
+    id("dev.architectury.loom") version "1.9.428" apply false
     id("com.modrinth.minotaur") version "2.8.7" apply false
 }
 
