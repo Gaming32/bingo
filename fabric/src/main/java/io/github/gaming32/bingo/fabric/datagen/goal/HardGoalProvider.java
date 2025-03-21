@@ -36,15 +36,13 @@ import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.CuredZombieVillagerTrigger;
 import net.minecraft.advancements.critereon.DamagePredicate;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
+import net.minecraft.advancements.critereon.DataComponentMatchers;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.FilledBucketTrigger;
 import net.minecraft.advancements.critereon.ItemDurabilityTrigger;
-import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
-import net.minecraft.advancements.critereon.ItemJukeboxPlayablePredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemSubPredicates;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -58,6 +56,9 @@ import net.minecraft.advancements.critereon.UsedTotemTrigger;
 import net.minecraft.advancements.critereon.UsingItemTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.predicates.DataComponentPredicates;
+import net.minecraft.core.component.predicates.EnchantmentsPredicate;
+import net.minecraft.core.component.predicates.JukeboxPlayablePredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -134,7 +135,10 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .criterion("obtain", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blocks, Blocks.JUKEBOX)),
                 ItemPredicate.Builder.item()
-                    .withSubPredicate(ItemSubPredicates.JUKEBOX_PLAYABLE, ItemJukeboxPlayablePredicate.any())
+                    .withComponents(DataComponentMatchers.Builder.components()
+                        .partial(DataComponentPredicates.JUKEBOX_PLAYABLE, JukeboxPlayablePredicate.any())
+                        .build()
+                    )
             ))
             .tags(BingoTags.ITEM)
             .name("listen_to_music")
@@ -546,7 +550,10 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     Optional.empty(),
                     Optional.of(ItemPredicate.Builder.item()
                         .of(items, ItemTags.AXES)
-                        .withSubPredicate(ItemSubPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement())
+                        .withComponents(DataComponentMatchers.Builder.components()
+                            .partial(DataComponentPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement())
+                            .build()
+                        )
                         .build()
                     ),
                     Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity()
@@ -599,11 +606,14 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .criterion("obtain", KillItemTrigger.builder()
                 .item(ItemPredicate.Builder.item()
                     .of(items, Items.ENCHANTED_BOOK)
-                    .withSubPredicate(
-                        ItemSubPredicates.STORED_ENCHANTMENTS,
-                        ItemEnchantmentsPredicate.storedEnchantments(List.of(
-                            new EnchantmentPredicate(enchantments.getOrThrow(Enchantments.MENDING), MinMaxBounds.Ints.ANY)
-                        ))
+                    .withComponents(DataComponentMatchers.Builder.components()
+                        .partial(
+                            DataComponentPredicates.STORED_ENCHANTMENTS,
+                            EnchantmentsPredicate.storedEnchantments(List.of(
+                                new EnchantmentPredicate(enchantments.getOrThrow(Enchantments.MENDING), MinMaxBounds.Ints.ANY)
+                            ))
+                        )
+                        .build()
                     )
                     .build()
                 )

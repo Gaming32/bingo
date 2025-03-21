@@ -1,4 +1,4 @@
-// 1.21.4	-999999999-01-01T00:00:00	Bingo/Bingo goals
+// 1.21.5 Release Candidate 1	-999999999-01-01T00:00:00	Bingo/Bingo goals
 60933cb93b51bc5046fb820f19ed358af2699f4d data/bingo/bingo/goal/easy/3x3x3_glass_cube.json
 49041086f9176f531ee3096073f5f1230a4e0f6a data/bingo/bingo/goal/easy/4x4_paintings.json
 86d1d398343deced49a4d91d7b0ca17274600842 data/bingo/bingo/goal/easy/acacia_log.json
@@ -164,7 +164,7 @@ c5af5df17a9d7aab4c4147e98b8777c15f1597a9 data/bingo/bingo/goal/easy/tropical_fis
 9d2206e7da5522b6d03ab4d01863de188380a9e5 data/bingo/bingo/goal/easy/villager_trade.json
 8c1d832696812d467caacf60f8d441381a9873f5 data/bingo/bingo/goal/easy/vine.json
 865375a0f257995906487c4256356c499b38188e data/bingo/bingo/goal/easy/water_lava_milk.json
-f790f57f1f818e5d39fec0e92b8c759efd553bac data/bingo/bingo/goal/easy/wear_different_colored_armor.json
+b498ba28538c4c4cf746e2f66529e0e2d6d47088 data/bingo/bingo/goal/easy/wear_different_colored_armor.json
 34aee96108623bf943d9f37868bd7c54993d6823 data/bingo/bingo/goal/easy/wool_colors.json
 aeec9ab682fa28e654abc93265983feabe6a3088 data/bingo/bingo/goal/easy/writable_book.json
 f70709cd3c94a8007b545409e05b4057bf284aa7 data/bingo/bingo/goal/easy/yellow_dye.json
@@ -201,7 +201,7 @@ c464ab4297605806e85403a8a9d7d06234608ca9 data/bingo/bingo/goal/hard/finish_on_bl
 562cce6d3f0fc4db1c603a91b43f2f5f54d7d6d0 data/bingo/bingo/goal/hard/full_iron_mob.json
 b00698295ac976d7483c697925e6810b0006a421 data/bingo/bingo/goal/hard/gilded_blackstone.json
 1f1424af3bb8dcaf0e6ad1a1c5760d5fc18a02b2 data/bingo/bingo/goal/hard/glazed_terracotta.json
-c2435def150cfcc1513d5f894d4fe5c0082ea4d6 data/bingo/bingo/goal/hard/hero_of_the_village.json
+46b7e29fe5f3d64f5f43af21907a33e2ffe49abb data/bingo/bingo/goal/hard/hero_of_the_village.json
 b5dca03e1d64438d53c4c266ff0044981fab7deb data/bingo/bingo/goal/hard/honey_block.json
 117d004cdfb68fc05e8674435422094a9e3d0f0c data/bingo/bingo/goal/hard/honeycomb_block.json
 56aa760556ca0e1442433b2412fcea6ea0c14fa8 data/bingo/bingo/goal/hard/huge_fungus_in_overworld.json
@@ -323,7 +323,7 @@ a29a2c33106259e1cd65fcd4198de72de8d0ce2e data/bingo/bingo/goal/medium/melon_slic
 179f9d3d0b34a765058124fa2dd8bdc73a6c6759 data/bingo/bingo/goal/medium/never_place_torches.json
 9cb23f0f09a7f34b90630d983adfd5537d00f896 data/bingo/bingo/goal/medium/never_wear_armor.json
 926d02d9395ecb9ee17323459ed60fa5b40505d4 data/bingo/bingo/goal/medium/obsidian.json
-78a9e9f054936af048d9ac59acfd11833c43b5b5 data/bingo/bingo/goal/medium/ominous_banner.json
+99b6af9922a3185328f609d2bdeb456a5ed69935 data/bingo/bingo/goal/medium/ominous_banner.json
 3791fa69259f1af3b6c310067d640299b352bc15 data/bingo/bingo/goal/medium/one_by_one_hole.json
 9d7860670a2d01601b342e988cee0829412bf031 data/bingo/bingo/goal/medium/phantom_membrane.json
 c99de2a915e7412d904bec5a8b522011e007fbba data/bingo/bingo/goal/medium/pillager_crossbow.json
