@@ -52,16 +52,16 @@ public record HasOnlyBeenDamagedByCondition(
     public boolean test(LootContext lootContext) {
         Entity entity = lootContext.getParameter(LootContextParams.THIS_ENTITY);
         return entity instanceof LivingEntityExt living && living.bingo$hasOnlyBeenDamagedBy(damageEntry -> {
-            if (this.entityType.isPresent() && damageEntry.entityType() != this.entityType.get()) {
+            if (this.entityType.isPresent() && !damageEntry.entityType().equals(this.entityType)) {
                 return false;
             }
-            if (this.entityTypeTag.isPresent() && (damageEntry.entityType() == null || !this.entityTypeTag.get().matches(BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(damageEntry.entityType())))) {
+            if (this.entityTypeTag.isPresent() && (damageEntry.entityType().isEmpty() || !this.entityTypeTag.get().matches(BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(damageEntry.entityType().get())))) {
                 return false;
             }
-            if (this.directEntityType.isPresent() && damageEntry.directEntityType() != this.directEntityType.get()) {
+            if (this.directEntityType.isPresent() && !damageEntry.directEntityType().equals(this.directEntityType)) {
                 return false;
             }
-            if (this.directEntityTypeTag.isPresent() && (damageEntry.directEntityType() == null || !this.directEntityTypeTag.get().matches(BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(damageEntry.directEntityType())))) {
+            if (this.directEntityTypeTag.isPresent() && (damageEntry.directEntityType().isEmpty() || !this.directEntityTypeTag.get().matches(BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(damageEntry.directEntityType().get())))) {
                 return false;
             }
             if (this.damageType.isPresent() && !damageEntry.damageType().is(this.damageType.get())) {

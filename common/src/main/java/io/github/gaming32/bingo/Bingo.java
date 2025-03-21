@@ -25,8 +25,7 @@ import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.Event;
-import io.github.gaming32.bingo.subpredicates.entity.BingoEntitySubPredicates;
-import io.github.gaming32.bingo.subpredicates.item.BingoItemSubPredicates;
+import io.github.gaming32.bingo.subpredicates.BingoEntitySubPredicates;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.nbt.NbtAccounter;
@@ -149,7 +148,6 @@ public class Bingo {
 
         BingoConditions.load();
         BingoEntitySubPredicates.load();
-        BingoItemSubPredicates.load();
         BingoTriggers.load();
     }
 

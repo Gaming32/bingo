@@ -12,7 +12,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -194,17 +193,16 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
                     notMeatBuilder.add(item.key());
                 }
             }
-            switch (item.value()) {
-                case BannerPatternItem ignored -> bannerPatternsBuilder.add(item.key());
-                case BlockItem blockItem -> {
-                    Block block = blockItem.getBlock();
-                    if (block instanceof SlabBlock) {
-                        slabBuilder.add(item.key());
-                    } else if (block instanceof StairBlock) {
-                        stairsBuilder.add(item.key());
-                    }
+            if (item.value().components().get(DataComponents.PROVIDES_BANNER_PATTERNS) != null) {
+                bannerPatternsBuilder.add(item.key());
+            }
+            if (item.value() instanceof BlockItem blockItem) {
+                Block block = blockItem.getBlock();
+                if (block instanceof SlabBlock) {
+                    slabBuilder.add(item.key());
+                } else if (block instanceof StairBlock) {
+                    stairsBuilder.add(item.key());
                 }
-                default -> {}
             }
         });
 
