@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.subpredicates.entity;
+package io.github.gaming32.bingo.subpredicates;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;

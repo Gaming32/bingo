@@ -1,13 +1,13 @@
 package io.github.gaming32.bingo.mixin.common;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import io.github.gaming32.bingo.ext.ItemEntityExt;
 import io.github.gaming32.bingo.ext.LivingEntityExt;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import io.github.gaming32.bingo.util.DamageEntry;
-import net.minecraft.Optionull;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -15,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -72,10 +74,7 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
         if (!bingo$damageHistory.isEmpty()) {
             ListTag history = new ListTag();
             for (DamageEntry entry : bingo$damageHistory) {
-                CompoundTag entryTag = entry.toNbt();
-                if (entryTag != null) {
-                    history.add(entryTag);
-                }
+                DamageEntry.CODEC.encodeStart(NbtOps.INSTANCE, entry).result().ifPresent(history::add);
             }
             compound.put("bingo:damage_history", history);
         }
@@ -84,22 +83,26 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
     private void onReadAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
         bingo$damageHistory.clear();
-        if (compound.contains("bingo:damage_history", Tag.TAG_LIST)) {
-            ListTag types = compound.getList("bingo:damage_history", Tag.TAG_COMPOUND);
-            for (int i = 0; i < types.size(); i++) {
-                DamageEntry entry = DamageEntry.fromNbt(registryAccess(), types.getCompound(i));
-                if (entry != null) {
-                    bingo$damageHistory.add(entry);
-                }
-            }
+        for (final var entry : compound.getListOrEmpty("bingo:damage_history")) {
+            DamageEntry.CODEC.parse(NbtOps.INSTANCE, entry).result().ifPresent(bingo$damageHistory::add);
+        }
+    }
+
+    @Inject(
+        method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
+        at = @At("RETURN")
+    )
+    private void setDroppedBy(ItemStack droppedItem, boolean dropAround, boolean includeThrowerName, CallbackInfoReturnable<ItemEntity> cir) {
+        if (cir.getReturnValue() instanceof ItemEntityExt itemEntity) {
+            itemEntity.bingo$setDroppedBy(this);
         }
     }
 
     @Override
     public void bingo$recordDamage(DamageSource source) {
         bingo$damageHistory.add(new DamageEntry(
-            Optionull.map(source.getEntity(), Entity::getType),
-            Optionull.map(source.getDirectEntity(), Entity::getType),
+            Optional.ofNullable(source.getEntity()).map(Entity::getType),
+            Optional.ofNullable(source.getDirectEntity()).map(Entity::getType),
             source.typeHolder()
         ));
     }

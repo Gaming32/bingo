@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.subpredicates.entity.PaintingPredicate;
+import io.github.gaming32.bingo.subpredicates.PaintingPredicate;
 import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;

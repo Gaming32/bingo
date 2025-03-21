@@ -8,6 +8,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -48,7 +49,8 @@ public record WearingDifferentArmorCondition(
         }
         int wearingCount = 0;
         final var models = HashSet.<ResourceKey<EquipmentAsset>>newHashSet(4);
-        for (final var stack : livingEntity.getArmorSlots()) {
+        for (final var slot : EquipmentSlotGroup.ARMOR) {
+            final var stack = livingEntity.getItemBySlot(slot);
             if (!stack.is(ConventionItemTags.ARMORS)) continue;
             final var equippable = stack.get(DataComponents.EQUIPPABLE);
             if (equippable == null) continue;

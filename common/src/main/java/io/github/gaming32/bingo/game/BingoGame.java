@@ -128,7 +128,7 @@ public class BingoGame {
         RemoveBoardPayload.INSTANCE.sendTo(player);
         if (((ServerPlayerExt)player).bingo$clearAdvancementsNeedClearing()) {
             player.connection.send(new ClientboundUpdateAdvancementsPacket(
-                false, List.of(), Set.of(VanillaNetworking.ROOT_ADVANCEMENT.id()), Map.of()
+                false, List.of(), Set.of(VanillaNetworking.ROOT_ADVANCEMENT.id()), Map.of(), false
             ));
         }
 
@@ -158,7 +158,8 @@ public class BingoGame {
             false,
             VanillaNetworking.generateAdvancements(player.registryAccess(), board.getSize(), board.getGoals()),
             Set.of(),
-            VanillaNetworking.generateProgressMap(board.getStates(), getTeam(player))
+            VanillaNetworking.generateProgressMap(board.getStates(), getTeam(player)),
+            false
         ));
         ((ServerPlayerExt)player).bingo$markAdvancementsNeedClearing();
     }
@@ -590,7 +591,8 @@ public class BingoGame {
             Map.of(
                 BingoBoard.generateVanillaId(boardIndex),
                 VanillaNetworking.generateProgress(boardState.and(team))
-            )
+            ),
+            false
         );
         for (final String member : playerTeam.getPlayers()) {
             final ServerPlayer player = playerList.getPlayerByName(member);

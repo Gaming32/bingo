@@ -8,7 +8,7 @@ import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
-import io.github.gaming32.bingo.subpredicates.entity.ItemEntityPredicate;
+import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
 import io.github.gaming32.bingo.triggers.AdjacentPaintingTrigger;
 import io.github.gaming32.bingo.triggers.BounceOnBlockTrigger;
 import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;

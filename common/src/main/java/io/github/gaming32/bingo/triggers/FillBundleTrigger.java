@@ -51,7 +51,7 @@ public class FillBundleTrigger extends SimpleCriterionTrigger<FillBundleTrigger.
         private static final Fraction FULL_STACK = Fraction.getFraction(64, 1);
 
         public boolean matches(Inventory inventory) {
-            for (ItemStack item : inventory.items) {
+            for (ItemStack item : inventory) {
                 if (item.is(ItemTags.BUNDLES)) {
                     BundleContents bundleContents = item.get(DataComponents.BUNDLE_CONTENTS);
                     if (bundleContents != null && bundleContents.weight().multiplyBy(FULL_STACK).intValue() >= amount) {

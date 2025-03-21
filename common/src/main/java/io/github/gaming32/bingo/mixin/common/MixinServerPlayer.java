@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayer.class)
-public abstract class MixinServerPlayer extends MixinPlayer implements ServerPlayerExt {
+public abstract class MixinServerPlayer extends MixinEntity implements ServerPlayerExt {
     @Shadow @Final public ServerPlayerGameMode gameMode;
 
     @Shadow @Final public MinecraftServer server;

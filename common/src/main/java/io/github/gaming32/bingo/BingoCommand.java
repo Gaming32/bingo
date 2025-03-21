@@ -94,11 +94,11 @@ public class BingoCommand {
         new DynamicCommandExceptionType(gamemodeId -> Bingo.translatableEscape("bingo.unknown_gamemode", gamemodeId));
     private static final DynamicCommandExceptionType INVALID_GOAL =
         new DynamicCommandExceptionType(e -> Bingo.translatable("bingo.start.invalid_goal").withStyle(s -> s
-            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.nullToEmpty(((InvalidGoalException)e).getMessage())))
+            .withHoverEvent(new HoverEvent.ShowText(Component.nullToEmpty(((InvalidGoalException)e).getMessage())))
         ));
     private static final DynamicCommandExceptionType FAILED_TO_START =
         new DynamicCommandExceptionType(e -> Bingo.translatable("bingo.start.failed").withStyle(s -> s
-            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.nullToEmpty(((Throwable)e).getMessage())))
+            .withHoverEvent(new HoverEvent.ShowText(Component.nullToEmpty(((Throwable)e).getMessage())))
         ));
     private static final SimpleCommandExceptionType NO_TEAMS =
         new SimpleCommandExceptionType(Bingo.translatable("bingo.no_teams"));
@@ -251,8 +251,8 @@ public class BingoCommand {
                             Bingo.translatable("bingo.board.copy")
                         ).withStyle(s -> s
                             .withColor(ChatFormatting.GREEN)
-                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Bingo.translatable("chat.copy.click")))
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, game.getBoard().toString())) // TODO: I18n?
+                            .withHoverEvent(new HoverEvent.ShowText(Bingo.translatable("chat.copy.click")))
+                            .withClickEvent(new ClickEvent.CopyToClipboard(game.getBoard().toString())) // TODO: I18n?
                         ), false);
                         return Command.SINGLE_SUCCESS;
                     })
