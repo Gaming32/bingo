@@ -7,6 +7,7 @@ import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.mixin.common.client.CameraAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.CacheSlot;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,8 +22,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 public class EntityIconRenderer implements IconRenderer<EntityIcon> {
-    // TODO: Make this a CacheSlot<ClientLevel, Map<...>> in 1.21.5
-    private static final Map<ClientLevel, Map<EntityIcon, Entity>> ENTITIES = new WeakHashMap<>();
+    private static final CacheSlot<ClientLevel, Map<EntityIcon, Entity>> ENTITIES = new CacheSlot<>(l -> new WeakHashMap<>());
 
     @Override
     public void render(EntityIcon icon, GuiGraphics graphics, int x, int y) {
@@ -84,8 +84,7 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         if (level == null) {
             return null;
         }
-        return ENTITIES.computeIfAbsent(level, l -> new WeakHashMap<>())
-            .computeIfAbsent(icon, EntityIconRenderer::createEntity);
+        return ENTITIES.compute(level).computeIfAbsent(icon, EntityIconRenderer::createEntity);
     }
 
     @Nullable

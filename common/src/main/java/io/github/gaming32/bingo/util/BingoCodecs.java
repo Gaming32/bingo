@@ -3,7 +3,6 @@ package io.github.gaming32.bingo.util;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -149,12 +148,8 @@ public final class BingoCodecs {
         return new FirstValidCodec<>(first, second);
     }
 
-    // TODO: Use ExtraCodecs.compactListCodec
     public static <A> Codec<Set<A>> minifiedSet(Codec<A> elementCodec) {
-        return Codec.either(setOf(elementCodec), elementCodec).xmap(
-            either -> either.map(Function.identity(), ImmutableSet::of),
-            set -> set.size() == 1 ? Either.right(set.iterator().next()) : Either.left(set)
-        );
+        return ExtraCodecs.compactListCodec(elementCodec).xmap(ImmutableSet::copyOf, ImmutableList::copyOf);
     }
 
     public static <A> MapCodec<Set<A>> minifiedSetField(Codec<A> elementCodec, String name) {
