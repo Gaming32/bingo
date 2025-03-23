@@ -265,6 +265,7 @@
   "bingo.goal_lost": "%s lost the goal %s for your team.",
   "bingo.goal_lost.single": "You lost the goal %s.",
   "bingo.goal_lost.lockout": "%s got the goal %s.",
+  "bingo.goal_lost_other.lockout": "%s lost the goal %s.",
   "bingo.duplicate_teams": "Cannot start a bingo with the same team twice (%s)!",
   "bingo.unknown_difficulty": "Unknown difficulty %s",
   "bingo.unknown_goal": "Unknown goal %s",
