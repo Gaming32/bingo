@@ -357,7 +357,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("vine"), items, Items.VINE, 10, 30)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
-        addGoal(obtainSomeItemsFromTag(id("different_slabs"), BingoItemTags.SLABS, "bingo.goal.different_slabs", 5, 7)
+        addGoal(obtainSomeItemsFromTag(id("different_slabs"), ItemTags.SLABS, "bingo.goal.different_slabs", 5, 7)
             .antisynergy("slabs")
             .infrequency(2));
         addGoal(BingoGoal.builder(id("almost_every_sword"))
@@ -401,7 +401,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(obtainItemGoal(id("fermented_spider_eye"), items, Items.FERMENTED_SPIDER_EYE)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("different_stairs"), BingoItemTags.STAIRS, "bingo.goal.different_stairs", 5, 7)
+        addGoal(obtainSomeItemsFromTag(id("different_stairs"), ItemTags.STAIRS, "bingo.goal.different_stairs", 5, 7)
             .antisynergy("stairs")
             .infrequency(2));
         addGoal(obtainItemGoal(id("ender_pearl"), items, Items.ENDER_PEARL, 2, 3)
@@ -512,11 +512,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .antisynergy("flowers")
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("concrete"), BingoItemTags.CONCRETE, "bingo.goal.concrete", 3, 6)
+        addGoal(obtainSomeItemsFromTag(id("concrete"), ConventionalItemTags.CONCRETES, "bingo.goal.concrete", 3, 6)
             .antisynergy("concrete_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("glazed_terracotta"), BingoItemTags.GLAZED_TERRACOTTA, "bingo.goal.glazed_terracotta", 3, 6)
+        addGoal(obtainSomeItemsFromTag(id("glazed_terracotta"), ConventionalItemTags.GLAZED_TERRACOTTAS, "bingo.goal.glazed_terracotta", 3, 6)
             .reactant("use_furnace")
             .antisynergy("glazed_terracotta_color")
             .infrequency(4)
