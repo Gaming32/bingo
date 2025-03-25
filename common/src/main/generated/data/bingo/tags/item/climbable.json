@@ -1,10 +1,10 @@
 {
   "values": [
     "minecraft:glow_berries",
-    "minecraft:ladder",
-    "minecraft:vine",
     "minecraft:weeping_vines",
+    "minecraft:ladder",
     "minecraft:scaffolding",
+    "minecraft:vine",
     "minecraft:twisting_vines"
   ]
 }

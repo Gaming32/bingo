@@ -75,13 +75,6 @@ allprojects {
             name = "TerraformersMC"
         }
         maven("https://maven.neoforged.net/releases/")
-        maven("https://prmaven.neoforged.net/NeoForge/pr2039") {
-            name = "Maven for PR #2039" // https://github.com/neoforged/NeoForge/pull/2039
-            content {
-                includeModule("net.neoforged", "neoforge")
-                includeModule("net.neoforged", "testframework")
-            }
-        }
     }
 
     tasks.withType<JavaCompile> {

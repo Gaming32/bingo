@@ -1,10 +1,10 @@
-// 1.21.5 Release Candidate 1	-999999999-01-01T00:00:00	Bingo/Tags for minecraft:item
+// 1.21.5	-999999999-01-01T00:00:00	Bingo/Tags for minecraft:item
 b6112420422099eed7aaae79f801a0250bf8764a data/bingo/tags/item/all_mineral_blocks.json
 849681cfac44a9f01a440afc75340e33bcdd9c4f data/bingo/tags/item/allowed_heads.json
 b8fb8aac34ee76a18519bf8341cc6965f6fc775f data/bingo/tags/item/banner_patterns.json
 50d93d5dff6f31f99f861c2df7c4e2dc1ec86e4b data/bingo/tags/item/basic_mineral_blocks.json
 bf422a19b538605dd3d307390e56e43387133e1b data/bingo/tags/item/bonemealable.json
-ab299635e548245a5ff164799998de5b7a2a0e4d data/bingo/tags/item/climbable.json
+dd2641d13bd24be28c939e33b005a799dfa1ce96 data/bingo/tags/item/climbable.json
 a8e3cdd07707862c9287a13bbcb1ad927c21bde8 data/bingo/tags/item/dead_coral_blocks.json
 04bf7a526e6e296e45ec8759262222e414c6e913 data/bingo/tags/item/diamond_in_name.json
 edc1d7ae236968dab44675ce2726aa8177c35461 data/bingo/tags/item/fish_buckets.json

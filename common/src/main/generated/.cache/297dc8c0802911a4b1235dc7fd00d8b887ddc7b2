@@ -1,4 +1,4 @@
-// 1.21.5 Release Candidate 1	-999999999-01-01T00:00:00	Bingo/Tags for minecraft:block
+// 1.21.5	-999999999-01-01T00:00:00	Bingo/Tags for minecraft:block
 b6112420422099eed7aaae79f801a0250bf8764a data/bingo/tags/block/all_mineral_blocks.json
 50d93d5dff6f31f99f861c2df7c4e2dc1ec86e4b data/bingo/tags/block/basic_mineral_blocks.json
 085238f24aca214ce9eb3f57ab02370467990f33 data/bingo/tags/block/copper_blocks.json
