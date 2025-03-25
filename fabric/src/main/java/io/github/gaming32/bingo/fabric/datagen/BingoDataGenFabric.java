@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.fabric.datagen;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
@@ -39,7 +40,6 @@ import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     private static final boolean DUMP_BINGO_COMMAND = false;
@@ -110,7 +110,7 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
                         }
                     }, out
                 ))
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(ImmutableSet.toImmutableSet());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

@@ -61,7 +61,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .stream()
             .map(x -> x.value().asItem())
             .filter(x -> x != Items.AIR)
-            .forEach(getOrCreateTagBuilder(BingoItemTags.CLIMBABLE)::add);
+            .forEachOrdered(getOrCreateTagBuilder(BingoItemTags.CLIMBABLE)::add);
 
         getOrCreateTagBuilder(BingoItemTags.FISH_BUCKETS).add(
             Items.COD_BUCKET,
