@@ -65,7 +65,8 @@ public class MixinServerScoreboard {
                 false,
                 List.of(),
                 Set.of(),
-                VanillaNetworking.generateProgressMap(game.getBoard().getStates(), team)
+                VanillaNetworking.generateProgressMap(game.getBoard().getStates(), team),
+                false
             ));
         }
     }

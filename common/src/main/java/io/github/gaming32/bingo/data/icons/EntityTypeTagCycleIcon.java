@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.data.icons;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -10,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +27,7 @@ public record EntityTypeTagCycleIcon(
         instance.group(
             TagKey.codec(Registries.ENTITY_TYPE).fieldOf("tag").forGetter(EntityTypeTagCycleIcon::tag),
             Item.CODEC.optionalFieldOf("base_item").forGetter(EntityTypeTagCycleIcon::baseItem),
-            Codec.INT.optionalFieldOf("count", 1).forGetter(EntityTypeTagCycleIcon::count)
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf("count", 1).forGetter(EntityTypeTagCycleIcon::count)
         ).apply(instance, EntityTypeTagCycleIcon::new)
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, EntityTypeTagCycleIcon> STREAM_CODEC = StreamCodec.composite(

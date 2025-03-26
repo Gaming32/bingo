@@ -11,15 +11,13 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.BonemealableBlock;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -59,14 +57,11 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         );
 
         // Cannot copy() because that can't copy from Vanilla's block tags, only our block tags
-        getOrCreateTagBuilder(BingoItemTags.CLIMBABLE).add(
-            Items.LADDER,
-            Items.SCAFFOLDING,
-            Items.VINE,
-            Items.GLOW_BERRIES,
-            Items.WEEPING_VINES,
-            Items.TWISTING_VINES
-        );
+        BingoDataGenFabric.loadVanillaTag(BlockTags.CLIMBABLE, registries)
+            .stream()
+            .map(x -> x.value().asItem())
+            .filter(x -> x != Items.AIR)
+            .forEachOrdered(getOrCreateTagBuilder(BingoItemTags.CLIMBABLE)::add);
 
         getOrCreateTagBuilder(BingoItemTags.FISH_BUCKETS).add(
             Items.COD_BUCKET,
@@ -102,43 +97,21 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.HORN_CORAL_BLOCK
         );
 
-        getOrCreateTagBuilder(BingoItemTags.BONEMEALABLE)
-            .forceAddTag(ItemTags.VILLAGER_PLANTABLE_SEEDS)
-            .forceAddTag(ItemTags.SAPLINGS)
-            .forceAddTag(BingoItemTags.TALL_FLOWERS)
-            .add(
-                Items.BAMBOO,
-                Items.BIG_DRIPLEAF,
-                Items.SMALL_DRIPLEAF,
-                Items.GLOW_BERRIES,
-                Items.COCOA_BEANS,
-                Items.CRIMSON_FUNGUS,
-                Items.WARPED_FUNGUS,
-                Items.GLOW_LICHEN,
-                Items.GRASS_BLOCK,
-                Items.KELP,
-                Items.MANGROVE_LEAVES,
-                Items.MOSS_BLOCK,
-                Items.RED_MUSHROOM,
-                Items.BROWN_MUSHROOM,
-                Items.NETHERRACK,
-                Items.WARPED_NYLIUM,
-                Items.CRIMSON_NYLIUM,
-                Items.PINK_PETALS,
-                Items.ROOTED_DIRT,
-                Items.SEAGRASS,
-                Items.SEA_PICKLE,
-                Items.MELON_SEEDS,
-                Items.PUMPKIN_SEEDS,
-                Items.SWEET_BERRIES,
-                Items.TALL_GRASS,
-                Items.TWISTING_VINES,
-                Items.WEEPING_VINES
-            );
-
         getOrCreateTagBuilder(BingoItemTags.FLOWERS)
             .forceAddTag(ItemTags.SMALL_FLOWERS)
-            .addTag(BingoItemTags.TALL_FLOWERS);
+            .add(
+                Items.SUNFLOWER,
+                Items.LILAC,
+                Items.PEONY,
+                Items.ROSE_BUSH,
+                Items.PITCHER_PLANT,
+                Items.FLOWERING_AZALEA,
+                Items.PINK_PETALS,
+                Items.WILDFLOWERS,
+                Items.CHORUS_FLOWER,
+                Items.SPORE_BLOSSOM,
+                Items.CACTUS_FLOWER
+            );
 
         getOrCreateTagBuilder(BingoItemTags.DEAD_CORAL_BLOCKS).add(
             Items.DEAD_BRAIN_CORAL_BLOCK,
@@ -148,35 +121,26 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.DEAD_TUBE_CORAL_BLOCK
         );
 
-        getOrCreateTagBuilder(BingoItemTags.TALL_FLOWERS).add(
-            Items.LILAC,
-            Items.PEONY,
-            Items.PITCHER_PLANT,
-            Items.ROSE_BUSH,
-            Items.SUNFLOWER
-        );
-
         final var trimTemplatesBuilder = getOrCreateTagBuilder(BingoItemTags.TRIM_TEMPLATES);
         VanillaRecipeProvider.smithingTrims()
             .map(VanillaRecipeProvider.TrimTemplate::template)
             .forEach(trimTemplatesBuilder::add);
 
-        var glazedTerracottaBuilder = getOrCreateTagBuilder(BingoItemTags.GLAZED_TERRACOTTA);
-        var concreteBuilder = getOrCreateTagBuilder(BingoItemTags.CONCRETE);
-        for (DyeColor dyeColor : DyeColor.values()) {
-            glazedTerracottaBuilder.add(item(dyeColor.getName() + "_glazed_terracotta"));
-            concreteBuilder.add(item(dyeColor.getName() + "_concrete"));
-        }
-
-        final var vanillaMeatTag = BingoDataGenFabric.loadVanillaTag(ItemTags.MEAT, registries);
+        final var vanillaMeat = BingoDataGenFabric.loadVanillaTag(ItemTags.MEAT, registries);
+        final var vanillaVillagerPlantableSeeds = BingoDataGenFabric.loadVanillaTag(
+            ItemTags.VILLAGER_PLANTABLE_SEEDS,
+            registries
+        );
+        final var vanillaSaplings = BingoDataGenFabric.loadVanillaTag(ItemTags.SAPLINGS, registries);
 
         var goldInNameBuilder = getOrCreateTagBuilder(BingoItemTags.GOLD_IN_NAME);
         var diamondInNameBuilder = getOrCreateTagBuilder(BingoItemTags.DIAMOND_IN_NAME);
         var meatBuilder = getOrCreateTagBuilder(BingoItemTags.MEAT);
         var notMeatBuilder = getOrCreateTagBuilder(BingoItemTags.NOT_MEAT);
         var bannerPatternsBuilder = getOrCreateTagBuilder(BingoItemTags.BANNER_PATTERNS);
-        var slabBuilder = getOrCreateTagBuilder(BingoItemTags.SLABS);
-        var stairsBuilder = getOrCreateTagBuilder(BingoItemTags.STAIRS);
+        var bonemealableBuilder = getOrCreateTagBuilder(BingoItemTags.BONEMEALABLE)
+            .forceAddTag(ItemTags.VILLAGER_PLANTABLE_SEEDS)
+            .forceAddTag(ItemTags.SAPLINGS);
         Pattern goldPattern = Pattern.compile("\\bGold(?:en)?\\b");
         Pattern diamondPattern = Pattern.compile("\\bDiamond\\b");
         items.listElements().forEach(item -> {
@@ -188,23 +152,24 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 diamondInNameBuilder.add(item.key());
             }
             if (item.value().components().has(DataComponents.FOOD)) {
-                if (vanillaMeatTag.contains(item) || FORCED_MEAT.contains(item.value())) {
+                if (vanillaMeat.contains(item) || FORCED_MEAT.contains(item.value())) {
                     meatBuilder.add(item.key());
                 } else {
                     notMeatBuilder.add(item.key());
                 }
             }
-            switch (item.value()) {
-                case BannerPatternItem ignored -> bannerPatternsBuilder.add(item.key());
-                case BlockItem blockItem -> {
-                    Block block = blockItem.getBlock();
-                    if (block instanceof SlabBlock) {
-                        slabBuilder.add(item.key());
-                    } else if (block instanceof StairBlock) {
-                        stairsBuilder.add(item.key());
-                    }
+            if (item.value().components().get(DataComponents.PROVIDES_BANNER_PATTERNS) != null) {
+                bannerPatternsBuilder.add(item.key());
+            }
+            if (item.value() instanceof BlockItem blockItem) {
+                Block block = blockItem.getBlock();
+                if (
+                    block instanceof BonemealableBlock &&
+                    !vanillaVillagerPlantableSeeds.contains(item) &&
+                    !vanillaSaplings.contains(item)
+                ) {
+                    bonemealableBuilder.add(item.key());
                 }
-                default -> {}
             }
         });
 

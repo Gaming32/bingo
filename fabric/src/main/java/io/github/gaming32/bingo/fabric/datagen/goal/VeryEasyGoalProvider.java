@@ -8,7 +8,7 @@ import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
-import io.github.gaming32.bingo.subpredicates.entity.ItemEntityPredicate;
+import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
 import io.github.gaming32.bingo.triggers.AdjacentPaintingTrigger;
 import io.github.gaming32.bingo.triggers.BounceOnBlockTrigger;
 import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
@@ -146,10 +146,10 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("snowball"), items, Items.SNOWBALL, 8, 16)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("different_slabs"), BingoItemTags.SLABS, "bingo.goal.different_slabs", 2, 4)
+        addGoal(obtainSomeItemsFromTag(id("different_slabs"), ItemTags.SLABS, "bingo.goal.different_slabs", 2, 4)
             .antisynergy("slabs")
             .infrequency(2));
-        addGoal(obtainSomeItemsFromTag(id("different_stairs"), BingoItemTags.STAIRS, "bingo.goal.different_stairs", 2, 4)
+        addGoal(obtainSomeItemsFromTag(id("different_stairs"), ItemTags.STAIRS, "bingo.goal.different_stairs", 2, 4)
             .antisynergy("stairs")
             .infrequency(2));
         addGoal(obtainItemGoal(id("diamond"), items, Items.DIAMOND));

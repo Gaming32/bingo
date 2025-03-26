@@ -14,6 +14,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.component.DyedItemColor;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +58,8 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
 
         public boolean matches(Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
             final IntSet discovered = new IntOpenHashSet();
-            for (final var item : inventory.armor) {
+            for (final var slot : EquipmentSlotGroup.ARMOR) {
+                final var item = inventory.player.getItemBySlot(slot);
                 if (itemPredicate.isPresent() && !itemPredicate.get().test(item)) {
                     continue;
                 }

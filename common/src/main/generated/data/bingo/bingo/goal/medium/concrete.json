@@ -17,7 +17,7 @@
           "bingo_type": "bingo:sub",
           "key": "count"
         },
-        "tag": "bingo:concrete"
+        "tag": "c:concretes"
       },
       "trigger": "bingo:has_some_items_from_tag"
     }
@@ -29,7 +29,7 @@
       "bingo_type": "bingo:sub",
       "key": "count"
     },
-    "tag": "bingo:concrete"
+    "tag": "c:concretes"
   },
   "infrequency": 4,
   "name": {

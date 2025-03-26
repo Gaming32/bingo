@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.mixin.common;
 
 import io.github.gaming32.bingo.ext.LeashFenceKnotEntityExt;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.BlockAttachedEntity;
@@ -62,12 +63,12 @@ public abstract class MixinLeashFenceKnotEntity extends BlockAttachedEntity impl
         } else {
             return;
         }
-        compound.putUUID("bingo:owner", ownerUuid);
+        compound.store("bingo:owner", UUIDUtil.CODEC, ownerUuid);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
     private void readOwner(CompoundTag compound, CallbackInfo ci) {
-        final UUID ownerUuid = compound.getUUID("bingo:owner");
+        final UUID ownerUuid = compound.read("bingo:owner", UUIDUtil.CODEC).orElse(null);
         if (bingo$cachedOwner != null && bingo$cachedOwner.getUUID().equals(ownerUuid)) return;
         bingo$ownerUuid = ownerUuid;
         bingo$cachedOwner = null;

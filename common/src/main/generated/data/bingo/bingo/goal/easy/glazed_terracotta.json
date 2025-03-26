@@ -17,7 +17,7 @@
           "bingo_type": "bingo:sub",
           "key": "count"
         },
-        "tag": "bingo:glazed_terracotta"
+        "tag": "c:glazed_terracottas"
       },
       "trigger": "bingo:has_some_items_from_tag"
     }
@@ -29,7 +29,7 @@
       "bingo_type": "bingo:sub",
       "key": "count"
     },
-    "tag": "bingo:glazed_terracotta"
+    "tag": "c:glazed_terracottas"
   },
   "infrequency": 4,
   "name": {

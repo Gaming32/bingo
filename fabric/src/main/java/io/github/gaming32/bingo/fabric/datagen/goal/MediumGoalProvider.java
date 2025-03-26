@@ -50,15 +50,14 @@ import net.minecraft.advancements.critereon.ConsumeItemTrigger;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DamagePredicate;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
+import net.minecraft.advancements.critereon.DataComponentMatchers;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.DistanceTrigger;
 import net.minecraft.advancements.critereon.EnchantedItemTrigger;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemDurabilityTrigger;
-import net.minecraft.advancements.critereon.ItemPotionsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemSubPredicates;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -73,8 +72,10 @@ import net.minecraft.advancements.critereon.TameAnimalTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponentExactPredicate;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.predicates.DataComponentPredicates;
+import net.minecraft.core.component.predicates.PotionsPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.network.chat.Component;
@@ -359,7 +360,10 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 new ItemIcon(makeItemWithGlint(Items.GOLDEN_SWORD)),
                 ItemPredicate.Builder.item()
                     .of(items, Items.GOLDEN_SWORD)
-                    .withSubPredicate(ItemSubPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement())
+                    .withComponents(DataComponentMatchers.Builder.components()
+                        .partial(DataComponentPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement())
+                        .build()
+                    )
             )
                 .name("enchanted_golden_sword")
         );
@@ -373,12 +377,12 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .antisynergy("terracotta_color")
             .infrequency(4)
         );
-        addGoal(obtainSomeItemsFromTag(id("glazed_terracotta"), BingoItemTags.GLAZED_TERRACOTTA, "bingo.goal.glazed_terracotta", 7, 10)
+        addGoal(obtainSomeItemsFromTag(id("glazed_terracotta"), ConventionalItemTags.GLAZED_TERRACOTTAS, "bingo.goal.glazed_terracotta", 7, 10)
             .reactant("use_furnace")
             .antisynergy("glazed_terracotta_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("concrete"), BingoItemTags.CONCRETE, "bingo.goal.concrete", 7, 10)
+        addGoal(obtainSomeItemsFromTag(id("concrete"), ConventionalItemTags.CONCRETES, "bingo.goal.concrete", 7, 10)
             .antisynergy("concrete_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
@@ -572,10 +576,13 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                     shieldItem,
                     ItemPredicate.Builder.item()
                         .of(items, Items.SHIELD)
-                        .hasComponents(DataComponentPredicate.someOf(
-                            shieldItem.getComponents(),
-                            DataComponents.BASE_COLOR, DataComponents.BANNER_PATTERNS
-                        ))
+                        .withComponents(DataComponentMatchers.Builder.components()
+                            .exact(DataComponentExactPredicate.someOf(
+                                shieldItem.getComponents(),
+                                DataComponents.BASE_COLOR, DataComponents.BANNER_PATTERNS
+                            ))
+                            .build()
+                        )
                 ).name(Component.translatable(
                     "bingo.goal.item_with_pattern",
                     Component.translatable(Items.SHIELD.getDescriptionId() + "." + DyeColor.BLUE.getName()),
@@ -715,10 +722,13 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 ominousBanner,
                 ItemPredicate.Builder.item()
                     .of(items, ominousBanner.getItem())
-                    .hasComponents(DataComponentPredicate.someOf(
-                        ominousBanner.getComponents(),
-                        DataComponents.BANNER_PATTERNS, DataComponents.ITEM_NAME
-                    ))
+                    .withComponents(DataComponentMatchers.Builder.components()
+                        .exact(DataComponentExactPredicate.someOf(
+                            ominousBanner.getComponents(),
+                            DataComponents.BANNER_PATTERNS, DataComponents.ITEM_NAME
+                        ))
+                        .build()
+                    )
             )
             .antisynergy("ominous_banner")
             .name(Component.translatable("block.minecraft.ominous_banner"))
@@ -887,9 +897,12 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             Arrays.stream(potions)
                 .map(potion -> ItemPredicate.Builder.item()
                     .of(registries.lookupOrThrow(Registries.ITEM), Items.POTION)
-                    .withSubPredicate(
-                        ItemSubPredicates.POTIONS,
-                        new ItemPotionsPredicate(HolderSet.direct(potion))
+                    .withComponents(DataComponentMatchers.Builder.components()
+                        .partial(
+                            DataComponentPredicates.POTIONS,
+                            new PotionsPredicate(HolderSet.direct(potion))
+                        )
+                        .build()
                     )
                 )
                 .toArray(ItemPredicate.Builder[]::new)

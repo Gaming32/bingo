@@ -30,6 +30,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DamagePredicate;
+import net.minecraft.advancements.critereon.DataComponentMatchers;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -39,7 +40,7 @@ import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponentExactPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -52,6 +53,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.InstrumentComponent;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -358,8 +360,11 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
                 InventoryChangeTrigger.TriggerInstance.hasItems(
                     ItemPredicate.Builder.item()
                         .of(items, Items.GOAT_HORN)
-                        .hasComponents(DataComponentPredicate.builder()
-                            .expect(DataComponents.INSTRUMENT, instrument)
+                        .withComponents(DataComponentMatchers.Builder.components()
+                            .exact(DataComponentExactPredicate.builder()
+                                .expect(DataComponents.INSTRUMENT, new InstrumentComponent(instrument))
+                                .build()
+                            )
                             .build()
                         )
                         .build()

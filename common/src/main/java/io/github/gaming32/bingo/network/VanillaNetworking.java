@@ -12,6 +12,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.core.ClientAsset;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +37,7 @@ public class VanillaNetworking {
                 new ItemStack(Items.PLAYER_HEAD),
                 Bingo.translatable("bingo.board.title"),
                 CommonComponents.EMPTY,
-                Optional.of(ResourceLocations.minecraft("textures/gui/advancements/backgrounds/stone.png")),
+                Optional.of(new ClientAsset(ResourceLocations.minecraft("gui/advancements/backgrounds/stone"))),
                 AdvancementType.TASK,
                 false,
                 false,

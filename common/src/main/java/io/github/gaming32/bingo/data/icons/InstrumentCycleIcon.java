@@ -35,8 +35,10 @@ public record InstrumentCycleIcon(Holder<Item> instrumentItem, OptionalInt overr
     @Override
     public ItemStack getFallback(RegistryAccess registries) {
         final var registry = registries.lookupOrThrow(Registries.INSTRUMENT);
-        final var result = InstrumentItem.create(instrumentItem.value(), registry.getAny().orElse(null));
-        result.setCount(overrideCount.orElse(registry.size()));
+        final var result = registry.getAny()
+            .map(instrument -> InstrumentItem.create(instrumentItem.value(), instrument))
+            .orElseGet(() -> new ItemStack(instrumentItem));
+        result.setCount(Math.max(overrideCount.orElse(registry.size()), 1));
         return result;
     }
 

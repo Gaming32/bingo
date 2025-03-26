@@ -168,18 +168,12 @@ public class BingoUtil {
 
             Style style = component.getStyle();
             if (style.getHoverEvent() != null) {
-                if (style.getHoverEvent().getAction() == HoverEvent.Action.SHOW_TEXT) {
-                    final Component hoverText = style.getHoverEvent().getValue(HoverEvent.Action.SHOW_TEXT);
-                    if (hoverText instanceof MutableComponent mutableComponent) {
-                        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, mutableComponent));
-                    }
-                } else if (style.getHoverEvent().getAction() == HoverEvent.Action.SHOW_ENTITY) {
-                    final HoverEvent.EntityTooltipInfo info = style.getHoverEvent().getValue(HoverEvent.Action.SHOW_ENTITY);
-                    assert info != null;
+                if (style.getHoverEvent() instanceof HoverEvent.ShowText(MutableComponent hoverText)) {
+                    style = style.withHoverEvent(new HoverEvent.ShowText(ensureHasFallback(hoverText)));
+                } else if (style.getHoverEvent() instanceof HoverEvent.EntityTooltipInfo info) {
                     if (info.name.orElse(null) instanceof MutableComponent mutableComponent) {
-                        style = style.withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_ENTITY,
-                            new HoverEvent.EntityTooltipInfo(info.type, info.id, ensureHasFallback(mutableComponent))
+                        style = style.withHoverEvent(new HoverEvent.ShowEntity(
+                            new HoverEvent.EntityTooltipInfo(info.type, info.uuid, ensureHasFallback(mutableComponent))
                         ));
                     }
                 }

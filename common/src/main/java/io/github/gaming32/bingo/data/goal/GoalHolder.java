@@ -15,7 +15,7 @@ public record GoalHolder(ResourceLocation id, BingoGoal goal) {
         final Optional<Component> tooltip = goal.buildTooltip(context);
         final MutableComponent name = goal.buildName(context);
         tooltip.ifPresent(t -> name.withStyle(s -> s
-            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, t))
+            .withHoverEvent(new HoverEvent.ShowText(t))
         ));
         return new ActiveGoal(
             id, name,
