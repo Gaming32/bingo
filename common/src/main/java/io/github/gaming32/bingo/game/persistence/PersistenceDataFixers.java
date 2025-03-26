@@ -6,9 +6,11 @@ import com.mojang.datafixers.DataFixerBuilder;
 import com.mojang.datafixers.schemas.Schema;
 import io.github.gaming32.bingo.game.persistence.fixes.FlattenGoalFix;
 import io.github.gaming32.bingo.game.persistence.fixes.NamespaceGameModeFix;
+import io.github.gaming32.bingo.game.persistence.fixes.TagRenameFix;
 import io.github.gaming32.bingo.game.persistence.schemas.BingoV1;
 import io.github.gaming32.bingo.game.persistence.schemas.BingoV2;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -46,5 +48,13 @@ public class PersistenceDataFixers {
 
         final var v3 = builder.addSchema(3, SAME);
         builder.addFixer(new NamespaceGameModeFix(v3));
+
+        final var v4 = builder.addSchema(4, SAME);
+        builder.addFixer(TagRenameFix.items(v4, Map.of(
+            "bingo:concrete", "c:concretes",
+            "bingo:glazed_terracotta", "c:glazed_terracottas",
+            "bingo:slabs", "minecraft:slabs",
+            "bingo:stairs", "minecraft:stairs"
+        )));
     }
 }
