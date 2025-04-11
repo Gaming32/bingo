@@ -38,7 +38,7 @@ public interface BingoGameMode {
 
     boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever);
 
-    default boolean isGoalAllowed(GoalHolder goal) {
+    default boolean isGoalAllowed(GoalHolder goal, boolean allowNeverGoalsInLockout) {
         return true;
     }
 
