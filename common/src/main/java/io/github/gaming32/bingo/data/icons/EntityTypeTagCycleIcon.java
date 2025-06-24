@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.data.icons;
 
+import com.google.common.base.Preconditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -36,6 +37,10 @@ public record EntityTypeTagCycleIcon(
         ByteBufCodecs.VAR_INT, EntityTypeTagCycleIcon::count,
         EntityTypeTagCycleIcon::new
     );
+
+    public EntityTypeTagCycleIcon {
+        Preconditions.checkArgument(count > 0, "count must be positive");
+    }
 
     public EntityTypeTagCycleIcon(TagKey<EntityType<?>> tag, Holder<Item> baseItem, int count) {
         this(tag, Optional.of(baseItem), count);

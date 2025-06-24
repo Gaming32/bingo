@@ -577,7 +577,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.kill_passive_mobs_with_only_fire", 0), subber -> subber.sub("with.0", "count"))
             .tooltip("kill_passive_mobs_with_only_fire")
             .icon(new CycleIcon(
-                new EntityTypeTagCycleIcon(BingoEntityTypeTags.PASSIVE, 0),
+                new EntityTypeTagCycleIcon(BingoEntityTypeTags.PASSIVE, 2),
                 new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStack(Items.FLINT_AND_STEEL, 1))
             ), subber -> subber.sub("icons.0.count", "count").sub("icons.1.item.count", "count"))
             .reactant("pacifist")
