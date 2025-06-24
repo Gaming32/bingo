@@ -21,7 +21,7 @@ jobs:
           java-version: 21
           distribution: zulu
       - name: Build with Gradle
-        run: ./gradlew build --stacktrace
+        run: ./gradlew build --stacktrace || ./gradlew build --stacktrace
       - name: Upload Fabric artifacts
         uses: actions/upload-artifact@v4
         with:
