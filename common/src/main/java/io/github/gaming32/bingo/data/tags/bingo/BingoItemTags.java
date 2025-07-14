@@ -9,7 +9,6 @@ public final class BingoItemTags {
     private BingoItemTags() {
     }
 
-    public static final TagKey<Item> ALLOWED_HEADS = create("allowed_heads");
     public static final TagKey<Item> ALL_MINERAL_BLOCKS = create("all_mineral_blocks");
     public static final TagKey<Item> BANNER_PATTERNS = create("banner_patterns");
     public static final TagKey<Item> BASIC_MINERAL_BLOCKS = create("basic_mineral_blocks");
@@ -20,7 +19,6 @@ public final class BingoItemTags {
     public static final TagKey<Item> FISHING_JUNK = create("fishing_junk");
     public static final TagKey<Item> FISHING_TREASURE = create("fishing_treasure");
     public static final TagKey<Item> FISH_BUCKETS = create("fish_buckets");
-    public static final TagKey<Item> FLOWERS = create("flowers");
     public static final TagKey<Item> GOLD_IN_NAME = create("gold_in_name");
     public static final TagKey<Item> LIVING_CORAL_BLOCKS = create("living_coral_blocks");
     public static final TagKey<Item> MEAT = create("meat");

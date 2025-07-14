@@ -4,10 +4,16 @@
   "package": "io.github.gaming32.bingo.mixin.fabric",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "CompositeEntryBaseAccessor",
+    "LootItemAccessor",
+    "LootTableAccessor",
     "MixinBoneMealItem",
     "MixinDyedItemColor",
     "MixinPlayerList",
-    "MixinServerLevel"
+    "MixinServerLevel",
+    "MobBucketItemAccessor",
+    "NestedLootTableAccessor",
+    "TagEntryAccessor"
   ],
   "client": [
     "client.GuiAccessor",

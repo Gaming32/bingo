@@ -19,24 +19,6 @@ public class BingoEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
     protected void addTags(HolderLookup.Provider registries) {
         final var entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
 
-        getOrCreateTagBuilder(BingoEntityTypeTags.TAMABLE).add(
-            EntityType.ALLAY,
-            EntityType.AXOLOTL,
-            EntityType.CAMEL,
-            EntityType.CAT,
-            EntityType.DONKEY,
-            EntityType.FOX,
-            EntityType.HORSE,
-            EntityType.LLAMA,
-            EntityType.MULE,
-            EntityType.OCELOT,
-            EntityType.PARROT,
-            EntityType.SKELETON_HORSE,
-            EntityType.STRIDER,
-            EntityType.TRADER_LLAMA,
-            EntityType.WOLF
-        );
-
         // find passive mobs
         final FabricTagBuilder passiveBuilder = getOrCreateTagBuilder(BingoEntityTypeTags.PASSIVE);
         final FabricTagBuilder hostileBuilder = getOrCreateTagBuilder(BingoEntityTypeTags.HOSTILE);

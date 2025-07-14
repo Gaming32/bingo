@@ -143,7 +143,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .name("listen_to_music")
             .icon(Items.JUKEBOX));
-        addGoal(obtainSomeItemsFromTag(id("different_flowers"), BingoItemTags.FLOWERS, "bingo.goal.different_flowers", 11, 14)
+        addGoal(obtainSomeItemsFromTag(id("different_flowers"), ConventionalItemTags.FLOWERS, "bingo.goal.different_flowers", 11, 14)
             .antisynergy("flowers")
             .infrequency(3)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));

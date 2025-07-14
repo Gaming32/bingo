@@ -48,7 +48,7 @@ db609a040f6342c59be40ac8c35bd07bbc0174e9 data/bingo/bingo/goal/easy/cut_sandston
 1602ac535923af29d61511abb1adf6fbd5b22273 data/bingo/bingo/goal/easy/dead_bush.json
 22e548d31778ef763882be34fe7565dee7d74cfe data/bingo/bingo/goal/easy/different_colored_shields.json
 ec9ac0d68d3369392df21107a0af540942cf5ee6 data/bingo/bingo/goal/easy/different_fish.json
-8a6d82d3712de6cd0a2ed947dc50ea7f64448683 data/bingo/bingo/goal/easy/different_flowers.json
+afbee2ed6fb90f1cbae0eb7e862cf39495fd9c6d data/bingo/bingo/goal/easy/different_flowers.json
 5d4ebd9bd3b972fc95a08b54e9dc97a81443887c data/bingo/bingo/goal/easy/different_slabs.json
 48f63f0ecc11c104e044e2df27dee749b880de72 data/bingo/bingo/goal/easy/different_stairs.json
 76e43a841dd1d1630f5517211355952f0ea94bcd data/bingo/bingo/goal/easy/disenchant.json
@@ -187,7 +187,7 @@ d1cf96ba5fcde802350a053ed2395165d3aad63f data/bingo/bingo/goal/hard/carrot_stick
 af19b2dd4ff8178c47c52fd19f16572246f008e9 data/bingo/bingo/goal/hard/diamond_block.json
 4e1636e760a804c6b2b456f43afe3019730ca6f2 data/bingo/bingo/goal/hard/diamond_in_name.json
 f9b663c6b8673cb653e0d79f8c2dfdeab3485a6c data/bingo/bingo/goal/hard/die_to_villager.json
-9fea0923ef101e8a4b39a1a65195eb8ebdc57527 data/bingo/bingo/goal/hard/different_flowers.json
+08fed57b58e358ed79989903e98cea8081000544 data/bingo/bingo/goal/hard/different_flowers.json
 44bdc3a9c14f7718c10cdf8e59218a1eefb108b8 data/bingo/bingo/goal/hard/dirt_netherrack_end_stone.json
 14f27c6725c9e7a0a363c33e9dd8d8234b7b07bd data/bingo/bingo/goal/hard/disarm_pillager.json
 59173b3fef6832884edd482c0cd312f01e061468 data/bingo/bingo/goal/hard/dragon_breath.json
@@ -272,7 +272,7 @@ e491c360a66e40c893fd86ad586f111f7a2ec766 data/bingo/bingo/goal/medium/crouch_dis
 2cf9c1433902a4d21a288d6c0e248b7edc45843d data/bingo/bingo/goal/medium/daylight_detector.json
 80654013eb12a4f600e0ee2bbc214997c9cede60 data/bingo/bingo/goal/medium/diamond_block.json
 a85c1efd208d634d4c0ad4722bae4e372d18e067 data/bingo/bingo/goal/medium/diamond_in_name.json
-5ff022dffb0d0a7b2e88a3202d6f08bb34b927f0 data/bingo/bingo/goal/medium/different_flowers.json
+daa89873e1ac69b17bf3ee47bd6f66724b5c1bb0 data/bingo/bingo/goal/medium/different_flowers.json
 97f5fbe190aa5363bef9aa30eb4cedcd4eaae21a data/bingo/bingo/goal/medium/different_saplings.json
 524ae877758ea21323b4347a0f3c508a912ba00c data/bingo/bingo/goal/medium/dried_kelp_block.json
 5eab18305e8491e81710a522e272c71bbb17c98e data/bingo/bingo/goal/medium/edible_items.json

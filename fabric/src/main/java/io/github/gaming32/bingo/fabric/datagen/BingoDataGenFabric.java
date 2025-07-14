@@ -1,9 +1,5 @@
 package io.github.gaming32.bingo.fabric.datagen;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTags;
@@ -16,28 +12,7 @@ import io.github.gaming32.bingo.fabric.datagen.tag.BingoItemTagProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.JsonKeySortOrderCallback;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.IoSupplier;
-import net.minecraft.tags.TagEntry;
-import net.minecraft.tags.TagFile;
-import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UncheckedIOException;
-import java.util.Collection;
-import java.util.List;
 
 public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     private static final boolean DUMP_BINGO_COMMAND = false;
@@ -68,50 +43,5 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     @Override
     public void addJsonKeySortOrders(JsonKeySortOrderCallback callback) {
         callback.add("bingo_type", 0);
-    }
-
-    public static <T> HolderSet.Direct<T> loadVanillaTag(TagKey<T> tag, HolderLookup.Provider registries) {
-        return HolderSet.direct(loadVanillaTagInternal(tag, registries));
-    }
-
-    private static <T> List<Holder<T>> loadVanillaTagInternal(TagKey<T> tag, HolderLookup.Provider registries) {
-        final var registry = registries.lookupOrThrow(tag.registry());
-        final IoSupplier<InputStream> resource = Minecraft.getInstance()
-            .getVanillaPackResources()
-            .getResource(
-                PackType.SERVER_DATA, tag.location().withPath(
-                    Registries.tagsDirPath(tag.registry()) + '/' + tag.location().getPath() + ".json"
-                )
-            );
-        if (resource == null) {
-            throw new IllegalArgumentException("Unknown tag " + tag);
-        }
-        final JsonElement json;
-        try (Reader input = new InputStreamReader(resource.get())) {
-            json = JsonParser.parseReader(input);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-
-        final TagFile file = TagFile.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json)
-            .getOrThrow(JsonParseException::new);
-        final var lookup = new TagEntry.Lookup<Holder<T>>() {
-            @Nullable
-            @Override
-            public Holder<T> element(ResourceLocation elementLocation, boolean readOnly) {
-                return registry.get(ResourceKey.create(tag.registry(), elementLocation)).orElse(null);
-            }
-
-            @Nullable
-            @Override
-            public Collection<Holder<T>> tag(ResourceLocation tagLocation) {
-                return loadVanillaTagInternal(TagKey.create(tag.registry(), tagLocation), registries);
-            }
-        };
-        return file.entries()
-            .stream()
-            .<Holder<T>>mapMulti((entry, out) -> entry.build(lookup, out))
-            .distinct()
-            .toList();
     }
 }

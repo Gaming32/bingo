@@ -26,7 +26,7 @@ import io.github.gaming32.bingo.data.tags.bingo.BingoDamageTypeTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
-import io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric;
+import io.github.gaming32.bingo.fabric.datagen.BingoDataGenUtil;
 import io.github.gaming32.bingo.triggers.BounceOnBlockTrigger;
 import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
 import io.github.gaming32.bingo.triggers.EntityKilledPlayerTrigger;
@@ -388,7 +388,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(bedRowGoal(id("bed_row"), 7, 10));
         // TODO: power redstone lamp
-        addGoal(obtainSomeItemsFromTag(id("different_flowers"), BingoItemTags.FLOWERS, "bingo.goal.different_flowers", 8, 10)
+        addGoal(obtainSomeItemsFromTag(id("different_flowers"), ConventionalItemTags.FLOWERS, "bingo.goal.different_flowers", 8, 10)
             .antisynergy("flowers")
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
@@ -940,7 +940,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         armors.orderRowsBy(Ordering.natural());
         armors.orderColumnsBy(Ordering.natural());
         Stream.of(ItemTags.HEAD_ARMOR, ItemTags.CHEST_ARMOR, ItemTags.LEG_ARMOR, ItemTags.FOOT_ARMOR)
-            .map(tag -> BingoDataGenFabric.loadVanillaTag(tag, registries))
+            .map(tag -> BingoDataGenUtil.loadVanillaTag(tag, registries))
             .flatMap(HolderSet::stream)
             .distinct()
             .map(Holder::value)

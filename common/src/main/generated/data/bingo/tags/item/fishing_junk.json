@@ -1,14 +1,16 @@
 {
   "values": [
     "minecraft:lily_pad",
-    "minecraft:bowl",
-    "minecraft:leather",
     "minecraft:leather_boots",
-    "minecraft:rotten_flesh",
-    "minecraft:stick",
-    "minecraft:potion",
+    "minecraft:leather",
     "minecraft:bone",
+    "minecraft:potion",
+    "minecraft:string",
+    "minecraft:bowl",
+    "minecraft:stick",
     "minecraft:ink_sac",
-    "minecraft:tripwire_hook"
+    "minecraft:tripwire_hook",
+    "minecraft:rotten_flesh",
+    "minecraft:bamboo"
   ]
 }

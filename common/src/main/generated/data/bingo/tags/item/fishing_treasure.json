@@ -1,9 +1,9 @@
 {
   "values": [
-    "minecraft:bow",
-    "minecraft:enchanted_book",
     "minecraft:name_tag",
+    "minecraft:saddle",
+    "minecraft:bow",
     "minecraft:nautilus_shell",
-    "minecraft:saddle"
+    "minecraft:enchanted_book"
   ]
 }
