@@ -19,6 +19,7 @@ import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EffectIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.data.icons.EntityTypeTagCycleIcon;
+import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.icons.IndicatorIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
@@ -109,6 +110,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.entity.animal.ChickenVariant;
+import net.minecraft.world.entity.animal.ChickenVariants;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
@@ -406,7 +409,16 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .infrequency(2));
         addGoal(obtainItemGoal(id("ender_pearl"), items, Items.ENDER_PEARL, 2, 3)
             .infrequency(2));
-        addGoal(obtainItemGoal(id("egg"), items, Items.EGG, 16, 16));
+        addGoal(
+            obtainItemGoal(
+                id("egg"),
+                items,
+                new ItemTagCycleIcon(ItemTags.EGGS, 16),
+                ItemPredicate.Builder.item().of(items, ItemTags.EGGS).withCount(MinMaxBounds.Ints.exactly(16))
+            )
+                .name(Component.translatable("bingo.count", 16, Items.EGG.getName()))
+                .tags(BingoTags.OVERWORLD)
+        );
         addGoal(BingoGoal.builder(id("4x4_paintings"))
             .criterion("paintings", AdjacentPaintingTrigger.builder()
                 .placedPainting(PaintingPredicate.builder()
@@ -954,7 +966,14 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(id("hatch_chicken"))
             .criterion("hatch", ChickenHatchTrigger.builder().build())
             .name("hatch_chicken")
-            .icon(CycleIcon.infer(Items.EGG, EntityType.CHICKEN))
+            .icon(CycleIcon.infer(
+                Items.EGG,
+                createChickenIcon(ChickenVariants.TEMPERATE),
+                Items.BLUE_EGG,
+                createChickenIcon(ChickenVariants.COLD),
+                Items.BROWN_EGG,
+                createChickenIcon(ChickenVariants.WARM)
+            ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
         // TODO: empty cauldron without buckets or bottles
         addGoal(BingoGoal.builder(id("sleep_in_villager_bed"))
@@ -1086,5 +1105,12 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("eat_entire_cake")
             .icon(Items.CAKE)
             .reactant("eat_non_meat");
+    }
+
+    private static GoalIcon createChickenIcon(ResourceKey<ChickenVariant> variant) {
+        CompoundTag data = BingoUtil.compound(Map.of(
+            "variant", StringTag.valueOf(variant.location().toString())
+        ));
+        return EntityIcon.ofSpawnEgg(EntityType.CHICKEN, data);
     }
 }

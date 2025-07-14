@@ -17,6 +17,45 @@
       },
       {
         "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:temperate"
+        },
+        "entity": "minecraft:chicken",
+        "item": {
+          "count": 1,
+          "id": "minecraft:chicken_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:blue_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:cold"
+        },
+        "entity": "minecraft:chicken",
+        "item": {
+          "count": 1,
+          "id": "minecraft:chicken_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:brown_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:warm"
+        },
         "entity": "minecraft:chicken",
         "item": {
           "count": 1,

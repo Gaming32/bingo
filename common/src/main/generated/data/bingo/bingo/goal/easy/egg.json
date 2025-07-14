@@ -1,12 +1,11 @@
 {
-  "antisynergy": "egg",
   "criteria": {
     "obtain": {
       "conditions": {
         "items": [
           {
             "count": 16,
-            "items": "minecraft:egg"
+            "items": "#minecraft:eggs"
           }
         ]
       },
@@ -15,11 +14,9 @@
   },
   "difficulty": "bingo:easy",
   "icon": {
-    "type": "bingo:item",
-    "item": {
-      "count": 16,
-      "id": "minecraft:egg"
-    }
+    "type": "bingo:item_tag_cycle",
+    "count": 16,
+    "tag": "minecraft:eggs"
   },
   "name": {
     "translate": "bingo.count",
@@ -39,5 +36,8 @@
       "obtain"
     ]
   ],
-  "tags": "bingo:item"
+  "tags": [
+    "bingo:item",
+    "bingo:overworld"
+  ]
 }
