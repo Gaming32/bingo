@@ -5,8 +5,8 @@
       "type": "bingo:int",
       "value": {
         "type": "minecraft:uniform",
-        "max_inclusive": 64,
-        "min_inclusive": 16
+        "max_inclusive": 16,
+        "min_inclusive": 8
       }
     }
   },

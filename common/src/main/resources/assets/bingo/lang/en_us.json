@@ -88,6 +88,7 @@
   "bingo.goal.eat_entire_cake": "Eat an entire Cake",
   "bingo.goal.edible_items": "%s Different Edible Items",
   "bingo.goal.edible_items.tooltip": "Raw and Cooked variants count as one (e.g. Raw Beef and Steak).",
+  "bingo.goal.egg.tooltip": "They don't have to be different types",
   "bingo.goal.equip_wolf_armor": "Equip a Dog with Armor",
   "bingo.goal.enchant_item": "Enchant an item",
   "bingo.goal.enchant_5_items": "Enchant 5 different items",

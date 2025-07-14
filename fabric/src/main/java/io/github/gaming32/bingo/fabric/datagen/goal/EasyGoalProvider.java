@@ -189,7 +189,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(Items.OAK_BUTTON));
         addGoal(obtainItemGoal(id("writable_book"), items, Items.WRITABLE_BOOK)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainItemGoal(id("flint"), items, Items.FLINT, 16, 64));
+        addGoal(obtainItemGoal(id("flint"), items, Items.FLINT, 8, 16));
         addGoal(eatEntireCake());
         addGoal(obtainItemGoal(id("pumpkin_pie"), items, Items.PUMPKIN_PIE)
             .tags(BingoTags.OVERWORLD));
@@ -393,7 +393,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("nether_bricks"), items, Items.NETHER_BRICKS, 16, 32)
             .reactant("use_furnace")
             .tags(BingoTags.NETHER));
-        addGoal(obtainItemGoal(id("arrow"), items, Items.ARROW, 16, 64));
+        addGoal(obtainItemGoal(id("arrow"), items, Items.ARROW, 8, 16));
         addGoal(BingoGoal.builder(id("sleep_in_nether"))
             .criterion("sleep", IntentionalGameDesignTrigger.TriggerInstance.clicked(
                 LocationPredicate.Builder.inDimension(Level.NETHER).build()
@@ -413,10 +413,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             obtainItemGoal(
                 id("egg"),
                 items,
-                new ItemTagCycleIcon(ItemTags.EGGS, 16),
-                ItemPredicate.Builder.item().of(items, ItemTags.EGGS).withCount(MinMaxBounds.Ints.exactly(16))
+                new ItemTagCycleIcon(ItemTags.EGGS, 3),
+                ItemPredicate.Builder.item().of(items, ItemTags.EGGS).withCount(MinMaxBounds.Ints.exactly(3))
             )
-                .name(Component.translatable("bingo.count", 16, Items.EGG.getName()))
+                .name(Component.translatable("bingo.count", 3, Items.EGG.getName()))
+                .tooltip("egg")
                 .tags(BingoTags.OVERWORLD)
         );
         addGoal(BingoGoal.builder(id("4x4_paintings"))
