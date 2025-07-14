@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Ravager.class)
 public class MixinRavager {
     @Inject(
-        method = "blockedByShield",
+        method = "blockedByItem",
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/world/entity/monster/Ravager;stunnedTick:I"

@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.subpredicates.entity;
+package io.github.gaming32.bingo.subpredicates;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

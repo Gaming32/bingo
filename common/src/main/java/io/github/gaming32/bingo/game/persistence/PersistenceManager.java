@@ -9,7 +9,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.scores.Scoreboard;
 
 public class PersistenceManager {
-    public static final int CURRENT_DATA_VERSION = 3;
+    public static final int CURRENT_DATA_VERSION = 4;
 
     public static CompoundTag serialize(HolderLookup.Provider registries, BingoGame game) {
         final var data = game.createPersistenceData();

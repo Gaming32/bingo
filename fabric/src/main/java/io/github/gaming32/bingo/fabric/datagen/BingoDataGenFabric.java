@@ -37,9 +37,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.Collection;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     private static final boolean DUMP_BINGO_COMMAND = false;
@@ -73,46 +71,47 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     }
 
     public static <T> HolderSet.Direct<T> loadVanillaTag(TagKey<T> tag, HolderLookup.Provider registries) {
-        return HolderSet.direct(Function.identity(), loadVanillaTagInternal(tag, registries));
+        return HolderSet.direct(loadVanillaTagInternal(tag, registries));
     }
 
-    private static <T> Set<Holder<T>> loadVanillaTagInternal(TagKey<T> tag, HolderLookup.Provider registries) {
+    private static <T> List<Holder<T>> loadVanillaTagInternal(TagKey<T> tag, HolderLookup.Provider registries) {
         final var registry = registries.lookupOrThrow(tag.registry());
         final IoSupplier<InputStream> resource = Minecraft.getInstance()
             .getVanillaPackResources()
             .getResource(
-                PackType.SERVER_DATA, ResourceLocation.fromNamespaceAndPath(
-                    tag.location().getNamespace(),
+                PackType.SERVER_DATA, tag.location().withPath(
                     Registries.tagsDirPath(tag.registry()) + '/' + tag.location().getPath() + ".json"
                 )
             );
         if (resource == null) {
             throw new IllegalArgumentException("Unknown tag " + tag);
         }
+        final JsonElement json;
         try (Reader input = new InputStreamReader(resource.get())) {
-            final JsonElement json = JsonParser.parseReader(input);
-            final TagFile file = TagFile.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json)
-                .getOrThrow(JsonParseException::new);
-            return file.entries()
-                .stream()
-                .<Holder<T>>mapMulti((entry, out) -> entry.build(
-                    new TagEntry.Lookup<>() {
-                        @Nullable
-                        @Override
-                        public Holder<T> element(ResourceLocation elementLocation, boolean readOnly) {
-                            return registry.get(ResourceKey.create(tag.registry(), elementLocation)).orElse(null);
-                        }
-
-                        @Nullable
-                        @Override
-                        public Collection<Holder<T>> tag(ResourceLocation tagLocation) {
-                            return loadVanillaTagInternal(TagKey.create(tag.registry(), tagLocation), registries);
-                        }
-                    }, out
-                ))
-                .collect(Collectors.toUnmodifiableSet());
+            json = JsonParser.parseReader(input);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+
+        final TagFile file = TagFile.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json)
+            .getOrThrow(JsonParseException::new);
+        final var lookup = new TagEntry.Lookup<Holder<T>>() {
+            @Nullable
+            @Override
+            public Holder<T> element(ResourceLocation elementLocation, boolean readOnly) {
+                return registry.get(ResourceKey.create(tag.registry(), elementLocation)).orElse(null);
+            }
+
+            @Nullable
+            @Override
+            public Collection<Holder<T>> tag(ResourceLocation tagLocation) {
+                return loadVanillaTagInternal(TagKey.create(tag.registry(), tagLocation), registries);
+            }
+        };
+        return file.entries()
+            .stream()
+            .<Holder<T>>mapMulti((entry, out) -> entry.build(lookup, out))
+            .distinct()
+            .toList();
     }
 }

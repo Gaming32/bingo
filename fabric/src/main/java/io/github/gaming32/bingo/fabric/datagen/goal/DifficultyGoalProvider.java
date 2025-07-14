@@ -31,7 +31,6 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
-import net.minecraft.advancements.critereon.ItemEnchantmentsPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -39,6 +38,7 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
@@ -392,14 +392,14 @@ public abstract class DifficultyGoalProvider {
         );
     }
 
-    protected static ItemEnchantmentsPredicate.Enchantments createAnyEnchantmentsRequirement() {
-        return ItemEnchantmentsPredicate.enchantments(List.of(
+    protected static EnchantmentsPredicate.Enchantments createAnyEnchantmentsRequirement() {
+        return EnchantmentsPredicate.enchantments(List.of(
             new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1))
         ));
     }
 
-    protected static ItemEnchantmentsPredicate.StoredEnchantments createAnyStoredEnchantmentsRequirement() {
-        return ItemEnchantmentsPredicate.storedEnchantments(List.of(
+    protected static EnchantmentsPredicate.StoredEnchantments createAnyStoredEnchantmentsRequirement() {
+        return EnchantmentsPredicate.storedEnchantments(List.of(
             new EnchantmentPredicate(Optional.empty(), MinMaxBounds.Ints.atLeast(1))
         ));
     }

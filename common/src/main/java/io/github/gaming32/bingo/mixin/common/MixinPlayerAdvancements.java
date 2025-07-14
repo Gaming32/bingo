@@ -20,7 +20,7 @@ public class MixinPlayerAdvancements {
             shift = At.Shift.AFTER
         )
     )
-    private void syncBingoAdvancements(ServerPlayer serverPlayer, CallbackInfo ci) {
+    private void syncBingoAdvancements(ServerPlayer serverPlayer, boolean bl, CallbackInfo ci) {
         if (!isFirstPacket) return;
         final var game = serverPlayer.server.bingo$getGame();
         if (game != null) {

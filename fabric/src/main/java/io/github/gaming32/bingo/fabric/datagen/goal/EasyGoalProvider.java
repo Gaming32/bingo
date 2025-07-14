@@ -29,7 +29,7 @@ import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.data.tags.bingo.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
-import io.github.gaming32.bingo.subpredicates.entity.PaintingPredicate;
+import io.github.gaming32.bingo.subpredicates.PaintingPredicate;
 import io.github.gaming32.bingo.triggers.AdjacentPaintingTrigger;
 import io.github.gaming32.bingo.triggers.ArrowPressTrigger;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
@@ -61,6 +61,7 @@ import net.minecraft.advancements.critereon.ConsumeItemTrigger;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DamagePredicate;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
+import net.minecraft.advancements.critereon.DataComponentMatchers;
 import net.minecraft.advancements.critereon.DefaultBlockInteractionTrigger;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.EffectsChangedTrigger;
@@ -72,7 +73,6 @@ import net.minecraft.advancements.critereon.FishingRodHookedTrigger;
 import net.minecraft.advancements.critereon.InputPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemSubPredicates;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -91,6 +91,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.predicates.DataComponentPredicates;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
@@ -356,7 +357,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("vine"), items, Items.VINE, 10, 30)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
-        addGoal(obtainSomeItemsFromTag(id("different_slabs"), BingoItemTags.SLABS, "bingo.goal.different_slabs", 5, 7)
+        addGoal(obtainSomeItemsFromTag(id("different_slabs"), ItemTags.SLABS, "bingo.goal.different_slabs", 5, 7)
             .antisynergy("slabs")
             .infrequency(2));
         addGoal(BingoGoal.builder(id("almost_every_sword"))
@@ -400,7 +401,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(obtainItemGoal(id("fermented_spider_eye"), items, Items.FERMENTED_SPIDER_EYE)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("different_stairs"), BingoItemTags.STAIRS, "bingo.goal.different_stairs", 5, 7)
+        addGoal(obtainSomeItemsFromTag(id("different_stairs"), ItemTags.STAIRS, "bingo.goal.different_stairs", 5, 7)
             .antisynergy("stairs")
             .infrequency(2));
         addGoal(obtainItemGoal(id("ender_pearl"), items, Items.ENDER_PEARL, 2, 3)
@@ -511,11 +512,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .antisynergy("flowers")
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("concrete"), BingoItemTags.CONCRETE, "bingo.goal.concrete", 3, 6)
+        addGoal(obtainSomeItemsFromTag(id("concrete"), ConventionalItemTags.CONCRETES, "bingo.goal.concrete", 3, 6)
             .antisynergy("concrete_color")
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(id("glazed_terracotta"), BingoItemTags.GLAZED_TERRACOTTA, "bingo.goal.glazed_terracotta", 3, 6)
+        addGoal(obtainSomeItemsFromTag(id("glazed_terracotta"), ConventionalItemTags.GLAZED_TERRACOTTAS, "bingo.goal.glazed_terracotta", 3, 6)
             .reactant("use_furnace")
             .antisynergy("glazed_terracotta_color")
             .infrequency(4)
@@ -576,7 +577,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.kill_passive_mobs_with_only_fire", 0), subber -> subber.sub("with.0", "count"))
             .tooltip("kill_passive_mobs_with_only_fire")
             .icon(new CycleIcon(
-                new EntityTypeTagCycleIcon(BingoEntityTypeTags.PASSIVE, 0),
+                new EntityTypeTagCycleIcon(BingoEntityTypeTags.PASSIVE, 2),
                 new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStack(Items.FLINT_AND_STEEL, 1))
             ), subber -> subber.sub("icons.0.count", "count").sub("icons.1.item.count", "count"))
             .reactant("pacifist")
@@ -877,20 +878,24 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .icon(EntityIcon.ofSpawnEgg(EntityType.PIGLIN))
             .tags(BingoTags.ACTION, BingoTags.NETHER));
         addGoal(BingoGoal.builder(id("nausea"))
-            .criterion("obtain", EffectsChangedTrigger.TriggerInstance.hasEffects(MobEffectsPredicate.Builder.effects().and(MobEffects.CONFUSION)))
+            .criterion("obtain", EffectsChangedTrigger.TriggerInstance.hasEffects(MobEffectsPredicate.Builder.effects().and(MobEffects.NAUSEA)))
             .name("nausea")
-            .icon(EffectIcon.of(MobEffects.CONFUSION))
+            .icon(EffectIcon.of(MobEffects.NAUSEA))
             .reactant("eat_meat")
             .tags(BingoTags.ITEM, BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(
                 id("obtain_enchanted_item"),
                 items,
                 Items.ENCHANTED_BOOK,
-                ItemPredicate.Builder.item().withSubPredicate(
-                    ItemSubPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement()
+                ItemPredicate.Builder.item().withComponents(
+                    DataComponentMatchers.Builder.components()
+                        .partial(DataComponentPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement())
+                        .build()
                 ),
-                ItemPredicate.Builder.item().withSubPredicate(
-                    ItemSubPredicates.STORED_ENCHANTMENTS, createAnyStoredEnchantmentsRequirement()
+                ItemPredicate.Builder.item().withComponents(
+                    DataComponentMatchers.Builder.components()
+                        .partial(DataComponentPredicates.STORED_ENCHANTMENTS, createAnyStoredEnchantmentsRequirement())
+                        .build()
                 )
             )
             .name("obtain_enchanted_item")

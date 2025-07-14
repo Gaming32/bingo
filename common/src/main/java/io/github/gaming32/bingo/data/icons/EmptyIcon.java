@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public enum EmptyIcon implements GoalIcon.WithoutContext {
     INSTANCE;
@@ -13,7 +14,7 @@ public enum EmptyIcon implements GoalIcon.WithoutContext {
 
     @Override
     public ItemStack getFallback() {
-        return ItemStack.EMPTY;
+        return Items.STONE.getDefaultInstance();
     }
 
     @Override

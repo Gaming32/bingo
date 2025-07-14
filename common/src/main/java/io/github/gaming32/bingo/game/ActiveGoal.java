@@ -25,7 +25,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.util.Unit;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -100,12 +99,11 @@ public record ActiveGoal(
         final ItemStack result = icon.getFallback(access);
         result.set(DataComponents.ITEM_NAME, name);
         result.set(DataComponents.RARITY, Rarity.COMMON);
-        result.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
         if (result.getCount() > result.getMaxStackSize()) {
             result.set(DataComponents.MAX_STACK_SIZE, Math.min(result.getCount(), Item.ABSOLUTE_MAX_STACK_SIZE));
         }
         tooltip.ifPresent(component -> result.set(DataComponents.LORE, new ItemLore(List.of(component))));
-        result.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiers(List.of(), false));
+        result.set(DataComponents.ATTRIBUTE_MODIFIERS, new ItemAttributeModifiers(List.of()));
         return result;
     }
 
