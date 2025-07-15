@@ -11,6 +11,7 @@ e0e1dcbc8d0051dfd2185f9902fef371ba7e7ff0 data/bingo/bingo/tag/build.json
 ec0fed5926df047e2433eb011817907108d7bf88 data/bingo/bingo/tag/end.json
 e3afeb62cdd4266a49147832aa67f9e14d2f7246 data/bingo/bingo/tag/finish.json
 f8ad1ef69be0bbac9da8bba2cf794b6a6519e50c data/bingo/bingo/tag/item.json
+aae72d460b7547e879e02ee32031ab4aa1597a0e data/bingo/bingo/tag/lockout_inflictable.json
 ddddf8256baebcc4d250a5006d09d57acbb4ba8c data/bingo/bingo/tag/nether.json
 8039ae633d3d0066f7387790117273e7f6f2c64e data/bingo/bingo/tag/never.json
 70db5d2846993435adc1455b5d3829590162a48e data/bingo/bingo/tag/ocean.json
