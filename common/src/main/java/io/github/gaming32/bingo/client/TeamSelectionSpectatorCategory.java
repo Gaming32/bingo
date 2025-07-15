@@ -10,6 +10,7 @@ import net.minecraft.client.gui.spectator.SpectatorMenu;
 import net.minecraft.client.gui.spectator.SpectatorMenuCategory;
 import net.minecraft.client.gui.spectator.SpectatorMenuItem;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
@@ -77,7 +78,7 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
     @Override
     public void renderIcon(GuiGraphics graphics, float brightness, float alpha) {
         graphics.blitSprite(
-            RenderType::guiTextured, CATEGORY_SPRITE, 0, 0, 16, 16,
+            RenderPipelines.GUI_TEXTURED, CATEGORY_SPRITE, 0, 0, 16, 16,
             ARGB.colorFromFloat(alpha, brightness, brightness, brightness)
         );
     }

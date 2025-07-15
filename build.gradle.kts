@@ -4,7 +4,7 @@ import net.fabricmc.loom.api.LoomGradleExtensionAPI
 plugins {
     java
     id("architectury-plugin") version "3.4.161"
-    id("dev.architectury.loom") version "1.10.432" apply false
+    id("dev.architectury.loom") version "1.10.433" apply false
     id("com.modrinth.minotaur") version "2.8.7" apply false
 }
 
@@ -27,7 +27,7 @@ subprojects {
             officialMojangMappings {
                 nameSyntheticMembers = true
             }
-            parchment("org.parchmentmc.data:parchment-1.21.4:2025.03.23@zip")
+            parchment("org.parchmentmc.data:parchment-1.21.6:2025.06.29@zip")
         })
 
         compileOnly("com.demonwav.mcdev:annotations:2.1.0")

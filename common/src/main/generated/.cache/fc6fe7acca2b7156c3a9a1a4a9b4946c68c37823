@@ -1,4 +1,4 @@
-// 1.21.5	-999999999-01-01T00:00:00	Bingo/Bingo goals
+// 1.21.7	-999999999-01-01T00:00:00	Bingo/Bingo goals
 60933cb93b51bc5046fb820f19ed358af2699f4d data/bingo/bingo/goal/easy/3x3x3_glass_cube.json
 49041086f9176f531ee3096073f5f1230a4e0f6a data/bingo/bingo/goal/easy/4x4_paintings.json
 86d1d398343deced49a4d91d7b0ca17274600842 data/bingo/bingo/goal/easy/acacia_log.json
@@ -308,7 +308,7 @@ d2b0d6a8dd9714a472882be430c222fe5e9dfa96 data/bingo/bingo/goal/medium/iron_block
 7ecc63a47d4bf00f5b213f0b80520132c66e89a3 data/bingo/bingo/goal/medium/item_frame.json
 9f205d2007a3791aa17edf9007a23dfd8c54cf62 data/bingo/bingo/goal/medium/kill_golem.json
 8ab402836b2aa0e439183086ce11a00fd7f6f37d data/bingo/bingo/goal/medium/kill_hostile_with_berries.json
-eea754fc0a38c7f4254a324bd5fecf3c09dd0e7a data/bingo/bingo/goal/medium/kill_mobs.json
+c55bb8c3d73adb6a893dd30859c78fa2058bacd6 data/bingo/bingo/goal/medium/kill_mobs.json
 b04f0d5f09b51bf2f355fb424b6868fd022549b9 data/bingo/bingo/goal/medium/kill_self_with_arrow.json
 3b5fc34fac71fcd63d5c059ed20982f7443e724a data/bingo/bingo/goal/medium/kill_with_crystal.json
 3d89fa541171469d187a87186d3181d868e31717 data/bingo/bingo/goal/medium/lapis_block.json

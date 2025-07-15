@@ -11,6 +11,7 @@ import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DatapackRegistryRegistrar;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
+import io.github.gaming32.bingo.platform.registrar.PictureInPictureRendererRegistrar;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.minecraft.client.Minecraft;
@@ -26,6 +27,7 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
@@ -79,6 +81,13 @@ public class NeoForgePlatform extends BingoPlatform {
     @Override
     public void registerClientTooltips(Consumer<ClientTooltipRegistrar> handler) {
         modEventBus.addListener((RegisterClientTooltipComponentFactoriesEvent event) ->
+            handler.accept(event::register)
+        );
+    }
+
+    @Override
+    public void registerPictureInPictureRenderers(Consumer<PictureInPictureRendererRegistrar> handler) {
+        modEventBus.addListener((RegisterPictureInPictureRenderersEvent event) ->
             handler.accept(event::register)
         );
     }

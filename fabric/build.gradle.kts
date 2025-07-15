@@ -55,10 +55,10 @@ dependencies {
         isTransitive = false
     }
 
-    include(implementation("com.electronwill.night-config:core:3.8.1")!!)
-    include(implementation("com.electronwill.night-config:toml:3.8.1")!!)
+    include(implementation("com.electronwill.night-config:core:3.8.2")!!)
+    include(implementation("com.electronwill.night-config:toml:3.8.2")!!)
 
-    modImplementation("com.terraformersmc:modmenu:14.0.0-beta.2")
+    modImplementation("com.terraformersmc:modmenu:15.0.0-beta.3")
 }
 
 tasks.processResources {

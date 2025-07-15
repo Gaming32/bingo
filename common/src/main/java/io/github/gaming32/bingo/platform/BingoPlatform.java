@@ -5,6 +5,7 @@ import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DatapackRegistryRegistrar;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
+import io.github.gaming32.bingo.platform.registrar.PictureInPictureRendererRegistrar;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.minecraft.core.Registry;
@@ -24,6 +25,8 @@ public abstract class BingoPlatform {
     public abstract boolean isModLoaded(String id);
 
     public abstract void registerClientTooltips(Consumer<ClientTooltipRegistrar> handler);
+
+    public abstract void registerPictureInPictureRenderers(Consumer<PictureInPictureRendererRegistrar> handler);
 
     public abstract void registerKeyMappings(Consumer<KeyMappingBuilder> handler);
 

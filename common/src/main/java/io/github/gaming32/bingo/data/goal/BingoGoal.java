@@ -192,7 +192,7 @@ public class BingoGoal {
 
     public void validateParsedCriteria(ProblemReporter reporter, HolderGetter.Provider lootData) {
         criteria.forEach((key, criterionOrSub) -> criterionOrSub.ifParsed(criterion -> {
-            final CriterionValidator validator = new CriterionValidator(reporter.forChild(key), lootData);
+            final CriterionValidator validator = new CriterionValidator(reporter.forChild(new ProblemReporter.FieldPathElement(key)), lootData);
             criterion.triggerInstance().validate(validator);
         }));
     }

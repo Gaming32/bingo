@@ -23,7 +23,7 @@ public class BounceOnBlockTrigger extends SimpleCriterionTrigger<BounceOnBlockTr
     }
 
     public void trigger(ServerPlayer player, BlockPos blockPos) {
-        trigger(player, instance -> instance.matches(player.serverLevel(), blockPos));
+        trigger(player, instance -> instance.matches(player.level(), blockPos));
     }
 
     public record TriggerInstance(

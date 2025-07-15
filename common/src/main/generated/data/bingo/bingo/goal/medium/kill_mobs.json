@@ -253,6 +253,14 @@
         },
         {
           "type": "bingo:entity",
+          "entity": "minecraft:happy_ghast",
+          "item": {
+            "count": 1,
+            "id": "minecraft:happy_ghast_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
           "entity": "minecraft:glow_squid",
           "item": {
             "count": 1,

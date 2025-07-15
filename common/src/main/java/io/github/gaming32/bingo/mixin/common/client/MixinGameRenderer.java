@@ -43,13 +43,13 @@ public class MixinGameRenderer {
             (int)(graphics.guiWidth() - (BingoClient.getBoardWidth() + BingoClient.BOARD_OFFSET) * scale),
             graphics.guiHeight()
         );
-        graphics.pose().pushPose();
+        graphics.pose().pushMatrix();
         graphics.pose().translate(
             (-BingoClient.getBoardWidth() - BingoClient.BOARD_OFFSET) * scale,
-            BingoClient.BOARD_OFFSET * scale, 0f
+            BingoClient.BOARD_OFFSET * scale
         );
         original.call(instance, graphics);
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
         graphics.disableScissor();
     }
 }

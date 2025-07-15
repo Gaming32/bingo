@@ -79,8 +79,8 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
     private void validate(GoalHolder holder) {
         final var collector = new ProblemReporter.Collector();
         holder.goal().validateParsedCriteria(collector, registries);
-        collector.getReport().ifPresent(report ->
-            Bingo.LOGGER.warn("Found validation problems in goal {}:\n{}", holder.id(), report)
-        );
+        if (!collector.isEmpty()) {
+            Bingo.LOGGER.warn("Found validation problems in goal {}:\n{}", holder.id(), collector.getReport());
+        }
     }
 }

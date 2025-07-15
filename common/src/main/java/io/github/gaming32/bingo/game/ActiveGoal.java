@@ -110,14 +110,14 @@ public record ActiveGoal(
     public void validateAndLog(HolderGetter.Provider lootData) {
         final var collector = new ProblemReporter.Collector();
         validate(collector, lootData);
-        collector.getReport().ifPresent(report ->
-            Bingo.LOGGER.warn("Found validation problems in goal {}:\n{}", id, report)
-        );
+        if (!collector.isEmpty()) {
+            Bingo.LOGGER.warn("Found validation problems in goal {}:\n{}", id, collector.getReport());
+        }
     }
 
     private void validate(ProblemReporter reporter, HolderGetter.Provider lootData) {
         criteria.forEach((key, criterion) -> {
-            final CriterionValidator validator = new CriterionValidator(reporter.forChild(key), lootData);
+            final CriterionValidator validator = new CriterionValidator(reporter.forChild(new ProblemReporter.FieldPathElement(key)), lootData);
             criterion.triggerInstance().validate(validator);
         });
     }

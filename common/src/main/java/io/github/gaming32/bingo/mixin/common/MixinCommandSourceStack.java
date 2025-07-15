@@ -155,7 +155,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
         ));
     }
 
-    @SuppressWarnings({"MixinAnnotationTarget", "UnresolvedMixinReference"})
+    @SuppressWarnings("MixinAnnotationTarget")
     @ModifyExpressionValue(
         method = "*",
         at = @At(
@@ -175,10 +175,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
 
     @Inject(
         method = "suggestRegistryElements",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/commands/CommandSourceStack;registryAccess()Lnet/minecraft/core/RegistryAccess;"
-        ),
+        at = @At("HEAD"),
         cancellable = true
     )
     private void suggestBingoGoals(

@@ -22,7 +22,7 @@ public final class BingoContextKeySets {
 
     public static LootContext wrapTool(ServerPlayer player, ItemStack tool) {
         return new LootContext.Builder(
-            new LootParams.Builder(player.serverLevel())
+            new LootParams.Builder(player.level())
                 .withParameter(LootContextParams.TOOL, tool)
                 .create(TOOL_ONLY)
         ).create(Optional.empty());

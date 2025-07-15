@@ -34,6 +34,7 @@ import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -69,14 +70,18 @@ public class Bingo {
         });
 
         Event.PLAYER_JOIN.register(player -> {
-            final var game = player.server.bingo$getGame();
+            MinecraftServer server = player.getServer();
+            assert server != null;
+            final var game = server.bingo$getGame();
             if (game != null) {
                 game.addPlayer(player);
             }
         });
 
         Event.PLAYER_QUIT.register(player -> {
-            final var game = player.server.bingo$getGame();
+            MinecraftServer server = player.getServer();
+            assert server != null;
+            final var game = server.bingo$getGame();
             if (game != null) {
                 game.removePlayer(player);
             }

@@ -35,15 +35,14 @@ public class PulledByLeashTrigger extends SimpleCriterionTrigger<PulledByLeashTr
         trigger(player, instance -> instance.matches(mobContext, knotContext, force));
     }
 
-    public void tryTrigger(Entity entity, Vec3 deltaMovement, Operation<Void> original, Entity leashHolder) {
-        final Vec3 force = deltaMovement.subtract(entity.getDeltaMovement());
-        original.call(entity, deltaMovement);
+    public void tryTrigger(Entity entity, Vec3 force, Operation<Void> original, @Nullable Entity leashHolder) {
+        original.call(entity, force);
         if (!(getLeashPlayer(leashHolder) instanceof ServerPlayer serverPlayer)) return;
         trigger(serverPlayer, entity, leashHolder instanceof LeashFenceKnotEntity knot ? knot : null, force);
     }
 
     @Nullable
-    private static Player getLeashPlayer(Entity leashHolder) {
+    private static Player getLeashPlayer(@Nullable Entity leashHolder) {
         if (leashHolder instanceof Player player) {
             return player;
         }

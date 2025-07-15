@@ -44,7 +44,6 @@ public class TooltipBuilder {
     }
 
     public void draw(Font font, GuiGraphics graphics, int mouseX, int mouseY, ClientTooltipPositioner positioner) {
-        graphics.renderTooltipInternal(font, lines, mouseX, mouseY, positioner, background);
-        graphics.flush();
+        graphics.setTooltipForNextFrameInternal(font, lines, mouseX, mouseY, positioner, background, false);
     }
 }

@@ -26,21 +26,21 @@ public class BingoFeatureTagProvider extends FabricTagProvider<ConfiguredFeature
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        getOrCreateTagBuilder(BingoFeatureTags.TREES).add(getTreeFeatures());
+        builder(BingoFeatureTags.TREES).add(getTreeFeatures());
 
-        getOrCreateTagBuilder(BingoFeatureTags.HUGE_MUSHROOMS).add(
+        builder(BingoFeatureTags.HUGE_MUSHROOMS).add(
             TreeFeatures.HUGE_BROWN_MUSHROOM,
             TreeFeatures.HUGE_RED_MUSHROOM
         );
 
-        getOrCreateTagBuilder(BingoFeatureTags.HUGE_FUNGI).add(
+        builder(BingoFeatureTags.HUGE_FUNGI).add(
             TreeFeatures.WARPED_FUNGUS_PLANTED,
             TreeFeatures.WARPED_FUNGUS,
             TreeFeatures.CRIMSON_FUNGUS_PLANTED,
             TreeFeatures.CRIMSON_FUNGUS
         );
 
-        getOrCreateTagBuilder(BingoFeatureTags.MEGA_JUNGLE_TREES).add(
+        builder(BingoFeatureTags.MEGA_JUNGLE_TREES).add(
             TreeFeatures.MEGA_JUNGLE_TREE
         );
     }

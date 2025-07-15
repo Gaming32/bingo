@@ -20,13 +20,13 @@ public class BingoEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagP
         final var entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
 
         // find passive mobs
-        final FabricTagBuilder passiveBuilder = getOrCreateTagBuilder(BingoEntityTypeTags.PASSIVE);
-        final FabricTagBuilder hostileBuilder = getOrCreateTagBuilder(BingoEntityTypeTags.HOSTILE);
+        final var passiveBuilder = valueLookupBuilder(BingoEntityTypeTags.PASSIVE);
+        final var hostileBuilder = valueLookupBuilder(BingoEntityTypeTags.HOSTILE);
         entityTypes.listElements().forEach(type -> {
             if (isPassive(type.value())) {
-                passiveBuilder.add(type.key());
+                passiveBuilder.add(type.value());
             } else if (!type.value().getCategory().isFriendly()) {
-                hostileBuilder.add(type.key());
+                hostileBuilder.add(type.value());
             }
         });
     }

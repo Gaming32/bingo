@@ -7,6 +7,8 @@ import io.github.gaming32.bingo.client.config.BingoClientConfig;
 import io.github.gaming32.bingo.client.icons.DefaultIconRenderers;
 import io.github.gaming32.bingo.client.icons.IconRenderer;
 import io.github.gaming32.bingo.client.icons.IconRenderers;
+import io.github.gaming32.bingo.client.icons.pip.BlockPictureInPictureRenderState;
+import io.github.gaming32.bingo.client.icons.pip.BlockPictureInPictureRenderer;
 import io.github.gaming32.bingo.client.recipeviewer.RecipeViewerPlugin;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.game.BingoBoard;
@@ -25,7 +27,7 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -82,6 +84,9 @@ public class BingoClient {
         });
 
         BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
+        BingoPlatform.platform.registerPictureInPictureRenderers(registrar ->
+            registrar.register(BlockPictureInPictureRenderState.class, BlockPictureInPictureRenderer::new)
+        );
 
         ClientPayloadHandler.init(new ClientPayloadHandlerImpl());
 
@@ -209,14 +214,14 @@ public class BingoClient {
         }
         final Minecraft minecraft = Minecraft.getInstance();
 
-        graphics.pose().pushPose();
-        graphics.pose().scale(pos.scale(), pos.scale(), 1);
-        graphics.pose().translate(pos.x(), pos.y(), 0);
+        graphics.pose().pushMatrix();
+        graphics.pose().scale(pos.scale(), pos.scale());
+        graphics.pose().translate(pos.x(), pos.y());
 
         final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientGame.size(), pos) : null;
 
         graphics.blitSprite(
-            RenderType::guiTextured,
+            RenderPipelines.GUI_TEXTURED,
             BOARD_TEXTURE, 0, 0,
             7 + 18 * clientGame.size() + 7,
             17 + 18 * clientGame.size() + 7
@@ -224,11 +229,11 @@ public class BingoClient {
         renderBoardTitle(graphics, minecraft.font);
 
         if (BingoMousePos.hasSlotPos(mousePos)) {
-            graphics.pose().pushPose();
+            graphics.pose().pushMatrix();
             final int slotX = mousePos.slotIdX() * 18 + 8;
             final int slotY = mousePos.slotIdY() * 18 + 18;
-            graphics.blitSprite(RenderType::guiTextured, SLOT_HIGHLIGHT_BACK_SPRITE, slotX - 4, slotY - 4, 24, 24);
-            graphics.pose().popPose();
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_HIGHLIGHT_BACK_SPRITE, slotX - 4, slotY - 4, 24, 24);
+            graphics.pose().popMatrix();
         }
 
         final boolean spectator = minecraft.player != null && minecraft.player.isSpectator();
@@ -261,31 +266,23 @@ public class BingoClient {
 
                 GoalProgress progress = clientGame.getProgress(sx, sy);
                 if (progress != null && !isGoalCompleted && progress.progress() > 0 && !spectator) {
-                    graphics.pose().pushPose();
-                    graphics.pose().translate(0, 0, 200);
-
                     final int pWidth = Math.round(progress.progress() * 13f / progress.maxProgress());
                     final int pColor = Mth.hsvToRgb((float)progress.progress() / progress.maxProgress() / 3f, 1f, 1f);
                     final int pX = slotX + 2;
                     final int pY = slotY + 13;
-                    graphics.fill(RenderType.guiOverlay(), pX, pY, pX + 13, pY + 2, 0xff000000);
-                    graphics.fill(RenderType.guiOverlay(), pX, pY, pX + pWidth, pY + 1, pColor | 0xff000000);
-
-                    graphics.pose().popPose();
+                    graphics.fill(pX, pY, pX + 13, pY + 2, 0xff000000);
+                    graphics.fill(pX, pY, pX + pWidth, pY + 1, pColor | 0xff000000);
                 }
             }
         }
 
         if (BingoMousePos.hasSlotPos(mousePos)) {
-            graphics.pose().pushPose();
-            graphics.pose().translate(0f, 0f, 200f);
             final int slotX = mousePos.slotIdX() * 18 + 8;
             final int slotY = mousePos.slotIdY() * 18 + 18;
-            graphics.blitSprite(RenderType::guiTexturedOverlay, SLOT_HIGHLIGHT_FRONT_SPRITE, slotX - 4, slotY - 4, 24, 24);
-            graphics.pose().popPose();
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_HIGHLIGHT_FRONT_SPRITE, slotX - 4, slotY - 4, 24, 24);
         }
 
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
         if (BingoMousePos.hasSlotPos(mousePos)) {
             final var goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
             final GoalProgress progress = clientGame.getProgress(mousePos.slotIdX(), mousePos.slotIdY());

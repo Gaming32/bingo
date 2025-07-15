@@ -2,13 +2,14 @@ package io.github.gaming32.bingo.mixin.common;
 
 import io.github.gaming32.bingo.ext.LeashFenceKnotEntityExt;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.BlockAttachedEntity;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -54,7 +55,7 @@ public abstract class MixinLeashFenceKnotEntity extends BlockAttachedEntity impl
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
-    private void writeOwner(CompoundTag compound, CallbackInfo ci) {
+    private void writeOwner(ValueOutput output, CallbackInfo ci) {
         final UUID ownerUuid;
         if (bingo$cachedOwner != null) {
             ownerUuid = bingo$cachedOwner.getUUID();
@@ -63,12 +64,12 @@ public abstract class MixinLeashFenceKnotEntity extends BlockAttachedEntity impl
         } else {
             return;
         }
-        compound.store("bingo:owner", UUIDUtil.CODEC, ownerUuid);
+        output.store("bingo:owner", UUIDUtil.CODEC, ownerUuid);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
-    private void readOwner(CompoundTag compound, CallbackInfo ci) {
-        final UUID ownerUuid = compound.read("bingo:owner", UUIDUtil.CODEC).orElse(null);
+    private void readOwner(ValueInput input, CallbackInfo ci) {
+        final UUID ownerUuid = input.read("bingo:owner", UUIDUtil.CODEC).orElse(null);
         if (bingo$cachedOwner != null && bingo$cachedOwner.getUUID().equals(ownerUuid)) return;
         bingo$ownerUuid = ownerUuid;
         bingo$cachedOwner = null;

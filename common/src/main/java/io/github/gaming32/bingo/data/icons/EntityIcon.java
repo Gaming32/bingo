@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.data.icons;
 
+import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoCodecs;
@@ -9,14 +10,19 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.storage.TagValueOutput;
+import org.slf4j.Logger;
 
 import java.util.Objects;
 
 public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item) implements GoalIcon.WithoutContext {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     public static final MapCodec<EntityIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(EntityIcon::entity),
@@ -51,7 +57,11 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
     }
 
     public static EntityIcon ofSpawnEgg(Entity entity, int count) {
-        return ofSpawnEgg(entity.getType(), entity.saveWithoutId(new CompoundTag()), count);
+        try (ProblemReporter.ScopedCollector collector = new ProblemReporter.ScopedCollector(new ProblemReporter.FieldPathElement("data"), LOGGER)) {
+            TagValueOutput output = TagValueOutput.createWithContext(collector, entity.registryAccess());
+            entity.saveWithoutId(output);
+            return ofSpawnEgg(entity.getType(), output.buildResult(), count);
+        }
     }
 
     public static EntityIcon ofSpawnEgg(Entity entity) {
@@ -63,7 +73,11 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
     }
 
     public static EntityIcon of(Entity entity, ItemStack item) {
-        return new EntityIcon(entity.getType(), entity.saveWithoutId(new CompoundTag()), item);
+        try (ProblemReporter.ScopedCollector collector = new ProblemReporter.ScopedCollector(new ProblemReporter.FieldPathElement("data"), LOGGER)) {
+            TagValueOutput output = TagValueOutput.createWithContext(collector, entity.registryAccess());
+            entity.saveWithoutId(output);
+            return new EntityIcon(entity.getType(), output.buildResult(), item);
+        }
     }
 
     @Override

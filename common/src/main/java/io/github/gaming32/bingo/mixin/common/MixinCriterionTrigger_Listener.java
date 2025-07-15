@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.mixin.common;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerAdvancements;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +21,9 @@ public class MixinCriterionTrigger_Listener {
     @Inject(method = "run", at = @At("HEAD"), cancellable = true)
     private void listenForGoalCompletion(PlayerAdvancements playerAdvancements, CallbackInfo ci) {
         final var player = ((PlayerAdvancementsAccessor)playerAdvancements).getPlayer();
-        final var game = player.server.bingo$getGame();
+        MinecraftServer server = player.getServer();
+        assert server != null;
+        final var game = server.bingo$getGame();
         if (game == null) return;
         final ActiveGoal goal = game.getBoard().byVanillaId(advancement.id());
         if (goal == null) return;

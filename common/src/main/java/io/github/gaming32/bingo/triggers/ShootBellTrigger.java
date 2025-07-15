@@ -32,7 +32,7 @@ public class ShootBellTrigger extends SimpleCriterionTrigger<ShootBellTrigger.Tr
     }
 
     public void trigger(ServerPlayer player, BlockPos pos, Projectile projectile) {
-        final ServerLevel level = player.serverLevel();
+        final ServerLevel level = player.level();
         final BlockState state = level.getBlockState(pos);
         final LootParams locationParams = new LootParams.Builder(level)
             .withParameter(LootContextParams.ORIGIN, pos.getCenter())

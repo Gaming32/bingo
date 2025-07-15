@@ -31,7 +31,7 @@ public class LeashedEntityTrigger extends SimpleCriterionTrigger<LeashedEntityTr
     }
 
     public void trigger(ServerPlayer player, Entity mob, Entity knot, BlockPos fencePos, ItemStack tool) {
-        final ServerLevel level = player.serverLevel();
+        final ServerLevel level = player.level();
         final LootContext mobContext = EntityPredicate.createContext(player, mob);
         final LootContext knotContext = EntityPredicate.createContext(player, knot);
         final LootParams fenceParams = new LootParams.Builder(level)

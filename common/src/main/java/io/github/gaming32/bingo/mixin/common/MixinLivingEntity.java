@@ -5,9 +5,6 @@ import io.github.gaming32.bingo.ext.ItemEntityExt;
 import io.github.gaming32.bingo.ext.LivingEntityExt;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import io.github.gaming32.bingo.util.DamageEntry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,6 +15,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -70,22 +69,17 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
-    private void onAddAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+    private void onAddAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
         if (!bingo$damageHistory.isEmpty()) {
-            ListTag history = new ListTag();
-            for (DamageEntry entry : bingo$damageHistory) {
-                DamageEntry.CODEC.encodeStart(NbtOps.INSTANCE, entry).result().ifPresent(history::add);
-            }
-            compound.put("bingo:damage_history", history);
+            final var outputList = output.list("bingo:damage_history", DamageEntry.CODEC);
+            bingo$damageHistory.forEach(outputList::add);
         }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
-    private void onReadAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+    private void onReadAdditionalSaveData(ValueInput input, CallbackInfo ci) {
         bingo$damageHistory.clear();
-        for (final var entry : compound.getListOrEmpty("bingo:damage_history")) {
-            DamageEntry.CODEC.parse(NbtOps.INSTANCE, entry).result().ifPresent(bingo$damageHistory::add);
-        }
+        input.listOrEmpty("bingo:damage_history", DamageEntry.CODEC).forEach(bingo$damageHistory::add);
     }
 
     @Inject(

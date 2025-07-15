@@ -23,7 +23,7 @@ public class CompleteMapTrigger extends SimpleCriterionTrigger<CompleteMapTrigge
     }
 
     public void trigger(ServerPlayer player, MapItemSavedData data) {
-        trigger(player, instance -> instance.matches(player.serverLevel(), data));
+        trigger(player, instance -> instance.matches(player.level(), data));
     }
 
     public record TriggerInstance(

@@ -14,11 +14,13 @@ import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DatapackRegistryRegistrar;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
+import io.github.gaming32.bingo.platform.registrar.PictureInPictureRendererRegistrar;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.SpecialGuiElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
@@ -35,7 +37,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
+import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -97,6 +102,15 @@ public class FabricPlatform extends BingoPlatform {
                 return factory != null ? factory.apply(component) : null;
             });
         }
+    }
+
+    @Override
+    public void registerPictureInPictureRenderers(Consumer<PictureInPictureRendererRegistrar> handler) {
+        handler.accept(FabricPlatform::registerPictureInPictureRenderer);
+    }
+
+    private static <S extends PictureInPictureRenderState> void registerPictureInPictureRenderer(Class<S> stateClass, Function<MultiBufferSource.BufferSource, PictureInPictureRenderer<S>> factory) {
+        SpecialGuiElementRegistry.register(context -> factory.apply(context.vertexConsumers()));
     }
 
     @Override

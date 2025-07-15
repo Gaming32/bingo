@@ -4,9 +4,12 @@ import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.fabric.BingoFabric;
 import io.github.gaming32.bingo.network.BingoNetworking;
+import io.github.gaming32.bingo.util.ResourceLocations;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.concurrent.CompletableFuture;
@@ -25,5 +28,7 @@ public class BingoFabricClient implements ClientModInitializer {
             response.writeVarInt(BingoNetworking.PROTOCOL_VERSION);
             return CompletableFuture.completedFuture(response);
         });
+
+        HudElementRegistry.addLast(ResourceLocations.bingo("hud"), (graphics, deltaTracker) -> BingoClient.renderBoardOnHud(Minecraft.getInstance(), graphics));
     }
 }

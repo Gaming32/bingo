@@ -24,7 +24,7 @@ public class IntentionalGameDesignTrigger extends SimpleCriterionTrigger<Intenti
 
     public void trigger(ServerPlayer player, BlockPos pos) {
         final Vec3 posD = Vec3.atCenterOf(pos);
-        trigger(player, instance -> instance.matches(player.serverLevel(), posD));
+        trigger(player, instance -> instance.matches(player.level(), posD));
     }
 
     public record TriggerInstance(

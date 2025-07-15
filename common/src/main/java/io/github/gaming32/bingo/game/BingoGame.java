@@ -539,9 +539,11 @@ public class BingoGame {
         if (revoke || gameMode.canGetGoal(this.board, index, team, isNever)) {
             final boolean isLoss = isNever ^ revoke;
             board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);
-            notifyTeam(player, team, goal, player.server.getPlayerList(), index, isLoss);
+            MinecraftServer server = player.getServer();
+            assert server != null;
+            notifyTeam(player, team, goal, server.getPlayerList(), index, isLoss);
             if (!isLoss) {
-                checkForWin(player.server.getPlayerList());
+                checkForWin(server.getPlayerList());
             }
         }
     }

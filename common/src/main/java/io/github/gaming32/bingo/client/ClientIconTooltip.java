@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 
 public record ClientIconTooltip(IconTooltip tooltip) implements ClientTooltipComponent {
@@ -22,6 +23,6 @@ public record ClientIconTooltip(IconTooltip tooltip) implements ClientTooltipCom
     @Override
     public void renderImage(Font font, int x, int y, int width, int height, GuiGraphics guiGraphics) {
         Minecraft.getInstance().getTextureManager().getTexture(tooltip.icon()).setFilter(true, false);
-        guiGraphics.blit(RenderType::guiTextured, tooltip.icon(), x, y, 0, 0, SIZE, SIZE, SIZE, SIZE);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, tooltip.icon(), x, y, 0, 0, SIZE, SIZE, SIZE, SIZE);
     }
 }

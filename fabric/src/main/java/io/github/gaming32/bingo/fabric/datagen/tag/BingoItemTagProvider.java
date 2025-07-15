@@ -16,6 +16,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
+import net.minecraft.data.tags.TagAppender;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -73,14 +74,14 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .stream()
             .map(x -> x.value().asItem())
             .filter(x -> x != Items.AIR)
-            .forEachOrdered(getOrCreateTagBuilder(BingoItemTags.CLIMBABLE)::add);
+            .forEachOrdered(valueLookupBuilder(BingoItemTags.CLIMBABLE)::add);
 
         // exclude fishing rod from these tags, makes it too easy
-        addItemsFromLootTable(getOrCreateTagBuilder(BingoItemTags.FISHING_JUNK), BuiltInLootTables.FISHING_JUNK, registries, item -> item != Items.FISHING_ROD);
-        addItemsFromLootTable(getOrCreateTagBuilder(BingoItemTags.FISHING_TREASURE), BuiltInLootTables.FISHING_TREASURE, registries, item -> item != Items.FISHING_ROD && item != Items.BOOK);
-        getOrCreateTagBuilder(BingoItemTags.FISHING_TREASURE).add(Items.ENCHANTED_BOOK);
+        addItemsFromLootTable(valueLookupBuilder(BingoItemTags.FISHING_JUNK), BuiltInLootTables.FISHING_JUNK, registries, item -> item != Items.FISHING_ROD);
+        addItemsFromLootTable(valueLookupBuilder(BingoItemTags.FISHING_TREASURE), BuiltInLootTables.FISHING_TREASURE, registries, item -> item != Items.FISHING_ROD && item != Items.BOOK);
+        valueLookupBuilder(BingoItemTags.FISHING_TREASURE).add(Items.ENCHANTED_BOOK);
 
-        getOrCreateTagBuilder(BingoItemTags.LIVING_CORAL_BLOCKS).add(
+        valueLookupBuilder(BingoItemTags.LIVING_CORAL_BLOCKS).add(
             Items.TUBE_CORAL_BLOCK,
             Items.BRAIN_CORAL_BLOCK,
             Items.BUBBLE_CORAL_BLOCK,
@@ -88,7 +89,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.HORN_CORAL_BLOCK
         );
 
-        getOrCreateTagBuilder(BingoItemTags.DEAD_CORAL_BLOCKS).add(
+        valueLookupBuilder(BingoItemTags.DEAD_CORAL_BLOCKS).add(
             Items.DEAD_BRAIN_CORAL_BLOCK,
             Items.DEAD_BUBBLE_CORAL_BLOCK,
             Items.DEAD_FIRE_CORAL_BLOCK,
@@ -96,9 +97,9 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Items.DEAD_TUBE_CORAL_BLOCK
         );
 
-        final var fishBucketsBuilder = getOrCreateTagBuilder(BingoItemTags.FISH_BUCKETS);
+        final var fishBucketsBuilder = valueLookupBuilder(BingoItemTags.FISH_BUCKETS);
 
-        final var trimTemplatesBuilder = getOrCreateTagBuilder(BingoItemTags.TRIM_TEMPLATES);
+        final var trimTemplatesBuilder = valueLookupBuilder(BingoItemTags.TRIM_TEMPLATES);
         VanillaRecipeProvider.smithingTrims()
             .map(VanillaRecipeProvider.TrimTemplate::template)
             .forEach(trimTemplatesBuilder::add);
@@ -110,12 +111,12 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         );
         final var vanillaSaplings = BingoDataGenUtil.loadVanillaTag(ItemTags.SAPLINGS, registries);
 
-        var goldInNameBuilder = getOrCreateTagBuilder(BingoItemTags.GOLD_IN_NAME);
-        var diamondInNameBuilder = getOrCreateTagBuilder(BingoItemTags.DIAMOND_IN_NAME);
-        var meatBuilder = getOrCreateTagBuilder(BingoItemTags.MEAT);
-        var notMeatBuilder = getOrCreateTagBuilder(BingoItemTags.NOT_MEAT);
-        var bannerPatternsBuilder = getOrCreateTagBuilder(BingoItemTags.BANNER_PATTERNS);
-        var bonemealableBuilder = getOrCreateTagBuilder(BingoItemTags.BONEMEALABLE)
+        var goldInNameBuilder = valueLookupBuilder(BingoItemTags.GOLD_IN_NAME);
+        var diamondInNameBuilder = valueLookupBuilder(BingoItemTags.DIAMOND_IN_NAME);
+        var meatBuilder = valueLookupBuilder(BingoItemTags.MEAT);
+        var notMeatBuilder = valueLookupBuilder(BingoItemTags.NOT_MEAT);
+        var bannerPatternsBuilder = valueLookupBuilder(BingoItemTags.BANNER_PATTERNS);
+        var bonemealableBuilder = valueLookupBuilder(BingoItemTags.BONEMEALABLE)
             .forceAddTag(ItemTags.VILLAGER_PLANTABLE_SEEDS)
             .forceAddTag(ItemTags.SAPLINGS);
         Pattern goldPattern = Pattern.compile("\\bGold(?:en)?\\b");
@@ -123,27 +124,27 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         items.listElements().forEach(item -> {
             String itemName = item.value().getName().getString();
             if (goldPattern.matcher(itemName).find()) {
-                goldInNameBuilder.add(item.key());
+                goldInNameBuilder.add(item.value());
             }
             if (diamondPattern.matcher(itemName).find()) {
-                diamondInNameBuilder.add(item.key());
+                diamondInNameBuilder.add(item.value());
             }
             if (item.value().components().has(DataComponents.FOOD)) {
                 if (vanillaMeat.contains(item) || FORCED_MEAT.contains(item.value())) {
-                    meatBuilder.add(item.key());
+                    meatBuilder.add(item.value());
                 } else {
-                    notMeatBuilder.add(item.key());
+                    notMeatBuilder.add(item.value());
                 }
             }
             if (item.value().components().get(DataComponents.PROVIDES_BANNER_PATTERNS) != null) {
-                bannerPatternsBuilder.add(item.key());
+                bannerPatternsBuilder.add(item.value());
             }
             switch (item.value()) {
                 case MobBucketItem mobBucketItem -> {
                     EntityType<? extends Mob> entityType = ((MobBucketItemAccessor) mobBucketItem).getType();
                     Class<? extends Mob> entityTypeClass = BingoDataGenUtil.getEntityTypeClass(entityType);
                     if (entityTypeClass != null && entityType != EntityType.TADPOLE && AbstractFish.class.isAssignableFrom(entityTypeClass)) {
-                        fishBucketsBuilder.add(item.key());
+                        fishBucketsBuilder.add(item.value());
                     }
                 }
                 case BlockItem blockItem -> {
@@ -153,7 +154,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
                             !vanillaVillagerPlantableSeeds.contains(item) &&
                             !vanillaSaplings.contains(item)
                     ) {
-                        bonemealableBuilder.add(item.key());
+                        bonemealableBuilder.add(item.value());
                     }
                 }
                 default -> {
@@ -169,38 +170,38 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         return ResourceKey.create(Registries.ITEM, ResourceLocations.minecraft(path));
     }
 
-    private static void addItemsFromLootTable(FabricTagBuilder tagBuilder, ResourceKey<LootTable> lootTable, HolderLookup.Provider registries, Predicate<Item> filter) {
-        addItemsFromLootTable(tagBuilder, BingoDataGenUtil.loadVanillaLootTable(lootTable, registries), registries, filter);
+    private static void addItemsFromLootTable(TagAppender<Item, Item> tagAppender, ResourceKey<LootTable> lootTable, HolderLookup.Provider registries, Predicate<Item> filter) {
+        addItemsFromLootTable(tagAppender, BingoDataGenUtil.loadVanillaLootTable(lootTable, registries), registries, filter);
     }
 
-    private static void addItemsFromLootTable(FabricTagBuilder tagBuilder, LootTable lootTable, HolderLookup.Provider registries, Predicate<Item> filter) {
+    private static void addItemsFromLootTable(TagAppender<Item, Item> tagAppender, LootTable lootTable, HolderLookup.Provider registries, Predicate<Item> filter) {
         for (LootPool pool : ((LootTableAccessor) lootTable).getPools()) {
             for (LootPoolEntryContainer entry : pool.entries) {
-                addItemsFromLootEntry(tagBuilder, entry, registries, filter);
+                addItemsFromLootEntry(tagAppender, entry, registries, filter);
             }
         }
     }
 
-    private static void addItemsFromLootEntry(FabricTagBuilder tagBuilder, LootPoolEntryContainer lootEntry, HolderLookup.Provider registries, Predicate<Item> filter) {
+    private static void addItemsFromLootEntry(TagAppender<Item, Item> tagAppender, LootPoolEntryContainer lootEntry, HolderLookup.Provider registries, Predicate<Item> filter) {
         switch (lootEntry) {
             case CompositeEntryBase composite -> {
                 for (LootPoolEntryContainer child : ((CompositeEntryBaseAccessor) composite).getChildren()) {
-                    addItemsFromLootEntry(tagBuilder, child, registries, filter);
+                    addItemsFromLootEntry(tagAppender, child, registries, filter);
                 }
             }
             case LootItem lootItem -> {
                 Item item = ((LootItemAccessor) lootItem).getItem().value();
                 if (filter.test(item)) {
-                    tagBuilder.add(item);
+                    tagAppender.add(item);
                 }
             }
-            case TagEntry tagEntry -> tagBuilder.forceAddTag(((TagEntryAccessor) tagEntry).getTag());
+            case TagEntry tagEntry -> tagAppender.forceAddTag(((TagEntryAccessor) tagEntry).getTag());
             case NestedLootTable nestedTable -> {
                 LootTable nestedTableObj = ((NestedLootTableAccessor) nestedTable).getContents().map(
                     lootTableKey -> BingoDataGenUtil.loadVanillaLootTable(lootTableKey, registries),
                     Function.identity()
                 );
-                addItemsFromLootTable(tagBuilder, nestedTableObj, registries, filter);
+                addItemsFromLootTable(tagAppender, nestedTableObj, registries, filter);
             }
             case EmptyLootItem ignored -> {
             }

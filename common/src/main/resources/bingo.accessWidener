@@ -1,14 +1,14 @@
-accessWidener	v2	named
-accessible	class	net/minecraft/advancements/critereon/PlayerPredicate$StatMatcher
+accessWidener v2 named
+accessible class net/minecraft/advancements/critereon/PlayerPredicate$StatMatcher
 
-accessible	method	net/minecraft/client/gui/GuiGraphics	renderTooltipInternal	(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/ResourceLocation;)V
+accessible method net/minecraft/client/gui/GuiGraphics setTooltipForNextFrameInternal (Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/ResourceLocation;Z)V
 
-# TODO: Remove getRegistryKey widener in 1.21.5
-accessible	method	net/minecraft/commands/arguments/ResourceKeyArgument	getRegistryKey	(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;Lnet/minecraft/resources/ResourceKey;Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;)Lnet/minecraft/resources/ResourceKey;
-accessible	method	net/minecraft/commands/arguments/ResourceKeyArgument	resolveKey	(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;Lnet/minecraft/resources/ResourceKey;Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;)Lnet/minecraft/core/Holder$Reference;
+accessible method net/minecraft/commands/arguments/ResourceKeyArgument resolveKey (Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;Lnet/minecraft/resources/ResourceKey;Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;)Lnet/minecraft/core/Holder$Reference;
 
-accessible  method  net/minecraft/world/level/storage/loot/parameters/LootContextParamSets  register    (Ljava/lang/String;Ljava/util/function/Consumer;)Lnet/minecraft/util/context/ContextKeySet;
+accessible method net/minecraft/world/level/storage/loot/parameters/LootContextParamSets register (Ljava/lang/String;Ljava/util/function/Consumer;)Lnet/minecraft/util/context/ContextKeySet;
 
-accessible  field   net/minecraft/world/inventory/GrindstoneMenu    repairSlots Lnet/minecraft/world/Container;
+accessible field net/minecraft/world/inventory/GrindstoneMenu repairSlots Lnet/minecraft/world/Container;
 
-accessible	method	net/minecraft/world/level/storage/LevelResource	<init>	(Ljava/lang/String;)V
+accessible method net/minecraft/world/level/storage/LevelResource <init> (Ljava/lang/String;)V
+
+accessible field net/minecraft/client/gui/GuiGraphics guiRenderState Lnet/minecraft/client/gui/render/state/GuiRenderState;

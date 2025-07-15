@@ -27,7 +27,7 @@ public class GrowBeeNestTreeTrigger extends SimpleCriterionTrigger<GrowBeeNestTr
     }
 
     public void trigger(ServerPlayer player, BlockPos nestPos, BlockState nestState, ItemStack tool) {
-        final LootParams nestParams = new LootParams.Builder(player.serverLevel())
+        final LootParams nestParams = new LootParams.Builder(player.level())
             .withParameter(LootContextParams.ORIGIN, nestPos.getCenter())
             .withParameter(LootContextParams.THIS_ENTITY, player)
             .withParameter(LootContextParams.BLOCK_STATE, nestState)

@@ -17,10 +17,10 @@ public class BingoDamageTypeTagProvider extends FabricTagProvider<DamageType> {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        getOrCreateTagBuilder(BingoDamageTypeTags.VOID).add(
+        builder(BingoDamageTypeTags.VOID).add(
             DamageTypes.FELL_OUT_OF_WORLD
         );
-        getOrCreateTagBuilder(BingoDamageTypeTags.BERRY_BUSH).add(
+        builder(BingoDamageTypeTags.BERRY_BUSH).add(
             DamageTypes.SWEET_BERRY_BUSH
         );
     }

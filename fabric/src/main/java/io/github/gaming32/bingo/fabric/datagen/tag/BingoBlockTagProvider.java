@@ -15,7 +15,7 @@ public class BingoBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        getOrCreateTagBuilder(BingoBlockTags.COPPER_BLOCKS).add(
+        valueLookupBuilder(BingoBlockTags.COPPER_BLOCKS).add(
             Blocks.COPPER_BLOCK,
             Blocks.EXPOSED_COPPER,
             Blocks.WEATHERED_COPPER,
@@ -27,13 +27,13 @@ public class BingoBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             Blocks.WAXED_OXIDIZED_COPPER
         );
 
-        getOrCreateTagBuilder(BingoBlockTags.BASIC_MINERAL_BLOCKS).add(
+        valueLookupBuilder(BingoBlockTags.BASIC_MINERAL_BLOCKS).add(
             Blocks.IRON_BLOCK,
             Blocks.GOLD_BLOCK,
             Blocks.DIAMOND_BLOCK
         );
 
-        getOrCreateTagBuilder(BingoBlockTags.ALL_MINERAL_BLOCKS).add(
+        valueLookupBuilder(BingoBlockTags.ALL_MINERAL_BLOCKS).add(
             Blocks.COAL_BLOCK,
             Blocks.COPPER_BLOCK,
             Blocks.IRON_BLOCK,

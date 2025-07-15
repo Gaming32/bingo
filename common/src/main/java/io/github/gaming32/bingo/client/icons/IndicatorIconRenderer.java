@@ -7,10 +7,9 @@ public class IndicatorIconRenderer implements IconRenderer<IndicatorIcon> {
     @Override
     public void render(IndicatorIcon icon, GuiGraphics graphics, int x, int y) {
         IconRenderers.getRenderer(icon.base()).render(icon.base(), graphics, x, y);
-        graphics.pose().pushPose();
-        graphics.pose().translate(0f, 0f, 200f);
-        graphics.pose().scale(0.5f, 0.5f, 1f);
+        graphics.pose().pushMatrix();
+        graphics.pose().scale(0.5f, 0.5f);
         IconRenderers.getRenderer(icon.indicator()).render(icon.indicator(), graphics, x * 2, y * 2 + 16);
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 }

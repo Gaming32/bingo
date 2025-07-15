@@ -23,10 +23,10 @@ public class MixinGui {
     private void moveEffectsPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (bingo$effectsNeedMoving()) {
             final float scale = BingoClient.CONFIG.getBoardScale();
-            guiGraphics.pose().pushPose();
+            guiGraphics.pose().pushMatrix();
             guiGraphics.pose().translate(
                 (-BingoClient.getBoardWidth() - BingoClient.BOARD_OFFSET) * scale,
-                BingoClient.BOARD_OFFSET * scale, 0f
+                BingoClient.BOARD_OFFSET * scale
             );
         }
     }
@@ -34,7 +34,7 @@ public class MixinGui {
     @Inject(method = "renderEffects", at = @At("RETURN"))
     private void moveEffectsPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (bingo$effectsNeedMoving()) {
-            guiGraphics.pose().popPose();
+            guiGraphics.pose().popMatrix();
         }
     }
 

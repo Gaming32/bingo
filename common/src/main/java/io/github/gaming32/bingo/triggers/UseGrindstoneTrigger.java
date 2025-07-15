@@ -52,7 +52,7 @@ public class UseGrindstoneTrigger extends SimpleCriterionTrigger<UseGrindstoneTr
         );
 
         public boolean matches(ServerPlayer player, double x, double y, double z, ItemStack firstItem, ItemStack secondItem) {
-            if (location.isPresent() && !location.get().matches(player.serverLevel(), x, y, z)) {
+            if (location.isPresent() && !location.get().matches(player.level(), x, y, z)) {
                 return false;
             }
             if (this.firstItem.isPresent() && !this.firstItem.get().matches(BingoContextKeySets.wrapTool(player, firstItem))) {

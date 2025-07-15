@@ -7,7 +7,6 @@
     "AdvancementProgressAccessor",
     "BaseFireBlockAccessor",
     "BounceOnBlockMixin",
-    "MixinAbstractBoat",
     "MixinBasePressurePlateBlock",
     "MixinBeaconBlockEntity",
     "MixinBedBlock",

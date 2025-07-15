@@ -61,7 +61,7 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
         );
 
         public boolean matches(ServerPlayer player, Inventory inventory, ProgressListener<TriggerInstance> progressListener) {
-            final var level = player.serverLevel();
+            final var level = player.level();
             final RecipeManager recipeManager = level.getServer().getRecipeManager();
 
             Set<Item> foundItems = Sets.newIdentityHashSet();

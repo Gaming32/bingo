@@ -15,6 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
@@ -54,7 +55,9 @@ public class RelativeStatsTrigger extends SimpleProgressibleCriterionTrigger<Rel
         );
 
         public boolean matches(ServerPlayer player, ProgressListener<TriggerInstance> progressListener) {
-            final BingoGame game = player.server.bingo$getGame();
+            MinecraftServer server = player.getServer();
+            assert server != null;
+            final BingoGame game = server.bingo$getGame();
             if (game != null) {
                 final Object2IntMap<Stat<?>> baseStats = game.getBaseStats(player);
                 final StatsCounter currentStats = player.getStats();

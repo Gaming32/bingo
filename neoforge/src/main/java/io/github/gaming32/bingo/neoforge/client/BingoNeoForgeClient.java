@@ -19,7 +19,7 @@ public class BingoNeoForgeClient {
 
         bus.addListener((RegisterGuiLayersEvent event) -> event.registerAboveAll(
             ResourceLocations.bingo("hud"),
-            (graphics, partialTick) -> BingoClient.renderBoardOnHud(Minecraft.getInstance(), graphics)
+            (graphics, deltaTracker) -> BingoClient.renderBoardOnHud(Minecraft.getInstance(), graphics)
         ));
 
         mod.registerExtensionPoint(IConfigScreenFactory.class, (minecraft, screen) -> new BingoConfigScreen(screen));

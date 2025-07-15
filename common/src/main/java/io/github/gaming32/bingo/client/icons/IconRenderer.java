@@ -21,9 +21,6 @@ public interface IconRenderer<I extends GoalIcon> {
     static void renderCount(int count, Font font, GuiGraphics graphics, int x, int y) {
         if (count == 1) return;
         final String text = Integer.toString(count);
-        graphics.pose().pushPose();
-        graphics.pose().translate(0f, 0f, 200f);
         graphics.drawString(font, text, x + 19 - 2 - font.width(text), y + 6 + 3, 0xffffff, true);
-        graphics.pose().popPose();
     }
 }

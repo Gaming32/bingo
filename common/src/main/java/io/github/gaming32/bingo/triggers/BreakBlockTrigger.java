@@ -35,7 +35,7 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
     }
 
     public void trigger(ServerPlayer player, BlockPos pos, ItemStack tool) {
-        final ServerLevel level = player.serverLevel();
+        final ServerLevel level = player.level();
         final BlockState state = level.getBlockState(pos);
         final LootParams locationParams = new LootParams.Builder(level)
             .withParameter(LootContextParams.ORIGIN, pos.getCenter())
