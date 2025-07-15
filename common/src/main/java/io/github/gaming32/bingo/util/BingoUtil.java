@@ -216,6 +216,21 @@ public class BingoUtil {
         return Either.right(team.getDisplayName());
     }
 
+    public static String formatRemainingTime(long remainingTimeTicks) {
+        if (remainingTimeTicks < 0)
+            remainingTimeTicks = 0;
+        int hours = (int) (remainingTimeTicks / 20 / 60 / 60);
+        int minutes = (int) (remainingTimeTicks / 20 / 60 % 60);
+        int seconds = (int) (remainingTimeTicks / 20 % 60);
+        StringBuilder sb = new StringBuilder();
+        if (hours > 0) {
+            sb.append(hours);
+            sb.append(":");
+        }
+        sb.append(String.format("%02d:%02d", minutes, seconds));
+        return sb.toString();
+    }
+
     public static <T, R> Either<R, R> mapEither(Either<? extends T, ? extends T> either, Function<? super T, ? extends R> mapper) {
         return either.mapBoth(mapper, mapper);
     }
