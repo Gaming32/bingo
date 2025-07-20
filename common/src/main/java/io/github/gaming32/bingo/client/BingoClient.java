@@ -156,7 +156,7 @@ public class BingoClient {
 
             int totalScore = 0;
             for (final BingoBoard.Teams state : clientGame.states()) {
-                if (state.any()) {
+                if (state.count() == 1) {
                     totalScore++;
                     teams[state.getFirstIndex()].score++;
                 }
@@ -243,20 +243,18 @@ public class BingoClient {
                 renderer.renderDecorations(icon, minecraft.font, graphics, slotX, slotY);
                 final BingoBoard.Teams state = clientGame.getState(sx, sy);
                 boolean isGoalCompleted = state.and(clientTeam);
+                int incompleteColor = Objects.requireNonNullElse(goal.specialType().incompleteColor, 0);
 
-                final Integer color = switch (clientGame.renderMode()) {
-                    case FANCY -> isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor;
-                    case ALL_TEAMS -> {
-                        if (!state.any()) {
-                            yield null;
-                        }
-                        final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
-                        final Integer maybeColor = clientGame.teams()[team.getFirstIndex()].getColor().getColor();
-                        yield maybeColor != null ? maybeColor : 0x55ff55;
-                    }
+                final int[] colors = switch (clientGame.renderMode()) {
+                    case FANCY -> new int[]{(isGoalCompleted ? 0x55ff55 : incompleteColor)};
+                    case ALL_TEAMS -> state.stream().map((team) -> clientGame.teams()[team].getColor().getColor()).toArray();
                 };
-                if (color != null) {
-                    graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
+                for (int i = 0; i < colors.length; ++i) {
+                    int color = colors[i];
+                    int start = 16 * i / colors.length;
+                    int end = 16 * (i + 1) / colors.length;
+                    int base = (colors.length == 1) ? 0xA0000000 : 0x50000000;
+                    graphics.fill(slotX + start, slotY, slotX + end, slotY + 16, base | color);
                 }
 
                 GoalProgress progress = clientGame.getProgress(sx, sy);

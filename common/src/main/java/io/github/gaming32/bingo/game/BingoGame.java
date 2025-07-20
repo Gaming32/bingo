@@ -540,7 +540,7 @@ public class BingoGame {
             final boolean isLoss = isNever ^ revoke;
             board[index] = isLoss ? board[index].andNot(team) : board[index].or(team);
             notifyTeam(player, team, goal, player.server.getPlayerList(), index, isLoss);
-            if (!isLoss) {
+            if (!isLoss || isNever) {
                 checkForWin(player.server.getPlayerList());
             }
         }
@@ -617,12 +617,16 @@ public class BingoGame {
                     teamComponent = teamComponent.copy().withStyle(playerTeam.getColor());
                 }
                 final Component lockoutMessage = Bingo.translatable(
-                    "bingo.goal_lost.lockout",
+                    isLoss ? "bingo.goal_lost_other.lockout" : "bingo.goal_lost.lockout",
                     teamComponent, goal.name().copy().withStyle(ChatFormatting.GOLD)
                 );
                 for (final ServerPlayer player : playerList.getPlayers()) {
                     if (player.isAlliedTo(playerTeam)) continue;
-                    player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.MASTER, 0.5f, 1f);
+                    player.playNotifySound(
+                            isLoss ? SoundEvents.NOTE_BLOCK_CHIME.value() : SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(),
+                            SoundSource.MASTER,
+                            0.5f, 1f
+                    );
                     player.sendSystemMessage(lockoutMessage);
                 }
             }
