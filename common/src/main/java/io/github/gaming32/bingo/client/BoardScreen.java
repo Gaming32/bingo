@@ -41,7 +41,7 @@ public class BoardScreen extends Screen {
         BingoClient.renderBingo(graphics, true, pos);
         assert minecraft != null;
         if (minecraft.player != null && minecraft.player.isSpectator()) {
-            final PlayerTeam team = BingoClient.clientGame.teams()[BingoClient.clientTeam.getFirstIndex()];
+            final PlayerTeam team = BingoClient.clientGame.getTeams()[BingoClient.clientTeam.getFirstIndex()];
             final Integer color = team.getColor().getColor();
             graphics.drawCenteredString(
                 font,
@@ -105,7 +105,7 @@ public class BoardScreen extends Screen {
 
     private void switchTeam(int dir) {
         final int currentIndex = BingoClient.clientTeam.getFirstIndex();
-        final int newIndex = Math.floorMod(currentIndex + dir, BingoClient.clientGame.teams().length);
+        final int newIndex = Math.floorMod(currentIndex + dir, BingoClient.clientGame.getTeams().length);
         BingoClient.clientTeam = BingoBoard.Teams.fromOne(newIndex);
     }
 }

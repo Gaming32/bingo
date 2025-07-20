@@ -6,6 +6,7 @@ import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateEndTimePayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -50,8 +51,8 @@ public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
         if (!checkGamePresent(payload)) return;
         System.arraycopy(
             payload.states(), 0,
-            BingoClient.clientGame.states(), 0,
-            BingoClient.clientGame.size() * BingoClient.clientGame.size()
+            BingoClient.clientGame.getStates(), 0,
+            BingoClient.clientGame.getSize() * BingoClient.clientGame.getSize()
         );
     }
 
@@ -63,18 +64,24 @@ public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
     @Override
     public void handleUpdateProgress(UpdateProgressPayload payload) {
         if (!checkGamePresent(payload)) return;
-        BingoClient.clientGame.progress()[payload.index()] = new GoalProgress(payload.progress(), payload.maxProgress());
+        BingoClient.clientGame.getProgress()[payload.index()] = new GoalProgress(payload.progress(), payload.maxProgress());
     }
 
     @Override
     public void handleUpdateState(UpdateStatePayload payload) {
         if (!checkGamePresent(payload)) return;
         final int index = payload.index();
-        if (index < 0 || index >= BingoClient.clientGame.size() * BingoClient.clientGame.size()) {
+        if (index < 0 || index >= BingoClient.clientGame.getSize() * BingoClient.clientGame.getSize()) {
             Bingo.LOGGER.warn("Invalid {} payload: invalid board index {}", UpdateStatePayload.TYPE, index);
             return;
         }
-        BingoClient.clientGame.states()[index] = payload.newState();
+        BingoClient.clientGame.getStates()[index] = payload.newState();
+    }
+
+    @Override
+    public void handleUpdateEndTime(UpdateEndTimePayload payload) {
+        if (!checkGamePresent(payload)) return;
+        BingoClient.clientGame.setScheduledEndTime(payload.endTime());
     }
 
     private static boolean checkGamePresent(CustomPacketPayload payload) {
