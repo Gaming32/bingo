@@ -1,88 +1,219 @@
-import com.modrinth.minotaur.ModrinthExtension
-import net.fabricmc.loom.api.LoomGradleExtensionAPI
+import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
+import xyz.wagyourtail.unimined.internal.minecraft.MinecraftProvider
 
 plugins {
     java
-    id("architectury-plugin") version "3.4.161"
-    id("dev.architectury.loom") version "1.10.433" apply false
-    id("com.modrinth.minotaur") version "2.8.7" apply false
+    alias(libs.plugins.unimined)
+    alias(libs.plugins.mod.publish.plugin)
 }
 
-operator fun Project.get(key: String) = properties[key] as String
+operator fun Project.get(key: String) = properties[key] as? String ?: throw IllegalArgumentException("Missing property $key")
 
-architectury {
-    minecraft = rootProject["minecraft_version"]
-}
-
+base.archivesName = rootProject["archives_base_name"]
+group = rootProject["maven_group"]
 version = rootProject["mod_version"]
 
-subprojects {
-    apply(plugin = "dev.architectury.loom")
-
-    val loom = extensions.getByName("loom") as LoomGradleExtensionAPI
-    dependencies {
-        "minecraft"("com.mojang:minecraft:${rootProject["minecraft_version"]}")
-        @Suppress("UnstableApiUsage")
-        "mappings"(loom.layered {
-            officialMojangMappings {
-                nameSyntheticMembers = true
-            }
-            parchment("org.parchmentmc.data:parchment-1.21.6:2025.06.29@zip")
-        })
-
-        compileOnly("com.demonwav.mcdev:annotations:2.1.0")
-    }
-
-    if (name != "common") {
-        apply(plugin = "com.modrinth.minotaur")
-        extensions.configure<ModrinthExtension>("modrinth") {
-            token = if (rootProject.hasProperty("modrinthKey")) {
-                rootProject["modrinthKey"]
-            } else {
-                System.getenv("MODRINTH_TOKEN")
-            }
-            projectId = "bingo-mod"
-            val changelogFile = rootProject.file("changelogs/${rootProject.version}.md")
-            if (changelogFile.isFile) {
-                println("Setting changelog to file $changelogFile")
-                changelog = changelogFile.readText()
-            } else {
-                println("Changelog file $changelogFile doesn't exist!")
-            }
-            gameVersions.add(rootProject["minecraft_version"])
+sourceSets {
+    main {
+        resources {
+            srcDir("src/main/generated")
         }
     }
-
-    version = "${rootProject.version}+$name"
 }
 
-allprojects {
-    apply(plugin = "java")
-    apply(plugin = "architectury-plugin")
-
-    base.archivesName = rootProject["archives_base_name"]
-    group = rootProject["maven_group"]
-
-    repositories {
-        maven("https://maven.parchmentmc.org") {
-            name = "ParchmentMC"
-        }
-        maven("https://maven.shedaniel.me/")
-        maven("https://maven.blamejared.com/") {
-            name = "Jared's maven"
-        }
-        maven("https://maven.terraformersmc.com/releases/") {
-            name = "TerraformersMC"
-        }
-        maven("https://maven.neoforged.net/releases/")
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
     }
 
-    tasks.withType<JavaCompile> {
-        options.encoding = "UTF-8"
-        options.release = 21
+    withSourcesJar()
+}
+
+val fabric: SourceSet by sourceSets.creating
+val neoforge: SourceSet by sourceSets.creating
+
+repositories {
+    unimined.neoForgedMaven()
+    unimined.spongeMaven()
+    unimined.wagYourMaven("releases")
+    maven("https://maven.shedaniel.me/")
+    maven("https://maven.blamejared.com/") {
+        name = "Jared's maven"
+    }
+    maven("https://maven.terraformersmc.com/releases/") {
+        name = "TerraformersMC"
+    }
+}
+
+val modCompileOnly: Configuration by configurations.creating
+configurations.compileOnly.get().extendsFrom(modCompileOnly)
+
+unimined.minecraft {
+    version = libs.versions.minecraft.get()
+
+    mappings {
+        mojmap()
+        parchment(libs.versions.parchment.mcversion.get(), libs.versions.parchment.date.get())
+        intermediary()
+
+        devFallbackNamespace("official")
     }
 
-    java {
-        withSourcesJar()
+    accessWidener {
+        accessWidener("src/main/resources/bingo.accessWidener")
+    }
+
+    if (sourceSet == sourceSets.main.get()) {
+        mods {
+            remap(modCompileOnly) {
+                namespace("intermediary")
+                catchAWNamespaceAssertion()
+            }
+        }
+    }
+
+    defaultRemapJar = false
+}
+
+unimined.minecraft(fabric) {
+    combineWith(sourceSets.main.get())
+
+    fabric {
+        loader(libs.versions.fabric.loader.get())
+        accessWidener("src/main/resources/bingo.accessWidener")
+    }
+
+    mods {
+        modImplementation {
+            mixinRemap {
+                reset()
+                enableBaseMixin()
+                enableMixinExtra()
+            }
+        }
+    }
+
+    // TODO: removal internal API usage when there is a way to inherit run configs
+    @Suppress("UnstableApiUsage")
+    (this as MinecraftProvider).provideRunClientTask("datagenClient", file("run/datagenClient"))
+
+    runs {
+        config("datagenClient") {
+            description = "Data Generation"
+            jvmArgs(
+                "-Dfabric-api.datagen",
+                "-Dfabric-api.datagen.output-dir=${file("src/main/generated").absolutePath}",
+                "-Dfabric-api.datagen.modid=bingo"
+            )
+        }
+    }
+
+    defaultRemapJar = true
+}
+
+unimined.minecraft(neoforge) {
+    combineWith(sourceSets.main.get())
+
+    neoForge {
+        loader(libs.versions.neoforge.get())
+        accessTransformer(aw2at("src/main/resources/bingo.accessWidener"))
+    }
+
+    minecraftRemapper.config {
+        ignoreConflicts(true)
+    }
+
+    defaultRemapJar = true
+}
+
+val fabricCompileOnly by configurations.getting
+val fabricInclude by configurations.getting
+val fabricImplementation by configurations.getting
+val fabricModImplementation by configurations.getting
+
+dependencies {
+    implementation(libs.mixin)
+    implementation(libs.mixinextras)
+    libs.bundles.nightconfig.get().forEach {
+        fabricInclude(fabricImplementation(implementation(it)!!)!!)
+    }
+    fabricModImplementation(fabricApi.fabric(libs.versions.fabric.api.get()))
+    fabricModImplementation(libs.modmenu)
+    modCompileOnly(libs.rei) {
+        exclude(group = "dev.architectury")
+    }
+    modCompileOnly(libs.jei)
+    modCompileOnly(libs.emi) // Unfortunately, although the API does what I need, it does in a way that's wholly different from the other recipe viewers
+    fabricCompileOnly(compileOnly(libs.mcdev.annotations.get())!!)
+}
+
+tasks.getByName("jar") {
+    enabled = false
+}
+
+val fabricSourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("fabric-sources")
+    from(sourceSets.main.get().allSource)
+    from(fabric.allSource)
+}
+
+val neoforgeSourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("neoforge-sources")
+    from(sourceSets.main.get().allSource)
+    from(neoforge.allSource)
+}
+
+tasks.getByName<ProcessResources>("processFabricResources") {
+    inputs.property("version", project.version)
+
+    filesMatching("fabric.mod.json") {
+        expand("version" to project.version)
+    }
+}
+
+tasks.getByName<ProcessResources>("processNeoforgeResources") {
+    inputs.property("version", project.version)
+
+    filesMatching("META-INF/neoforge.mods.toml") {
+        expand("version" to project.version)
+    }
+}
+
+publishMods {
+    val changelogFile = file("changelogs/${project.version}.md")
+    if (changelogFile.isFile) {
+        println("Setting changelog to file $changelogFile")
+        changelog.set(changelogFile.readText())
+    } else {
+        println("Changelog file $changelogFile doesn't exist!")
+        changelog.set("")
+    }
+
+    type = STABLE
+
+    val modrinthOpts = modrinthOptions {
+        accessToken.set(providers.gradleProperty("modrinthKey").orElse(providers.environmentVariable("MODRINTH_TOKEN")))
+        projectId.set("bingo-mod")
+        minecraftVersions.add(libs.versions.minecraft)
+    }
+
+    modrinth("modrinthFabric") {
+        from(modrinthOpts)
+        file.set(tasks.getByName<RemapJarTask>("remapFabricJar").asJar.archiveFile)
+        additionalFiles.from(fabricSourcesJar)
+        modLoaders.add("fabric")
+        requires {
+            slug.set("fabric-api")
+        }
+        optional {
+            slug.set("modmenu")
+        }
+    }
+
+    modrinth("modrinthNeoforge") {
+        from(modrinthOpts)
+        file.set(tasks.getByName<RemapJarTask>("remapNeoforgeJar").asJar.archiveFile)
+        additionalFiles.from(neoforgeSourcesJar)
+        modLoaders.add("neoforge")
     }
 }

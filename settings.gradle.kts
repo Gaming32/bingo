@@ -1,12 +1,27 @@
 pluginManagement {
     repositories {
-        maven("https://maven.fabricmc.net/")
-        maven("https://maven.architectury.dev/")
-        maven("https://maven.neoforged.net/releases/")
-        gradlePluginPortal()
+        mavenCentral()
+        maven {
+            url = uri("https://maven.neoforged.net/releases")
+        }
+        maven {
+            url = uri("https://maven.minecraftforge.net/")
+        }
+        maven {
+            url = uri("https://maven.fabricmc.net/")
+        }
+        maven {
+            url = uri("https://maven.wagyourtail.xyz/releases")
+        }
+        maven {
+            url = uri("https://maven.wagyourtail.xyz/snapshots")
+        }
+        gradlePluginPortal {
+            content {
+                excludeGroup("org.apache.logging.log4j")
+            }
+        }
     }
 }
 
-include("common")
-include("fabric")
-include("neoforge")
+rootProject.name = "bingo"

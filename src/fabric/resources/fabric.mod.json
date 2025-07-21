@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "bingo",
+  "version": "${version}",
+
+  "name": "Bingo",
+  "description": "A mod for playing bingo! Works best if on both client and server, but also has compat for Vanilla clients.",
+  "authors": [
+    "Gaming32",
+    "Earthcomputer"
+  ],
+  "contact": {},
+
+  "license": "MIT",
+  "icon": "icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.gaming32.bingo.fabric.BingoFabric"
+    ],
+    "client": [
+      "io.github.gaming32.bingo.fabric.client.BingoFabricClient"
+    ],
+    "fabric-datagen": [
+      "io.github.gaming32.bingo.fabric.datagen.BingoDataGenFabric"
+    ],
+    "jei_mod_plugin": [
+      "io.github.gaming32.bingo.client.recipeviewer.jei.BingoJeiPlugin"
+    ],
+    "modmenu": [
+      "io.github.gaming32.bingo.fabric.compat.ModMenuCompat"
+    ],
+    "fabric-gametest": [
+    ]
+  },
+  "mixins": [
+    "bingo.mixins.json",
+    "bingo-common.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "fabric-api": ">=0.112.1",
+    "minecraft": ">=1.21.6 <1.21.8"
+  },
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_6862": [
+        "net/fabricmc/fabric/api/tag/FabricTagKey"
+      ],
+      "net/minecraft/class_8610": [
+        "net/fabricmc/fabric/api/networking/v1/FabricServerConfigurationNetworkHandler"
+      ],
+      "net/minecraft/class_11389": [
+        "net/fabricmc/fabric/api/datagen/v1/provider/FabricProvidedTagBuilder<TE;TT;>"
+      ]
+    }
+  }
+}
