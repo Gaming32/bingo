@@ -187,6 +187,10 @@ public class FabricPlatform extends BingoPlatform {
         if (builder.isSynced()) {
             fabricBuilder.attribute(RegistryAttribute.SYNCED);
         }
+
+        // FIXME: this technically shouldn't be optional, but prevents clients from being kicked on different mod loaders
+        fabricBuilder.attribute(RegistryAttribute.OPTIONAL);
+
         return new FabricDeferredRegister<>(fabricBuilder.buildAndRegister());
     }
 

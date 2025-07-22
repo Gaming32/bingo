@@ -100,7 +100,7 @@ public final class BingoNetworkingImpl extends BingoNetworking {
             switch (protocol) {
                 case PLAY -> {
                     switch (flow) {
-                        case null -> inner.playBidirectional(type, codec, neoHandler);
+                        case null -> inner.playBidirectional(type, codec, neoHandler, neoHandler);
                         case CLIENTBOUND -> inner.playToClient(type, codec, neoHandler);
                         case SERVERBOUND -> inner.playToServer(type, codec, neoHandler);
                     }
@@ -109,7 +109,7 @@ public final class BingoNetworkingImpl extends BingoNetworking {
                     @SuppressWarnings("unchecked")
                     final var castedCodec = (StreamCodec<? super FriendlyByteBuf, P>) codec;
                     switch (flow) {
-                        case null -> inner.configurationBidirectional(type, castedCodec, neoHandler);
+                        case null -> inner.configurationBidirectional(type, castedCodec, neoHandler, neoHandler);
                         case CLIENTBOUND -> inner.configurationToClient(type, castedCodec, neoHandler);
                         case SERVERBOUND -> inner.configurationToServer(type, castedCodec, neoHandler);
                     }
