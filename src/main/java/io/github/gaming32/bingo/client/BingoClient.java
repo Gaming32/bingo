@@ -240,14 +240,10 @@ public class BingoClient {
         for (int sx = 0; sx < clientGame.size(); sx++) {
             for (int sy = 0; sy < clientGame.size(); sy++) {
                 final var goal = clientGame.getGoal(sx, sy);
-                final int slotX = sx * 18 + 8;
-                final int slotY = sy * 18 + 18;
-                final GoalIcon icon = goal.icon();
-                final IconRenderer<? super GoalIcon> renderer = IconRenderers.getRenderer(icon);
-                renderer.render(icon, graphics, slotX, slotY);
-                renderer.renderDecorations(icon, minecraft.font, graphics, slotX, slotY);
                 final BingoBoard.Teams state = clientGame.getState(sx, sy);
                 boolean isGoalCompleted = state.and(clientTeam);
+                final int slotX = sx * 18 + 8;
+                final int slotY = sy * 18 + 18;
 
                 final Integer color = switch (clientGame.renderMode()) {
                     case FANCY -> isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor;
@@ -263,6 +259,11 @@ public class BingoClient {
                 if (color != null) {
                     graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
                 }
+
+                final GoalIcon icon = goal.icon();
+                final IconRenderer<? super GoalIcon> renderer = IconRenderers.getRenderer(icon);
+                renderer.render(icon, graphics, slotX, slotY);
+                renderer.renderDecorations(icon, minecraft.font, graphics, slotX, slotY);
 
                 GoalProgress progress = clientGame.getProgress(sx, sy);
                 if (progress != null && !isGoalCompleted && progress.progress() > 0 && !spectator) {
@@ -309,7 +310,7 @@ public class BingoClient {
         final FormattedCharSequence title = font.width(BOARD_TITLE) > maxWidth
             ? getVisualOrderWithEllipses(BOARD_TITLE_SHORT, font, maxWidth)
             : BOARD_TITLE.getVisualOrderText();
-        graphics.drawString(font, title, 8, 6, 0x404040, false);
+        graphics.drawString(font, title, 8, 6, 0xff404040, false);
     }
 
     public static FormattedCharSequence getVisualOrderWithEllipses(Component text, Font font, int maxWidth) {

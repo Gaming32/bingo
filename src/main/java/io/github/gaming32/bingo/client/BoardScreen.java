@@ -47,7 +47,7 @@ public class BoardScreen extends Screen {
                 font,
                 BingoClient.getDisplayName(team),
                 width / 2, (int)pos.y() + BingoClient.getBoardHeight() + BingoClient.BOARD_OFFSET,
-                color != null ? color : 0xffffff
+                color != null ? color : 0xffffffff
             );
         }
     }

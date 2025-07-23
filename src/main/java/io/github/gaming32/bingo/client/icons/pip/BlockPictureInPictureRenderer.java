@@ -1,6 +1,8 @@
 package io.github.gaming32.bingo.client.icons.pip;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -13,14 +15,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionfc;
 import org.joml.Vector3f;
 
 public class BlockPictureInPictureRenderer extends PictureInPictureRenderer<BlockPictureInPictureRenderState> {
+    private static final float RENDER_SIZE = 16F;
     private static final ItemTransform DEFAULT_TRANSFORM = new ItemTransform(
         new Vector3f(30f, 225f, 0f),
         new Vector3f(0f, 0f, 0f),
         new Vector3f(0.625f, 0.625f, 0.625f)
     );
+    private static final Quaternionfc LIGHT_FIX_ROT = Axis.YP.rotationDegrees(285);
 
     public BlockPictureInPictureRenderer(MultiBufferSource.BufferSource bufferSource) {
         super(bufferSource);
@@ -34,16 +39,16 @@ public class BlockPictureInPictureRenderer extends PictureInPictureRenderer<Bloc
 
     @Override
     protected void renderToTexture(BlockPictureInPictureRenderState state, PoseStack pose) {
-        pose.pushPose();
-//        pose.translate(state.x0() + 1f, state.y0() + 4f, 150f);
-//        pose.mulPose(new Matrix4f().scaling(1f, -1f, 1f));
-//        pose.scale(16f, 16f, 16f);
-        pose.pushPose();
+        Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
+
+        float scale = state.scale();
+        pose.scale(RENDER_SIZE * scale, -RENDER_SIZE * scale, -RENDER_SIZE * scale);
         DEFAULT_TRANSFORM.apply(false, pose.last());
-//        pose.translate(-0.5f, -0.5f, -0.5f);
+        pose.translate(.5, .5, .5);
+        pose.last().normal().rotate(LIGHT_FIX_ROT);
+        pose.translate(-.5, -.5, -.5);
+
         renderSingleBlock(state.block(), pose, bufferSource);
-        pose.popPose();
-        pose.popPose();
     }
 
     @Override
@@ -75,5 +80,10 @@ public class BlockPictureInPictureRenderer extends PictureInPictureRenderer<Bloc
                 state.getBlock(), ItemDisplayContext.NONE, poseStack, bufferSource,
                 LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY
             );
+    }
+
+    @Override
+    protected float getTranslateY(int height, int guiScale) {
+        return (float) height / 2;
     }
 }

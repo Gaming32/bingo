@@ -95,7 +95,6 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
     public enum SpecialType implements StringRepresentable {
         NONE(null), NEVER(0xff5555), FINISH(0x5555ff);
 
-        @SuppressWarnings("deprecation")
         public static final EnumCodec<SpecialType> CODEC = StringRepresentable.fromEnum(SpecialType::values);
         public static final StreamCodec<FriendlyByteBuf, SpecialType> STREAM_CODEC = BingoStreamCodecs.enum_(SpecialType.class);
 

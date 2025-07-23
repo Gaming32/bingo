@@ -18,6 +18,7 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.slf4j.Logger;
 
@@ -44,13 +45,14 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         if (Math.max(entity.getBbWidth(), entity.getBbHeight()) > 1) {
             size /= Math.max(entity.getBbWidth(), entity.getBbHeight());
         }
-        int yOffset = 15;
         if (entity instanceof LivingEntity living && living.isBaby()) {
             size /= 1.7f;
         }
 
+        final Vector3f translation = new Vector3f(0, entity.getBbHeight() / 2 + 0.0625f, 0);
         final Quaternionf xRot = Axis.XP.rotationDegrees(-10f);
-        Quaternionf rotation = Axis.ZP.rotationDegrees(180f).mul(xRot);
+        final Quaternionf rotation = Axis.ZP.rotationDegrees(180f).mul(xRot);
+        xRot.conjugate();
         entity.tickCount = minecraft.player.tickCount;
         entity.setYRot(-150f);
         entity.setYHeadRot(-150f);
@@ -58,15 +60,12 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         entity.setXRot(0f);
 
         final EntityRenderDispatcher renderDispatcher = minecraft.getEntityRenderDispatcher();
-        xRot.conjugate();
-        ((CameraAccessor)renderDispatcher.camera).setYRot(0f);
-        renderDispatcher.overrideCameraOrientation(xRot);
-        renderDispatcher.setRenderShadow(false);
+
+        Vector2f topLeft = graphics.pose().transformPosition(x, y, new Vector2f());
+        Vector2f bottomRight = graphics.pose().transformPosition(x + 16, y + 16, new Vector2f());
 
         EntityRenderer<? super Entity, ?> entityRenderer = renderDispatcher.getRenderer(entity);
-        graphics.submitEntityRenderState(entityRenderer.createRenderState(entity, 1), size, new Vector3f(0, yOffset, 0), rotation, new Quaternionf(), x, y, x + 16, y + 16);
-
-        renderDispatcher.setRenderShadow(true);
+        graphics.submitEntityRenderState(entityRenderer.createRenderState(entity, 1), size, translation, rotation, xRot, (int) topLeft.x, (int) topLeft.y, (int) bottomRight.x, (int) bottomRight.y);
     }
 
     @Nullable
