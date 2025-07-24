@@ -1,7 +1,5 @@
 package io.github.gaming32.bingo.platform;
 
-import com.google.gson.JsonElement;
-import com.mojang.serialization.DynamicOps;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
@@ -10,10 +8,7 @@ import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registrar.PictureInPictureRendererRegistrar;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.RegistryOps;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -36,10 +31,6 @@ public abstract class BingoPlatform {
     public abstract void registerKeyMappings(Consumer<KeyMappingBuilder> handler);
 
     public abstract void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler);
-
-    public abstract HolderLookup.Provider getRegistryAccessFromReloadListener(PreparableReloadListener listener);
-
-    public abstract RegistryOps<JsonElement> makeRegistryOpsFromReloadListener(PreparableReloadListener listener, DynamicOps<JsonElement> wrapped);
 
     public abstract void registerDatapackRegistries(Consumer<DatapackRegistryRegistrar> handler);
 

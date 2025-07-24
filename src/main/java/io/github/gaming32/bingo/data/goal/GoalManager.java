@@ -4,10 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoRegistries;
-import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -26,13 +24,11 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
 
     private static Map<ResourceLocation, GoalHolder> goals = Map.of();
     private static Map<Integer, List<GoalHolder>> goalsByDifficulty = Map.of();
+    private final HolderLookup.Provider registries;
 
     public GoalManager(HolderLookup.Provider registries) {
         super(registries, BingoGoal.CODEC, BingoRegistries.GOAL);
-    }
-
-    public GoalManager() {
-        super(BingoGoal.CODEC, FileToIdConverter.registry(BingoRegistries.GOAL));
+        this.registries = registries;
     }
 
     public static Set<ResourceLocation> getGoalIds() {
@@ -61,7 +57,7 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
     protected void apply(Map<ResourceLocation, BingoGoal> goals, ResourceManager resourceManager, ProfilerFiller profiler) {
         final ImmutableMap.Builder<ResourceLocation, GoalHolder> result = ImmutableMap.builderWithExpectedSize(goals.size());
         final Map<Integer, ImmutableList.Builder<GoalHolder>> byDifficulty = HashMap.newHashMap(
-            (int) BingoPlatform.platform.getRegistryAccessFromReloadListener(this).lookupOrThrow(BingoRegistries.DIFFICULTY).listElements().count()
+            (int) registries.lookupOrThrow(BingoRegistries.DIFFICULTY).listElements().count()
         );
         for (final var entry : goals.entrySet()) {
             final var goal = entry.getValue();
@@ -82,7 +78,7 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
 
     private void validate(GoalHolder holder) {
         final var collector = new ProblemReporter.Collector();
-        holder.goal().validateParsedCriteria(collector, BingoPlatform.platform.getRegistryAccessFromReloadListener(this));
+        holder.goal().validateParsedCriteria(collector, registries);
         if (!collector.isEmpty()) {
             Bingo.LOGGER.warn("Found validation problems in goal {}:\n{}", holder.id(), collector.getReport());
         }
