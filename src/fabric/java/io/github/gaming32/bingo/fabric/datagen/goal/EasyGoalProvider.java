@@ -1085,6 +1085,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
 
         addGoal(obtainItemGoal(id("firefly_bush"), items, Items.FIREFLY_BUSH)
             .tags(BingoTags.OVERWORLD));
+
+        addGoal(obtainItemGoal(id("dried_ghast"), items, Items.DRIED_GHAST)
+            .tags(BingoTags.NETHER));
     }
 
     private GoalBuilder eatEntireCake() {
