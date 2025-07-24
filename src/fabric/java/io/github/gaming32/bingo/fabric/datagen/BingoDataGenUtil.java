@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.fabric.datagen;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.DynamicOps;
@@ -9,17 +10,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.VanillaPackResources;
 import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagFile;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,13 +38,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class BingoDataGenUtil {
     private static final Map<EntityType<?>, Class<? extends Entity>> ENTITY_TYPE_TO_CLASS = createEntityTypeToClassMap();
+    private static final Map<Item, List<ResourceLocation>> RECIPES_BY_ITEM = createRecipesByItemMap();
 
     private BingoDataGenUtil() {
     }
@@ -148,5 +157,54 @@ public final class BingoDataGenUtil {
     @Nullable
     public static <T extends Entity> Class<T> getEntityTypeClass(EntityType<T> entityType) {
         return (Class<T>) ENTITY_TYPE_TO_CLASS.get(entityType);
+    }
+
+    private static Map<Item, List<ResourceLocation>> createRecipesByItemMap() {
+        Map<Item, List<ResourceLocation>> recipesByItem = new HashMap<>();
+
+        VanillaPackResources packResources = Minecraft.getInstance().getVanillaPackResources();
+        Set<String> namespaces = packResources.getNamespaces(PackType.SERVER_DATA);
+        for (String namespace : namespaces) {
+            packResources.listResources(PackType.SERVER_DATA, namespace, "recipe", (recipeId, resource) -> {
+                final JsonElement json;
+                try (Reader input = new InputStreamReader(resource.get())) {
+                    json = JsonParser.parseReader(input);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+
+                if (!json.isJsonObject()) {
+                    return;
+                }
+                JsonObject result = GsonHelper.getAsJsonObject(json.getAsJsonObject(), "result", new JsonObject());
+                String id = GsonHelper.getAsString(result, "id", null);
+                if (id == null) {
+                    return;
+                }
+                ResourceLocation resultId = ResourceLocation.tryParse(id);
+                Item item = BuiltInRegistries.ITEM.getValue(resultId);
+                if (item != Items.AIR) {
+                    recipesByItem.computeIfAbsent(item, k -> new ArrayList<>()).add(convertRecipeId(recipeId));
+                }
+            });
+        }
+
+        return recipesByItem;
+    }
+
+    private static ResourceLocation convertRecipeId(ResourceLocation fullPath) {
+        return fullPath.withPath(path -> {
+            if (path.startsWith("recipe/")) {
+                path = path.substring("recipe/".length());
+            }
+            if (path.endsWith(".json")) {
+                path = path.substring(0, path.length() - ".json".length());
+            }
+            return path;
+        });
+    }
+
+    public static List<ResourceLocation> getRecipesForItem(Item item) {
+        return RECIPES_BY_ITEM.getOrDefault(item, List.of());
     }
 }

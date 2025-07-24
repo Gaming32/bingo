@@ -1,8 +1,14 @@
 {
   "criteria": {
-    "craft": {
+    "craft_minecraft_stick": {
       "conditions": {
         "recipe_id": "minecraft:stick"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "craft_minecraft_stick_from_bamboo_item": {
+      "conditions": {
+        "recipe_id": "minecraft:stick_from_bamboo_item"
       },
       "trigger": "minecraft:recipe_crafted"
     }
@@ -20,7 +26,8 @@
   },
   "requirements": [
     [
-      "craft"
+      "craft_minecraft_stick",
+      "craft_minecraft_stick_from_bamboo_item"
     ]
   ],
   "tags": [

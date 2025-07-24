@@ -44,6 +44,7 @@ import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.BredAnimalsTrigger;
@@ -677,10 +678,15 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .reactant("pacifist")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.NETHER, BingoTags.COMBAT)
         );
-        addGoal(BingoGoal.builder(id("never_craft_sticks"))
-            .criterion("craft", RecipeCraftedTrigger.TriggerInstance.craftedItem(
-                ResourceKey.create(Registries.RECIPE, ResourceLocations.minecraft("stick"))
-            ))
+        var neverCraftSticksBuilder = BingoGoal.builder(id("never_craft_sticks"));
+        for (ResourceLocation stickRecipeId : BingoDataGenUtil.getRecipesForItem(Items.STICK)) {
+            neverCraftSticksBuilder.criterion(
+                "craft_" + stickRecipeId.getNamespace() + "_" + stickRecipeId.getPath(),
+                RecipeCraftedTrigger.TriggerInstance.craftedItem(ResourceKey.create(Registries.RECIPE, stickRecipeId))
+            );
+        }
+        addGoal(neverCraftSticksBuilder
+            .requirements(AdvancementRequirements.Strategy.OR)
             .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
             .name("never_craft_sticks")
             .icon(Items.STICK));
