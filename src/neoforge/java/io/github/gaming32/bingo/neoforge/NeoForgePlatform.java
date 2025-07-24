@@ -111,7 +111,7 @@ public class NeoForgePlatform extends BingoPlatform {
     public void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
         NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> handler.accept(
             (id, listener, dependencies) -> {
-                event.addListener(id, listener.apply(event.getRegistryAccess()));
+                event.addListener(id, listener.apply(event.getServerResources().getRegistryLookup()));
                 for (final var dependency : dependencies) {
                     event.addDependency(dependency, id);
                 }
