@@ -1,7 +1,9 @@
 package io.github.gaming32.bingo.fabric;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DynamicOps;
 import io.github.gaming32.bingo.fabric.event.FabricClientEvents;
 import io.github.gaming32.bingo.fabric.event.FabricEvents;
 import io.github.gaming32.bingo.fabric.registry.FabricDeferredRegister;
@@ -41,10 +43,13 @@ import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -52,6 +57,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Optional;
+import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -59,6 +66,7 @@ import java.util.function.Function;
 
 public class FabricPlatform extends BingoPlatform {
     private final BingoNetworking networking;
+    private final WeakHashMap<PreparableReloadListener, BingoReloadListener> bingoReloadListeners = new WeakHashMap<>();
 
     public FabricPlatform() {
         networking = new BingoNetworkingImpl();
@@ -124,39 +132,25 @@ public class FabricPlatform extends BingoPlatform {
     @Override
     public void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
         final var helper = ResourceManagerHelper.get(PackType.SERVER_DATA);
-        handler.accept((id, listener, dependencies) -> helper.registerReloadListener(id, listener.andThen(
-            vanilla -> new IdentifiableResourceReloadListener() {
-                @Override
-                public ResourceLocation getFabricId() {
-                    return id;
-                }
+        handler.accept((id, listenerCreator, dependencies) -> helper.registerReloadListener(id, registries -> {
+            PreparableReloadListener delegate = listenerCreator.create(Optional.of(registries));
+            return new BingoReloadListener(id, dependencies, delegate, registries);
+        }));
+    }
 
-                @Override
-                public Collection<ResourceLocation> getFabricDependencies() {
-                    return dependencies;
-                }
+    @Override
+    public HolderLookup.Provider getRegistryAccessFromReloadListener(PreparableReloadListener listener) {
+        BingoReloadListener bingoListener = BingoReloadListener.bingoReloadListeners.get(listener);
+        if (bingoListener == null) {
+            throw new IllegalStateException("Reload listener was not created via the bingo platform");
+        }
 
-                @Override
-                public @NotNull CompletableFuture<Void> reload(
-                    PreparationBarrier preparationBarrier,
-                    ResourceManager resourceManager,
-                    Executor backgroundExecutor,
-                    Executor gameExecutor
-                ) {
-                    return vanilla.reload(
-                        preparationBarrier,
-                        resourceManager,
-                        backgroundExecutor,
-                        gameExecutor
-                    );
-                }
+        return bingoListener.registries;
+    }
 
-                @Override
-                public @NotNull String getName() {
-                    return vanilla.getName();
-                }
-            }
-        )));
+    @Override
+    public RegistryOps<JsonElement> makeRegistryOpsFromReloadListener(PreparableReloadListener listener, DynamicOps<JsonElement> wrapped) {
+        return RegistryOps.create(wrapped, getRegistryAccessFromReloadListener(listener));
     }
 
     @Override
@@ -232,6 +226,53 @@ public class FabricPlatform extends BingoPlatform {
             ClientEvents.PLAYER_QUIT.setRegistrar(FabricClientEvents.PLAYER_QUIT::register);
             ClientEvents.CLIENT_TICK_START.setRegistrar(handler -> ClientTickEvents.START_CLIENT_TICK.register(handler::accept));
             ClientEvents.CLIENT_TICK_END.setRegistrar(handler -> ClientTickEvents.END_CLIENT_TICK.register(handler::accept));
+        }
+    }
+
+    private static final class BingoReloadListener implements IdentifiableResourceReloadListener {
+        private static final WeakHashMap<PreparableReloadListener, BingoReloadListener> bingoReloadListeners = new WeakHashMap<>();
+
+        private final ResourceLocation id;
+        private final Collection<ResourceLocation> dependencies;
+        private final PreparableReloadListener delegate;
+        private final HolderLookup.Provider registries;
+
+        private BingoReloadListener(ResourceLocation id, Collection<ResourceLocation> dependencies, PreparableReloadListener delegate, HolderLookup.Provider registries) {
+            this.id = id;
+            this.dependencies = dependencies;
+            this.delegate = delegate;
+            this.registries = registries;
+            bingoReloadListeners.put(delegate, this);
+        }
+
+        @Override
+        public ResourceLocation getFabricId() {
+            return id;
+        }
+
+        @Override
+        public Collection<ResourceLocation> getFabricDependencies() {
+            return dependencies;
+        }
+
+        @Override
+        public @NotNull CompletableFuture<Void> reload(
+            PreparationBarrier preparationBarrier,
+            ResourceManager resourceManager,
+            Executor backgroundExecutor,
+            Executor gameExecutor
+        ) {
+            return delegate.reload(
+                preparationBarrier,
+                resourceManager,
+                backgroundExecutor,
+                gameExecutor
+            );
+        }
+
+        @Override
+        public @NotNull String getName() {
+            return delegate.getName();
         }
     }
 }

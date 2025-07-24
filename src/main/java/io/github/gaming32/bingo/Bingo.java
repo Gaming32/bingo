@@ -166,7 +166,7 @@ public class Bingo {
 
     private static void registerDataReloadListeners() {
         BingoPlatform.platform.registerDataReloadListeners(registrar -> {
-            registrar.register(GoalManager.ID, GoalManager::new);
+            registrar.register(GoalManager.ID, registries -> registries.map(GoalManager::new).orElseGet(GoalManager::new));
         });
     }
 
