@@ -13,7 +13,7 @@ neoforge = "9"
 nightconfig = "3.8.2"
 parchment-date = "2025.06.29"
 parchment-mcversion = "1.21.6"
-rei = "19.0.809"
+rei = "20.0.810"
 unimined = "1.3.16-SNAPSHOT"
 
 [libraries]
