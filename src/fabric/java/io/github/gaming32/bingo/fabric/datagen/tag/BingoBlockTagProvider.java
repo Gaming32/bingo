@@ -45,5 +45,10 @@ public class BingoBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             Blocks.QUARTZ_BLOCK,
             Blocks.NETHERITE_BLOCK
         );
+
+        valueLookupBuilder(BingoBlockTags.TORCHES).add(
+            Blocks.TORCH,
+            Blocks.WALL_TORCH
+        );
     }
 }

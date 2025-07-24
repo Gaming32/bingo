@@ -1,4 +1,4 @@
-// 1.21.7	-999999999-01-01T00:00:00	Bingo/Bingo goals
+// 1.21.8	-999999999-01-01T00:00:00	Bingo/Bingo goals
 60933cb93b51bc5046fb820f19ed358af2699f4d data/bingo/bingo/goal/easy/3x3x3_glass_cube.json
 49041086f9176f531ee3096073f5f1230a4e0f6a data/bingo/bingo/goal/easy/4x4_paintings.json
 86d1d398343deced49a4d91d7b0ca17274600842 data/bingo/bingo/goal/easy/acacia_log.json
@@ -321,7 +321,7 @@ bf8010ad0875a5893e18971f6a759d46c77f2cc6 data/bingo/bingo/goal/medium/levels.jso
 582137430e005a328b508a407f2abc804ee1e4ef data/bingo/bingo/goal/medium/marker_on_map.json
 a29a2c33106259e1cd65fcd4198de72de8d0ce2e data/bingo/bingo/goal/medium/melon_slice.json
 40e1f11a07e7d6ee9750964cbfa53a731a0448f7 data/bingo/bingo/goal/medium/never_craft_sticks.json
-179f9d3d0b34a765058124fa2dd8bdc73a6c6759 data/bingo/bingo/goal/medium/never_place_torches.json
+c612d5f69a512b4756caa184e399b94ca6934d78 data/bingo/bingo/goal/medium/never_place_torches.json
 9cb23f0f09a7f34b90630d983adfd5537d00f896 data/bingo/bingo/goal/medium/never_wear_armor.json
 926d02d9395ecb9ee17323459ed60fa5b40505d4 data/bingo/bingo/goal/medium/obsidian.json
 99b6af9922a3185328f609d2bdeb456a5ed69935 data/bingo/bingo/goal/medium/ominous_banner.json

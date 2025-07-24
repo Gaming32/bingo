@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Table;
+import io.github.gaming32.bingo.conditions.BlockCondition;
 import io.github.gaming32.bingo.conditions.BlockPatternCondition;
 import io.github.gaming32.bingo.conditions.OneByOneHoleCondition;
 import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
@@ -851,7 +852,7 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         );
         // TODO: put chest on donkey
         addGoal(BingoGoal.builder(id("never_place_torches"))
-            .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(Blocks.TORCH))
+            .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(BlockCondition.builder(BlockPredicate.Builder.block().of(blocks, BingoBlockTags.TORCHES))))
             .tags(BingoTags.NEVER)
             .name("never_place_torches")
             .tooltip("never_place_torches")

@@ -16,6 +16,7 @@ public final class BingoConditions {
     private static final DeferredRegister<LootItemConditionType> REGISTER =
         BingoPlatform.platform.createDeferredRegister(BuiltInRegistries.LOOT_CONDITION_TYPE);
 
+    public static final RegistryValue<LootItemConditionType> BLOCK = register("block", BlockCondition.CODEC);
     public static final RegistryValue<LootItemConditionType> BLOCK_PATTERN = register("block_pattern", BlockPatternCondition.CODEC);
     public static final RegistryValue<LootItemConditionType> DISTANCE_FROM_SPAWN = register("distance_from_spawn", DistanceFromSpawnCondition.CODEC);
     public static final RegistryValue<LootItemConditionType> FLAMMABLE = register("flammable", FlammableCondition.CODEC);

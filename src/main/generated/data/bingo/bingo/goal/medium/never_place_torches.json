@@ -4,8 +4,10 @@
       "conditions": {
         "location": [
           {
-            "block": "minecraft:torch",
-            "condition": "minecraft:block_state_property"
+            "block": {
+              "blocks": "#bingo:torches"
+            },
+            "condition": "bingo:block"
           }
         ]
       },
