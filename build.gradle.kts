@@ -193,7 +193,7 @@ publishMods {
 
     val modrinthOpts = modrinthOptions {
         accessToken.set(providers.gradleProperty("modrinthKey").orElse(providers.environmentVariable("MODRINTH_TOKEN")))
-        projectId.set("bingo-mod")
+        projectId.set("tXdFVOz6")
         minecraftVersions.add(libs.versions.minecraft)
     }
 
