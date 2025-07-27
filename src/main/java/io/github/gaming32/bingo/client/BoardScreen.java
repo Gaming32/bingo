@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.scores.PlayerTeam;
 
 public class BoardScreen extends Screen {
@@ -47,7 +48,7 @@ public class BoardScreen extends Screen {
                 font,
                 BingoClient.getDisplayName(team),
                 width / 2, (int)pos.y() + BingoClient.getBoardHeight() + BingoClient.BOARD_OFFSET,
-                color != null ? color : 0xffffffff
+                color != null ? ARGB.color(0xFF, color) : 0xFFFFFFFF
             );
         }
     }
