@@ -216,7 +216,8 @@ public class BingoClient {
 
         graphics.pose().pushMatrix();
         graphics.pose().scale(pos.scale(), pos.scale());
-        graphics.pose().translate(pos.x(), pos.y());
+        // get rid of the fractional part to avoid funky matrix values causing rendering artifacts
+        graphics.pose().translate((int) pos.x(), (int) pos.y());
 
         final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientGame.size(), pos) : null;
 
