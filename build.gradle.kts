@@ -60,7 +60,7 @@ unimined.minecraft {
     }
 
     accessWidener {
-        accessWidener("src/main/resources/bingo.accessWidener")
+        accessWidener(file("src/main/resources/bingo.accessWidener"))
     }
 
     if (sourceSet == sourceSets.main.get()) {
@@ -80,7 +80,7 @@ unimined.minecraft(fabric) {
 
     fabric {
         loader(libs.versions.fabric.loader.get())
-        accessWidener("src/main/resources/bingo.accessWidener")
+        accessWidener(file("src/main/resources/bingo.accessWidener"))
     }
 
     mods {
@@ -93,7 +93,7 @@ unimined.minecraft(fabric) {
         }
     }
 
-    // TODO: removal internal API usage when there is a way to inherit run configs
+    // TODO: remove internal API usage when there is a way to inherit run configs
     @Suppress("UnstableApiUsage")
     (this as MinecraftProvider).provideRunClientTask("datagenClient", file("run/datagenClient"))
 
@@ -116,7 +116,7 @@ unimined.minecraft(neoforge) {
 
     neoForge {
         loader(libs.versions.neoforge.get())
-        accessTransformer(aw2at("src/main/resources/bingo.accessWidener"))
+        accessTransformer(aw2at(file("src/main/resources/bingo.accessWidener")))
     }
 
     minecraftRemapper.config {
