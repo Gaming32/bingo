@@ -199,6 +199,7 @@ publishMods {
 
     modrinth("modrinthFabric") {
         from(modrinthOpts)
+        version.set("${project.version}+fabric")
         file.set(tasks.getByName<RemapJarTask>("remapFabricJar").asJar.archiveFile)
         additionalFiles.from(fabricSourcesJar)
         modLoaders.add("fabric")
@@ -212,6 +213,7 @@ publishMods {
 
     modrinth("modrinthNeoforge") {
         from(modrinthOpts)
+        version.set("${project.version}+neoforge")
         file.set(tasks.getByName<RemapJarTask>("remapNeoforgeJar").asJar.archiveFile)
         additionalFiles.from(neoforgeSourcesJar)
         modLoaders.add("neoforge")
