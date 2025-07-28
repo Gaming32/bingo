@@ -1,16 +1,25 @@
 package io.github.gaming32.bingo.client.config;
 
+import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
+import io.github.gaming32.bingo.ext.RowHelperExt;
+import io.github.gaming32.bingo.game.BingoBoard;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.CommonColors;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -32,6 +41,12 @@ public class BingoConfigScreen extends Screen {
         rowHelper.addChild(createCornerButton());
         rowHelper.addChild(createSizeSlider());
         rowHelper.addChild(createShowScoreCounterButton());
+
+        ((RowHelperExt) (Object) rowHelper).bingo$ensureNewLine();
+
+        for (int slot = 0; slot < BingoBoard.NUM_MANUAL_HIGHLIGHT_COLORS; slot++) {
+            addManualHighlightColorTextField(rowHelper, slot);
+        }
 
         rowHelper.addChild(
             Button.builder(CommonComponents.GUI_DONE, button -> minecraft.setScreen(parent)).width(200).build(),
@@ -111,5 +126,58 @@ public class BingoConfigScreen extends Screen {
                     BingoClient.CONFIG.save();
                 }
             );
+    }
+
+    private void addManualHighlightColorTextField(GridLayout.RowHelper rowHelper, int highlightValue) {
+        Component label = Bingo.translatable("bingo.client_config.manual_highlight_color", highlightValue + 1);
+        int color = BingoClient.CONFIG.getManualHighlightColor(highlightValue) & 0xffffff;
+        EditBox editBox = new EditBox(font, 150, 20, label);
+        editBox.setValue("%06X".formatted(color));
+        ColorBox colorBox = new ColorBox(font, 20, 20, label, color);
+        editBox.setResponder(value -> {
+            int newColor;
+            try {
+                newColor = Integer.parseInt(value, 16) & 0xffffff;
+            } catch (NumberFormatException e) {
+                editBox.setTextColor(CommonColors.RED);
+                return;
+            }
+            editBox.setTextColor(0xffe0e0e0);
+            colorBox.color = newColor;
+            BingoClient.CONFIG.setManualHighlightColor(highlightValue, newColor);
+            BingoClient.CONFIG.save();
+        });
+        rowHelper.addChild(colorBox);
+        rowHelper.addChild(editBox);
+    }
+
+    private static class ColorBox extends AbstractWidget {
+        private final Font font;
+        private final Component label;
+        private int color;
+
+        public ColorBox(Font font, int width, int height, Component label, int color) {
+            super(0, 0, font.width(label) + 5 + width, height, Component.empty());
+            this.font = font;
+            this.label = label;
+            this.color = color;
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+            int labelWidth = font.width(label);
+            graphics.drawString(font, label, getX(), getY() + (getHeight() - font.lineHeight) / 2, CommonColors.WHITE);
+
+            int boxLeft = getX() + labelWidth + 5;
+            graphics.fill(boxLeft, getY(), getRight() - 1, getBottom(), ARGB.color(0xff, color));
+            graphics.hLine(boxLeft, getRight() - 1, getY(), CommonColors.BLACK);
+            graphics.hLine(boxLeft, getRight() - 1, getBottom() - 1, CommonColors.BLACK);
+            graphics.vLine(boxLeft, getY(), getBottom() - 1, CommonColors.BLACK);
+            graphics.vLine(getRight() - 1, getY(), getBottom() - 1, CommonColors.BLACK);
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+        }
     }
 }

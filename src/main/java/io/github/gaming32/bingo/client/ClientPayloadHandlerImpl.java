@@ -1,8 +1,10 @@
 package io.github.gaming32.bingo.client;
 
 import io.github.gaming32.bingo.Bingo;
+import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
+import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
@@ -12,6 +14,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
+import org.apache.commons.lang3.mutable.MutableInt;
+
+import java.util.Arrays;
 
 public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
     @Override
@@ -36,7 +41,9 @@ public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
             payload.goals(),
             playerTeams,
             payload.renderMode(),
-            new GoalProgress[size * size]
+            new GoalProgress[size * size],
+            Arrays.stream(payload.manualHighlights()).mapToObj(i -> i == 0 ? null : i - 1).toArray(Integer[]::new),
+            new MutableInt(payload.manualHighlightModCount())
         );
     }
 
@@ -75,6 +82,15 @@ public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
             return;
         }
         BingoClient.clientGame.states()[index] = payload.newState();
+    }
+
+    @Override
+    public void handleManualHighlight(ManualHighlightPayload payload) {
+        if (!checkGamePresent(payload)) return;
+        if (payload.slot() < 0 || payload.slot() >= BingoClient.clientGame.size() * BingoClient.clientGame.size()) return;
+        if (payload.value() < 0 || payload.value() > BingoBoard.NUM_MANUAL_HIGHLIGHT_COLORS) return;
+        BingoClient.clientGame.manualHighlights()[payload.slot()] = payload.value() == 0 ? null : payload.value() - 1;
+        BingoClient.clientGame.manualHighlightModCount().setValue(payload.modCount());
     }
 
     private static boolean checkGamePresent(CustomPacketPayload payload) {

@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.game;
 
+import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -8,6 +9,7 @@ import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.data.goal.GoalManager;
+import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import io.netty.buffer.ByteBuf;
@@ -20,6 +22,8 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
+import java.util.OptionalInt;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -43,6 +48,7 @@ public class BingoBoard {
     public static final int MIN_SIZE = 1;
     public static final int MAX_SIZE = 7;
     public static final int DEFAULT_SIZE = 5;
+    public static final int NUM_MANUAL_HIGHLIGHT_COLORS = 3;
 
     public static final Codec<BingoBoard> PERSISTENCE_CODEC = PartiallyParsed.CODEC.xmap(
         BingoBoard::create, PartiallyParsed::create
@@ -50,13 +56,17 @@ public class BingoBoard {
 
     private final int size;
     private final Teams[] states;
+    private final @Nullable Integer[][] manualHighlights;
+    private final int[] manualHighlightModCount;
     private final ActiveGoal[] goals;
     private final Map<ResourceLocation, ActiveGoal> byVanillaId;
     private final Object2IntMap<ActiveGoal> toGoalIndex;
 
-    private BingoBoard(int size) {
+    private BingoBoard(int size, int teamCount) {
         this.size = size;
         this.states = new Teams[size * size];
+        this.manualHighlights = new Integer[teamCount][size * size];
+        this.manualHighlightModCount = new int[teamCount];
         this.goals = new ActiveGoal[size * size];
         this.byVanillaId = HashMap.newHashMap(size * size);
         this.toGoalIndex = new Object2IntOpenHashMap<>(size * size);
@@ -67,9 +77,15 @@ public class BingoBoard {
 
     private static BingoBoard create(PartiallyParsed parsed) {
         final var size = parsed.size;
-        final BingoBoard board = new BingoBoard(size);
+        final BingoBoard board = new BingoBoard(size, parsed.manualHighlights.size());
         parsed.states.toArray(board.states);
         parsed.goals.toArray(board.goals);
+        for (int teamIndex = 0; teamIndex < parsed.manualHighlights.size(); teamIndex++) {
+            for (int i = 0; i < size * size; i++) {
+                OptionalInt manualHighlight = parsed.manualHighlights.get(teamIndex).get(i);
+                board.manualHighlights[teamIndex][i] = manualHighlight.isEmpty() ? null : manualHighlight.getAsInt();
+            }
+        }
         for (int i = 0; i < size * size; i++) {
             final ActiveGoal goal = board.goals[i];
             board.byVanillaId.put(generateVanillaId(i), goal);
@@ -89,7 +105,7 @@ public class BingoBoard {
         boolean allowsClientRequired,
         HolderLookup.Provider registries
     ) {
-        final BingoBoard board = new BingoBoard(size);
+        final BingoBoard board = new BingoBoard(size, teamCount);
         final GoalHolder[] generatedSheet = generateGoals(
             registries.lookupOrThrow(BingoRegistries.DIFFICULTY),
             size,
@@ -297,6 +313,33 @@ public class BingoBoard {
         return goals[getIndex(x, y)];
     }
 
+    public @Nullable Integer[] getTeamManualHighlights(Teams team) {
+        Preconditions.checkArgument(team.one(), "Team must be a single team");
+        return manualHighlights[team.getFirstIndex()];
+    }
+
+    public int getManualHighlightModCount(Teams team) {
+        Preconditions.checkArgument(team.one(), "Team must be a single team");
+        return manualHighlightModCount[team.getFirstIndex()];
+    }
+
+    public void setTeamManualHighlight(MinecraftServer server, BingoGame game, Teams team, int slot, @Nullable Integer value, @Nullable ServerPlayer cause) {
+        Preconditions.checkArgument(team.one(), "Team must be a single team");
+        int modCount = ++manualHighlightModCount[team.getFirstIndex()];
+        manualHighlights[team.getFirstIndex()][slot] = value;
+
+        ManualHighlightPayload clientboundPacket = new ManualHighlightPayload(slot, value == null ? 0 : value + 1, modCount);
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            if (player == cause) {
+                continue;
+            }
+            Teams playerTeam = game.getTeam(player);
+            if (playerTeam.and(team)) {
+                clientboundPacket.sendTo(player);
+            }
+        }
+    }
+
     private int getIndex(int x, int y) {
         return y * size + x;
     }
@@ -445,17 +488,24 @@ public class BingoBoard {
         }
     }
 
-    private record PartiallyParsed(int size, List<Teams> states, List<ActiveGoal> goals) {
+    private record PartiallyParsed(int size, List<Teams> states, List<List<OptionalInt>> manualHighlights, List<ActiveGoal> goals) {
         static final Codec<PartiallyParsed> CODEC = RecordCodecBuilder.<PartiallyParsed>create(
             instance -> instance.group(
                 Codec.INT.fieldOf("size").forGetter(PartiallyParsed::size),
                 Teams.CODEC.listOf().fieldOf("states").forGetter(PartiallyParsed::states),
+                Codec.INT.xmap(i -> i == 0 ? OptionalInt.empty() : OptionalInt.of(i - 1), i -> i.isEmpty() ? 0 : i.getAsInt() + 1)
+                    .listOf()
+                    .listOf()
+                    .fieldOf("manual_highlights").forGetter(PartiallyParsed::manualHighlights),
                 ActiveGoal.PERSISTENCE_CODEC.listOf().fieldOf("goals").forGetter(PartiallyParsed::goals)
             ).apply(instance, PartiallyParsed::new)
         ).validate(PartiallyParsed::validate);
 
         static PartiallyParsed create(BingoBoard board) {
-            return new PartiallyParsed(board.size, List.of(board.states), List.of(board.goals));
+            List<List<OptionalInt>> manualHighlights = Arrays.stream(board.manualHighlights)
+                .map(teamHighlights -> Arrays.stream(teamHighlights).map(i -> i == null ? OptionalInt.empty() : OptionalInt.of(i)).toList())
+                .toList();
+            return new PartiallyParsed(board.size, List.of(board.states), manualHighlights, List.of(board.goals));
         }
 
         private DataResult<PartiallyParsed> validate() {
@@ -464,6 +514,9 @@ public class BingoBoard {
             var result = DataResult.success(this);
             result = BingoUtil.combineError(result, Util.fixedSize(states, size * size));
             result = BingoUtil.combineError(result, Util.fixedSize(goals, size * size));
+            for (List<OptionalInt> teamHighlight : manualHighlights) {
+                result = BingoUtil.combineError(result, Util.fixedSize(teamHighlight, size * size));
+            }
             return result;
         }
     }

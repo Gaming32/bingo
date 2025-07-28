@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.network;
 
+import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
@@ -20,6 +21,8 @@ public interface ClientPayloadHandler {
     void handleUpdateProgress(UpdateProgressPayload payload);
 
     void handleUpdateState(UpdateStatePayload payload);
+
+    void handleManualHighlight(ManualHighlightPayload payload);
 
     static ClientPayloadHandler get() {
         if (Holder.instance == null) {

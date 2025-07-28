@@ -22,7 +22,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public abstract class BingoNetworking {
-    public static final int PROTOCOL_VERSION = 10;
+    public static final int PROTOCOL_VERSION = 11;
 
     public static BingoNetworking instance() {
         return BingoPlatform.platform.getNetworking();

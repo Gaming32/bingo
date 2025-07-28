@@ -16,6 +16,7 @@ import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.game.persistence.PersistenceManager;
 import io.github.gaming32.bingo.mixin.common.ServerExplosionAccessor;
 import io.github.gaming32.bingo.network.BingoNetworking;
+import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.network.messages.configuration.ProtocolVersionConfigurationTask;
 import io.github.gaming32.bingo.network.messages.configuration.ProtocolVersionPayload;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
@@ -185,6 +186,7 @@ public class Bingo {
             registrar.register(PacketFlow.CLIENTBOUND, SyncTeamPayload.TYPE, SyncTeamPayload.CODEC);
             registrar.register(PacketFlow.CLIENTBOUND, UpdateProgressPayload.TYPE, UpdateProgressPayload.CODEC);
             registrar.register(PacketFlow.CLIENTBOUND, UpdateStatePayload.TYPE, UpdateStatePayload.CODEC);
+            registrar.register(null, ManualHighlightPayload.TYPE, ManualHighlightPayload.CODEC);
         });
     }
 

@@ -21,7 +21,9 @@ public record InitBoardPayload(
     ActiveGoal[] goals,
     BingoBoard.Teams[] states,
     String[] teams,
-    BingoGameMode.RenderMode renderMode
+    BingoGameMode.RenderMode renderMode,
+    int[] manualHighlights,
+    int manualHighlightModCount
 ) implements AbstractCustomPayload {
     public static final Type<InitBoardPayload> TYPE = AbstractCustomPayload.type("init_board");
     public static final StreamCodec<RegistryFriendlyByteBuf, InitBoardPayload> CODEC = StreamCodec.composite(
@@ -30,10 +32,12 @@ public record InitBoardPayload(
         BingoBoard.Teams.STREAM_CODEC.apply(BingoStreamCodecs.array(BingoBoard.Teams[]::new)), InitBoardPayload::states,
         ByteBufCodecs.STRING_UTF8.apply(BingoStreamCodecs.array(String[]::new)), InitBoardPayload::teams,
         BingoGameMode.RenderMode.STREAM_CODEC, InitBoardPayload::renderMode,
+        BingoStreamCodecs.INT_ARRAY, InitBoardPayload::manualHighlights,
+        ByteBufCodecs.VAR_INT, InitBoardPayload::manualHighlightModCount,
         InitBoardPayload::new
     );
 
-    public static InitBoardPayload create(BingoGame game, BingoBoard.Teams[] states) {
+    public static InitBoardPayload create(BingoGame game, BingoBoard.Teams team, BingoBoard.Teams[] states) {
         final BingoBoard board = game.getBoard();
 
         return new InitBoardPayload(
@@ -43,7 +47,9 @@ public record InitBoardPayload(
             Arrays.stream(game.getTeams())
                 .map(PlayerTeam::getName)
                 .toArray(String[]::new),
-            game.getGameMode().getRenderMode()
+            game.getGameMode().getRenderMode(),
+            team.one() ? Arrays.stream(board.getTeamManualHighlights(team)).mapToInt(i -> i == null ? 0 : i + 1).toArray() : new int[board.getSize() * board.getSize()],
+            team.one() ? board.getManualHighlightModCount(team) : 0
         );
     }
 

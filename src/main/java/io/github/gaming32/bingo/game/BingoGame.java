@@ -138,7 +138,7 @@ public class BingoGame {
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamPayload(team).sendTo(player);
 
-        InitBoardPayload.create(this, obfuscateTeam(team, player)).sendTo(player);
+        InitBoardPayload.create(this, team, obfuscateTeam(team, player)).sendTo(player);
         if (!((PlayerAdvancementsAccessor)player.getAdvancements()).getIsFirstPacket()) {
             syncAdvancementsTo(player);
         }

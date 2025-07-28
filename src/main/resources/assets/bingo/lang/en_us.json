@@ -326,6 +326,7 @@
   "bingo.client_config.board_scale": "Board Scale: %s",
   "bingo.client_config.show_score_counter": "Score Counter",
   "bingo.client_config.show_score_counter.tooltip": "This toggles the display of the score counter during lockout matches.",
+  "bingo.client_config.manual_highlight_color": "Manual Highlight Color %s",
   "bingo.board_corner.upper_left": "Upper-left",
   "bingo.board_corner.upper_right": "Upper-right",
   "bingo.board_corner.lower_left": "Lower-left",

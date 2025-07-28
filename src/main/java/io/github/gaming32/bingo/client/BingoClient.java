@@ -15,6 +15,7 @@ import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
+import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
@@ -34,6 +35,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -261,6 +263,15 @@ public class BingoClient {
                     graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
                 }
 
+                Integer manualHighlight = clientGame.getManualHighlight(sx, sy);
+                if (manualHighlight != null) {
+                    int highlightColor = ARGB.color(0xff, BingoClient.CONFIG.getManualHighlightColor(manualHighlight));
+                    graphics.hLine(slotX, slotX + 15, slotY, highlightColor);
+                    graphics.hLine(slotX, slotX + 15, slotY + 15, highlightColor);
+                    graphics.vLine(slotX, slotY, slotY + 15, highlightColor);
+                    graphics.vLine(slotX + 15, slotY, slotY + 15, highlightColor);
+                }
+
                 final GoalIcon icon = goal.icon();
                 final IconRenderer<? super GoalIcon> renderer = IconRenderers.getRenderer(icon);
                 renderer.render(icon, graphics, slotX, slotY);
@@ -340,6 +351,19 @@ public class BingoClient {
         final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), clientGame.size(), boardPos);
         if (!mousePos.hasSlotPos()) {
             return false;
+        }
+
+        if (key.getType() == InputConstants.Type.MOUSE && key.getValue() == InputConstants.MOUSE_BUTTON_LEFT) {
+            Integer manualHighlight = clientGame.getManualHighlight(mousePos.slotIdX(), mousePos.slotIdY());
+            Integer nextHighlight = switch (manualHighlight) {
+                case null -> 0;
+                case BingoBoard.NUM_MANUAL_HIGHLIGHT_COLORS - 1 -> null;
+                default -> manualHighlight + 1;
+            };
+            clientGame.setManualHighlight(mousePos.slotIdX(), mousePos.slotIdY(), nextHighlight);
+            new ManualHighlightPayload(clientGame.getIndex(mousePos.slotIdX(), mousePos.slotIdY()), nextHighlight == null ? 0 : nextHighlight + 1, clientGame.manualHighlightModCount().getValue())
+                .sendToServer();
+            clientGame.manualHighlightModCount().increment();
         }
 
         final var goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());

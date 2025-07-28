@@ -61,7 +61,8 @@
     "client.CameraAccessor",
     "client.MixinGameRenderer",
     "client.MixinGui",
-    "client.MixinRootSpectatorMenuCategory"
+    "client.MixinRootSpectatorMenuCategory",
+    "client.MixinRowHelper"
   ],
   "injectors": {
     "defaultRequire": 1

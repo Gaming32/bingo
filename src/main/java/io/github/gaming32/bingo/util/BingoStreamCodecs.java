@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.function.IntFunction;
 
 public class BingoStreamCodecs {
+    public static final StreamCodec<ByteBuf, int[]> INT_ARRAY = ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list())
+        .map(list -> list.stream().mapToInt(Integer::intValue).toArray(), arr -> Arrays.stream(arr).boxed().toList());
+
     public static <E extends Enum<E>> StreamCodec<FriendlyByteBuf, E> enum_(Class<E> clazz) {
         return StreamCodec.of(FriendlyByteBuf::writeEnum, buf -> buf.readEnum(clazz));
     }
