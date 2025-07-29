@@ -55,6 +55,7 @@ public record WearingDifferentArmorCondition(
             final var equippable = stack.get(DataComponents.EQUIPPABLE);
             if (equippable == null) continue;
             equippable.assetId().ifPresent(models::add);
+            wearingCount++;
         }
         return equippedArmor.matches(wearingCount) && differentTypes.matches(models.size());
     }
