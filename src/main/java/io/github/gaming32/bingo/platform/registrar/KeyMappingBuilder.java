@@ -20,7 +20,7 @@ public interface KeyMappingBuilder {
     KeyMappingExt register(Consumer<Minecraft> action);
 
     enum ConflictContext {
-        UNIVERSAL, GUI, IN_GAME
+        UNIVERSAL, GUI, IN_GAME, NEVER
     }
 
     record KeyMappingExt(KeyMapping mapping, ConflictContext conflictContext, Consumer<Minecraft> action) {

@@ -306,6 +306,7 @@
   "bingo.board.copy": "Copy board to clipboard",
   "bingo.key.board": "Show Bingo Board",
   "bingo.key.category": "Bingo",
+  "bingo.key.manual_highlight": "Manual Highlight",
   "bingo.sixteen_bang": "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, and %s!",
   "bingo.unclaimed": "Unclaimed",
   "bingo.three": "%s, %s, and %s",

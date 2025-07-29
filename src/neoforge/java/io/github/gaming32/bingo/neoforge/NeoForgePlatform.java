@@ -29,6 +29,7 @@ import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactori
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.settings.IKeyConflictContext;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
@@ -43,6 +44,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -98,13 +100,22 @@ public class NeoForgePlatform extends BingoPlatform {
             @Override
             public KeyMappingExt register(Consumer<Minecraft> action) {
                 final KeyMappingExt mapping = super.register(action);
-                mapping.mapping().setKeyConflictContext(KeyConflictContext.valueOf(mapping.conflictContext().name()));
+                mapping.mapping().setKeyConflictContext(convertConflictContext(mapping.conflictContext()));
                 return mapping;
             }
         };
         handler.accept(builder);
         modEventBus.addListener((RegisterKeyMappingsEvent event) -> builder.registerAll(event::register));
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> builder.handleAll(Minecraft.getInstance()));
+    }
+
+    private static IKeyConflictContext convertConflictContext(KeyMappingBuilder.ConflictContext conflictContext) {
+        return switch (conflictContext) {
+            case UNIVERSAL -> KeyConflictContext.UNIVERSAL;
+            case GUI -> KeyConflictContext.GUI;
+            case IN_GAME -> KeyConflictContext.IN_GAME;
+            case NEVER -> BingoConflictContext.NEVER;
+        };
     }
 
     @Override
@@ -212,6 +223,20 @@ public class NeoForgePlatform extends BingoPlatform {
             ClientEvents.CLIENT_TICK_END.setRegistrar(handler -> bus.addListener((ClientTickEvent.Post event) ->
                 handler.accept(Minecraft.getInstance())
             ));
+        }
+    }
+
+    private enum BingoConflictContext implements IKeyConflictContext {
+        NEVER {
+            @Override
+            public boolean isActive() {
+                return false;
+            }
+
+            @Override
+            public boolean conflicts(@NotNull IKeyConflictContext iKeyConflictContext) {
+                return false;
+            }
         }
     }
 }

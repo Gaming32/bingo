@@ -21,9 +21,11 @@ import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.util.ResourceLocations;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -55,6 +57,8 @@ public class BingoClient {
 
     public static final int BOARD_OFFSET = 3;
 
+    public static KeyMapping manualHighlightKeyMapping;
+
     public static BingoBoard.Teams clientTeam = BingoBoard.Teams.NONE;
     public static BingoBoard.Teams receivedClientTeam = BingoBoard.Teams.NONE;
     public static ClientGame clientGame;
@@ -83,6 +87,14 @@ public class BingoClient {
                         minecraft.setScreen(new BoardScreen());
                     }
                 });
+            manualHighlightKeyMapping = builder
+                .name("bingo.key.manual_highlight")
+                .category("bingo.key.category")
+                .keyType(InputConstants.Type.MOUSE)
+                .keyCode(InputConstants.MOUSE_BUTTON_LEFT)
+                .conflictContext(KeyMappingBuilder.ConflictContext.UNIVERSAL) // TODO: better conflict context
+                .register(minecraft -> {})
+                .mapping();
         });
 
         BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
@@ -353,7 +365,7 @@ public class BingoClient {
             return false;
         }
 
-        if (key.getType() == InputConstants.Type.MOUSE && key.getValue() == InputConstants.MOUSE_BUTTON_LEFT) {
+        if (key.equals(manualHighlightKeyMapping.key)) {
             Integer manualHighlight = clientGame.getManualHighlight(mousePos.slotIdX(), mousePos.slotIdY());
             Integer nextHighlight = switch (manualHighlight) {
                 case null -> 0;
@@ -364,6 +376,7 @@ public class BingoClient {
             new ManualHighlightPayload(clientGame.getIndex(mousePos.slotIdX(), mousePos.slotIdY()), nextHighlight == null ? 0 : nextHighlight + 1, clientGame.manualHighlightModCount().getValue())
                 .sendToServer();
             clientGame.manualHighlightModCount().increment();
+            AbstractButton.playButtonClickSound(Minecraft.getInstance().getSoundManager());
         }
 
         final var goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
