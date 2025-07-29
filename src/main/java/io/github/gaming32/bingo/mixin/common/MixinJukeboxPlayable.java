@@ -25,9 +25,9 @@ public class MixinJukeboxPlayable {
         JukeboxBlockEntity instance, ItemStack itemStack, Operation<Void> original,
         @Local(argsOnly = true) Player player
     ) {
+        original.call(instance, itemStack);
         if (player instanceof ServerPlayer serverPlayer) {
             BingoTriggers.PARTY_PARROTS.get().trigger(serverPlayer, instance);
         }
-        original.call(instance, itemStack);
     }
 }
