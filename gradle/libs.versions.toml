@@ -2,7 +2,7 @@
 emi = "1.1.16+1.21.1"
 fabric-api = "0.129.0+1.21.8"
 fabric-loader = "0.16.14"
-jei = "19.22.0.315"
+jei = "19.22.1.316"
 mcdev-annotations = "2.1.0"
 minecraft = "1.21.8"
 mixin = "0.8.5-SNAPSHOT"
