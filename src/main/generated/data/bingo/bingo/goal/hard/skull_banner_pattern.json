@@ -29,15 +29,7 @@
     }
   },
   "name": {
-    "translate": "bingo.goal.skull_banner_pattern",
-    "with": [
-      {
-        "translate": "item.minecraft.skull_banner_pattern.desc"
-      },
-      {
-        "translate": "item.minecraft.skull_banner_pattern"
-      }
-    ]
+    "translate": "item.minecraft.skull_banner_pattern"
   },
   "progress": {
     "type": "bingo:criterion",
