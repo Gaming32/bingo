@@ -682,7 +682,6 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .icon(Items.CARROT_ON_A_STICK));
         addGoal(obtainItemGoal(id("skull_banner_pattern"), items, Items.SKULL_BANNER_PATTERN)
             .tags(BingoTags.NETHER, BingoTags.COMBAT, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
-            .name(Component.translatable("item.minecraft.skull_banner_pattern"))
             .icon(makeBannerWithPattern(Items.WHITE_BANNER, bannerPatterns.getOrThrow(BannerPatterns.SKULL), DyeColor.BLACK)));
         addGoal(obtainItemGoal(id("turtle_helmet"), items, Items.TURTLE_HELMET)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
