@@ -312,6 +312,8 @@
   "bingo.four": "%s, %s, %s, and %s",
   "bingo.spawner": "%s %s",
   "bingo.no_game_running": "No Bingo game is running!",
+  "bingo.invalid_shape": "Invalid shape: %s",
+  "bingo.invalid_size": "Invalid size: %s. Must be between %s and %s",
   "bingo.not_in_team": "You are not in a team",
   "bingo.team_not_playing": "The team %s is not in the game",
   "bingo.outdated_client": "Outdated Bingo client! Client version: %s. Server version: %s.",

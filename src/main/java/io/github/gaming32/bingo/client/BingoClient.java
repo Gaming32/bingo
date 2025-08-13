@@ -20,6 +20,7 @@ import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Vec2i;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -50,6 +51,7 @@ import java.util.Objects;
 
 public class BingoClient {
     private static final ResourceLocation BOARD_TEXTURE = ResourceLocations.bingo("board");
+    private static final ResourceLocation BOARD_CELL_TEXTURE = ResourceLocations.bingo("board_cell");
     private static final ResourceLocation SLOT_HIGHLIGHT_BACK_SPRITE = ResourceLocations.minecraft("container/slot_highlight_back");
     private static final ResourceLocation SLOT_HIGHLIGHT_FRONT_SPRITE = ResourceLocations.minecraft("container/slot_highlight_front");
     public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
@@ -214,11 +216,11 @@ public class BingoClient {
     }
 
     public static int getBoardWidth() {
-        return 14 + 18 * clientGame.size();
+        return 14 + 18 * clientGame.shape().getVisualSize(clientGame.size()).x();
     }
 
     public static int getBoardHeight() {
-        return 24 + 18 * clientGame.size();
+        return 24 + 18 * clientGame.shape().getVisualSize(clientGame.size()).y();
     }
 
     public static void renderBingo(GuiGraphics graphics, boolean mouseHover, PositionAndScale pos) {
@@ -233,84 +235,95 @@ public class BingoClient {
         // get rid of the fractional part to avoid funky matrix values causing rendering artifacts
         graphics.pose().translate((int) pos.x(), (int) pos.y());
 
-        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientGame.size(), pos) : null;
+        final BingoMousePos mousePos = mouseHover ? BingoMousePos.getPos(minecraft, clientGame.shape(), clientGame.size(), pos) : null;
+        final Vec2i visualSize = clientGame.shape().getVisualSize(clientGame.size());
+        final int goalCount = clientGame.shape().getGoalCount(clientGame.size());
 
         graphics.blitSprite(
             RenderPipelines.GUI_TEXTURED,
             BOARD_TEXTURE, 0, 0,
-            7 + 18 * clientGame.size() + 7,
-            17 + 18 * clientGame.size() + 7
+            7 + 18 * visualSize.x() + 7,
+            17 + 18 * visualSize.y() + 7
         );
+
+        for (int goalIndex = 0; goalIndex < goalCount; goalIndex++) {
+            final Vec2i slotPos = clientGame.shape().getCoords(clientGame.size(), goalIndex);
+            final int slotX = slotPos.x() * 18 + 7;
+            final int slotY = slotPos.y() * 18 + 17;
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BOARD_CELL_TEXTURE, slotX, slotY, 18, 18);
+        }
+
         renderBoardTitle(graphics, minecraft.font);
 
         if (BingoMousePos.hasSlotPos(mousePos)) {
             graphics.pose().pushMatrix();
-            final int slotX = mousePos.slotIdX() * 18 + 8;
-            final int slotY = mousePos.slotIdY() * 18 + 18;
+            final Vec2i slotPos = mousePos.getSlotPos(clientGame);
+            final int slotX = slotPos.x() * 18 + 8;
+            final int slotY = slotPos.y() * 18 + 18;
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_HIGHLIGHT_BACK_SPRITE, slotX - 4, slotY - 4, 24, 24);
             graphics.pose().popMatrix();
         }
 
         final boolean spectator = minecraft.player != null && minecraft.player.isSpectator();
-        for (int sx = 0; sx < clientGame.size(); sx++) {
-            for (int sy = 0; sy < clientGame.size(); sy++) {
-                final var goal = clientGame.getGoal(sx, sy);
-                final BingoBoard.Teams state = clientGame.getState(sx, sy);
-                boolean isGoalCompleted = state.and(clientTeam);
-                final int slotX = sx * 18 + 8;
-                final int slotY = sy * 18 + 18;
+        for (int goalIndex = 0; goalIndex < goalCount; goalIndex++) {
+            final Vec2i slotPos = clientGame.shape().getCoords(clientGame.size(), goalIndex);
+            final var goal = clientGame.goals()[goalIndex];
+            final BingoBoard.Teams state = clientGame.states()[goalIndex];
+            final boolean isGoalCompleted = state.and(clientTeam);
+            final int slotX = slotPos.x() * 18 + 8;
+            final int slotY = slotPos.y() * 18 + 18;
 
-                final Integer color = switch (clientGame.renderMode()) {
-                    case FANCY -> isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor;
-                    case ALL_TEAMS -> {
-                        if (!state.any()) {
-                            yield null;
-                        }
-                        final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
-                        final Integer maybeColor = clientGame.teams()[team.getFirstIndex()].getColor().getColor();
-                        yield maybeColor != null ? maybeColor : 0x55ff55;
+            final Integer color = switch (clientGame.renderMode()) {
+                case FANCY -> isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor;
+                case ALL_TEAMS -> {
+                    if (!state.any()) {
+                        yield null;
                     }
-                };
-                if (color != null) {
-                    graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
+                    final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
+                    final Integer maybeColor = clientGame.teams()[team.getFirstIndex()].getColor().getColor();
+                    yield maybeColor != null ? maybeColor : 0x55ff55;
                 }
+            };
+            if (color != null) {
+                graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
+            }
 
-                Integer manualHighlight = clientGame.getManualHighlight(sx, sy);
-                if (manualHighlight != null) {
-                    int highlightColor = ARGB.color(0xff, BingoClient.CONFIG.getManualHighlightColor(manualHighlight));
-                    graphics.hLine(slotX, slotX + 15, slotY, highlightColor);
-                    graphics.hLine(slotX, slotX + 15, slotY + 15, highlightColor);
-                    graphics.vLine(slotX, slotY, slotY + 15, highlightColor);
-                    graphics.vLine(slotX + 15, slotY, slotY + 15, highlightColor);
-                }
+            Integer manualHighlight = clientGame.manualHighlights()[goalIndex];
+            if (manualHighlight != null) {
+                int highlightColor = ARGB.color(0xff, BingoClient.CONFIG.getManualHighlightColor(manualHighlight));
+                graphics.hLine(slotX, slotX + 15, slotY, highlightColor);
+                graphics.hLine(slotX, slotX + 15, slotY + 15, highlightColor);
+                graphics.vLine(slotX, slotY, slotY + 15, highlightColor);
+                graphics.vLine(slotX + 15, slotY, slotY + 15, highlightColor);
+            }
 
-                final GoalIcon icon = goal.icon();
-                final IconRenderer<? super GoalIcon> renderer = IconRenderers.getRenderer(icon);
-                renderer.render(icon, graphics, slotX, slotY);
-                renderer.renderDecorations(icon, minecraft.font, graphics, slotX, slotY);
+            final GoalIcon icon = goal.icon();
+            final IconRenderer<? super GoalIcon> renderer = IconRenderers.getRenderer(icon);
+            renderer.render(icon, graphics, slotX, slotY);
+            renderer.renderDecorations(icon, minecraft.font, graphics, slotX, slotY);
 
-                GoalProgress progress = clientGame.getProgress(sx, sy);
-                if (progress != null && !isGoalCompleted && progress.progress() > 0 && !spectator) {
-                    final int pWidth = Math.round(progress.progress() * 13f / progress.maxProgress());
-                    final int pColor = Mth.hsvToRgb((float)progress.progress() / progress.maxProgress() / 3f, 1f, 1f);
-                    final int pX = slotX + 2;
-                    final int pY = slotY + 13;
-                    graphics.fill(pX, pY, pX + 13, pY + 2, 0xff000000);
-                    graphics.fill(pX, pY, pX + pWidth, pY + 1, pColor | 0xff000000);
-                }
+            GoalProgress progress = clientGame.progress()[goalIndex];
+            if (progress != null && !isGoalCompleted && progress.progress() > 0 && !spectator) {
+                final int pWidth = Math.round(progress.progress() * 13f / progress.maxProgress());
+                final int pColor = Mth.hsvToRgb((float) progress.progress() / progress.maxProgress() / 3f, 1f, 1f);
+                final int pX = slotX + 2;
+                final int pY = slotY + 13;
+                graphics.fill(pX, pY, pX + 13, pY + 2, 0xff000000);
+                graphics.fill(pX, pY, pX + pWidth, pY + 1, pColor | 0xff000000);
             }
         }
 
         if (BingoMousePos.hasSlotPos(mousePos)) {
-            final int slotX = mousePos.slotIdX() * 18 + 8;
-            final int slotY = mousePos.slotIdY() * 18 + 18;
+            final Vec2i slotPos = mousePos.getSlotPos(clientGame);
+            final int slotX = slotPos.x() * 18 + 8;
+            final int slotY = slotPos.y() * 18 + 18;
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_HIGHLIGHT_FRONT_SPRITE, slotX - 4, slotY - 4, 24, 24);
         }
 
         graphics.pose().popMatrix();
         if (BingoMousePos.hasSlotPos(mousePos)) {
-            final var goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
-            final GoalProgress progress = clientGame.getProgress(mousePos.slotIdX(), mousePos.slotIdY());
+            final var goal = clientGame.goals()[mousePos.goalIndex()];
+            final GoalProgress progress = clientGame.progress()[mousePos.goalIndex()];
             final TooltipBuilder tooltip = new TooltipBuilder();
             tooltip.add(goal.name());
             if (progress != null && (progress.maxProgress() > 1 || minecraft.options.advancedItemTooltips)) {
@@ -325,7 +338,7 @@ public class BingoClient {
                 minecraft.font.split(component, width).forEach(tooltip::add);
             });
             goal.tooltipIcon().map(IconTooltip::new).ifPresent(tooltip::add);
-            tooltip.draw(minecraft.font, graphics, (int)mousePos.mouseX(), (int)mousePos.mouseY());
+            tooltip.draw(minecraft.font, graphics, (int) mousePos.mouseX(), (int) mousePos.mouseY());
         }
     }
 
@@ -360,26 +373,26 @@ public class BingoClient {
             return false;
         }
 
-        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), clientGame.size(), boardPos);
+        final BingoMousePos mousePos = BingoMousePos.getPos(Minecraft.getInstance(), clientGame.shape(), clientGame.size(), boardPos);
         if (!mousePos.hasSlotPos()) {
             return false;
         }
 
         if (key.equals(manualHighlightKeyMapping.key)) {
-            Integer manualHighlight = clientGame.getManualHighlight(mousePos.slotIdX(), mousePos.slotIdY());
+            Integer manualHighlight = clientGame.manualHighlights()[mousePos.goalIndex()];
             Integer nextHighlight = switch (manualHighlight) {
                 case null -> 0;
                 case BingoBoard.NUM_MANUAL_HIGHLIGHT_COLORS - 1 -> null;
                 default -> manualHighlight + 1;
             };
-            clientGame.setManualHighlight(mousePos.slotIdX(), mousePos.slotIdY(), nextHighlight);
-            new ManualHighlightPayload(clientGame.getIndex(mousePos.slotIdX(), mousePos.slotIdY()), nextHighlight == null ? 0 : nextHighlight + 1, clientGame.manualHighlightModCount().getValue())
+            clientGame.manualHighlights()[mousePos.goalIndex()] = nextHighlight;
+            new ManualHighlightPayload(mousePos.goalIndex(), nextHighlight == null ? 0 : nextHighlight + 1, clientGame.manualHighlightModCount().getValue())
                 .sendToServer();
             clientGame.manualHighlightModCount().increment();
             AbstractButton.playButtonClickSound(Minecraft.getInstance().getSoundManager());
         }
 
-        final var goal = clientGame.getGoal(mousePos.slotIdX(), mousePos.slotIdY());
+        final var goal = clientGame.goals()[mousePos.goalIndex()];
 
         final RecipeViewerPlugin plugin = getRecipeViewerPlugin();
         if (plugin.isViewRecipe(key)) {

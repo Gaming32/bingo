@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
+import io.github.gaming32.bingo.game.BoardShape;
 import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Vec2i;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
@@ -54,12 +56,13 @@ public class VanillaNetworking {
     public static final AdvancementRequirements REQUIREMENTS = AdvancementRequirements.allOf(List.of(CRITERION));
 
     public static List<AdvancementHolder> generateAdvancements(
-        RegistryAccess registries, int size, ActiveGoal[] goals
+        RegistryAccess registries, BoardShape shape, int size, ActiveGoal[] goals
     ) {
         final List<AdvancementHolder> result = new ArrayList<>(1 + goals.length);
         result.add(ROOT_ADVANCEMENT);
         for (int i = 0; i < goals.length; i++) {
-            result.add(generateAdvancement(registries, i, goals[i], i % size, i / size));
+            final Vec2i pos = shape.getCoords(size, i);
+            result.add(generateAdvancement(registries, i, goals[i], pos.x(), pos.y()));
         }
         return result;
     }

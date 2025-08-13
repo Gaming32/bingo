@@ -46,7 +46,7 @@ public record ManualHighlightPayload(int slot, int value, int modCount) implemen
             if (game == null) {
                 return;
             }
-            if (slot < 0 || slot >= game.getBoard().getSize() * game.getBoard().getSize()) {
+            if (slot < 0 || slot >= game.getBoard().getShape().getGoalCount(game.getBoard().getSize())) {
                 return;
             }
             BingoBoard.Teams team = game.getTeam(player);

@@ -12,7 +12,10 @@ import io.github.gaming32.bingo.data.goal.GoalManager;
 import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Vec2i;
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.Util;
@@ -24,11 +27,13 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,8 +50,6 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class BingoBoard {
-    public static final int MIN_SIZE = 1;
-    public static final int MAX_SIZE = 7;
     public static final int DEFAULT_SIZE = 5;
     public static final int NUM_MANUAL_HIGHLIGHT_COLORS = 3;
 
@@ -54,6 +57,7 @@ public class BingoBoard {
         BingoBoard::create, PartiallyParsed::create
     );
 
+    private final BoardShape shape;
     private final int size;
     private final Teams[] states;
     private final @Nullable Integer[][] manualHighlights;
@@ -62,14 +66,16 @@ public class BingoBoard {
     private final Map<ResourceLocation, ActiveGoal> byVanillaId;
     private final Object2IntMap<ActiveGoal> toGoalIndex;
 
-    private BingoBoard(int size, int teamCount) {
+    private BingoBoard(BoardShape shape, int size, int teamCount) {
+        this.shape = shape;
         this.size = size;
-        this.states = new Teams[size * size];
-        this.manualHighlights = new Integer[teamCount][size * size];
+        final int goalCount = shape.getGoalCount(size);
+        this.states = new Teams[goalCount];
+        this.manualHighlights = new Integer[teamCount][goalCount];
         this.manualHighlightModCount = new int[teamCount];
-        this.goals = new ActiveGoal[size * size];
-        this.byVanillaId = HashMap.newHashMap(size * size);
-        this.toGoalIndex = new Object2IntOpenHashMap<>(size * size);
+        this.goals = new ActiveGoal[goalCount];
+        this.byVanillaId = HashMap.newHashMap(goalCount);
+        this.toGoalIndex = new Object2IntOpenHashMap<>(goalCount);
 
         Arrays.fill(states, Teams.NONE);
         toGoalIndex.defaultReturnValue(-1);
@@ -77,16 +83,17 @@ public class BingoBoard {
 
     private static BingoBoard create(PartiallyParsed parsed) {
         final var size = parsed.size;
-        final BingoBoard board = new BingoBoard(size, parsed.manualHighlights.size());
+        final int goalCount = parsed.shape.getGoalCount(size);
+        final BingoBoard board = new BingoBoard(parsed.shape, size, parsed.manualHighlights.size());
         parsed.states.toArray(board.states);
         parsed.goals.toArray(board.goals);
         for (int teamIndex = 0; teamIndex < parsed.manualHighlights.size(); teamIndex++) {
-            for (int i = 0; i < size * size; i++) {
+            for (int i = 0; i < goalCount; i++) {
                 OptionalInt manualHighlight = parsed.manualHighlights.get(teamIndex).get(i);
                 board.manualHighlights[teamIndex][i] = manualHighlight.isEmpty() ? null : manualHighlight.getAsInt();
             }
         }
-        for (int i = 0; i < size * size; i++) {
+        for (int i = 0; i < goalCount; i++) {
             final ActiveGoal goal = board.goals[i];
             board.byVanillaId.put(generateVanillaId(i), goal);
             board.toGoalIndex.put(goal, i);
@@ -95,6 +102,7 @@ public class BingoBoard {
     }
 
     public static BingoBoard generate(
+        BoardShape shape,
         int size,
         int difficulty,
         int teamCount,
@@ -105,9 +113,11 @@ public class BingoBoard {
         boolean allowsClientRequired,
         HolderLookup.Provider registries
     ) {
-        final BingoBoard board = new BingoBoard(size, teamCount);
+        final int goalCount = shape.getGoalCount(size);
+        final BingoBoard board = new BingoBoard(shape, size, teamCount);
         final GoalHolder[] generatedSheet = generateGoals(
             registries.lookupOrThrow(BingoRegistries.DIFFICULTY),
+            shape,
             size,
             difficulty,
             rand,
@@ -116,7 +126,7 @@ public class BingoBoard {
             excludedTags,
             allowsClientRequired
         );
-        for (int i = 0; i < size * size; i++) {
+        for (int i = 0; i < goalCount; i++) {
             final ActiveGoal goal;
             try {
                 goal = board.goals[i] = generatedSheet[i].build(rand);
@@ -135,6 +145,7 @@ public class BingoBoard {
 
     public static GoalHolder[] generateGoals(
         HolderLookup<BingoDifficulty> difficultyLookup,
+        BoardShape shape,
         int size,
         int difficulty,
         RandomSource rand,
@@ -145,23 +156,31 @@ public class BingoBoard {
     ) {
         final Queue<GoalHolder> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
 
-        final GoalHolder[] generatedSheet = new GoalHolder[size * size];
+        final int goalCount = shape.getGoalCount(size);
+        final GoalHolder[] generatedSheet = new GoalHolder[goalCount];
+
+        final Int2ObjectMap<List<int[]>> linesForCells = new Int2ObjectOpenHashMap<>();
+        for (final int[] line : shape.getLines(size)) {
+            for (final int cell : line) {
+                linesForCells.computeIfAbsent(cell, k -> new ArrayList<>()).add(line);
+            }
+        }
 
         final var difficulties = BingoDifficulty.getNumbers(difficultyLookup);
-        final int[] difficultyLayout = generateDifficulty(difficulties, size, difficulty, rand);
-        final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(size * size), rand);
+        final int[] difficultyLayout = generateDifficulty(difficulties, goalCount, difficulty, rand);
+        final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(goalCount), rand);
 
-        final Set<ResourceLocation> usedGoals = HashSet.newHashSet(size * size);
+        final Set<ResourceLocation> usedGoals = HashSet.newHashSet(goalCount);
         final Object2IntOpenHashMap<Holder<BingoTag>> tagCount = new Object2IntOpenHashMap<>();
         final Set<String> antisynergys = new HashSet<>();
         final Set<String> reactants = new HashSet<>();
         final Set<String> catalysts = new HashSet<>();
 
         for (final var tag : excludedTags) {
-            tagCount.put(tag, tag.value().getMaxForDifficulty(difficulty, size));
+            tagCount.put(tag, tag.value().getMaxForDifficulty(difficulty, goalCount));
         }
 
-        for (int i = 0; i < size * size; i++) {
+        for (int i = 0; i < goalCount; i++) {
             final var difficultiesToTry = difficulties.headSet(difficultyLayout[i], true).descendingIterator();
             if (!difficultiesToTry.hasNext()) {
                 throw new IllegalArgumentException("No goals with difficulty " + difficultyLayout[i] + " or easier");
@@ -213,19 +232,23 @@ public class BingoBoard {
 
                 if (goalCandidate.goal().getTags().size() != 0) {
                     for (final var tag : goalCandidate.goal().getTags()) {
-                        if (tagCount.getInt(tag) >= tag.value().getMaxForDifficulty(difficulty, size)) {
+                        if (tagCount.getInt(tag) >= tag.value().getMaxForDifficulty(difficulty, goalCount)) {
                             continue goalGen;
                         }
                     }
 
                     if (goalCandidate.goal().getTags().stream().anyMatch(t -> !t.value().allowedOnSameLine())) {
-                        for (int z = 0; z < i; z++) {
-                            final var tags = generatedSheet[indices[z]].goal().getTags();
-                            if (tags.size() > 0 && isOnSameLine(size, indices[i], indices[z])) {
-                                if (tags.stream().anyMatch(t ->
-                                    !t.value().allowedOnSameLine() && goalCandidate.goal().getTags().contains(t)
-                                )) {
-                                    continue goalGen;
+                        for (final int[] line : linesForCells.get(indices[i])) {
+                            for (final int cell : line) {
+                                if (cell != indices[i] && generatedSheet[cell] != null) {
+                                    final var tags = generatedSheet[cell].goal().getTags();
+                                    if (tags.size() > 0) {
+                                        if (tags.stream().anyMatch(t ->
+                                            !t.value().allowedOnSameLine() && goalCandidate.goal().getTags().contains(t)
+                                        )) {
+                                            continue goalGen;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -254,33 +277,8 @@ public class BingoBoard {
         return generatedSheet;
     }
 
-    private static boolean isOnSameLine(int size, int a, int b) {
-        // check primary diagonal
-        if (a % (size + 1) == 0 && b % (size + 1) == 0) {
-            return true;
-        }
-
-        // check secondary diagonal
-        if (size > 1
-            && a % (size - 1) == 0 && b % (size - 1) == 0 // this checks the secondary diagonal plus the other two corners
-            && a != 0 && b != 0 // exclude the top left corner
-            && a != size * size - 1 && b != size * size - 1 // exclude the bottom right corner
-        ) {
-            return true;
-        }
-
-        // check row and column
-        if (a / size == b / size) {
-            return true;
-        }
-        if (a % size == b % size) {
-            return true;
-        }
-        return false;
-    }
-
-    private static int[] generateDifficulty(NavigableSet<Integer> difficulties, int size, int difficulty, RandomSource rand) {
-        final int[] layout = new int[size * size];
+    private static int[] generateDifficulty(NavigableSet<Integer> difficulties, int goalCount, int difficulty, RandomSource rand) {
+        final int[] layout = new int[goalCount];
 
         final Iterator<Integer> available = difficulties.headSet(difficulty, true).descendingIterator();
         if (!available.hasNext()) {
@@ -291,8 +289,8 @@ public class BingoBoard {
             Arrays.fill(layout, difficulty1);
         } else {
             final int difficulty2 = available.next();
-            final int amountOf1 = rand.nextInt(size * size * 3 / 5, size * size * 3 / 5 + size);
-            final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(size * size), rand);
+            final int amountOf1 = rand.nextInt(goalCount * 3 / 5, goalCount * 3 / 5 + (int) Math.sqrt(goalCount));
+            final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(goalCount), rand);
             Arrays.fill(layout, difficulty2);
             for (int i = 0; i < amountOf1; i++) {
                 layout[indices[i]] = difficulty1;
@@ -301,16 +299,12 @@ public class BingoBoard {
         return layout;
     }
 
+    public BoardShape getShape() {
+        return shape;
+    }
+
     public int getSize() {
         return size;
-    }
-
-    public Teams getState(int x, int y) {
-        return states[getIndex(x, y)];
-    }
-
-    public ActiveGoal getGoal(int x, int y) {
-        return goals[getIndex(x, y)];
     }
 
     public @Nullable Integer[] getTeamManualHighlights(Teams team) {
@@ -340,10 +334,6 @@ public class BingoBoard {
         }
     }
 
-    private int getIndex(int x, int y) {
-        return y * size + x;
-    }
-
     public Teams[] getStates() {
         return states;
     }
@@ -367,21 +357,27 @@ public class BingoBoard {
         final int boxWidth = 20;
         final int boxHeight = 7;
 
-        final StringBuilder result = new StringBuilder((boxWidth * size + 1) * (boxHeight + 1));
+        final Vec2i visualSize = shape.getVisualSize(size);
+        final StringBuilder result = new StringBuilder();
 
-        for (int y = 0; y < size; y++) {
-            for (int column = 0; column < size; column++) {
+        for (int y = 0; y < visualSize.y(); y++) {
+            for (int column = 0; column < visualSize.x(); column++) {
                 result.append('+').repeat('-', boxWidth - 1);
             }
             result.append("+\n");
 
-            final String[][] texts = new String[size][];
-            for (int x = 0; x < size; x++) {
-                texts[x] = WordUtils.wrap(getGoal(x, y).name().getString(), boxWidth - 3, "\n", true).split("\n");
+            final String[][] texts = new String[visualSize.x()][];
+            for (int x = 0; x < visualSize.x(); x++) {
+                final int goalIndex = shape.getCellFromCoords(size, x, y);
+                if (goalIndex == -1) {
+                    texts[x] = new String[0];
+                } else {
+                    texts[x] = WordUtils.wrap(goals[goalIndex].name().getString(), boxWidth - 3, "\n", true).split("\n");
+                }
             }
 
             for (int line = 0; line < boxHeight - 1; line++) {
-                for (int x = 0; x < size; x++) {
+                for (int x = 0; x < visualSize.x(); x++) {
                     final String box = line < texts[x].length ? texts[x][line] : "";
                     result.append("| ").append(box).repeat(' ', boxWidth - box.length() - 2);
                 }
@@ -389,7 +385,7 @@ public class BingoBoard {
             }
         }
 
-        for (int column = 0; column < size; column++) {
+        for (int column = 0; column < visualSize.x(); column++) {
             result.append('+').repeat('-', boxWidth - 1);
         }
         result.append('+');
@@ -488,10 +484,11 @@ public class BingoBoard {
         }
     }
 
-    private record PartiallyParsed(int size, List<Teams> states, List<List<OptionalInt>> manualHighlights, List<ActiveGoal> goals) {
+    private record PartiallyParsed(BoardShape shape, int size, List<Teams> states, List<List<OptionalInt>> manualHighlights, List<ActiveGoal> goals) {
         static final Codec<PartiallyParsed> CODEC = RecordCodecBuilder.<PartiallyParsed>create(
             instance -> instance.group(
-                Codec.INT.fieldOf("size").forGetter(PartiallyParsed::size),
+                BoardShape.CODEC.optionalFieldOf("shape", BoardShape.SQUARE).forGetter(PartiallyParsed::shape),
+                ExtraCodecs.POSITIVE_INT.fieldOf("size").forGetter(PartiallyParsed::size),
                 Teams.CODEC.listOf().fieldOf("states").forGetter(PartiallyParsed::states),
                 Codec.INT.xmap(i -> i == 0 ? OptionalInt.empty() : OptionalInt.of(i - 1), i -> i.isEmpty() ? 0 : i.getAsInt() + 1)
                     .listOf()
@@ -505,17 +502,18 @@ public class BingoBoard {
             List<List<OptionalInt>> manualHighlights = Arrays.stream(board.manualHighlights)
                 .map(teamHighlights -> Arrays.stream(teamHighlights).map(i -> i == null ? OptionalInt.empty() : OptionalInt.of(i)).toList())
                 .toList();
-            return new PartiallyParsed(board.size, List.of(board.states), manualHighlights, List.of(board.goals));
+            return new PartiallyParsed(board.shape, board.size, List.of(board.states), manualHighlights, List.of(board.goals));
         }
 
         private DataResult<PartiallyParsed> validate() {
             // fixedSize does create a shortened partial result, but we only care about it having a partial, as the
             // shortening is also handled in create() above.
+            final int goalCount = shape.getGoalCount(size);
             var result = DataResult.success(this);
-            result = BingoUtil.combineError(result, Util.fixedSize(states, size * size));
-            result = BingoUtil.combineError(result, Util.fixedSize(goals, size * size));
+            result = BingoUtil.combineError(result, Util.fixedSize(states, goalCount));
+            result = BingoUtil.combineError(result, Util.fixedSize(goals, goalCount));
             for (List<OptionalInt> teamHighlight : manualHighlights) {
-                result = BingoUtil.combineError(result, Util.fixedSize(teamHighlight, size * size));
+                result = BingoUtil.combineError(result, Util.fixedSize(teamHighlight, goalCount));
             }
             return result;
         }

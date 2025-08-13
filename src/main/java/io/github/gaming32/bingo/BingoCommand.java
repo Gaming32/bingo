@@ -5,12 +5,15 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.Dynamic3CommandExceptionType;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.serialization.JavaOps;
 import io.github.gaming32.bingo.commandswitch.CommandSwitch;
 import io.github.gaming32.bingo.data.BingoDifficulties;
 import io.github.gaming32.bingo.data.BingoDifficulty;
@@ -23,9 +26,11 @@ import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
+import io.github.gaming32.bingo.game.BoardShape;
 import io.github.gaming32.bingo.game.InvalidGoalException;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
+import io.github.gaming32.bingo.util.Vec2i;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -77,6 +82,10 @@ import static net.minecraft.commands.Commands.literal;
 public class BingoCommand {
     private static final SimpleCommandExceptionType NO_GAME_RUNNING =
         new SimpleCommandExceptionType(Bingo.translatable("bingo.no_game_running"));
+    private static final DynamicCommandExceptionType INVALID_SHAPE =
+        new DynamicCommandExceptionType(shape -> Bingo.translatableEscape("bingo.invalid_shape", shape));
+    private static final Dynamic3CommandExceptionType INVALID_SIZE =
+        new Dynamic3CommandExceptionType((size, min, max) -> Bingo.translatableEscape("bingo.invalid_size", size, min, max));
     private static final DynamicCommandExceptionType CANNOT_SHOW_BOARD =
         new DynamicCommandExceptionType(size -> Bingo.translatableEscape("bingo.cannot_show_board", size));
     private static final DynamicCommandExceptionType TEAM_ALREADY_EXISTS =
@@ -124,8 +133,12 @@ public class BingoCommand {
     private static final CommandSwitch<Boolean> CONTINUE_AFTER_WIN = CommandSwitch.storeTrue("--continue-after-win");
     private static final CommandSwitch<Boolean> INCLUDE_INACTIVE_TEAMS = CommandSwitch.storeTrue("--include-inactive-teams");
 
+    private static final CommandSwitch<String> SHAPE = CommandSwitch
+        .argument("--shape", StringArgumentType.word())
+        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(Arrays.stream(BoardShape.values()).map(BoardShape::getSerializedName), builder))
+        .build(BoardShape.SQUARE.getSerializedName());
     private static final CommandSwitch<Integer> SIZE = CommandSwitch
-        .argument("--size", IntegerArgumentType.integer(BingoBoard.MIN_SIZE, BingoBoard.MAX_SIZE))
+        .argument("--size", IntegerArgumentType.integer())
         .build(BingoBoard.DEFAULT_SIZE);
     private static final CommandSwitch<Long> SEED = CommandSwitch
         .argument("--seed", LongArgumentType.longArg())
@@ -199,8 +212,12 @@ public class BingoCommand {
                         throw NO_GAME_RUNNING.create();
                     }
                     int size = game.getBoard().getSize();
+                    Vec2i visualSize = game.getBoard().getShape().getVisualSize(size);
+                    if (visualSize.x() > 9) {
+                        throw CANNOT_SHOW_BOARD.create(size);
+                    }
 
-                    MenuType<?> menuType = switch (size) {
+                    MenuType<?> menuType = switch (visualSize.y()) {
                         case 1 -> MenuType.GENERIC_9x1;
                         case 2 -> MenuType.GENERIC_9x2;
                         case 3 -> MenuType.GENERIC_9x3;
@@ -214,22 +231,21 @@ public class BingoCommand {
                     ctx.getSource().getPlayerOrException().openMenu(new MenuProvider() {
                         @Override
                         public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
-                            final var menu = new ChestMenu(menuType, syncId, inventory, new SimpleContainer(9 * size), size) {
+                            final var menu = new ChestMenu(menuType, syncId, inventory, new SimpleContainer(9 * visualSize.y()), visualSize.y()) {
                                 @Override
                                 public void clicked(int slotId, int button, ClickType clickType, Player player) {
                                     sendAllDataToRemote(); // Same as in spectator mode
                                 }
                             };
-                            int minX = (9 - size) / 2;
-                            for (int x = 0; x < size; x++) {
-                                for (int y = 0; y < size; y++) {
-                                    menu.getContainer().setItem(
-                                        minX + y * 9 + x,
-                                        game.getBoard()
-                                            .getGoal(x, y)
-                                            .getFallbackWithComponents(registries)
-                                    );
-                                }
+                            int minX = (9 - visualSize.x()) / 2;
+                            for (int goalIndex = 0; goalIndex < game.getBoard().getGoals().length; goalIndex++) {
+                                Vec2i goalPos = game.getBoard().getShape().getCoords(size, goalIndex);
+                                menu.getContainer().setItem(
+                                    minX + goalPos.y() * 9 + goalPos.x(),
+                                    game.getBoard()
+                                        .getGoals()[goalIndex]
+                                        .getFallbackWithComponents(registries)
+                                );
                             }
                             return menu;
                         }
@@ -266,10 +282,16 @@ public class BingoCommand {
                             throw NO_GAME_RUNNING.create();
                         }
                         final BingoBoard board = game.getBoard();
-                        final StringBuilder line = new StringBuilder(board.getSize());
-                        for (int y = 0; y < board.getSize(); y++) {
-                            for (int x = 0; x < board.getSize(); x++) {
-                                line.append(board.getGoal(x, y).difficulty().orElseThrow().value().number());
+                        final Vec2i visualSize = board.getShape().getVisualSize(board.getSize());
+                        final StringBuilder line = new StringBuilder(visualSize.x());
+                        for (int y = 0; y < visualSize.y(); y++) {
+                            for (int x = 0; x < visualSize.x(); x++) {
+                                int goalIndex = board.getShape().getCellFromCoords(board.getSize(), x, y);
+                                if (goalIndex == -1) {
+                                    line.append(' ');
+                                } else {
+                                    line.append(board.getGoals()[goalIndex].difficulty().orElseThrow().value().number());
+                                }
                             }
                             ctx.getSource().sendSuccess(() -> Component.literal(line.toString()), false);
                             line.setLength(0);
@@ -363,6 +385,7 @@ public class BingoCommand {
             CONTINUE_AFTER_WIN.addTo(startCommand);
             INCLUDE_INACTIVE_TEAMS.addTo(startCommand);
 
+            SHAPE.addTo(startCommand);
             SIZE.addTo(startCommand);
             SEED.addTo(startCommand);
             AUTO_FORFEIT_TIME.addTo(startCommand);
@@ -398,7 +421,12 @@ public class BingoCommand {
         final long seed = SEED.get(context);
         final var requiredGoals = REQUIRE_GOAL.get(context);
         final var excludedTags = EXCLUDE_TAG.get(context);
+        final String shapeString = SHAPE.get(context);
+        final BoardShape shape = BoardShape.CODEC.parse(JavaOps.INSTANCE, shapeString).getOrThrow(err -> INVALID_SHAPE.create(shapeString));
         final int size = SIZE.get(context);
+        if (size < shape.getMinSize() || size > shape.getMaxSize()) {
+            throw INVALID_SIZE.create(size, shape.getMinSize(), shape.getMaxSize());
+        }
         final var gamemode = GAMEMODE.get(context).value();
         final boolean requireClient = REQUIRE_CLIENT.get(context);
         final boolean continueAfterWin = CONTINUE_AFTER_WIN.get(context);
@@ -433,6 +461,7 @@ public class BingoCommand {
         final BingoBoard board;
         try {
             board = BingoBoard.generate(
+                shape,
                 size,
                 difficulty.value().number(),
                 teams.size(),

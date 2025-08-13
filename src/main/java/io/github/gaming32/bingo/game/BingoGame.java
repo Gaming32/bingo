@@ -157,7 +157,7 @@ public class BingoGame {
     public void syncAdvancementsTo(ServerPlayer player) {
         player.connection.send(new ClientboundUpdateAdvancementsPacket(
             false,
-            VanillaNetworking.generateAdvancements(player.registryAccess(), board.getSize(), board.getGoals()),
+            VanillaNetworking.generateAdvancements(player.registryAccess(), board.getShape(), board.getSize(), board.getGoals()),
             Set.of(),
             VanillaNetworking.generateProgressMap(board.getStates(), getTeam(player)),
             false

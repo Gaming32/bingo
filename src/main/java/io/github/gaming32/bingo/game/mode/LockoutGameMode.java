@@ -70,7 +70,7 @@ public class LockoutGameMode implements BingoGameMode {
 
         Arrays.sort(teams, Comparator.comparing(v -> -v.goalsHeld)); // Sort in reverse
 
-        final int totalGoals = board.getSize() * board.getSize();
+        final int totalGoals = board.getShape().getGoalCount(board.getSize());
         if (totalGoals - totalHeld < teams[0].goalsHeld - teams[1].goalsHeld) {
             return teams[0].team;
         }

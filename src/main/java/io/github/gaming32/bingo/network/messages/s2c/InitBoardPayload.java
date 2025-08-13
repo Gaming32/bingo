@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.network.messages.s2c;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
+import io.github.gaming32.bingo.game.BoardShape;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import io.github.gaming32.bingo.network.BingoNetworking;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 
 public record InitBoardPayload(
+    BoardShape shape,
     int size,
     ActiveGoal[] goals,
     BingoBoard.Teams[] states,
@@ -27,6 +29,7 @@ public record InitBoardPayload(
 ) implements AbstractCustomPayload {
     public static final Type<InitBoardPayload> TYPE = AbstractCustomPayload.type("init_board");
     public static final StreamCodec<RegistryFriendlyByteBuf, InitBoardPayload> CODEC = StreamCodec.composite(
+        BoardShape.STREAM_CODEC, InitBoardPayload::shape,
         ByteBufCodecs.VAR_INT, InitBoardPayload::size,
         ActiveGoal.STREAM_CODEC.apply(BingoStreamCodecs.array(ActiveGoal[]::new)), InitBoardPayload::goals,
         BingoBoard.Teams.STREAM_CODEC.apply(BingoStreamCodecs.array(BingoBoard.Teams[]::new)), InitBoardPayload::states,
@@ -41,6 +44,7 @@ public record InitBoardPayload(
         final BingoBoard board = game.getBoard();
 
         return new InitBoardPayload(
+            board.getShape(),
             board.getSize(),
             board.getGoals(),
             states,
@@ -48,7 +52,7 @@ public record InitBoardPayload(
                 .map(PlayerTeam::getName)
                 .toArray(String[]::new),
             game.getGameMode().getRenderMode(),
-            team.one() ? Arrays.stream(board.getTeamManualHighlights(team)).mapToInt(i -> i == null ? 0 : i + 1).toArray() : new int[board.getSize() * board.getSize()],
+            team.one() ? Arrays.stream(board.getTeamManualHighlights(team)).mapToInt(i -> i == null ? 0 : i + 1).toArray() : new int[board.getShape().getGoalCount(board.getSize())],
             team.one() ? board.getManualHighlightModCount(team) : 0
         );
     }

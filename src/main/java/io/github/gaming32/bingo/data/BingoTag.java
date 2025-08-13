@@ -43,8 +43,8 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
         return difficulty < size ? difficultyMax.getFloat(difficulty) : difficultyMax.getFloat(size - 1);
     }
 
-    public int getMaxForDifficulty(int difficulty, int boardSize) {
-        return Mth.ceil(getUnscaledMaxForDifficulty(difficulty) * boardSize * boardSize);
+    public int getMaxForDifficulty(int difficulty, int goalCount) {
+        return Mth.ceil(getUnscaledMaxForDifficulty(difficulty) * goalCount);
     }
 
     public static Builder builder() {
