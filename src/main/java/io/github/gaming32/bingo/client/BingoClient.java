@@ -320,6 +320,20 @@ public class BingoClient {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_HIGHLIGHT_FRONT_SPRITE, slotX - 4, slotY - 4, 24, 24);
         }
 
+        if (!clientGame.nerfedTeams().and(clientTeam)) {
+            for (int goalIndex = 0; goalIndex < goalCount; goalIndex++) {
+                if (!clientGame.shape().isNerfCell(clientGame.size(), goalIndex)) {
+                    continue;
+                }
+
+                final Vec2i slotPos = clientGame.shape().getCoords(clientGame.size(), goalIndex);
+                final int slotX = slotPos.x() * 18 + 8;
+                final int slotY = slotPos.y() * 18 + 18;
+
+                graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0x80000000);
+            }
+        }
+
         graphics.pose().popMatrix();
         if (BingoMousePos.hasSlotPos(mousePos)) {
             final var goal = clientGame.goals()[mousePos.goalIndex()];

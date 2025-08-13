@@ -44,6 +44,7 @@ public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
             payload.states(),
             payload.goals(),
             playerTeams,
+            payload.nerfedTeams(),
             payload.renderMode(),
             new GoalProgress[goalCount],
             Arrays.stream(payload.manualHighlights()).mapToObj(i -> i == 0 ? null : i - 1).toArray(Integer[]::new),

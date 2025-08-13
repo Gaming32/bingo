@@ -15,6 +15,7 @@ public record ClientGame(
     BingoBoard.Teams[] states,
     ActiveGoal[] goals,
     PlayerTeam[] teams,
+    BingoBoard.Teams nerfedTeams,
     BingoGameMode.RenderMode renderMode,
     @Nullable GoalProgress[] progress,
     @Nullable Integer[] manualHighlights,

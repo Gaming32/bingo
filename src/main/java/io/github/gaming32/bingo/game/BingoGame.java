@@ -88,6 +88,7 @@ public class BingoGame {
     private BingoBoard.Teams remainingTeams;
     private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
+    private BingoBoard.Teams nerfedTeams = BingoBoard.Teams.NONE;
 
     public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean continueAfterWin, int autoForfeitTicks, PlayerTeam... teams) {
         this.board = board;
@@ -568,6 +569,8 @@ public class BingoGame {
         int boardIndex,
         boolean isLoss
     ) {
+        final boolean announceGoal = gameMode.announceGoal(this, team, boardIndex);
+
         final PlayerTeam playerTeam = getTeam(team);
         final Component goalName = goal.name().copy().withStyle(isLoss ? ChatFormatting.GOLD : ChatFormatting.GREEN);
         final Component message;
@@ -600,16 +603,18 @@ public class BingoGame {
         for (final String member : playerTeam.getPlayers()) {
             final ServerPlayer player = playerList.getPlayerByName(member);
             if (player == null) continue;
-            player.playNotifySound(
-                isLoss ? SoundEvents.RESPAWN_ANCHOR_DEPLETE.value() : SoundEvents.NOTE_BLOCK_CHIME.value(),
-                SoundSource.MASTER,
-                isLoss ? 1f : 0.5f, 1f
-            );
             if (!showOtherTeam && !player.isSpectator()) {
                 obfuscatedStatePayload.sendTo(player);
             }
             player.connection.send(vanillaPacket);
-            player.sendSystemMessage(message);
+            if (announceGoal) {
+                player.playNotifySound(
+                    isLoss ? SoundEvents.RESPAWN_ANCHOR_DEPLETE.value() : SoundEvents.NOTE_BLOCK_CHIME.value(),
+                    SoundSource.MASTER,
+                    isLoss ? 1f : 0.5f, 1f
+                );
+                player.sendSystemMessage(message);
+            }
         }
         if (showOtherTeam) {
             statePayload.sendTo(playerList.getPlayers());
@@ -625,8 +630,10 @@ public class BingoGame {
                 );
                 for (final ServerPlayer player : playerList.getPlayers()) {
                     if (player.isAlliedTo(playerTeam)) continue;
-                    player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.MASTER, 0.5f, 1f);
-                    player.sendSystemMessage(lockoutMessage);
+                    if (announceGoal) {
+                        player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.MASTER, 0.5f, 1f);
+                        player.sendSystemMessage(lockoutMessage);
+                    }
                 }
             }
         } else {
@@ -661,6 +668,15 @@ public class BingoGame {
 
     public PlayerTeam[] getTeams() {
         return teams;
+    }
+
+    public BingoBoard.Teams getNerfedTeams() {
+        return nerfedTeams;
+    }
+
+    public void nerfPlayer(ServerPlayer player) {
+        BingoBoard.Teams team = getTeam(player);
+        nerfedTeams = nerfedTeams.or(team);
     }
 
     public void checkForWin(PlayerList playerList) {
@@ -724,7 +740,7 @@ public class BingoGame {
     }
 
     public BingoBoard.Teams getWinner(boolean tryHarder) {
-        return gameMode.getWinners(board, teams.length, tryHarder);
+        return gameMode.getWinners(board, teams.length, nerfedTeams, tryHarder);
     }
 
     public PersistenceData createPersistenceData() {
@@ -756,7 +772,8 @@ public class BingoGame {
         Map<UUID, Object2IntMap<Stat<?>>> baseStats,
         Optional<BingoBoard.Teams> playingTeams,
         BingoBoard.Teams winningTeams,
-        BingoBoard.Teams finishedTeams
+        BingoBoard.Teams finishedTeams,
+        BingoBoard.Teams nerfedTeams
     ) {
         private static final Codec<Map<UUID, Int2ObjectMap<AdvancementProgress>>> ADVANCEMENT_PROGRESS_CODEC =
             Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.int2ObjectMap(AdvancementProgress.CODEC));
@@ -784,7 +801,8 @@ public class BingoGame {
                 BASE_STATS_CODEC.fieldOf("base_stats").forGetter(PersistenceData::baseStats),
                 BingoBoard.Teams.CODEC.optionalFieldOf("playing_teams").forGetter(PersistenceData::playingTeams),
                 BingoBoard.Teams.CODEC.optionalFieldOf("winning_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::winningTeams),
-                BingoBoard.Teams.CODEC.optionalFieldOf("finished_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::finishedTeams)
+                BingoBoard.Teams.CODEC.optionalFieldOf("finished_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::finishedTeams),
+                BingoBoard.Teams.CODEC.optionalFieldOf("nerfed_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::nerfedTeams)
             ).apply(instance, PersistenceData::new)
         );
 
@@ -871,7 +889,7 @@ public class BingoGame {
                 createMap(game, game.advancementProgress),
                 createMap(game, game.goalProgress),
                 goalAchievedCount, queuedGoals, game.baseStats,
-                Optional.of(game.remainingTeams), game.winningTeams, game.finishedTeams
+                Optional.of(game.remainingTeams), game.winningTeams, game.finishedTeams, game.nerfedTeams
             );
         }
 

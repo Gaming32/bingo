@@ -23,6 +23,7 @@ public record InitBoardPayload(
     ActiveGoal[] goals,
     BingoBoard.Teams[] states,
     String[] teams,
+    BingoBoard.Teams nerfedTeams,
     BingoGameMode.RenderMode renderMode,
     int[] manualHighlights,
     int manualHighlightModCount
@@ -34,6 +35,7 @@ public record InitBoardPayload(
         ActiveGoal.STREAM_CODEC.apply(BingoStreamCodecs.array(ActiveGoal[]::new)), InitBoardPayload::goals,
         BingoBoard.Teams.STREAM_CODEC.apply(BingoStreamCodecs.array(BingoBoard.Teams[]::new)), InitBoardPayload::states,
         ByteBufCodecs.STRING_UTF8.apply(BingoStreamCodecs.array(String[]::new)), InitBoardPayload::teams,
+        BingoBoard.Teams.STREAM_CODEC, InitBoardPayload::nerfedTeams,
         BingoGameMode.RenderMode.STREAM_CODEC, InitBoardPayload::renderMode,
         BingoStreamCodecs.INT_ARRAY, InitBoardPayload::manualHighlights,
         ByteBufCodecs.VAR_INT, InitBoardPayload::manualHighlightModCount,
@@ -51,6 +53,7 @@ public record InitBoardPayload(
             Arrays.stream(game.getTeams())
                 .map(PlayerTeam::getName)
                 .toArray(String[]::new),
+            game.getNerfedTeams(),
             game.getGameMode().getRenderMode(),
             team.one() ? Arrays.stream(board.getTeamManualHighlights(team)).mapToInt(i -> i == null ? 0 : i + 1).toArray() : new int[board.getShape().getGoalCount(board.getSize())],
             team.one() ? board.getManualHighlightModCount(team) : 0

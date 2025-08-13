@@ -163,6 +163,11 @@ public enum BoardShape implements StringRepresentable {
                 return -1;
             }
         }
+
+        @Override
+        public boolean isNerfCell(int size, int cell) {
+            return cell >= Mth.square(size);
+        }
     };
 
     public static final Codec<BoardShape> CODEC = StringRepresentable.fromEnum(BoardShape::values);
@@ -190,6 +195,10 @@ public enum BoardShape implements StringRepresentable {
     public abstract Vec2i getCoords(int size, int cell);
 
     public abstract int getCellFromCoords(int size, int x, int y);
+
+    public boolean isNerfCell(int size, int cell) {
+        return false;
+    }
 
     public final int getMinSize() {
         return minSize;

@@ -2,6 +2,7 @@ package io.github.gaming32.bingo;
 
 import com.demonwav.mcdev.annotations.Translatable;
 import com.mojang.logging.LogUtils;
+import io.github.gaming32.bingo.client.BingoConfig;
 import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoRegistries;
@@ -50,9 +51,15 @@ public class Bingo {
     public static final String MOD_ID = "bingo";
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    public static final BingoConfig CONFIG = new BingoConfig(
+        BingoPlatform.platform.getConfigDir().resolve("bingo.toml")
+    );
     public static final LevelResource PERSISTED_BINGO_GAME = new LevelResource("persisted_bingo_game.dat");
 
     public static void init() {
+        CONFIG.load();
+        CONFIG.save();
+
         registerEventHandlers();
         initializeRegistries();
         registerDatapackRegistries();

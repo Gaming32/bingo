@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.game.BingoBoard;
+import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
@@ -33,13 +34,16 @@ public interface BingoGameMode {
         return null;
     }
 
-    @NotNull
-    BingoBoard.Teams getWinners(BingoBoard board, int teamCount, boolean tryHarder);
+    BingoBoard.@NotNull Teams getWinners(BingoBoard board, int teamCount, BingoBoard.Teams nerfedTeams, boolean tryHarder);
 
     boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever);
 
     default boolean isGoalAllowed(GoalHolder goal) {
         return true;
+    }
+
+    default boolean announceGoal(BingoGame game, BingoBoard.Teams team, int goalIndex) {
+        return game.getNerfedTeams().and(team) || !game.getBoard().getShape().isNerfCell(game.getBoard().getSize(), goalIndex);
     }
 
     default RenderMode getRenderMode() {
@@ -52,6 +56,14 @@ public interface BingoGameMode {
 
     default boolean canFinishedTeamsGetMoreGoals() {
         return true;
+    }
+
+    static boolean hasGoal(BingoBoard board, int goalIndex, BingoBoard.Teams team, boolean isNerfed) {
+        if (!isNerfed && board.getShape().isNerfCell(board.getSize(), goalIndex)) {
+            return true;
+        }
+
+        return board.getStates()[goalIndex].and(team);
     }
 
     static void load() {

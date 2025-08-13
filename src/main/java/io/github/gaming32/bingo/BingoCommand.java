@@ -119,6 +119,11 @@ public class BingoCommand {
     private static final DynamicCommandExceptionType TEAM_NOT_PLAYING =
         new DynamicCommandExceptionType(team -> Bingo.translatableEscape("bingo.team_not_playing", team));
 
+    private static final SimpleCommandExceptionType ALREADY_NERFED =
+        new SimpleCommandExceptionType(Bingo.translatable("bingo.already_nerfed"));
+    private static final SimpleCommandExceptionType NOT_NERFED =
+        new SimpleCommandExceptionType(Bingo.translatable("bingo.not_nerfed"));
+
     private static final SuggestionProvider<CommandSourceStack> ACTIVE_GOAL_SUGGESTOR = (context, builder) -> {
         final var game = ((MinecraftServerExt) context.getSource().getServer()).bingo$getGame();
         if (game == null) {
@@ -376,6 +381,34 @@ public class BingoCommand {
                     )
                 )
             )
+            .then(literal("nerf")
+                .then(literal("add")
+                    .then(argument("player", EntityArgument.player())
+                        .executes(context -> {
+                            ServerPlayer player = EntityArgument.getPlayer(context, "player");
+                            if (!Bingo.CONFIG.getNerfedPlayers().add(player.getUUID())) {
+                                throw ALREADY_NERFED.create();
+                            }
+                            Bingo.CONFIG.save();
+                            context.getSource().sendSuccess(() -> Bingo.translatable("bingo.nerf.added", player.getDisplayName()), true);
+                            return Command.SINGLE_SUCCESS;
+                        })
+                    )
+                )
+                .then(literal("remove")
+                    .then(argument("player", EntityArgument.player())
+                        .executes(context -> {
+                            ServerPlayer player = EntityArgument.getPlayer(context, "player");
+                            if (!Bingo.CONFIG.getNerfedPlayers().remove(player.getUUID())) {
+                                throw NOT_NERFED.create();
+                            }
+                            Bingo.CONFIG.save();
+                            context.getSource().sendSuccess(() -> Bingo.translatable("bingo.nerf.removed", player.getDisplayName()), true);
+                            return Command.SINGLE_SUCCESS;
+                        })
+                    )
+                )
+            )
         );
 
         {
@@ -482,6 +515,13 @@ public class BingoCommand {
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
         final var game = new BingoGame(board, gamemode, requireClient, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
+
+        for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
+            if (Bingo.CONFIG.getNerfedPlayers().contains(player.getUUID())) {
+                game.nerfPlayer(player);
+            }
+        }
+
         ((MinecraftServerExt) server).bingo$setGame(game);
         Bingo.updateCommandTree(playerList);
         new ArrayList<>(playerList.getPlayers()).forEach(game::addPlayer);

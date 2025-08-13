@@ -6,6 +6,7 @@ import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.game.BingoBoard;
+import io.github.gaming32.bingo.game.BingoGame;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +46,7 @@ public class LockoutGameMode implements BingoGameMode {
 
     @NotNull
     @Override
-    public BingoBoard.Teams getWinners(BingoBoard board, int teamCount, boolean tryHarder) {
+    public BingoBoard.Teams getWinners(BingoBoard board, int teamCount, BingoBoard.Teams nerfedTeams, boolean tryHarder) {
         class TeamValue {
             final BingoBoard.Teams team;
             int goalsHeld;
@@ -97,6 +98,11 @@ public class LockoutGameMode implements BingoGameMode {
     @Override
     public boolean isGoalAllowed(GoalHolder goal) {
         return goal.goal().getTags().stream().allMatch(g -> g.value().specialType() == BingoTag.SpecialType.NONE);
+    }
+
+    @Override
+    public boolean announceGoal(BingoGame game, BingoBoard.Teams team, int goalIndex) {
+        return true;
     }
 
     @Override
