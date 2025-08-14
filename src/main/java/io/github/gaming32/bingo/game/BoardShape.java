@@ -70,7 +70,7 @@ public enum BoardShape implements StringRepresentable {
             return y * size + x;
         }
     },
-    NERF_EXPANDED(1, "nerf_expanded", 3, 6) {
+    NERF_EXPANDED(1, "nerf_expanded", 2, 6) {
         @Override
         public int getGoalCount(int size) {
             return Mth.square(size + 1) + 1;
@@ -97,14 +97,14 @@ public enum BoardShape implements StringRepresentable {
             }
 
             int[] diagonal1 = new int[size + 1];
-            diagonal1[0] = Mth.square(size) + 2 * size;
+            diagonal1[0] = Mth.square(size) + 2 * size + 1;
             for (int i = 0; i < size; i++) {
                 diagonal1[i + 1] = i * size + i;
             }
             lines.add(diagonal1);
 
             int[] diagonal2 = new int[size + 1];
-            diagonal2[0] = Mth.square(size) + 2 * size + 1;
+            diagonal2[0] = Mth.square(size) + 2 * size;
             for (int i = 0; i < size; i++) {
                 diagonal2[i + 1] = (size - i - 1) * size + i;
             }
@@ -126,11 +126,11 @@ public enum BoardShape implements StringRepresentable {
             } else if (cell < Mth.square(size) + size) {
                 // row extensions
                 int row = cell - Mth.square(size);
-                return new Vec2i(row % 2 == 0 ? 0 : size + 1, row + 1);
+                return new Vec2i(getRowExtensionX(size, row), row + 1);
             } else if (cell < Mth.square(size) + 2 * size) {
                 // column extensions
                 int col = cell - Mth.square(size) - size;
-                return new Vec2i(col + 1, col % 2 == 0 ? 0 : size + 1);
+                return new Vec2i(col + 1, getColExtensionY(size, col));
             } else if (cell == Mth.square(size) + 2 * size) {
                 // bottom left - top right diagonal extension
                 return new Vec2i(0, size + 1);
@@ -147,12 +147,10 @@ public enum BoardShape implements StringRepresentable {
                 return (y - 1) * size + x - 1;
             } else if (y >= 1 && y <= size) {
                 // row extension
-                int expectedX = y % 2 == 0 ? size + 1 : 0;
-                return x == expectedX ? Mth.square(size) + y - 1 : -1;
+                return x == getRowExtensionX(size, y - 1) ? Mth.square(size) + y - 1 : -1;
             } else if (x >= 1 && x <= size) {
                 // column extension
-                int expectedY = x % 2 == 0 ? size + 1 : 0;
-                return y == expectedY ? Mth.square(size) + size + x - 1 : -1;
+                return y == getColExtensionY(size, x - 1) ? Mth.square(size) + size + x - 1 : -1;
             } else if (x == 0 && y == size + 1) {
                 // bottom left - top right diagonal extension
                 return Mth.square(size) + 2 * size;
@@ -161,6 +159,22 @@ public enum BoardShape implements StringRepresentable {
                 return Mth.square(size) + 2 * size + 1;
             } else {
                 return -1;
+            }
+        }
+
+        private static int getRowExtensionX(int size, int row) {
+            if (size % 2 == 0) {
+                return row % 2 == 0 ? size + 1 : 0;
+            } else {
+                return row != 0 && row % 2 == 0 ? 0 : size + 1;
+            }
+        }
+
+        private static int getColExtensionY(int size, int col) {
+            if (size % 2 == 0) {
+                return col % 2 == 0 ? 0 : size + 1;
+            } else {
+                return col != 0 && col % 2 == 0 ? size + 1 : 0;
             }
         }
 
