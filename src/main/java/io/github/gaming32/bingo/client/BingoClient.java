@@ -154,9 +154,16 @@ public class BingoClient {
     }
 
     public static void renderBoardOnHud(Minecraft minecraft, GuiGraphics graphics) {
-        if (clientGame == null || minecraft.getDebugOverlay().showDebugScreen() || minecraft.screen instanceof BoardScreen) {
+        if (clientGame == null) {
             return;
         }
+        if (minecraft.getDebugOverlay().showDebugScreen() && !BingoClient.CONFIG.showBoardOnF3Screen()) {
+            return;
+        }
+        if (minecraft.screen instanceof BoardScreen) {
+            return;
+        }
+
         final PositionAndScale pos = getBoardPosition();
         renderBingo(graphics, minecraft.screen instanceof ChatScreen, pos);
 

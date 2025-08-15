@@ -330,6 +330,8 @@
   "bingo.client_config.title": "Bingo Settings",
   "bingo.client_config.board_corner": "Board Corner",
   "bingo.client_config.board_scale": "Board Scale: %s",
+  "bingo.client_config.show_board_on_f3_screen": "Show Board on F3 Screen",
+  "bingo.client_config.show_board_on_f3_screen.tooltip": "This toggles the display of the board on the F3 screen.",
   "bingo.client_config.show_score_counter": "Score Counter",
   "bingo.client_config.show_score_counter.tooltip": "This toggles the display of the score counter during lockout matches.",
   "bingo.client_config.manual_highlight_color": "Manual Highlight Color %s",

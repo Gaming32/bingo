@@ -12,6 +12,7 @@ public class BingoClientConfig {
     private final FileConfig config;
 
     private BoardCorner boardCorner = BoardCorner.UPPER_RIGHT;
+    private boolean showBoardOnF3Screen = false;
     private float boardScale = 1f;
     private boolean showScoreCounter = true;
     private final int[] manualHighlightColors = new int[BingoBoard.NUM_MANUAL_HIGHLIGHT_COLORS];
@@ -24,6 +25,7 @@ public class BingoClientConfig {
     public void load() {
         config.load();
         boardCorner = config.getEnumOrElse("board.corner", BoardCorner.UPPER_RIGHT);
+        showBoardOnF3Screen = Boolean.parseBoolean(String.valueOf(config.<Object>get("board.showOnF3Screen")));
         boardScale = config.getOrElse("board.scale", 1.0).floatValue();
         showScoreCounter = config.getOrElse("board.showScoreCounter", true);
         for (int value = 0; value < BingoBoard.NUM_MANUAL_HIGHLIGHT_COLORS; value++) {
@@ -34,6 +36,7 @@ public class BingoClientConfig {
     public void save() {
         config.clear();
         config.set("board.corner", boardCorner.name());
+        config.set("board.showOnF3Screen", showBoardOnF3Screen);
         config.set("board.scale", boardScale);
         config.set("board.showScoreCounter", showScoreCounter);
         for (int value = 0; value < BingoBoard.NUM_MANUAL_HIGHLIGHT_COLORS; value++) {
@@ -44,6 +47,7 @@ public class BingoClientConfig {
 
     public void reset() {
         boardCorner = BoardCorner.UPPER_RIGHT;
+        showBoardOnF3Screen = false;
         boardScale = 1f;
         showScoreCounter = true;
         Arrays.setAll(manualHighlightColors, i -> DEFAULT_MANUAL_HIGHLIGHT_COLORS[i]);
@@ -55,6 +59,14 @@ public class BingoClientConfig {
 
     public void setBoardCorner(BoardCorner boardCorner) {
         this.boardCorner = boardCorner;
+    }
+
+    public boolean showBoardOnF3Screen() {
+        return showBoardOnF3Screen;
+    }
+
+    public void setShowBoardOnF3Screen(boolean showBoardOnF3Screen) {
+        this.showBoardOnF3Screen = showBoardOnF3Screen;
     }
 
     public float getBoardScale() {

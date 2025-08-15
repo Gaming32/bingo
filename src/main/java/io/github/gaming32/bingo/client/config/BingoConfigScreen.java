@@ -39,6 +39,7 @@ public class BingoConfigScreen extends Screen {
         final GridLayout.RowHelper rowHelper = gridLayout.createRowHelper(2);
 
         rowHelper.addChild(createCornerButton());
+        rowHelper.addChild(createShowBoardOnF3ScreenButton());
         rowHelper.addChild(createSizeSlider());
         rowHelper.addChild(createShowScoreCounterButton());
 
@@ -82,6 +83,18 @@ public class BingoConfigScreen extends Screen {
                 0, 0, 150, 20, Component.translatable("bingo.client_config.board_corner"),
                 (button, corner) -> {
                     BingoClient.CONFIG.setBoardCorner(corner);
+                    BingoClient.CONFIG.save();
+                }
+            );
+    }
+
+    private CycleButton<Boolean> createShowBoardOnF3ScreenButton() {
+        return CycleButton.onOffBuilder()
+            .withInitialValue(BingoClient.CONFIG.showBoardOnF3Screen())
+            .withTooltip(v -> Tooltip.create(Component.translatable("bingo.client_config.show_board_on_f3_screen.tooltip")))
+            .create(0, 0, 150, 20, Component.translatable("bingo.client_config.show_board_on_f3_screen"),
+                (button, show) -> {
+                    BingoClient.CONFIG.setShowBoardOnF3Screen(show);
                     BingoClient.CONFIG.save();
                 }
             );
