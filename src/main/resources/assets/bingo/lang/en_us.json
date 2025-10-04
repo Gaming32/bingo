@@ -54,6 +54,7 @@
   "bingo.goal.complete_map": "Complete a Map",
   "bingo.goal.concrete": "%s Colors of Concrete",
   "bingo.goal.coral_blocks": "All living coral blocks",
+  "bingo.goal.create_copper_golem": "Create a %s",
   "bingo.goal.create_iron_golem": "Create an %s",
   "bingo.goal.create_snow_golem": "Create a %s",
   "bingo.goal.crouch_distance": "Crouch a distance of %s blocks",

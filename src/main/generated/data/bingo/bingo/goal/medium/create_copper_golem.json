@@ -1,0 +1,44 @@
+{
+  "criteria": {
+    "summon": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:copper_golem"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:summoned_entity"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:entity",
+    "entity": "minecraft:copper_golem",
+    "item": {
+      "count": 1,
+      "id": "minecraft:copper_golem_spawn_egg"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.create_copper_golem",
+    "with": [
+      {
+        "translate": "entity.minecraft.copper_golem"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "summon"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

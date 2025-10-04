@@ -207,6 +207,14 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.create_iron_golem", EntityType.IRON_GOLEM.getDescription()))
             .icon(EntityIcon.ofSpawnEgg(EntityType.IRON_GOLEM))
         );
+        addGoal(BingoGoal.builder(id("create_copper_golem"))
+            .criterion("summon", SummonedEntityTrigger.TriggerInstance.summonedEntity(
+                EntityPredicate.Builder.entity().of(entityTypes, EntityType.COPPER_GOLEM)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.create_copper_golem", EntityType.COPPER_GOLEM.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.COPPER_GOLEM))
+        );
         addGoal(obtainItemGoal(id("ender_eye"), items, Items.ENDER_EYE)
             .reactant("pacifist")
             .tags(BingoTags.NETHER, BingoTags.COMBAT));
