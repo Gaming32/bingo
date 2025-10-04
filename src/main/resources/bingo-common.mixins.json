@@ -47,6 +47,7 @@
     "MixinServerPlayer_2",
     "MixinServerScoreboard",
     "MixinServerStatsCounter",
+    "MixinShelfBlock",
     "MixinTargetBlock",
     "MixinThrownEgg",
     "MixinTrapDoorBlock",
@@ -54,7 +55,6 @@
     "MixinVehicleEntity",
     "MixinZombie",
     "PlayerAdvancementsAccessor",
-    "ServerExplosionAccessor",
     "StatsCounterAccessor"
   ],
   "client": [
@@ -66,5 +66,11 @@
   ],
   "injectors": {
     "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "mixinextras": {
+    "minVersion": "0.5.0"
   }
 }

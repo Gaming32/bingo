@@ -224,6 +224,8 @@
   "bingo.goal.stairway_to_heaven.tooltip": "Using Stairs, build up to Y=320 (height limit) and stand on top at the end of the Bingo (if you need to jump over a block, it's not a finished stairway). Make sure the stairway is straight, with no bends.",
   "bingo.goal.stone.tooltip": "NOT Cobblestone.",
   "bingo.goal.stun_ravager": "Stun a %s",
+  "bingo.goal.swap_hotbar_with_shelf": "Swap your Hotbar with Shelves",
+  "bingo.goal.swap_hotbar_with_shelf.tooltip": "Both your hotbar and the shelves must be full.",
   "bingo.goal.tame_cat": "Tame a Cat",
   "bingo.goal.tame_horse": "Tame a Horse",
   "bingo.goal.tame_mule": "Tame a Mule",

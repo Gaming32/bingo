@@ -28,6 +28,7 @@ import io.github.gaming32.bingo.data.tags.bingo.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
 import io.github.gaming32.bingo.fabric.datagen.BingoDataGenUtil;
+import io.github.gaming32.bingo.triggers.BingoTriggers;
 import io.github.gaming32.bingo.triggers.BounceOnBlockTrigger;
 import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
 import io.github.gaming32.bingo.triggers.EntityKilledPlayerTrigger;
@@ -902,6 +903,14 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .icon(IndicatorIcon.infer(EntityType.WOLF, Items.WOLF_ARMOR)));
         addGoal(obtainAllItemsFromTag(BingoItemTags.TORCHES, "torches")
             .tags(BingoTags.OVERWORLD, BingoTags.NETHER));
+
+        addGoal(BingoGoal.builder(id("swap_hotbar_with_shelf"))
+            .criterion("swap", BingoTriggers.hotbarSwappedWithShelf())
+            .tags(BingoTags.ACTION)
+            .antisynergy("shelf")
+            .name("swap_hotbar_with_shelf")
+            .tooltip("swap_hotbar_with_shelf")
+            .icon(IndicatorIcon.infer(ItemTags.WOODEN_SHELVES, Items.DIAMOND_SWORD)));
     }
 
     @SafeVarargs

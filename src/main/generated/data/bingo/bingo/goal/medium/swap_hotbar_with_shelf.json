@@ -1,0 +1,35 @@
+{
+  "antisynergy": "shelf",
+  "criteria": {
+    "swap": {
+      "trigger": "bingo:hotbar_swapped_with_shelf"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:indicator",
+    "base": {
+      "type": "bingo:item_tag_cycle",
+      "tag": "minecraft:wooden_shelves"
+    },
+    "indicator": {
+      "type": "bingo:item",
+      "item": {
+        "count": 1,
+        "id": "minecraft:diamond_sword"
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.swap_hotbar_with_shelf"
+  },
+  "requirements": [
+    [
+      "swap"
+    ]
+  ],
+  "tags": "bingo:action",
+  "tooltip": {
+    "translate": "bingo.goal.swap_hotbar_with_shelf.tooltip"
+  }
+}

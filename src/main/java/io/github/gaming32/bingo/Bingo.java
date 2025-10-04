@@ -15,7 +15,6 @@ import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import io.github.gaming32.bingo.ext.ServerPlayerExt;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.game.persistence.PersistenceManager;
-import io.github.gaming32.bingo.mixin.common.ServerExplosionAccessor;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.network.messages.configuration.ProtocolVersionConfigurationTask;
@@ -107,7 +106,7 @@ public class Bingo {
                 final ServerPlayer player;
                 if (explosion.getIndirectSourceEntity() instanceof ServerPlayer thePlayer) {
                     player = thePlayer;
-                } else if (((ServerExplosionAccessor)explosion).getDamageSource().getEntity() instanceof ServerPlayer thePlayer) {
+                } else if (explosion.getDamageSource().getEntity() instanceof ServerPlayer thePlayer) {
                     player = thePlayer;
                 } else {
                     player = null;

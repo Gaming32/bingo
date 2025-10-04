@@ -10,6 +10,7 @@ import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.DistanceTrigger;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
@@ -45,6 +46,7 @@ public class BingoTriggers {
     public static final RegistryValue<GrowFeatureTrigger> GROW_FEATURE = register("grow_feature", GrowFeatureTrigger::new);
     public static final RegistryValue<HasSomeFoodItemsTrigger> HAS_SOME_FOOD_ITEMS = register("has_some_food_items", HasSomeFoodItemsTrigger::new);
     public static final RegistryValue<HasSomeItemsFromTagTrigger> HAS_SOME_ITEMS_FROM_TAG = register("has_some_items_from_tag", HasSomeItemsFromTagTrigger::new);
+    public static final RegistryValue<PlayerTrigger> HOTBAR_SWAPPED_WITH_SHELF = register("hotbar_swapped_with_shelf", PlayerTrigger::new);
     public static final RegistryValue<IntentionalGameDesignTrigger> INTENTIONAL_GAME_DESIGN = register("intentional_game_design", IntentionalGameDesignTrigger::new);
     public static final RegistryValue<ItemPickedUpTrigger> ITEM_PICKED_UP = register("item_picked_up", ItemPickedUpTrigger::new);
     public static final RegistryValue<KillItemTrigger> KILL_ITEM = register("kill_item", KillItemTrigger::new);
@@ -77,6 +79,10 @@ public class BingoTriggers {
         return CROUCH.get().createCriterion(
             new DistanceTrigger.TriggerInstance(Optional.empty(), Optional.empty(), Optional.of(distance))
         );
+    }
+
+    public static Criterion<PlayerTrigger.TriggerInstance> hotbarSwappedWithShelf() {
+        return HOTBAR_SWAPPED_WITH_SHELF.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty()));
     }
 
     public static Criterion<ItemUsedOnLocationTrigger.TriggerInstance> slept(LootItemCondition... bedLocation) {

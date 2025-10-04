@@ -361,6 +361,7 @@ b7ff54e7c4c35f9e8394be7610aa7671b42b0ecc data/bingo/bingo/goal/medium/strength_p
 9a0c96151d5ee62e3c828cdb71d2602500bc3b2e data/bingo/bingo/goal/medium/stripped_crimson_stem.json
 fc7d5c0e45f18662428d7ef442dd44b0ef76c141 data/bingo/bingo/goal/medium/stripped_warped_hyphae.json
 07109e5a14193d03cfbb34a56bde4ea162474314 data/bingo/bingo/goal/medium/stripped_warped_stem.json
+afd0a24994e4088268c2165c633c76a90edcbe68 data/bingo/bingo/goal/medium/swap_hotbar_with_shelf.json
 09e4baf21ce747d07f8429c3598274e9476d283f data/bingo/bingo/goal/medium/swiftness_potion.json
 fd50ab5d9e38aa05771a2c7b3269861186f4c782 data/bingo/bingo/goal/medium/tame_cat.json
 bccd153fbb60dc018f5b79aeb54367af041feae1 data/bingo/bingo/goal/medium/tame_wolf.json

@@ -2,7 +2,6 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.gaming32.bingo.mixin.common.ServerExplosionAccessor;
 import io.github.gaming32.bingo.util.CustomEnumCodec;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -15,6 +14,7 @@ import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ServerExplosion;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -66,7 +66,7 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
             if (this.location.isPresent() && !this.location.get().matches(level, location.x, location.y, location.z)) {
                 return false;
             }
-            if (this.damageSource.isPresent() && !this.damageSource.get().matches(level, location, ((ServerExplosionAccessor)explosion).getDamageSource())) {
+            if (this.damageSource.isPresent() && !this.damageSource.get().matches(level, location, ((ServerExplosion) explosion).getDamageSource())) {
                 return false;
             }
             if (this.blockInteraction.isPresent() && this.blockInteraction.get() != explosion.getBlockInteraction()) {
