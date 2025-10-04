@@ -4,6 +4,8 @@ import io.github.gaming32.bingo.game.BingoBoard;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.scores.PlayerTeam;
@@ -54,24 +56,25 @@ public class BoardScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
         assert minecraft != null;
-        if (BingoClient.clientGame != null && BingoClient.detectPress(keyCode, scanCode, getPosition())) {
+        if (BingoClient.clientGame != null && BingoClient.detectPress(event, getPosition())) {
             return true;
-        } else if (leftButton.visible && minecraft.options.keyLeft.matches(keyCode, scanCode)) {
+        } else if (leftButton.visible && minecraft.options.keyLeft.matches(event)) {
             switchTeam(-1);
-        } else if (rightButton.visible && minecraft.options.keyRight.matches(keyCode, scanCode)) {
+        } else if (rightButton.visible && minecraft.options.keyRight.matches(event)) {
             switchTeam(-1);
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (BingoClient.clientGame != null && BingoClient.detectClick(button, getPosition())) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (BingoClient.clientGame != null && BingoClient.detectClick(event.button(), getPosition())) {
             return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override

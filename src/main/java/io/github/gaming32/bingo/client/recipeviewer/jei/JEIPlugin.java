@@ -40,7 +40,7 @@ public class JEIPlugin extends RecipeViewerPlugin {
 
     @Override
     public void showUsages(ItemStack stack) {
-        show(stack, List.of(RecipeIngredientRole.INPUT, RecipeIngredientRole.CATALYST));
+        show(stack, List.of(RecipeIngredientRole.INPUT, RecipeIngredientRole.CRAFTING_STATION));
     }
 
     private void show(ItemStack stack, List<RecipeIngredientRole> roles) {

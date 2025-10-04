@@ -22,8 +22,7 @@ public class MixinCriterionTrigger_Listener {
     @Inject(method = "run", at = @At("HEAD"), cancellable = true)
     private void listenForGoalCompletion(PlayerAdvancements playerAdvancements, CallbackInfo ci) {
         final var player = ((PlayerAdvancementsAccessor)playerAdvancements).getPlayer();
-        MinecraftServer server = player.getServer();
-        assert server != null;
+        MinecraftServer server = player.level().getServer();
         final var game = ((MinecraftServerExt) server).bingo$getGame();
         if (game == null) return;
         final ActiveGoal goal = game.getBoard().byVanillaId(advancement.id());

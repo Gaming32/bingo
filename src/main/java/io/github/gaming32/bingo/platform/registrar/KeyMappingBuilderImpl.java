@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class KeyMappingBuilderImpl implements KeyMappingBuilder {
+public abstract class KeyMappingBuilderImpl implements KeyMappingBuilder {
     private final List<KeyMappingExt> mappings = new ArrayList<>();
 
     private String name;
-    private String category;
+    private KeyMapping.Category category;
     private InputConstants.Type keyType;
     private int keyCode;
     private ConflictContext conflictContext;
@@ -36,7 +36,7 @@ public class KeyMappingBuilderImpl implements KeyMappingBuilder {
     }
 
     @Override
-    public KeyMappingBuilder category(String category) {
+    public KeyMappingBuilder category(KeyMapping.Category category) {
         this.category = category;
         return this;
     }

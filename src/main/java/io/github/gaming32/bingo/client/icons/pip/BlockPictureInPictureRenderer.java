@@ -8,6 +8,7 @@ import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -73,12 +74,15 @@ public class BlockPictureInPictureRenderer extends PictureInPictureRenderer<Bloc
             model, r, g, b,
             LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY
         );
+
+        SubmitNodeStorage submitNodeStorage = Minecraft.getInstance().gameRenderer.getFeatureRenderDispatcher().getSubmitNodeStorage();
+
         minecraft.getModelManager()
             .specialBlockModelRenderer()
             .get()
             .renderByBlock(
-                state.getBlock(), ItemDisplayContext.NONE, poseStack, bufferSource,
-                LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY
+                state.getBlock(), ItemDisplayContext.NONE, poseStack, submitNodeStorage,
+                LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0
             );
     }
 

@@ -145,6 +145,14 @@ dependencies {
     modCompileOnly(libs.jei)
     modCompileOnly(libs.emi) // Unfortunately, although the API does what I need, it does in a way that's wholly different from the other recipe viewers
     fabricCompileOnly(compileOnly(libs.mcdev.annotations.get())!!)
+
+    testImplementation(libs.fabric.loader.junit)
+    testImplementation(libs.junit)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+    enabled = false // TODO get test classpath working
 }
 
 tasks.getByName("jar") {

@@ -2,6 +2,8 @@ package io.github.gaming32.bingo.platform.event;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.player.LocalPlayer;
 
 import java.util.function.Consumer;
@@ -15,11 +17,11 @@ public class ClientEvents {
 
     @FunctionalInterface
     public interface KeyReleaseHandler {
-        boolean onKeyReleased(Screen screen, int keyCode, int scanCode, int modifiers);
+        boolean onKeyReleased(Screen screen, KeyEvent event);
     }
 
     @FunctionalInterface
     public interface MouseReleaseHandler {
-        boolean onMouseReleased(Screen screen, double mouseX, double mouseY, int modifiers);
+        boolean onMouseReleased(Screen screen, MouseButtonEvent event);
     }
 }

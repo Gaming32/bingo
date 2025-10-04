@@ -1,6 +1,9 @@
 package io.github.gaming32.bingo.mixin.common;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import io.github.gaming32.bingo.ext.ItemEntityExt;
 import io.github.gaming32.bingo.ext.LivingEntityExt;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
@@ -52,6 +55,12 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
         }
     }
 
+    @ModifyExpressionValue(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;applyItemBlocking(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)F"))
+    private float captureBlocked(float blockedDamage, @Share("blocked") LocalBooleanRef blocked) {
+        blocked.set(blockedDamage > 0);
+        return blockedDamage;
+    }
+
     @Inject(
         method = "hurtServer",
         at = @At(
@@ -63,9 +72,9 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
         ServerLevel serverLevel, DamageSource damageSource, float taken,
         CallbackInfoReturnable<Boolean> cir,
         @Local(ordinal = 1) float dealt,
-        @Local(ordinal = 0) boolean blocked
+        @Share("blocked") LocalBooleanRef blocked
     ) {
-        BingoTriggers.ENTITY_DIE_NEAR_PLAYER.get().trigger((LivingEntity) (Object) this, damageSource, dealt, taken, blocked);
+        BingoTriggers.ENTITY_DIE_NEAR_PLAYER.get().trigger((LivingEntity) (Object) this, damageSource, dealt, taken, blocked.get());
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))

@@ -56,8 +56,7 @@ public class RelativeStatsTrigger extends SimpleProgressibleCriterionTrigger<Rel
         );
 
         public boolean matches(ServerPlayer player, ProgressListener<TriggerInstance> progressListener) {
-            MinecraftServer server = player.getServer();
-            assert server != null;
+            MinecraftServer server = player.level().getServer();
             final BingoGame game = ((MinecraftServerExt) server).bingo$getGame();
             if (game != null) {
                 final Object2IntMap<Stat<?>> baseStats = game.getBaseStats(player);

@@ -14,9 +14,11 @@ import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
 import io.github.gaming32.bingo.platform.registrar.PictureInPictureRendererRegistrar;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
@@ -48,6 +50,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class NeoForgePlatform extends BingoPlatform {
@@ -67,7 +71,7 @@ public class NeoForgePlatform extends BingoPlatform {
 
     @Override
     public boolean isClient() {
-        return FMLEnvironment.dist.isClient();
+        return FMLEnvironment.getDist().isClient();
     }
 
     @Override
@@ -96,6 +100,8 @@ public class NeoForgePlatform extends BingoPlatform {
 
     @Override
     public void registerKeyMappings(Consumer<KeyMappingBuilder> handler) {
+        List<KeyMapping.Category> categories = new ArrayList<>();
+
         final KeyMappingBuilderImpl builder = new KeyMappingBuilderImpl() {
             @Override
             public KeyMappingExt register(Consumer<Minecraft> action) {
@@ -103,9 +109,21 @@ public class NeoForgePlatform extends BingoPlatform {
                 mapping.mapping().setKeyConflictContext(convertConflictContext(mapping.conflictContext()));
                 return mapping;
             }
+
+            @Override
+            public KeyMapping.Category registerCategory(ResourceLocation id) {
+                KeyMapping.Category category = new KeyMapping.Category(id);
+                categories.add(category);
+                return category;
+            }
         };
         handler.accept(builder);
-        modEventBus.addListener((RegisterKeyMappingsEvent event) -> builder.registerAll(event::register));
+        modEventBus.addListener((RegisterKeyMappingsEvent event) -> {
+            builder.registerAll(event::register);
+            for (KeyMapping.Category category : categories) {
+                event.registerCategory(category);
+            }
+        });
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> builder.handleAll(Minecraft.getInstance()));
     }
 
@@ -205,12 +223,12 @@ public class NeoForgePlatform extends BingoPlatform {
 
         if (isClient()) {
             ClientEvents.KEY_RELEASED_PRE.setRegistrar(handler -> bus.addListener((ScreenEvent.KeyReleased.Pre event) -> {
-                if (handler.onKeyReleased(event.getScreen(), event.getKeyCode(), event.getScanCode(), event.getModifiers())) {
+                if (handler.onKeyReleased(event.getScreen(), event.getKeyEvent())) {
                     event.setCanceled(true);
                 }
             }));
             ClientEvents.MOUSE_RELEASED_PRE.setRegistrar(handler -> bus.addListener((ScreenEvent.MouseButtonReleased.Pre event) -> {
-                if (handler.onMouseReleased(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getButton())) {
+                if (handler.onMouseReleased(event.getScreen(), event.getMouseButtonEvent())) {
                     event.setCanceled(true);
                 }
             }));

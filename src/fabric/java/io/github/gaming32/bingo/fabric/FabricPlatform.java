@@ -34,24 +34,25 @@ import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.WeakReference;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -115,7 +116,12 @@ public class FabricPlatform extends BingoPlatform {
 
     @Override
     public void registerKeyMappings(Consumer<KeyMappingBuilder> handler) {
-        final KeyMappingBuilderImpl builder = new KeyMappingBuilderImpl();
+        final KeyMappingBuilderImpl builder = new KeyMappingBuilderImpl() {
+            @Override
+            public KeyMapping.Category registerCategory(ResourceLocation id) {
+                return KeyMapping.Category.register(id);
+            }
+        };
         handler.accept(builder);
         builder.registerAll(KeyBindingHelper::registerKeyBinding);
         ClientTickEvents.END_CLIENT_TICK.register(builder::handleAll);
@@ -123,40 +129,25 @@ public class FabricPlatform extends BingoPlatform {
 
     @Override
     public void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
-        final var helper = ResourceManagerHelper.get(PackType.SERVER_DATA);
-        handler.accept((id, listener, dependencies) -> helper.registerReloadListener(id, listener.andThen(
-            vanilla -> new IdentifiableResourceReloadListener() {
-                @Override
-                public ResourceLocation getFabricId() {
-                    return id;
-                }
+        final var helper = ResourceLoader.get(PackType.SERVER_DATA);
+        handler.accept((id, listener, dependencies) -> {
+            helper.registerReloader(id, new PreparableReloadListener() {
+                private WeakReference<HolderLookup.Provider> currentLookup;
+                private PreparableReloadListener delegate;
 
                 @Override
-                public Collection<ResourceLocation> getFabricDependencies() {
-                    return dependencies;
-                }
+                @NotNull
+                public CompletableFuture<Void> reload(SharedState sharedState, Executor executor, PreparationBarrier preparationBarrier, Executor executor2) {
+                    HolderLookup.Provider lookup = sharedState.get(ResourceLoader.RELOADER_REGISTRY_LOOKUP_KEY);
+                    if (currentLookup == null || lookup != currentLookup.get()) {
+                        currentLookup = new WeakReference<>(lookup);
+                        delegate = listener.apply(lookup);
+                    }
 
-                @Override
-                public @NotNull CompletableFuture<Void> reload(
-                    PreparationBarrier preparationBarrier,
-                    ResourceManager resourceManager,
-                    Executor backgroundExecutor,
-                    Executor gameExecutor
-                ) {
-                    return vanilla.reload(
-                        preparationBarrier,
-                        resourceManager,
-                        backgroundExecutor,
-                        gameExecutor
-                    );
+                    return delegate.reload(sharedState, executor, preparationBarrier, executor2);
                 }
-
-                @Override
-                public @NotNull String getName() {
-                    return vanilla.getName();
-                }
-            }
-        )));
+            });
+        });
     }
 
     @Override
@@ -219,14 +210,14 @@ public class FabricPlatform extends BingoPlatform {
         if (isClient()) {
             ClientEvents.KEY_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
                 (client, screen, scaledWidth, scaledHeight) ->
-                    ScreenKeyboardEvents.allowKeyRelease(screen).register((screen1, key, scancode, modifiers) ->
-                        !handler.onKeyReleased(screen1, key, scancode, modifiers)
+                    ScreenKeyboardEvents.allowKeyRelease(screen).register((screen1, event) ->
+                        !handler.onKeyReleased(screen1, event)
                     )
             ));
             ClientEvents.MOUSE_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
                 (client, screen, scaledWidth, scaledHeight) ->
-                    ScreenMouseEvents.allowMouseRelease(screen).register((screen1, mouseX, mouseY, button) ->
-                        !handler.onMouseReleased(screen1, mouseX, mouseY, button)
+                    ScreenMouseEvents.allowMouseRelease(screen).register((screen1, event) ->
+                        !handler.onMouseReleased(screen1, event)
                     )
             ));
             ClientEvents.PLAYER_QUIT.setRegistrar(FabricClientEvents.PLAYER_QUIT::register);

@@ -79,8 +79,7 @@ public class Bingo {
         });
 
         Event.PLAYER_JOIN.register(player -> {
-            MinecraftServer server = player.getServer();
-            assert server != null;
+            MinecraftServer server = player.level().getServer();
             final var game = ((MinecraftServerExt) server).bingo$getGame();
             if (game != null) {
                 game.addPlayer(player);
@@ -88,8 +87,7 @@ public class Bingo {
         });
 
         Event.PLAYER_QUIT.register(player -> {
-            MinecraftServer server = player.getServer();
-            assert server != null;
+            MinecraftServer server = player.level().getServer();
             final var game = ((MinecraftServerExt) server).bingo$getGame();
             if (game != null) {
                 game.removePlayer(player);

@@ -27,7 +27,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinServerPlayer extends MixinEntity implements ServerPlayerExt {
     @Shadow @Final public ServerPlayerGameMode gameMode;
 
-    @Shadow @Final public MinecraftServer server;
+    @Shadow @Final
+    private MinecraftServer server;
     @Unique
     private boolean bingo$advancementsNeedClearing;
 

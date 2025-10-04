@@ -11,12 +11,11 @@ import net.minecraft.client.gui.spectator.SpectatorMenuCategory;
 import net.minecraft.client.gui.spectator.SpectatorMenuItem;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 // Based off of TeleportToTeamMenuCategory
 public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, SpectatorMenuItem {
@@ -91,7 +89,7 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
     private record TeamSelectionItem(
         PlayerTeam playerTeam,
         BingoBoard.Teams teamState,
-        @Nullable Supplier<PlayerSkin> iconSkin,
+        @Nullable PlayerSkin iconSkin,
         Component displayName
     ) implements SpectatorMenuItem {
         @Nullable
@@ -123,12 +121,12 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
                 }
             }
 
-            final Supplier<PlayerSkin> iconSkin;
+            final PlayerSkin iconSkin;
             if (onlinePlayers.isEmpty()) {
                 iconSkin = null;
             } else {
                 final PlayerInfo teamFace = onlinePlayers.get(RandomSource.create().nextInt(onlinePlayers.size()));
-                iconSkin = minecraft.getSkinManager().lookupInsecure(teamFace.getProfile());
+                iconSkin = teamFace.getSkin();
             }
 
             return new TeamSelectionItem(team, teamId, iconSkin, BingoClient.getDisplayName(team));
@@ -159,7 +157,7 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
             }
 
             if (iconSkin != null) {
-                PlayerFaceRenderer.draw(graphics, iconSkin.get(), 2, 2, 12, ARGB.white(alpha));
+                PlayerFaceRenderer.draw(graphics, iconSkin, 2, 2, 12, ARGB.white(alpha));
             }
         }
 

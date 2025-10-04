@@ -39,7 +39,7 @@ public class VanillaNetworking {
                 new ItemStack(Items.PLAYER_HEAD),
                 Bingo.translatable("bingo.board.title"),
                 CommonComponents.EMPTY,
-                Optional.of(new ClientAsset(ResourceLocations.minecraft("gui/advancements/backgrounds/stone"))),
+                Optional.of(new ClientAsset.ResourceTexture(ResourceLocations.minecraft("gui/advancements/backgrounds/stone"))),
                 AdvancementType.TASK,
                 false,
                 false,

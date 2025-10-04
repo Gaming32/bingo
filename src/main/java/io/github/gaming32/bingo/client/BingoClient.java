@@ -28,6 +28,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -79,9 +80,10 @@ public class BingoClient {
         DefaultIconRenderers.setup();
 
         BingoPlatform.platform.registerKeyMappings(builder -> {
+            KeyMapping.Category category = builder.registerCategory(ResourceLocations.bingo("category"));
             builder
                 .name("bingo.key.board")
-                .category("bingo.key.category")
+                .category(category)
                 .keyCode(InputConstants.KEY_B)
                 .conflictContext(KeyMappingBuilder.ConflictContext.IN_GAME)
                 .register(minecraft -> {
@@ -91,7 +93,7 @@ public class BingoClient {
                 });
             manualHighlightKeyMapping = builder
                 .name("bingo.key.manual_highlight")
-                .category("bingo.key.category")
+                .category(category)
                 .keyType(InputConstants.Type.MOUSE)
                 .keyCode(InputConstants.MOUSE_BUTTON_LEFT)
                 .conflictContext(KeyMappingBuilder.ConflictContext.UNIVERSAL) // TODO: better conflict context
@@ -110,18 +112,18 @@ public class BingoClient {
     }
 
     private static void registerEventHandlers() {
-        ClientEvents.KEY_RELEASED_PRE.register((screen, keyCode, scanCode, modifiers) -> {
+        ClientEvents.KEY_RELEASED_PRE.register((screen, event) -> {
             if (clientGame == null || !(screen instanceof ChatScreen)) {
                 return false;
             }
-            return detectPress(keyCode, scanCode, getBoardPosition());
+            return detectPress(event, getBoardPosition());
         });
 
-        ClientEvents.MOUSE_RELEASED_PRE.register((screen, mouseX, mouseY, button) -> {
+        ClientEvents.MOUSE_RELEASED_PRE.register((screen, event) -> {
             if (clientGame == null || !(screen instanceof ChatScreen)) {
                 return false;
             }
-            return detectClick(button, getBoardPosition());
+            return detectClick(event.button(), getBoardPosition());
         });
 
         ClientEvents.PLAYER_QUIT.register(player -> {
@@ -385,8 +387,8 @@ public class BingoClient {
         return detectClickOrPress(InputConstants.Type.MOUSE.getOrCreate(button), boardPos);
     }
 
-    public static boolean detectPress(int keyCode, int scanCode, PositionAndScale boardPos) {
-        return detectClickOrPress(InputConstants.getKey(keyCode, scanCode), boardPos);
+    public static boolean detectPress(KeyEvent event, PositionAndScale boardPos) {
+        return detectClickOrPress(InputConstants.getKey(event), boardPos);
     }
 
     public static boolean detectClickOrPress(InputConstants.Key key, PositionAndScale boardPos) {
@@ -440,12 +442,12 @@ public class BingoClient {
                 if (!players.hasNext()) {
                     final ClientLevel level = Minecraft.getInstance().level;
                     if (level != null) {
-                        final Player player = level.getPlayerByUUID(playerInfo.getProfile().getId());
+                        final Player player = level.getPlayerByUUID(playerInfo.getProfile().id());
                         if (player != null) {
                             return player.getName();
                         }
                     }
-                    return Component.literal(playerInfo.getProfile().getName());
+                    return Component.literal(playerInfo.getProfile().name());
                 }
             }
         }

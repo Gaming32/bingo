@@ -40,8 +40,7 @@ public record ManualHighlightPayload(int slot, int value, int modCount) implemen
             }
             ServerPlayer player = (ServerPlayer) context.player();
             assert player != null;
-            MinecraftServer server = player.getServer();
-            assert server != null;
+            MinecraftServer server = player.level().getServer();
             BingoGame game = ((MinecraftServerExt) server).bingo$getGame();
             if (game == null) {
                 return;
