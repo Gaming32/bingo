@@ -1,11 +1,11 @@
 {
-  "antisynergy": "lantern",
+  "antisynergy": "shelf",
   "criteria": {
     "obtain": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:soul_lantern"
+            "items": "#minecraft:wooden_shelves"
           }
         ]
       },
@@ -14,14 +14,11 @@
   },
   "difficulty": "bingo:easy",
   "icon": {
-    "type": "bingo:item",
-    "item": {
-      "count": 1,
-      "id": "minecraft:soul_lantern"
-    }
+    "type": "bingo:item_tag_cycle",
+    "tag": "minecraft:wooden_shelves"
   },
   "name": {
-    "translate": "block.minecraft.soul_lantern"
+    "translate": "bingo.goal.shelf"
   },
   "progress": {
     "type": "bingo:criterion",
@@ -32,8 +29,5 @@
       "obtain"
     ]
   ],
-  "tags": [
-    "bingo:item",
-    "bingo:nether"
-  ]
+  "tags": "bingo:item"
 }

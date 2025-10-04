@@ -1,11 +1,11 @@
 {
-  "antisynergy": "lantern",
+  "antisynergy": "copper_chest",
   "criteria": {
     "obtain": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:soul_lantern"
+            "items": "minecraft:copper_chest"
           }
         ]
       },
@@ -17,11 +17,11 @@
     "type": "bingo:item",
     "item": {
       "count": 1,
-      "id": "minecraft:soul_lantern"
+      "id": "minecraft:copper_chest"
     }
   },
   "name": {
-    "translate": "block.minecraft.soul_lantern"
+    "translate": "block.minecraft.copper_chest"
   },
   "progress": {
     "type": "bingo:criterion",
@@ -34,6 +34,6 @@
   ],
   "tags": [
     "bingo:item",
-    "bingo:nether"
+    "bingo:overworld"
   ]
 }

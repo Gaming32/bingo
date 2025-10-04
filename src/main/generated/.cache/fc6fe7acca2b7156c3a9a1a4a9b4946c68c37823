@@ -37,6 +37,9 @@ a164b16d2492080bdb117029dfb27e0ccd5678e6 data/bingo/bingo/goal/easy/cod.json
 5a180a6f9bfb1c92f2d4a5f4de03f497bf30c988 data/bingo/bingo/goal/easy/common_mob_drops.json
 1f515eb981d2421b90850442de2daa26c811c47f data/bingo/bingo/goal/easy/complete_map.json
 07ee5036d00c190c49ab5c1d21f449eeeca5a1f6 data/bingo/bingo/goal/easy/concrete.json
+fd54cc9d468b8f91606466de336ae725d15bf06d data/bingo/bingo/goal/easy/copper_chain.json
+de033de9091bac6ac599cd64f5c32218312d90a9 data/bingo/bingo/goal/easy/copper_chest.json
+cbcc6aae3e2301b82290f04c2aae2901bad52f69 data/bingo/bingo/goal/easy/copper_lantern.json
 21ef11e3abd5c914fcf6f552dd53ffc800488d2b data/bingo/bingo/goal/easy/crafter.json
 778c4fe3543fd4f885453778147c95fd34d7dce8 data/bingo/bingo/goal/easy/create_snow_golem.json
 31f900aa53d4b5458d7bb4dac758860ff41ce90b data/bingo/bingo/goal/easy/crouch_distance.json
@@ -91,6 +94,7 @@ ebfb2c7b98fe4e75e2ca06a3b8ff7f65a5c5041a data/bingo/bingo/goal/easy/honey_bottle
 8863d5ac085920b8f0dbb4975e209d309b1172ef data/bingo/bingo/goal/easy/honeycomb.json
 9763a8892eb0cbb297d8995a0cfd4da2b2890bfb data/bingo/bingo/goal/easy/ink_sac.json
 c31574d4b2635a1c97b27ac729f99c549a5e124d data/bingo/bingo/goal/easy/iron_block.json
+92590662f2639a91ac52b8e600c03be655dee1df data/bingo/bingo/goal/easy/iron_chain.json
 a52b52895d1f462ba1fd65af776d56ee93c13635 data/bingo/bingo/goal/easy/iron_nugget.json
 efe9580872ef4add61d20fd6ed6c3c557d5a481e data/bingo/bingo/goal/easy/jukebox.json
 fcc9b50f774017bf1aadc52cb68ad1d9373e5bbb data/bingo/bingo/goal/easy/kill_creeper_with_only_fire.json
@@ -133,11 +137,12 @@ c360c9456d4f691336803746dce6134474efcb0a data/bingo/bingo/goal/easy/rotten_flesh
 06494d9e0fdc4a76ed739d10707572cf987f364c data/bingo/bingo/goal/easy/sand.json
 79bc14a91310d50961776227358775acdb1a2ce3 data/bingo/bingo/goal/easy/sandstone.json
 e681f04166247683b8e2a4f61eea5dbe7996e649 data/bingo/bingo/goal/easy/seagrass.json
+5392524d8692f26c0c77464aa9b4d6aff800eb8d data/bingo/bingo/goal/easy/shelf.json
 e4d2ddae28692a668687ba6d60d707d2da57fc50 data/bingo/bingo/goal/easy/shoot_bell_from_10_blocks.json
 627d15a2e5755915483d2b23eed9680161636e58 data/bingo/bingo/goal/easy/shoot_button.json
 e841313409a47dd1dc5271ebf3266b286c36f3e4 data/bingo/bingo/goal/easy/sleep_in_nether.json
 62e77a9b091bcdf7f4138038e3a25e59220f0b7a data/bingo/bingo/goal/easy/sleep_in_villager_bed.json
-feab4c7b1686ccc3edb0542e6ee58dbdebf87b69 data/bingo/bingo/goal/easy/soul_lantern.json
+b2d92472de3b7a87591e936f757feb96786d8db7 data/bingo/bingo/goal/easy/soul_lantern.json
 388d0bc69d1a2241057733de4433451377397fe2 data/bingo/bingo/goal/easy/soul_sand.json
 3396c49e6ab25093e1d6c5f5244d7935e42c4ecc data/bingo/bingo/goal/easy/soul_soil.json
 b8771812b9bfee9cf6ef05744d910ffd28a432ce data/bingo/bingo/goal/easy/spider_eye.json

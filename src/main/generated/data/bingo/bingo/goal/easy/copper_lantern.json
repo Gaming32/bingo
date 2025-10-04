@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "minecraft:soul_lantern"
+            "items": "minecraft:copper_lantern"
           }
         ]
       },
@@ -17,11 +17,11 @@
     "type": "bingo:item",
     "item": {
       "count": 1,
-      "id": "minecraft:soul_lantern"
+      "id": "minecraft:copper_lantern"
     }
   },
   "name": {
-    "translate": "block.minecraft.soul_lantern"
+    "translate": "block.minecraft.copper_lantern"
   },
   "progress": {
     "type": "bingo:criterion",
@@ -34,6 +34,6 @@
   ],
   "tags": [
     "bingo:item",
-    "bingo:nether"
+    "bingo:overworld"
   ]
 }

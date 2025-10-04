@@ -864,7 +864,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             );
         }
         addGoal(obtainItemGoal(id("soul_lantern"), items, Items.SOUL_LANTERN)
-            .tags(BingoTags.NETHER));
+            .tags(BingoTags.NETHER)
+            .setAntisynergy("lantern"));
+        addGoal(obtainItemGoal(id("copper_lantern"), items, Items.COPPER_LANTERN.unaffected())
+            .tags(BingoTags.OVERWORLD)
+            .setAntisynergy("lantern"));
         addGoal(BingoGoal.builder(id("open_door_with_target_from_ten_blocks"))
             .criterion("open_door", DoorOpenedByTargetTrigger.builder()
                 .projectile(EntityPredicate.Builder.entity().distance(DistancePredicate.horizontal(MinMaxBounds.Doubles.atLeast(10))))
@@ -1088,6 +1092,19 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
 
         addGoal(obtainItemGoal(id("dried_ghast"), items, Items.DRIED_GHAST)
             .tags(BingoTags.NETHER));
+
+        addGoal(obtainItemGoal(id("copper_chest"), items, Items.COPPER_CHEST)
+            .tags(BingoTags.OVERWORLD));
+
+        addGoal(obtainItemGoal(id("iron_chain"), items, Items.IRON_CHAIN)
+            .setAntisynergy("chain"));
+
+        addGoal(obtainItemGoal(id("copper_chain"), items, Items.COPPER_CHAIN.unaffected())
+            .setAntisynergy("chain"));
+
+        addGoal(obtainItemGoal(id("shelf"), items, GoalIcon.infer(ItemTags.WOODEN_SHELVES), ItemPredicate.Builder.item().of(items, ItemTags.WOODEN_SHELVES))
+            .name("shelf")
+            .antisynergy("shelf"));
     }
 
     private GoalBuilder eatEntireCake() {
