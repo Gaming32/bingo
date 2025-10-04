@@ -4,6 +4,8 @@ import io.github.gaming32.bingo.data.tags.bingo.BingoBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.block.BaseTorchBlock;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
@@ -46,9 +48,12 @@ public class BingoBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             Blocks.NETHERITE_BLOCK
         );
 
-        valueLookupBuilder(BingoBlockTags.TORCHES).add(
-            Blocks.TORCH,
-            Blocks.WALL_TORCH
-        );
+        var torches = valueLookupBuilder(BingoBlockTags.TORCHES);
+
+        arg.lookupOrThrow(Registries.BLOCK).listElements().forEach(block -> {
+            if (block.value() instanceof BaseTorchBlock) {
+                torches.add(block.value());
+            }
+        });
     }
 }

@@ -252,6 +252,7 @@ d8a7b4f4e70dde84cf6c93874497386f8415c3b3 data/bingo/bingo/goal/hard/terracotta.j
 46fc04481d001113d821feeb491f4f380a14667d data/bingo/bingo/goal/hard/wool.json
 63abd6ba7ecd687e8c7f56d9a07c2db098a082e4 data/bingo/bingo/goal/hard/zombified_piglin_sword.json
 0088a5262b201f48f0623e8552b719b05466ed02 data/bingo/bingo/goal/medium/all_different_armor.json
+94c713df3a5ad20421cfb9bea4c486785c9220b2 data/bingo/bingo/goal/medium/all_torches.json
 2e4398c088e6cbf9464c1077612af4545137d928 data/bingo/bingo/goal/medium/anchor_in_overworld.json
 5a13acf39504c78c79a94bb96cb4a138399b2291 data/bingo/bingo/goal/medium/bamboo.json
 8658e55232362579ff1b85f994b78c43d4ebcc7b data/bingo/bingo/goal/medium/basic_mineral_blocks.json

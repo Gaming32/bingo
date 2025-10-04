@@ -892,6 +892,8 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("equip_wolf_armor")
             .icon(IndicatorIcon.infer(EntityType.WOLF, Items.WOLF_ARMOR)));
+        addGoal(obtainAllItemsFromTag(BingoItemTags.TORCHES, "torches")
+            .tags(BingoTags.OVERWORLD, BingoTags.NETHER));
     }
 
     @SafeVarargs

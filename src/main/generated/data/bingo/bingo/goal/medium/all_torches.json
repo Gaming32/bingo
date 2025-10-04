@@ -1,0 +1,39 @@
+{
+  "antisynergy": "all_torches",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": -1,
+        "tag": "bingo:torches"
+      },
+      "trigger": "bingo:has_some_items_from_tag"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "tag": "bingo:torches"
+  },
+  "name": {
+    "translate": "bingo.goal.all_somethings",
+    "with": [
+      {
+        "translate": "bingo.goal.all_somethings.torches"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:overworld",
+    "bingo:nether"
+  ]
+}

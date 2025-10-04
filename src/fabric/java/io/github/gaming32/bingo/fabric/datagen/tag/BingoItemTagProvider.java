@@ -28,6 +28,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.level.block.BaseTorchBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -116,6 +117,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         var diamondInNameBuilder = valueLookupBuilder(BingoItemTags.DIAMOND_IN_NAME);
         var meatBuilder = valueLookupBuilder(BingoItemTags.MEAT);
         var notMeatBuilder = valueLookupBuilder(BingoItemTags.NOT_MEAT);
+        var torchesBuilder = valueLookupBuilder(BingoItemTags.TORCHES);
         var bannerPatternsBuilder = valueLookupBuilder(BingoItemTags.BANNER_PATTERNS);
         var bonemealableBuilder = valueLookupBuilder(BingoItemTags.BONEMEALABLE)
             .forceAddTag(ItemTags.VILLAGER_PLANTABLE_SEEDS)
@@ -150,12 +152,15 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 }
                 case BlockItem blockItem -> {
                     Block block = blockItem.getBlock();
-                    if (
-                        block instanceof BonemealableBlock &&
-                            !vanillaVillagerPlantableSeeds.contains(item) &&
-                            !vanillaSaplings.contains(item)
-                    ) {
-                        bonemealableBuilder.add(item.value());
+                    switch (block) {
+                        case BaseTorchBlock ignored -> torchesBuilder.add(item.value());
+                        case BonemealableBlock ignored -> {
+                            if (!vanillaVillagerPlantableSeeds.contains(item) && !vanillaSaplings.contains(item)) {
+                                bonemealableBuilder.add(item.value());
+                            }
+                        }
+                        default -> {
+                        }
                     }
                 }
                 default -> {
