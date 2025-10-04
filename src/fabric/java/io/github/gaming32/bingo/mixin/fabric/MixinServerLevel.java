@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(ServerLevel.class)
 public class MixinServerLevel {
-    @ModifyVariable(method = "explode", at = @At("STORE"))
+    @ModifyVariable(method = "explode(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;Lnet/minecraft/world/level/ExplosionDamageCalculator;DDDFZLnet/minecraft/world/level/Level$ExplosionInteraction;Lnet/minecraft/core/particles/ParticleOptions;Lnet/minecraft/core/particles/ParticleOptions;Lnet/minecraft/util/random/WeightedList;Lnet/minecraft/core/Holder;)V", at = @At("STORE"))
     private ServerExplosion onExplosion(ServerExplosion instance) {
         FabricEvents.SERVER_EXPLOSION.invoker().accept((ServerLevel)(Object)this, instance);
         return instance;
