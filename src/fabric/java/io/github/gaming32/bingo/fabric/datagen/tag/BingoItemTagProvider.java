@@ -114,6 +114,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
         final var vanillaSaplings = BingoDataGenUtil.loadVanillaTag(ItemTags.SAPLINGS, registries);
 
         var goldInNameBuilder = valueLookupBuilder(BingoItemTags.GOLD_IN_NAME);
+        var copperInNameBuilder = valueLookupBuilder(BingoItemTags.COPPER_IN_NAME);
         var diamondInNameBuilder = valueLookupBuilder(BingoItemTags.DIAMOND_IN_NAME);
         var meatBuilder = valueLookupBuilder(BingoItemTags.MEAT);
         var notMeatBuilder = valueLookupBuilder(BingoItemTags.NOT_MEAT);
@@ -123,11 +124,15 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
             .forceAddTag(ItemTags.VILLAGER_PLANTABLE_SEEDS)
             .forceAddTag(ItemTags.SAPLINGS);
         Pattern goldPattern = Pattern.compile("\\bGold(?:en)?\\b");
+        Pattern copperPattern = Pattern.compile("\\bCopper\\b");
         Pattern diamondPattern = Pattern.compile("\\bDiamond\\b");
         items.listElements().forEach(item -> {
             String itemName = item.value().getName().getString();
             if (goldPattern.matcher(itemName).find()) {
                 goldInNameBuilder.add(item.value());
+            }
+            if (copperPattern.matcher(itemName).find()) {
+                copperInNameBuilder.add(item.value());
             }
             if (diamondPattern.matcher(itemName).find()) {
                 diamondInNameBuilder.add(item.value());

@@ -252,6 +252,9 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainSomeItemsFromTag(id("gold_in_name"), BingoItemTags.GOLD_IN_NAME, "bingo.goal.gold_in_name", 2, 4)
             .tooltip("gold_in_name")
             .antisynergy("gold_items"));
+        addGoal(obtainSomeItemsFromTag(id("copper_in_name"), BingoItemTags.COPPER_IN_NAME, "bingo.goal.copper_in_name", 2, 4)
+            .tooltip("copper_in_name")
+            .antisynergy("copper_items"));
         addGoal(obtainItemGoal(id("sand"), items, Items.SAND, 10, 32)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));

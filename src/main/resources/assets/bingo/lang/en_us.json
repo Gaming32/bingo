@@ -53,6 +53,8 @@
   "bingo.goal.complete_full_size_map": "Complete a full size Map",
   "bingo.goal.complete_map": "Complete a Map",
   "bingo.goal.concrete": "%s Colors of Concrete",
+  "bingo.goal.copper_in_name": "%s Different Copper Items",
+  "bingo.goal.copper_in_name.tooltip": "Any item with 'Copper' in its name (yes, even Ingots and Ores).",
   "bingo.goal.coral_blocks": "All living coral blocks",
   "bingo.goal.create_copper_golem": "Create a %s",
   "bingo.goal.create_iron_golem": "Create an %s",

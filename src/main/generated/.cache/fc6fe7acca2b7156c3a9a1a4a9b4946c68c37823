@@ -39,6 +39,7 @@ a164b16d2492080bdb117029dfb27e0ccd5678e6 data/bingo/bingo/goal/easy/cod.json
 07ee5036d00c190c49ab5c1d21f449eeeca5a1f6 data/bingo/bingo/goal/easy/concrete.json
 fd54cc9d468b8f91606466de336ae725d15bf06d data/bingo/bingo/goal/easy/copper_chain.json
 de033de9091bac6ac599cd64f5c32218312d90a9 data/bingo/bingo/goal/easy/copper_chest.json
+8f5034daec7f7969686d73589df86bdbb0843cab data/bingo/bingo/goal/easy/copper_in_name.json
 cbcc6aae3e2301b82290f04c2aae2901bad52f69 data/bingo/bingo/goal/easy/copper_lantern.json
 21ef11e3abd5c914fcf6f552dd53ffc800488d2b data/bingo/bingo/goal/easy/crafter.json
 778c4fe3543fd4f885453778147c95fd34d7dce8 data/bingo/bingo/goal/easy/create_snow_golem.json
@@ -396,6 +397,7 @@ c6ac61e0b19798e0ff618ed10b5748fda62a4004 data/bingo/bingo/goal/very_easy/breed_m
 9ca7f30e57202266fc780123d71d78639bfab2f3 data/bingo/bingo/goal/very_easy/coal.json
 7594fbdbabf359e83fabc53242d33824ac1b1872 data/bingo/bingo/goal/very_easy/cobblestone.json
 01143f8e33e1dce4b29cc8bbeeaa7c2f151c8330 data/bingo/bingo/goal/very_easy/cod.json
+9f50a2503ae6d6252aa0e88411b2dbbdf3efb574 data/bingo/bingo/goal/very_easy/copper_in_name.json
 d7c122c24ff0dd30856ec065482d042a8ab2e187 data/bingo/bingo/goal/very_easy/crouch_distance.json
 a7e163e3411f299814f1ebb9ab674d41b180a37f data/bingo/bingo/goal/very_easy/cut_sandstone.json
 e15d544d15d76795973879ab8597f0fcc7f0eda6 data/bingo/bingo/goal/very_easy/dark_oak_log.json
