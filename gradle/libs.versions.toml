@@ -14,7 +14,7 @@ neoforge = "0-beta"
 nightconfig = "3.8.2"
 parchment-date = "2025.10.12"
 parchment-mcversion = "1.21.10"
-rei = "20.0.811"
+rei = "21.11.814"
 unimined = "1.3.16-SNAPSHOT"
 
 [libraries]
