@@ -24,11 +24,11 @@ public class MixinShelfBlock {
     @Inject(method = "swapHotbar", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER))
     private void countHotbarSwap(
         CallbackInfoReturnable<Boolean> cir,
-        @Local(ordinal = 0) ItemStack hotbarStack,
-        @Local(ordinal = 1) ItemStack shelfStack,
+        @Local(name = "placedInventoryItem") ItemStack placedInventoryItem,
+        @Local(name = "removedShelfItem") ItemStack removedShelfItem,
         @Share("count") LocalIntRef count
     ) {
-        if (!hotbarStack.isEmpty() && !shelfStack.isEmpty()) {
+        if (!placedInventoryItem.isEmpty() && !removedShelfItem.isEmpty()) {
             count.set(count.get() + 1);
         }
     }

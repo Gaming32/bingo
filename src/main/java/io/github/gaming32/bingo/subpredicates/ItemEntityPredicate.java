@@ -3,16 +3,17 @@ package io.github.gaming32.bingo.subpredicates;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.ext.ItemEntityExt;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.EntitySubPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.EntitySubPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public record ItemEntityPredicate(
     }
 
     @Override
-    public boolean matches(Entity entity, ServerLevel level, @Nullable Vec3 position) {
+    public boolean matches(@NonNull Entity entity, @NonNull ServerLevel level, @Nullable Vec3 position) {
         if (!(entity instanceof ItemEntity itemEntity)) {
             return false;
         }

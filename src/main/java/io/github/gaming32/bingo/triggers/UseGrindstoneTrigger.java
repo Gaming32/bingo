@@ -4,17 +4,19 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.conditions.BingoContextKeySets;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.CriterionValidator;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.LocationPredicate;
+import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.Validatable;
+import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
@@ -65,10 +67,10 @@ public class UseGrindstoneTrigger extends SimpleCriterionTrigger<UseGrindstoneTr
         }
 
         @Override
-        public void validate(CriterionValidator validator) {
+        public void validate(@NonNull ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            firstItem.ifPresent(p -> validator.validate(p, BingoContextKeySets.TOOL_ONLY, ".first_item"));
-            secondItem.ifPresent(p -> validator.validate(p, BingoContextKeySets.TOOL_ONLY, ".second_item"));
+            firstItem.ifPresent(p -> Validatable.validate(validator.context(BingoContextKeySets.TOOL_ONLY), "first_item", p));
+            secondItem.ifPresent(p -> Validatable.validate(validator.context(BingoContextKeySets.TOOL_ONLY), "second_item", p));
         }
     }
 

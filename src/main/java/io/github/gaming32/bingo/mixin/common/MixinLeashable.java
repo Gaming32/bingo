@@ -19,10 +19,10 @@ public interface MixinLeashable {
         )
     )
     private static void pulledByLeashTrigger(
-        Entity entity, Vec3 force, Operation<Void> original
+        Entity entity, Vec3 momentum, Operation<Void> original
     ) {
         Leashable.LeashData leashData = ((Leashable) entity).getLeashData();
         Entity leashHolder = leashData != null ? leashData.leashHolder : null;
-        BingoTriggers.PULLED_BY_LEASH.get().tryTrigger(entity, force, original, leashHolder);
+        BingoTriggers.PULLED_BY_LEASH.get().tryTrigger(entity, momentum, original, leashHolder);
     }
 }

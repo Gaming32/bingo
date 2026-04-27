@@ -7,9 +7,9 @@ import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTri
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
@@ -63,7 +63,7 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
                 if (itemPredicate.isPresent() && !itemPredicate.get().test(item)) {
                     continue;
                 }
-                if (item.is(ItemTags.DYEABLE)) {
+                if (item.is(ItemTags.CAULDRON_CAN_REMOVE_DYE)) {  // todo; is this tag what we want? includes wolf armor but thats probably irrelevant
                     final DyedItemColor color = item.get(DataComponents.DYED_COLOR);
                     if (!allowUncolored && color == null) {
                         continue;

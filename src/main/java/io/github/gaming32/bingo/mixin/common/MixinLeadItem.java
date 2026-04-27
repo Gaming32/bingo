@@ -27,15 +27,14 @@ public class MixinLeadItem {
     @Inject(
         method = "bindPlayerMobs",
         at = @At(
-            value = "INVOKE_ASSIGN",
-            target = "Ljava/util/Optional;orElseGet(Ljava/util/function/Supplier;)Ljava/lang/Object;"
+            value = "INVOKE",
+            target = "Ljava/util/List;iterator()Ljava/util/Iterator;"
         )
     )
     private static void setKnotOwner(
         Player player, Level level, BlockPos pos, CallbackInfoReturnable<InteractionResult> cir, @Local(name = "activeKnot") LeashFenceKnotEntity activeKnot
     ) {
-        ((LeashFenceKnotEntityExt)entity).bingo$setOwner(player);
-        return entity;
+        ((LeashFenceKnotEntityExt) activeKnot).bingo$setOwner(player);  // todo: not sure if this works
     }
 
     @WrapOperation(

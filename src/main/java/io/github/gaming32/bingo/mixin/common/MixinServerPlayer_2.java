@@ -13,18 +13,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(targets = "net.minecraft.server.level.ServerPlayer$2")
 public class MixinServerPlayer_2 {
-    @Shadow(aliases = {"field_29183", "f_143458_"}, remap = false)
-    @Final
-    private ServerPlayer this$0;
+    @Shadow @Final
+    ServerPlayer this$0;
 
     @Inject(
         method = "slotChanged",
         at = @At(
             value = "FIELD",
-            target = "Lnet/minecraft/advancements/CriteriaTriggers;INVENTORY_CHANGED:Lnet/minecraft/advancements/critereon/InventoryChangeTrigger;"
+            target = "Lnet/minecraft/advancements/CriteriaTriggers;INVENTORY_CHANGED:Lnet/minecraft/advancements/criterion/InventoryChangeTrigger;"
         )
-    )
-    private void onInventoryChanged(AbstractContainerMenu containerToSend, int dataSlotIndex, ItemStack stack, CallbackInfo ci) {
+    )  // todo: opcode thing again
+    private void onInventoryChanged(AbstractContainerMenu container, int slotIndex, ItemStack changedItem, CallbackInfo ci) {
         for (final InventoryChangedCallback handler : InventoryChangedCallback.HANDLERS) {
             handler.inventoryChanged(this$0, this$0.getInventory());
         }

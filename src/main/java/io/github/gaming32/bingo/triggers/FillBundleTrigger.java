@@ -4,9 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
@@ -54,7 +54,7 @@ public class FillBundleTrigger extends SimpleCriterionTrigger<FillBundleTrigger.
             for (ItemStack item : inventory) {
                 if (item.is(ItemTags.BUNDLES)) {
                     BundleContents bundleContents = item.get(DataComponents.BUNDLE_CONTENTS);
-                    if (bundleContents != null && bundleContents.weight().multiplyBy(FULL_STACK).intValue() >= amount) {
+                    if (bundleContents != null && bundleContents.weight().getOrThrow().multiplyBy(FULL_STACK).intValue() >= amount) {
                         return true;
                     }
                 }

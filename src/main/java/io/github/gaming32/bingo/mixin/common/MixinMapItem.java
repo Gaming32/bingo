@@ -25,10 +25,10 @@ public class MixinMapItem {
         )
     )
     private boolean onUpdateColor(
-        MapItemSavedData instance, int x, int z, byte color,
+        MapItemSavedData instance, int x, int y, byte newColor,
         Operation<Boolean> operation, @Share("updated") LocalBooleanRef updated
     ) {
-        final boolean result = operation.call(instance, x, z, color);
+        final boolean result = operation.call(instance, x, y, newColor);
         if (result) {
             updated.set(true);
         }
@@ -37,13 +37,13 @@ public class MixinMapItem {
 
     @Inject(method = "update", at = @At("TAIL"))
     private void checkComplete(
-        Level level, Entity viewer, MapItemSavedData data,
+        Level level, Entity player, MapItemSavedData data,
         CallbackInfo ci, @Share("updated") LocalBooleanRef updated
     ) {
-        if (!updated.get() || !(viewer instanceof ServerPlayer player)) return;
+        if (!updated.get() || !(player instanceof ServerPlayer serverPlayer)) return;
         for (final byte b : data.colors) {
             if (b == 0) return;
         }
-        BingoTriggers.COMPLETED_MAP.get().trigger(player, data);
+        BingoTriggers.COMPLETED_MAP.get().trigger(serverPlayer, data);
     }
 }

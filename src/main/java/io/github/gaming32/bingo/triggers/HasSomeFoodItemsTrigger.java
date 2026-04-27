@@ -6,9 +6,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.TagPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
@@ -67,7 +67,7 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
             Set<Item> foundItems = Sets.newIdentityHashSet();
             for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
                 ItemStack item = inventory.getItem(i);
-                if (tag.isPresent() && !tag.get().matches(item.getItemHolder())) {
+                if (tag.isPresent() && !tag.get().matches(item.typeHolder())) {
                     continue;
                 }
                 final FoodProperties food = item.get(DataComponents.FOOD);
@@ -76,7 +76,7 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
                     final var input = new SingleRecipeInput(item);
                     var recipe = recipeManager.getRecipeFor(RecipeType.SMELTING, input, level);
                     if (recipe.isPresent()) {
-                        item = recipe.get().value().assemble(input, level.registryAccess());
+                        item = recipe.get().value().assemble(input);
                     }
 
                     if (foundItems.add(item.getItem()) && foundItems.size() >= requiredCount) {

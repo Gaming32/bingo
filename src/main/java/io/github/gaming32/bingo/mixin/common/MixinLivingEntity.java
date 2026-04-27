@@ -49,9 +49,9 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
         )
     )
     @SuppressWarnings("UnreachableCode")
-    private void onEquipItem(EquipmentSlot slot, ItemStack oldItem, ItemStack newItem, CallbackInfo ci) {
+    private void onEquipItem(EquipmentSlot slot, ItemStack oldStack, ItemStack stack, CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer player) {
-            BingoTriggers.EQUIP_ITEM.get().trigger(player, oldItem, newItem, slot);
+            BingoTriggers.EQUIP_ITEM.get().trigger(player, oldStack, stack, slot);
         }
     }
 
@@ -69,12 +69,12 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
         )
     )
     private void onDeathFromDamageSource(
-        ServerLevel serverLevel, DamageSource damageSource, float taken,
+        ServerLevel level, DamageSource source, float damage,
         CallbackInfoReturnable<Boolean> cir,
-        @Local(ordinal = 1) float dealt,
+        @Local(name = "originalDamage") float originalDamage,
         @Share("blocked") LocalBooleanRef blocked
     ) {
-        BingoTriggers.ENTITY_DIE_NEAR_PLAYER.get().trigger((LivingEntity) (Object) this, damageSource, dealt, taken, blocked.get());
+        BingoTriggers.ENTITY_DIE_NEAR_PLAYER.get().trigger((LivingEntity) (Object) this, source, originalDamage, damage, blocked.get());
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
@@ -95,7 +95,7 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
         method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
         at = @At("RETURN")
     )
-    private void setDroppedBy(ItemStack droppedItem, boolean dropAround, boolean includeThrowerName, CallbackInfoReturnable<ItemEntity> cir) {
+    private void setDroppedBy(ItemStack itemStack, boolean randomly, boolean thrownFromHand, CallbackInfoReturnable<ItemEntity> cir) {
         if (cir.getReturnValue() instanceof ItemEntityExt itemEntity) {
             itemEntity.bingo$setDroppedBy(this);
         }

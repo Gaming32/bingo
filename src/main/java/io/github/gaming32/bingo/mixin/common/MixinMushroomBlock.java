@@ -18,11 +18,11 @@ public class MixinMushroomBlock {
     private boolean onPlaceMushroom(
         ConfiguredFeature<?, ?> feature,
         WorldGenLevel level,
-        ChunkGenerator chunkGen,
-        RandomSource rand,
-        BlockPos pos,
+        ChunkGenerator chunkGenerator,
+        RandomSource random,
+        BlockPos origin,
         Operation<Boolean> operation
     ) {
-        return GrowFeatureTrigger.wrapPlaceOperation(feature, level, chunkGen, rand, pos, operation);
+        return GrowFeatureTrigger.wrapPlaceOperation(feature, level, chunkGenerator, random, origin, operation);
     }
 }

@@ -7,15 +7,15 @@ import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PlayerPredicate;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.criterion.PlayerPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stat;
@@ -96,7 +96,7 @@ public class RelativeStatsTrigger extends SimpleProgressibleCriterionTrigger<Rel
             return this;
         }
 
-        public Builder stat(ResourceLocation customStat, MinMaxBounds.Ints range) {
+        public Builder stat(Identifier customStat, MinMaxBounds.Ints range) {
             return stat(
                 Stats.CUSTOM,
                 BuiltInRegistries.CUSTOM_STAT.getOrThrow(ResourceKey.create(

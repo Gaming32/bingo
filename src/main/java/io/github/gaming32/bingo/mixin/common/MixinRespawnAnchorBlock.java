@@ -20,15 +20,15 @@ public class MixinRespawnAnchorBlock {
         method = "useWithoutItem",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/level/block/RespawnAnchorBlock;explode(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V"
+            target = "Lnet/minecraft/world/level/block/RespawnAnchorBlock;explode(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;)V"
         )
     )
     private void intentionalGameDesignTrigger(
-        BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult,
+        BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult,
         CallbackInfoReturnable<InteractionResult> cir
     ) {
         if (player instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.INTENTIONAL_GAME_DESIGN.get().trigger(serverPlayer, blockPos);
+            BingoTriggers.INTENTIONAL_GAME_DESIGN.get().trigger(serverPlayer, pos);
         }
     }
 }

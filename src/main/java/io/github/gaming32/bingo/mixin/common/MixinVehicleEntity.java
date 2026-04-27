@@ -32,10 +32,10 @@ public abstract class MixinVehicleEntity extends Entity {
             )
         }
     )
-    private void onKilled(ServerLevel serverLevel, DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> cir) {
+    private void onKilled(ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
         if (isRemoved()) return;
-        if (damageSource.getEntity() instanceof ServerPlayer player) {
-            BingoTriggers.DESTROY_VEHICLE.get().trigger(player, (VehicleEntity)(Object)this, damageSource);
+        if (source.getEntity() instanceof ServerPlayer player) {
+            BingoTriggers.DESTROY_VEHICLE.get().trigger(player, (VehicleEntity)(Object)this, source);
         }
     }
 }

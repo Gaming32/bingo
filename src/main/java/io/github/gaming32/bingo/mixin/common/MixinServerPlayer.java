@@ -44,32 +44,32 @@ public abstract class MixinServerPlayer extends MixinEntity implements ServerPla
     }
 
     @Inject(method = "onItemPickup", at = @At("TAIL"))
-    private void itemPickedUpTrigger(ItemEntity itemEntity, CallbackInfo ci) {
-        BingoTriggers.ITEM_PICKED_UP.get().trigger((ServerPlayer)(Object)this, itemEntity);
+    private void itemPickedUpTrigger(ItemEntity entity, CallbackInfo ci) {
+        BingoTriggers.ITEM_PICKED_UP.get().trigger((ServerPlayer)(Object)this, entity);
     }
 
     @Inject(method = "awardKillScore", at = @At("HEAD"))
     @SuppressWarnings("UnreachableCode")
-    private void killSelfTrigger(Entity killed, DamageSource source, CallbackInfo ci) {
-        if (killed == (Object)this) {
-            BingoTriggers.KILL_SELF.get().trigger((ServerPlayer)killed, source);
+    private void killSelfTrigger(Entity victim, DamageSource killingBlow, CallbackInfo ci) {
+        if (victim == (Object)this) {
+            BingoTriggers.KILL_SELF.get().trigger((ServerPlayer) victim, killingBlow);
         }
     }
 
     @Inject(method = "die", at = @At("RETURN"))
-    private void deathTrigger(DamageSource damageSource, CallbackInfo ci) {
-        BingoTriggers.DEATH.get().trigger((ServerPlayer)(Object)this, damageSource);
+    private void deathTrigger(DamageSource source, CallbackInfo ci) {
+        BingoTriggers.DEATH.get().trigger((ServerPlayer)(Object)this, source);
     }
 
     @Inject(
         method = "checkMovementStatistics",
         at = @At(
             value = "FIELD",
-            target = "Lnet/minecraft/stats/Stats;CROUCH_ONE_CM:Lnet/minecraft/resources/ResourceLocation;"
+            target = "Lnet/minecraft/stats/Stats;CROUCH_ONE_CM:Lnet/minecraft/resources/Identifier;"
         )
-    )
+    )  // todo: still don't know how to use opcodes here
     @SuppressWarnings("UnreachableCode")
-    private void sneakingTrigger(double distanceX, double distanceY, double distanceZ, CallbackInfo ci) {
+    private void sneakingTrigger(double dx, double dy, double dz, CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer serverPlayer) {
             if (bingo$startSneakingPos == null) {
                 Bingo.LOGGER.warn("bingo$startSneakingPos was null but player was sneaking");
@@ -80,13 +80,13 @@ public abstract class MixinServerPlayer extends MixinEntity implements ServerPla
     }
 
     @WrapMethod(method = "setGameMode")
-    private boolean onSetGameMode(GameType newMode, Operation<Boolean> original) {
+    private boolean onSetGameMode(GameType mode, Operation<Boolean> original) {
         final var oldMode = gameMode.getGameModeForPlayer();
-        if (!original.call(newMode)) {
+        if (!original.call(mode)) {
             return false;
         }
         final var game = ((MinecraftServerExt) server).bingo$getGame();
-        if (game != null && (newMode == GameType.SPECTATOR || oldMode == GameType.SPECTATOR)) {
+        if (game != null && (mode == GameType.SPECTATOR || oldMode == GameType.SPECTATOR)) {
             final ServerPlayer player = (ServerPlayer)(Object)this;
             final BingoBoard.Teams team = game.getTeam(player);
             new ResyncStatesPayload(game.obfuscateTeam(team, player)).sendTo(player);

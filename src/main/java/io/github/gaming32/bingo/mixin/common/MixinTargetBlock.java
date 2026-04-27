@@ -24,20 +24,20 @@ public class MixinTargetBlock {
         )
     )
     private static void preOutputPower(
-        LevelAccessor level, BlockState state, int power, BlockPos pos, int waitTime, Operation<Void> original,
+        LevelAccessor level, BlockState state, int outputStrength, BlockPos pos, int duration, Operation<Void> original,
         @Local(argsOnly = true) Entity projectileEntity
     ) {
         if (!(projectileEntity instanceof Projectile projectile) || !(projectile.getOwner() instanceof Player player)) {
-            original.call(level, state, power, pos, waitTime);
+            original.call(level, state, outputStrength, pos, duration);
             return;
         }
         try (
             final var ignored = GlobalVars.CURRENT_PLAYER.push(player);
             final var ignored1 = GlobalVars.CURRENT_PROJECTILE.push(projectile);
             final var ignored2 = GlobalVars.CURRENT_BLOCK_POS.push(pos);
-            final var ignored3 = GlobalVars.CURRENT_REDSTONE_OUTPUT.push(power)
+            final var ignored3 = GlobalVars.CURRENT_REDSTONE_OUTPUT.push(outputStrength)
         ) {
-            original.call(level, state, power, pos, waitTime);
+            original.call(level, state, outputStrength, pos, duration);
         }
     }
 }

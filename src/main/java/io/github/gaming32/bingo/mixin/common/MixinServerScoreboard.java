@@ -34,8 +34,8 @@ public class MixinServerScoreboard {
             shift = At.Shift.AFTER
         )
     )
-    private void syncTeamAdd(String playerName, PlayerTeam team, CallbackInfoReturnable<Boolean> cir) {
-        bingo$syncTeam(playerName);
+    private void syncTeamAdd(String player, PlayerTeam team, CallbackInfoReturnable<Boolean> cir) {
+        bingo$syncTeam(player);
     }
 
     @Inject(
@@ -46,8 +46,8 @@ public class MixinServerScoreboard {
             shift = At.Shift.AFTER
         )
     )
-    private void syncTeamRemove(String username, PlayerTeam playerTeam, CallbackInfo ci) {
-        bingo$syncTeam(username);
+    private void syncTeamRemove(String player, PlayerTeam team, CallbackInfo ci) {
+        bingo$syncTeam(player);
     }
 
     @Unique

@@ -22,12 +22,12 @@ public class MixinPlayerAdvancements {
             shift = At.Shift.AFTER
         )
     )
-    private void syncBingoAdvancements(ServerPlayer serverPlayer, boolean bl, CallbackInfo ci) {
+    private void syncBingoAdvancements(ServerPlayer player, boolean showAdvancements, CallbackInfo ci) {
         if (!isFirstPacket) return;
-        MinecraftServer server = serverPlayer.level().getServer();
+        MinecraftServer server = player.level().getServer();
         final var game = ((MinecraftServerExt) server).bingo$getGame();
         if (game != null) {
-            game.syncAdvancementsTo(serverPlayer);
+            game.syncAdvancementsTo(player);
         }
     }
 }

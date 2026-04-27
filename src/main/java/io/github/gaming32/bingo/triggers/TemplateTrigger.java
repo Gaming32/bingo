@@ -2,9 +2,9 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ public class TemplateTrigger extends SimpleCriterionTrigger<TemplateTrigger.Trig
     }
 
     public void trigger(ServerPlayer player) {
-        trigger(player, instance -> instance.matches());
+        trigger(player, TriggerInstance::matches);
     }
 
     public record TriggerInstance(

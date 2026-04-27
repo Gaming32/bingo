@@ -17,6 +17,7 @@ import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public record PaintingPredicate(
     }
 
     @Override
-    public boolean matches(Entity entity, ServerLevel level, @Nullable Vec3 position) {
+    public boolean matches(@NonNull Entity entity, @NonNull ServerLevel level, @Nullable Vec3 position) {
         if (!(entity instanceof Painting painting)) {
             return false;
         }

@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.network.BingoNetworking;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.server.network.ConfigurationTask;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 
@@ -18,7 +19,7 @@ public enum ProtocolVersionConfigurationTask implements ConfigurationTask {
     }
 
     @Override
-    public Type type() {
+    public @NonNull Type type() {
         return TYPE;
     }
 }

@@ -5,7 +5,7 @@ import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
 import io.github.gaming32.bingo.util.Identifiers;
-import net.minecraft.advancements.critereon.EntitySubPredicate;
+import net.minecraft.advancements.criterion.EntitySubPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 public class BingoEntitySubPredicates {
