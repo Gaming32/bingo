@@ -19,7 +19,7 @@ import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import io.github.gaming32.bingo.util.Vec2i;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -51,10 +51,10 @@ import java.util.Iterator;
 import java.util.Objects;
 
 public class BingoClient {
-    private static final ResourceLocation BOARD_TEXTURE = ResourceLocations.bingo("board");
-    private static final ResourceLocation BOARD_CELL_TEXTURE = ResourceLocations.bingo("board_cell");
-    private static final ResourceLocation SLOT_HIGHLIGHT_BACK_SPRITE = ResourceLocations.minecraft("container/slot_highlight_back");
-    private static final ResourceLocation SLOT_HIGHLIGHT_FRONT_SPRITE = ResourceLocations.minecraft("container/slot_highlight_front");
+    private static final ResourceLocation BOARD_TEXTURE = Identifiers.bingo("board");
+    private static final ResourceLocation BOARD_CELL_TEXTURE = Identifiers.bingo("board_cell");
+    private static final ResourceLocation SLOT_HIGHLIGHT_BACK_SPRITE = Identifiers.minecraft("container/slot_highlight_back");
+    private static final ResourceLocation SLOT_HIGHLIGHT_FRONT_SPRITE = Identifiers.minecraft("container/slot_highlight_front");
     public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
     public static final Component BOARD_TITLE_SHORT = Component.translatable("bingo.board.title.short");
 
@@ -80,7 +80,7 @@ public class BingoClient {
         DefaultIconRenderers.setup();
 
         BingoPlatform.platform.registerKeyMappings(builder -> {
-            KeyMapping.Category category = builder.registerCategory(ResourceLocations.bingo("category"));
+            KeyMapping.Category category = builder.registerCategory(Identifiers.bingo("category"));
             builder
                 .name("bingo.key.board")
                 .category(category)

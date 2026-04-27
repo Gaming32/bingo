@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Block.class)
 public class MixinBlock {
     @Inject(method = "playerWillDestroy", at = @At("RETURN"))
-    private void onPlayerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player, CallbackInfoReturnable<BlockState> cir) {
+    private void onPlayerWillDestroy(Level level, BlockPos pos, BlockState state, Player player, CallbackInfoReturnable<BlockState> cir) {
         if (player instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.BREAK_BLOCK.get().trigger(serverPlayer, blockPos, player.getMainHandItem());
+            BingoTriggers.BREAK_BLOCK.get().trigger(serverPlayer, pos, player.getMainHandItem());
         }
     }
 }

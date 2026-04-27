@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.data.tags.bingo;
 
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -15,6 +15,6 @@ public final class BingoBlockTags {
     public static final TagKey<Block> TORCHES = create("torches");
 
     private static TagKey<Block> create(String name) {
-        return TagKey.create(Registries.BLOCK, ResourceLocations.bingo(name));
+        return TagKey.create(Registries.BLOCK, Identifiers.bingo(name));
     }
 }

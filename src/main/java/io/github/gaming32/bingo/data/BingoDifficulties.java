@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.data;
 
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.Util;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
@@ -31,6 +31,6 @@ public final class BingoDifficulties {
     }
 
     private static ResourceKey<BingoDifficulty> createKey(String name) {
-        return ResourceKey.create(BingoRegistries.DIFFICULTY, ResourceLocations.bingo(name));
+        return ResourceKey.create(BingoRegistries.DIFFICULTY, Identifiers.bingo(name));
     }
 }

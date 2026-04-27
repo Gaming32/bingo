@@ -23,9 +23,9 @@ public class MixinBlockItem {
             target = "Lnet/minecraft/world/level/block/Block;setPlacedBy(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;)V"
         )
     )
-    private void mineralPillar(Block instance, Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack, Operation<Void> original) {
-        original.call(instance, level, pos, state, placer, stack);
-        if (placer instanceof ServerPlayer player) {
+    private void mineralPillar(Block instance, Level level, BlockPos pos, BlockState state, LivingEntity by, ItemStack itemStack, Operation<Void> original) {
+        original.call(instance, level, pos, state, by, itemStack);
+        if (by instanceof ServerPlayer player) {
             BingoTriggers.MINERAL_PILLAR.get().trigger(player, level, pos);
         }
     }

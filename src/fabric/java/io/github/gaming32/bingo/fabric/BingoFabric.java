@@ -3,9 +3,9 @@ package io.github.gaming32.bingo.fabric;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.BingoPlatform;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.FriendlyByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class BingoFabric implements ModInitializer {
-    public static final ResourceLocation PROTOCOL_VERSION_PACKET = ResourceLocations.bingo("protocol_version");
+    public static final ResourceLocation PROTOCOL_VERSION_PACKET = Identifiers.bingo("protocol_version");
 
     @Override
     public void onInitialize() {
@@ -21,7 +21,7 @@ public class BingoFabric implements ModInitializer {
         Bingo.init();
 
         ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> {
-            final FriendlyByteBuf buf = PacketByteBufs.create();
+            final FriendlyByteBuf buf = FriendlyByteBufs.create();
             buf.writeVarInt(BingoNetworking.PROTOCOL_VERSION);
             sender.sendPacket(PROTOCOL_VERSION_PACKET, buf);
         });

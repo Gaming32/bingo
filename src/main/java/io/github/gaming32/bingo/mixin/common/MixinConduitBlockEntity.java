@@ -22,12 +22,12 @@ public class MixinConduitBlockEntity {
             target = "Lnet/minecraft/world/level/block/entity/ConduitBlockEntity;updateShape(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Ljava/util/List;)Z"
         )
     )
-    private static boolean powerConduitTrigger(Level level, BlockPos pos, List<BlockPos> positions, Operation<Boolean> original) {
-        final int oldLevel = positions.size() / 7;
-        final boolean result = original.call(level, pos, positions);
-        final int newLevel = positions.size() / 7;
+    private static boolean powerConduitTrigger(Level level, BlockPos worldPosition, List<BlockPos> effectBlocks, Operation<Boolean> original) {
+        final int oldLevel = effectBlocks.size() / 7;
+        final boolean result = original.call(level, worldPosition, effectBlocks);
+        final int newLevel = effectBlocks.size() / 7;
         if (result && newLevel != oldLevel) {
-            for (ServerPlayer serverplayer : level.getEntitiesOfClass(ServerPlayer.class, new AABB(pos).inflate(10))) {
+            for (ServerPlayer serverplayer : level.getEntitiesOfClass(ServerPlayer.class, new AABB(worldPosition).inflate(10))) {
                 BingoTriggers.POWER_CONDUIT.get().trigger(serverplayer, newLevel);
             }
         }

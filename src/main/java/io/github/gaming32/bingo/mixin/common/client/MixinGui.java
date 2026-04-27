@@ -6,7 +6,7 @@ import io.github.gaming32.bingo.client.config.BoardCorner;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,22 +19,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinGui {
     @Shadow @Final private Minecraft minecraft;
 
-    @Inject(method = "renderEffects", at = @At("HEAD"))
-    private void moveEffectsPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractEffects", at = @At("HEAD"))
+    private void moveEffectsPre(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (bingo$effectsNeedMoving()) {
             final float scale = BingoClient.CONFIG.getBoardScale();
-            guiGraphics.pose().pushMatrix();
-            guiGraphics.pose().translate(
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(
                 (-BingoClient.getBoardWidth() - BingoClient.BOARD_OFFSET) * scale,
                 BingoClient.BOARD_OFFSET * scale
             );
         }
     }
 
-    @Inject(method = "renderEffects", at = @At("RETURN"))
-    private void moveEffectsPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractEffects", at = @At("RETURN"))
+    private void moveEffectsPost(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (bingo$effectsNeedMoving()) {
-            guiGraphics.pose().popMatrix();
+            graphics.pose().popMatrix();
         }
     }
 

@@ -7,16 +7,18 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.CriterionValidator;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.decoration.Painting;
-import net.minecraft.world.entity.decoration.PaintingVariant;
+import net.minecraft.world.entity.decoration.painting.Painting;
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
+import net.minecraft.world.level.storage.loot.Validatable;
+import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
@@ -84,10 +86,10 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
         }
 
         @Override
-        public void validate(CriterionValidator criterionValidator) {
-            SimpleInstance.super.validate(criterionValidator);
-            criterionValidator.validateEntity(placedPainting, ".placed_painting");
-            criterionValidator.validateEntity(adjacentPaintings, ".adjacent_paintings");
+        public void validate(@NonNull ValidationContextSource validator) {
+            SimpleInstance.super.validate(validator);
+            Validatable.validate(validator.entityContext(), "placed_painting", placedPainting);
+            Validatable.validate(validator.entityContext(), "adjacent_paintings", adjacentPaintings);
         }
     }
 

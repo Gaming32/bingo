@@ -1,8 +1,8 @@
 package io.github.gaming32.bingo.fabric.datagen.tag;
 
 import io.github.gaming32.bingo.data.tags.bingo.BingoDamageTypeTags;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageType;
@@ -10,8 +10,8 @@ import net.minecraft.world.damagesource.DamageTypes;
 
 import java.util.concurrent.CompletableFuture;
 
-public class BingoDamageTypeTagProvider extends FabricTagProvider<DamageType> {
-    public BingoDamageTypeTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+public class BingoDamageTypeTagProvider extends FabricTagsProvider<DamageType> {
+    public BingoDamageTypeTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, Registries.DAMAGE_TYPE, registriesFuture);
     }
 

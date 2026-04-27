@@ -7,7 +7,7 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import io.github.gaming32.bingo.data.JsonSubber;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 import java.util.function.Consumer;
 

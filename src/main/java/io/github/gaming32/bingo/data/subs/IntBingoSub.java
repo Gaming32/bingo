@@ -3,9 +3,10 @@ package io.github.gaming32.bingo.data.subs;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.IntProviders;
 
 public record IntBingoSub(IntProvider provider) implements BingoSub {
-    public static final MapCodec<IntBingoSub> CODEC = IntProvider.CODEC
+    public static final MapCodec<IntBingoSub> CODEC = IntProviders.CODEC
         .fieldOf("value")
         .xmap(IntBingoSub::new, IntBingoSub::provider);
 

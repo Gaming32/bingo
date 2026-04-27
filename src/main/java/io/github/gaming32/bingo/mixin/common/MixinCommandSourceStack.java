@@ -13,7 +13,8 @@ import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.goal.GoalManager;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
 import io.github.gaming32.bingo.util.BingoUtil;
-import net.minecraft.Util;
+import net.minecraft.server.permissions.PermissionSet;
+import net.minecraft.util.Util;
 import net.minecraft.commands.CommandResultCallback;
 import net.minecraft.commands.CommandSigningContext;
 import net.minecraft.commands.CommandSource;
@@ -52,7 +53,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
     @Shadow @Final private Vec3 worldPosition;
     @Shadow @Final private Vec2 rotation;
     @Shadow @Final private ServerLevel level;
-    @Shadow @Final private int permissionLevel;
+    @Shadow @Final private PermissionSet permissions;
     @Shadow @Final private String textName;
     @Shadow @Final private Component displayName;
     @Shadow @Final private MinecraftServer server;
@@ -79,7 +80,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
         Vec3 worldPosition,
         Vec2 rotation,
         ServerLevel level,
-        int permissionLevel,
+        PermissionSet permissions,
         String textName,
         Component displayName,
         MinecraftServer server,
@@ -142,7 +143,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
             worldPosition,
             rotation,
             level,
-            permissionLevel,
+            permissions,
             textName,
             displayName,
             server,
@@ -179,13 +180,13 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
         cancellable = true
     )
     private void suggestBingoGoals(
-        ResourceKey<? extends Registry<?>> resourceKey,
-        SharedSuggestionProvider.ElementSuggestionType registryKey,
+        ResourceKey<? extends Registry<?>> key,
+        SharedSuggestionProvider.ElementSuggestionType elements,
         SuggestionsBuilder builder,
         CommandContext<?> context,
         CallbackInfoReturnable<CompletableFuture<Suggestions>> cir
     ) {
-        if (resourceKey == BingoRegistries.GOAL) {
+        if (key == BingoRegistries.GOAL) {
             cir.setReturnValue(SharedSuggestionProvider.suggestResource(GoalManager.getGoalIds(), builder));
         }
     }

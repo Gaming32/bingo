@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoRegistries;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.ProblemReporter;
@@ -20,9 +20,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
-    public static final ResourceLocation ID = ResourceLocations.bingo("goals");
+    public static final Identifier ID = Identifiers.bingo("goals");
 
-    private static Map<ResourceLocation, GoalHolder> goals = Map.of();
+    private static Map<Identifier, GoalHolder> goals = Map.of();
     private static Map<Integer, List<GoalHolder>> goalsByDifficulty = Map.of();
     private final HolderLookup.Provider registries;
 
@@ -31,12 +31,12 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
         this.registries = registries;
     }
 
-    public static Set<ResourceLocation> getGoalIds() {
+    public static Set<Identifier> getGoalIds() {
         return goals.keySet();
     }
 
     @Nullable
-    public static GoalHolder getGoal(ResourceLocation id) {
+    public static GoalHolder getGoal(Identifier id) {
         return goals.get(id);
     }
 
@@ -54,8 +54,8 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, BingoGoal> goals, ResourceManager resourceManager, ProfilerFiller profiler) {
-        final ImmutableMap.Builder<ResourceLocation, GoalHolder> result = ImmutableMap.builderWithExpectedSize(goals.size());
+    protected void apply(Map<Identifier, BingoGoal> goals, ResourceManager resourceManager, ProfilerFiller profiler) {
+        final ImmutableMap.Builder<Identifier, GoalHolder> result = ImmutableMap.builderWithExpectedSize(goals.size());
         final Map<Integer, ImmutableList.Builder<GoalHolder>> byDifficulty = HashMap.newHashMap(
             (int) registries.lookupOrThrow(BingoRegistries.DIFFICULTY).listElements().count()
         );

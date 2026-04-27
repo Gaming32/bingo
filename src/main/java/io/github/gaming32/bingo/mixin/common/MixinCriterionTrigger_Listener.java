@@ -20,14 +20,14 @@ public class MixinCriterionTrigger_Listener {
     @Shadow @Final private String criterion;
 
     @Inject(method = "run", at = @At("HEAD"), cancellable = true)
-    private void listenForGoalCompletion(PlayerAdvancements playerAdvancements, CallbackInfo ci) {
-        final var player = ((PlayerAdvancementsAccessor)playerAdvancements).getPlayer();
-        MinecraftServer server = player.level().getServer();
+    private void listenForGoalCompletion(PlayerAdvancements player, CallbackInfo ci) {
+        final var serverPlayer = ((PlayerAdvancementsAccessor) player).getPlayer();
+        MinecraftServer server = serverPlayer.level().getServer();
         final var game = ((MinecraftServerExt) server).bingo$getGame();
         if (game == null) return;
         final ActiveGoal goal = game.getBoard().byVanillaId(advancement.id());
         if (goal == null) return;
-        game.award(player, goal, criterion);
+        game.award(serverPlayer, goal, criterion);
         ci.cancel();
     }
 }

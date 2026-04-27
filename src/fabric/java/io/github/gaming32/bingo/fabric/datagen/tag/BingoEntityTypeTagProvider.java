@@ -1,8 +1,8 @@
 package io.github.gaming32.bingo.fabric.datagen.tag;
 
 import io.github.gaming32.bingo.data.tags.bingo.BingoEntityTypeTags;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
@@ -10,8 +10,8 @@ import net.minecraft.world.entity.MobCategory;
 
 import java.util.concurrent.CompletableFuture;
 
-public class BingoEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagProvider {
-    public BingoEntityTypeTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
+public class BingoEntityTypeTagProvider extends FabricTagsProvider.EntityTypeTagProvider {
+    public BingoEntityTypeTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
         super(output, completableFuture);
     }
 

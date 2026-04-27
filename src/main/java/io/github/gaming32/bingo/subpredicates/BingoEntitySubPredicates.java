@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 
@@ -20,6 +20,6 @@ public class BingoEntitySubPredicates {
     }
 
     private static <P extends EntitySubPredicate> RegistryValue<MapCodec<P>> register(String name, MapCodec<P> codec) {
-        return REGISTER.register(ResourceLocations.bingo(name), () -> codec);
+        return REGISTER.register(Identifiers.bingo(name), () -> codec);
     }
 }

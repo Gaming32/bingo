@@ -1,14 +1,14 @@
 package io.github.gaming32.bingo.client.icons;
 
 import io.github.gaming32.bingo.data.icons.EffectIcon;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 
 public class EffectIconRenderer implements IconRenderer<EffectIcon> {
-    private static final ResourceLocation EFFECT_BACKGROUND_SPRITE = ResourceLocations.minecraft("hud/effect_background");
+    private static final ResourceLocation EFFECT_BACKGROUND_SPRITE = Identifiers.minecraft("hud/effect_background");
 
     @Override
     public void render(EffectIcon icon, GuiGraphics graphics, int x, int y) {

@@ -4,12 +4,12 @@ import io.github.gaming32.bingo.game.ActiveGoal;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 
 import java.util.Optional;
 
-public record GoalHolder(ResourceLocation id, BingoGoal goal) {
+public record GoalHolder(Identifier id, BingoGoal goal) {
     public ActiveGoal build(RandomSource rand) {
         final var context = goal.buildSubstitutionContext(rand);
         final Optional<Component> tooltip = goal.buildTooltip(context);

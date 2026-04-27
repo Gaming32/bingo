@@ -39,7 +39,7 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
 
     public static EntityIcon ofSpawnEgg(EntityType<?> entity, CompoundTag data, int count) {
         return new EntityIcon(entity, data, new ItemStack(
-            Objects.requireNonNull(SpawnEggItem.byId(entity), () -> "entity \"" + entity + "\" doesn't have a spawn egg"),
+            SpawnEggItem.byId(entity).orElseThrow(() -> new IllegalArgumentException("entity \"" + entity + "\" doesn't have a spawn egg")),
             count
         ));
     }

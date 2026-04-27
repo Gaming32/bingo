@@ -1,15 +1,15 @@
 package io.github.gaming32.bingo.platform.registry;
 
 import io.github.gaming32.bingo.platform.BingoPlatform;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class RegistryBuilder<T> {
     private final ResourceKey<Registry<T>> key;
     private boolean synced;
-    private ResourceLocation defaultId;
+    private Identifier defaultId;
 
     public RegistryBuilder(ResourceKey<Registry<T>> key) {
         this.key = key;
@@ -20,13 +20,13 @@ public class RegistryBuilder<T> {
         return this;
     }
 
-    public RegistryBuilder<T> defaultId(ResourceLocation id) {
+    public RegistryBuilder<T> defaultId(Identifier id) {
         this.defaultId = id;
         return this;
     }
 
     public RegistryBuilder<T> defaultId(String id) {
-        return defaultId(ResourceLocations.bingo(id));
+        return defaultId(Identifiers.bingo(id));
     }
 
     public DeferredRegister<T> build() {
@@ -41,7 +41,7 @@ public class RegistryBuilder<T> {
         return synced;
     }
 
-    public ResourceLocation getDefaultId() {
+    public Identifier getDefaultId() {
         return defaultId;
     }
 }

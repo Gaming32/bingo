@@ -11,20 +11,20 @@ import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.data.goal.GoalManager;
 import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.util.BingoUtil;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import io.github.gaming32.bingo.util.Vec2i;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
@@ -63,7 +63,7 @@ public class BingoBoard {
     private final @Nullable Integer[][] manualHighlights;
     private final int[] manualHighlightModCount;
     private final ActiveGoal[] goals;
-    private final Map<ResourceLocation, ActiveGoal> byVanillaId;
+    private final Map<Identifier, ActiveGoal> byVanillaId;
     private final Object2IntMap<ActiveGoal> toGoalIndex;
 
     private BingoBoard(BoardShape shape, int size, int teamCount) {
@@ -170,7 +170,7 @@ public class BingoBoard {
         final int[] difficultyLayout = generateDifficulty(difficulties, goalCount, difficulty, rand);
         final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(goalCount), rand);
 
-        final Set<ResourceLocation> usedGoals = HashSet.newHashSet(goalCount);
+        final Set<Identifier> usedGoals = HashSet.newHashSet(goalCount);
         final Object2IntOpenHashMap<Holder<BingoTag>> tagCount = new Object2IntOpenHashMap<>();
         final Set<String> antisynergys = new HashSet<>();
         final Set<String> reactants = new HashSet<>();
@@ -343,7 +343,7 @@ public class BingoBoard {
     }
 
     @Nullable
-    public ActiveGoal byVanillaId(ResourceLocation id) {
+    public ActiveGoal byVanillaId(Identifier id) {
         return byVanillaId.get(id);
     }
 
@@ -393,8 +393,8 @@ public class BingoBoard {
         return result.toString();
     }
 
-    public static ResourceLocation generateVanillaId(int index) {
-        return ResourceLocations.bingo("generated/goal/" + index);
+    public static Identifier generateVanillaId(int index) {
+        return Identifiers.bingo("generated/goal/" + index);
     }
 
     public static final class Teams {

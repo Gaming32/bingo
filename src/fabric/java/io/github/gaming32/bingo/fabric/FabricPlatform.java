@@ -19,9 +19,9 @@ import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.SpecialGuiElementRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.ClientTooltipComponentCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -38,13 +38,13 @@ import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
-import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
+import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.InteractionResult;
@@ -98,7 +98,7 @@ public class FabricPlatform extends BingoPlatform {
         });
         final var builtFactories = factories.build();
         if (!builtFactories.isEmpty()) {
-            TooltipComponentCallback.EVENT.register(component -> {
+            ClientTooltipComponentCallback.EVENT.register(component -> {
                 final var factory = builtFactories.get(component.getClass());
                 return factory != null ? factory.apply(component) : null;
             });
@@ -111,19 +111,19 @@ public class FabricPlatform extends BingoPlatform {
     }
 
     private static <S extends PictureInPictureRenderState> void registerPictureInPictureRenderer(Class<S> stateClass, Function<MultiBufferSource.BufferSource, PictureInPictureRenderer<S>> factory) {
-        SpecialGuiElementRegistry.register(context -> factory.apply(context.vertexConsumers()));
+        PictureInPictureRendererRegistry.register(context -> factory.apply(context.bufferSource())); // todo: no idea if bufferSource returns what the factory wants
     }
 
     @Override
     public void registerKeyMappings(Consumer<KeyMappingBuilder> handler) {
         final KeyMappingBuilderImpl builder = new KeyMappingBuilderImpl() {
             @Override
-            public KeyMapping.Category registerCategory(ResourceLocation id) {
+            public KeyMapping.Category registerCategory(Identifier id) {
                 return KeyMapping.Category.register(id);
             }
         };
         handler.accept(builder);
-        builder.registerAll(KeyBindingHelper::registerKeyBinding);
+        builder.registerAll(KeyMappingHelper::registerKeyMapping);
         ClientTickEvents.END_CLIENT_TICK.register(builder::handleAll);
     }
 
@@ -131,14 +131,14 @@ public class FabricPlatform extends BingoPlatform {
     public void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
         final var helper = ResourceLoader.get(PackType.SERVER_DATA);
         handler.accept((id, listener, dependencies) -> {
-            helper.registerReloader(id, new PreparableReloadListener() {
+            helper.registerReloadListener(id, new PreparableReloadListener() {
                 private WeakReference<HolderLookup.Provider> currentLookup;
                 private PreparableReloadListener delegate;
 
                 @Override
                 @NotNull
                 public CompletableFuture<Void> reload(SharedState sharedState, Executor executor, PreparationBarrier preparationBarrier, Executor executor2) {
-                    HolderLookup.Provider lookup = sharedState.get(ResourceLoader.RELOADER_REGISTRY_LOOKUP_KEY);
+                    HolderLookup.Provider lookup = sharedState.get(ResourceLoader.REGISTRY_LOOKUP_KEY);
                     if (currentLookup == null || lookup != currentLookup.get()) {
                         currentLookup = new WeakReference<>(lookup);
                         delegate = listener.apply(lookup);
@@ -174,7 +174,7 @@ public class FabricPlatform extends BingoPlatform {
     public <T> DeferredRegister<T> buildDeferredRegister(RegistryBuilder<T> builder) {
         final var fabricBuilder = builder.getDefaultId() != null
             ? FabricRegistryBuilder.createDefaulted(builder.getKey(), builder.getDefaultId())
-            : FabricRegistryBuilder.createSimple(builder.getKey());
+            : FabricRegistryBuilder.create(builder.getKey());
         if (builder.isSynced()) {
             fabricBuilder.attribute(RegistryAttribute.SYNCED);
         }

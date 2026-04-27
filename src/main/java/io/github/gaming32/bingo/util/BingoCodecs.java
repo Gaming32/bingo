@@ -66,12 +66,12 @@ public final class BingoCodecs {
     public static final Codec<IntList> INT_LIST = Codec.INT.listOf().xmap(IntImmutableList::new, Function.identity());
     public static final Codec<ItemStack> UNBOUNDED_ITEM_STACK = RecordCodecBuilder.create(
         instance -> instance.group(
-            Item.CODEC.fieldOf("id").forGetter(ItemStack::getItemHolder),
+            Item.CODEC.fieldOf("id").forGetter(ItemStack::typeHolder),
             ExtraCodecs.POSITIVE_INT.fieldOf("count").orElse(1).forGetter(ItemStack::getCount),
             DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemStack::getComponentsPatch)
         ).apply(instance, ItemStack::new)
     );
-    public static final Codec<ItemStack> LENIENT_ITEM_STACK = Codec.withAlternative(UNBOUNDED_ITEM_STACK, ItemStack.SIMPLE_ITEM_CODEC);
+    public static final Codec<ItemStack> LENIENT_ITEM_STACK = Codec.withAlternative(UNBOUNDED_ITEM_STACK, ItemStack.CODEC);  // todo: what was SIMPLE_ITEM_CODEC?
 
     private BingoCodecs() {
     }

@@ -7,7 +7,7 @@ import io.github.gaming32.bingo.client.BoardScreen;
 import io.github.gaming32.bingo.client.config.BingoClientConfig;
 import io.github.gaming32.bingo.client.config.BoardCorner;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Final;
@@ -21,13 +21,13 @@ public class MixinGameRenderer {
     private Minecraft minecraft;
 
     @WrapOperation(
-        method = "render",
+        method = "extractGui",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/components/toasts/ToastManager;render(Lnet/minecraft/client/gui/GuiGraphics;)V"
+            target = "Lnet/minecraft/client/gui/components/toasts/ToastManager;extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
         )
     )
-    private void moveToasts(ToastManager instance, GuiGraphics graphics, Operation<Void> original) {
+    private void moveToasts(ToastManager instance, GuiGraphicsExtractor graphics, Operation<Void> original) {
         final BingoClientConfig config = BingoClient.CONFIG;
         if (
             BingoClient.clientGame == null || config.getBoardCorner() != BoardCorner.UPPER_RIGHT ||

@@ -2,7 +2,7 @@ package io.github.gaming32.bingo.client;
 
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.game.BingoBoard;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.PlayerFaceRenderer;
@@ -29,7 +29,7 @@ import java.util.Objects;
 
 // Based off of TeleportToTeamMenuCategory
 public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, SpectatorMenuItem {
-    private static final ResourceLocation CATEGORY_SPRITE = ResourceLocations.bingo("spectator/team_selection");
+    private static final ResourceLocation CATEGORY_SPRITE = Identifiers.bingo("spectator/team_selection");
     private static final Component CATEGORY_NAME = Component.translatable("bingo.spectator.team_selection");
     private static final Component CATEGORY_PROMPT = Component.translatable("bingo.spectator.team_selection.prompt");
 

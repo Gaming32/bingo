@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.mixin.common;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -20,19 +19,20 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LeadItem.class)
 public class MixinLeadItem {
-    @ModifyExpressionValue(
+    @Inject(
         method = "bindPlayerMobs",
         at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/decoration/LeashFenceKnotEntity;getOrCreateKnot(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/entity/decoration/LeashFenceKnotEntity;"
+            value = "INVOKE_ASSIGN",
+            target = "Ljava/util/Optional;orElseGet(Ljava/util/function/Supplier;)Ljava/lang/Object;"
         )
     )
-    private static LeashFenceKnotEntity setKnotOwner(
-        LeashFenceKnotEntity entity,
-        @Local(argsOnly = true) Player player
+    private static void setKnotOwner(
+        Player player, Level level, BlockPos pos, CallbackInfoReturnable<InteractionResult> cir, @Local(name = "activeKnot") LeashFenceKnotEntity activeKnot
     ) {
         ((LeashFenceKnotEntityExt)entity).bingo$setOwner(player);
         return entity;
@@ -63,14 +63,14 @@ public class MixinLeadItem {
         )
     )
     private static void triggerLeashedEntity(
-        Leashable instance, Entity entity, boolean bl, Operation<Void> original,
+        Leashable instance, Entity holder, boolean synch, Operation<Void> original,
         @Local(argsOnly = true) Player player,
         @Local(argsOnly = true) BlockPos pos
     ) {
-        original.call(instance, entity, bl);
+        original.call(instance, holder, synch);
         if (player instanceof ServerPlayer serverPlayer) {
             BingoTriggers.LEASHED_ENTITY.get().trigger(
-                serverPlayer, (Entity)instance, entity, pos,
+                serverPlayer, (Entity)instance, holder, pos,
                 GlobalVars.CURRENT_ITEM.getOrElse(ItemStack.EMPTY)
             );
         }

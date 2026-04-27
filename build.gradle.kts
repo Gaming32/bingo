@@ -23,7 +23,7 @@ sourceSets {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 
     withSourcesJar()
@@ -51,16 +51,8 @@ configurations.compileOnly.get().extendsFrom(modCompileOnly)
 unimined.minecraft {
     version = libs.versions.minecraft.get()
 
-    mappings {
-        mojmap()
-        parchment(libs.versions.parchment.mcversion.get(), libs.versions.parchment.date.get())
-        intermediary()
-
-        devFallbackNamespace("official")
-    }
-
     accessWidener {
-        accessWidener(file("src/main/resources/bingo.accessWidener"))
+        accessWidener(file("src/main/resources/bingo.classtweaker"))
     }
 
     if (sourceSet == sourceSets.main.get()) {
@@ -80,7 +72,7 @@ unimined.minecraft(fabric) {
 
     fabric {
         loader(libs.versions.fabric.loader.get())
-        accessWidener(file("src/main/resources/bingo.accessWidener"))
+        accessWidener(file("src/main/resources/bingo.classtweaker"))
     }
 
     mods {
@@ -116,7 +108,7 @@ unimined.minecraft(neoforge) {
 
     neoForge {
         loader(libs.versions.neoforge.get())
-        accessTransformer(aw2at(file("src/main/resources/bingo.accessWidener")))
+        accessTransformer(aw2at(file("src/main/resources/bingo.accessWidener")))  // todo: use the classtweaker file somehow
     }
 
     minecraftRemapper.config {

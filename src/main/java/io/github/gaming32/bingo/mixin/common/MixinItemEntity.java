@@ -71,8 +71,8 @@ public abstract class MixinItemEntity extends Entity implements ItemEntityExt {
         },
         allow = 1
     )
-    @SuppressWarnings({"UnresolvedMixinReference", "MixinAnnotationTarget"})
-    private void onKilled(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        BingoTriggers.KILL_ITEM.get().trigger((ItemEntity) (Object) this, source, amount);
+    @SuppressWarnings("MixinAnnotationTarget")
+    private void onKilled(ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
+        BingoTriggers.KILL_ITEM.get().trigger((ItemEntity) (Object) this, source, damage);
     }
 }

@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.data.tags.bingo;
 
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -28,6 +28,6 @@ public final class BingoItemTags {
     public static final TagKey<Item> TRIM_TEMPLATES = create("trim_templates");
 
     private static TagKey<Item> create(String name) {
-        return TagKey.create(Registries.ITEM, ResourceLocations.bingo(name));
+        return TagKey.create(Registries.ITEM, Identifiers.bingo(name));
     }
 }

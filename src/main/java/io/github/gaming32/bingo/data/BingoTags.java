@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.data;
 
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
@@ -51,6 +51,6 @@ public final class BingoTags {
     }
 
     private static ResourceKey<BingoTag> createKey(String name) {
-        return ResourceKey.create(BingoRegistries.TAG, ResourceLocations.bingo(name));
+        return ResourceKey.create(BingoRegistries.TAG, Identifiers.bingo(name));
     }
 }

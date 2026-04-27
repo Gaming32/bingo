@@ -48,13 +48,13 @@ public abstract class MixinBeehiveDecorator {
     )
     private void onPlace(
         TreeDecorator.Context context, CallbackInfo ci,
-        @Local Optional<BlockPos> location, @Share("block") LocalRef<BlockState> blockShare
+        @Local(name = "hivePos") Optional<BlockPos> hivePos, @Share("block") LocalRef<BlockState> blockShare
     ) {
-        assert location.isPresent();
+        assert hivePos.isPresent();
         if (GlobalVars.CURRENT_PLAYER.get() instanceof ServerPlayer player) {
             final ItemStack item = GlobalVars.CURRENT_ITEM.get();
             if (item != null) {
-                BingoTriggers.GROW_BEE_NEST_TREE.get().trigger(player, location.get(), blockShare.get(), item);
+                BingoTriggers.GROW_BEE_NEST_TREE.get().trigger(player, hivePos.get(), blockShare.get(), item);
             }
         }
     }

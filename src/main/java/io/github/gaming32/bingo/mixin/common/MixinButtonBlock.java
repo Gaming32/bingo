@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.mixin.common;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,9 +21,9 @@ public class MixinButtonBlock {
             target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"
         )
     )
-    private void arrowPressTrigger(BlockState state, Level level, BlockPos pos, CallbackInfo ci, @Local AbstractArrow arrow) {
-        if (arrow != null) {
-            BingoTriggers.ARROW_PRESS.get().trigger(arrow, pos);
+    private void arrowPressTrigger(BlockState state, Level level, BlockPos pos, CallbackInfo ci, @Local(name = "firstArrow") AbstractArrow firstArrow) {
+        if (firstArrow != null) {
+            BingoTriggers.ARROW_PRESS.get().trigger(firstArrow, pos);
         }
     }
 }

@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
@@ -36,6 +36,6 @@ public final class BingoConditions {
     }
 
     private static RegistryValue<LootItemConditionType> register(String registryName, MapCodec<? extends LootItemCondition> codec) {
-        return REGISTER.register(ResourceLocations.bingo(registryName), () -> new LootItemConditionType(codec));
+        return REGISTER.register(Identifiers.bingo(registryName), () -> new LootItemConditionType(codec));
     }
 }

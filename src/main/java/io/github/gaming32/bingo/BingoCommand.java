@@ -39,7 +39,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ColorArgument;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceKeyArgument;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.commands.arguments.TeamArgument;
 import net.minecraft.commands.arguments.TimeArgument;
 import net.minecraft.core.Holder;
@@ -49,10 +49,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -60,7 +61,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
@@ -165,9 +166,9 @@ public class BingoCommand {
         .<ResourceKey<BingoGoal>, GoalHolder>specialArgument("--require-goal", ResourceKeyArgument.key(BingoRegistries.GOAL))
         .getter((context, arg) -> {
             final var key = ResourceKeyArgument.getRegistryKey(context, arg, BingoRegistries.GOAL, INVALID_GOAL);
-            final var goal = GoalManager.getGoal(key.location());
+            final var goal = GoalManager.getGoal(key.identifier());
             if (goal == null) {
-                throw UNKNOWN_GOAL.create(key.location());
+                throw UNKNOWN_GOAL.create(key.identifier());
             }
             return goal;
         })
@@ -184,10 +185,11 @@ public class BingoCommand {
     ) {
         final CommandNode<CommandSourceStack> bingoCommand = dispatcher.register(literal("bingo")
             .then(literal("start")
-                .requires(source -> source.hasPermission(2))
+                .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
             )
             .then(literal("stop")
-                .requires(source -> source.hasPermission(2) && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
+                .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)
+                        && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .executes(ctx -> {
                     final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
                     if (game == null) {
@@ -198,14 +200,15 @@ public class BingoCommand {
                 })
             )
             .then(literal("reset")
-                .requires(source -> source.hasPermission(2))
+                .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                 .executes(BingoCommand::resetGame)
             )
             .then(literal("forfeit")
                 .requires(source -> ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .executes(ctx -> forfeit(ctx.getSource()))
                 .then(argument("team", TeamArgument.team())
-                    .requires(source -> source.hasPermission(2) && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
+                    .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)
+                            && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                     .executes(ctx -> forfeit(ctx.getSource(), TeamArgument.getTeam(ctx, "team")))
                 )
             )
@@ -238,7 +241,7 @@ public class BingoCommand {
                         public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
                             final var menu = new ChestMenu(menuType, syncId, inventory, new SimpleContainer(9 * visualSize.y()), visualSize.y()) {
                                 @Override
-                                public void clicked(int slotId, int button, ClickType clickType, Player player) {
+                                public void clicked(int slotId, int button, ContainerInput containerInput, Player player) {
                                     sendAllDataToRemote(); // Same as in spectator mode
                                 }
                             };
@@ -280,7 +283,7 @@ public class BingoCommand {
                     })
                 )
                 .then(literal("difficulties")
-                    .requires(source -> source.hasPermission(2))
+                    .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                     .executes(ctx -> {
                         final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
                         if (game == null) {
@@ -306,16 +309,17 @@ public class BingoCommand {
                 )
             )
             .then(literal("goals")
-                .requires(source -> source.hasPermission(2) && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
+                .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)
+                        && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .then(argument("players", EntityArgument.players())
                     .then(literal("award")
-                        .then(argument("goal", ResourceLocationArgument.id())
+                        .then(argument("goal", IdentifierArgument.id())
                             .suggests(ACTIVE_GOAL_SUGGESTOR)
                             .executes(ctx -> awardOrRevoke(ctx, BingoGame::award, "bingo.award.success"))
                         )
                     )
                     .then(literal("revoke")
-                        .then(argument("goal", ResourceLocationArgument.id())
+                        .then(argument("goal", IdentifierArgument.id())
                             .suggests(ACTIVE_GOAL_SUGGESTOR)
                             .executes(ctx -> awardOrRevoke(ctx, BingoGame::revoke, "bingo.revoke.success"))
                         )
@@ -323,7 +327,7 @@ public class BingoCommand {
                 )
             )
             .then(literal("teams")
-                .requires(source -> source.hasPermission(2))
+                .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                 .then(literal("create")
                     .then(argument("color", ColorArgument.color())
                         .suggests((context, builder) -> {
@@ -588,7 +592,7 @@ public class BingoCommand {
             throw NO_GAME_RUNNING.create();
         }
         final Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "players");
-        final ResourceLocation goalId = ResourceLocationArgument.getId(context, "goal");
+        final Identifier goalId = IdentifierArgument.getId(context, "goal");
 
         int success = 0;
         for (final ActiveGoal goal : game.getBoard().getGoals()) {

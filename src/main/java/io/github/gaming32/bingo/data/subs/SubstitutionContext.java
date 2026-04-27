@@ -13,7 +13,7 @@ public record SubstitutionContext(Map<String, Dynamic<?>> referable, RandomSourc
     public static SubstitutionContext createValidationContext(Set<String> keys) {
         return new SubstitutionContext(
             Maps.asMap(keys, k -> BingoCodecs.EMPTY_DYNAMIC),
-            RandomSource.createNewThreadLocalInstance()
+            RandomSource.createThreadLocalInstance()
         );
     }
 

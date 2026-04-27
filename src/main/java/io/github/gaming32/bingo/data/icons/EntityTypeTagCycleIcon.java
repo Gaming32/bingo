@@ -65,8 +65,10 @@ public record EntityTypeTagCycleIcon(
             baseItem.orElseGet(() ->
                 StreamSupport.stream(BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(tag).spliterator(), false)
                     .map(holder -> SpawnEggItem.byId(holder.value()))
-                    .filter(Objects::nonNull)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .findFirst()
+                    .map(Holder::value)
                     .map(Item::builtInRegistryHolder)
                     .orElseGet(Items.AIR::builtInRegistryHolder)
             ),

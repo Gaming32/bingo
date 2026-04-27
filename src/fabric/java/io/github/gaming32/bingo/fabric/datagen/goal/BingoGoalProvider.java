@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.DynamicOps;
 import io.github.gaming32.bingo.data.goal.BingoGoal;
 import io.github.gaming32.bingo.data.goal.GoalBuilder;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -24,7 +24,7 @@ public class BingoGoalProvider extends FabricCodecDataProvider<BingoGoal> {
         VeryHardGoalProvider::new
     );
 
-    public BingoGoalProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+    public BingoGoalProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, PackOutput.Target.DATA_PACK, "bingo/goal", BingoGoal.CODEC);
     }
 

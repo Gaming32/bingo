@@ -24,7 +24,7 @@
     "MixinDoorBlock",
     "MixinEnchantmentMenu",
     "MixinEntity",
-    "MixinFungusBlock",
+    "MixinNetherFungusBlock",
     "MixinGrindstoneMenu_4",
     "MixinHangingEntityItem",
     "MixinItemEntity",

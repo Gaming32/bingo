@@ -27,7 +27,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -44,7 +44,7 @@ public final class GoalBuilder {
     private static final ParsedOrSub<GoalIcon> DEFAULT_ICON =
         ParsedOrSub.fromParsed(GoalIcon.CODEC, EmptyIcon.INSTANCE);
 
-    private final ResourceLocation id;
+    private final Identifier id;
     private final ImmutableMap.Builder<String, BingoSub> subs = ImmutableMap.builder();
     private final ImmutableMap.Builder<String, ParsedOrSub<Criterion<?>>> criteria = ImmutableMap.builder();
     private Optional<AdvancementRequirements> requirements = Optional.empty();
@@ -54,7 +54,7 @@ public final class GoalBuilder {
     private final ImmutableSet.Builder<ResourceKey<BingoTag>> tags = ImmutableSet.builder();
     private Optional<ParsedOrSub<Component>> name = Optional.empty();
     private Optional<ParsedOrSub<Component>> tooltip = Optional.empty();
-    private Optional<ResourceLocation> tooltipIcon = Optional.empty();
+    private Optional<Identifier> tooltipIcon = Optional.empty();
     private ParsedOrSub<GoalIcon> icon = DEFAULT_ICON;
     private OptionalInt infrequency = OptionalInt.empty();
     private ImmutableSet.Builder<String> antisynergy = ImmutableSet.builder();
@@ -62,7 +62,7 @@ public final class GoalBuilder {
     private final ImmutableSet.Builder<String> reactant = ImmutableSet.builder();
     private Optional<ResourceKey<BingoDifficulty>> difficulty;
 
-    GoalBuilder(ResourceLocation id) {
+    GoalBuilder(Identifier id) {
         this.id = id;
     }
 
@@ -150,7 +150,7 @@ public final class GoalBuilder {
         return this;
     }
 
-    public GoalBuilder tooltipIcon(ResourceLocation tooltipIcon) {
+    public GoalBuilder tooltipIcon(Identifier tooltipIcon) {
         this.tooltipIcon = Optional.of(tooltipIcon);
         return this;
     }

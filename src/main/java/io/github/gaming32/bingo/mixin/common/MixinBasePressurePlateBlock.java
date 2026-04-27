@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.mixin.common;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,8 +22,8 @@ public class MixinBasePressurePlateBlock {
             ordinal = 1
         )
     )
-    private void arrowPressTrigger(Entity entity, Level level, BlockPos pos, BlockState state, int currentSignal, CallbackInfo ci) {
-        if (entity instanceof AbstractArrow arrow) {
+    private void arrowPressTrigger(Entity sourceEntity, Level level, BlockPos pos, BlockState state, int oldSignal, CallbackInfo ci) {
+        if (sourceEntity instanceof AbstractArrow arrow) {
             BingoTriggers.ARROW_PRESS.get().trigger(arrow, pos);
         }
     }

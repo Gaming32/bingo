@@ -6,16 +6,16 @@ import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.FungusBlock;
+import net.minecraft.world.level.block.NetherFungusBlock;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(FungusBlock.class)
-public class MixinFungusBlock {
+@Mixin(NetherFungusBlock.class)
+public class MixinNetherFungusBlock {
     @WrapOperation(
-        method = {"lambda$performBonemeal$3", "method_46682"},
+        method = "lambda$performBonemeal$0",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/levelgen/feature/ConfiguredFeature;place(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;)Z",
@@ -26,11 +26,11 @@ public class MixinFungusBlock {
     private static boolean onPlaceFungus(
         ConfiguredFeature<?, ?> feature,
         WorldGenLevel level,
-        ChunkGenerator chunkGen,
-        RandomSource rand,
-        BlockPos pos,
+        ChunkGenerator chunkGenerator,
+        RandomSource random,
+        BlockPos origin,
         Operation<Boolean> operation
     ) {
-        return GrowFeatureTrigger.wrapPlaceOperation(feature, level, chunkGen, rand, pos, operation);
+        return GrowFeatureTrigger.wrapPlaceOperation(feature, level, chunkGenerator, random, origin, operation);
     }
 }

@@ -52,7 +52,7 @@ import io.github.gaming32.bingo.triggers.WearDifferentColoredArmorTrigger;
 import io.github.gaming32.bingo.triggers.ZombieDrownedTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -663,28 +663,28 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
 
         for (String woodType : List.of("oak", "spruce", "birch", "dark_oak", "acacia", "cherry")) {
             Item planksItem = items.getOrThrow(ResourceKey.create(
-                Registries.ITEM, ResourceLocations.minecraft(woodType + "_planks")
+                Registries.ITEM, Identifiers.minecraft(woodType + "_planks")
             )).value();
             addGoal(obtainItemGoal(id(woodType + "_planks"), items, planksItem, 65, 128)
                 .tags(BingoTags.OVERWORLD)
                 .infrequency(25));
 
             Item logItem = items.getOrThrow(ResourceKey.create(
-                Registries.ITEM, ResourceLocations.minecraft(woodType + "_log")
+                Registries.ITEM, Identifiers.minecraft(woodType + "_log")
             )).value();
             addGoal(obtainItemGoal(id(woodType + "_log"), items, logItem, 16, 32)
                 .tags(BingoTags.OVERWORLD)
                 .infrequency(25));
 
             Item woodItem = items.getOrThrow(ResourceKey.create(
-                Registries.ITEM, ResourceLocations.minecraft(woodType + "_wood")
+                Registries.ITEM, Identifiers.minecraft(woodType + "_wood")
             )).value();
             addGoal(obtainItemGoal(id(woodType + "_wood"), items, woodItem, 11, 20)
                 .infrequency(25)
                 .tags(BingoTags.OVERWORLD));
 
             Item strippedWoodItem = items.getOrThrow(ResourceKey.create(
-                Registries.ITEM, ResourceLocations.minecraft("stripped_" + woodType + "_wood")
+                Registries.ITEM, Identifiers.minecraft("stripped_" + woodType + "_wood")
             )).value();
             addGoal(obtainItemGoal(id("stripped_" + woodType + "_wood"), items, strippedWoodItem, 11, 20)
                 .reactant("axe_use")
@@ -692,7 +692,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 .tags(BingoTags.OVERWORLD));
 
             Item strippedLogItem = items.getOrThrow(ResourceKey.create(
-                Registries.ITEM, ResourceLocations.minecraft("stripped_" + woodType + "_log")
+                Registries.ITEM, Identifiers.minecraft("stripped_" + woodType + "_log")
             )).value();
             addGoal(obtainItemGoal(id("stripped_" + woodType + "_log"), items, strippedLogItem, 16, 32)
                 .reactant("axe_use")

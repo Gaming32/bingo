@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.platform.registrar;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Consumer;
 
@@ -20,7 +20,7 @@ public interface KeyMappingBuilder {
 
     KeyMappingExt register(Consumer<Minecraft> action);
 
-    KeyMapping.Category registerCategory(ResourceLocation id);
+    KeyMapping.Category registerCategory(Identifier id);
 
     enum ConflictContext {
         UNIVERSAL, GUI, IN_GAME, NEVER

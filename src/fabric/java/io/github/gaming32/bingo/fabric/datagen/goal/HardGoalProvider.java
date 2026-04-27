@@ -25,7 +25,7 @@ import io.github.gaming32.bingo.triggers.KillItemTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
 import io.github.gaming32.bingo.util.BlockPattern;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -581,7 +581,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD, BingoTags.BUILD)
             .name("6x6scaffolding")
             .tooltip("6x6scaffolding")
-            .tooltipIcon(ResourceLocations.bingo("textures/gui/tooltips/6x6scaffolding.png"))
+            .tooltipIcon(Identifiers.bingo("textures/gui/tooltips/6x6scaffolding.png"))
             .icon(Items.SCAFFOLDING));
         addGoal(obtainItemGoal(id("honey_block"), items, Items.HONEY_BLOCK, 2, 5)
             .setAntisynergy("honey")

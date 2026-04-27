@@ -5,7 +5,7 @@ import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
 import io.github.gaming32.bingo.data.subs.BingoSubType;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
@@ -19,6 +19,6 @@ public class BingoRegistries {
     public static final ResourceKey<Registry<BingoTag>> TAG = createKey("tag");
 
     private static <T> ResourceKey<Registry<T>> createKey(String name) {
-        return ResourceKey.createRegistryKey(ResourceLocations.bingo(name));
+        return ResourceKey.createRegistryKey(Identifiers.bingo(name));
     }
 }

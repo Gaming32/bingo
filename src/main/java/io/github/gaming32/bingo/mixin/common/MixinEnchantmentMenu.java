@@ -19,14 +19,14 @@ public class MixinEnchantmentMenu {
     @Shadow @Final public int[] costs;
 
     @Inject(
-        method = "lambda$clickMenuButton$1",
+        method = "lambda$clickMenuButton$0",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/advancements/critereon/EnchantedItemTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/ItemStack;I)V",
+            target = "Lnet/minecraft/advancements/criterion/EnchantedItemTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/ItemStack;I)V",
             shift = At.Shift.AFTER
         )
     )
-    private void customEnchantTrigger(ItemStack itemStack, int i, Player player, int j, ItemStack itemStack2, Level level, BlockPos blockPos, CallbackInfo ci) {
-        BingoTriggers.ENCHANTED_ITEM.get().trigger((ServerPlayer)player, j, costs[i]);
+    private void customEnchantTrigger(ItemStack itemStack, int buttonId, Player player, int enchantmentCost, ItemStack currency, Level level, BlockPos pos, CallbackInfo ci) {
+        BingoTriggers.ENCHANTED_ITEM.get().trigger((ServerPlayer)player, enchantmentCost, costs[buttonId]);
     }
 }

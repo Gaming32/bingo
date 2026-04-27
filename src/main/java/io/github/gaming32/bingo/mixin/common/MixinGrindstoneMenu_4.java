@@ -15,11 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(targets = "net.minecraft.world.inventory.GrindstoneMenu$4")
 public class MixinGrindstoneMenu_4 {
-    @Shadow(aliases = "field_16780")
-    @Final
+    @Shadow @Final
     GrindstoneMenu this$0;
-    @Shadow(aliases = {"field_16779", "val$p_39568_"})
-    @Final
+    @Shadow @Final
     ContainerLevelAccess val$access;
 
     @Inject(
@@ -29,7 +27,7 @@ public class MixinGrindstoneMenu_4 {
             target = "Lnet/minecraft/world/inventory/ContainerLevelAccess;execute(Ljava/util/function/BiConsumer;)V"
         )
     )
-    private void onUseGrindstone(Player player, ItemStack stack, CallbackInfo ci) {
+    private void onUseGrindstone(Player player, ItemStack carried, CallbackInfo ci) {
         if (player instanceof ServerPlayer serverPlayer) {
             val$access.execute((level, blockPos) -> {
                 BingoTriggers.USE_GRINDSTONE.get().trigger(serverPlayer, blockPos, this$0.repairSlots.getItem(0), this$0.repairSlots.getItem(1));

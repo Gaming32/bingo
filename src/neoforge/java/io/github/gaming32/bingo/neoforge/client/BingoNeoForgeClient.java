@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.neoforge.client;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.client.config.BingoConfigScreen;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -18,7 +18,7 @@ public class BingoNeoForgeClient {
         BingoClient.init();
 
         bus.addListener((RegisterGuiLayersEvent event) -> event.registerAboveAll(
-            ResourceLocations.bingo("hud"),
+            Identifiers.bingo("hud"),
             (graphics, deltaTracker) -> BingoClient.renderBoardOnHud(Minecraft.getInstance(), graphics)
         ));
 

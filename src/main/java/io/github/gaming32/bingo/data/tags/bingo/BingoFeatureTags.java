@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.data.tags.bingo;
 
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -15,6 +15,6 @@ public final class BingoFeatureTags {
     public static final TagKey<ConfiguredFeature<?, ?>> TREES = create("trees");
 
     private static TagKey<ConfiguredFeature<?, ?>> create(String name) {
-        return TagKey.create(Registries.CONFIGURED_FEATURE, ResourceLocations.bingo(name));
+        return TagKey.create(Registries.CONFIGURED_FEATURE, Identifiers.bingo(name));
     }
 }

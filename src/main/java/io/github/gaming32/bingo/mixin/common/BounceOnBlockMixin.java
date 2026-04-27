@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin({BedBlock.class, SlimeBlock.class})
 public class BounceOnBlockMixin {
     @Inject(
-        method = {"bounceUp", "method_21847", "method_21838"},
+        method = "bounceUp",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/Entity;setDeltaMovement(DDD)V",

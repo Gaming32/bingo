@@ -26,7 +26,7 @@ public interface GoalIcon {
     /**
      * Used for rendering count, as well as for a fallback for Vanilla clients.
      */
-    ItemStack getFallback(RegistryAccess registries);
+    ItemStack getFallback(RegistryAccess registries);  // todo: change to ItemStackTemplate?
 
     default ItemStack getFallbackWithStaticContext() {
         return getFallback(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
@@ -51,7 +51,7 @@ public interface GoalIcon {
                 if (tagKey.registry() == Registries.ENTITY_TYPE) {
                     yield new EntityTypeTagCycleIcon((TagKey<EntityType<?>>)tagKey);
                 }
-                throw new IllegalArgumentException("No TagCycleIcon for registry " + tagKey.registry().location());
+                throw new IllegalArgumentException("No TagCycleIcon for registry " + tagKey.registry().identifier());
             }
             default -> throw new IllegalArgumentException("Couldn't infer GoalIcon from " + obj);
         };

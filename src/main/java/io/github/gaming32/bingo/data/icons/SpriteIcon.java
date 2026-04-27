@@ -5,18 +5,18 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
-public record SpriteIcon(ResourceLocation sprite, ItemStack item) implements GoalIcon.WithoutContext {
+public record SpriteIcon(Identifier sprite, ItemStack item) implements GoalIcon.WithoutContext {
     public static final MapCodec<SpriteIcon> CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("sprite").forGetter(SpriteIcon::sprite),
+            Identifier.CODEC.fieldOf("sprite").forGetter(SpriteIcon::sprite),
             BingoCodecs.LENIENT_ITEM_STACK.fieldOf("item").forGetter(SpriteIcon::item)
         ).apply(instance, SpriteIcon::new)
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, SpriteIcon> STREAM_CODEC = StreamCodec.composite(
-        ResourceLocation.STREAM_CODEC, SpriteIcon::sprite,
+        Identifier.STREAM_CODEC, SpriteIcon::sprite,
         ItemStack.STREAM_CODEC, SpriteIcon::item,
         SpriteIcon::new
     );

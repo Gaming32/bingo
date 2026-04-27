@@ -5,7 +5,7 @@ import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BoardShape;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import io.github.gaming32.bingo.util.Vec2i;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
@@ -17,8 +17,9 @@ import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.core.ClientAsset;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
@@ -32,14 +33,14 @@ import java.util.stream.IntStream;
 
 public class VanillaNetworking {
     public static final AdvancementHolder ROOT_ADVANCEMENT = new AdvancementHolder(
-        ResourceLocations.bingo("generated/root"),
+        Identifiers.bingo("generated/root"),
         new Advancement(
             Optional.empty(),
             Optional.of(new DisplayInfo(
-                new ItemStack(Items.PLAYER_HEAD),
+                new ItemStackTemplate(Items.PLAYER_HEAD),
                 Bingo.translatable("bingo.board.title"),
                 CommonComponents.EMPTY,
-                Optional.of(new ClientAsset.ResourceTexture(ResourceLocations.minecraft("gui/advancements/backgrounds/stone"))),
+                Optional.of(new ClientAsset.ResourceTexture(Identifiers.minecraft("gui/advancements/backgrounds/stone"))),
                 AdvancementType.TASK,
                 false,
                 false,
@@ -71,7 +72,7 @@ public class VanillaNetworking {
         RegistryAccess registries, int index, ActiveGoal goal, int x, int y
     ) {
         final DisplayInfo displayInfo = new DisplayInfo(
-            goal.icon().getFallback(registries),
+            ItemStackTemplate.fromNonEmptyStack(goal.icon().getFallback(registries)),
             goal.name(),
             goal.tooltip().orElse(CommonComponents.EMPTY),
             Optional.empty(),
@@ -94,10 +95,10 @@ public class VanillaNetworking {
         );
     }
 
-    public static Map<ResourceLocation, AdvancementProgress> generateProgressMap(
+    public static Map<Identifier, AdvancementProgress> generateProgressMap(
         BingoBoard.Teams[] board, BingoBoard.Teams playerTeam
     ) {
-        final Map<ResourceLocation, AdvancementProgress> result = HashMap.newHashMap(board.length);
+        final Map<Identifier, AdvancementProgress> result = HashMap.newHashMap(board.length);
         for (int i = 0; i < board.length; i++) {
             result.put(BingoBoard.generateVanillaId(i), generateProgress(board[i].and(playerTeam)));
         }
@@ -114,8 +115,8 @@ public class VanillaNetworking {
         return result;
     }
 
-    public static Set<ResourceLocation> generateAdvancementIds(int count) {
-        final Set<ResourceLocation> result = HashSet.newHashSet(1 + count);
+    public static Set<Identifier> generateAdvancementIds(int count) {
+        final Set<Identifier> result = HashSet.newHashSet(1 + count);
         result.add(ROOT_ADVANCEMENT.id());
         IntStream.range(0, count)
             .mapToObj(BingoBoard::generateVanillaId)

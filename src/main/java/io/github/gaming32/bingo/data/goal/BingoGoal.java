@@ -21,7 +21,7 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.CriterionValidator;
+import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
@@ -33,7 +33,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.RandomSource;
@@ -57,7 +57,7 @@ public class BingoGoal {
             RegistryCodecs.homogeneousList(BingoRegistries.TAG).optionalFieldOf("tags", HolderSet.empty()).forGetter(BingoGoal::getTags),
             ParsedOrSub.codec(ComponentSerialization.CODEC).fieldOf("name").forGetter(BingoGoal::getName),
             ParsedOrSub.codec(ComponentSerialization.CODEC).optionalFieldOf("tooltip").forGetter(BingoGoal::getTooltip),
-            ResourceLocation.CODEC.optionalFieldOf("tooltip_icon").forGetter(BingoGoal::getTooltipIcon),
+            Identifier.CODEC.optionalFieldOf("tooltip_icon").forGetter(BingoGoal::getTooltipIcon),
             ParsedOrSub.optionalCodec(GoalIcon.CODEC, "icon", EmptyIcon.INSTANCE).forGetter(BingoGoal::getIcon),
             BingoCodecs.optionalPositiveInt("infrequency").forGetter(BingoGoal::getInfrequency),
             BingoCodecs.minifiedSetField(Codec.STRING, "antisynergy").forGetter(BingoGoal::getAntisynergy),
@@ -76,7 +76,7 @@ public class BingoGoal {
     private final HolderSet<BingoTag> tags;
     private final ParsedOrSub<Component> name;
     private final Optional<ParsedOrSub<Component>> tooltip;
-    private final Optional<ResourceLocation> tooltipIcon;
+    private final Optional<Identifier> tooltipIcon;
     private final ParsedOrSub<GoalIcon> icon;
     private final OptionalInt infrequency;
     private final Set<String> antisynergy;
@@ -96,7 +96,7 @@ public class BingoGoal {
         HolderSet<BingoTag> tags,
         ParsedOrSub<Component> name,
         Optional<ParsedOrSub<Component>> tooltip,
-        Optional<ResourceLocation> tooltipIcon,
+        Optional<Identifier> tooltipIcon,
         ParsedOrSub<GoalIcon> icon,
         OptionalInt infrequency,
         Collection<String> antisynergy,
@@ -193,7 +193,7 @@ public class BingoGoal {
 
     public void validateParsedCriteria(ProblemReporter reporter, HolderGetter.Provider lootData) {
         criteria.forEach((key, criterionOrSub) -> criterionOrSub.ifParsed(criterion -> {
-            final CriterionValidator validator = new CriterionValidator(reporter.forChild(new ProblemReporter.FieldPathElement(key)), lootData);
+            final ValidationContextSource validator = new ValidationContextSource(reporter.forChild(new ProblemReporter.FieldPathElement(key)), lootData);
             criterion.triggerInstance().validate(validator);
         }));
     }
@@ -230,7 +230,7 @@ public class BingoGoal {
         return tooltip;
     }
 
-    public Optional<ResourceLocation> getTooltipIcon() {
+    public Optional<Identifier> getTooltipIcon() {
         return tooltipIcon;
     }
 
@@ -298,7 +298,7 @@ public class BingoGoal {
         return requiredCount.substituteOrThrow(context);
     }
 
-    public static GoalBuilder builder(ResourceLocation id) {
+    public static GoalBuilder builder(Identifier id) {
         return new GoalBuilder(id);
     }
 }

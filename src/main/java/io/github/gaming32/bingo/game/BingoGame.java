@@ -37,9 +37,11 @@ import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionProgress;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -230,7 +232,10 @@ public class BingoGame {
                 );
             }
             for (final ServerPlayer player : playerList.getPlayers()) {
-                player.playNotifySound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.MASTER, 1f, 1f);
+                player.connection.send(new ClientboundSoundPacket(
+                    Holder.direct(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE), SoundSource.MASTER,  // todo: does that holder work?
+                    1, 1, 1,1f, 1f, player.getRandom().nextLong()
+                ));
             }
         } else {
             message = Bingo.translatable("bingo.ended.draw");
@@ -292,7 +297,10 @@ public class BingoGame {
         playerList.broadcastSystemMessage(message, false);
 
         for (ServerPlayer player : playerList.getPlayers()) {
-            player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.MASTER, 1f, 1f);
+            player.connection.send(new ClientboundSoundPacket(
+                SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.MASTER,
+                1, 1, 1,1f, 1f, player.getRandom().nextLong()
+            ));
         }
 
         if (remainingTeams.count() <= 1) {
@@ -607,11 +615,11 @@ public class BingoGame {
             }
             player.connection.send(vanillaPacket);
             if (announceGoal) {
-                player.playNotifySound(
-                    isLoss ? SoundEvents.RESPAWN_ANCHOR_DEPLETE.value() : SoundEvents.NOTE_BLOCK_CHIME.value(),
-                    SoundSource.MASTER,
-                    isLoss ? 1f : 0.5f, 1f
-                );
+                player.connection.send(new ClientboundSoundPacket(
+                    isLoss ? SoundEvents.RESPAWN_ANCHOR_DEPLETE : SoundEvents.NOTE_BLOCK_CHIME, SoundSource.MASTER,
+                    1, 1, 1,
+                    isLoss ? 1f: 0.5f, 1f, player.getRandom().nextLong()  // todo: am i allowed to use that random generator? also affects all other uses of ClientboundSoundPacket
+                ));
                 player.sendSystemMessage(message);
             }
         }
@@ -630,7 +638,10 @@ public class BingoGame {
                 for (final ServerPlayer player : playerList.getPlayers()) {
                     if (player.isAlliedTo(playerTeam)) continue;
                     if (announceGoal) {
-                        player.playNotifySound(SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.MASTER, 0.5f, 1f);
+                        player.connection.send(new ClientboundSoundPacket(
+                            SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.MASTER,
+                            1, 1, 1, 0.5f, 1f, player.getRandom().nextLong()  // todo: why is the volume 0.5? above it's 0.5 on win. 1 on loss
+                        ));
                         player.sendSystemMessage(lockoutMessage);
                     }
                 }
@@ -731,7 +742,10 @@ public class BingoGame {
 
         if (remainingTeams.count() > 1) {
             for (final ServerPlayer player : playerList.getPlayers()) {
-                player.playNotifySound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.MASTER, 1f, 1f);
+                player.connection.send(new ClientboundSoundPacket(
+                    Holder.direct(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE), SoundSource.MASTER,
+                    1, 1, 1,1f, 1f, player.getRandom().nextLong()
+                ));
             }
         }
 

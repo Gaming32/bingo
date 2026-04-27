@@ -26,7 +26,7 @@ import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
-import io.github.gaming32.bingo.util.ResourceLocations;
+import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.BlockPredicate;
@@ -97,7 +97,7 @@ public abstract class DifficultyGoalProvider {
     public abstract void addGoals();
 
     protected final ResourceLocation id(String path) {
-        return ResourceLocations.bingo(prefix + path);
+        return Identifiers.bingo(prefix + path);
     }
 
     protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ResourceKey<Item> item) {
@@ -216,7 +216,7 @@ public abstract class DifficultyGoalProvider {
                 .tags(BingoTags.ITEM)
                 .name(Component.translatable("bingo.goal.edible_items", minCount))
                 .tooltip("edible_items")
-                .tooltipIcon(ResourceLocations.bingo("textures/gui/tooltips/raw_and_cooked.png"))
+                .tooltipIcon(Identifiers.bingo("textures/gui/tooltips/raw_and_cooked.png"))
                 .antisynergy("edible_items")
                 .infrequency(2)
                 .icon(new ItemTagCycleIcon(ConventionalItemTags.FOODS, minCount));
@@ -228,7 +228,7 @@ public abstract class DifficultyGoalProvider {
             .tags(BingoTags.ITEM)
             .name(Component.translatable("bingo.goal.edible_items", 0), subber -> subber.sub("with.0", "count"))
             .tooltip("edible_items")
-            .tooltipIcon(ResourceLocations.bingo("textures/gui/tooltips/raw_and_cooked.png"))
+            .tooltipIcon(Identifiers.bingo("textures/gui/tooltips/raw_and_cooked.png"))
             .antisynergy("edible_items")
             .infrequency(2)
             .icon(new ItemTagCycleIcon(ConventionalItemTags.FOODS), subber -> subber.sub("+count", "count"));
@@ -405,6 +405,6 @@ public abstract class DifficultyGoalProvider {
     }
 
     protected static ResourceKey<Item> itemResource(String path) {
-        return ResourceKey.create(Registries.ITEM, ResourceLocations.minecraft(path));
+        return ResourceKey.create(Registries.ITEM, Identifiers.minecraft(path));
     }
 }

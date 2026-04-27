@@ -12,7 +12,7 @@ import io.github.gaming32.bingo.data.progresstrackers.ProgressTracker;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.CriterionValidator;
+import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.RegistryAccess;
@@ -23,7 +23,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,10 +36,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public record ActiveGoal(
-    ResourceLocation id,
+    Identifier id,
     Component name,
     Optional<Component> tooltip,
-    Optional<ResourceLocation> tooltipIcon,
+    Optional<Identifier> tooltipIcon,
     GoalIcon icon,
     Map<String, Criterion<?>> criteria,
     int requiredCount,
@@ -50,10 +50,10 @@ public record ActiveGoal(
 ) {
     public static final Codec<ActiveGoal> PERSISTENCE_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(ActiveGoal::id),
+            Identifier.CODEC.fieldOf("id").forGetter(ActiveGoal::id),
             ComponentSerialization.CODEC.fieldOf("name").forGetter(ActiveGoal::name),
             ComponentSerialization.CODEC.optionalFieldOf("tooltip").forGetter(ActiveGoal::tooltip),
-            ResourceLocation.CODEC.optionalFieldOf("tooltip_icon").forGetter(ActiveGoal::tooltipIcon),
+            Identifier.CODEC.optionalFieldOf("tooltip_icon").forGetter(ActiveGoal::tooltipIcon),
             GoalIcon.CODEC.fieldOf("icon").forGetter(ActiveGoal::icon),
             Codec.unboundedMap(Codec.STRING, Criterion.CODEC).fieldOf("criteria").forGetter(ActiveGoal::criteria),
             Codec.INT.fieldOf("required_count").forGetter(ActiveGoal::requiredCount),
@@ -70,20 +70,20 @@ public record ActiveGoal(
         ).apply(instance, ActiveGoal::new)
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, ActiveGoal> STREAM_CODEC = StreamCodec.composite(
-        ResourceLocation.STREAM_CODEC, ActiveGoal::id,
+        Identifier.STREAM_CODEC, ActiveGoal::id,
         ComponentSerialization.TRUSTED_STREAM_CODEC, ActiveGoal::name,
         ComponentSerialization.TRUSTED_OPTIONAL_STREAM_CODEC, ActiveGoal::tooltip,
-        ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional), ActiveGoal::tooltipIcon,
+        Identifier.STREAM_CODEC.apply(ByteBufCodecs::optional), ActiveGoal::tooltipIcon,
         GoalIcon.STREAM_CODEC, ActiveGoal::icon,
         BingoTag.SpecialType.STREAM_CODEC, ActiveGoal::specialType,
         ActiveGoal::forClient
     );
 
     public static ActiveGoal forClient(
-        ResourceLocation id,
+        Identifier id,
         Component name,
         Optional<Component> tooltip,
-        Optional<ResourceLocation> tooltipIcon,
+        Optional<Identifier> tooltipIcon,
         GoalIcon icon,
         BingoTag.SpecialType specialType
     ) {
@@ -117,7 +117,7 @@ public record ActiveGoal(
 
     private void validate(ProblemReporter reporter, HolderGetter.Provider lootData) {
         criteria.forEach((key, criterion) -> {
-            final CriterionValidator validator = new CriterionValidator(reporter.forChild(new ProblemReporter.FieldPathElement(key)), lootData);
+            final ValidationContextSource validator = new ValidationContextSource(reporter.forChild(new ProblemReporter.FieldPathElement(key)), lootData);
             criterion.triggerInstance().validate(validator);
         });
     }

@@ -27,8 +27,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BedBlock.class)
 public class MixinBedBlock {
     @Inject(method = "setPlacedBy", at = @At("RETURN"))
-    private void onPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack, CallbackInfo ci) {
-        if (placer instanceof ServerPlayer player) {
+    private void onPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity by, ItemStack itemStack, CallbackInfo ci) {
+        if (by instanceof ServerPlayer player) {
             BingoTriggers.BED_ROW.get().trigger(player, level, pos);
         }
     }
@@ -41,11 +41,11 @@ public class MixinBedBlock {
         )
     )
     private void intentionalGameDesignTrigger(
-        BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult,
+        BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult,
         CallbackInfoReturnable<InteractionResult> cir
     ) {
         if (player instanceof ServerPlayer serverPlayer) {
-            BingoTriggers.INTENTIONAL_GAME_DESIGN.get().trigger(serverPlayer, blockPos);
+            BingoTriggers.INTENTIONAL_GAME_DESIGN.get().trigger(serverPlayer, pos);
         }
     }
 
@@ -57,17 +57,17 @@ public class MixinBedBlock {
         )
     )
     private Either<Player.BedSleepingProblem, Unit> sleptTrigger(
-        Player instance, BlockPos bedPos,
+        Player instance, BlockPos pos,
         Operation<Either<Player.BedSleepingProblem, Unit>> original,
         @Local(argsOnly = true) BlockState state
     ) {
-        final var result = original.call(instance, bedPos);
+        final var result = original.call(instance, pos);
         if (!(instance instanceof ServerPlayer serverPlayer)) {
             return result;
         }
         return result.ifRight(unit -> BingoTriggers.SLEPT.get().trigger(
             // useWithoutItem is only ever called with the MAIN_HAND
-            serverPlayer, bedPos, instance.getItemInHand(InteractionHand.MAIN_HAND)
+            serverPlayer, pos, instance.getItemInHand(InteractionHand.MAIN_HAND)
         ));
     }
 }

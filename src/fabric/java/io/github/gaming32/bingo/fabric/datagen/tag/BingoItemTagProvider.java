@@ -10,9 +10,9 @@ import io.github.gaming32.bingo.mixin.fabric.LootTableAccessor;
 import io.github.gaming32.bingo.mixin.fabric.MobBucketItemAccessor;
 import io.github.gaming32.bingo.mixin.fabric.NestedLootTableAccessor;
 import io.github.gaming32.bingo.mixin.fabric.TagEntryAccessor;
-import io.github.gaming32.bingo.util.ResourceLocations;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import io.github.gaming32.bingo.util.Identifiers;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -47,7 +47,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
+public class BingoItemTagProvider extends FabricTagsProvider.ItemTagProvider {
     private static final Set<Item> FORCED_MEAT = Set.of(
         Items.COD,
         Items.COOKED_COD,
@@ -60,9 +60,9 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
     );
 
     public BingoItemTagProvider(
-        FabricDataOutput output,
+        FabricPackOutput output,
         CompletableFuture<HolderLookup.Provider> registriesFuture,
-        FabricTagProvider.BlockTagProvider blockTagProvider
+        FabricTagsProvider.BlockTagProvider blockTagProvider
     ) {
         super(output, registriesFuture, blockTagProvider);
     }
@@ -178,7 +178,7 @@ public class BingoItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     private static ResourceKey<Item> item(String path) {
-        return ResourceKey.create(Registries.ITEM, ResourceLocations.minecraft(path));
+        return ResourceKey.create(Registries.ITEM, Identifiers.minecraft(path));
     }
 
     private static void addItemsFromLootTable(TagAppender<Item, Item> tagAppender, ResourceKey<LootTable> lootTable, HolderLookup.Provider registries, Predicate<Item> filter) {

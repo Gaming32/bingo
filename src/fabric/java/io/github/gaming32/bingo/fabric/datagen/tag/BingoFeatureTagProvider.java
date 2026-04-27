@@ -2,8 +2,8 @@ package io.github.gaming32.bingo.fabric.datagen.tag;
 
 import com.mojang.logging.LogUtils;
 import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.TreeFeatures;
@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class BingoFeatureTagProvider extends FabricTagProvider<ConfiguredFeature<?, ?>> {
+public class BingoFeatureTagProvider extends FabricTagsProvider<ConfiguredFeature<?, ?>> {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public BingoFeatureTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+    public BingoFeatureTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, Registries.CONFIGURED_FEATURE, registriesFuture);
     }
 

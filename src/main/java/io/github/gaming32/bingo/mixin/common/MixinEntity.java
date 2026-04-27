@@ -44,7 +44,7 @@ public abstract class MixinEntity {
         method = "spawnAtLocation(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;",
         at = @At("RETURN")
     )
-    private void setDroppedBy(ServerLevel serverLevel, ItemStack itemStack, float f, CallbackInfoReturnable<ItemEntity> cir) {
+    private void setDroppedBy(ServerLevel level, ItemStack itemStack, float offset, CallbackInfoReturnable<ItemEntity> cir) {
         if (cir.getReturnValue() instanceof ItemEntityExt itemEntity) {
             itemEntity.bingo$setDroppedBy((Entity)(Object)this);
         }
@@ -54,11 +54,11 @@ public abstract class MixinEntity {
         method = "awardKillScore",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/advancements/critereon/KilledTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;)V",
+            target = "Lnet/minecraft/advancements/criterion/KilledTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;)V",
             shift = At.Shift.AFTER
         )
     )
-    private void customTrigger(Entity killed, DamageSource source, CallbackInfo ci) {
-        BingoTriggers.ENTITY_KILLED_PLAYER.get().trigger((ServerPlayer)killed, (Entity)(Object)this, source);
+    private void customTrigger(Entity victim, DamageSource killingBlow, CallbackInfo ci) {
+        BingoTriggers.ENTITY_KILLED_PLAYER.get().trigger((ServerPlayer) victim, (Entity)(Object)this, killingBlow);
     }
 }
