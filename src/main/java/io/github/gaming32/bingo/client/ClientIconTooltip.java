@@ -2,27 +2,27 @@ package io.github.gaming32.bingo.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
+import org.jspecify.annotations.NonNull;
 
 public record ClientIconTooltip(IconTooltip tooltip) implements ClientTooltipComponent {
     private static final int SIZE = 64;
 
     @Override
-    public int getHeight(Font font) {
+    public int getHeight(@NonNull Font font) {
         return SIZE;
     }
 
     @Override
-    public int getWidth(Font font) {
+    public int getWidth(@NonNull Font font) {
         return SIZE;
     }
 
     @Override
-    public void renderImage(Font font, int x, int y, int width, int height, GuiGraphics guiGraphics) {
-        Minecraft.getInstance().getTextureManager().getTexture(tooltip.icon()).setFilter(true, false);
+    public void extractImage(@NonNull Font font, int x, int y, int width, int height, GuiGraphicsExtractor guiGraphics) {
+        // Minecraft.getInstance().getTextureManager().getTexture(tooltip.icon()).setFilter(true, false);  // todo: how do we set a filter now?
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, tooltip.icon(), x, y, 0, 0, SIZE, SIZE, SIZE, SIZE);
     }
 }

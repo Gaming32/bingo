@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.client.icons;
 import io.github.gaming32.bingo.data.icons.InstrumentCycleIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -13,16 +13,16 @@ import net.minecraft.world.item.ItemStack;
 
 public class InstrumentCycleIconRenderer implements AbstractCycleIconRenderer<InstrumentCycleIcon> {
     @Override
-    public void renderWithParentPeriod(int parentPeriod, InstrumentCycleIcon icon, GuiGraphics graphics, int x, int y) {
+    public void renderWithParentPeriod(int parentPeriod, InstrumentCycleIcon icon, GuiGraphicsExtractor graphics, int x, int y) {
         final var connection = Minecraft.getInstance().getConnection();
         if (connection == null) return;
         final var instruments = connection.registryAccess().lookupOrThrow(Registries.INSTRUMENT);
         if (instruments.size() == 0) return;
-        graphics.renderFakeItem(InstrumentItem.create(icon.instrumentItem().value(), getIcon(instruments, parentPeriod)), x, y);
+        graphics.fakeItem(InstrumentItem.create(icon.instrumentItem().value(), getIcon(instruments, parentPeriod)), x, y);
     }
 
     @Override
-    public void renderDecorationsWithParentPeriod(int parentPeriod, InstrumentCycleIcon icon, Font font, GuiGraphics graphics, int x, int y) {
+    public void renderDecorationsWithParentPeriod(int parentPeriod, InstrumentCycleIcon icon, Font font, GuiGraphicsExtractor graphics, int x, int y) {
         var count = 1;
         if (icon.overrideCount().isPresent()) {
             count = icon.overrideCount().getAsInt();

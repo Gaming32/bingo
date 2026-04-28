@@ -3,9 +3,8 @@ package io.github.gaming32.bingo.client.icons;
 import com.mojang.logging.LogUtils;
 import com.mojang.math.Axis;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
-import io.github.gaming32.bingo.mixin.common.client.CameraAccessor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.CacheSlot;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -28,16 +27,16 @@ import java.util.WeakHashMap;
 public class EntityIconRenderer implements IconRenderer<EntityIcon> {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static final CacheSlot<ClientLevel, Map<EntityIcon, Entity>> ENTITIES = new CacheSlot<>(l -> new WeakHashMap<>());
+    private static final CacheSlot<ClientLevel, Map<EntityIcon, Entity>> ENTITIES = new CacheSlot<>(_ -> new WeakHashMap<>());
 
     @Override
-    public void render(EntityIcon icon, GuiGraphics graphics, int x, int y) {
+    public void render(EntityIcon icon, GuiGraphicsExtractor graphics, int x, int y) {
         final Entity entity = getEntity(icon);
         if (entity == null) return;
         renderEntity(entity, graphics, x, y);
     }
 
-    public static void renderEntity(Entity entity, GuiGraphics graphics, int x, int y) {
+    public static void renderEntity(Entity entity, GuiGraphicsExtractor graphics, int x, int y) {
         final Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null) return;
 
@@ -65,7 +64,7 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
         Vector2f bottomRight = graphics.pose().transformPosition(x + 16, y + 16, new Vector2f());
 
         EntityRenderer<? super Entity, ?> entityRenderer = renderDispatcher.getRenderer(entity);
-        graphics.submitEntityRenderState(entityRenderer.createRenderState(entity, 1), size, translation, rotation, xRot, (int) topLeft.x, (int) topLeft.y, (int) bottomRight.x, (int) bottomRight.y);
+        graphics.entity(entityRenderer.createRenderState(entity, 1), size, translation, rotation, xRot, (int) topLeft.x, (int) topLeft.y, (int) bottomRight.x, (int) bottomRight.y);
     }
 
     @Nullable

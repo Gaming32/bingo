@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.client;
 
 import io.github.gaming32.bingo.game.BingoBoard;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -9,6 +9,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.scores.PlayerTeam;
+import org.jspecify.annotations.NonNull;
 
 public class BoardScreen extends Screen {
     private Button leftButton;
@@ -37,8 +38,8 @@ public class BoardScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
+    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         if (BingoClient.clientGame == null) return;
         final PositionAndScale pos = getPosition();
         BingoClient.renderBingo(graphics, true, pos);
@@ -46,7 +47,7 @@ public class BoardScreen extends Screen {
         if (minecraft.player != null && minecraft.player.isSpectator()) {
             final PlayerTeam team = BingoClient.clientGame.teams()[BingoClient.clientTeam.getFirstIndex()];
             final Integer color = team.getColor().getColor();
-            graphics.drawCenteredString(
+            graphics.centeredText(
                 font,
                 BingoClient.getDisplayName(team),
                 width / 2, (int)pos.y() + BingoClient.getBoardHeight() + BingoClient.BOARD_OFFSET,

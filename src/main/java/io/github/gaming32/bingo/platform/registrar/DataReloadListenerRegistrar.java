@@ -14,7 +14,7 @@ public interface DataReloadListenerRegistrar {
     }
 
     void register(
-            Identifier id,
+        Identifier id,
         Function<HolderLookup.Provider, PreparableReloadListener> listener,
         Collection<Identifier> dependencies
     );

@@ -5,7 +5,7 @@ import io.github.gaming32.bingo.client.BingoClient;
 import io.github.gaming32.bingo.ext.RowHelperExt;
 import io.github.gaming32.bingo.game.BingoBoard;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -20,6 +20,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
+import org.jspecify.annotations.NonNull;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -70,9 +71,9 @@ public class BingoConfigScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        graphics.drawCenteredString(font, title, width / 2, 15, 0xffffffff);
+    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(font, title, width / 2, 15, 0xffffffff);
     }
 
     private CycleButton<BoardCorner> createCornerButton() {

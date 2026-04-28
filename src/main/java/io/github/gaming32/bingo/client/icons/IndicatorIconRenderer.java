@@ -1,11 +1,11 @@
 package io.github.gaming32.bingo.client.icons;
 
 import io.github.gaming32.bingo.data.icons.IndicatorIcon;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class IndicatorIconRenderer implements IconRenderer<IndicatorIcon> {
     @Override
-    public void render(IndicatorIcon icon, GuiGraphics graphics, int x, int y) {
+    public void render(IndicatorIcon icon, GuiGraphicsExtractor graphics, int x, int y) {
         IconRenderers.getRenderer(icon.base()).render(icon.base(), graphics, x, y);
         graphics.pose().pushMatrix();
         graphics.pose().scale(0.5f, 0.5f);

@@ -1,10 +1,10 @@
 package io.github.gaming32.bingo.client.icons;
 
 import io.github.gaming32.bingo.data.icons.GoalIcon;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.world.flag.FeatureElement;
@@ -15,17 +15,17 @@ import java.util.Optional;
 public interface AbstractCycleIconRenderer<I extends GoalIcon> extends IconRenderer<I> {
     long TIME_PER_ICON = 2000;
 
-    void renderWithParentPeriod(int parentPeriod, I icon, GuiGraphics graphics, int x, int y);
+    void renderWithParentPeriod(int parentPeriod, I icon, GuiGraphicsExtractor graphics, int x, int y);
 
     @Override
-    default void render(I icon, GuiGraphics graphics, int x, int y) {
+    default void render(I icon, GuiGraphicsExtractor graphics, int x, int y) {
         renderWithParentPeriod(1, icon, graphics, x, y);
     }
 
-    void renderDecorationsWithParentPeriod(int parentPeriod, I icon, Font font, GuiGraphics graphics, int x, int y);
+    void renderDecorationsWithParentPeriod(int parentPeriod, I icon, Font font, GuiGraphicsExtractor graphics, int x, int y);
 
     @Override
-    default void renderDecorations(I icon, Font font, GuiGraphics graphics, int x, int y) {
+    default void renderDecorations(I icon, Font font, GuiGraphicsExtractor graphics, int x, int y) {
         renderDecorationsWithParentPeriod(1, icon, font, graphics, x, y);
     }
 

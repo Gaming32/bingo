@@ -3,14 +3,14 @@ package io.github.gaming32.bingo.client.icons;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 
 public interface IconRenderer<I extends GoalIcon> {
-    void render(I icon, GuiGraphics graphics, int x, int y);
+    void render(I icon, GuiGraphicsExtractor graphics, int x, int y);
 
-    default void renderDecorations(I icon, Font font, GuiGraphics graphics, int x, int y) {
-        graphics.renderItemDecorations(font, getIconItem(icon), x, y);
+    default void renderDecorations(I icon, Font font, GuiGraphicsExtractor graphics, int x, int y) {
+        graphics.itemDecorations(font, getIconItem(icon), x, y);
     }
 
     default ItemStack getIconItem(I icon) {
@@ -18,9 +18,9 @@ public interface IconRenderer<I extends GoalIcon> {
         return connection != null ? icon.getFallback(connection.registryAccess()) : icon.getFallbackWithStaticContext();
     }
 
-    static void renderCount(int count, Font font, GuiGraphics graphics, int x, int y) {
+    static void renderCount(int count, Font font, GuiGraphicsExtractor graphics, int x, int y) {
         if (count == 1) return;
         final String text = Integer.toString(count);
-        graphics.drawString(font, text, x + 19 - 2 - font.width(text), y + 6 + 3, 0xffffffff, true);
+        graphics.text(font, text, x + 19 - 2 - font.width(text), y + 6 + 3, 0xffffffff, true);
     }
 }

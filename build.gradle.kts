@@ -75,16 +75,6 @@ unimined.minecraft(fabric) {
         accessWidener(file("src/main/resources/bingo.classtweaker"))
     }
 
-    mods {
-        modImplementation {
-            mixinRemap {
-                reset()
-                enableBaseMixin()
-                enableMixinExtra()
-            }
-        }
-    }
-
     // TODO: remove internal API usage when there is a way to inherit run configs
     @Suppress("UnstableApiUsage")
     (this as MinecraftProvider).provideRunClientTask("datagenClient", file("run/datagenClient"))
@@ -121,7 +111,6 @@ unimined.minecraft(neoforge) {
 val fabricCompileOnly by configurations.getting
 val fabricInclude by configurations.getting
 val fabricImplementation by configurations.getting
-val fabricModImplementation by configurations.getting
 
 dependencies {
     implementation(libs.mixin)
@@ -129,13 +118,13 @@ dependencies {
     libs.bundles.nightconfig.get().forEach {
         fabricInclude(fabricImplementation(implementation(it)!!)!!)
     }
-    fabricModImplementation(fabricApi.fabric(libs.versions.fabric.api.get()))
-    fabricModImplementation(libs.modmenu)
-    modCompileOnly(libs.rei) {
+    fabricImplementation(fabricApi.fabric(libs.versions.fabric.api.get()))
+    fabricImplementation(libs.modmenu)
+    compileOnly(libs.rei) {
         exclude(group = "dev.architectury")
     }
-    modCompileOnly(libs.jei)
-    modCompileOnly(libs.emi) // Unfortunately, although the API does what I need, it does in a way that's wholly different from the other recipe viewers
+    compileOnly(libs.jei)
+    compileOnly(libs.emi) // Unfortunately, although the API does what I need, it does in a way that's wholly different from the other recipe viewers
     fabricCompileOnly(compileOnly(libs.mcdev.annotations.get())!!)
 
     testImplementation(libs.fabric.loader.junit)

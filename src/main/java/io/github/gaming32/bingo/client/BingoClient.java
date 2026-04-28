@@ -25,7 +25,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.input.KeyEvent;
@@ -38,7 +38,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -51,10 +51,10 @@ import java.util.Iterator;
 import java.util.Objects;
 
 public class BingoClient {
-    private static final ResourceLocation BOARD_TEXTURE = Identifiers.bingo("board");
-    private static final ResourceLocation BOARD_CELL_TEXTURE = Identifiers.bingo("board_cell");
-    private static final ResourceLocation SLOT_HIGHLIGHT_BACK_SPRITE = Identifiers.minecraft("container/slot_highlight_back");
-    private static final ResourceLocation SLOT_HIGHLIGHT_FRONT_SPRITE = Identifiers.minecraft("container/slot_highlight_front");
+    private static final Identifier BOARD_TEXTURE = Identifiers.bingo("board");
+    private static final Identifier BOARD_CELL_TEXTURE = Identifiers.bingo("board_cell");
+    private static final Identifier SLOT_HIGHLIGHT_BACK_SPRITE = Identifiers.minecraft("container/slot_highlight_back");
+    private static final Identifier SLOT_HIGHLIGHT_FRONT_SPRITE = Identifiers.minecraft("container/slot_highlight_front");
     public static final Component BOARD_TITLE = Component.translatable("bingo.board.title");
     public static final Component BOARD_TITLE_SHORT = Component.translatable("bingo.board.title.short");
 
@@ -155,7 +155,7 @@ public class BingoClient {
         return recipeViewerPlugin;
     }
 
-    public static void renderBoardOnHud(Minecraft minecraft, GuiGraphics graphics) {
+    public static void renderBoardOnHud(Minecraft minecraft, GuiGraphicsExtractor graphics) {
         if (clientGame == null) {
             return;
         }
@@ -212,15 +212,15 @@ public class BingoClient {
                     leftText.withStyle(team.getColor());
                     rightText.withStyle(team.getColor());
                 }
-                graphics.drawString(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
-                graphics.drawString(font, rightText, scoreX, scoreY, 0xffffffff);
+                graphics.text(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
+                graphics.text(font, rightText, scoreX, scoreY, 0xffffffff);
                 scoreY += shift;
             }
 
             final MutableComponent leftText = Component.translatable("bingo.unclaimed");
             final MutableComponent rightText = Component.literal(" - " + (clientGame.states().length - totalScore));
-            graphics.drawString(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
-            graphics.drawString(font, rightText, scoreX, scoreY, 0xffffffff);
+            graphics.text(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
+            graphics.text(font, rightText, scoreX, scoreY, 0xffffffff);
         }
     }
 
@@ -232,7 +232,7 @@ public class BingoClient {
         return 24 + 18 * clientGame.shape().getVisualSize(clientGame.size()).y();
     }
 
-    public static void renderBingo(GuiGraphics graphics, boolean mouseHover, PositionAndScale pos) {
+    public static void renderBingo(GuiGraphicsExtractor graphics, boolean mouseHover, PositionAndScale pos) {
         if (clientGame == null) {
             Bingo.LOGGER.warn("BingoClient.renderBingo() called when Bingo.clientGame == null!");
             return;
@@ -300,10 +300,10 @@ public class BingoClient {
             Integer manualHighlight = clientGame.manualHighlights()[goalIndex];
             if (manualHighlight != null) {
                 int highlightColor = ARGB.color(0xff, BingoClient.CONFIG.getManualHighlightColor(manualHighlight));
-                graphics.hLine(slotX, slotX + 15, slotY, highlightColor);
-                graphics.hLine(slotX, slotX + 15, slotY + 15, highlightColor);
-                graphics.vLine(slotX, slotY, slotY + 15, highlightColor);
-                graphics.vLine(slotX + 15, slotY, slotY + 15, highlightColor);
+                graphics.horizontalLine(slotX, slotX + 15, slotY, highlightColor);
+                graphics.horizontalLine(slotX, slotX + 15, slotY + 15, highlightColor);
+                graphics.verticalLine(slotX, slotY, slotY + 15, highlightColor);
+                graphics.verticalLine(slotX + 15, slotY, slotY + 15, highlightColor);
             }
 
             final GoalIcon icon = goal.icon();
@@ -365,12 +365,12 @@ public class BingoClient {
         }
     }
 
-    private static void renderBoardTitle(GuiGraphics graphics, Font font) {
+    private static void renderBoardTitle(GuiGraphicsExtractor graphics, Font font) {
         final int maxWidth = getBoardWidth() - 16;
         final FormattedCharSequence title = font.width(BOARD_TITLE) > maxWidth
             ? getVisualOrderWithEllipses(BOARD_TITLE_SHORT, font, maxWidth)
             : BOARD_TITLE.getVisualOrderText();
-        graphics.drawString(font, title, 8, 6, 0xff404040, false);
+        graphics.text(font, title, 8, 6, 0xff404040, false);
     }
 
     public static FormattedCharSequence getVisualOrderWithEllipses(Component text, Font font, int maxWidth) {
