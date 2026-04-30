@@ -41,7 +41,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -232,9 +232,9 @@ public class BingoGame {
                 );
             }
             for (final ServerPlayer player : playerList.getPlayers()) {
-                player.connection.send(new ClientboundSoundPacket(
+                player.connection.send(new ClientboundSoundEntityPacket(
                     Holder.direct(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE), SoundSource.MASTER,  // todo: does that holder work?
-                    1, 1, 1,1f, 1f, player.getRandom().nextLong()
+                    player,1f, 1f, player.getRandom().nextLong()
                 ));
             }
         } else {
@@ -297,9 +297,9 @@ public class BingoGame {
         playerList.broadcastSystemMessage(message, false);
 
         for (ServerPlayer player : playerList.getPlayers()) {
-            player.connection.send(new ClientboundSoundPacket(
+            player.connection.send(new ClientboundSoundEntityPacket(
                 SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.MASTER,
-                1, 1, 1,1f, 1f, player.getRandom().nextLong()
+                player, 1f, 1f, player.getRandom().nextLong()
             ));
         }
 
@@ -615,10 +615,10 @@ public class BingoGame {
             }
             player.connection.send(vanillaPacket);
             if (announceGoal) {
-                player.connection.send(new ClientboundSoundPacket(
+                player.connection.send(new ClientboundSoundEntityPacket(
                     isLoss ? SoundEvents.RESPAWN_ANCHOR_DEPLETE : SoundEvents.NOTE_BLOCK_CHIME, SoundSource.MASTER,
-                    1, 1, 1,
-                    isLoss ? 1f: 0.5f, 1f, player.getRandom().nextLong()  // todo: am i allowed to use that random generator? also affects all other uses of ClientboundSoundPacket
+                    player,
+                    isLoss ? 1f: 0.5f, 1f, player.getRandom().nextLong()
                 ));
                 player.sendSystemMessage(message);
             }
@@ -638,9 +638,9 @@ public class BingoGame {
                 for (final ServerPlayer player : playerList.getPlayers()) {
                     if (player.isAlliedTo(playerTeam)) continue;
                     if (announceGoal) {
-                        player.connection.send(new ClientboundSoundPacket(
+                        player.connection.send(new ClientboundSoundEntityPacket(
                             SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.MASTER,
-                            1, 1, 1, 0.5f, 1f, player.getRandom().nextLong()  // todo: why is the volume 0.5? above it's 0.5 on win. 1 on loss
+                            player, 0.5f, 1f, player.getRandom().nextLong()  // todo: why is the volume 0.5? above it's 0.5 on win. 1 on loss
                         ));
                         player.sendSystemMessage(lockoutMessage);
                     }
@@ -742,9 +742,9 @@ public class BingoGame {
 
         if (remainingTeams.count() > 1) {
             for (final ServerPlayer player : playerList.getPlayers()) {
-                player.connection.send(new ClientboundSoundPacket(
+                player.connection.send(new ClientboundSoundEntityPacket(
                     Holder.direct(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE), SoundSource.MASTER,
-                    1, 1, 1,1f, 1f, player.getRandom().nextLong()
+                    player,1f, 1f, player.getRandom().nextLong()
                 ));
             }
         }
