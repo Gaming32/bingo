@@ -9,6 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.world.flag.FeatureElement;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.Optional;
 
@@ -30,11 +31,11 @@ public interface AbstractCycleIconRenderer<I extends GoalIcon> extends IconRende
     }
 
     @Override
-    default ItemStack getIconItem(I icon) {
-        return getIconItemWithParentPeriod(1, icon);
+    default ItemStackTemplate getIconItemTemplate(I icon) {
+        return getIconItemTemplateWithParentPeriod(1, icon);
     }
 
-    ItemStack getIconItemWithParentPeriod(int parentPeriod, I icon);
+    ItemStackTemplate getIconItemTemplateWithParentPeriod(int parentPeriod, I icon);
 
     static <T extends FeatureElement> Optional<Holder<T>> getIconFromTag(HolderSet<T> tag, int parentPeriod) {
         if (tag.size() == 0) {

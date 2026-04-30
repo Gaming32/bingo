@@ -11,7 +11,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,16 +46,16 @@ public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer
     }
 
     @Override
-    public ItemStack getIconItemWithParentPeriod(int parentPeriod, EntityTypeTagCycleIcon icon) {
+    public ItemStackTemplate getIconItemTemplateWithParentPeriod(int parentPeriod, EntityTypeTagCycleIcon icon) {
         final var entityTypes = BuiltInRegistries.ENTITY_TYPE.get(icon.tag());
         if (entityTypes.isEmpty()) {
-            return ItemStack.EMPTY;
+            return new ItemStackTemplate(Items.STONE);
         }
         final var entityType = AbstractCycleIconRenderer.getIconFromTag(entityTypes.get(), parentPeriod);
         if (entityType.isEmpty()) {
-            return ItemStack.EMPTY;
+            return new ItemStackTemplate(Items.STONE);
         }
         final Item spawnEggItem = EntityIcon.getSpawnEggItem(entityType.get().value());
-        return spawnEggItem == null ? ItemStack.EMPTY : new ItemStack(spawnEggItem, icon.count());
+        return spawnEggItem == null ? new ItemStackTemplate(Items.STONE): new ItemStackTemplate(spawnEggItem, icon.count());
     }
 }

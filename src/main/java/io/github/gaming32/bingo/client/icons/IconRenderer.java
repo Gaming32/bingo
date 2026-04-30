@@ -5,17 +5,24 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 public interface IconRenderer<I extends GoalIcon> {
     void render(I icon, GuiGraphicsExtractor graphics, int x, int y);
 
     default void renderDecorations(I icon, Font font, GuiGraphicsExtractor graphics, int x, int y) {
-        graphics.itemDecorations(font, getIconItem(icon), x, y);
+        ItemStackTemplate iconItem = getIconItemTemplate(icon);
+        graphics.itemDecorations(font, iconItem.withCount(1).create(), x, y);
+        renderCount(iconItem.count(), font, graphics, x, y);
     }
 
     default ItemStack getIconItem(I icon) {
+        return getIconItemTemplate(icon).withCount(1).create();
+    }
+
+    default ItemStackTemplate getIconItemTemplate(I icon) {
         final var connection = Minecraft.getInstance().getConnection();
-        return connection != null ? icon.getFallback(connection.registryAccess()).create() : icon.getFallbackWithStaticContext().create();
+        return connection != null ? icon.getFallback(connection.registryAccess()) : icon.getFallbackWithStaticContext();
     }
 
     static void renderCount(int count, Font font, GuiGraphicsExtractor graphics, int x, int y) {

@@ -6,10 +6,14 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Instrument;
 import net.minecraft.world.item.InstrumentItem;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.InstrumentComponent;
 
 public class InstrumentCycleIconRenderer implements AbstractCycleIconRenderer<InstrumentCycleIcon> {
     @Override
@@ -36,16 +40,22 @@ public class InstrumentCycleIconRenderer implements AbstractCycleIconRenderer<In
     }
 
     @Override
-    public ItemStack getIconItemWithParentPeriod(int parentPeriod, InstrumentCycleIcon icon) {
+    public ItemStackTemplate getIconItemTemplateWithParentPeriod(int parentPeriod, InstrumentCycleIcon icon) {
         final var connection = Minecraft.getInstance().getConnection();
         if (connection == null) {
-            return ItemStack.EMPTY;
+            return new ItemStackTemplate(Items.STONE);
         }
         final var instruments = connection.registryAccess().lookupOrThrow(Registries.INSTRUMENT);
         if (instruments.size() == 0) {
-            return ItemStack.EMPTY;
+            return new ItemStackTemplate(Items.STONE);
         }
-        return InstrumentItem.create(icon.instrumentItem().value(), getIcon(instruments, parentPeriod));
+        return new ItemStackTemplate(
+            icon.instrumentItem(),
+            1,
+            DataComponentPatch.builder()
+                .set(DataComponents.INSTRUMENT, new InstrumentComponent(getIcon(instruments, parentPeriod)))
+                .build()
+        );
     }
 
     private static Holder<Instrument> getIcon(Registry<Instrument> icons, int parentPeriod) {
