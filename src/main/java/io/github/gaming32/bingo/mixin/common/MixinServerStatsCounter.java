@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public class MixinServerStatsCounter extends StatsCounter {
     @WrapMethod(method = "setValue")
     private void onSetValue(Player player, Stat<?> stat, int count, Operation<Void> original) {
-        if (player instanceof ServerPlayer serverPlayer) {  // todo: does this break something?
+        if (player instanceof ServerPlayer serverPlayer) {
             final var game = ((MinecraftServerExt) serverPlayer.level().getServer()).bingo$getGame();
             if (game != null) {
                 final var baseStats = game.getOrCreateBaseStats(player);
@@ -25,6 +25,8 @@ public class MixinServerStatsCounter extends StatsCounter {
             }
             original.call(player, stat, count);
             BingoTriggers.RELATIVE_STATS.get().trigger(serverPlayer);
+        } else {
+            original.call(player, stat, count);
         }
     }
 }

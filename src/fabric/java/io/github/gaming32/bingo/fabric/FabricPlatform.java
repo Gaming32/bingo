@@ -111,7 +111,7 @@ public class FabricPlatform extends BingoPlatform {
     }
 
     private static <S extends PictureInPictureRenderState> void registerPictureInPictureRenderer(Class<S> stateClass, Function<MultiBufferSource.BufferSource, PictureInPictureRenderer<S>> factory) {
-        PictureInPictureRendererRegistry.register(context -> factory.apply(context.bufferSource())); // todo: no idea if bufferSource returns what the factory wants
+        PictureInPictureRendererRegistry.register(context -> factory.apply(context.bufferSource()));
     }
 
     @Override

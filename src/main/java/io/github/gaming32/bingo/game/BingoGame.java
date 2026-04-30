@@ -233,7 +233,7 @@ public class BingoGame {
             }
             for (final ServerPlayer player : playerList.getPlayers()) {
                 player.connection.send(new ClientboundSoundEntityPacket(
-                    Holder.direct(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE), SoundSource.MASTER,  // todo: does that holder work?
+                    Holder.direct(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE), SoundSource.MASTER,
                     player,1f, 1f, player.getRandom().nextLong()
                 ));
             }
@@ -640,7 +640,7 @@ public class BingoGame {
                     if (announceGoal) {
                         player.connection.send(new ClientboundSoundEntityPacket(
                             SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.MASTER,
-                            player, 0.5f, 1f, player.getRandom().nextLong()  // todo: why is the volume 0.5? above it's 0.5 on win. 1 on loss
+                            player, 0.5f, 1f, player.getRandom().nextLong()
                         ));
                         player.sendSystemMessage(lockoutMessage);
                     }

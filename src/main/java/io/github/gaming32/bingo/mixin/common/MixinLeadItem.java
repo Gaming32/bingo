@@ -34,7 +34,7 @@ public class MixinLeadItem {
     private static void setKnotOwner(
         Player player, Level level, BlockPos pos, CallbackInfoReturnable<InteractionResult> cir, @Local(name = "activeKnot") LeashFenceKnotEntity activeKnot
     ) {
-        ((LeashFenceKnotEntityExt) activeKnot).bingo$setOwner(player);  // todo: not sure if this works
+        ((LeashFenceKnotEntityExt) activeKnot).bingo$setOwner(player);
     }
 
     @WrapOperation(

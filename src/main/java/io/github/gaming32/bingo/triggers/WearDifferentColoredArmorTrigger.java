@@ -63,7 +63,7 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
                 if (itemPredicate.isPresent() && !itemPredicate.get().test(item)) {
                     continue;
                 }
-                if (item.is(ItemTags.CAULDRON_CAN_REMOVE_DYE)) {  // todo; is this tag what we want? includes wolf armor but thats probably irrelevant
+                if (item.is(ItemTags.CAULDRON_CAN_REMOVE_DYE)) {
                     final DyedItemColor color = item.get(DataComponents.DYED_COLOR);
                     if (!allowUncolored && color == null) {
                         continue;

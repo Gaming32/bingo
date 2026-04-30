@@ -22,7 +22,6 @@ public record ClientIconTooltip(IconTooltip tooltip) implements ClientTooltipCom
 
     @Override
     public void extractImage(@NonNull Font font, int x, int y, int width, int height, GuiGraphicsExtractor guiGraphics) {
-        // Minecraft.getInstance().getTextureManager().getTexture(tooltip.icon()).setFilter(true, false);  // todo: how do we set a filter now?
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, tooltip.icon(), x, y, 0, 0, SIZE, SIZE, SIZE, SIZE);
     }
 }
