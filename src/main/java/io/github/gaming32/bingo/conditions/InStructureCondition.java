@@ -9,7 +9,6 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -19,10 +18,9 @@ public record InStructureCondition(TagKey<Structure> structure) implements LootI
         .fieldOf("structure")
         .xmap(InStructureCondition::new, InStructureCondition::structure);
 
-    @NotNull
     @Override
-    public LootItemConditionType getType() {
-        return BingoConditions.IN_STRUCTURE.get();
+    public MapCodec<InStructureCondition> codec() {
+        return CODEC;
     }
 
     @NotNull

@@ -7,7 +7,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,7 +47,7 @@ public record CycleIcon(List<GoalIcon> icons) implements GoalIcon {
     }
 
     @Override
-    public ItemStack getFallback(RegistryAccess registries) {
+    public ItemStackTemplate getFallback(RegistryAccess registries) {
         return icons.getLast().getFallback(registries);
     }
 

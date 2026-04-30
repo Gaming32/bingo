@@ -12,14 +12,13 @@ public class BlockIconRenderer implements IconRenderer<BlockIcon> {
         Vector2f topLeft = graphics.pose().transformPosition(x, y, new Vector2f());
         Vector2f bottomRight = graphics.pose().transformPosition(x + 16, y + 16, new Vector2f());
 
-        graphics.guiRenderState.addPicturesInPictureState(new BlockPictureInPictureRenderState(
+        graphics.guiRenderState.addPicturesInPictureState(BlockPictureInPictureRenderState.create(
             icon.block(),
             (int) topLeft.x,
             (int) bottomRight.x,
             (int) topLeft.y,
             (int) bottomRight.y,
             1,
-            new ScreenRectangle((int) topLeft.x, (int) topLeft.y, 16, 16),
             new ScreenRectangle((int) topLeft.x, (int) topLeft.y, 16, 16)
         ));
     }

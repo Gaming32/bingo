@@ -15,7 +15,7 @@ public interface IconRenderer<I extends GoalIcon> {
 
     default ItemStack getIconItem(I icon) {
         final var connection = Minecraft.getInstance().getConnection();
-        return connection != null ? icon.getFallback(connection.registryAccess()) : icon.getFallbackWithStaticContext();
+        return connection != null ? icon.getFallback(connection.registryAccess()).create() : icon.getFallbackWithStaticContext().create();
     }
 
     static void renderCount(int count, Font font, GuiGraphicsExtractor graphics, int x, int y) {

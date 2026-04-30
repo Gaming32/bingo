@@ -1,10 +1,10 @@
 package io.github.gaming32.bingo.data;
 
 import io.github.gaming32.bingo.util.Identifiers;
-import net.minecraft.Util;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Util;
 
 public final class BingoDifficulties {
     public static final ResourceKey<BingoDifficulty> VERY_EASY = createKey("very_easy");
@@ -26,7 +26,7 @@ public final class BingoDifficulties {
 
     private static void register(BootstrapContext<BingoDifficulty> context, ResourceKey<BingoDifficulty> key, int number) {
         context.register(key, new BingoDifficulty(
-            Component.translatable(Util.makeDescriptionId("bingo_difficulty", key.location())), number
+            Component.translatable(Util.makeDescriptionId("bingo_difficulty", key.identifier())), number
         ));
     }
 

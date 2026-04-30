@@ -4,7 +4,7 @@ import io.github.gaming32.bingo.util.Identifiers;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.runtime.IJeiRuntime;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 @JeiPlugin
@@ -25,7 +25,7 @@ public class BingoJeiPlugin implements IModPlugin {
 
     @NotNull
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return Identifiers.bingo("jei_plugin");
     }
 

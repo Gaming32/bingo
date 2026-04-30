@@ -57,49 +57,51 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.ConsumeItemTrigger;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DamagePredicate;
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
-import net.minecraft.advancements.critereon.DataComponentMatchers;
-import net.minecraft.advancements.critereon.DefaultBlockInteractionTrigger;
-import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.advancements.critereon.EffectsChangedTrigger;
-import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
-import net.minecraft.advancements.critereon.EntityFlagsPredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.EntityTypePredicate;
-import net.minecraft.advancements.critereon.FishingRodHookedTrigger;
-import net.minecraft.advancements.critereon.InputPredicate;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.MobEffectsPredicate;
-import net.minecraft.advancements.critereon.PickedUpItemTrigger;
-import net.minecraft.advancements.critereon.PlayerInteractTrigger;
-import net.minecraft.advancements.critereon.PlayerPredicate;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.advancements.critereon.SummonedEntityTrigger;
-import net.minecraft.advancements.critereon.TagPredicate;
-import net.minecraft.advancements.critereon.TameAnimalTrigger;
-import net.minecraft.advancements.critereon.TradeTrigger;
-import net.minecraft.advancements.critereon.UsingItemTrigger;
+import net.minecraft.advancements.criterion.BlockPredicate;
+import net.minecraft.advancements.criterion.ConsumeItemTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.DamagePredicate;
+import net.minecraft.advancements.criterion.DamageSourcePredicate;
+import net.minecraft.advancements.criterion.DataComponentMatchers;
+import net.minecraft.advancements.criterion.DefaultBlockInteractionTrigger;
+import net.minecraft.advancements.criterion.DistancePredicate;
+import net.minecraft.advancements.criterion.EffectsChangedTrigger;
+import net.minecraft.advancements.criterion.EntityEquipmentPredicate;
+import net.minecraft.advancements.criterion.EntityFlagsPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.EntityTypePredicate;
+import net.minecraft.advancements.criterion.FishingRodHookedTrigger;
+import net.minecraft.advancements.criterion.InputPredicate;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.criterion.LocationPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.criterion.MobEffectsPredicate;
+import net.minecraft.advancements.criterion.PickedUpItemTrigger;
+import net.minecraft.advancements.criterion.PlayerInteractTrigger;
+import net.minecraft.advancements.criterion.PlayerPredicate;
+import net.minecraft.advancements.criterion.PlayerTrigger;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
+import net.minecraft.advancements.criterion.SummonedEntityTrigger;
+import net.minecraft.advancements.criterion.TagPredicate;
+import net.minecraft.advancements.criterion.TameAnimalTrigger;
+import net.minecraft.advancements.criterion.TradeTrigger;
+import net.minecraft.advancements.criterion.UsingItemTrigger;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.predicates.DataComponentPredicates;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
@@ -110,13 +112,12 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
-import net.minecraft.world.entity.animal.ChickenVariant;
-import net.minecraft.world.entity.animal.ChickenVariants;
+import net.minecraft.world.entity.animal.chicken.ChickenVariant;
+import net.minecraft.world.entity.animal.chicken.ChickenVariants;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.Level;
@@ -140,7 +141,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class EasyGoalProvider extends DifficultyGoalProvider {
-    public EasyGoalProvider(BiConsumer<ResourceLocation, BingoGoal> goalAdder, HolderLookup.Provider registries) {
+    public EasyGoalProvider(BiConsumer<Identifier, BingoGoal> goalAdder, HolderLookup.Provider registries) {
         super(BingoDifficulties.EASY, goalAdder, registries);
     }
 
@@ -255,7 +256,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .name("3x3x3_glass_cube")
             .icon(new CycleIcon(
-                new ItemIcon(new ItemStack(Items.GLASS, 26)),
+                new ItemIcon(new ItemStackTemplate(Items.GLASS, 26)),
                 ItemIcon.ofItem(Items.LAVA_BUCKET)
             ))
             .tags(BingoTags.BUILD, BingoTags.OVERWORLD)
@@ -416,7 +417,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 new ItemTagCycleIcon(ItemTags.EGGS, 3),
                 ItemPredicate.Builder.item().of(items, ItemTags.EGGS).withCount(MinMaxBounds.Ints.exactly(3))
             )
-                .name(Component.translatable("bingo.count", 3, Items.EGG.getName()))
+                .name(Component.translatable("bingo.count", 3, Component.translatable(Items.EGG.getDescriptionId())))
                 .tooltip("egg")
                 .tags(BingoTags.OVERWORLD)
         );
@@ -436,7 +437,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 .build()
             )
             .name("4x4_paintings")
-            .icon(new ItemStack(Items.PAINTING, 3))
+            .icon(new ItemStackTemplate(Items.PAINTING, 3))
             .antisynergy("painting")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("bone_block"), items, Items.BONE_BLOCK, 5, 10));
@@ -510,9 +511,9 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .name(Component.translatable(
                 "bingo.three",
-                Items.WATER_BUCKET.getName(),
-                Items.LAVA_BUCKET.getName(),
-                Items.MILK_BUCKET.getName()
+                Component.translatable(Items.WATER_BUCKET.getDescriptionId()),
+                Component.translatable(Items.LAVA_BUCKET.getDescriptionId()),
+                Component.translatable(Items.MILK_BUCKET.getDescriptionId())
             ))
             .icon(new CycleIcon(
                 ItemIcon.ofItem(Items.WATER_BUCKET),
@@ -564,7 +565,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 )))
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.FINISH)
-            .name(Component.translatable("bingo.goal.finish_at_spawn", Items.COMPASS.getName()))
+            .name(Component.translatable("bingo.goal.finish_at_spawn", Component.translatable(Items.COMPASS.getDescriptionId())))
             .tooltip("finish_at_spawn")
             .icon(Items.COMPASS)
         );
@@ -591,7 +592,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tooltip("kill_passive_mobs_with_only_fire")
             .icon(new CycleIcon(
                 new EntityTypeTagCycleIcon(BingoEntityTypeTags.PASSIVE, 2),
-                new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStack(Items.FLINT_AND_STEEL, 1))
+                new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStackTemplate(Items.FLINT_AND_STEEL))
             ), subber -> subber.sub("icons.0.count", "count").sub("icons.1.item.count", "count"))
             .reactant("pacifist")
             .tags(BingoTags.ACTION, BingoTags.COMBAT));
@@ -625,11 +626,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .criterion("ender_pearl", InventoryChangeTrigger.TriggerInstance.hasItems(Items.ENDER_PEARL))
             .progress(AchievedRequirementsProgressTracker.INSTANCE)
             .name(Component.translatable("bingo.goal.common_mob_drops",
-                Items.ROTTEN_FLESH.getName(),
-                Items.SPIDER_EYE.getName(),
-                Items.BONE.getName(),
-                Items.GUNPOWDER.getName(),
-                Items.ENDER_PEARL.getName()))
+                Component.translatable(Items.ROTTEN_FLESH.getDescriptionId()),
+                Component.translatable(Items.SPIDER_EYE.getDescriptionId()),
+                Component.translatable(Items.BONE.getDescriptionId()),
+                Component.translatable(Items.GUNPOWDER.getDescriptionId()),
+                Component.translatable(Items.ENDER_PEARL.getDescriptionId())))
             .icon(CycleIcon.infer(Items.ROTTEN_FLESH, Items.SPIDER_EYE, Items.BONE, Items.GUNPOWDER, Items.ENDER_PEARL))
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(id("feather"), items, Items.FEATHER, 32, 64)
@@ -647,11 +648,11 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                     .flatMap(color -> Stream.of(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS)
                         .map(item -> {
                             if (color == null) {
-                                return new ItemStack(item, 4);
+                                return new ItemStackTemplate(item, 4);
                             }
-                            ItemStack stack = DyedItemColor.applyDyes(new ItemStack(item), List.of(DyeItem.byColor(color)));
-                            stack.setCount(4);
-                            return stack;
+
+                            DyedItemColor itemColor = DyedItemColor.applyDyes((DyedItemColor) null, List.of(color));
+                            return new ItemStackTemplate(item.builtInRegistryHolder(), 4, DataComponentPatch.builder().set(DataComponents.DYED_COLOR, itemColor).build());
                         })
                     )
             ))
@@ -803,7 +804,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .criterion("drink", ConsumeItemTrigger.TriggerInstance.usedItem(items, Items.SUSPICIOUS_STEW))
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .reactant("eat_non_meat")
-            .name(Component.translatable("bingo.goal.drink_sus_stew", Items.SUSPICIOUS_STEW.getName()))
+            .name(Component.translatable("bingo.goal.drink_sus_stew", Component.translatable(Items.SUSPICIOUS_STEW.getDescriptionId())))
             .icon(Items.SUSPICIOUS_STEW));
         addGoal(BingoGoal.builder(id("give_fox_sword"))
             .criterion("pickup", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(
@@ -837,7 +838,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER));
         {
             final List<CompoundTag> slots = IntStream.range(0, 4).mapToObj(slot -> BingoUtil.compound(Map.of(
-                "id", StringTag.valueOf(Items.PORKCHOP.builtInRegistryHolder().key().location().toString()),
+                "id", StringTag.valueOf(Items.PORKCHOP.builtInRegistryHolder().key().identifier().toString()),
                 "Slot", ByteTag.valueOf((byte) slot)
             ))).toList();
             addGoal(BingoGoal.builder(id("porkchops_in_soul_campfire"))
@@ -857,7 +858,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 ))
                 .icon(new CycleIcon(
                     ItemIcon.ofItem(Items.SOUL_CAMPFIRE),
-                    new ItemIcon(new ItemStack(Items.PORKCHOP, 4))
+                    new ItemIcon(new ItemStackTemplate(Items.PORKCHOP, 4))
                 ))
                 .reactant("pacifist")
                 .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.COMBAT)
@@ -877,7 +878,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             )
             .name("open_door_with_target_from_ten_blocks")
             .tooltip("open_door_with_target_from_ten_blocks")
-            .icon(CycleIcon.infer(Items.ARROW, new ItemStack(Items.TARGET, 10), Items.OAK_DOOR))
+            .icon(CycleIcon.infer(Items.ARROW, new ItemStackTemplate(Items.TARGET, 10), Items.OAK_DOOR))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
         );
         addGoal(obtainItemGoal(id("carrot_on_a_stick"), items, Items.CARROT_ON_A_STICK)
@@ -1013,7 +1014,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .name("burn_village_house")
             .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD)
             .icon(CycleIcon.infer(
-                new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStack(Items.FLINT_AND_STEEL)),
+                new BlockIcon(Blocks.FIRE.defaultBlockState(), new ItemStackTemplate(Items.FLINT_AND_STEEL)),
                 EntityType.VILLAGER
             ))
         );
@@ -1136,7 +1137,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
 
     private static GoalIcon createChickenIcon(ResourceKey<ChickenVariant> variant) {
         CompoundTag data = BingoUtil.compound(Map.of(
-            "variant", StringTag.valueOf(variant.location().toString())
+            "variant", StringTag.valueOf(variant.identifier().toString())
         ));
         return EntityIcon.ofSpawnEgg(EntityType.CHICKEN, data);
     }

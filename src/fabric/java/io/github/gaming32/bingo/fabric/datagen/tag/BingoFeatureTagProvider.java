@@ -67,7 +67,7 @@ public class BingoFeatureTagProvider extends FabricTagsProvider<ConfiguredFeatur
                 continue;
             }
             ResourceKey<ConfiguredFeature<?, ?>> featureKey = (ResourceKey<ConfiguredFeature<?,?>>) resourceKey;
-            String path = featureKey.location().getPath();
+            String path = featureKey.identifier().getPath();
             if (!path.contains("fungus") && !path.contains("mushroom")) {
                 result.add(featureKey);
             }

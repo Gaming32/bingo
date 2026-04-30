@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -18,10 +17,9 @@ public enum FlammableCondition implements LootItemCondition {
 
     public static final MapCodec<FlammableCondition> CODEC = MapCodec.unit(INSTANCE);
 
-    @NotNull
     @Override
-    public LootItemConditionType getType() {
-        return BingoConditions.FLAMMABLE.get();
+    public MapCodec<FlammableCondition> codec() {
+        return CODEC;
     }
 
     @NotNull

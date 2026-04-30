@@ -21,6 +21,7 @@
     "minecraft:llama",
     "minecraft:mooshroom",
     "minecraft:mule",
+    "minecraft:nautilus",
     "minecraft:ocelot",
     "minecraft:panda",
     "minecraft:parrot",
@@ -40,7 +41,6 @@
     "minecraft:turtle",
     "minecraft:villager",
     "minecraft:wandering_trader",
-    "minecraft:wolf",
-    "minecraft:zombie_horse"
+    "minecraft:wolf"
   ]
 }

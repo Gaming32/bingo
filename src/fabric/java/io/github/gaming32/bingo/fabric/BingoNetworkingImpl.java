@@ -70,8 +70,8 @@ public class BingoNetworkingImpl extends BingoNetworking {
         ) {
             if (flow == null || flow == PacketFlow.CLIENTBOUND) {
                 switch (protocol) {
-                    case PLAY -> PayloadTypeRegistry.playS2C().register(type, codec);
-                    case CONFIGURATION -> PayloadTypeRegistry.configurationS2C().register(type, (StreamCodec<? super FriendlyByteBuf, P>) codec);
+                    case PLAY -> PayloadTypeRegistry.clientboundPlay().register(type, codec);
+                    case CONFIGURATION -> PayloadTypeRegistry.clientboundConfiguration().register(type, (StreamCodec<? super FriendlyByteBuf, P>) codec);
                     default -> throw new IllegalArgumentException("Cannot register for connection state: " + protocol);
                 }
                 if (BingoPlatform.platform.isClient()) {
@@ -81,7 +81,7 @@ public class BingoNetworkingImpl extends BingoNetworking {
             if (flow == null || flow == PacketFlow.SERVERBOUND) {
                 switch (protocol) {
                     case PLAY -> {
-                        PayloadTypeRegistry.playC2S().register(type, codec);
+                        PayloadTypeRegistry.serverboundPlay().register(type, codec);
                         ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
                             handler.accept(payload, new Context(
                                 context.player(),
@@ -92,12 +92,12 @@ public class BingoNetworkingImpl extends BingoNetworking {
                         );
                     }
                     case CONFIGURATION -> {
-                        PayloadTypeRegistry.configurationC2S().register(type, (StreamCodec<? super FriendlyByteBuf, P>) codec);
+                        PayloadTypeRegistry.serverboundConfiguration().register(type, (StreamCodec<? super FriendlyByteBuf, P>) codec);
                         ServerConfigurationNetworking.registerGlobalReceiver(type, (payload, context) ->
                             handler.accept(payload, new Context(
                                 null,
                                 context.responseSender()::sendPacket,
-                                context.networkHandler(),
+                                context.packetListener(),
                                 PacketFlow.SERVERBOUND
                             ))
                         );
@@ -124,7 +124,7 @@ public class BingoNetworkingImpl extends BingoNetworking {
                         handler.accept(payload, new Context(
                             null,
                             context.responseSender()::sendPacket,
-                            context.networkHandler(),
+                            context.packetListener(),
                             PacketFlow.CLIENTBOUND
                         ))
                     );

@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class BingoGoalProvider extends FabricCodecDataProvider<BingoGoal> {
     }
 
     @Override
-    protected void configure(BiConsumer<ResourceLocation, BingoGoal> adder, HolderLookup.Provider registries) {
+    protected void configure(BiConsumer<Identifier, BingoGoal> adder, HolderLookup.Provider registries) {
         final DynamicOps<JsonElement> oldOps = GoalBuilder.JSON_OPS.get();
         try {
             GoalBuilder.JSON_OPS.set(registries.createSerializationContext(oldOps));
@@ -49,6 +49,6 @@ public class BingoGoalProvider extends FabricCodecDataProvider<BingoGoal> {
 
     @FunctionalInterface
     private interface GoalProviderProvider {
-        DifficultyGoalProvider create(BiConsumer<ResourceLocation, BingoGoal> adder, HolderLookup.Provider registries);
+        DifficultyGoalProvider create(BiConsumer<Identifier, BingoGoal> adder, HolderLookup.Provider registries);
     }
 }

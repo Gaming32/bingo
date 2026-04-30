@@ -2,13 +2,12 @@ package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.criterion.BlockPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -19,9 +18,8 @@ public record BlockCondition(BlockPredicate block) implements LootItemCondition 
     ).apply(instance, BlockCondition::new));
 
     @Override
-    @NotNull
-    public LootItemConditionType getType() {
-        return BingoConditions.BLOCK.get();
+    public MapCodec<BlockCondition> codec() {
+        return CODEC;
     }
 
     @Override

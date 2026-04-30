@@ -1,13 +1,13 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import io.github.gaming32.bingo.util.BingoUtil;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -17,15 +17,14 @@ public record ToolDamageCondition(MinMaxBounds.Ints damage) implements LootItemC
         .fieldOf("damage")
         .xmap(ToolDamageCondition::new, ToolDamageCondition::damage);
 
-    @NotNull
     @Override
-    public LootItemConditionType getType() {
-        return BingoConditions.TOOL_DAMAGE.get();
+    public MapCodec<ToolDamageCondition> codec() {
+        return CODEC;
     }
 
     @Override
     public boolean test(LootContext lootContext) {
-        ItemStack tool = lootContext.getParameter(LootContextParams.TOOL);
+        ItemStack tool = BingoUtil.toItemStack(lootContext.getParameter(LootContextParams.TOOL));
         return tool.isDamageableItem() && damage.matches(tool.getDamageValue());
     }
 

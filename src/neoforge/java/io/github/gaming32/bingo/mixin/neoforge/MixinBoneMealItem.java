@@ -32,12 +32,12 @@ public class MixinBoneMealItem {
         BlockPos pos,
         BlockState state,
         Operation<Void> operation,
-        @Local(argsOnly = true) ItemStack boneMeal,
+        @Local(argsOnly = true) ItemStack itemStack,
         @Local(argsOnly = true) Player player
     ) {
         try (
-            var ignored = GlobalVars.CURRENT_PLAYER.push(player);
-            var ignored1 = GlobalVars.CURRENT_ITEM.push(boneMeal)
+            var _ = GlobalVars.CURRENT_PLAYER.push(player);
+            var _ = GlobalVars.CURRENT_ITEM.push(itemStack)
         ) {
             operation.call(instance, level, random, pos, state);
         }

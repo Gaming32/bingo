@@ -96,7 +96,7 @@ public record ActiveGoal(
     }
 
     public ItemStack getFallbackWithComponents(RegistryAccess access) {
-        final ItemStack result = icon.getFallback(access);
+        final ItemStack result = icon.getFallback(access).create();
         result.set(DataComponents.ITEM_NAME, name);
         result.set(DataComponents.RARITY, Rarity.COMMON);
         if (result.getCount() > result.getMaxStackSize()) {

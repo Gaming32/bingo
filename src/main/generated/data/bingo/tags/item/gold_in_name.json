@@ -5,6 +5,7 @@
     "minecraft:nether_gold_ore",
     "minecraft:raw_gold_block",
     "minecraft:gold_block",
+    "minecraft:golden_dandelion",
     "minecraft:raw_gold",
     "minecraft:gold_ingot",
     "minecraft:golden_sword",
@@ -20,6 +21,8 @@
     "minecraft:enchanted_golden_apple",
     "minecraft:gold_nugget",
     "minecraft:golden_carrot",
-    "minecraft:golden_horse_armor"
+    "minecraft:golden_horse_armor",
+    "minecraft:golden_spear",
+    "minecraft:golden_nautilus_armor"
   ]
 }

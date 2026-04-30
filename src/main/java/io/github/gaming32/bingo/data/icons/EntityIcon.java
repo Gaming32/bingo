@@ -4,44 +4,46 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoCodecs;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.storage.TagValueOutput;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.Objects;
-
-public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item) implements GoalIcon.WithoutContext {
+public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStackTemplate item) implements GoalIcon.WithoutContext {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final MapCodec<EntityIcon> CODEC = RecordCodecBuilder.mapCodec(instance ->
         instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(EntityIcon::entity),
             CompoundTag.CODEC.optionalFieldOf("data", new CompoundTag()).forGetter(EntityIcon::data),
-            BingoCodecs.LENIENT_ITEM_STACK.fieldOf("item").forGetter(EntityIcon::item)
+            BingoCodecs.LENIENT_ITEM_STACK_TEMPLATE.fieldOf("item").forGetter(EntityIcon::item)
         ).apply(instance, EntityIcon::new)
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, EntityIcon> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.registry(Registries.ENTITY_TYPE), EntityIcon::entity,
         ByteBufCodecs.COMPOUND_TAG, EntityIcon::data,
-        ItemStack.STREAM_CODEC, EntityIcon::item,
+        ItemStackTemplate.STREAM_CODEC, EntityIcon::item,
         EntityIcon::new
     );
 
     public static EntityIcon ofSpawnEgg(EntityType<?> entity, CompoundTag data, int count) {
-        return new EntityIcon(entity, data, new ItemStack(
-            SpawnEggItem.byId(entity).orElseThrow(() -> new IllegalArgumentException("entity \"" + entity + "\" doesn't have a spawn egg")),
-            count
-        ));
+        Item spawnEggItem = getSpawnEggItem(entity);
+        if (spawnEggItem == null) {
+            throw new IllegalArgumentException("entity \"" + entity + "\" doesn't have a spawn egg");
+        }
+        return new EntityIcon(entity, data, new ItemStackTemplate(spawnEggItem, count));
     }
 
     public static EntityIcon ofSpawnEgg(EntityType<?> entity, CompoundTag data) {
@@ -68,11 +70,11 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
         return ofSpawnEgg(entity, 1);
     }
 
-    public static EntityIcon of(EntityType<?> entity, ItemStack item) {
+    public static EntityIcon of(EntityType<?> entity, ItemStackTemplate item) {
         return new EntityIcon(entity, new CompoundTag(), item);
     }
 
-    public static EntityIcon of(Entity entity, ItemStack item) {
+    public static EntityIcon of(Entity entity, ItemStackTemplate item) {
         try (ProblemReporter.ScopedCollector collector = new ProblemReporter.ScopedCollector(new ProblemReporter.FieldPathElement("data"), LOGGER)) {
             TagValueOutput output = TagValueOutput.createWithContext(collector, entity.registryAccess());
             entity.saveWithoutId(output);
@@ -81,12 +83,20 @@ public record EntityIcon(EntityType<?> entity, CompoundTag data, ItemStack item)
     }
 
     @Override
-    public ItemStack getFallback() {
+    public ItemStackTemplate getFallback() {
         return item;
     }
 
     @Override
     public GoalIconType<?> type() {
         return GoalIconType.ENTITY.get();
+    }
+
+    @Nullable
+    public static Item getSpawnEggItem(EntityType<?> entityType) {
+        Identifier name = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        Identifier spawnEggName = name.withSuffix("_spawn_egg");
+        var holder = BuiltInRegistries.ITEM.get(spawnEggName);
+        return holder.map(Holder.Reference::value).orElse(null);
     }
 }

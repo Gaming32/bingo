@@ -1,8 +1,8 @@
 [versions]
-emi = "1.1.16+1.21.1"
+asm = "9.9.1"
 fabric-api = "0.145.4+26.1.2"
 fabric-loader = "0.19.1"
-jei = "25.0.1.4"
+jei = "29.5.0.27"
 junit = "5.14.0"
 mcdev-annotations = "2.1.0"
 minecraft = "26.1.2"
@@ -16,9 +16,9 @@ rei = "20.0.811"
 unimined = "1.4.2-SNAPSHOT"
 
 [libraries]
-emi = { module = "dev.emi:emi-xplat-intermediary", version.ref = "emi" }
+asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
 fabric-loader-junit = { module = "net.fabricmc:fabric-loader-junit", version.ref = "fabric-loader" }
-jei = { module = "mezz.jei:jei-1.21.9-common-api", version.ref = "jei" }
+jei = { module = "mezz.jei:jei-26.1.2-common-api", version.ref = "jei" }
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 mcdev-annotations = { module = "com.demonwav.mcdev:annotations", version.ref = "mcdev-annotations" }
 mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
@@ -29,6 +29,7 @@ nightconfig-toml = { module = "com.electronwill.night-config:toml", version.ref 
 rei = { module = "me.shedaniel:RoughlyEnoughItems-api", version.ref = "rei" }
 
 [bundles]
+asm = [ "asm" ]
 nightconfig = ["nightconfig-core", "nightconfig-toml"]
 
 [plugins]

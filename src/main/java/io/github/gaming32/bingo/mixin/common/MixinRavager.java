@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Ravager;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,7 +17,8 @@ public class MixinRavager {
         method = "blockedByItem",
         at = @At(
             value = "FIELD",
-            target = "Lnet/minecraft/world/entity/monster/Ravager;stunnedTick:I"
+            target = "Lnet/minecraft/world/entity/monster/Ravager;stunnedTick:I",
+            opcode = Opcodes.PUTFIELD
         )
     )
     private void stunnedRavager(LivingEntity defender, CallbackInfo ci) {

@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.conditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.data.tags.convention.ConventionItemTags;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.context.ContextKey;
@@ -14,7 +14,6 @@ import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -35,10 +34,9 @@ public record WearingDifferentArmorCondition(
         ).apply(instance, WearingDifferentArmorCondition::new)
     );
 
-    @NotNull
     @Override
-    public LootItemConditionType getType() {
-        return BingoConditions.WEARING_DIFFERENT_ARMOR.get();
+    public MapCodec<WearingDifferentArmorCondition> codec() {
+        return CODEC;
     }
 
     @Override

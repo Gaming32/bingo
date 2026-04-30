@@ -18,7 +18,6 @@ import net.minecraft.core.ClientAsset;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 
@@ -72,7 +71,7 @@ public class VanillaNetworking {
         RegistryAccess registries, int index, ActiveGoal goal, int x, int y
     ) {
         final DisplayInfo displayInfo = new DisplayInfo(
-            ItemStackTemplate.fromNonEmptyStack(goal.icon().getFallback(registries)),
+            goal.icon().getFallback(registries),
             goal.name(),
             goal.tooltip().orElse(CommonComponents.EMPTY),
             Optional.empty(),

@@ -71,7 +71,7 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
     private void onDeathFromDamageSource(
         ServerLevel level, DamageSource source, float damage,
         CallbackInfoReturnable<Boolean> cir,
-        @Local(name = "originalDamage") float originalDamage,
+        @Local(ordinal = 1) float originalDamage, // TODO: use local variable name when neoforge updates vineflower (which is nuking the variable)
         @Share("blocked") LocalBooleanRef blocked
     ) {
         BingoTriggers.ENTITY_DIE_NEAR_PLAYER.get().trigger((LivingEntity) (Object) this, source, originalDamage, damage, blocked.get());

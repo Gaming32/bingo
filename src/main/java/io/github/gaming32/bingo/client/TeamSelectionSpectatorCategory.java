@@ -4,15 +4,15 @@ import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.PlayerFaceRenderer;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.PlayerFaceExtractor;
 import net.minecraft.client.gui.spectator.SpectatorMenu;
 import net.minecraft.client.gui.spectator.SpectatorMenuCategory;
 import net.minecraft.client.gui.spectator.SpectatorMenuItem;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.PlayerSkin;
@@ -29,7 +29,7 @@ import java.util.Objects;
 
 // Based off of TeleportToTeamMenuCategory
 public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, SpectatorMenuItem {
-    private static final ResourceLocation CATEGORY_SPRITE = Identifiers.bingo("spectator/team_selection");
+    private static final Identifier CATEGORY_SPRITE = Identifiers.bingo("spectator/team_selection");
     private static final Component CATEGORY_NAME = Component.translatable("bingo.spectator.team_selection");
     private static final Component CATEGORY_PROMPT = Component.translatable("bingo.spectator.team_selection.prompt");
 
@@ -74,7 +74,7 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
     }
 
     @Override
-    public void renderIcon(GuiGraphics graphics, float brightness, float alpha) {
+    public void extractIcon(GuiGraphicsExtractor graphics, float brightness, float alpha) {
         graphics.blitSprite(
             RenderPipelines.GUI_TEXTURED, CATEGORY_SPRITE, 0, 0, 16, 16,
             ARGB.colorFromFloat(alpha, brightness, brightness, brightness)
@@ -144,7 +144,7 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
         }
 
         @Override
-        public void renderIcon(GuiGraphics graphics, float brightness, float alpha) {
+        public void extractIcon(GuiGraphicsExtractor graphics, float brightness, float alpha) {
             final Integer color = playerTeam.getColor().getColor();
             if (color != null) {
                 final float red = (color >> 16 & 0xff) / 255f;
@@ -157,7 +157,7 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
             }
 
             if (iconSkin != null) {
-                PlayerFaceRenderer.draw(graphics, iconSkin, 2, 2, 12, ARGB.white(alpha));
+                PlayerFaceExtractor.extractRenderState(graphics, iconSkin, 2, 2, 12, ARGB.white(alpha));
             }
         }
 

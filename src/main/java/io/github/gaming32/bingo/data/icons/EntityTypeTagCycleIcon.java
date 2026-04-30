@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,9 +14,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -60,19 +60,18 @@ public record EntityTypeTagCycleIcon(
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemStack getFallback() {
-        return new ItemStack(
+    public ItemStackTemplate getFallback() {
+        return new ItemStackTemplate(
             baseItem.orElseGet(() ->
                 StreamSupport.stream(BuiltInRegistries.ENTITY_TYPE.getTagOrEmpty(tag).spliterator(), false)
-                    .map(holder -> SpawnEggItem.byId(holder.value()))
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
+                    .map(holder -> EntityIcon.getSpawnEggItem(holder.value()))
+                    .filter(Objects::nonNull)
                     .findFirst()
-                    .map(Holder::value)
                     .map(Item::builtInRegistryHolder)
                     .orElseGet(Items.AIR::builtInRegistryHolder)
             ),
-            count
+            count,
+            DataComponentPatch.EMPTY
         );
     }
 

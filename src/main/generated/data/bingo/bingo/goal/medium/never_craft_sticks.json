@@ -26,8 +26,8 @@
   },
   "requirements": [
     [
-      "craft_minecraft_stick",
-      "craft_minecraft_stick_from_bamboo_item"
+      "craft_minecraft_stick_from_bamboo_item",
+      "craft_minecraft_stick"
     ]
   ],
   "tags": [

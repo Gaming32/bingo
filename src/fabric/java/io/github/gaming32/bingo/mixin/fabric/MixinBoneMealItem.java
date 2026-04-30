@@ -15,14 +15,13 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(BoneMealItem.class)
 public class MixinBoneMealItem {
     @WrapOperation(method = "useOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BoneMealItem;growCrop(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z"))
-    private boolean wrapUseOn(ItemStack boneMeal, Level level, BlockPos pos, Operation<Boolean> operation, UseOnContext context) {
+    private boolean wrapUseOn(ItemStack itemStack, Level level, BlockPos pos, Operation<Boolean> operation, UseOnContext context) {
         final Player player = context.getPlayer();
-        // J25, and we'll be able to use "var _ ="
         try (
-            var ignored = GlobalVars.CURRENT_PLAYER.push(player);
-            var ignored1 = GlobalVars.CURRENT_ITEM.push(boneMeal)
+            var _ = GlobalVars.CURRENT_PLAYER.push(player);
+            var _ = GlobalVars.CURRENT_ITEM.push(itemStack)
         ) {
-            return operation.call(boneMeal, level, pos);
+            return operation.call(itemStack, level, pos);
         }
     }
 }

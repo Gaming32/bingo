@@ -17,23 +17,23 @@ import io.github.gaming32.bingo.triggers.TryUseItemTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.BredAnimalsTrigger;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.ItemDurabilityTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.criterion.BlockPredicate;
+import net.minecraft.advancements.criterion.BredAnimalsTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.ItemDurabilityTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.criterion.LocationPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.criterion.PlayerTrigger;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -48,7 +48,7 @@ import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 
 public class VeryEasyGoalProvider extends DifficultyGoalProvider {
-    public VeryEasyGoalProvider(BiConsumer<ResourceLocation, BingoGoal> goalAdder, HolderLookup.Provider registries) {
+    public VeryEasyGoalProvider(BiConsumer<Identifier, BingoGoal> goalAdder, HolderLookup.Provider registries) {
         super(BingoDifficulties.VERY_EASY, goalAdder, registries);
     }
 
@@ -118,8 +118,8 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .progress("flowers")
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.and",
-                    Component.translatable("bingo.count", 0, Items.POPPY.getName()),
-                    Component.translatable("bingo.count", 0, Items.DANDELION.getName())),
+                    Component.translatable("bingo.count", 0, Component.translatable(Items.POPPY.getDescriptionId())),
+                    Component.translatable("bingo.count", 0, Component.translatable(Items.DANDELION.getDescriptionId()))),
                 subber -> subber.sub("with.0.with.0", "poppies_count").sub("with.1.with.0", "dandelions_count"))
             .icon(new CycleIcon(
                 ItemIcon.ofItem(Items.POPPY),

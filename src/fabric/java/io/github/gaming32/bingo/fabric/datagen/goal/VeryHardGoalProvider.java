@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.fabric.datagen.goal;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 import io.github.gaming32.bingo.conditions.HasOnlyBeenDamagedByCondition;
 import io.github.gaming32.bingo.data.BingoDifficulties;
@@ -28,33 +27,31 @@ import io.github.gaming32.bingo.triggers.ZombifyPigTrigger;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.DamagePredicate;
-import net.minecraft.advancements.critereon.DataComponentMatchers;
-import net.minecraft.advancements.critereon.DistancePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.KilledTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.DamagePredicate;
+import net.minecraft.advancements.criterion.DataComponentMatchers;
+import net.minecraft.advancements.criterion.DistancePredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.KilledTrigger;
+import net.minecraft.advancements.criterion.LocationPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.criterion.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentExactPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.InstrumentComponent;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
@@ -68,7 +65,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public class VeryHardGoalProvider extends DifficultyGoalProvider {
-    public VeryHardGoalProvider(BiConsumer<ResourceLocation, BingoGoal> goalAdder, HolderLookup.Provider registries) {
+    public VeryHardGoalProvider(BiConsumer<Identifier, BingoGoal> goalAdder, HolderLookup.Provider registries) {
         super(BingoDifficulties.VERY_HARD, goalAdder, registries);
     }
 
@@ -108,7 +105,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(
             id("any_head"),
             items,
-            new ItemStack(Items.ZOMBIE_HEAD),
+            new ItemStackTemplate(Items.ZOMBIE_HEAD),
             ItemPredicate.Builder.item().of(
                 items,
                 Items.SKELETON_SKULL,
@@ -122,23 +119,13 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .name("any_head")
             .tooltip("any_head"));
 
-        addGoal(BingoGoal.builder(id("all_dyes"))
-            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
-                Arrays.stream(DyeColor.values()).map(DyeItem::byColor).toArray(ItemLike[]::new)))
+        addGoal(obtainAllItemsFromTag(ItemTags.DYES, "dyes")
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD)
-            .name("all_dyes")
             .tooltip(Component.translatable(
                 "bingo.sixteen_bang",
                 Arrays.stream(DyeColor.values())
                     .map(color -> Component.translatable("color.minecraft." + color.getName()))
                     .toArray(Object[]::new)
-            ))
-            .icon(new CycleIcon(
-                Arrays.stream(DyeColor.values())
-                    .map(DyeItem::byColor)
-                    .map(i -> new ItemStack(i, 16))
-                    .map(ItemIcon::new)
-                    .collect(ImmutableList.toImmutableList())
             ))
             .antisynergy("every_color")
             .reactant("use_furnace")
@@ -147,7 +134,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             .criterion("obtain", ExperienceChangeTrigger.builder().levels(MinMaxBounds.Ints.atLeast(50)).build())
             .tags(BingoTags.STAT)
             .name(Component.translatable("bingo.goal.levels", 50))
-            .icon(new ItemStack(Items.EXPERIENCE_BOTTLE, 50))
+            .icon(new ItemStackTemplate(Items.EXPERIENCE_BOTTLE, 50))
             .infrequency(2)
             .antisynergy("levels"));
         addGoal(obtainItemGoal(id("tipped_arrow"), items, Items.TIPPED_ARROW, 16, 32)
@@ -349,12 +336,12 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         final var sortedInstruments = registries.lookupOrThrow(Registries.INSTRUMENT)
             .listElements()
             .collect(ImmutableSortedSet.toImmutableSortedSet(
-                Comparator.comparing(e -> e.key().location())
+                Comparator.comparing(e -> e.key().identifier())
             ));
 
         final GoalBuilder builder = BingoGoal.builder(id("all_goat_horns"));
         for (final var instrument : sortedInstruments) {
-            final var location = instrument.key().location();
+            final var location = instrument.key().identifier();
             builder.criterion(
                 "obtain_" + location.getNamespace() + "_" + location.getPath(),
                 InventoryChangeTrigger.TriggerInstance.hasItems(

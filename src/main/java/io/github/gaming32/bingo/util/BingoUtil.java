@@ -17,6 +17,9 @@ import net.minecraft.commands.arguments.ResourceOrTagKeyArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -29,6 +32,9 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemInstance;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -268,5 +275,26 @@ public class BingoUtil {
 
     public static <A> DataResult<A> combineError(DataResult<A> current, Supplier<String> error) {
         return combineError(current, DataResult.error(error));
+    }
+
+    // Temporary while they move the utility methods from ItemStack to ItemInstance
+    public static ItemStack toItemStack(ItemInstance itemInstance) {
+        return switch (itemInstance) {
+            case ItemStack stack -> stack;
+            case ItemStackTemplate template -> template.create();
+            default -> throw new IllegalArgumentException("Cannot convert " + itemInstance.getClass().getName() + " to ItemStack");
+        };
+    }
+
+    public static DataComponentPatch.Builder builderFrom(DataComponentPatch patch) {
+        DataComponentPatch.Builder builder = DataComponentPatch.builder();
+        for (Map.Entry<DataComponentType<?>, Optional<?>> entry : patch.entrySet()) {
+            if (entry.getValue().isPresent()) {
+                builder.set(TypedDataComponent.createUnchecked(entry.getKey(), entry.getValue().get()));
+            } else {
+                builder.remove(entry.getKey());
+            }
+        }
+        return builder;
     }
 }

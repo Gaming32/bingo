@@ -77,9 +77,8 @@ public class BingoConfigScreen extends Screen {
     }
 
     private CycleButton<BoardCorner> createCornerButton() {
-        return CycleButton.builder(BoardCorner::getDescription)
+        return CycleButton.builder(BoardCorner::getDescription, BingoClient.CONFIG.getBoardCorner())
             .withValues(BoardCorner.values())
-            .withInitialValue(BingoClient.CONFIG.getBoardCorner())
             .create(
                 0, 0, 150, 20, Component.translatable("bingo.client_config.board_corner"),
                 (button, corner) -> {
@@ -90,8 +89,7 @@ public class BingoConfigScreen extends Screen {
     }
 
     private CycleButton<Boolean> createShowBoardOnF3ScreenButton() {
-        return CycleButton.onOffBuilder()
-            .withInitialValue(BingoClient.CONFIG.showBoardOnF3Screen())
+        return CycleButton.onOffBuilder(BingoClient.CONFIG.showBoardOnF3Screen())
             .withTooltip(v -> Tooltip.create(Component.translatable("bingo.client_config.show_board_on_f3_screen.tooltip")))
             .create(0, 0, 150, 20, Component.translatable("bingo.client_config.show_board_on_f3_screen"),
                 (button, show) -> {
@@ -130,8 +128,7 @@ public class BingoConfigScreen extends Screen {
     }
 
     private CycleButton<Boolean> createShowScoreCounterButton() {
-        return CycleButton.onOffBuilder()
-            .withInitialValue(BingoClient.CONFIG.isShowScoreCounter())
+        return CycleButton.onOffBuilder(BingoClient.CONFIG.isShowScoreCounter())
             .withTooltip(v -> Tooltip.create(Component.translatable("bingo.client_config.show_score_counter.tooltip")))
             .create(
                 0, 0, 150, 20, Component.translatable("bingo.client_config.show_score_counter"),
@@ -178,16 +175,16 @@ public class BingoConfigScreen extends Screen {
         }
 
         @Override
-        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
             int labelWidth = font.width(label);
-            graphics.drawString(font, label, getX(), getY() + (getHeight() - font.lineHeight) / 2, CommonColors.WHITE);
+            graphics.text(font, label, getX(), getY() + (getHeight() - font.lineHeight) / 2, CommonColors.WHITE);
 
             int boxLeft = getX() + labelWidth + 5;
             graphics.fill(boxLeft, getY(), getRight() - 1, getBottom(), ARGB.color(0xff, color));
-            graphics.hLine(boxLeft, getRight() - 1, getY(), CommonColors.BLACK);
-            graphics.hLine(boxLeft, getRight() - 1, getBottom() - 1, CommonColors.BLACK);
-            graphics.vLine(boxLeft, getY(), getBottom() - 1, CommonColors.BLACK);
-            graphics.vLine(getRight() - 1, getY(), getBottom() - 1, CommonColors.BLACK);
+            graphics.horizontalLine(boxLeft, getRight() - 1, getY(), CommonColors.BLACK);
+            graphics.horizontalLine(boxLeft, getRight() - 1, getBottom() - 1, CommonColors.BLACK);
+            graphics.verticalLine(boxLeft, getY(), getBottom() - 1, CommonColors.BLACK);
+            graphics.verticalLine(getRight() - 1, getY(), getBottom() - 1, CommonColors.BLACK);
         }
 
         @Override

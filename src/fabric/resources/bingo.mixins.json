@@ -9,7 +9,6 @@
     "LootPoolAccessor",
     "LootTableAccessor",
     "MixinBoneMealItem",
-    "MixinDyedItemColor",
     "MixinPlayerList",
     "MixinServerLevel",
     "MobBucketItemAccessor",

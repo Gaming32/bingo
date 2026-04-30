@@ -12,9 +12,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.VanillaPackResources;
 import net.minecraft.server.packs.resources.IoSupplier;
@@ -47,7 +47,7 @@ import java.util.Set;
 
 public final class BingoDataGenUtil {
     private static final Map<EntityType<?>, Class<? extends Entity>> ENTITY_TYPE_TO_CLASS = createEntityTypeToClassMap();
-    private static final Map<Item, List<ResourceLocation>> RECIPES_BY_ITEM = createRecipesByItemMap();
+    private static final Map<Item, List<Identifier>> RECIPES_BY_ITEM = createRecipesByItemMap();
 
     private BingoDataGenUtil() {
     }
@@ -80,13 +80,13 @@ public final class BingoDataGenUtil {
         final var lookup = new TagEntry.Lookup<Holder<T>>() {
             @Nullable
             @Override
-            public Holder<T> element(ResourceLocation elementLocation, boolean readOnly) {
+            public Holder<T> element(Identifier elementLocation, boolean readOnly) {
                 return registry.get(ResourceKey.create(tag.registry(), elementLocation)).orElse(null);
             }
 
             @Nullable
             @Override
-            public Collection<Holder<T>> tag(ResourceLocation tagLocation) {
+            public Collection<Holder<T>> tag(Identifier tagLocation) {
                 return loadVanillaTagInternal(TagKey.create(tag.registry(), tagLocation), registries);
             }
         };
@@ -101,7 +101,7 @@ public final class BingoDataGenUtil {
         final IoSupplier<InputStream> resource = Minecraft.getInstance()
             .getVanillaPackResources()
             .getResource(
-                PackType.SERVER_DATA, lootTable.location().withPath(path -> "loot_table/" + path + ".json")
+                PackType.SERVER_DATA, lootTable.identifier().withPath(path -> "loot_table/" + path + ".json")
             );
         if (resource == null) {
             throw new IllegalArgumentException("Unknown loot table " + lootTable);
@@ -159,8 +159,8 @@ public final class BingoDataGenUtil {
         return (Class<T>) ENTITY_TYPE_TO_CLASS.get(entityType);
     }
 
-    private static Map<Item, List<ResourceLocation>> createRecipesByItemMap() {
-        Map<Item, List<ResourceLocation>> recipesByItem = new HashMap<>();
+    private static Map<Item, List<Identifier>> createRecipesByItemMap() {
+        Map<Item, List<Identifier>> recipesByItem = new HashMap<>();
 
         VanillaPackResources packResources = Minecraft.getInstance().getVanillaPackResources();
         Set<String> namespaces = packResources.getNamespaces(PackType.SERVER_DATA);
@@ -181,7 +181,7 @@ public final class BingoDataGenUtil {
                 if (id == null) {
                     return;
                 }
-                ResourceLocation resultId = ResourceLocation.tryParse(id);
+                Identifier resultId = Identifier.tryParse(id);
                 Item item = BuiltInRegistries.ITEM.getValue(resultId);
                 if (item != Items.AIR) {
                     recipesByItem.computeIfAbsent(item, k -> new ArrayList<>()).add(convertRecipeId(recipeId));
@@ -192,7 +192,7 @@ public final class BingoDataGenUtil {
         return recipesByItem;
     }
 
-    private static ResourceLocation convertRecipeId(ResourceLocation fullPath) {
+    private static Identifier convertRecipeId(Identifier fullPath) {
         return fullPath.withPath(path -> {
             if (path.startsWith("recipe/")) {
                 path = path.substring("recipe/".length());
@@ -204,7 +204,7 @@ public final class BingoDataGenUtil {
         });
     }
 
-    public static List<ResourceLocation> getRecipesForItem(Item item) {
+    public static List<Identifier> getRecipesForItem(Item item) {
         return RECIPES_BY_ITEM.getOrDefault(item, List.of());
     }
 }

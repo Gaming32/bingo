@@ -29,31 +29,31 @@ import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.BredAnimalsTrigger;
-import net.minecraft.advancements.critereon.ConsumeItemTrigger;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.CuredZombieVillagerTrigger;
-import net.minecraft.advancements.critereon.DamagePredicate;
-import net.minecraft.advancements.critereon.DamageSourcePredicate;
-import net.minecraft.advancements.critereon.DataComponentMatchers;
-import net.minecraft.advancements.critereon.EnchantmentPredicate;
-import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.FilledBucketTrigger;
-import net.minecraft.advancements.critereon.ItemDurabilityTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.KilledTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.advancements.critereon.PickedUpItemTrigger;
-import net.minecraft.advancements.critereon.PlayerInteractTrigger;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.advancements.critereon.TagPredicate;
-import net.minecraft.advancements.critereon.TameAnimalTrigger;
-import net.minecraft.advancements.critereon.UsedTotemTrigger;
-import net.minecraft.advancements.critereon.UsingItemTrigger;
+import net.minecraft.advancements.criterion.BlockPredicate;
+import net.minecraft.advancements.criterion.BredAnimalsTrigger;
+import net.minecraft.advancements.criterion.ConsumeItemTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.CuredZombieVillagerTrigger;
+import net.minecraft.advancements.criterion.DamagePredicate;
+import net.minecraft.advancements.criterion.DamageSourcePredicate;
+import net.minecraft.advancements.criterion.DataComponentMatchers;
+import net.minecraft.advancements.criterion.EnchantmentPredicate;
+import net.minecraft.advancements.criterion.EntityEquipmentPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.FilledBucketTrigger;
+import net.minecraft.advancements.criterion.ItemDurabilityTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.criterion.KilledTrigger;
+import net.minecraft.advancements.criterion.LocationPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.criterion.PickedUpItemTrigger;
+import net.minecraft.advancements.criterion.PlayerInteractTrigger;
+import net.minecraft.advancements.criterion.PlayerTrigger;
+import net.minecraft.advancements.criterion.TagPredicate;
+import net.minecraft.advancements.criterion.TameAnimalTrigger;
+import net.minecraft.advancements.criterion.UsedTotemTrigger;
+import net.minecraft.advancements.criterion.UsingItemTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.predicates.DataComponentPredicates;
@@ -61,7 +61,7 @@ import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.core.component.predicates.JukeboxPlayablePredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
@@ -70,7 +70,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -89,7 +89,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public class HardGoalProvider extends DifficultyGoalProvider {
-    public HardGoalProvider(BiConsumer<ResourceLocation, BingoGoal> goalAdder, HolderLookup.Provider registries) {
+    public HardGoalProvider(BiConsumer<Identifier, BingoGoal> goalAdder, HolderLookup.Provider registries) {
         super(BingoDifficulties.HARD, goalAdder, registries);
     }
 
@@ -105,7 +105,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .criterion("enchant", EnchantedItemTrigger.builder().requiredLevels(MinMaxBounds.Ints.atLeast(10)).build())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("level_10_enchant")
-            .icon(new ItemStack(Items.ENCHANTING_TABLE, 10)));
+            .icon(new ItemStackTemplate(Items.ENCHANTING_TABLE, 10)));
         addGoal(BingoGoal.builder(id("milk_mooshroom"))
             .criterion("obtain", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
                 ItemPredicate.Builder.item().of(items, Items.BUCKET),
@@ -317,7 +317,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             )
             .progress("enchant")
             .name("enchant_5_items")
-            .icon(makeItemWithGlint(new ItemStack(Items.STICK, 5)))
+            .icon(makeItemWithGlint(new ItemStackTemplate(Items.STICK, 5)))
             .antisynergy("enchant")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
         );
@@ -360,7 +360,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             )
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name("mega_jungle_tree")
-            .icon(new ItemStack(Blocks.JUNGLE_SAPLING, 4))
+            .icon(new ItemStackTemplate(Items.JUNGLE_SAPLING, 4))
         );
         addGoal(obtainItemGoal(id("prismarine_shard"), items, Items.PRISMARINE_SHARD, 2, 10)
             .infrequency(2)
@@ -506,7 +506,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT, BingoTags.VILLAGE)
             .reactant("pacifist")
             .name(Component.translatable("advancements.adventure.hero_of_the_village.title"))
-            .icon(Raid.getOminousBannerInstance(bannerPatterns))
+            .icon(Raid.getOminousBannerTemplate(bannerPatterns))
         );
         addGoal(BingoGoal.builder(id("ocelot_trust"))
             .criterion("trust", TameAnimalTrigger.TriggerInstance.tamedAnimal(
@@ -540,7 +540,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.NETHER)
             .name(Component.translatable(
                 "bingo.goal.use_lodestone",
-                Items.COMPASS.getName(), Blocks.LODESTONE.getName()
+                Component.translatable(Items.COMPASS.getDescriptionId()), Blocks.LODESTONE.getName()
             ))
             .icon(Blocks.LODESTONE)
         );
@@ -676,8 +676,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name(Component.translatable(
                 "bingo.goal.carrot_stick_to_rod",
-                Items.CARROT_ON_A_STICK.getName(),
-                Items.FISHING_ROD.getName()
+                Component.translatable(Items.CARROT_ON_A_STICK.getDescriptionId()),
+                Component.translatable(Items.FISHING_ROD.getDescriptionId())
             ))
             .icon(Items.CARROT_ON_A_STICK));
         addGoal(obtainItemGoal(id("skull_banner_pattern"), items, Items.SKULL_BANNER_PATTERN)

@@ -41,18 +41,18 @@
   "depends": {
     "fabricloader": ">=0.16.9",
     "fabric-api": ">=0.112.1",
-    "minecraft": ">=1.21.9 <1.21.11"
+    "minecraft": ">=26.1 <26.2"
   },
   "custom": {
     "loom:injected_interfaces": {
-      "net/minecraft/class_6862": [
+      "net/minecraft/tags/TagKey": [
         "net/fabricmc/fabric/api/tag/FabricTagKey"
       ],
-      "net/minecraft/class_8610": [
-        "net/fabricmc/fabric/api/networking/v1/FabricServerConfigurationNetworkHandler"
+      "net/minecraft/server/network/ServerConfigurationPacketListenerImpl": [
+        "net/fabricmc/fabric/api/networking/v1/FabricServerConfigurationPacketListenerImpl"
       ],
-      "net/minecraft/class_11389": [
-        "net/fabricmc/fabric/api/datagen/v1/provider/FabricProvidedTagBuilder<TE;TT;>"
+      "net/minecraft/data/tags/TagAppender": [
+        "net/fabricmc/fabric/api/datagen/v1/provider/FabricTagAppender<TE;TT;>"
       ]
     }
   }

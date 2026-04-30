@@ -10,7 +10,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,9 +26,9 @@ public interface GoalIcon {
     /**
      * Used for rendering count, as well as for a fallback for Vanilla clients.
      */
-    ItemStack getFallback(RegistryAccess registries);  // todo: change to ItemStackTemplate?
+    ItemStackTemplate getFallback(RegistryAccess registries);
 
-    default ItemStack getFallbackWithStaticContext() {
+    default ItemStackTemplate getFallbackWithStaticContext() {
         return getFallback(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
     }
 
@@ -39,7 +39,7 @@ public interface GoalIcon {
         return switch (obj) {
             case null -> EmptyIcon.INSTANCE;
             case GoalIcon icon -> icon;
-            case ItemStack stack -> new ItemIcon(stack);
+            case ItemStackTemplate stack -> new ItemIcon(stack);
             case Block block -> BlockIcon.ofBlock(block);
             case BlockState state -> BlockIcon.ofBlock(state);
             case ItemLike item -> ItemIcon.ofItem(item);
@@ -58,15 +58,15 @@ public interface GoalIcon {
     }
 
     interface WithoutContext extends GoalIcon {
-        ItemStack getFallback();
+        ItemStackTemplate getFallback();
 
         @Override
-        default ItemStack getFallback(RegistryAccess registries) {
+        default ItemStackTemplate getFallback(RegistryAccess registries) {
             return getFallback();
         }
 
         @Override
-        default ItemStack getFallbackWithStaticContext() {
+        default ItemStackTemplate getFallbackWithStaticContext() {
             return getFallback();
         }
     }

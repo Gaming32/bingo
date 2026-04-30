@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
 
-public class BingoBlockTagProvider extends FabricTagsProvider.BlockTagProvider {
+public class BingoBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
     public BingoBlockTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }

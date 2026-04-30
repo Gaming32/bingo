@@ -1,12 +1,11 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.advancements.critereon.DistancePredicate;
+import net.minecraft.advancements.criterion.DistancePredicate;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,10 +17,9 @@ public record DistanceFromSpawnCondition(Optional<DistancePredicate> distance) i
         .optionalFieldOf("distance")
         .xmap(DistanceFromSpawnCondition::new, DistanceFromSpawnCondition::distance);
 
-    @NotNull
     @Override
-    public LootItemConditionType getType() {
-        return BingoConditions.DISTANCE_FROM_SPAWN.get();
+    public MapCodec<DistanceFromSpawnCondition> codec() {
+        return CODEC;
     }
 
     @Override

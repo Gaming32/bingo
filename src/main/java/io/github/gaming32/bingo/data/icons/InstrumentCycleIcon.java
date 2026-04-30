@@ -5,13 +5,15 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.component.InstrumentComponent;
 
 import java.util.OptionalInt;
 
@@ -33,13 +35,16 @@ public record InstrumentCycleIcon(Holder<Item> instrumentItem, OptionalInt overr
     }
 
     @Override
-    public ItemStack getFallback(RegistryAccess registries) {
+    public ItemStackTemplate getFallback(RegistryAccess registries) {
         final var registry = registries.lookupOrThrow(Registries.INSTRUMENT);
         final var result = registry.getAny()
-            .map(instrument -> InstrumentItem.create(instrumentItem.value(), instrument))
-            .orElseGet(() -> new ItemStack(instrumentItem));
-        result.setCount(Math.max(overrideCount.orElse(registry.size()), 1));
-        return result;
+            .map(instrument -> new ItemStackTemplate(
+                instrumentItem,
+                1,
+                DataComponentPatch.builder().set(DataComponents.INSTRUMENT, new InstrumentComponent(instrument)).build()
+            ))
+            .orElseGet(() -> new ItemStackTemplate(instrumentItem, 1, DataComponentPatch.EMPTY));
+        return result.withCount(Math.max(overrideCount.orElse(registry.size()), 1));
     }
 
     @Override

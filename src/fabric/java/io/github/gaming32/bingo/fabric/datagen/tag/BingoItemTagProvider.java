@@ -14,16 +14,20 @@ import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentInitializers;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
 import net.minecraft.data.tags.TagAppender;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.animal.fish.AbstractFish;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -41,13 +45,15 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
 import net.minecraft.world.level.storage.loot.entries.TagEntry;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-public class BingoItemTagProvider extends FabricTagsProvider.ItemTagProvider {
+public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
     private static final Set<Item> FORCED_MEAT = Set.of(
         Items.COD,
         Items.COOKED_COD,
@@ -62,13 +68,23 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagProvider {
     public BingoItemTagProvider(
         FabricPackOutput output,
         CompletableFuture<HolderLookup.Provider> registriesFuture,
-        FabricTagsProvider.BlockTagProvider blockTagProvider
+        FabricTagsProvider.BlockTagsProvider blockTagProvider
     ) {
         super(output, registriesFuture, blockTagProvider);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider registries) {
+        Map<ResourceKey<Item>, DataComponentMap> itemComponents = new HashMap<>();
+
+        for (var pendingComponents : BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.build(registries)) {
+            if (pendingComponents.key() == Registries.ITEM) {
+                @SuppressWarnings("unchecked")
+                var pendingItemComponents = (DataComponentInitializers.PendingComponents<Item>) pendingComponents;
+                pendingItemComponents.forEach((item, components) -> itemComponents.put(item.key(), components));
+            }
+        }
+
         final var items = registries.lookupOrThrow(Registries.ITEM);
 
         // Cannot copy() because that can't copy from Vanilla's block tags, only our block tags
@@ -127,7 +143,7 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagProvider {
         Pattern copperPattern = Pattern.compile("\\bCopper\\b");
         Pattern diamondPattern = Pattern.compile("\\bDiamond\\b");
         items.listElements().forEach(item -> {
-            String itemName = item.value().getName().getString();
+            String itemName = Component.translatable(item.value().getDescriptionId()).getString();
             if (goldPattern.matcher(itemName).find()) {
                 goldInNameBuilder.add(item.value());
             }
@@ -137,14 +153,17 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagProvider {
             if (diamondPattern.matcher(itemName).find()) {
                 diamondInNameBuilder.add(item.value());
             }
-            if (item.value().components().has(DataComponents.FOOD)) {
+
+            DataComponentMap components = itemComponents.getOrDefault(item.key(), DataComponentMap.EMPTY);
+
+            if (components.has(DataComponents.FOOD) && components.has(DataComponents.CONSUMABLE)) {
                 if (vanillaMeat.contains(item) || FORCED_MEAT.contains(item.value())) {
                     meatBuilder.add(item.value());
                 } else {
                     notMeatBuilder.add(item.value());
                 }
             }
-            if (item.value().components().get(DataComponents.PROVIDES_BANNER_PATTERNS) != null) {
+            if (components.get(DataComponents.PROVIDES_BANNER_PATTERNS) != null) {
                 bannerPatternsBuilder.add(item.value());
             }
             switch (item.value()) {

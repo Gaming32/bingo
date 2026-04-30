@@ -409,7 +409,7 @@ public class BingoClient {
                 default -> manualHighlight + 1;
             };
             clientGame.manualHighlights()[mousePos.goalIndex()] = nextHighlight;
-            new ManualHighlightPayload(mousePos.goalIndex(), nextHighlight == null ? 0 : nextHighlight + 1, clientGame.manualHighlightModCount().getValue())
+            new ManualHighlightPayload(mousePos.goalIndex(), nextHighlight == null ? 0 : nextHighlight + 1, clientGame.manualHighlightModCount().intValue())
                 .sendToServer();
             clientGame.manualHighlightModCount().increment();
             AbstractButton.playButtonClickSound(Minecraft.getInstance().getSoundManager());

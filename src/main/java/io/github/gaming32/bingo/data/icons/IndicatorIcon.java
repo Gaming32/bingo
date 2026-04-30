@@ -6,6 +6,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 public record IndicatorIcon(GoalIcon base, GoalIcon indicator) implements GoalIcon {
     public static final MapCodec<IndicatorIcon> CODEC = RecordCodecBuilder.mapCodec(
@@ -25,7 +26,7 @@ public record IndicatorIcon(GoalIcon base, GoalIcon indicator) implements GoalIc
     }
 
     @Override
-    public ItemStack getFallback(RegistryAccess registries) {
+    public ItemStackTemplate getFallback(RegistryAccess registries) {
         return base.getFallback(registries);
     }
 

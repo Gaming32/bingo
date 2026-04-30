@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.conditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.CustomEnumCodec;
-import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.criterion.TagPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.context.ContextKey;
@@ -13,7 +13,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -27,17 +26,16 @@ public record VillagerOwnershipCondition(PoiManager.Occupancy occupancy, Optiona
         ).apply(instance, VillagerOwnershipCondition::new)
     );
 
-    @NotNull
     @Override
-    public LootItemConditionType getType() {
-        return BingoConditions.VILLAGER_OWNERSHIP.get();
+    public MapCodec<VillagerOwnershipCondition> codec() {
+        return CODEC;
     }
 
     @Override
     public boolean test(LootContext lootContext) {
         return lootContext.getLevel().getPoiManager().getInChunk(
             type -> tag.isEmpty() || tag.get().matches(type),
-            new ChunkPos(BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN))),
+            ChunkPos.containing(BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN))),
             occupancy
         ).anyMatch(r -> true);
     }

@@ -10,7 +10,7 @@ import net.minecraft.world.entity.MobCategory;
 
 import java.util.concurrent.CompletableFuture;
 
-public class BingoEntityTypeTagProvider extends FabricTagsProvider.EntityTypeTagProvider {
+public class BingoEntityTypeTagProvider extends FabricTagsProvider.EntityTypeTagsProvider {
     public BingoEntityTypeTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
         super(output, completableFuture);
     }

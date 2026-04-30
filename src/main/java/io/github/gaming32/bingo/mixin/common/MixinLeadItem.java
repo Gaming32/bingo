@@ -48,8 +48,8 @@ public class MixinLeadItem {
         Player player, Level level, BlockPos pos,
         Operation<InteractionResult> original,
         @Local(argsOnly = true) UseOnContext context
-        ) {
-        try (final var ignored = GlobalVars.CURRENT_ITEM.push(context.getItemInHand())) {
+    ) {
+        try (final var _ = GlobalVars.CURRENT_ITEM.push(context.getItemInHand())) {
             return original.call(player, level, pos);
         }
     }

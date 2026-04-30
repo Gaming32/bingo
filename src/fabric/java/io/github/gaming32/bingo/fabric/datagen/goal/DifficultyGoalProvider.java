@@ -29,27 +29,28 @@ import io.github.gaming32.bingo.util.BlockPattern;
 import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.critereon.BlockPredicate;
-import net.minecraft.advancements.critereon.EnchantmentPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.criterion.BlockPredicate;
+import net.minecraft.advancements.criterion.EnchantmentPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.criterion.LocationPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -72,16 +73,16 @@ import java.util.function.Consumer;
 public abstract class DifficultyGoalProvider {
     private final ResourceKey<BingoDifficulty> difficulty;
     private final String prefix;
-    private final BiConsumer<ResourceLocation, BingoGoal> goalAdder;
+    private final BiConsumer<Identifier, BingoGoal> goalAdder;
     protected final HolderLookup.Provider registries;
 
     protected DifficultyGoalProvider(
         ResourceKey<BingoDifficulty> difficulty,
-        BiConsumer<ResourceLocation, BingoGoal> goalAdder,
+        BiConsumer<Identifier, BingoGoal> goalAdder,
         HolderLookup.Provider registries
     ) {
         this.difficulty = difficulty;
-        this.prefix = difficulty.location().getPath() + '/';
+        this.prefix = difficulty.identifier().getPath() + '/';
         this.goalAdder = goalAdder;
         this.registries = registries;
     }
@@ -96,31 +97,31 @@ public abstract class DifficultyGoalProvider {
 
     public abstract void addGoals();
 
-    protected final ResourceLocation id(String path) {
+    protected final Identifier id(String path) {
         return Identifiers.bingo(prefix + path);
     }
 
-    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ResourceKey<Item> item) {
+    protected static GoalBuilder obtainItemGoal(Identifier id, HolderLookup<Item> items, ResourceKey<Item> item) {
         return obtainItemGoal(id, items, items.getOrThrow(item).value());
     }
 
     @SuppressWarnings("deprecation")
-    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike item) {
+    protected static GoalBuilder obtainItemGoal(Identifier id, HolderLookup<Item> items, ItemLike item) {
         return obtainItemGoal(id, items, item, ItemPredicate.Builder.item().of(items, item))
-            .antisynergy(item.asItem().builtInRegistryHolder().key().location().getPath())
-            .name(item.asItem().getName());
+            .antisynergy(item.asItem().builtInRegistryHolder().key().identifier().getPath())
+            .name(Component.translatable(item.asItem().getDescriptionId()));
     }
 
-    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike icon, ItemPredicate.Builder... oneOfThese) {
+    protected static GoalBuilder obtainItemGoal(Identifier id, HolderLookup<Item> items, ItemLike icon, ItemPredicate.Builder... oneOfThese) {
         return obtainItemGoal(id, items, ItemIcon.ofItem(icon), oneOfThese);
     }
 
-    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemStack icon, ItemPredicate.Builder... oneOfThese) {
+    protected static GoalBuilder obtainItemGoal(Identifier id, HolderLookup<Item> items, ItemStackTemplate icon, ItemPredicate.Builder... oneOfThese) {
         return obtainItemGoal(id, items, new ItemIcon(icon), oneOfThese);
     }
 
     protected static GoalBuilder obtainItemGoal(
-        ResourceLocation id,
+        Identifier id,
         @SuppressWarnings("unused") HolderLookup<Item> items, // Unused, but present for consistency
         GoalIcon icon,
         ItemPredicate.Builder... oneOfThese
@@ -140,28 +141,28 @@ public abstract class DifficultyGoalProvider {
             .icon(icon);
     }
 
-    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ResourceKey<Item> item, int minCount, int maxCount) {
+    protected static GoalBuilder obtainItemGoal(Identifier id, HolderLookup<Item> items, ResourceKey<Item> item, int minCount, int maxCount) {
         return obtainItemGoal(id, items, items.getOrThrow(item).value(), minCount, maxCount);
     }
 
     @SuppressWarnings("deprecation")
-    protected static GoalBuilder obtainItemGoal(ResourceLocation id, HolderLookup<Item> items, ItemLike item, int minCount, int maxCount) {
+    protected static GoalBuilder obtainItemGoal(Identifier id, HolderLookup<Item> items, ItemLike item, int minCount, int maxCount) {
         final var realItem = item.asItem();
         final Consumer<JsonSubber> subFunction = minCount == maxCount
             ? subber -> {}
             : subber -> subber.sub("with.0", "count");
         return obtainItemGoal(id, item, ItemPredicate.Builder.item().of(items, item), minCount, maxCount)
-            .antisynergy(realItem.builtInRegistryHolder().key().location().getPath())
-            .name(Component.translatable("bingo.count", minCount, realItem.getName()), subFunction);
+            .antisynergy(realItem.builtInRegistryHolder().key().identifier().getPath())
+            .name(Component.translatable("bingo.count", minCount, Component.translatable(realItem.asItem().getDescriptionId())), subFunction);
     }
 
-    protected static GoalBuilder obtainItemGoal(ResourceLocation id, ItemLike icon, ItemPredicate.Builder item, int minCount, int maxCount) {
+    protected static GoalBuilder obtainItemGoal(Identifier id, ItemLike icon, ItemPredicate.Builder item, int minCount, int maxCount) {
         if (minCount == maxCount) {
             return BingoGoal.builder(id)
                 .criterion("obtain", TotalCountInventoryChangeTrigger.builder().items(item.withCount(MinMaxBounds.Ints.exactly(minCount)).build()).build())
                 .progress("obtain")
                 .tags(BingoTags.ITEM)
-                .icon(new ItemStack(icon, minCount));
+                .icon(new ItemStackTemplate(icon.asItem(), minCount));
         }
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minCount, maxCount))
@@ -174,7 +175,7 @@ public abstract class DifficultyGoalProvider {
     }
 
     protected static GoalBuilder obtainSomeItemsFromTag(
-        ResourceLocation id, TagKey<Item> tag, @Translatable String translationKey,
+        Identifier id, TagKey<Item> tag, @Translatable String translationKey,
         int minCount, int maxCount
     ) {
         if (minCount == maxCount) {
@@ -208,7 +209,7 @@ public abstract class DifficultyGoalProvider {
             .icon(new ItemTagCycleIcon(tag));
     }
 
-    protected static GoalBuilder obtainSomeEdibleItems(ResourceLocation id, int minCount, int maxCount) {
+    protected static GoalBuilder obtainSomeEdibleItems(Identifier id, int minCount, int maxCount) {
         if (minCount == maxCount) {
             return BingoGoal.builder(id)
                 .criterion("obtain", HasSomeFoodItemsTrigger.builder().requiredCount(minCount).build())
@@ -234,7 +235,7 @@ public abstract class DifficultyGoalProvider {
             .icon(new ItemTagCycleIcon(ConventionalItemTags.FOODS), subber -> subber.sub("+count", "count"));
     }
 
-    protected static GoalBuilder obtainLevelsGoal(ResourceLocation id, int minLevels, int maxLevels) {
+    protected static GoalBuilder obtainLevelsGoal(Identifier id, int minLevels, int maxLevels) {
         return BingoGoal.builder(id)
             .sub("count", BingoSub.random(minLevels, maxLevels))
             .criterion("obtain", ExperienceChangeTrigger.builder().levels(MinMaxBounds.Ints.atLeast(0)).build(),
@@ -246,7 +247,7 @@ public abstract class DifficultyGoalProvider {
             .antisynergy("levels");
     }
 
-    protected static GoalBuilder crouchDistanceGoal(ResourceLocation id, int minDistance, int maxDistance) {
+    protected static GoalBuilder crouchDistanceGoal(Identifier id, int minDistance, int maxDistance) {
         return BingoGoal.builder(id)
             .sub("distance", BingoSub.random(minDistance, maxDistance))
             .criterion(
@@ -272,14 +273,14 @@ public abstract class DifficultyGoalProvider {
             .icon(Items.LEATHER_BOOTS, subber -> subber.sub("item.count", "distance"));
     }
 
-    protected static GoalBuilder bedRowGoal(ResourceLocation id, int minCount, int maxCount) {
+    protected static GoalBuilder bedRowGoal(Identifier id, int minCount, int maxCount) {
         if (minCount == maxCount) {
             return BingoGoal.builder(id)
                 .criterion("obtain", BedRowTrigger.create(minCount))
                 .name(Component.translatable("bingo.goal.bed_row", minCount))
                 .antisynergy("bed_color")
                 .infrequency(4)
-                .icon(new ItemStack(Items.MAGENTA_BED, minCount))
+                .icon(new ItemStackTemplate(Items.MAGENTA_BED, minCount))
                 .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
         }
         return BingoGoal.builder(id)
@@ -292,13 +293,13 @@ public abstract class DifficultyGoalProvider {
             .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
     }
 
-    protected static GoalBuilder mineralPillarGoal(ResourceLocation id, TagKey<Block> tag) {
+    protected static GoalBuilder mineralPillarGoal(Identifier id, TagKey<Block> tag) {
         return BingoGoal.builder(id)
             .criterion("pillar", MineralPillarTrigger.pillar(tag))
             .tags(BingoTags.BUILD);
     }
 
-    protected GoalBuilder blockCubeGoal(ResourceLocation id, Object icon, TagKey<Block> blockTag, Component tagName) {
+    protected GoalBuilder blockCubeGoal(Identifier id, Object icon, TagKey<Block> blockTag, Component tagName) {
         final var blocks = registries.lookupOrThrow(Registries.BLOCK);
         return BingoGoal.builder(id)
             .sub("width", BingoSub.random(2, 4))
@@ -343,25 +344,29 @@ public abstract class DifficultyGoalProvider {
             .icon(icon);
     }
 
-    protected static ItemStack makeItemWithGlint(ItemLike item) {
-        return makeItemWithGlint(new ItemStack(item));
+    protected static ItemStackTemplate makeItemWithGlint(ItemLike item) {
+        return makeItemWithGlint(new ItemStackTemplate(item.asItem()));
     }
 
-    protected static ItemStack makeItemWithGlint(ItemStack item) {
-        item.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
-        return item;
+    protected static ItemStackTemplate makeItemWithGlint(ItemStackTemplate item) {
+        return new ItemStackTemplate(
+            item.item(),
+            item.count(),
+            BingoUtil.builderFrom(item.components()).set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true).build()
+        );
     }
 
-    protected static ItemStack makeBannerWithPattern(Item base, Holder<BannerPattern> pattern, DyeColor color) {
-        final ItemStack result = new ItemStack(base);
-        result.set(DataComponents.BANNER_PATTERNS, new BannerPatternLayers.Builder().add(pattern, color).build());
-        return result;
+    protected static ItemStackTemplate makeBannerWithPattern(Item base, Holder<BannerPattern> pattern, DyeColor color) {
+        return new ItemStackTemplate(
+            base,
+            DataComponentPatch.builder()
+                .set(DataComponents.BANNER_PATTERNS, new BannerPatternLayers.Builder().add(pattern, color).build())
+                .build()
+        );
     }
 
-    protected static ItemStack makeShieldWithColor(@Nullable DyeColor color) {
-        ItemStack stack = new ItemStack(Items.SHIELD);
-        stack.set(DataComponents.BASE_COLOR, color);
-        return stack;
+    protected static ItemStackTemplate makeShieldWithColor(@Nullable DyeColor color) {
+        return new ItemStackTemplate(Items.SHIELD, DataComponentPatch.builder().set(DataComponents.BASE_COLOR, color).build());
     }
 
     @SuppressWarnings("deprecation")
@@ -375,7 +380,7 @@ public abstract class DifficultyGoalProvider {
             .hasNbt(BingoUtil.compound(Map.of(
                 "SpawnData", BingoUtil.compound(Map.of(
                     "entity", BingoUtil.compound(Map.of(
-                        "id", StringTag.valueOf(entityType.builtInRegistryHolder().key().location().toString())
+                        "id", StringTag.valueOf(entityType.builtInRegistryHolder().key().identifier().toString())
                     ))
                 ))
             )));
@@ -386,7 +391,10 @@ public abstract class DifficultyGoalProvider {
         return new CycleIcon(
             potions.listElements()
                 .filter(p -> encountered.add(p.value().name()))
-                .map(p -> PotionContents.createItemStack(baseItem, p))
+                .map(p -> new ItemStackTemplate(
+                    baseItem,
+                    DataComponentPatch.builder().set(DataComponents.POTION_CONTENTS, new PotionContents(p)).build()
+                ))
                 .map(ItemIcon::new)
                 .collect(ImmutableList.toImmutableList())
         );

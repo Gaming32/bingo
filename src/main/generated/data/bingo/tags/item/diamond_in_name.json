@@ -13,6 +13,8 @@
     "minecraft:diamond_chestplate",
     "minecraft:diamond_leggings",
     "minecraft:diamond_boots",
-    "minecraft:diamond_horse_armor"
+    "minecraft:diamond_horse_armor",
+    "minecraft:diamond_spear",
+    "minecraft:diamond_nautilus_armor"
   ]
 }

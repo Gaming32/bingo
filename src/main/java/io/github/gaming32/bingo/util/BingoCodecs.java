@@ -26,7 +26,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import java.lang.reflect.Array;
 import java.util.List;
@@ -64,14 +64,14 @@ public final class BingoCodecs {
     public static final Codec<Int2IntMap> INT_2_INT_MAP = Codec.unboundedMap(INT_AS_STRING, Codec.INT)
         .xmap(Int2IntOpenHashMap::new, Function.identity());
     public static final Codec<IntList> INT_LIST = Codec.INT.listOf().xmap(IntImmutableList::new, Function.identity());
-    public static final Codec<ItemStack> UNBOUNDED_ITEM_STACK = RecordCodecBuilder.create(
+    public static final Codec<ItemStackTemplate> UNBOUNDED_ITEM_STACK_TEMPLATE = RecordCodecBuilder.create(
         instance -> instance.group(
-            Item.CODEC.fieldOf("id").forGetter(ItemStack::typeHolder),
-            ExtraCodecs.POSITIVE_INT.fieldOf("count").orElse(1).forGetter(ItemStack::getCount),
-            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemStack::getComponentsPatch)
-        ).apply(instance, ItemStack::new)
+            Item.CODEC.fieldOf("id").forGetter(ItemStackTemplate::typeHolder),
+            ExtraCodecs.POSITIVE_INT.fieldOf("count").orElse(1).forGetter(ItemStackTemplate::count),
+            DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemStackTemplate::components)
+        ).apply(instance, ItemStackTemplate::new)
     );
-    public static final Codec<ItemStack> LENIENT_ITEM_STACK = Codec.withAlternative(UNBOUNDED_ITEM_STACK, ItemStack.CODEC);  // todo: what was SIMPLE_ITEM_CODEC?
+    public static final Codec<ItemStackTemplate> LENIENT_ITEM_STACK_TEMPLATE = Codec.withAlternative(UNBOUNDED_ITEM_STACK_TEMPLATE, ItemStackTemplate.CODEC);
 
     private BingoCodecs() {
     }

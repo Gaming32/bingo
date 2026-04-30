@@ -7,15 +7,12 @@ import net.minecraft.world.item.ItemStack;
 
 public abstract class RecipeViewerPlugin {
     public static RecipeViewerPlugin detect() {
-        if (BingoPlatform.platform.isModLoaded("emi")) {
-            return new EMIPlugin();
-        }
         if (BingoPlatform.platform.isModLoaded("jei")) {
             return new JEIPlugin();
         }
-        if (BingoPlatform.platform.isModLoaded("roughlyenoughitems")) {
-            return new REIPlugin();
-        }
+//        if (BingoPlatform.platform.isModLoaded("roughlyenoughitems")) {
+//            return new REIPlugin();
+//        }
         return new NoPlugin();
     }
 

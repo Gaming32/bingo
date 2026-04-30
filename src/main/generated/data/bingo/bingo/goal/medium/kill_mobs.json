@@ -109,6 +109,14 @@
         },
         {
           "type": "bingo:entity",
+          "entity": "minecraft:camel_husk",
+          "item": {
+            "count": 1,
+            "id": "minecraft:camel_husk_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
           "entity": "minecraft:cat",
           "item": {
             "count": 1,
@@ -341,6 +349,14 @@
         },
         {
           "type": "bingo:entity",
+          "entity": "minecraft:nautilus",
+          "item": {
+            "count": 1,
+            "id": "minecraft:nautilus_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
           "entity": "minecraft:ocelot",
           "item": {
             "count": 1,
@@ -353,6 +369,14 @@
           "item": {
             "count": 1,
             "id": "minecraft:panda_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:parched",
+          "item": {
+            "count": 1,
+            "id": "minecraft:parched_spawn_egg"
           }
         },
         {
@@ -649,6 +673,14 @@
           "item": {
             "count": 1,
             "id": "minecraft:zombie_horse_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
+          "entity": "minecraft:zombie_nautilus",
+          "item": {
+            "count": 1,
+            "id": "minecraft:zombie_nautilus_spawn_egg"
           }
         },
         {

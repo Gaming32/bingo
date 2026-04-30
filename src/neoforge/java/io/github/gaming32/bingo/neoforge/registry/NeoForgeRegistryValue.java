@@ -2,8 +2,8 @@ package io.github.gaming32.bingo.neoforge.registry;
 
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class NeoForgeRegistryValue<T> implements RegistryValue<T> {
@@ -19,7 +19,7 @@ public class NeoForgeRegistryValue<T> implements RegistryValue<T> {
     }
 
     @Override
-    public ResourceLocation id() {
+    public Identifier id() {
         return holder.getId();
     }
 

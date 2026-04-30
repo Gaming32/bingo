@@ -1,22 +1,20 @@
 package io.github.gaming32.bingo.client.icons;
 
+import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.data.icons.EntityTypeTagCycleIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.WeakHashMap;
 
 public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer<EntityTypeTagCycleIcon> {
@@ -56,7 +54,7 @@ public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer
         if (entityType.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        final Optional<Holder<Item>> spawnEggItem = SpawnEggItem.byId(entityType.get().value());
-        return spawnEggItem.map(itemHolder -> new ItemStack(itemHolder, icon.count())).orElse(ItemStack.EMPTY);
+        final Item spawnEggItem = EntityIcon.getSpawnEggItem(entityType.get().value());
+        return spawnEggItem == null ? ItemStack.EMPTY : new ItemStack(spawnEggItem, icon.count());
     }
 }

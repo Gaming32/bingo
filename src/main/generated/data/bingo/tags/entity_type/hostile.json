@@ -3,6 +3,7 @@
     "minecraft:blaze",
     "minecraft:bogged",
     "minecraft:breeze",
+    "minecraft:camel_husk",
     "minecraft:cave_spider",
     "minecraft:creaking",
     "minecraft:creeper",
@@ -19,6 +20,7 @@
     "minecraft:husk",
     "minecraft:illusioner",
     "minecraft:magma_cube",
+    "minecraft:parched",
     "minecraft:phantom",
     "minecraft:piglin",
     "minecraft:piglin_brute",
@@ -38,6 +40,8 @@
     "minecraft:wither_skeleton",
     "minecraft:zoglin",
     "minecraft:zombie",
+    "minecraft:zombie_horse",
+    "minecraft:zombie_nautilus",
     "minecraft:zombie_villager",
     "minecraft:zombified_piglin"
   ]

@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.data.icons;
 import com.mojang.serialization.MapCodec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 
 public enum EmptyIcon implements GoalIcon.WithoutContext {
@@ -13,8 +13,8 @@ public enum EmptyIcon implements GoalIcon.WithoutContext {
     public static final StreamCodec<ByteBuf, EmptyIcon> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     @Override
-    public ItemStack getFallback() {
-        return Items.STONE.getDefaultInstance();
+    public ItemStackTemplate getFallback() {
+        return new ItemStackTemplate(Items.STONE);
     }
 
     @Override

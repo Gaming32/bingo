@@ -3,8 +3,8 @@ package io.github.gaming32.bingo.neoforge.registry;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
 
@@ -29,7 +29,7 @@ public final class NeoForgeDeferredRegister<T> implements DeferredRegister<T> {
 
     @Override
     @SuppressWarnings({"unchecked", "RedundantCast"})
-    public <S extends T> RegistryValue<S> register(ResourceLocation location, Supplier<S> value) {
+    public <S extends T> RegistryValue<S> register(Identifier location, Supplier<S> value) {
         if (!location.getNamespace().equals("bingo")) {
             throw new IllegalArgumentException("Can only use NeoForgeDeferredRegister with bingo namespace");
         }

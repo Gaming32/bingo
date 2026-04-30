@@ -10,10 +10,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class BingoFabric implements ModInitializer {
-    public static final ResourceLocation PROTOCOL_VERSION_PACKET = Identifiers.bingo("protocol_version");
+    public static final Identifier PROTOCOL_VERSION_PACKET = Identifiers.bingo("protocol_version");
 
     @Override
     public void onInitialize() {

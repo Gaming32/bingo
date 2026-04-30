@@ -15,6 +15,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.GameType;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -65,9 +66,10 @@ public abstract class MixinServerPlayer extends MixinEntity implements ServerPla
         method = "checkMovementStatistics",
         at = @At(
             value = "FIELD",
-            target = "Lnet/minecraft/stats/Stats;CROUCH_ONE_CM:Lnet/minecraft/resources/Identifier;"
+            target = "Lnet/minecraft/stats/Stats;CROUCH_ONE_CM:Lnet/minecraft/resources/Identifier;",
+            opcode = Opcodes.GETSTATIC
         )
-    )  // todo: still don't know how to use opcodes here
+    )
     @SuppressWarnings("UnreachableCode")
     private void sneakingTrigger(double dx, double dy, double dz, CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer serverPlayer) {

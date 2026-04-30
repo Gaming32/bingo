@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -11,7 +12,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 
 public record ItemTagCycleIcon(TagKey<Item> tag, int count) implements GoalIcon.WithoutContext {
@@ -33,10 +34,11 @@ public record ItemTagCycleIcon(TagKey<Item> tag, int count) implements GoalIcon.
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemStack getFallback() {
-        return new ItemStack(
+    public ItemStackTemplate getFallback() {
+        return new ItemStackTemplate(
             Iterables.getFirst(BuiltInRegistries.ITEM.getTagOrEmpty(tag), Items.STONE.builtInRegistryHolder()),
-            count
+            count,
+            DataComponentPatch.EMPTY
         );
     }
 

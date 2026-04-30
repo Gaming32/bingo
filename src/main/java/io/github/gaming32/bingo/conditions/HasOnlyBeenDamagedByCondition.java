@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.conditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.ext.LivingEntityExt;
-import net.minecraft.advancements.critereon.TagPredicate;
+import net.minecraft.advancements.criterion.TagPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -15,7 +15,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -42,10 +41,9 @@ public record HasOnlyBeenDamagedByCondition(
         ).apply(instance, HasOnlyBeenDamagedByCondition::new)
     );
 
-    @NotNull
     @Override
-    public LootItemConditionType getType() {
-        return BingoConditions.HAS_ONLY_BEEN_DAMAGED_BY.get();
+    public MapCodec<HasOnlyBeenDamagedByCondition> codec() {
+        return CODEC;
     }
 
     @Override

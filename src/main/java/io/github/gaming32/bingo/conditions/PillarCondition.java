@@ -3,14 +3,13 @@ package io.github.gaming32.bingo.conditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.critereon.BlockPredicate;
+import net.minecraft.advancements.criterion.BlockPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -25,10 +24,9 @@ public record PillarCondition(int minHeight, Optional<BlockPredicate> block) imp
         ).apply(instance, PillarCondition::new)
     );
 
-    @NotNull
     @Override
-    public LootItemConditionType getType() {
-        return BingoConditions.PILLAR.get();
+    public MapCodec<PillarCondition> codec() {
+        return CODEC;
     }
 
     @Override

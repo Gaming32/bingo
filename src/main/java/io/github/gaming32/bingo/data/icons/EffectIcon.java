@@ -2,13 +2,15 @@ package io.github.gaming32.bingo.data.icons;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -33,8 +35,11 @@ public record EffectIcon(Holder<MobEffect> effect, Holder<Potion> potion) implem
     }
 
     @Override
-    public ItemStack getFallback() {
-        return PotionContents.createItemStack(Items.POTION, potion);
+    public ItemStackTemplate getFallback() {
+        return new ItemStackTemplate(
+            Items.POTION,
+            DataComponentPatch.builder().set(DataComponents.POTION_CONTENTS, new PotionContents(potion)).build()
+        );
     }
 
     @Override

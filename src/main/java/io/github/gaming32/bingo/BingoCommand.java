@@ -189,7 +189,7 @@ public class BingoCommand {
             )
             .then(literal("stop")
                 .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)
-                        && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
+                        && source.getServer() != null && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .executes(ctx -> {
                     final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
                     if (game == null) {
@@ -204,16 +204,16 @@ public class BingoCommand {
                 .executes(BingoCommand::resetGame)
             )
             .then(literal("forfeit")
-                .requires(source -> ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
+                .requires(source -> source.getServer() != null && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .executes(ctx -> forfeit(ctx.getSource()))
                 .then(argument("team", TeamArgument.team())
                     .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)
-                            && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
+                            && source.getServer() != null && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                     .executes(ctx -> forfeit(ctx.getSource(), TeamArgument.getTeam(ctx, "team")))
                 )
             )
             .then(literal("board")
-                .requires(source -> ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
+                .requires(source -> source.getServer() != null && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .executes(ctx -> {
                     final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
                     if (game == null) {
@@ -310,7 +310,7 @@ public class BingoCommand {
             )
             .then(literal("goals")
                 .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)
-                        && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
+                        && source.getServer() != null && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .then(argument("players", EntityArgument.players())
                     .then(literal("award")
                         .then(argument("goal", IdentifierArgument.id())
