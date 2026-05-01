@@ -917,6 +917,10 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .name("swap_hotbar_with_shelf")
             .tooltip("swap_hotbar_with_shelf")
             .icon(IndicatorIcon.infer(ItemTags.WOODEN_SHELVES, Items.DIAMOND_SWORD)));
+
+        addGoal(obtainSomeItemsFromTag(id("nautilus_armor"), BingoItemTags.NAUTILUS_ARMOR, "bingo.goal.some_nautilus_armor", 1, 1)
+            .tags(BingoTags.OVERWORLD, BingoTags.OCEAN)
+            .antisynergy("nautilus_armor"));
     }
 
     @SafeVarargs

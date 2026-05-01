@@ -139,10 +139,16 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
         var bonemealableBuilder = valueLookupBuilder(BingoItemTags.BONEMEALABLE)
             .forceAddTag(ItemTags.VILLAGER_PLANTABLE_SEEDS)
             .forceAddTag(ItemTags.SAPLINGS);
+        var nautilusArmorBuilder = valueLookupBuilder(BingoItemTags.NAUTILUS_ARMOR);
         Pattern goldPattern = Pattern.compile("\\bGold(?:en)?\\b");
         Pattern copperPattern = Pattern.compile("\\bCopper\\b");
         Pattern diamondPattern = Pattern.compile("\\bDiamond\\b");
         items.listElements().forEach(item -> {
+            String id = item.key().identifier().getPath();
+            if (id.endsWith("_nautilus_armor")) {
+                nautilusArmorBuilder.add(item.value());
+            }
+
             String itemName = Component.translatable(item.value().getDescriptionId()).getString();
             if (goldPattern.matcher(itemName).find()) {
                 goldInNameBuilder.add(item.value());

@@ -1,0 +1,42 @@
+{
+  "antisynergy": [
+    "all_nautilus_armor",
+    "nautilus_armor"
+  ],
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": -1,
+        "tag": "bingo:nautilus_armor"
+      },
+      "trigger": "bingo:has_some_items_from_tag"
+    }
+  },
+  "difficulty": "bingo:very_hard",
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "tag": "bingo:nautilus_armor"
+  },
+  "name": {
+    "translate": "bingo.goal.all_somethings",
+    "with": [
+      {
+        "translate": "bingo.goal.all_somethings.nautilus_armor"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:overworld",
+    "bingo:ocean"
+  ]
+}

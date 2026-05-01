@@ -327,6 +327,9 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainAllGoatHorns());
         addGoal(obtainAllItemsFromTag(BingoItemTags.CLIMBABLE, "climbables")
             .tags(BingoTags.NETHER, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
+        addGoal(obtainAllItemsFromTag(BingoItemTags.NAUTILUS_ARMOR, "nautilus_armor")
+            .tags(BingoTags.OVERWORLD, BingoTags.OCEAN)
+            .antisynergy("nautilus_armor"));
     }
 
     @SuppressWarnings("deprecation")

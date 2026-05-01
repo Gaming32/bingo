@@ -695,5 +695,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .antisynergy("food"));
         addGoal(obtainItemGoal(id("mace"), items, Items.MACE)
             .tags(BingoTags.OVERWORLD));
+        addGoal(obtainSomeItemsFromTag(id("nautilus_armor"), BingoItemTags.NAUTILUS_ARMOR, "bingo.goal.some_nautilus_armor", 2, 3)
+            .tags(BingoTags.OVERWORLD, BingoTags.OCEAN)
+            .antisynergy("nautilus_armor"));
     }
 }
