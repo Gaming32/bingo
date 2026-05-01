@@ -26,7 +26,7 @@ public interface ClientPayloadHandler {
 
     static ClientPayloadHandler get() {
         if (Holder.instance == null) {
-            if (BingoPlatform.platform.isClient()) {
+            if (BingoPlatform.isClient()) {
                 throw new IllegalStateException("ClientPayloadHandler not initialized yet!");
             }
             throw new IllegalStateException("Cannot call ClientPayloadHandler.get() on server!");
@@ -38,7 +38,7 @@ public interface ClientPayloadHandler {
         if (Holder.instance != null) {
             throw new IllegalStateException("Cannot call ClientPayloadHandler.init() more than once.");
         }
-        if (!BingoPlatform.platform.isClient()) {
+        if (!BingoPlatform.isClient()) {
             throw new IllegalStateException("Cannot call ClientPayloadHandler.init() on server.");
         }
         Holder.instance = instance;

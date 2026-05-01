@@ -17,10 +17,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.gaming32.bingo.fabric.BingoFabric"
+      "io.github.gaming32.bingo.Bingo::init"
     ],
     "client": [
-      "io.github.gaming32.bingo.fabric.client.BingoFabricClient"
+      "io.github.gaming32.bingo.client.BingoClient::init"
     ],
     "fabric-datagen": [
       "io.github.gaming32.bingo.datagen.BingoDataGenFabric"
@@ -29,7 +29,7 @@
       "io.github.gaming32.bingo.client.recipeviewer.jei.BingoJeiPlugin"
     ],
     "modmenu": [
-      "io.github.gaming32.bingo.fabric.compat.ModMenuCompat"
+      "io.github.gaming32.bingo.client.ModMenuCompat"
     ],
     "fabric-gametest": [
     ]

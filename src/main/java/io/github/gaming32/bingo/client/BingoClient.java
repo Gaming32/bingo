@@ -16,6 +16,7 @@ import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
+import io.github.gaming32.bingo.platform.BingoClientPlatform;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
@@ -67,11 +68,13 @@ public class BingoClient {
     public static ClientGame clientGame;
 
     public static final BingoClientConfig CONFIG = new BingoClientConfig(
-        BingoPlatform.platform.getConfigDir().resolve("bingo-client.toml")
+        BingoPlatform.getConfigDir().resolve("bingo-client.toml")
     );
     private static RecipeViewerPlugin recipeViewerPlugin;
 
     public static void init() {
+        BingoClientPlatform.registerEvents();
+
         CONFIG.load();
         CONFIG.save();
 
@@ -79,7 +82,7 @@ public class BingoClient {
 
         DefaultIconRenderers.setup();
 
-        BingoPlatform.platform.registerKeyMappings(builder -> {
+        BingoPlatform.registerKeyMappings(builder -> {
             KeyMapping.Category category = builder.registerCategory(Identifiers.bingo("category"));
             builder
                 .name("bingo.key.board")
@@ -101,8 +104,8 @@ public class BingoClient {
                 .mapping();
         });
 
-        BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
-        BingoPlatform.platform.registerPictureInPictureRenderers(registrar ->
+        BingoPlatform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
+        BingoPlatform.registerPictureInPictureRenderers(registrar ->
             registrar.register(BlockPictureInPictureRenderState.class, BlockPictureInPictureRenderer::new)
         );
 

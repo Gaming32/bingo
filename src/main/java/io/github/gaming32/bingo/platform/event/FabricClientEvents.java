@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.fabric.event;
+package io.github.gaming32.bingo.platform.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

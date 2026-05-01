@@ -14,16 +14,16 @@ public interface AbstractCustomPayload extends CustomPacketPayload {
 
     @ApiStatus.NonExtendable
     default void sendToServer() {
-        BingoNetworking.instance().sendToServer(this);
+        BingoNetworking.sendToServer(this);
     }
 
     @ApiStatus.NonExtendable
     default void sendTo(ServerPlayer player) {
-        BingoNetworking.instance().sendTo(player, this);
+        BingoNetworking.sendTo(player, this);
     }
 
     @ApiStatus.NonExtendable
     default void sendTo(Iterable<ServerPlayer> players) {
-        BingoNetworking.instance().sendTo(players, this);
+        BingoNetworking.sendTo(players, this);
     }
 }

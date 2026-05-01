@@ -51,11 +51,13 @@ public class Bingo {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final BingoConfig CONFIG = new BingoConfig(
-        BingoPlatform.platform.getConfigDir().resolve("bingo.toml")
+        BingoPlatform.getConfigDir().resolve("bingo.toml")
     );
     public static final LevelResource PERSISTED_BINGO_GAME = new LevelResource("persisted_bingo_game.dat");
 
     public static void init() {
+        BingoPlatform.registerEvents();
+
         CONFIG.load();
         CONFIG.save();
 
@@ -163,20 +165,20 @@ public class Bingo {
     }
 
     private static void registerDatapackRegistries() {
-        BingoPlatform.platform.registerDatapackRegistries(registrar -> {
+        BingoPlatform.registerDatapackRegistries(registrar -> {
             registrar.unsynced(BingoRegistries.TAG, BingoTag.CODEC);
             registrar.unsynced(BingoRegistries.DIFFICULTY, BingoDifficulty.CODEC);
         });
     }
 
     private static void registerDataReloadListeners() {
-        BingoPlatform.platform.registerDataReloadListeners(registrar -> {
+        BingoPlatform.registerDataReloadListeners(registrar -> {
             registrar.register(GoalManager.ID, GoalManager::new);
         });
     }
 
     private static void registerPayloadHandlers() {
-        BingoNetworking.instance().onRegister(registrar -> {
+        BingoNetworking.onRegister(registrar -> {
             registrar.register(ConnectionProtocol.CONFIGURATION, null, ProtocolVersionPayload.TYPE, ProtocolVersionPayload.CODEC, (payload, context) -> {
                 switch (context.flow()) {
                     case CLIENTBOUND -> payload.handleClientbound(context);
@@ -207,6 +209,6 @@ public class Bingo {
     }
 
     public static boolean isInstalledOnClient(ServerPlayer player) {
-        return BingoNetworking.instance().canPlayerReceive(player, InitBoardPayload.TYPE);
+        return BingoNetworking.canPlayerReceive(player, InitBoardPayload.TYPE);
     }
 }

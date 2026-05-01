@@ -1,6 +1,6 @@
 package io.github.gaming32.bingo.mixin;
 
-import io.github.gaming32.bingo.fabric.event.FabricEvents;
+import io.github.gaming32.bingo.platform.event.FabricEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ServerExplosion;
 import org.spongepowered.asm.mixin.Mixin;

@@ -4,12 +4,26 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 
-public interface RegistryValue<T> {
-    T get();
+public final class RegistryValue<T> {
+    private final Holder.Reference<T> holder;
 
-    Identifier id();
+    RegistryValue(Holder.Reference<T> holder) {
+        this.holder = holder;
+    }
 
-    ResourceKey<T> key();
+    public T get() {
+        return holder.value();
+    }
 
-    Holder<T> asHolder();
+    public Identifier id() {
+        return holder.key().identifier();
+    }
+
+    public ResourceKey<T> key() {
+        return holder.key();
+    }
+
+    public Holder<T> asHolder() {
+        return holder;
+    }
 }

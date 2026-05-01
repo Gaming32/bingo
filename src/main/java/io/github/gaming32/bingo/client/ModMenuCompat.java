@@ -1,4 +1,4 @@
-package io.github.gaming32.bingo.fabric.compat;
+package io.github.gaming32.bingo.client;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

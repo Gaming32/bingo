@@ -24,7 +24,7 @@ public record ProtocolVersionPayload(int protocolVersion) implements CustomPacke
     }
 
     public void handleServerbound(BingoNetworking.Context context) {
-        BingoNetworking.instance().finishTask(context, ProtocolVersionConfigurationTask.TYPE);
+        BingoNetworking.finishTask(context, ProtocolVersionConfigurationTask.TYPE);
 
         if (protocolVersion != BingoNetworking.PROTOCOL_VERSION) {
             if (protocolVersion < BingoNetworking.PROTOCOL_VERSION) {
