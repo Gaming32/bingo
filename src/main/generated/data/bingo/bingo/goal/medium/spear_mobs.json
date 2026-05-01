@@ -1,0 +1,58 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 5,
+        "min_inclusive": 2
+      }
+    }
+  },
+  "criteria": {
+    "spear": {
+      "conditions": {
+        "count": {
+          "bingo_type": "bingo:sub",
+          "key": "count"
+        }
+      },
+      "trigger": "minecraft:spear_mobs"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:indicator",
+    "base": {
+      "type": "bingo:entity_type_tag_cycle",
+      "count": {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      "tag": "bingo:hostile"
+    },
+    "indicator": {
+      "type": "bingo:item_tag_cycle",
+      "tag": "minecraft:spears"
+    }
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.spear_mobs",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "spear"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:combat"
+  ]
+}

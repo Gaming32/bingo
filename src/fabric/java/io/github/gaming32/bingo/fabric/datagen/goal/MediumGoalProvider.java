@@ -15,6 +15,7 @@ import io.github.gaming32.bingo.data.goal.GoalBuilder;
 import io.github.gaming32.bingo.data.icons.BlockIcon;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
+import io.github.gaming32.bingo.data.icons.EntityTypeTagCycleIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.icons.IndicatorIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
@@ -67,6 +68,7 @@ import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.advancements.criterion.PlayerInteractTrigger;
 import net.minecraft.advancements.criterion.PlayerTrigger;
 import net.minecraft.advancements.criterion.RecipeCraftedTrigger;
+import net.minecraft.advancements.criterion.SpearMobsTrigger;
 import net.minecraft.advancements.criterion.StartRidingTrigger;
 import net.minecraft.advancements.criterion.SummonedEntityTrigger;
 import net.minecraft.advancements.criterion.TagPredicate;
@@ -99,7 +101,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -117,7 +118,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
-import java.util.stream.Stream;
 
 public class MediumGoalProvider extends DifficultyGoalProvider {
     public MediumGoalProvider(BiConsumer<Identifier, BingoGoal> goalAdder, HolderLookup.Provider registries) {
@@ -930,6 +930,17 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD)
             .name("nametag_enderman")
             .icon(Items.NAME_TAG));
+
+        addGoal(BingoGoal.builder(id("spear_mobs"))
+            .sub("count", BingoSub.random(2, 5))
+            .criterion("spear", SpearMobsTrigger.TriggerInstance.spearMobs(1), subber -> subber.sub("conditions.count", "count"))
+            .tags(BingoTags.ACTION, BingoTags.COMBAT)
+            .name(Component.translatable("bingo.goal.spear_mobs", 1), subber -> subber.sub("with.0", "count"))
+            .infrequency(2)
+            .icon(
+                IndicatorIcon.infer(new EntityTypeTagCycleIcon(BingoEntityTypeTags.HOSTILE, 2), ItemTags.SPEARS),
+                subber -> subber.sub("base.count", "count")
+            ));
     }
 
     @SafeVarargs

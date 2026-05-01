@@ -225,6 +225,7 @@
   "bingo.goal.sleep_in_mansion": "Sleep in a Woodland Mansion",
   "bingo.goal.sleep_in_nether": "(Try to) sleep in the Nether",
   "bingo.goal.sleep_in_villager_bed": "Sleep in a %s's bed",
+  "bingo.goal.spear_mobs": "Spear %s mobs in one go",
   "bingo.goal.sponge.tooltip": "DRY Sponge, not a Wet one",
   "bingo.goal.stairway_to_heaven": "Finish on top of a stairway to heaven",
   "bingo.goal.stairway_to_heaven.tooltip": "Using Stairs, build up to Y=320 (height limit) and stand on top at the end of the Bingo (if you need to jump over a block, it's not a finished stairway). Make sure the stairway is straight, with no bends.",
