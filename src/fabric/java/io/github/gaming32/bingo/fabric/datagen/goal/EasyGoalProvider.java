@@ -1109,6 +1109,21 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(id("shelf"), items, GoalIcon.infer(ItemTags.WOODEN_SHELVES), ItemPredicate.Builder.item().of(items, ItemTags.WOODEN_SHELVES))
             .name("shelf")
             .antisynergy("shelf"));
+
+        addGoal(BingoGoal.builder(id("feed_golden_dandelion"))
+            .criterion(
+                "feed",
+                PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                    ItemPredicate.Builder.item().of(items, Items.GOLDEN_DANDELION),
+                    Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity()
+                        .of(entityTypes, BingoEntityTypeTags.CAN_BE_AGE_LOCKED)
+                        .flags(EntityFlagsPredicate.Builder.flags().setIsBaby(true))))
+                )
+            )
+            .tags(BingoTags.OVERWORLD, BingoTags.ACTION)
+            .name("feed_golden_dandelion")
+            .tooltip("feed_golden_dandelion")
+            .icon(new IndicatorIcon(new EntityTypeTagCycleIcon(BingoEntityTypeTags.CAN_BE_AGE_LOCKED), ItemIcon.ofItem(Items.GOLDEN_DANDELION))));
     }
 
     private GoalBuilder eatEntireCake() {

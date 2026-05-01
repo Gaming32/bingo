@@ -100,6 +100,8 @@
   "bingo.goal.enchanted_golden_sword": "Enchanted Golden Sword",
   "bingo.goal.ender_eye.hard.tooltip": "How good is your luck?",
   "bingo.goal.extinguish_campfire": "Extinguish a campfire with a shovel",
+  "bingo.goal.feed_golden_dandelion": "Prevent a baby mob from growing up",
+  "bingo.goal.feed_golden_dandelion.tooltip": "Feed a baby mob a golden dandelion",
   "bingo.goal.feed_panda_cake": "Feed a %s a %s",
   "bingo.goal.fill_all_campfire_slots": "Fill all 4 slots of a %s",
   "bingo.goal.fill_bundle": "Fill a Bundle",

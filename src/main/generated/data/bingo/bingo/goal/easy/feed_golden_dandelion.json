@@ -1,0 +1,54 @@
+{
+  "criteria": {
+    "feed": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#bingo:can_be_age_locked",
+              "flags": {
+                "is_baby": true
+              }
+            }
+          }
+        ],
+        "item": {
+          "items": "minecraft:golden_dandelion"
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:indicator",
+    "base": {
+      "type": "bingo:entity_type_tag_cycle",
+      "tag": "bingo:can_be_age_locked"
+    },
+    "indicator": {
+      "type": "bingo:item",
+      "item": {
+        "count": 1,
+        "id": "minecraft:golden_dandelion"
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.feed_golden_dandelion"
+  },
+  "requirements": [
+    [
+      "feed"
+    ]
+  ],
+  "tags": [
+    "bingo:overworld",
+    "bingo:action"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.feed_golden_dandelion.tooltip"
+  }
+}
