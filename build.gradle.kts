@@ -14,10 +14,10 @@ version = rootProject["mod_version"]
 sourceSets {
     main {
         java {
-            srcDir("src/fabric/java")
+            srcDir("src/datagen/java")
         }
         resources {
-            srcDir("src/fabric/resources")
+            srcDir("src/datagen/resources")
             srcDir("src/main/generated")
         }
     }

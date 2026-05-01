@@ -8,7 +8,7 @@ import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import io.github.gaming32.bingo.ext.ServerPlayerExt;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
-import io.github.gaming32.bingo.mixin.common.PlayerAdvancementsAccessor;
+import io.github.gaming32.bingo.mixin.PlayerAdvancementsAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;

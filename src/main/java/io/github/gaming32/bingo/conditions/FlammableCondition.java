@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.MapCodec;
-import io.github.gaming32.bingo.mixin.common.BaseFireBlockAccessor;
+import io.github.gaming32.bingo.mixin.BaseFireBlockAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.block.Blocks;
