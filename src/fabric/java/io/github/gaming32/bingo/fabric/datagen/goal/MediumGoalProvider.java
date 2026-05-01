@@ -921,6 +921,15 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainSomeItemsFromTag(id("nautilus_armor"), BingoItemTags.NAUTILUS_ARMOR, "bingo.goal.some_nautilus_armor", 1, 1)
             .tags(BingoTags.OVERWORLD, BingoTags.OCEAN)
             .antisynergy("nautilus_armor"));
+
+        addGoal(BingoGoal.builder(id("nametag_enderman"))
+            .criterion("nametag", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                ItemPredicate.Builder.item().of(items, Items.NAME_TAG),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(entityTypes, EntityType.ENDERMAN).build()))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD)
+            .name("nametag_enderman")
+            .icon(Items.NAME_TAG));
     }
 
     @SafeVarargs

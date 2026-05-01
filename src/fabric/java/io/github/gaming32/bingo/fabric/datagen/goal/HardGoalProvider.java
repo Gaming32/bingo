@@ -159,14 +159,6 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name("zombified_piglin_sword")
             .icon(Items.GOLDEN_SWORD));
         // TODO: finish by launching fireworks of n different colors
-        addGoal(BingoGoal.builder(id("nametag_enderman"))
-            .criterion("nametag", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
-                ItemPredicate.Builder.item().of(items, Items.NAME_TAG),
-                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(entityTypes, EntityType.ENDERMAN).build()))
-            ))
-            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD)
-            .name("nametag_enderman")
-            .icon(Items.NAME_TAG));
         addGoal(BingoGoal.builder(id("finish_on_blaze_spawner"))
             .criterion("spawner", PlayerTrigger.TriggerInstance.located(EntityPredicate.Builder.entity()
                 .steppingOn(LocationPredicate.Builder.location()
