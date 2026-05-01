@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Cache Gradle stuff
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: gradle-${{ hashFiles('*.gradle.kts', 'gradle.properties', '*/*.gradle.kts', 'gradle/**') }}
           restore-keys: gradle-
