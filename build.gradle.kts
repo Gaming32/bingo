@@ -1,9 +1,7 @@
-import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
-import xyz.wagyourtail.unimined.internal.minecraft.MinecraftProvider
 
 plugins {
     java
-    alias(libs.plugins.unimined)
+    alias(libs.plugins.fabric.loom)
     alias(libs.plugins.mod.publish.plugin)
 }
 
@@ -15,7 +13,11 @@ version = rootProject["mod_version"]
 
 sourceSets {
     main {
+        java {
+            srcDir("src/fabric/java")
+        }
         resources {
+            srcDir("src/fabric/resources")
             srcDir("src/main/generated")
         }
     }
@@ -33,9 +35,6 @@ val fabric: SourceSet by sourceSets.creating
 val neoforge: SourceSet by sourceSets.creating
 
 repositories {
-    unimined.neoForgedMaven()
-    unimined.spongeMaven()
-    unimined.wagYourMaven("releases")
     maven("https://maven.shedaniel.me/")
     maven("https://maven.blamejared.com/") {
         name = "Jared's maven"
@@ -48,127 +47,54 @@ repositories {
 val modCompileOnly: Configuration by configurations.creating
 configurations.compileOnly.get().extendsFrom(modCompileOnly)
 
-unimined.minecraft {
-    version = libs.versions.minecraft.get()
-
-    accessWidener {
-        accessWidener(file("src/main/resources/bingo.accessWidener"))
-    }
-
-    if (sourceSet == sourceSets.main.get()) {
-        mods {
-            remap(modCompileOnly) {
-                namespace("intermediary")
-                catchAWNamespaceAssertion()
-            }
-        }
-    }
-
-    defaultRemapJar = false
+loom {
+    accessWidenerPath = file("src/main/resources/bingo.accessWidener")
 }
 
-unimined.minecraft(fabric) {
-    combineWith(sourceSets.main.get())
-
-    fabric {
-        loader(libs.versions.fabric.loader.get())
-        accessWidener(file("src/main/resources/bingo.accessWidener"))
+fabricApi {
+    configureDataGeneration {
+        client = true
     }
-
-    // TODO: remove internal API usage when there is a way to inherit run configs
-    @Suppress("UnstableApiUsage")
-    (this as MinecraftProvider).provideRunClientTask("datagenClient", file("run/datagenClient"))
-
-    runs {
-        config("datagenClient") {
-            description = "Data Generation"
-            jvmArgs(
-                "-Dfabric-api.datagen",
-                "-Dfabric-api.datagen.output-dir=${file("src/main/generated").absolutePath}",
-                "-Dfabric-api.datagen.modid=bingo"
-            )
-        }
-    }
-
-    defaultRemapJar = true
 }
-
-unimined.minecraft(neoforge) {
-    combineWith(sourceSets.main.get())
-
-    neoForge {
-        loader(libs.versions.neoforge.get())
-        accessTransformer(aw2at(file("src/main/resources/bingo.accessWidener")))
-    }
-
-    minecraftRemapper.config {
-        ignoreConflicts(true)
-    }
-
-    defaultRemapJar = true
-}
-
-val fabricCompileOnly by configurations.getting
-val fabricInclude by configurations.getting
-val fabricImplementation by configurations.getting
 
 dependencies {
-    implementation(libs.bundles.asm)
-    implementation(libs.mixin)
-    implementation(libs.mixinextras)
+    minecraft(libs.minecraft)
     libs.bundles.nightconfig.get().forEach {
-        fabricInclude(fabricImplementation(implementation(it)!!)!!)
+        include(implementation(it)!!)
     }
-    fabricImplementation(fabricApi.fabric(libs.versions.fabric.api.get()))
-    fabricImplementation(libs.modmenu) {
+    implementation(libs.fabric.loader)
+    implementation(libs.fabric.api)
+    implementation(libs.modmenu) {
         isTransitive = false
     }
-//    compileOnly(libs.rei) {
-//        exclude(group = "dev.architectury")
-//    }
     compileOnly(libs.jei)
-    fabricCompileOnly(compileOnly(libs.mcdev.annotations.get())!!)
+    compileOnly(libs.mcdev.annotations.get())
 
     testImplementation(libs.fabric.loader.junit)
     testImplementation(libs.junit)
 }
 
+
 tasks.withType<Test> {
     useJUnitPlatform()
-    enabled = false // TODO get test classpath working
 }
 
-tasks.getByName("jar") {
-    enabled = false
+tasks.getByName<Jar>("jar") {
+    from("LICENSE")
 }
 
-val fabricSourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("fabric-sources")
-    from(sourceSets.main.get().allSource)
-    from(fabric.allSource)
-}
+val processResourcesValues = mapOf("version" to project.version)
 
-val neoforgeSourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("neoforge-sources")
-    from(sourceSets.main.get().allSource)
-    from(neoforge.allSource)
-}
+tasks.getByName<ProcessResources>("processResources") {
+    inputs.properties(processResourcesValues)
 
-tasks.getByName<ProcessResources>("processFabricResources") {
-    inputs.property("version", project.version)
+    duplicatesStrategy = DuplicatesStrategy.WARN
 
     filesMatching("fabric.mod.json") {
-        expand("version" to project.version)
+        expand(processResourcesValues)
     }
 }
 
-tasks.getByName<ProcessResources>("processNeoforgeResources") {
-    inputs.property("version", project.version)
-
-    filesMatching("META-INF/neoforge.mods.toml") {
-        expand("version" to project.version)
-    }
-}
 
 publishMods {
     val changelogFile = file("changelogs/${project.version}.md")
@@ -192,8 +118,8 @@ publishMods {
         from(modrinthOpts)
         version.set("${project.version}+fabric")
         displayName.set("Bingo ${project.version} for Fabric")
-        file.set(tasks.getByName<RemapJarTask>("remapFabricJar").asJar.archiveFile)
-        additionalFiles.from(fabricSourcesJar)
+        file.set(tasks.getByName<Jar>("jar").archiveFile)
+        additionalFiles.from(tasks.getByName("sourcesJar"))
         modLoaders.add("fabric")
         requires {
             slug.set("fabric-api")
@@ -201,14 +127,5 @@ publishMods {
         optional {
             slug.set("modmenu")
         }
-    }
-
-    modrinth("modrinthNeoforge") {
-        from(modrinthOpts)
-        version.set("${project.version}+neoforge")
-        displayName.set("Bingo ${project.version} for NeoForge")
-        file.set(tasks.getByName<RemapJarTask>("remapNeoforgeJar").asJar.archiveFile)
-        additionalFiles.from(neoforgeSourcesJar)
-        modLoaders.add("neoforge")
     }
 }
