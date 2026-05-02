@@ -31,6 +31,6 @@ side="BOTH"
 [[dependencies.bingo]]
 modId="minecraft"
 type="required"
-versionRange="[26.1,26.2)"
+versionRange="[${min_minecraft_version},${max_minecraft_version})"
 ordering="NONE"
 side="BOTH"
