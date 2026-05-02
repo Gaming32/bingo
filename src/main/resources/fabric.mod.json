@@ -39,8 +39,8 @@
     "bingo.datagen.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.16.9",
-    "fabric-api": ">=0.112.1",
-    "minecraft": ">=26.1 <26.2"
+    "fabricloader": ">=0.18.4",
+    "fabric-api": "*",
+    "minecraft": ">=${min_minecraft_version} <${max_minecraft_version}"
   }
 }

@@ -6,7 +6,9 @@ fabric-loom = "1.16-SNAPSHOT"
 jei = "29.5.0.27"
 junit = "5.14.0"
 mcdev-annotations = "2.1.0"
-minecraft = "26.1.2"
+minecraft-exact = "26.1.2"
+minecraft-max = "26.2"
+minecraft-min = "26.1"
 mod-dev-gradle = "1.0.11"
 mod-publish-plugin = "1.0.0"
 modmenu = "18.0.0-alpha.8"
@@ -20,7 +22,7 @@ fabric-loader-junit = { module = "net.fabricmc:fabric-loader-junit", version.ref
 jei = { module = "mezz.jei:jei-26.1.2-common-api", version.ref = "jei" }
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 mcdev-annotations = { module = "com.demonwav.mcdev:annotations", version.ref = "mcdev-annotations" }
-minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft-exact" }
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 nightconfig-core = { module = "com.electronwill.night-config:core", version.ref = "nightconfig" }
 nightconfig-toml = { module = "com.electronwill.night-config:toml", version.ref = "nightconfig" }

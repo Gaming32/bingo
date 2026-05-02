@@ -78,7 +78,11 @@ tasks.getByName<Jar>("jar") {
     from("LICENSE")
 }
 
-val processResourcesValues = mapOf("version" to project.version)
+val processResourcesValues = mapOf(
+    "version" to project.version,
+    "min_minecraft_version" to libs.versions.minecraft.min.get(),
+    "max_minecraft_version" to libs.versions.minecraft.max.get(),
+)
 
 tasks.getByName<ProcessResources>("processResources") {
     inputs.properties(processResourcesValues)
@@ -111,7 +115,7 @@ publishMods {
     val modrinthOpts = modrinthOptions {
         accessToken.set(providers.gradleProperty("modrinthKey").orElse(providers.environmentVariable("MODRINTH_TOKEN")))
         projectId.set("tXdFVOz6")
-        minecraftVersions.add(libs.versions.minecraft)
+        minecraftVersions.add(libs.versions.minecraft.exact)
     }
 
     modrinth("modrinthFabric") {
