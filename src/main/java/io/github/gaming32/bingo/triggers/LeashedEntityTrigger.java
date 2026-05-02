@@ -20,13 +20,10 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
 public class LeashedEntityTrigger extends SimpleCriterionTrigger<LeashedEntityTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -79,7 +76,7 @@ public class LeashedEntityTrigger extends SimpleCriterionTrigger<LeashedEntityTr
         }
 
         @Override
-        public void validate(@NonNull ValidationContextSource validator) {
+        public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
             Validatable.validate(validator.entityContext(), "mob", mob);
             Validatable.validate(validator.entityContext(), "knot", knot);

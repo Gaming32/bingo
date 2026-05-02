@@ -8,7 +8,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
@@ -22,7 +21,6 @@ public class BingoCommandDumper implements DataProvider {
         this.registries = registries;
     }
 
-    @NotNull
     @Override
     public CompletableFuture<?> run(CachedOutput output) {
         final Path result = this.output.getOutputFolder(PackOutput.Target.REPORTS).resolve("bingo_command.json");
@@ -35,7 +33,6 @@ public class BingoCommandDumper implements DataProvider {
         });
     }
 
-    @NotNull
     @Override
     public String getName() {
         return "bingo Command";

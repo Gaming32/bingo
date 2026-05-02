@@ -2,8 +2,8 @@ package io.github.gaming32.bingo.platform.registry;
 
 import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 
 import java.util.function.Supplier;
 

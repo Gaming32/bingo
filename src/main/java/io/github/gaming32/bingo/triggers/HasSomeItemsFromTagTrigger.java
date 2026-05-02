@@ -17,8 +17,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -28,7 +27,6 @@ public class HasSomeItemsFromTagTrigger extends SimpleProgressibleCriterionTrigg
         InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.HAS_SOME_ITEMS_FROM_TAG.get().trigger(player, inventory));
     }
 
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

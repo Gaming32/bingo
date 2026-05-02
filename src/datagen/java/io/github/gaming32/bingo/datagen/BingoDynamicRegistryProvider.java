@@ -4,7 +4,6 @@ import io.github.gaming32.bingo.data.BingoRegistries;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.HolderLookup;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -19,7 +18,6 @@ public class BingoDynamicRegistryProvider extends FabricDynamicRegistryProvider 
         entries.addAll(registries.lookupOrThrow(BingoRegistries.DIFFICULTY));
     }
 
-    @NotNull
     @Override
     public String getName() {
         return "Bingo registries";

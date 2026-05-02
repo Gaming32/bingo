@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -28,7 +27,6 @@ public record ToolDamageCondition(MinMaxBounds.Ints damage) implements LootItemC
         return tool.isDamageableItem() && damage.matches(tool.getDamageValue());
     }
 
-    @NotNull
     @Override
     public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.TOOL);

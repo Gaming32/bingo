@@ -4,7 +4,6 @@ import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
 
 public final class BingoEntityTypeTags {
     private BingoEntityTypeTags() {

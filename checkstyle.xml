@@ -11,6 +11,8 @@
         <property name="files" value="^.*[\\/]io[\\/]github[\\/]gaming32[\\/]bingo[\\/](datagen|platform|mixin)[\\/].*$"/>
     </module>
 
+    <module name="JavadocPackage"/>
+
     <module name="TreeWalker">
         <module name="SuppressionCommentFilter"/>
 
@@ -18,12 +20,10 @@
             <property name="allowStaticMemberImports" value="true"/>
         </module>
 
-        <!--
         <module name="MatchXpath">
             <property name="query" value="//STATIC_IMPORT[./LITERAL_STATIC and not(.//STAR)]"/>
             <message key="matchxpath.match" value="Static imports should always use wildcard imports"/>
         </module>
-        -->
 
         <!--
         <module name="NeedBraces">
@@ -35,11 +35,9 @@
         </module>
         -->
 
-        <!--
         <module name="IllegalImport">
             <property name="illegalClasses" value="org.jetbrains.annotations.Nullable, org.jetbrains.annotations.NotNull"/>
         </module>
-        -->
 
         <module name="IllegalImport">
             <property name="id" value="PlatformImport"/>

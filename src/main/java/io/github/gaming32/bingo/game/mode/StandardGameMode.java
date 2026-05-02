@@ -1,10 +1,8 @@
 package io.github.gaming32.bingo.game.mode;
 
 import io.github.gaming32.bingo.game.BingoBoard;
-import org.jetbrains.annotations.NotNull;
 
 public class StandardGameMode implements BingoGameMode {
-    @NotNull
     @Override
     public BingoBoard.Teams getWinners(BingoBoard board, int teamCount, BingoBoard.Teams nerfedTeams, boolean tryHarder) {
         BingoBoard.Teams result = BingoBoard.Teams.NONE;

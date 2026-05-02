@@ -17,7 +17,6 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.component.DyedItemColor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -26,7 +25,6 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
         InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.WEAR_DIFFERENT_COLORED_ARMOR.get().trigger(player, inventory));
     }
 
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

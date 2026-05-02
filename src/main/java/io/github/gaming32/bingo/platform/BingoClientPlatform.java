@@ -13,9 +13,12 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
+import org.jetbrains.annotations.UnknownNullability;
 
 public final class BingoClientPlatform {
+    @UnknownNullability
     private static ModContainer modContainer;
+    @UnknownNullability
     private static IEventBus modEventBus;
 
     private BingoClientPlatform() {

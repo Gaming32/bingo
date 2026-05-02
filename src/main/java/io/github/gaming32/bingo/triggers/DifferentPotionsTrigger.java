@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.PotionContents;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -25,7 +24,6 @@ public class DifferentPotionsTrigger extends SimpleProgressibleCriterionTrigger<
         InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.DIFFERENT_POTIONS.get().trigger(player, inventory));
     }
 
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

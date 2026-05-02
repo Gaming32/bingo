@@ -13,8 +13,6 @@ import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.goal.GoalManager;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
 import io.github.gaming32.bingo.util.BingoUtil;
-import net.minecraft.server.permissions.PermissionSet;
-import net.minecraft.util.Util;
 import net.minecraft.commands.CommandResultCallback;
 import net.minecraft.commands.CommandSigningContext;
 import net.minecraft.commands.CommandSource;
@@ -26,12 +24,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.util.TaskChainer;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -108,7 +107,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
     }
 
     @Override
-    public <T> CommandSourceStack bingo$withArgument(CommandSwitch<T> arg, T value) {
+    public <T extends @Nullable Object> CommandSourceStack bingo$withArgument(CommandSwitch<T> arg, T value) {
         final var copy = bingo$copy();
         ((MixinCommandSourceStack)(CommandSourceStackExt)copy).bingo$arguments =
             Util.copyAndPut(bingo$arguments, arg, value);
@@ -122,7 +121,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
     }
 
     @Override
-    public <T> CommandSourceStack bingo$withRepeatableArgument(CommandSwitch<T> arg, T value) {
+    public <T extends @Nullable Object> CommandSourceStack bingo$withRepeatableArgument(CommandSwitch<T> arg, T value) {
         final var copy = bingo$copy();
         ((MixinCommandSourceStack)(CommandSourceStackExt)copy).bingo$repeatableArguments =
             BingoUtil.copyAndPut(bingo$repeatableArguments, arg, value);
@@ -131,12 +130,11 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Collection<T> bingo$getRepeatableArgument(CommandSwitch<T> arg) {
+    public <T extends @Nullable Object> Collection<T> bingo$getRepeatableArgument(CommandSwitch<T> arg) {
         return (Collection<T>)bingo$repeatableArguments.get(arg);
     }
 
     @Unique
-    @NotNull
     private CommandSourceStack bingo$copy() {
         return copyExtraFields(create(
             source,
@@ -166,7 +164,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
         require = 0,
         expect = 0
     )
-    private CommandSourceStack copyExtraFields(@NotNull CommandSourceStack newStack) {
+    private CommandSourceStack copyExtraFields(CommandSourceStack newStack) {
         final var ext = (MixinCommandSourceStack)(CommandSourceStackExt)newStack;
         ext.bingo$constants = bingo$constants;
         ext.bingo$arguments = bingo$arguments;

@@ -40,8 +40,8 @@ import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public final class BingoPlatform {
+    @UnknownNullability
     private static IEventBus modEventBus;
 
     private BingoPlatform() {
@@ -206,7 +207,7 @@ public final class BingoPlatform {
             }
 
             @Override
-            public boolean conflicts(@NotNull IKeyConflictContext iKeyConflictContext) {
+            public boolean conflicts(IKeyConflictContext iKeyConflictContext) {
                 return false;
             }
         }

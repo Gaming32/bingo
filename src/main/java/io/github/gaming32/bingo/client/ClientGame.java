@@ -7,7 +7,7 @@ import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record ClientGame(
     BoardShape shape,

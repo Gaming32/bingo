@@ -13,7 +13,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.Set;
@@ -40,7 +39,6 @@ public record VillagerOwnershipCondition(PoiManager.Occupancy occupancy, Optiona
         ).anyMatch(r -> true);
     }
 
-    @NotNull
     @Override
     public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.ORIGIN);

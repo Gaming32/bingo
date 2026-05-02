@@ -12,10 +12,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.cuboid.ItemTransform;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionfc;
 import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 
 // If you don't want to use your own brain while porting, get inspired by what XFactHD does:
 // https://github.com/XFactHD/FramedBlocks/blob/26.1/src/main/java/io/github/xfacthd/framedblocks/client/screen/pip/BlockPictureInPictureRenderer.java
@@ -36,7 +35,6 @@ public class BlockPictureInPictureRenderer extends PictureInPictureRenderer<Bloc
     }
 
     @Override
-    @NotNull
     public Class<BlockPictureInPictureRenderState> getRenderStateClass() {
         return BlockPictureInPictureRenderState.class;
     }
@@ -67,7 +65,6 @@ public class BlockPictureInPictureRenderer extends PictureInPictureRenderer<Bloc
     }
 
     @Override
-    @NotNull
     protected String getTextureLabel() {
         return "bingo block";
     }

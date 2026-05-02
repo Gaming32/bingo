@@ -19,8 +19,7 @@ import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,13 +49,11 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
             .toList();
     }
 
-    @NotNull
     @Override
     public List<SpectatorMenuItem> getItems() {
         return items;
     }
 
-    @NotNull
     @Override
     public Component getPrompt() {
         return CATEGORY_PROMPT;
@@ -67,7 +64,6 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
         menu.selectCategory(this);
     }
 
-    @NotNull
     @Override
     public Component getName() {
         return CATEGORY_NAME;
@@ -137,7 +133,6 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
             BingoClient.clientTeam = teamState;
         }
 
-        @NotNull
         @Override
         public Component getName() {
             return displayName;

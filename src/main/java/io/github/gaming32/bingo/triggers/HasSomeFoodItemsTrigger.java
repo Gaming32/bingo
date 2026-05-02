@@ -21,8 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -32,7 +31,6 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
         InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.HAS_SOME_FOOD_ITEMS.get().trigger(player, inventory));
     }
 
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
