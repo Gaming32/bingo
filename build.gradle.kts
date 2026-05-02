@@ -32,9 +32,6 @@ java {
     withSourcesJar()
 }
 
-val fabric: SourceSet by sourceSets.creating
-val neoforge: SourceSet by sourceSets.creating
-
 repositories {
     maven("https://maven.shedaniel.me/")
     maven("https://maven.blamejared.com/") {
