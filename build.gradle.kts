@@ -1,6 +1,7 @@
 
 plugins {
     java
+    checkstyle
     alias(libs.plugins.fabric.loom)
     alias(libs.plugins.mod.publish.plugin)
 }
@@ -95,6 +96,11 @@ tasks.getByName<ProcessResources>("processResources") {
     }
 }
 
+checkstyle {
+    toolVersion = libs.versions.checkstyle.get()
+    configFile = rootProject.file("checkstyle.xml")
+    isIgnoreFailures = false
+}
 
 publishMods {
     val changelogFile = file("changelogs/${project.version}.md")

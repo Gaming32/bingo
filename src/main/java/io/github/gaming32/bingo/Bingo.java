@@ -15,7 +15,7 @@ import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import io.github.gaming32.bingo.ext.ServerPlayerExt;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.game.persistence.PersistenceManager;
-import io.github.gaming32.bingo.network.BingoNetworking;
+import io.github.gaming32.bingo.platform.BingoNetworking;
 import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.network.messages.configuration.ProtocolVersionConfigurationTask;
 import io.github.gaming32.bingo.network.messages.configuration.ProtocolVersionPayload;

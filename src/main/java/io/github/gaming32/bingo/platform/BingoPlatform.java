@@ -3,7 +3,6 @@ package io.github.gaming32.bingo.platform;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import io.github.gaming32.bingo.platform.event.FabricEvents;
-import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.platform.event.ConfigurationTaskRegistrar;
 import io.github.gaming32.bingo.platform.event.Event;
 import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;

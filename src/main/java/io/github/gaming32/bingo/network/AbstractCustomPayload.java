@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.network;
 
+import io.github.gaming32.bingo.platform.BingoNetworking;
 import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;

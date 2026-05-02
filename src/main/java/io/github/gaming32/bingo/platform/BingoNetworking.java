@@ -1,6 +1,6 @@
-package io.github.gaming32.bingo.network;
+package io.github.gaming32.bingo.platform;
 
-import io.github.gaming32.bingo.platform.BingoPlatform;
+import io.github.gaming32.bingo.network.AbstractCustomPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
