@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.platform.registry;
 
+import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
@@ -17,7 +18,9 @@ public final class DeferredRegister<T> {
     }
 
     public static <T> DeferredRegister<T> create(Registry<T> registry) {
-        return new DeferredRegister<>(registry, net.neoforged.neoforge.registries.DeferredRegister.create(registry, "bingo"));
+        var neoDeferredRegister = net.neoforged.neoforge.registries.DeferredRegister.create(registry, "bingo");
+        neoDeferredRegister.register(BingoPlatform.getModEventBus());
+        return new DeferredRegister<>(registry, neoDeferredRegister);
     }
 
     public Registry<T> registry() {
