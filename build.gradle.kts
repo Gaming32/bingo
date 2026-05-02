@@ -42,9 +42,6 @@ repositories {
     }
 }
 
-val modCompileOnly: Configuration by configurations.creating
-configurations.compileOnly.get().extendsFrom(modCompileOnly)
-
 loom {
     accessWidenerPath = file("src/main/resources/bingo.accessWidener")
 }
