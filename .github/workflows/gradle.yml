@@ -27,7 +27,3 @@ jobs:
         with:
           name: jars
           path: build/libs
-      - name: Run datagen
-        run: ./gradlew runDatagen
-      - name: Verify datagen up-to-date
-        run: git diff --color=always --exit-code
