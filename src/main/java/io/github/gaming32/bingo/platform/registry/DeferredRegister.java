@@ -9,13 +9,15 @@ import java.util.function.Supplier;
 
 public final class DeferredRegister<T> {
     private final Registry<T> registry;
+    private final net.neoforged.neoforge.registries.DeferredRegister<T> deferredRegister;
 
-    private DeferredRegister(Registry<T> registry) {
+    private DeferredRegister(Registry<T> registry, net.neoforged.neoforge.registries.DeferredRegister<T> deferredRegister) {
         this.registry = registry;
+        this.deferredRegister = deferredRegister;
     }
 
     public static <T> DeferredRegister<T> create(Registry<T> registry) {
-        return new DeferredRegister<>(registry);
+        return new DeferredRegister<>(registry, net.neoforged.neoforge.registries.DeferredRegister.create(registry, "bingo"));
     }
 
     public Registry<T> registry() {
@@ -26,8 +28,12 @@ public final class DeferredRegister<T> {
         return registry.key();
     }
 
+    @SuppressWarnings({"unchecked", "RedundantCast"})
     public <S extends T> RegistryValue<S> register(Identifier location, Supplier<S> value) {
-        return new RegistryValue<>(Registry.registerForHolder(registry, location, value.get()));
+        if (!location.getNamespace().equals("bingo")) {
+            throw new IllegalArgumentException("Can only use DeferredRegister with bingo namespace");
+        }
+        return (RegistryValue<S>)new RegistryValue<>(deferredRegister.register(location.getPath(), value));
     }
 
     public <S extends T> RegistryValue<S> register(String id, Supplier<S> value) {

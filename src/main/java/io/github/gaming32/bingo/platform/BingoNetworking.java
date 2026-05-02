@@ -1,12 +1,10 @@
 package io.github.gaming32.bingo.platform;
 
+import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
-import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketListener;
@@ -22,6 +20,10 @@ import net.minecraft.server.network.ServerCommonPacketListenerImpl;
 import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
@@ -31,15 +33,25 @@ public final class BingoNetworking {
     public static final int PROTOCOL_VERSION = 12;
 
     public static void onRegister(Consumer<Registrar> handler) {
-        handler.accept(new Registrar());
+        BingoPlatform.getModEventBus().addListener(RegisterPayloadHandlersEvent.class, event -> handler.accept(
+            new Registrar(
+                event.registrar(Bingo.MOD_ID)
+                    .versioned(Integer.toString(BingoNetworking.PROTOCOL_VERSION))
+                    .optional()
+            )
+        ));
     }
 
     public static void sendToServer(CustomPacketPayload payload) {
-        ClientPlayNetworking.send(payload);
+        final ClientPacketListener connection = Minecraft.getInstance().getConnection();
+        if (connection == null) {
+            throw new IllegalStateException("Not connected!");
+        }
+        connection.send(payload);
     }
 
     public static void sendTo(ServerPlayer player, CustomPacketPayload payload) {
-        ServerPlayNetworking.send(player, payload);
+        player.connection.send(payload);
     }
 
     public static void sendTo(Iterable<ServerPlayer> players, CustomPacketPayload payload) {
@@ -49,22 +61,36 @@ public final class BingoNetworking {
     }
 
     public static boolean canServerReceive(CustomPacketPayload.Type<?> type) {
-        return ClientPlayNetworking.canSend(type);
+        final ClientPacketListener connection = Minecraft.getInstance().getConnection();
+        if (connection == null) {
+            return false;
+        }
+        return connection.hasChannel(type);
     }
 
     public static boolean canPlayerReceive(ServerPlayer player, CustomPacketPayload.Type<?> type) {
-        return ServerPlayNetworking.canSend(player, type);
+        return player.connection.hasChannel(type);
     }
 
     public static void finishTask(Context context, ConfigurationTask.Type type) {
         if (!(context.packetListener instanceof ServerConfigurationPacketListenerImpl packetListener)) {
             throw new IllegalStateException("finishTask can only be called during the configuration phase");
         }
-        packetListener.completeTask(type);
+        packetListener.finishCurrentTask(type);
+    }
+
+    private static Context convertContext(IPayloadContext neoforge) {
+        return new Context(
+            neoforge.protocol() == ConnectionProtocol.PLAY ? neoforge.player() : null,
+            neoforge::reply, neoforge.listener(), neoforge.flow()
+        );
     }
 
     public static final class Registrar {
-        private Registrar() {
+        private final PayloadRegistrar inner;
+
+        private Registrar(PayloadRegistrar inner) {
+            this.inner = inner;
         }
 
         @SuppressWarnings("unchecked")
@@ -75,42 +101,25 @@ public final class BingoNetworking {
             StreamCodec<? super RegistryFriendlyByteBuf, P> codec,
             BiConsumer<P, Context> handler
         ) {
-            if (flow == null || flow == PacketFlow.CLIENTBOUND) {
-                switch (protocol) {
-                    case PLAY -> PayloadTypeRegistry.clientboundPlay().register(type, codec);
-                    case CONFIGURATION -> PayloadTypeRegistry.clientboundConfiguration().register(type, (StreamCodec<? super FriendlyByteBuf, P>) codec);
-                    default -> throw new IllegalArgumentException("Cannot register for connection state: " + protocol);
-                }
-                if (BingoPlatform.isClient()) {
-                    ClientReceiverRegistrar.register(protocol, type, handler);
-                }
-            }
-            if (flow == null || flow == PacketFlow.SERVERBOUND) {
-                switch (protocol) {
-                    case PLAY -> {
-                        PayloadTypeRegistry.serverboundPlay().register(type, codec);
-                        ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
-                            handler.accept(payload, new Context(
-                                context.player(),
-                                context.responseSender()::sendPacket,
-                                context.player().connection,
-                                PacketFlow.SERVERBOUND
-                            ))
-                        );
+            final IPayloadHandler<P> neoHandler = (payload, context) -> handler.accept(payload, convertContext(context));
+            switch (protocol) {
+                case PLAY -> {
+                    switch (flow) {
+                        case null -> inner.playBidirectional(type, codec, neoHandler, neoHandler);
+                        case CLIENTBOUND -> inner.playToClient(type, codec, neoHandler);
+                        case SERVERBOUND -> inner.playToServer(type, codec, neoHandler);
                     }
-                    case CONFIGURATION -> {
-                        PayloadTypeRegistry.serverboundConfiguration().register(type, (StreamCodec<? super FriendlyByteBuf, P>) codec);
-                        ServerConfigurationNetworking.registerGlobalReceiver(type, (payload, context) ->
-                            handler.accept(payload, new Context(
-                                null,
-                                context.responseSender()::sendPacket,
-                                context.packetListener(),
-                                PacketFlow.SERVERBOUND
-                            ))
-                        );
-                    }
-                    default -> throw new IllegalArgumentException("Cannot register for connection state: " + protocol);
                 }
+                case CONFIGURATION -> {
+                    @SuppressWarnings("unchecked")
+                    final var castedCodec = (StreamCodec<? super FriendlyByteBuf, P>) codec;
+                    switch (flow) {
+                        case null -> inner.configurationBidirectional(type, castedCodec, neoHandler, neoHandler);
+                        case CLIENTBOUND -> inner.configurationToClient(type, castedCodec, neoHandler);
+                        case SERVERBOUND -> inner.configurationToServer(type, castedCodec, neoHandler);
+                    }
+                }
+                default -> throw new IllegalArgumentException("Cannot register for connection state: " + protocol);
             }
         }
 
@@ -120,33 +129,6 @@ public final class BingoNetworking {
             StreamCodec<? super RegistryFriendlyByteBuf, P> codec
         ) {
             register(ConnectionProtocol.PLAY, flow, type, codec, AbstractCustomPayload::handle);
-        }
-
-        private static class ClientReceiverRegistrar {
-            public static <P extends CustomPacketPayload> void register(
-                ConnectionProtocol protocol, CustomPacketPayload.Type<P> type, BiConsumer<P, Context> handler
-            ) {
-                switch (protocol) {
-                    case PLAY -> ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
-                        handler.accept(payload, new Context(
-                            context.player(),
-                            context.responseSender()::sendPacket,
-                            context.player().connection,
-                            PacketFlow.CLIENTBOUND
-                        ))
-                    );
-                    case CONFIGURATION -> ClientConfigurationNetworking.registerGlobalReceiver(type, (payload, context) ->
-                        handler.accept(payload, new Context(
-                            null,
-                            context.responseSender()::sendPacket,
-                            context.packetListener(),
-                            PacketFlow.CLIENTBOUND
-                        ))
-                    );
-                    default -> throw new IllegalArgumentException("Cannot register for connection state: " + protocol);
-                }
-
-            }
         }
     }
 

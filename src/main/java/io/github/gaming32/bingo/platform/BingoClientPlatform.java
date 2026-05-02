@@ -1,53 +1,60 @@
 package io.github.gaming32.bingo.platform;
 
-import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
-import io.github.gaming32.bingo.platform.event.FabricClientEvents;
+import io.github.gaming32.bingo.client.config.BingoConfigScreen;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.util.Identifiers;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
-import net.fabricmc.fabric.api.networking.v1.FriendlyByteBufs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
-
-import java.util.concurrent.CompletableFuture;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.common.NeoForge;
 
 public final class BingoClientPlatform {
+    private static ModContainer modContainer;
+    private static IEventBus modEventBus;
+
     private BingoClientPlatform() {
     }
 
+    public static void setModContainer(ModContainer modContainer) {
+        BingoClientPlatform.modContainer = modContainer;
+    }
+
+    public static void setModEventBus(IEventBus modEventBus) {
+        BingoClientPlatform.modEventBus = modEventBus;
+    }
+
     public static void registerEvents() {
-        ClientEvents.KEY_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
-            (client, screen, scaledWidth, scaledHeight) ->
-                ScreenKeyboardEvents.allowKeyRelease(screen).register((screen1, event) ->
-                    !handler.onKeyReleased(screen1, event)
-                )
-        ));
-        ClientEvents.MOUSE_RELEASED_PRE.setRegistrar(handler -> ScreenEvents.BEFORE_INIT.register(
-            (client, screen, scaledWidth, scaledHeight) ->
-                ScreenMouseEvents.allowMouseRelease(screen).register((screen1, event) ->
-                    !handler.onMouseReleased(screen1, event)
-                )
-        ));
-        ClientEvents.PLAYER_QUIT.setRegistrar(FabricClientEvents.PLAYER_QUIT::register);
-        ClientEvents.CLIENT_TICK_START.setRegistrar(handler -> ClientTickEvents.START_CLIENT_TICK.register(handler::accept));
-        ClientEvents.CLIENT_TICK_END.setRegistrar(handler -> ClientTickEvents.END_CLIENT_TICK.register(handler::accept));
-
-        ClientLoginNetworking.registerGlobalReceiver(BingoPlatform.PROTOCOL_VERSION_PACKET, (client, handler, buf, listenerAdder) -> {
-            final int serverVersion = buf.readVarInt();
-            if (serverVersion != BingoNetworking.PROTOCOL_VERSION) {
-                Bingo.LOGGER.warn("Bingo client and server versions don't match. A disconnect is probably imminent.");
+        ClientEvents.KEY_RELEASED_PRE.setRegistrar(handler -> NeoForge.EVENT_BUS.addListener((ScreenEvent.KeyReleased.Pre event) -> {
+            if (handler.onKeyReleased(event.getScreen(), event.getKeyEvent())) {
+                event.setCanceled(true);
             }
-            final FriendlyByteBuf response = FriendlyByteBufs.create();
-            response.writeVarInt(BingoNetworking.PROTOCOL_VERSION);
-            return CompletableFuture.completedFuture(response);
-        });
+        }));
+        ClientEvents.MOUSE_RELEASED_PRE.setRegistrar(handler -> NeoForge.EVENT_BUS.addListener((ScreenEvent.MouseButtonReleased.Pre event) -> {
+            if (handler.onMouseReleased(event.getScreen(), event.getMouseButtonEvent())) {
+                event.setCanceled(true);
+            }
+        }));
+        ClientEvents.PLAYER_QUIT.setRegistrar(handler -> NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) ->
+            handler.accept(event.getPlayer())
+        ));
+        ClientEvents.CLIENT_TICK_START.setRegistrar(handler -> NeoForge.EVENT_BUS.addListener((ClientTickEvent.Pre event) ->
+            handler.accept(Minecraft.getInstance())
+        ));
+        ClientEvents.CLIENT_TICK_END.setRegistrar(handler -> NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) ->
+            handler.accept(Minecraft.getInstance())
+        ));
 
-        HudElementRegistry.addLast(Identifiers.bingo("hud"), (graphics, deltaTracker) -> BingoClient.renderBoardOnHud(Minecraft.getInstance(), graphics));
+        modEventBus.addListener((RegisterGuiLayersEvent event) -> event.registerAboveAll(
+            Identifiers.bingo("hud"),
+            (graphics, deltaTracker) -> BingoClient.renderBoardOnHud(Minecraft.getInstance(), graphics)
+        ));
+
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (minecraft, screen) -> new BingoConfigScreen(screen));
     }
 }

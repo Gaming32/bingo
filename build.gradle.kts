@@ -1,8 +1,9 @@
+import io.github.gaming32.bingo.buildscript.ConvertClassTweakerTask
 
 plugins {
     java
     checkstyle
-    alias(libs.plugins.fabric.loom)
+    alias(libs.plugins.mod.dev.gradle)
     alias(libs.plugins.mod.publish.plugin)
 }
 
@@ -14,21 +15,13 @@ version = rootProject["mod_version"]
 
 sourceSets {
     main {
-        java {
-            srcDir("src/datagen/java")
-        }
         resources {
-            srcDir("src/datagen/resources")
             srcDir("src/main/generated")
         }
     }
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
-    }
-
     withSourcesJar()
 }
 
@@ -42,31 +35,52 @@ repositories {
     }
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/bingo.accessWidener")
+val convertClassTweaker by tasks.registering(ConvertClassTweakerTask::class) {
+    description = "Converts the class tweaker to an access transformer etc"
+    classTweakerFile.set(file("src/main/resources/bingo.accessWidener"))
+    accessTransformerFile.set(layout.buildDirectory.file("classTweaker/accesstransformer.cfg"))
+}
+afterEvaluate {
+    tasks.named("createMinecraftArtifacts") {
+        dependsOn(convertClassTweaker)
+    }
 }
 
-fabricApi {
-    configureDataGeneration {
-        client = true
+neoForge {
+    version = libs.versions.neoforge.get()
+
+    accessTransformers.from(convertClassTweaker.flatMap { it.accessTransformerFile })
+
+    runs {
+        create("client") {
+            client()
+        }
+        create("server") {
+            server()
+        }
+
+        mods {
+            create("bingo") {
+                sourceSet(sourceSets.main.get())
+            }
+        }
+    }
+
+    unitTest {
+        enable()
+        testedMod.set(mods["bingo"])
     }
 }
 
 dependencies {
-    minecraft(libs.minecraft)
     libs.bundles.nightconfig.get().forEach {
-        include(implementation(it)!!)
-    }
-    implementation(libs.fabric.loader)
-    implementation(libs.fabric.api)
-    implementation(libs.modmenu) {
-        isTransitive = false
+        jarJar(implementation(it)!!)
     }
     compileOnly(libs.jei)
     compileOnly(libs.mcdev.annotations.get())
 
-    testImplementation(libs.fabric.loader.junit)
     testImplementation(libs.junit)
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 
@@ -76,19 +90,21 @@ tasks.withType<Test> {
 
 tasks.getByName<Jar>("jar") {
     from("LICENSE")
+    from(convertClassTweaker.flatMap { it.accessTransformerFile }) {
+        rename { "META-INF/accesstransformer.cfg" }
+    }
 }
 
 val processResourcesValues = mapOf("version" to project.version)
 
-tasks.getByName<ProcessResources>("processResources") {
+val generateModMetadata by tasks.registering(ProcessResources::class) {
     inputs.properties(processResourcesValues)
-
-    duplicatesStrategy = DuplicatesStrategy.WARN
-
-    filesMatching("fabric.mod.json") {
-        expand(processResourcesValues)
-    }
+    expand(processResourcesValues)
+    from("src/main/templates")
+    into(layout.buildDirectory.dir("generated/sources/modMetadata"))
 }
+sourceSets.main.get().resources.srcDir(generateModMetadata)
+neoForge.ideSyncTask(generateModMetadata)
 
 checkstyle {
     toolVersion = libs.versions.checkstyle.get()
@@ -114,18 +130,12 @@ publishMods {
         minecraftVersions.add(libs.versions.minecraft)
     }
 
-    modrinth("modrinthFabric") {
+    modrinth("modrinthNeoforge") {
         from(modrinthOpts)
-        version.set("${project.version}+fabric")
-        displayName.set("Bingo ${project.version} for Fabric")
+        version.set("${project.version}+neoforge")
+        displayName.set("Bingo ${project.version} for NeoForge")
         file.set(tasks.getByName<Jar>("jar").archiveFile)
         additionalFiles.from(tasks.getByName("sourcesJar"))
-        modLoaders.add("fabric")
-        requires {
-            slug.set("fabric-api")
-        }
-        optional {
-            slug.set("modmenu")
-        }
+        modLoaders.add("neoforge")
     }
 }

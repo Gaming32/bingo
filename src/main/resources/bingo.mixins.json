@@ -44,7 +44,7 @@
     "MixinRangedCrossbowAttackGoal",
     "MixinRavager",
     "MixinRespawnAnchorBlock",
-    "MixinServerLevel",
+    "MixinServerCommonPacketListenerImpl",
     "MixinServerPlayer",
     "MixinServerPlayer_2",
     "MixinServerScoreboard",
@@ -63,7 +63,6 @@
     "client.CameraAccessor",
     "client.MixinGameRenderer",
     "client.MixinGui",
-    "client.MixinMinecraft",
     "client.MixinRootSpectatorMenuCategory",
     "client.MixinRowHelper"
   ],
