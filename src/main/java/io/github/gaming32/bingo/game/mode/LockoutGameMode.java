@@ -9,7 +9,6 @@ import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.scores.PlayerTeam;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -44,7 +43,6 @@ public class LockoutGameMode implements BingoGameMode {
         return null;
     }
 
-    @NotNull
     @Override
     public BingoBoard.Teams getWinners(BingoBoard board, int teamCount, BingoBoard.Teams nerfedTeams, boolean tryHarder) {
         class TeamValue {

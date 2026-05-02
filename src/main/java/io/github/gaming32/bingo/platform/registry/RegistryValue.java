@@ -1,8 +1,8 @@
 package io.github.gaming32.bingo.platform.registry;
 
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 
 public final class RegistryValue<T> {
     private final Holder.Reference<T> holder;

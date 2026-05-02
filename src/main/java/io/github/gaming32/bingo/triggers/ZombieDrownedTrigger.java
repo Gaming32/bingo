@@ -10,13 +10,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
 public class ZombieDrownedTrigger extends SimpleCriterionTrigger<ZombieDrownedTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -46,7 +43,7 @@ public class ZombieDrownedTrigger extends SimpleCriterionTrigger<ZombieDrownedTr
         }
 
         @Override
-        public void validate(@NonNull ValidationContextSource validator) {
+        public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
             Validatable.validate(validator.entityContext(), "zombie", zombie);
         }

@@ -11,12 +11,10 @@ import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public class CompleteMapTrigger extends SimpleCriterionTrigger<CompleteMapTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

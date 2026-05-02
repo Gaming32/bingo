@@ -2,8 +2,8 @@ package io.github.gaming32.bingo.platform;
 
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.client.BingoClient;
-import io.github.gaming32.bingo.platform.event.FabricClientEvents;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
+import io.github.gaming32.bingo.platform.event.FabricClientEvents;
 import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;

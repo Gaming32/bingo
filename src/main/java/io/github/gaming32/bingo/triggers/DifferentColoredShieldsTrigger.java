@@ -14,8 +14,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -26,7 +25,6 @@ public class DifferentColoredShieldsTrigger extends SimpleProgressibleCriterionT
         InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.DIFFERENT_COLORED_SHIELDS.get().trigger(player, inventory));
     }
 
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

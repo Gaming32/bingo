@@ -9,7 +9,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringRepresentable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -108,7 +107,6 @@ public record CompoundBingoSub(ElementType elementType, Operator operator, List<
             this.supportedOperators = Set.of(supportedOperators);
         }
 
-        @NotNull
         @Override
         public String getSerializedName() {
             return name().toLowerCase(Locale.ROOT);
@@ -121,7 +119,6 @@ public record CompoundBingoSub(ElementType elementType, Operator operator, List<
         @SuppressWarnings("deprecation")
         public static final EnumCodec<Operator> CODEC = StringRepresentable.fromEnum(Operator::values);
 
-        @NotNull
         @Override
         public String getSerializedName() {
             return name().toLowerCase(Locale.ROOT);

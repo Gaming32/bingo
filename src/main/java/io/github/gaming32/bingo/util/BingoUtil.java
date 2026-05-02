@@ -37,7 +37,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -143,7 +142,7 @@ public class BingoUtil {
         return codec.parse(dynamic).getOrThrow(IllegalArgumentException::new);
     }
 
-    public static <T extends Enum<T>> T valueOf(String name, @NotNull T defaultValue) {
+    public static <T extends Enum<T>> T valueOf(String name, T defaultValue) {
         try {
             return Enum.valueOf(defaultValue.getDeclaringClass(), name);
         } catch (IllegalArgumentException e) {

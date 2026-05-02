@@ -21,14 +21,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class GrowFeatureTrigger extends SimpleCriterionTrigger<GrowFeatureTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

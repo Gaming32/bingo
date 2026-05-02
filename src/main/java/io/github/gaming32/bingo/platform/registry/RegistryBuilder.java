@@ -4,8 +4,8 @@ import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 
 public class RegistryBuilder<T> {
     private final ResourceKey<Registry<T>> key;

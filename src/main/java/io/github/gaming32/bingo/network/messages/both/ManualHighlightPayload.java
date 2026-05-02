@@ -4,8 +4,8 @@ import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
-import io.github.gaming32.bingo.platform.BingoNetworking;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
+import io.github.gaming32.bingo.platform.BingoNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -13,7 +13,6 @@ import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.NotNull;
 
 public record ManualHighlightPayload(int slot, int value, int modCount) implements AbstractCustomPayload {
     public static final CustomPacketPayload.Type<ManualHighlightPayload> TYPE = AbstractCustomPayload.type("manual_highlight");
@@ -25,7 +24,6 @@ public record ManualHighlightPayload(int slot, int value, int modCount) implemen
     );
 
     @Override
-    @NotNull
     public Type<ManualHighlightPayload> type() {
         return TYPE;
     }

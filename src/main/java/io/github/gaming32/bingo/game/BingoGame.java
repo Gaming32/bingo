@@ -54,8 +54,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -655,7 +654,6 @@ public class BingoGame {
         }
     }
 
-    @NotNull
     public BingoBoard.Teams getTeam(ServerPlayer player) {
         for (int i = 0; i < teams.length; i++) {
             if (player.isAlliedTo(teams[i])) {

@@ -6,8 +6,8 @@ import com.google.gson.JsonObject;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
 import io.github.gaming32.bingo.util.BingoUtil;
-import net.minecraft.util.Util;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;

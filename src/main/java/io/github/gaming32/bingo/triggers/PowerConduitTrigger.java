@@ -8,12 +8,10 @@ import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public class PowerConduitTrigger extends SimpleCriterionTrigger<PowerConduitTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

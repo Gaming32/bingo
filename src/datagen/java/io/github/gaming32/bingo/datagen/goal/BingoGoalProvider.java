@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -29,7 +28,6 @@ public class BingoGoalProvider extends FabricCodecDataProvider<BingoGoal> {
     }
 
     @Override
-    @NotNull
     public String getName() {
         return "Bingo goals";
     }

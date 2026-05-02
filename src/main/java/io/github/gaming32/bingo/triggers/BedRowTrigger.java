@@ -17,13 +17,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
 import java.util.Optional;
 
 public class BedRowTrigger extends SimpleCriterionTrigger<BedRowTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

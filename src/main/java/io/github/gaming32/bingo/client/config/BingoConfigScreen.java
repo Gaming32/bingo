@@ -20,7 +20,6 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
-import org.jspecify.annotations.NonNull;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -71,7 +70,7 @@ public class BingoConfigScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         graphics.centeredText(font, title, width / 2, 15, 0xffffffff);
     }

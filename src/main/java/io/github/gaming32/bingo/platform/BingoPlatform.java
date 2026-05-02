@@ -2,9 +2,9 @@ package io.github.gaming32.bingo.platform;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
-import io.github.gaming32.bingo.platform.event.FabricEvents;
 import io.github.gaming32.bingo.platform.event.ConfigurationTaskRegistrar;
 import io.github.gaming32.bingo.platform.event.Event;
+import io.github.gaming32.bingo.platform.event.FabricEvents;
 import io.github.gaming32.bingo.platform.registrar.ClientTooltipRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DataReloadListenerRegistrar;
 import io.github.gaming32.bingo.platform.registrar.DatapackRegistryRegistrar;
@@ -47,7 +47,6 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.nio.file.Path;
@@ -120,7 +119,6 @@ public final class BingoPlatform {
                 private PreparableReloadListener delegate;
 
                 @Override
-                @NotNull
                 public CompletableFuture<Void> reload(SharedState sharedState, Executor executor, PreparationBarrier preparationBarrier, Executor executor2) {
                     HolderLookup.Provider lookup = sharedState.get(ResourceLoader.REGISTRY_LOOKUP_KEY);
                     if (currentLookup == null || lookup != currentLookup.get()) {
