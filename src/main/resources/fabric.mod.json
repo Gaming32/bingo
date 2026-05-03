@@ -41,6 +41,7 @@
     "bingo.mixins.json",
     "bingo.datagen.mixins.json"
   ],
+  "accessWidener": "bingo.accessWidener",
   "depends": {
     "fabricloader": ">=0.18.4",
     "fabric-api": "*",
