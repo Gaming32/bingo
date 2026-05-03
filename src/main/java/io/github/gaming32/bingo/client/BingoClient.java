@@ -20,9 +20,11 @@ import io.github.gaming32.bingo.platform.BingoClientPlatform;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.Identifiers;
 import io.github.gaming32.bingo.util.Vec2i;
 import net.minecraft.ChatFormatting;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -175,6 +177,34 @@ public class BingoClient {
         final PositionAndScale pos = getBoardPosition();
         renderBingo(graphics, minecraft.screen instanceof ChatScreen, pos);
 
+        final Font font = minecraft.font;
+        final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
+        int scoreY;
+        if (CONFIG.getBoardCorner().isOnBottom) {
+            scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
+        } else {
+            scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
+        }
+        final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
+
+        if (clientGame.scheduledEndTime() > 0) {
+            long serverTime = 0;
+            if (minecraft.level instanceof ClientLevel clientLevel) {
+                serverTime = clientLevel.getGameTime();
+            }
+            long remainingTimeTicks = clientGame.scheduledEndTime() - serverTime;
+            String formatedRemainingTime = " - " + BingoUtil.formatRemainingTime(remainingTimeTicks);
+            int color = 0xffffffff;
+            if (remainingTimeTicks < 30 * SharedConstants.TICKS_PER_MINUTE)
+                color = 0xffffaf00;
+            if (remainingTimeTicks < 5 * SharedConstants.TICKS_PER_MINUTE)
+                color = 0xffff0000;
+            final MutableComponent remainingTimeLabel = Component.translatable("bingo.remaining_time");
+            graphics.text(font, remainingTimeLabel, scoreX - font.width(remainingTimeLabel), scoreY, color);
+            graphics.text(font, Component.literal(formatedRemainingTime), scoreX, scoreY, color);
+            scoreY += shift;
+        }
+
         if (CONFIG.isShowScoreCounter() && clientGame.renderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
             class TeamValue {
                 final BingoBoard.Teams team;
@@ -200,15 +230,6 @@ public class BingoClient {
 
             Arrays.sort(teams, Comparator.comparing(v -> -v.score)); // Sort in reverse
 
-            final Font font = minecraft.font;
-            final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
-            int scoreY;
-            if (CONFIG.getBoardCorner().isOnBottom) {
-                scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
-            } else {
-                scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
-            }
-            final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
             for (final TeamValue teamValue : teams) {
                 if (teamValue.score == 0) break;
                 final PlayerTeam team = clientGame.teams()[teamValue.team.getFirstIndex()];

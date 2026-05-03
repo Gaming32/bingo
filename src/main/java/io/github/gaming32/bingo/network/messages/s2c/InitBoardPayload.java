@@ -25,7 +25,8 @@ public record InitBoardPayload(
     BingoBoard.Teams nerfedTeams,
     BingoGameMode.RenderMode renderMode,
     int[] manualHighlights,
-    int manualHighlightModCount
+    int manualHighlightModCount,
+    long scheduledEndTime
 ) implements AbstractCustomPayload {
     public static final Type<InitBoardPayload> TYPE = AbstractCustomPayload.type("init_board");
     public static final StreamCodec<RegistryFriendlyByteBuf, InitBoardPayload> CODEC = StreamCodec.composite(
@@ -38,10 +39,11 @@ public record InitBoardPayload(
         BingoGameMode.RenderMode.STREAM_CODEC, InitBoardPayload::renderMode,
         BingoStreamCodecs.INT_ARRAY, InitBoardPayload::manualHighlights,
         ByteBufCodecs.VAR_INT, InitBoardPayload::manualHighlightModCount,
+        ByteBufCodecs.LONG, InitBoardPayload::scheduledEndTime,
         InitBoardPayload::new
     );
 
-    public static InitBoardPayload create(BingoGame game, BingoBoard.Teams team, BingoBoard.Teams[] states) {
+    public static InitBoardPayload create(BingoGame game, BingoBoard.Teams team, BingoBoard.Teams[] states, long scheduledEndTime) {
         final BingoBoard board = game.getBoard();
 
         return new InitBoardPayload(
@@ -55,7 +57,8 @@ public record InitBoardPayload(
             game.getNerfedTeams(),
             game.getGameMode().getRenderMode(),
             team.one() ? Arrays.stream(board.getTeamManualHighlights(team)).mapToInt(i -> i == null ? 0 : i + 1).toArray() : new int[board.getShape().getGoalCount(board.getSize())],
-            team.one() ? board.getManualHighlightModCount(team) : 0
+            team.one() ? board.getManualHighlightModCount(team) : 0,
+            scheduledEndTime
         );
     }
 

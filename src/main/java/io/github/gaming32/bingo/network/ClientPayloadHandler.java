@@ -4,6 +4,7 @@ import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateEndTimePayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import io.github.gaming32.bingo.platform.BingoPlatform;
@@ -21,6 +22,8 @@ public interface ClientPayloadHandler {
     void handleUpdateProgress(UpdateProgressPayload payload);
 
     void handleUpdateState(UpdateStatePayload payload);
+
+    void handleUpdateEndTime(UpdateEndTimePayload payload);
 
     void handleManualHighlight(ManualHighlightPayload payload);
 

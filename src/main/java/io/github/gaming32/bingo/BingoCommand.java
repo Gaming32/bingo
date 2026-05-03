@@ -147,6 +147,10 @@ public class BingoCommand {
     private static final CommandSwitch<Long> SEED = CommandSwitch
         .argument("--seed", LongArgumentType.longArg())
         .build(RandomSupport::generateUniqueSeed);
+    private static final CommandSwitch<Integer> TIME_LIMIT = CommandSwitch
+        .argument("--time-limit", TimeArgument.time(-1))
+        .getter(IntegerArgumentType::getInteger)
+        .build(-1);
     private static final CommandSwitch<Integer> AUTO_FORFEIT_TIME = CommandSwitch
         .argument("--auto-forfeit-time", TimeArgument.time(0))
         .getter(IntegerArgumentType::getInteger)
@@ -382,6 +386,23 @@ public class BingoCommand {
                     )
                 )
             )
+            .then(literal("time-limit")
+                .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
+                .then(literal("set")
+                    .then(argument("time-limit", TimeArgument.time(-1))
+                        .executes(ctx -> {
+                            final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
+                            if (game == null) {
+                                throw NO_GAME_RUNNING.create();
+                            }
+                            int timeLimit = IntegerArgumentType.getInteger(ctx, "time-limit");
+                            final long scheduledEndTime = timeLimit > 0 ? ctx.getSource().getServer().overworld().getGameTime() + timeLimit : 0;
+                            game.setScheduledEndTime(ctx.getSource().getServer(), scheduledEndTime);
+                            return 1;
+                        })
+                    )
+                )
+            )
             .then(literal("nerf")
                 .then(literal("add")
                     .then(argument("player", EntityArgument.player())
@@ -422,6 +443,7 @@ public class BingoCommand {
             SHAPE.addTo(startCommand);
             SIZE.addTo(startCommand);
             SEED.addTo(startCommand);
+            TIME_LIMIT.addTo(startCommand);
             AUTO_FORFEIT_TIME.addTo(startCommand);
             DIFFICULTY.addTo(startCommand);
             GAMEMODE.addTo(startCommand);
@@ -465,6 +487,7 @@ public class BingoCommand {
         final boolean requireClient = REQUIRE_CLIENT.get(context);
         final boolean continueAfterWin = CONTINUE_AFTER_WIN.get(context);
         final boolean includeInactiveTeams = INCLUDE_INACTIVE_TEAMS.get(context);
+        final int timeLimit  = TIME_LIMIT.get(context);
         final int autoForfeitTicks = AUTO_FORFEIT_TIME.get(context);
 
         final Set<PlayerTeam> teams = LinkedHashSet.newLinkedHashSet(teamCount);
@@ -515,7 +538,8 @@ public class BingoCommand {
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        final var game = new BingoGame(board, gamemode, requireClient, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
+        final long scheduledEndTime = timeLimit > 0 ? context.getSource().getServer().overworld().getGameTime() + timeLimit : 0;
+        final var game = new BingoGame(board, gamemode, requireClient, continueAfterWin, scheduledEndTime, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
             if (Bingo.CONFIG.getNerfedPlayers().contains(player.getUUID())) {

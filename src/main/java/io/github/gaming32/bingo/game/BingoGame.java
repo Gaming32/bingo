@@ -14,6 +14,7 @@ import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateEndTimePayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import io.github.gaming32.bingo.triggers.progress.ProgressibleTrigger;
@@ -44,12 +45,16 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stat;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
@@ -79,23 +84,27 @@ public class BingoGame {
     private final boolean continueAfterWin;
     private final int autoForfeitTicks;
     private final PlayerTeam[] teams;
+    private long scheduledEndTime;
 
+    private final RandomSource random = RandomSource.create();
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> advancementProgress = new HashMap<>();
     private final Map<UUID, Map<ActiveGoal, GoalProgress>> goalProgress = new HashMap<>();
     private final Map<UUID, Object2IntOpenHashMap<ActiveGoal>> goalAchievedCount = new HashMap<>();
     private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
     private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
+    private final ServerBossEvent vanillaRemainingTime = new ServerBossEvent(Mth.createInsecureUUID(this.random), Bingo.translatable("bingo.remaining_time"), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS);
     private final OptionalLong[] lastActiveTimes;
     private BingoBoard.Teams remainingTeams;
     private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams nerfedTeams = BingoBoard.Teams.NONE;
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean continueAfterWin, int autoForfeitTicks, PlayerTeam... teams) {
+    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean continueAfterWin, long scheduledEndTime, int autoForfeitTicks, PlayerTeam... teams) {
         this.board = board;
         this.gameMode = gameMode;
         this.requireClient = requireClient;
         this.continueAfterWin = continueAfterWin;
+        this.scheduledEndTime = scheduledEndTime;
         this.autoForfeitTicks = autoForfeitTicks;
         this.teams = teams;
         this.lastActiveTimes = new OptionalLong[teams.length];
@@ -140,7 +149,7 @@ public class BingoGame {
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamPayload(team).sendTo(player);
 
-        InitBoardPayload.create(this, team, obfuscateTeam(team, player)).sendTo(player);
+        InitBoardPayload.create(this, team, obfuscateTeam(team, player), this.scheduledEndTime).sendTo(player);
         if (!((PlayerAdvancementsAccessor)player.getAdvancements()).getIsFirstPacket()) {
             syncAdvancementsTo(player);
         }
@@ -153,6 +162,10 @@ public class BingoGame {
                     new UpdateProgressPayload(goalIndex, progress.progress(), progress.maxProgress()).sendTo(player);
                 }
             });
+        }
+
+        if (scheduledEndTime > 0 && !Bingo.isInstalledOnClient(player)) {
+            vanillaRemainingTime.addPlayer(player);
         }
     }
 
@@ -169,6 +182,39 @@ public class BingoGame {
 
     public void removePlayer(ServerPlayer player) {
         unregisterListeners(player, true);
+        vanillaRemainingTime.removePlayer(player);
+    }
+
+    public void setScheduledEndTime(MinecraftServer server, long scheduledEndTime) {
+        this.scheduledEndTime = scheduledEndTime;
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            if (Bingo.isInstalledOnClient(player)) {
+                new UpdateEndTimePayload(scheduledEndTime).sendTo(player);
+            } else {
+                vanillaRemainingTime.addPlayer(player);
+            }
+        }
+        updateVanillaRemainingTime(server);
+    }
+
+    public void updateVanillaRemainingTime(MinecraftServer server) {
+        if (vanillaRemainingTime.getPlayers().isEmpty()) {
+            return;
+        }
+        long remainingTimeTicks = scheduledEndTime - server.overworld().getGameTime();
+        String formatedRemainingTime = BingoUtil.formatRemainingTime(remainingTimeTicks);
+        if (remainingTimeTicks <= 0) {
+            vanillaRemainingTime.removeAllPlayers();
+            return;
+        }
+        BossEvent.BossBarColor color = BossEvent.BossBarColor.WHITE;
+        if (remainingTimeTicks < 5 * SharedConstants.TICKS_PER_MINUTE) {
+            color = BossEvent.BossBarColor.RED;
+        } else if (remainingTimeTicks < 30 * SharedConstants.TICKS_PER_MINUTE) {
+            color = BossEvent.BossBarColor.PURPLE;
+        }
+        vanillaRemainingTime.setName(Bingo.translatable("bingo.remaining_time_with_value", formatedRemainingTime));
+        vanillaRemainingTime.setColor(color);
     }
 
     public BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam, Player player) {
@@ -243,6 +289,9 @@ public class BingoGame {
 
         ((MinecraftServerExt) playerList.getServer()).bingo$setGame(null);
         new ResyncStatesPayload(board.getStates()).sendTo(playerList.getPlayers());
+        if (scheduledEndTime > 0) {
+            setScheduledEndTime(playerList.getServer(), 0);
+        }
         Bingo.updateCommandTree(playerList);
     }
 
@@ -270,6 +319,14 @@ public class BingoGame {
                         }
                     }
                 }
+            }
+        }
+
+        if (scheduledEndTime > 0 && server.getTickCount() % SharedConstants.TICKS_PER_SECOND == 0) {
+            if (server.overworld().getGameTime() > scheduledEndTime) {
+                endGame(server.getPlayerList());
+            } else {
+                updateVanillaRemainingTime(server);
             }
         }
     }
@@ -774,6 +831,7 @@ public class BingoGame {
         BingoGameMode gameMode,
         boolean requireClient,
         boolean continueAfterWin,
+        long scheduledEndTime,
         int autoForfeitTicks,
         List<String> teamNames,
         Map<UUID, Int2ObjectMap<AdvancementProgress>> advancementProgress,
@@ -803,6 +861,7 @@ public class BingoGame {
                 BingoGameMode.PERSISTENCE_CODEC.fieldOf("game_mode").forGetter(PersistenceData::gameMode),
                 Codec.BOOL.fieldOf("require_client").forGetter(PersistenceData::requireClient),
                 Codec.BOOL.optionalFieldOf("continue_after_win", false).forGetter(PersistenceData::continueAfterWin),
+                ExtraCodecs.NON_NEGATIVE_LONG.optionalFieldOf("scheduled_end_time", 0L).forGetter(PersistenceData::scheduledEndTime),
                 ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("auto_forfeit_ticks", DEFAULT_AUTO_FORFEIT_TICKS).forGetter(PersistenceData::autoForfeitTicks),
                 Codec.STRING.listOf().fieldOf("team_names").forGetter(PersistenceData::teamNames),
                 ADVANCEMENT_PROGRESS_CODEC.fieldOf("advancement_progress").forGetter(PersistenceData::advancementProgress),
@@ -825,7 +884,7 @@ public class BingoGame {
                     throw new IllegalStateException("Team '" + teamNames.get(i) + "' no longer exists");
                 }
             }
-            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, autoForfeitTicks, teams);
+            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, scheduledEndTime, autoForfeitTicks, teams);
 
             for (final var entry : advancementProgress.entrySet()) {
                 final Map<ActiveGoal, AdvancementProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
@@ -895,7 +954,8 @@ public class BingoGame {
             }
 
             return new PersistenceData(
-                game.board, game.gameMode, game.requireClient, game.continueAfterWin, game.autoForfeitTicks,
+                game.board, game.gameMode, game.requireClient, game.continueAfterWin,
+                game.scheduledEndTime, game.autoForfeitTicks,
                 Arrays.stream(game.teams).map(PlayerTeam::getName).toList(),
                 createMap(game, game.advancementProgress),
                 createMap(game, game.goalProgress),
