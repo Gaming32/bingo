@@ -8,7 +8,7 @@
     <module name="SuppressionSingleFilter">
         <property name="checks" value="IllegalImport"/>
         <property name="id" value="PlatformImport"/>
-        <property name="files" value="^.*[\\/]io[\\/]github[\\/]gaming32[\\/]bingo[\\/](datagen|platform|mixin)[\\/].*$"/>
+        <property name="files" value="^.*[\\/]io[\\/]github[\\/]gaming32[\\/]bingo[\\/](datagen|gametest|platform|mixin)[\\/].*$"/>
     </module>
 
     <module name="JavadocPackage"/>
