@@ -162,9 +162,12 @@ public class BingoClient {
         if (clientGame == null) {
             return;
         }
-        if (minecraft.getDebugOverlay().showDebugScreen() && !BingoClient.CONFIG.showBoardOnF3Screen()) {
+
+        boolean debugOverlayVisible = minecraft.debugEntries.isOverlayVisible() && (!minecraft.options.hideGui || minecraft.screen != null);
+        if (debugOverlayVisible && !BingoClient.CONFIG.showBoardOnF3Screen()) {
             return;
         }
+
         if (minecraft.screen instanceof BoardScreen) {
             return;
         }
