@@ -50,6 +50,11 @@ fabricApi {
     configureDataGeneration {
         client = true
     }
+    configureTests {
+        modId = "bingo"
+        enableClientGameTests = true
+        createSourceSet = true
+    }
 }
 
 dependencies {

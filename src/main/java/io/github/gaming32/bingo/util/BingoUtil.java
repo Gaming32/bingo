@@ -296,4 +296,9 @@ public class BingoUtil {
         }
         return builder;
     }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Throwable> T sneakyThrow(Throwable t) throws T {
+        throw (T) t;
+    }
 }
