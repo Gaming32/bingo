@@ -1,0 +1,1038 @@
+package io.github.gaming32.bingo.datagen.goal;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.Table;
+import io.github.gaming32.bingo.conditions.BlockCondition;
+import io.github.gaming32.bingo.conditions.BlockPatternCondition;
+import io.github.gaming32.bingo.conditions.OneByOneHoleCondition;
+import io.github.gaming32.bingo.conditions.WearingDifferentArmorCondition;
+import io.github.gaming32.bingo.data.BingoDifficulties;
+import io.github.gaming32.bingo.data.BingoTags;
+import io.github.gaming32.bingo.data.goal.BingoGoal;
+import io.github.gaming32.bingo.data.goal.GoalBuilder;
+import io.github.gaming32.bingo.data.icons.BlockIcon;
+import io.github.gaming32.bingo.data.icons.CycleIcon;
+import io.github.gaming32.bingo.data.icons.EntityIcon;
+import io.github.gaming32.bingo.data.icons.EntityTypeTagCycleIcon;
+import io.github.gaming32.bingo.data.icons.GoalIcon;
+import io.github.gaming32.bingo.data.icons.IndicatorIcon;
+import io.github.gaming32.bingo.data.icons.ItemIcon;
+import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
+import io.github.gaming32.bingo.data.subs.BingoSub;
+import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
+import io.github.gaming32.bingo.data.subs.SubBingoSub;
+import io.github.gaming32.bingo.data.tags.bingo.BingoBlockTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoDamageTypeTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoEntityTypeTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
+import io.github.gaming32.bingo.datagen.BingoDataGenUtil;
+import io.github.gaming32.bingo.triggers.BingoTriggers;
+import io.github.gaming32.bingo.triggers.BounceOnBlockTrigger;
+import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
+import io.github.gaming32.bingo.triggers.EntityKilledPlayerTrigger;
+import io.github.gaming32.bingo.triggers.EquipItemTrigger;
+import io.github.gaming32.bingo.triggers.ExplosionTrigger;
+import io.github.gaming32.bingo.triggers.GrowBeeNestTreeTrigger;
+import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
+import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
+import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
+import io.github.gaming32.bingo.triggers.KillSelfTrigger;
+import io.github.gaming32.bingo.triggers.LeashedEntityTrigger;
+import io.github.gaming32.bingo.triggers.PulledByLeashTrigger;
+import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
+import io.github.gaming32.bingo.util.BingoUtil;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.advancements.AdvancementRequirements;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.criterion.BlockPredicate;
+import net.minecraft.advancements.criterion.BredAnimalsTrigger;
+import net.minecraft.advancements.criterion.ConsumeItemTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
+import net.minecraft.advancements.criterion.DamagePredicate;
+import net.minecraft.advancements.criterion.DamageSourcePredicate;
+import net.minecraft.advancements.criterion.DataComponentMatchers;
+import net.minecraft.advancements.criterion.DistancePredicate;
+import net.minecraft.advancements.criterion.DistanceTrigger;
+import net.minecraft.advancements.criterion.EnchantedItemTrigger;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.ItemDurabilityTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.criterion.KilledTrigger;
+import net.minecraft.advancements.criterion.LocationPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.criterion.PlayerInteractTrigger;
+import net.minecraft.advancements.criterion.PlayerTrigger;
+import net.minecraft.advancements.criterion.RecipeCraftedTrigger;
+import net.minecraft.advancements.criterion.SpearMobsTrigger;
+import net.minecraft.advancements.criterion.StartRidingTrigger;
+import net.minecraft.advancements.criterion.SummonedEntityTrigger;
+import net.minecraft.advancements.criterion.TagPredicate;
+import net.minecraft.advancements.criterion.TameAnimalTrigger;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentExactPredicate;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.core.component.predicates.DataComponentPredicates;
+import net.minecraft.core.component.predicates.PotionsPredicate;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.stats.Stats;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.raid.Raid;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
+import net.minecraft.world.level.block.entity.BannerPatterns;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiConsumer;
+
+import static io.github.gaming32.bingo.datagen.goal.GoalIds.Medium.*;
+
+public class MediumGoalProvider extends DifficultyGoalProvider {
+    public MediumGoalProvider(BiConsumer<Identifier, BingoGoal> goalAdder, HolderLookup.Provider registries) {
+        super(BingoDifficulties.MEDIUM, goalAdder, registries);
+    }
+
+    @Override
+    public void addGoals() {
+        final var bannerPatterns = registries.lookupOrThrow(Registries.BANNER_PATTERN);
+        final var entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
+        final var items = registries.lookupOrThrow(Registries.ITEM);
+        final var blocks = registries.lookupOrThrow(Registries.BLOCK);
+
+        addGoal(obtainSomeEdibleItems(EDIBLE_ITEMS, 6, 7).tags(BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(BEETROOT_SOUP, items, Items.BEETROOT_SOUP)
+            .tags(BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(POTTED_CACTUS)
+            .criterion("pot", CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
+                new ItemUsedOnLocationTrigger.TriggerInstance(
+                    Optional.empty(),
+                    Optional.of(ContextAwarePredicate.create(
+                        LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.POTTED_CACTUS).build()
+                    ))
+                ))
+            )
+            .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .name("potted_cactus")
+            .icon(Blocks.POTTED_CACTUS, Blocks.CACTUS)
+        );
+        addGoal(BingoGoal.builder(SHOOT_TNT_MINECART)
+            .criterion("explode", ExplosionTrigger.builder()
+                .source(EntityPredicate.Builder.entity().of(entityTypes, EntityType.TNT_MINECART))
+                .build()
+            )
+            .name(Component.translatable("bingo.goal.shoot_tnt_minecart", EntityType.TNT_MINECART.getDescription()))
+            .icon(CycleIcon.infer(makeItemWithGlint(Items.BOW), Items.ARROW, Items.TNT_MINECART))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
+        addGoal(obtainItemGoal(MAGMA_BLOCK, items, Items.MAGMA_BLOCK, 10, 30));
+        addGoal(obtainItemGoal(DAMAGED_ANVIL, items, Items.DAMAGED_ANVIL));
+        addGoal(obtainItemGoal(MELON_SLICE, items, Items.MELON_SLICE, 16, 64)
+            .tags(BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(NEVER_WEAR_ARMOR)
+            .criterion("equip", EquipItemTrigger.builder()
+                .newItem(ItemPredicate.Builder.item().of(items, ConventionalItemTags.ARMORS).build())
+                .slots(EquipmentSlot.Type.HUMANOID_ARMOR)
+                .build()
+            )
+            .tags(BingoTags.NEVER)
+            .name("never_wear_armor")
+            .icon(Items.DIAMOND_CHESTPLATE)
+            .antisynergy("never_wear_armor")
+            .catalyst("wear_armor"));
+        addGoal(BingoGoal.builder(SKELETON_BOW)
+            .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
+                ItemPredicate.Builder.item().of(items, Items.BOW).build(),
+                EntityPredicate.Builder.entity().of(entityTypes, EntityType.SKELETON).build()
+            ))
+            .reactant("pacifist")
+            .tags(BingoTags.ITEM, BingoTags.COMBAT)
+            .name("skeleton_bow")
+            .icon(Items.BOW));
+        addGoal(obtainItemGoal(DIAMOND_BLOCK, items, Items.DIAMOND_BLOCK)
+            .infrequency(2));
+        addGoal(obtainItemGoal(LAPIS_BLOCK, items, Items.LAPIS_BLOCK, 2, 3)
+            .tags(BingoTags.OVERWORLD));
+        addGoal(
+            obtainSomeItemsFromTag(
+                DIFFERENT_SAPLINGS,
+                ItemTags.SAPLINGS,
+                "bingo.goal.different_saplings",
+                3, 5
+            )
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+        );
+        addGoal(BingoGoal.builder(TAME_WOLF)
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(entityTypes, EntityType.WOLF)))
+            .tags(BingoTags.STAT, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .name("tame_wolf")
+            .icon(Items.BONE));
+        addGoal(obtainItemGoal(FIRE_CHARGE, items, Items.FIRE_CHARGE, 6, 6)
+            .tags(BingoTags.NETHER, BingoTags.COMBAT));
+        addGoal(obtainItemGoal(MAGMA_CREAM, items, Items.MAGMA_CREAM, 2, 3)
+            .tags(BingoTags.NETHER, BingoTags.COMBAT));
+        addGoal(BingoGoal.builder(CREATE_IRON_GOLEM)
+            .criterion("summon", SummonedEntityTrigger.TriggerInstance.summonedEntity(
+                EntityPredicate.Builder.entity().of(entityTypes, EntityType.IRON_GOLEM)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.create_iron_golem", EntityType.IRON_GOLEM.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.IRON_GOLEM))
+        );
+        addGoal(BingoGoal.builder(CREATE_COPPER_GOLEM)
+            .criterion("summon", SummonedEntityTrigger.TriggerInstance.summonedEntity(
+                EntityPredicate.Builder.entity().of(entityTypes, EntityType.COPPER_GOLEM)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.create_copper_golem", EntityType.COPPER_GOLEM.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.COPPER_GOLEM))
+        );
+        addGoal(obtainItemGoal(ENDER_EYE, items, Items.ENDER_EYE)
+            .reactant("pacifist")
+            .tags(BingoTags.NETHER, BingoTags.COMBAT));
+        addGoal(obtainItemGoal(RABBIT_STEW, items, Items.RABBIT_STEW)
+            .tags(BingoTags.OVERWORLD));
+
+        addGoal(potionGoal("fire_resistance_potion", items, Potions.FIRE_RESISTANCE, Potions.LONG_FIRE_RESISTANCE));
+        addGoal(potionGoal("healing_potion", items, Potions.HEALING, Potions.STRONG_HEALING)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT));
+        addGoal(potionGoal("poison_potion", items, Potions.POISON, Potions.LONG_POISON, Potions.STRONG_POISON)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT));
+        addGoal(potionGoal("harming_potion", items, Potions.HARMING, Potions.STRONG_HARMING)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT));
+        addGoal(potionGoal("regeneration_potion", items, Potions.REGENERATION, Potions.LONG_REGENERATION, Potions.STRONG_REGENERATION)
+            .tags(BingoTags.COMBAT));
+        addGoal(potionGoal("slowness_potion", items, Potions.SLOWNESS, Potions.LONG_SLOWNESS, Potions.STRONG_SLOWNESS)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT));
+        addGoal(potionGoal("strength_potion", items, Potions.STRENGTH, Potions.LONG_STRENGTH, Potions.STRONG_STRENGTH)
+            .tags(BingoTags.COMBAT));
+        addGoal(potionGoal("swiftness_potion", items, Potions.SWIFTNESS, Potions.LONG_SWIFTNESS, Potions.STRONG_SWIFTNESS)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT));
+        addGoal(potionGoal("weakness_potion", items, Potions.WEAKNESS, Potions.LONG_WEAKNESS)
+            .tags(BingoTags.OVERWORLD, BingoTags.COMBAT));
+        addGoal(potionGoal("leaping_potion", items, Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD, BingoTags.COMBAT));
+        addGoal(potionGoal("slow_falling_potion", items, Potions.SLOW_FALLING, Potions.LONG_SLOW_FALLING)
+            .tags(BingoTags.COMBAT, BingoTags.OVERWORLD));
+        addGoal(potionGoal("turtle_master_potion", items, Potions.TURTLE_MASTER, Potions.LONG_TURTLE_MASTER, Potions.STRONG_TURTLE_MASTER)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD, BingoTags.COMBAT));
+
+        addGoal(BingoGoal.builder(FINISH_BY_FREE_FALLING)
+            .criterion("free_fall", DistanceTrigger.TriggerInstance.fallFromHeight(
+                // Copy of Vanilla's "fall_from_world_height" or "Caves & Cliffs" advancement
+                EntityPredicate.Builder.entity().located(
+                    LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atMost(-59))
+                ),
+                DistancePredicate.vertical(MinMaxBounds.Doubles.atLeast(379)),
+                LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atLeast(319))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.OVERWORLD, BingoTags.FINISH)
+            .name("finish_by_free_falling")
+            .tooltip(Component.translatable("advancements.adventure.fall_from_world_height.description"))
+            .icon(Items.WATER_BUCKET)
+        );
+        addGoal(BingoGoal.builder(VEGETARIAN)
+            .criterion("meat", ConsumeItemTrigger.TriggerInstance.usedItem(
+                ItemPredicate.Builder.item().of(items, BingoItemTags.MEAT)
+            ))
+            .tags(BingoTags.NEVER, BingoTags.ACTION)
+            .antisynergy("food")
+            .catalyst("eat_meat")
+            .name("vegetarian")
+            .tooltip("vegetarian")
+            .icon(new ItemTagCycleIcon(BingoItemTags.NOT_MEAT))
+        );
+        addGoal(BingoGoal.builder(KILL_SELF_WITH_ARROW)
+            .criterion("kill", KillSelfTrigger.TriggerInstance.killSelf(
+                DamageSourcePredicate.Builder.damageType()
+                    .tag(TagPredicate.is(DamageTypeTags.IS_PROJECTILE))
+                    .direct(EntityPredicate.Builder.entity().of(entityTypes, EntityTypeTags.ARROWS))
+                    .build()
+            ))
+            .tags(BingoTags.ACTION)
+            .name("kill_self_with_arrow")
+            .icon(Items.ARROW));
+        addGoal(BingoGoal.builder(WHILE_TRYING_TO_ESCAPE)
+            .criterion("die", EntityKilledPlayerTrigger.builder()
+                .sourceEntity(ContextAwarePredicate.create(
+                    new LootItemEntityPropertyCondition(Optional.empty(), LootContext.EntityTarget.THIS),
+                    InvertedLootItemCondition.invert(LootItemEntityPropertyCondition.hasProperties(
+                        LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().build()
+                    )).build()
+                ))
+                .build()
+            )
+            .tags(BingoTags.ACTION)
+            .name("while_trying_to_escape")
+            .tooltip("while_trying_to_escape")
+            .icon(Items.ZOMBIE_HEAD)
+        );
+        addGoal(BingoGoal.builder(FINISH_ON_TOP)
+            .criterion("on_top", PlayerTrigger.TriggerInstance.located(
+                LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atLeast(319))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.FINISH)
+            .name("finish_on_top")
+            .tooltip("finish_on_top")
+            .icon(new ItemStackTemplate(Items.DIRT, 320))
+        );
+        // TODO: kill hostile mob with gravel
+        // TODO: kill hostile mob with sand
+        // TODO: put carpet on llama
+        addGoal(BingoGoal.builder(SIZED_NETHER_PORTAL)
+            .sub("width", BingoSub.random(4, 6))
+            .sub("height", BingoSub.random(4, 6))
+            .criterion("activate",
+                ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
+                    LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.NETHER_PORTAL),
+                    BlockPatternCondition.builder().aisle("P")
+                        .where('P', BlockPredicate.Builder.block().of(blocks, Blocks.NETHER_PORTAL))
+                ),
+                subber -> subber.sub("conditions.location.1.aisles.0", new CompoundBingoSub(
+                    CompoundBingoSub.ElementType.ARRAY,
+                    CompoundBingoSub.Operator.MUL,
+                    BingoSub.wrapInArray(
+                        new CompoundBingoSub(
+                            CompoundBingoSub.ElementType.STRING,
+                            CompoundBingoSub.Operator.MUL,
+                            BingoSub.literal("P"),
+                            new SubBingoSub("width")
+                        )
+                    ),
+                    new SubBingoSub("height")
+                ))
+            )
+            .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.NETHER)
+            .name(
+                Component.translatable("bingo.goal.sized_nether_portal", 0, 0),
+                subber -> subber.sub("with.0", "width").sub("with.1", "height")
+            )
+            .icon(
+                new CycleIcon(
+                    BlockIcon.ofBlockAndItem(Blocks.NETHER_PORTAL, Blocks.OBSIDIAN),
+                    BlockIcon.ofBlock(Blocks.OBSIDIAN)
+                ),
+                subber -> subber
+                    .sub("icons.0.item.count", new CompoundBingoSub(
+                        CompoundBingoSub.ElementType.INT,
+                        CompoundBingoSub.Operator.MUL,
+                        new SubBingoSub("width"),
+                        new SubBingoSub("height")
+                    ))
+                    .sub("icons.1.item.count", new CompoundBingoSub(
+                        CompoundBingoSub.ElementType.INT,
+                        CompoundBingoSub.Operator.SUM,
+                        new SubBingoSub("width"),
+                        new SubBingoSub("width"),
+                        new SubBingoSub("height"),
+                        new SubBingoSub("height")
+                    ))
+            ));
+        addGoal(obtainItemGoal(OBSIDIAN, items, Items.OBSIDIAN, 3, 10));
+        addGoal(obtainItemGoal(IRON_BLOCK, items, Items.IRON_BLOCK, 5, 7)
+            .infrequency(2));
+        addGoal(obtainItemGoal(GOLD_BLOCK, items, Items.GOLD_BLOCK, 2, 4)
+            .infrequency(2));
+        addGoal(obtainItemGoal(DAYLIGHT_DETECTOR, items, Items.DAYLIGHT_DETECTOR)
+            .tags(BingoTags.OVERWORLD, BingoTags.NETHER));
+        addGoal(
+            obtainItemGoal(
+                ENCHANTED_GOLDEN_SWORD,
+                items,
+                new ItemIcon(makeItemWithGlint(Items.GOLDEN_SWORD)),
+                ItemPredicate.Builder.item()
+                    .of(items, Items.GOLDEN_SWORD)
+                    .withComponents(DataComponentMatchers.Builder.components()
+                        .partial(DataComponentPredicates.ENCHANTMENTS, createAnyEnchantmentsRequirement())
+                        .build()
+                    )
+            )
+                .name("enchanted_golden_sword")
+        );
+        addGoal(obtainSomeItemsFromTag(WOOL_COLORS, ItemTags.WOOL, "bingo.goal.wool_colors", 8, 11)
+            .antisynergy("wool_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
+        addGoal(obtainSomeItemsFromTag(TERRACOTTA, ItemTags.TERRACOTTA, "bingo.goal.colors_of_terracotta", 8, 11)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD)
+            .reactant("use_furnace")
+            .antisynergy("terracotta_color")
+            .infrequency(4)
+        );
+        addGoal(obtainSomeItemsFromTag(GLAZED_TERRACOTTA, ConventionalItemTags.GLAZED_TERRACOTTAS, "bingo.goal.glazed_terracotta", 7, 10)
+            .reactant("use_furnace")
+            .antisynergy("glazed_terracotta_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
+        addGoal(obtainSomeItemsFromTag(CONCRETE, ConventionalItemTags.CONCRETES, "bingo.goal.concrete", 7, 10)
+            .antisynergy("concrete_color")
+            .infrequency(4)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
+        addGoal(bedRowGoal(BED_ROW, 7, 10));
+        // TODO: power redstone lamp
+        addGoal(obtainSomeItemsFromTag(DIFFERENT_FLOWERS, ConventionalItemTags.FLOWERS, "bingo.goal.different_flowers", 8, 10)
+            .antisynergy("flowers")
+            .infrequency(2)
+            .tags(BingoTags.OVERWORLD));
+        // TODO: put zombified piglin in water
+        addGoal(mineralPillarGoal(BASIC_MINERAL_BLOCKS, BingoBlockTags.BASIC_MINERAL_BLOCKS)
+            .name("basic_mineral_blocks")
+            .tags(BingoTags.OVERWORLD)
+            .icon(new ItemTagCycleIcon(BingoItemTags.BASIC_MINERAL_BLOCKS))
+        );
+        // TODO: kill hostile mob with anvil
+        addGoal(obtainLevelsGoal(LEVELS, 16, 26)
+            .infrequency(2));
+        // TODO: different seeds
+        // TODO: 4 different armor types
+        // TODO: fill hopper with 320 items
+        addGoal(obtainItemGoal(RED_NETHER_BRICKS, items, Items.RED_NETHER_BRICKS, 16, 32)
+            .reactant("use_furnace")
+            .tags(BingoTags.NETHER));
+        addGoal(obtainItemGoal(SPECTRAL_ARROW, items, Items.SPECTRAL_ARROW, 16, 32)
+            .tags(BingoTags.NETHER));
+        addGoal(obtainItemGoal(ROTTEN_FLESH, items, Items.ROTTEN_FLESH, 33, 64)
+            .infrequency(2));
+        addGoal(obtainItemGoal(INK_SAC, items, Items.INK_SAC, 16, 32)
+            .infrequency(2)
+            .tags(BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(SLIME_BALL, items, Items.SLIME_BALL, 5, 9)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(LEAD_ON_RABBIT)
+            .criterion("use", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                ItemPredicate.Builder.item().of(items, Items.LEAD),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(entityTypes, EntityType.RABBIT)))
+            ))
+            .name(Component.translatable(
+                "bingo.goal.lead_on_rabbit",
+                Component.translatable(Items.LEAD.getDescriptionId()), EntityType.RABBIT.getDescription()
+            ))
+            .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .icon(Items.LEAD)
+        );
+        addGoal(obtainItemGoal(FIREWORK_STAR, items, Items.FIREWORK_STAR)
+            .tags(BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(HANG_MOB)
+            .criterion("hang", PulledByLeashTrigger.builder()
+                .knotRequired(true)
+                .force(DistancePredicate.vertical(MinMaxBounds.Doubles.atLeast(0.1)))
+                .build()
+            )
+            .name("hang_mob")
+            .tooltip("hang_mob")
+            .icon(CycleIcon.infer(EntityType.PIG, Items.LEAD, Items.OAK_FENCE))
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+        );
+        addGoal(obtainItemGoal(BLAZE_ROD, items, Items.BLAZE_ROD)
+            .reactant("pacifist")
+            .tags(BingoTags.NETHER, BingoTags.COMBAT));
+        addGoal(obtainItemGoal(GHAST_TEAR, items, Items.GHAST_TEAR)
+            .reactant("pacifist")
+            .tags(BingoTags.NETHER, BingoTags.COMBAT));
+        // TODO: never use coal
+        addGoal(obtainItemGoal(GLOWSTONE_DUST, items, Items.GLOWSTONE_DUST, 32, 64)
+            .tags(BingoTags.NETHER));
+        addGoal(obtainItemGoal(ITEM_FRAME, items, Items.ITEM_FRAME, 10, 32));
+        addGoal(obtainSomeItemsFromTag(DIAMOND_IN_NAME, BingoItemTags.DIAMOND_IN_NAME, "bingo.goal.diamond_in_name", 3, 4)
+            .antisynergy("diamond_items")
+            .tooltip("diamond_in_name"));
+        addGoal(obtainItemGoal(PRISMARINE_CRYSTALS, items, Items.PRISMARINE_CRYSTALS, 2, 4)
+            .infrequency(2)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(ONE_BY_ONE_HOLE)
+            .criterion("hole", CriteriaTriggers.LOCATION.createCriterion(
+                new PlayerTrigger.TriggerInstance(Optional.of(
+                    ContextAwarePredicate.create(new OneByOneHoleCondition(
+                        -59, 63,
+                        net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate.not(
+                            net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate.solid()
+                        )
+                    ))
+                ))
+            ))
+            .name("one_by_one_hole")
+            .tooltip("one_by_one_hole")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .icon(Items.DIAMOND_PICKAXE)
+        );
+        addGoal(BingoGoal.builder(BREAK_DIAMOND_SWORD)
+            .criterion("break", ItemDurabilityTrigger.TriggerInstance.changedDurability(
+                Optional.of(ItemPredicate.Builder.item().of(items, Items.DIAMOND_SWORD).build()),
+                MinMaxBounds.Ints.atMost(0)
+            ))
+            .name("break_diamond_sword")
+            .icon(Items.DIAMOND_SWORD)
+            .tags(BingoTags.ACTION, BingoTags.STAT)
+            .reactant("sword_use")
+        );
+        addGoal(obtainItemGoal(SADDLE, items, Items.SADDLE));
+        // TODO: give mob hat
+        addGoal(obtainItemGoal(HEART_OF_THE_SEA, items, Items.HEART_OF_THE_SEA)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(PHANTOM_MEMBRANE, items, Items.PHANTOM_MEMBRANE)
+            .reactant("pacifist")
+            .tags(BingoTags.COMBAT, BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(MARKER_ON_MAP)
+            .criterion("use", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+                LocationPredicate.Builder.location(),
+                ItemPredicate.Builder.item()
+                    .of(items, Items.FILLED_MAP)
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name("marker_on_map")
+            .icon(Items.BLUE_BANNER)
+        );
+        addGoal(BingoGoal.builder(WATER_LAVA_MILK_FISH)
+            .criterion("buckets", InventoryChangeTrigger.TriggerInstance.hasItems(
+                ItemPredicate.Builder.item().of(items, Items.WATER_BUCKET),
+                ItemPredicate.Builder.item().of(items, Items.LAVA_BUCKET),
+                ItemPredicate.Builder.item().of(items, Items.MILK_BUCKET),
+                ItemPredicate.Builder.item().of(items, BingoItemTags.FISH_BUCKETS)
+            ))
+            .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+            .name(Component.translatable(
+                "bingo.four",
+                Component.translatable(Items.WATER_BUCKET.getDescriptionId()),
+                Component.translatable(Items.LAVA_BUCKET.getDescriptionId()),
+                Component.translatable(Items.MILK_BUCKET.getDescriptionId()),
+                Component.translatable(BingoItemTags.FISH_BUCKETS.getTranslationKey())
+            ))
+            .tooltip(Component.translatable(
+                "bingo.goal.fish_bucket.tooltip",
+                Component.translatable("advancements.husbandry.tactical_fishing.title")
+            ))
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.WATER_BUCKET),
+                ItemIcon.ofItem(Items.LAVA_BUCKET),
+                ItemIcon.ofItem(Items.MILK_BUCKET),
+                new ItemTagCycleIcon(BingoItemTags.FISH_BUCKETS)
+            ))
+            .antisynergy("bucket_types", "water_bucket", "lava_bucket", "milk_bucket", "fish_bucket")
+            .reactant("use_buckets")
+        );
+        addGoal(BingoGoal.builder(LEASH_DOLPHIN_TO_FENCE)
+            .criterion("leash", LeashedEntityTrigger.builder()
+                .mob(EntityPredicate.Builder.entity().of(entityTypes, EntityType.DOLPHIN).build())
+                .build()
+            )
+            .tags(BingoTags.ACTION, BingoTags.OCEAN, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
+            .name("leash_dolphin_to_fence")
+            .icon(IndicatorIcon.infer(
+                CycleIcon.infer(Items.OAK_FENCE, EntityType.DOLPHIN),
+                Items.LEAD
+            ))
+        );
+        addGoal(obtainItemGoal(DRIED_KELP_BLOCK, items, Items.DRIED_KELP_BLOCK, 21, 32)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(GUNPOWDER, items, Items.GUNPOWDER, 6, 15)
+            .infrequency(2)
+            .tags(BingoTags.COMBAT));
+        addGoal(obtainItemGoal(SPIDER_EYE, items, Items.SPIDER_EYE, 6, 15)
+            .infrequency(2)
+            .tags(BingoTags.COMBAT, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(ENDER_PEARL, items, Items.ENDER_PEARL, 4, 6)
+            .infrequency(2)
+            .tags(BingoTags.COMBAT));
+        // TODO: never use axe
+        addGoal(BingoGoal.builder(ENCHANT_ITEM)
+            .criterion("enchant", EnchantedItemTrigger.TriggerInstance.enchantedItem())
+            .name("enchant_item")
+            .icon(makeItemWithGlint(Items.IRON_SWORD))
+            .antisynergy("enchant")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
+        {
+            final ItemStackTemplate shieldItem = new ItemStackTemplate(
+                Items.SHIELD,
+                DataComponentPatch.builder()
+                    .set(DataComponents.BASE_COLOR, DyeColor.BLUE)
+                    .set(
+                        DataComponents.BANNER_PATTERNS,
+                        new BannerPatternLayers.Builder()
+                            .add(bannerPatterns.getOrThrow(BannerPatterns.FLOWER), DyeColor.WHITE)
+                            .build()
+                    )
+                    .build()
+            );
+            addGoal(
+                obtainItemGoal(
+                    BLUE_SHIELD_WITH_WHITE_FLOWER_CHARGE,
+                    items,
+                    shieldItem,
+                    ItemPredicate.Builder.item()
+                        .of(items, Items.SHIELD)
+                        .withComponents(DataComponentMatchers.Builder.components()
+                            .exact(DataComponentExactPredicate.someOf(
+                                PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, shieldItem.components()),
+                                DataComponents.BASE_COLOR, DataComponents.BANNER_PATTERNS
+                            ))
+                            .build()
+                        )
+                ).name(Component.translatable(
+                    "bingo.goal.item_with_pattern",
+                    Component.translatable(Items.SHIELD.getDescriptionId() + "." + DyeColor.BLUE.getName()),
+                    Component.translatable(
+                        "block.minecraft.banner." +
+                            BannerPatterns.FLOWER.identifier().toShortLanguageKey() + "." +
+                            DyeColor.WHITE.getName()
+                    )
+                ))
+                .tags(BingoTags.ITEM, BingoTags.OVERWORLD)
+            );
+        }
+        addGoal(BingoGoal.builder(TAME_CAT)
+            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(entityTypes, EntityType.CAT)))
+            .name("tame_cat")
+            .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD)
+            .icon(EntityIcon.ofSpawnEgg(EntityType.CAT))
+        );
+        addGoal(BingoGoal.builder(BREED_MOBS)
+            .sub("count", BingoSub.random(5, 7))
+            .criterion(
+                "breed",
+                RelativeStatsTrigger.builder()
+                    .stat(Stats.ANIMALS_BRED, MinMaxBounds.Ints.atLeast(0))
+                    .build(),
+                subber -> subber.sub("conditions.stats.0.value.min", "count")
+            )
+            .progress("breed")
+            .name(
+                Component.translatable("bingo.goal.breed_mobs", 0),
+                subber -> subber.sub("with.0", "count")
+            )
+            .tooltip("breed_mobs")
+            .icon(Items.WHEAT_SEEDS)
+            .antisynergy("breed_animals")
+            .infrequency(2)
+            .tags(BingoTags.ACTION, BingoTags.STAT)
+        );
+        addGoal(crouchDistanceGoal(CROUCH_DISTANCE, 200, 400));
+        addGoal(BingoGoal.builder(KILL_MOBS)
+            .sub("count", BingoSub.random(75, 100))
+            .criterion(
+                "kill",
+                RelativeStatsTrigger.builder()
+                    .stat(Stats.MOB_KILLS, MinMaxBounds.Ints.atLeast(0))
+                    .build(),
+                subber -> subber.sub("conditions.stats.0.value.min", "count")
+            )
+            .progress("kill")
+            .name(
+                Component.translatable("bingo.goal.kill_mobs", 0),
+                subber -> subber.sub("with.0", "count")
+            )
+            .icon(IndicatorIcon.infer(
+                new CycleIcon(
+                    entityTypes.listElements()
+                        .map(Holder.Reference::value)
+                        .filter(t -> !FeatureFlags.isExperimental(t.requiredFeatures()))
+                        .filter(t -> t.getCategory() != MobCategory.MISC)
+                        .filter(t -> EntityIcon.getSpawnEggItem(t) != null)
+                        .map(EntityIcon::ofSpawnEgg)
+                        .map(i -> (GoalIcon)i)
+                        .collect(ImmutableList.toImmutableList())
+                ),
+                Items.DIAMOND_SWORD
+            ))
+            .reactant("pacifist")
+            .antisynergy("mob_kills")
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.STAT)
+        );
+        addGoal(obtainItemGoal(SEAGRASS, items, Items.SEAGRASS, 33, 64)
+            .infrequency(2)
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(KILL_GOLEM)
+            .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
+                EntityPredicate.Builder.entity().of(entityTypes, EntityType.IRON_GOLEM)
+            ))
+            .name(Component.translatable("bingo.goal.kill_golem", EntityType.IRON_GOLEM.getDescription()))
+            .icon(IndicatorIcon.infer(EntityType.IRON_GOLEM, Items.DIAMOND_SWORD))
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
+        addGoal(BingoGoal.builder(KILL_WITH_CRYSTAL)
+            .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
+                Optional.empty(),
+                DamageSourcePredicate.Builder.damageType()
+                    .direct(EntityPredicate.Builder.entity().of(entityTypes, EntityType.END_CRYSTAL))
+            ))
+            .name(Component.translatable("bingo.goal.kill_with_crystal", EntityType.END_CRYSTAL.getDescription()))
+            .icon(Items.END_CRYSTAL)
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.NETHER, BingoTags.COMBAT)
+        );
+        var neverCraftSticksBuilder = BingoGoal.builder(NEVER_CRAFT_STICKS);
+        for (Identifier stickRecipeId : BingoDataGenUtil.getRecipesForItem(Items.STICK)) {
+            neverCraftSticksBuilder.criterion(
+                "craft_" + stickRecipeId.getNamespace() + "_" + stickRecipeId.getPath(),
+                RecipeCraftedTrigger.TriggerInstance.craftedItem(ResourceKey.create(Registries.RECIPE, stickRecipeId))
+            );
+        }
+        addGoal(neverCraftSticksBuilder
+            .requirements(AdvancementRequirements.Strategy.OR)
+            .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
+            .name("never_craft_sticks")
+            .icon(Items.STICK));
+        // TODO: light campfire from 10 blocks away
+        // TODO: max scale map
+        // TODO: ignite TNT with lectern
+        addGoal(BingoGoal.builder(KILL_HOSTILE_WITH_BERRIES)
+            .criterion("kill", EntityDieNearPlayerTrigger.builder()
+                .entity(EntityPredicate.Builder.entity()
+                    .of(entityTypes, BingoEntityTypeTags.HOSTILE)
+                    .build()
+                )
+                .killingBlow(DamagePredicate.Builder.damageInstance()
+                    .type(DamageSourcePredicate.Builder.damageType()
+                        .tag(TagPredicate.is(BingoDamageTypeTags.BERRY_BUSH))
+                    )
+                    .build()
+                )
+                .build()
+            )
+            .name(Component.translatable("bingo.goal.kill_hostile_with_berries", Blocks.SWEET_BERRY_BUSH.getName()))
+            .icon(IndicatorIcon.infer(BingoEntityTypeTags.HOSTILE, Items.SWEET_BERRIES))
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT, BingoTags.RARE_BIOME)
+        );
+        addGoal(BingoGoal.builder(PILLAGER_CROSSBOW)
+            .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
+                ItemPredicate.Builder.item().of(items, Items.CROSSBOW).build(),
+                EntityPredicate.Builder.entity().of(entityTypes, EntityType.PILLAGER).build()
+            ))
+            .reactant("pacifist")
+            .tags(BingoTags.ITEM, BingoTags.COMBAT, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .name("pillager_crossbow")
+            .icon(Items.CROSSBOW));
+        final ItemStackTemplate ominousBanner = Raid.getOminousBannerTemplate(bannerPatterns);
+        addGoal(
+            obtainItemGoal(
+                OMINOUS_BANNER,
+                items,
+                ominousBanner,
+                ItemPredicate.Builder.item()
+                    .of(items, ominousBanner.item().value())
+                    .withComponents(DataComponentMatchers.Builder.components()
+                        .exact(DataComponentExactPredicate.someOf(
+                            PatchedDataComponentMap.fromPatch(DataComponentMap.EMPTY, ominousBanner.components()),
+                            DataComponents.BANNER_PATTERNS, DataComponents.ITEM_NAME
+                        ))
+                        .build()
+                    )
+            )
+            .antisynergy("ominous_banner")
+            .name(Component.translatable("block.minecraft.ominous_banner"))
+            .reactant("pacifist")
+            .tags(BingoTags.COMBAT, BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(GAIN_FOX_TRUST)
+            .criterion("breed", BredAnimalsTrigger.TriggerInstance.bredAnimals(
+                EntityPredicate.Builder.entity().of(entityTypes, EntityType.FOX)
+            ))
+            .name(Component.translatable("bingo.goal.gain_fox_trust", EntityType.FOX.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.FOX))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+        );
+        addGoal(obtainItemGoal(HONEY_BLOCK, items, Items.HONEY_BLOCK)
+            .setAntisynergy("honey")
+            .infrequency(2)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(HONEYCOMB_BLOCK, items, Items.HONEYCOMB_BLOCK, 3, 3)
+            .setAntisynergy("honeycomb")
+            .infrequency(2)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(REPAIR_IRON_GOLEM)
+            .criterion("repair", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                ItemPredicate.Builder.item().of(items, Items.IRON_INGOT),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(entityTypes, EntityType.IRON_GOLEM)))
+            ))
+            .name(Component.translatable("bingo.goal.repair_iron_golem", EntityType.IRON_GOLEM.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.IRON_GOLEM, BingoUtil.compound(Map.of(
+                "Health", FloatTag.valueOf(40f)
+            ))))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.VILLAGE)
+        );
+        addGoal(BingoGoal.builder(GROW_TREE_WITH_BEE_NEST)
+            .criterion("grow", GrowBeeNestTreeTrigger.TriggerInstance.grew())
+            .name(Component.translatable("bingo.goal.grow_tree_with_bee_nest", Blocks.BEE_NEST.getName()))
+            .icon(Items.BEE_NEST)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
+
+        for (String woodType : List.of("warped", "crimson")) {
+            addGoal(obtainItemGoal(id(woodType + "_stem"), items, itemResource(woodType + "_stem"), 16, 32)
+                .infrequency(25)
+                .tags(BingoTags.NETHER));
+
+            addGoal(obtainItemGoal(id("stripped_" + woodType + "_stem"), items, itemResource("stripped_" + woodType + "_stem"), 16, 32)
+                .infrequency(25)
+                .tags(BingoTags.NETHER));
+
+            addGoal(obtainItemGoal(id(woodType + "_hyphae"), items, itemResource(woodType + "_hyphae"), 16, 32)
+                .infrequency(25)
+                .tags(BingoTags.NETHER));
+
+            addGoal(obtainItemGoal(id("stripped_" + woodType + "_hyphae"), items, itemResource("stripped_" + woodType + "_hyphae"), 16, 32)
+                .infrequency(25)
+                .tags(BingoTags.NETHER));
+
+            addGoal(obtainItemGoal(id(woodType + "_planks"), items, itemResource(woodType + "_planks"), 16, 32)
+                .infrequency(25)
+                .tags(BingoTags.NETHER));
+        }
+
+        addGoal(obtainItemGoal(QUARTZ_BLOCK, items, Items.QUARTZ_BLOCK)
+            .tags(BingoTags.NETHER));
+        addGoal(BingoGoal.builder(ANCHOR_IN_OVERWORLD)
+            .criterion("anchor", IntentionalGameDesignTrigger.TriggerInstance.clicked(
+                LocationPredicate.Builder.inDimension(Level.OVERWORLD).build()
+            ))
+            .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
+            .name(Component.translatable("bingo.goal.anchor_in_overworld", Blocks.RESPAWN_ANCHOR.getName()))
+            .icon(Blocks.RESPAWN_ANCHOR)
+        );
+        addGoal(obtainItemGoal(WARPED_FUNGUS_ON_A_STICK, items, Items.WARPED_FUNGUS_ON_A_STICK)
+            .tags(BingoTags.NETHER));
+        // TODO: convert hoglin into zoglin
+        addGoal(BingoGoal.builder(RIDE_STRIDER)
+            .criterion("ride", StartRidingTrigger.TriggerInstance.playerStartsRiding(
+                EntityPredicate.Builder.entity().vehicle(EntityPredicate.Builder.entity().of(entityTypes, EntityType.STRIDER))
+            ))
+            .name(Component.translatable("bingo.goal.ride_strider", EntityType.STRIDER.getDescription()))
+            .icon(EntityIcon.ofSpawnEgg(EntityType.STRIDER))
+            .tags(BingoTags.ACTION, BingoTags.NETHER)
+        );
+        // TODO: damage strider with water
+        addGoal(obtainItemGoal(BAMBOO, items, Items.BAMBOO, 6, 15)
+            .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
+        addGoal(obtainItemGoal(CRYING_OBSIDIAN, items, Items.CRYING_OBSIDIAN));
+        // TODO: kill self with ender pearl
+        addGoal(obtainItemGoal(GRASS_BLOCK, items, Items.GRASS_BLOCK)
+            .tooltip("grass_block")
+            .tags(BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(BOUNCE_ON_SLIME)
+            .criterion("bounce", BounceOnBlockTrigger.TriggerInstance.bounceOnBlock(
+                BlockPredicate.Builder.block().of(blocks, Blocks.SLIME_BLOCK)
+            ))
+            .name(Component.translatable("bingo.goal.bounce_on_slime", Blocks.SLIME_BLOCK.getName()))
+            .icon(Items.SLIME_BLOCK)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
+        addGoal(BingoGoal.builder(FULL_GOLD_ARMOR)
+            .criterion("obtain", InventoryChangeTrigger.TriggerInstance.hasItems(
+                Items.GOLDEN_BOOTS, Items.GOLDEN_LEGGINGS, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_HELMET
+            ))
+            .name("full_gold_armor")
+            .icon(new CycleIcon(
+                ItemIcon.ofItem(Items.GOLDEN_BOOTS),
+                ItemIcon.ofItem(Items.GOLDEN_LEGGINGS),
+                ItemIcon.ofItem(Items.GOLDEN_CHESTPLATE),
+                ItemIcon.ofItem(Items.GOLDEN_HELMET)
+            ))
+            .tags(BingoTags.ITEM)
+        );
+        addGoal(obtainItemGoal(BROWN_WOOL, items, Items.BROWN_WOOL)
+            .tags(BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(GROW_NETHER_FUNGUS)
+            .criterion("grow", GrowFeatureTrigger.builder().feature(BingoFeatureTags.HUGE_FUNGI).build())
+            .name("grow_nether_fungus")
+            .icon(new CycleIcon(ItemIcon.ofItem(Items.CRIMSON_FUNGUS), ItemIcon.ofItem(Items.WARPED_FUNGUS)))
+            .antisynergy("grow_fungus")
+            .tags(BingoTags.ACTION, BingoTags.NETHER)
+        );
+        // TODO: put chest on donkey
+        addGoal(BingoGoal.builder(NEVER_PLACE_TORCHES)
+            .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(BlockCondition.builder(BlockPredicate.Builder.block().of(blocks, BingoBlockTags.TORCHES))))
+            .tags(BingoTags.NEVER)
+            .name("never_place_torches")
+            .tooltip("never_place_torches")
+            .icon(Items.TORCH));
+        addGoal(obtainItemGoal(TURTLE_SCUTE, items, Items.TURTLE_SCUTE)
+            .setAntisynergy("turtle_helmet")
+            .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(ALL_DIFFERENT_ARMOR)
+            .criterion("armor", CriteriaTriggers.INVENTORY_CHANGED.createCriterion(
+                new InventoryChangeTrigger.TriggerInstance(
+                    Optional.of(
+                        ContextAwarePredicate.create(new WearingDifferentArmorCondition(
+                            MinMaxBounds.Ints.atLeast(4),
+                            MinMaxBounds.Ints.atLeast(4)
+                        ))
+                    ),
+                    InventoryChangeTrigger.TriggerInstance.Slots.ANY,
+                    List.of()
+                )
+            ))
+            .tags(BingoTags.ITEM)
+            .reactant("wear_armor")
+            .name(Component.translatable("bingo.goal.all_different_armor", 4))
+            .icon(createAllDifferentMaterialsIcon())
+        );
+        addGoal(BingoGoal.builder(EQUIP_WOLF_ARMOR)
+            .criterion("equip", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                ItemPredicate.Builder.item().of(items, Items.BRUSH),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(entityTypes, EntityType.ARMADILLO)))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+            .name("equip_wolf_armor")
+            .icon(IndicatorIcon.infer(EntityType.WOLF, Items.WOLF_ARMOR)));
+        addGoal(obtainAllItemsFromTag(BingoItemTags.TORCHES, "torches")
+            .tags(BingoTags.OVERWORLD, BingoTags.NETHER));
+
+        addGoal(BingoGoal.builder(SWAP_HOTBAR_WITH_SHELF)
+            .criterion("swap", BingoTriggers.hotbarSwappedWithShelf())
+            .tags(BingoTags.ACTION)
+            .antisynergy("shelf")
+            .name("swap_hotbar_with_shelf")
+            .tooltip("swap_hotbar_with_shelf")
+            .icon(IndicatorIcon.infer(ItemTags.WOODEN_SHELVES, Items.DIAMOND_SWORD)));
+
+        addGoal(obtainSomeItemsFromTag(NAUTILUS_ARMOR, BingoItemTags.NAUTILUS_ARMOR, "bingo.goal.some_nautilus_armor", 1, 1)
+            .tags(BingoTags.OVERWORLD, BingoTags.OCEAN)
+            .antisynergy("nautilus_armor"));
+
+        addGoal(BingoGoal.builder(NAMETAG_ENDERMAN)
+            .criterion("nametag", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                ItemPredicate.Builder.item().of(items, Items.NAME_TAG),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(entityTypes, EntityType.ENDERMAN).build()))
+            ))
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD)
+            .name("nametag_enderman")
+            .icon(Items.NAME_TAG));
+
+        addGoal(BingoGoal.builder(SPEAR_MOBS)
+            .sub("count", BingoSub.random(2, 5))
+            .criterion("spear", SpearMobsTrigger.TriggerInstance.spearMobs(1), subber -> subber.sub("conditions.count", "count"))
+            .tags(BingoTags.ACTION, BingoTags.COMBAT)
+            .name(Component.translatable("bingo.goal.spear_mobs", 1), subber -> subber.sub("with.0", "count"))
+            .infrequency(2)
+            .icon(
+                IndicatorIcon.infer(new EntityTypeTagCycleIcon(BingoEntityTypeTags.HOSTILE, 2), ItemTags.SPEARS),
+                subber -> subber.sub("base.count", "count")
+            ));
+    }
+
+    @SafeVarargs
+    private GoalBuilder potionGoal(String id, HolderLookup<Item> items, Holder<Potion>... potions) {
+        PotionContents potionContents = new PotionContents(potions[0]);
+        ItemStackTemplate potionItem = new ItemStackTemplate(
+            Items.POTION,
+            DataComponentPatch.builder().set(DataComponents.POTION_CONTENTS, potionContents).build()
+        );
+        GoalBuilder builder = obtainItemGoal(
+            id(id),
+            items,
+            potionItem,
+            Arrays.stream(potions)
+                .map(potion -> ItemPredicate.Builder.item()
+                    .of(registries.lookupOrThrow(Registries.ITEM), Items.POTION)
+                    .withComponents(DataComponentMatchers.Builder.components()
+                        .partial(
+                            DataComponentPredicates.POTIONS,
+                            new PotionsPredicate(HolderSet.direct(potion))
+                        )
+                        .build()
+                    )
+                )
+                .toArray(ItemPredicate.Builder[]::new)
+        )
+            .antisynergy(id)
+            .name(potionContents.getName(Items.POTION.getDescriptionId() + ".effect."))
+            .infrequency(12)
+            .tags(BingoTags.NETHER);
+        if (potions[0] != Potions.FIRE_RESISTANCE) {
+            builder.reactant("pacifist");
+        }
+        return builder;
+    }
+
+    private GoalIcon createAllDifferentMaterialsIcon() {
+        final int iterations = 4;
+        final var armors = getArmors();
+        final var materials = ImmutableList.copyOf(armors.columnKeySet());
+        final ImmutableList.Builder<GoalIcon> icons = ImmutableList.builderWithExpectedSize(iterations * armors.rowMap().size());
+        int materialIndex = 0;
+        for (int iteration = 0; iteration < iterations; iteration++) {
+            for (final var type : armors.rowKeySet()) {
+                Item item;
+                do {
+                    item = armors.get(type, materials.get(materialIndex++ % materials.size()));
+                } while (item == null);
+                icons.add(ItemIcon.ofItem(item));
+            }
+        }
+        return new CycleIcon(icons.build());
+    }
+
+    private Table<EquipmentSlot, String, Item> getArmors() {
+        final var armors = ImmutableTable.<EquipmentSlot, String, Item>builder();
+        armors.orderRowsBy(Ordering.natural());
+        armors.orderColumnsBy(Ordering.natural());
+        for (Holder<Item> helmet : BingoDataGenUtil.loadVanillaTag(ItemTags.HEAD_ARMOR, registries)) {
+            String name = helmet.getRegisteredName();
+            if (name.endsWith("_helmet")) {
+                armors.put(EquipmentSlot.HEAD, name.substring(0, name.length() - "_helmet".length()), helmet.value());
+            } else {
+                throw new IllegalStateException("Unexpected helmet name: " + name);
+            }
+        }
+        for (Holder<Item> chestplate : BingoDataGenUtil.loadVanillaTag(ItemTags.CHEST_ARMOR, registries)) {
+            String name = chestplate.getRegisteredName();
+            if (name.endsWith("_chestplate")) {
+                armors.put(EquipmentSlot.CHEST, name.substring(0, name.length() - "_chestplate".length()), chestplate.value());
+            } else {
+                throw new IllegalStateException("Unexpected chestplate name: " + name);
+            }
+        }
+        for (Holder<Item> leggings : BingoDataGenUtil.loadVanillaTag(ItemTags.LEG_ARMOR, registries)) {
+            String name = leggings.getRegisteredName();
+            if (name.endsWith("_leggings")) {
+                armors.put(EquipmentSlot.LEGS, name.substring(0, name.length() - "_leggings".length()), leggings.value());
+            } else {
+                throw new IllegalStateException("Unexpected leggings name: " + name);
+            }
+        }
+        for (Holder<Item> boots : BingoDataGenUtil.loadVanillaTag(ItemTags.FOOT_ARMOR, registries)) {
+            String name = boots.getRegisteredName();
+            if (name.endsWith("_boots")) {
+                armors.put(EquipmentSlot.FEET, name.substring(0, name.length() - "_boots".length()), boots.value());
+            } else {
+                throw new IllegalStateException("Unexpected boots name: " + name);
+            }
+        }
+        return armors.build();
+    }
+}

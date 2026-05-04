@@ -7,19 +7,19 @@ import com.mojang.brigadier.tree.CommandNode;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
 import net.minecraft.commands.CommandSourceStack;
 import org.apache.commons.lang3.function.TriFunction;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 
-import static net.minecraft.commands.Commands.argument;
-import static net.minecraft.commands.Commands.literal;
+import static net.minecraft.commands.Commands.*;
 
-record ArgumentSwitch<A, T>(
+record ArgumentSwitch<A, T extends @Nullable Object>(
     String name,
     String argName,
     ArgumentType<A> type,
     ArgGetter<T> getter,
     Function<CommandContext<CommandSourceStack>, T> defaultValue,
-    SuggestionProvider<CommandSourceStack> suggests
+    @Nullable SuggestionProvider<CommandSourceStack> suggests
 ) implements CommandSwitch<T> {
     @Override
     public void addTo(CommandNode<CommandSourceStack> node) {

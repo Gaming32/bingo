@@ -16,13 +16,10 @@ import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
 public class GrowBeeNestTreeTrigger extends SimpleCriterionTrigger<GrowBeeNestTreeTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -61,7 +58,7 @@ public class GrowBeeNestTreeTrigger extends SimpleCriterionTrigger<GrowBeeNestTr
         }
 
         @Override
-        public void validate(@NonNull ValidationContextSource validator) {
+        public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
             nest.ifPresent(p -> Validatable.validate(validator.context(LootContextParamSets.ADVANCEMENT_LOCATION), "nest", nest));
         }

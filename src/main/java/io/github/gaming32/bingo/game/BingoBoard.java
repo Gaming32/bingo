@@ -18,7 +18,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.util.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -29,8 +28,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import org.apache.commons.lang3.text.WordUtils;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -104,7 +104,7 @@ public class BingoBoard {
     public static BingoBoard generate(
         BoardShape shape,
         int size,
-        int difficulty,
+        BingoDifficulty difficulty,
         int teamCount,
         RandomSource rand,
         Predicate<GoalHolder> isAllowedGoal,
@@ -147,7 +147,7 @@ public class BingoBoard {
         HolderLookup<BingoDifficulty> difficultyLookup,
         BoardShape shape,
         int size,
-        int difficulty,
+        BingoDifficulty difficulty,
         RandomSource rand,
         Predicate<GoalHolder> isAllowedGoal,
         Collection<GoalHolder> requiredGoals,
@@ -177,7 +177,7 @@ public class BingoBoard {
         final Set<String> catalysts = new HashSet<>();
 
         for (final var tag : excludedTags) {
-            tagCount.put(tag, tag.value().getMaxForDifficulty(difficulty, goalCount));
+            tagCount.put(tag, tag.value().getMaxForDifficulty(difficulty.number(), goalCount));
         }
 
         for (int i = 0; i < goalCount; i++) {
@@ -232,7 +232,7 @@ public class BingoBoard {
 
                 if (goalCandidate.goal().getTags().size() != 0) {
                     for (final var tag : goalCandidate.goal().getTags()) {
-                        if (tagCount.getInt(tag) >= tag.value().getMaxForDifficulty(difficulty, goalCount)) {
+                        if (tagCount.getInt(tag) >= tag.value().getMaxForDifficulty(difficulty.number(), goalCount)) {
                             continue goalGen;
                         }
                     }
@@ -277,23 +277,43 @@ public class BingoBoard {
         return generatedSheet;
     }
 
-    private static int[] generateDifficulty(NavigableSet<Integer> difficulties, int goalCount, int difficulty, RandomSource rand) {
+    private static int[] generateDifficulty(NavigableSet<Integer> difficulties, int goalCount, BingoDifficulty difficulty, RandomSource rand) {
         final int[] layout = new int[goalCount];
 
-        final Iterator<Integer> available = difficulties.headSet(difficulty, true).descendingIterator();
-        if (!available.hasNext()) {
-            throw new IllegalArgumentException("No difficulty exists with number " + difficulty);
-        }
-        final int difficulty1 = available.next();
-        if (!available.hasNext()) {
-            Arrays.fill(layout, difficulty1);
+        if (difficulty.distribution() != null) {
+            Arrays.fill(layout, difficulty.number());
+            float[] cumDistribution = new float[difficulty.distribution().size()];
+            for (int d = 0; d < cumDistribution.length; d++) {
+                cumDistribution[d] = difficulty.distribution().get(d) * layout.length;
+                if (d > 0) {
+                    cumDistribution[d] += cumDistribution[d - 1];
+                }
+            }
+            for (int i = 0; i < layout.length; ++i) {
+                for (int d = 0; d < cumDistribution.length; d++) {
+                    if ((i + 1) <= cumDistribution[d]) {
+                        layout[i] = d;
+                        break;
+                    }
+                }
+            }
+            BingoUtil.shuffle(layout, rand);
         } else {
-            final int difficulty2 = available.next();
-            final int amountOf1 = rand.nextInt(goalCount * 3 / 5, goalCount * 3 / 5 + (int) Math.sqrt(goalCount));
-            final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(goalCount), rand);
-            Arrays.fill(layout, difficulty2);
-            for (int i = 0; i < amountOf1; i++) {
-                layout[indices[i]] = difficulty1;
+            final Iterator<Integer> available = difficulties.headSet(difficulty.number(), true).descendingIterator();
+            if (!available.hasNext()) {
+                throw new IllegalArgumentException("No difficulty exists with number " + difficulty);
+            }
+            final int difficulty1 = available.next();
+            if (!available.hasNext()) {
+                Arrays.fill(layout, difficulty1);
+            } else {
+                final int difficulty2 = available.next();
+                final int amountOf1 = rand.nextInt(goalCount * 3 / 5, goalCount * 3 / 5 + (int) Math.sqrt(goalCount));
+                final int[] indices = BingoUtil.shuffle(BingoUtil.generateIntArray(goalCount), rand);
+                Arrays.fill(layout, difficulty2);
+                for (int i = 0; i < amountOf1; i++) {
+                    layout[indices[i]] = difficulty1;
+                }
             }
         }
         return layout;

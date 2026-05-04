@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.ext;
 
 import io.github.gaming32.bingo.commandswitch.CommandSwitch;
 import net.minecraft.commands.CommandSourceStack;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -15,7 +16,7 @@ public interface CommandSourceStackExt {
         throw new UnsupportedOperationException("Implemented via mixin");
     }
 
-    default <T> CommandSourceStack bingo$withArgument(CommandSwitch<T> arg, T value) {
+    default <T extends @Nullable Object> CommandSourceStack bingo$withArgument(CommandSwitch<T> arg, T value) {
         throw new UnsupportedOperationException("Implemented via mixin");
     }
 
@@ -23,11 +24,11 @@ public interface CommandSourceStackExt {
         throw new UnsupportedOperationException("Implemented via mixin");
     }
 
-    default <T> CommandSourceStack bingo$withRepeatableArgument(CommandSwitch<T> arg, T value) {
+    default <T extends @Nullable Object> CommandSourceStack bingo$withRepeatableArgument(CommandSwitch<T> arg, T value) {
         throw new UnsupportedOperationException("Implemented via mixin");
     }
 
-    default <T> Collection<T> bingo$getRepeatableArgument(CommandSwitch<T> arg) {
+    default <T extends @Nullable Object> Collection<T> bingo$getRepeatableArgument(CommandSwitch<T> arg) {
         throw new UnsupportedOperationException("Implemented via mixin");
     }
 }

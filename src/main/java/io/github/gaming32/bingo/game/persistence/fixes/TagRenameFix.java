@@ -11,7 +11,7 @@ import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.mojang.datafixers.DSL.named;
+import static com.mojang.datafixers.DSL.*;
 
 public class TagRenameFix extends DataFix {
     private final DSL.TypeReference unhashedTypeReference;

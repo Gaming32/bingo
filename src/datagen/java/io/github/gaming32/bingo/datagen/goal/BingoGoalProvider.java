@@ -1,0 +1,52 @@
+package io.github.gaming32.bingo.datagen.goal;
+
+import com.google.gson.JsonElement;
+import com.mojang.serialization.DynamicOps;
+import io.github.gaming32.bingo.data.goal.BingoGoal;
+import io.github.gaming32.bingo.data.goal.GoalBuilder;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.Identifier;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
+
+public class BingoGoalProvider extends FabricCodecDataProvider<BingoGoal> {
+    private static final List<GoalProviderProvider> PROVIDERS = List.of(
+        VeryEasyGoalProvider::new,
+        EasyGoalProvider::new,
+        MediumGoalProvider::new,
+        HardGoalProvider::new,
+        VeryHardGoalProvider::new
+    );
+
+    public BingoGoalProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries, PackOutput.Target.DATA_PACK, "bingo/goal", BingoGoal.CODEC);
+    }
+
+    @Override
+    public String getName() {
+        return "Bingo goals";
+    }
+
+    @Override
+    protected void configure(BiConsumer<Identifier, BingoGoal> adder, HolderLookup.Provider registries) {
+        final DynamicOps<JsonElement> oldOps = GoalBuilder.JSON_OPS.get();
+        try {
+            GoalBuilder.JSON_OPS.set(registries.createSerializationContext(oldOps));
+            for (final GoalProviderProvider provider : PROVIDERS) {
+                provider.create(adder, registries).addGoals();
+            }
+        } finally {
+            GoalBuilder.JSON_OPS.set(oldOps);
+        }
+    }
+
+    @FunctionalInterface
+    private interface GoalProviderProvider {
+        DifficultyGoalProvider create(BiConsumer<Identifier, BingoGoal> adder, HolderLookup.Provider registries);
+    }
+}

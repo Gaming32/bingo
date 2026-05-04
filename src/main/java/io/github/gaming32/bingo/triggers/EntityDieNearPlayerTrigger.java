@@ -14,14 +14,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Optional;
 
 public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDieNearPlayerTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -69,7 +66,7 @@ public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDie
         }
 
         @Override
-        public void validate(@NonNull ValidationContextSource validator) {
+        public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
             Validatable.validate(validator.entityContext(), "entity", entity);
         }

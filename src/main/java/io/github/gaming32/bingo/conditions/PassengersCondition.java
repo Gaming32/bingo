@@ -11,7 +11,6 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -59,7 +58,6 @@ public record PassengersCondition(List<ContextAwarePredicate> passengers, boolea
         return !requireFull || toTest.isEmpty();
     }
 
-    @NotNull
     @Override
     public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.THIS_ENTITY, LootContextParams.ORIGIN);

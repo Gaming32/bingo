@@ -9,7 +9,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.scores.PlayerTeam;
-import org.jspecify.annotations.NonNull;
 
 public class BoardScreen extends Screen {
     private Button leftButton;
@@ -38,7 +37,7 @@ public class BoardScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         if (BingoClient.clientGame == null) return;
         final PositionAndScale pos = getPosition();

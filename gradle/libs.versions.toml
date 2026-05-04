@@ -1,37 +1,36 @@
 [versions]
-asm = "9.9.1"
+checkstyle = "13.4.1"
 fabric-api = "0.145.4+26.1.2"
 fabric-loader = "0.19.1"
+fabric-loom = "1.16-SNAPSHOT"
 jei = "29.5.0.27"
 junit = "5.14.0"
 mcdev-annotations = "2.1.0"
-minecraft = "26.1.2"
-mixin = "0.8.7-SNAPSHOT"
-mixinextras = "0.5.4"
+minecraft-exact = "26.1.2"
+minecraft-max = "26.2"
+minecraft-min = "26.1"
+mod-dev-gradle = "2.0.141"
 mod-publish-plugin = "1.0.0"
 modmenu = "18.0.0-alpha.8"
-neoforge = "11-beta"
+neoforge = "26.1.2.31-beta"
 nightconfig = "3.8.2"
-rei = "20.0.811"
-unimined = "1.4.2-SNAPSHOT"
 
 [libraries]
-asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
+fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
 fabric-loader-junit = { module = "net.fabricmc:fabric-loader-junit", version.ref = "fabric-loader" }
 jei = { module = "mezz.jei:jei-26.1.2-common-api", version.ref = "jei" }
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 mcdev-annotations = { module = "com.demonwav.mcdev:annotations", version.ref = "mcdev-annotations" }
-mixin = { module = "org.spongepowered:mixin", version.ref = "mixin" }
-mixinextras = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft-exact" }
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 nightconfig-core = { module = "com.electronwill.night-config:core", version.ref = "nightconfig" }
 nightconfig-toml = { module = "com.electronwill.night-config:toml", version.ref = "nightconfig" }
-rei = { module = "me.shedaniel:RoughlyEnoughItems-api", version.ref = "rei" }
 
 [bundles]
-asm = [ "asm" ]
 nightconfig = ["nightconfig-core", "nightconfig-toml"]
 
 [plugins]
+fabric-loom = { id = "net.fabricmc.fabric-loom", version.ref = "fabric-loom" }
+mod-dev-gradle = { id = "net.neoforged.moddev", version.ref = "mod-dev-gradle" }
 mod-publish-plugin = { id = "me.modmuss50.mod-publish-plugin", version.ref = "mod-publish-plugin" }
-unimined = { id = "xyz.wagyourtail.unimined", version.ref = "unimined" }

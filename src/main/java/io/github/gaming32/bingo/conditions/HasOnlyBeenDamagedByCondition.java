@@ -15,7 +15,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.Set;
@@ -72,7 +71,6 @@ public record HasOnlyBeenDamagedByCondition(
         });
     }
 
-    @NotNull
     @Override
     public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.THIS_ENTITY);
@@ -135,7 +133,6 @@ public record HasOnlyBeenDamagedByCondition(
             return this;
         }
 
-        @NotNull
         @Override
         public HasOnlyBeenDamagedByCondition build() {
             return new HasOnlyBeenDamagedByCondition(entityType, entityTypeTag, directEntityType, directEntityTypeTag, damageType, damageTypeTag);

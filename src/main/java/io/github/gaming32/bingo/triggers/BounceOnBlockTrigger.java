@@ -11,12 +11,10 @@ import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public class BounceOnBlockTrigger extends SimpleCriterionTrigger<BounceOnBlockTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

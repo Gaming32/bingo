@@ -4,10 +4,11 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
 import net.minecraft.commands.CommandSourceStack;
+import org.jspecify.annotations.Nullable;
 
-import static net.minecraft.commands.Commands.literal;
+import static net.minecraft.commands.Commands.*;
 
-record ConstantSwitch<T>(String name, T value, T fallback) implements CommandSwitch<T> {
+record ConstantSwitch<T extends @Nullable Object>(String name, T value, T fallback) implements CommandSwitch<T> {
     @Override
     public void addTo(CommandNode<CommandSourceStack> node) {
         node.addChild(literal(name)

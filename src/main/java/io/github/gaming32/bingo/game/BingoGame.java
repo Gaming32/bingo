@@ -8,7 +8,7 @@ import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import io.github.gaming32.bingo.ext.ServerPlayerExt;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
-import io.github.gaming32.bingo.mixin.common.PlayerAdvancementsAccessor;
+import io.github.gaming32.bingo.mixin.PlayerAdvancementsAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
@@ -54,8 +54,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -655,7 +654,6 @@ public class BingoGame {
         }
     }
 
-    @NotNull
     public BingoBoard.Teams getTeam(ServerPlayer player) {
         for (int i = 0; i < teams.length; i++) {
             if (player.isAlliedTo(teams[i])) {

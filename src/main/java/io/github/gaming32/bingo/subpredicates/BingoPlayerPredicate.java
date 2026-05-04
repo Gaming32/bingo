@@ -17,9 +17,7 @@ import net.minecraft.stats.StatType;
 import net.minecraft.stats.StatsCounter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,7 +32,7 @@ public record BingoPlayerPredicate(
     );
 
     @Override
-    public boolean matches(@NonNull Entity entity, @NonNull ServerLevel level, @Nullable Vec3 position) {
+    public boolean matches(Entity entity, ServerLevel level, @Nullable Vec3 position) {
         if (!(entity instanceof ServerPlayer player)) {
             return false;
         }
@@ -54,7 +52,6 @@ public record BingoPlayerPredicate(
         return true;
     }
 
-    @NotNull
     @Override
     public MapCodec<? extends EntitySubPredicate> codec() {
         return CODEC;

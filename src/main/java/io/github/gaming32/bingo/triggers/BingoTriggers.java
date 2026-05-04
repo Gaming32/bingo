@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.triggers;
 
-import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
 import io.github.gaming32.bingo.util.Identifiers;
@@ -19,7 +18,7 @@ import java.util.function.Supplier;
 
 public class BingoTriggers {
     private static final DeferredRegister<CriterionTrigger<?>> REGISTER =
-        BingoPlatform.platform.createDeferredRegister(BuiltInRegistries.TRIGGER_TYPES);
+        DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES);
 
     public static final RegistryValue<AdjacentPaintingTrigger> ADJACENT_PAINTING = register("adjacent_painting", AdjacentPaintingTrigger::new);
     public static final RegistryValue<ArrowPressTrigger> ARROW_PRESS = register("arrow_press", ArrowPressTrigger::new);

@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BundleContents;
 import org.apache.commons.lang3.math.Fraction;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -23,7 +22,6 @@ public class FillBundleTrigger extends SimpleCriterionTrigger<FillBundleTrigger.
         InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.FILL_BUNDLE.get().trigger(player, inventory));
     }
 
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

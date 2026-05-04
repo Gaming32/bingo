@@ -38,8 +38,8 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ColorArgument;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.commands.arguments.TeamArgument;
 import net.minecraft.commands.arguments.TimeArgument;
 import net.minecraft.core.Holder;
@@ -48,8 +48,8 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerPlayer;
@@ -67,7 +67,6 @@ import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.function.TriFunction;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,8 +76,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import static net.minecraft.commands.Commands.argument;
-import static net.minecraft.commands.Commands.literal;
+import static net.minecraft.commands.Commands.*;
 
 public class BingoCommand {
     private static final SimpleCommandExceptionType NO_GAME_RUNNING =
@@ -258,7 +256,6 @@ public class BingoCommand {
                             return menu;
                         }
 
-                        @NotNull
                         @Override
                         public Component getDisplayName() {
                             return Bingo.translatable("bingo.board.title");
@@ -500,7 +497,7 @@ public class BingoCommand {
             board = BingoBoard.generate(
                 shape,
                 size,
-                difficulty.value().number(),
+                difficulty.value(),
                 teams.size(),
                 RandomSource.create(seed),
                 gamemode::isGoalAllowed,

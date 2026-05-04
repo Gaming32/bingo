@@ -7,7 +7,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.Set;
@@ -32,7 +31,6 @@ public record DistanceFromSpawnCondition(Optional<DistancePredicate> distance) i
         );
     }
 
-    @NotNull
     @Override
     public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.ORIGIN);

@@ -21,13 +21,10 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
 public class ShootBellTrigger extends SimpleCriterionTrigger<ShootBellTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -80,7 +77,7 @@ public class ShootBellTrigger extends SimpleCriterionTrigger<ShootBellTrigger.Tr
         }
 
         @Override
-        public void validate(@NonNull ValidationContextSource validator) {
+        public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
             bell.ifPresent(p -> Validatable.validate(validator.context(LootContextParamSets.ADVANCEMENT_LOCATION), "location", p));
             projectile.ifPresent(p -> Validatable.validate(validator.context(LootContextParamSets.ADVANCEMENT_ENTITY), "projectile", p));
