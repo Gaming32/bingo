@@ -1,7 +1,6 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.MapCodec;
-import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
 import io.github.gaming32.bingo.util.Identifiers;
@@ -13,7 +12,7 @@ public final class BingoConditions {
     }
 
     private static final DeferredRegister<MapCodec<? extends LootItemCondition>> REGISTER =
-        BingoPlatform.platform.createDeferredRegister(BuiltInRegistries.LOOT_CONDITION_TYPE);
+        DeferredRegister.create(BuiltInRegistries.LOOT_CONDITION_TYPE);
 
     public static final RegistryValue<MapCodec<BlockCondition>> BLOCK = register("block", BlockCondition.CODEC);
     public static final RegistryValue<MapCodec<BlockPatternCondition>> BLOCK_PATTERN = register("block_pattern", BlockPatternCondition.CODEC);

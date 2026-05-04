@@ -13,8 +13,7 @@ import io.github.gaming32.bingo.util.BingoStreamCodecs;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.scores.PlayerTeam;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -34,11 +33,11 @@ public interface BingoGameMode {
         return null;
     }
 
-    BingoBoard.@NotNull Teams getWinners(BingoBoard board, int teamCount, BingoBoard.Teams nerfedTeams, boolean tryHarder);
+    BingoBoard.Teams getWinners(BingoBoard board, int teamCount, BingoBoard.Teams nerfedTeams, boolean tryHarder);
 
     boolean canGetGoal(BingoBoard board, int index, BingoBoard.Teams team, boolean isNever);
 
-    default boolean isGoalAllowed(GoalHolder goal) {
+    default boolean isGoalAllowed(GoalHolder goal, boolean allowNeverGoalsInLockout) {
         return true;
     }
 

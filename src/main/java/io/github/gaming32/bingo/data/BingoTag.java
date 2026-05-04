@@ -12,8 +12,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -105,7 +104,6 @@ public record BingoTag(FloatList difficultyMax, boolean allowedOnSameLine, Speci
             this.incompleteColor = incompleteColor;
         }
 
-        @NotNull
         @Override
         public String getSerializedName() {
             return name().toLowerCase(Locale.ROOT);

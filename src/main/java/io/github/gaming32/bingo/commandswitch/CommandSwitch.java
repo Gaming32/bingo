@@ -17,14 +17,14 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public sealed interface CommandSwitch<T> permits ArgumentSwitch, ConstantSwitch, RepeatableArgumentSwitch {
+public sealed interface CommandSwitch<T extends @Nullable Object> permits ArgumentSwitch, ConstantSwitch, RepeatableArgumentSwitch {
     String name();
 
     void addTo(CommandNode<CommandSourceStack> node);
@@ -43,7 +43,7 @@ public sealed interface CommandSwitch<T> permits ArgumentSwitch, ConstantSwitch,
         return storeConstant(name, value, null);
     }
 
-    static <T> CommandSwitch<T> storeConstant(String name, T value, T fallback) {
+    static <T extends @Nullable Object> CommandSwitch<T> storeConstant(String name, T value, T fallback) {
         return new ConstantSwitch<>(name, value, fallback);
     }
 
@@ -75,7 +75,9 @@ public sealed interface CommandSwitch<T> permits ArgumentSwitch, ConstantSwitch,
         private final String name;
         private final ArgumentType<A> type;
         private String argName;
+        @Nullable
         private ArgGetter<T> getter;
+        @Nullable
         private SuggestionProvider<CommandSourceStack> suggests = null;
 
         private ArgumentSwitchBuilder(String name, ArgumentType<A> type) {
@@ -135,6 +137,7 @@ public sealed interface CommandSwitch<T> permits ArgumentSwitch, ConstantSwitch,
         private final String name;
         private final ResourceKey<Registry<T>> registry;
         private String argName;
+        @Nullable
         private DynamicCommandExceptionType unknownExceptionType;
 
         private ResourceArgumentSwitchBuilder(String name, ResourceKey<Registry<T>> registry) {
@@ -175,7 +178,7 @@ public sealed interface CommandSwitch<T> permits ArgumentSwitch, ConstantSwitch,
             final var exceptionType =
                 Objects.requireNonNull(unknownExceptionType, "unknownExceptionType() must be called");
             return new RepeatableArgumentSwitch<>(
-                new ArgumentSwitch<>(
+                new ArgumentSwitch<ResourceOrTagKeyArgument.Result<T>, ResourceOrTagKeyArgument.Result<T>>(
                     name, argName,
                     ResourceOrTagKeyArgument.resourceOrTagKey(registryKey),
                     (context, arg) ->

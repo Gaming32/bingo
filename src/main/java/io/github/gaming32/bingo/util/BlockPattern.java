@@ -6,7 +6,6 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
@@ -110,7 +109,6 @@ public class BlockPattern {
         }
 
         @Override
-        @NotNull
         public String getSerializedName() {
             return serializedName;
         }

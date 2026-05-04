@@ -16,6 +16,7 @@ import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
+import io.github.gaming32.bingo.platform.BingoClientPlatform;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
@@ -67,11 +68,13 @@ public class BingoClient {
     public static ClientGame clientGame;
 
     public static final BingoClientConfig CONFIG = new BingoClientConfig(
-        BingoPlatform.platform.getConfigDir().resolve("bingo-client.toml")
+        BingoPlatform.getConfigDir().resolve("bingo-client.toml")
     );
     private static RecipeViewerPlugin recipeViewerPlugin;
 
     public static void init() {
+        BingoClientPlatform.registerEvents();
+
         CONFIG.load();
         CONFIG.save();
 
@@ -79,7 +82,7 @@ public class BingoClient {
 
         DefaultIconRenderers.setup();
 
-        BingoPlatform.platform.registerKeyMappings(builder -> {
+        BingoPlatform.registerKeyMappings(builder -> {
             KeyMapping.Category category = builder.registerCategory(Identifiers.bingo("category"));
             builder
                 .name("bingo.key.board")
@@ -101,8 +104,8 @@ public class BingoClient {
                 .mapping();
         });
 
-        BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
-        BingoPlatform.platform.registerPictureInPictureRenderers(registrar ->
+        BingoPlatform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
+        BingoPlatform.registerPictureInPictureRenderers(registrar ->
             registrar.register(BlockPictureInPictureRenderState.class, BlockPictureInPictureRenderer::new)
         );
 
@@ -159,9 +162,12 @@ public class BingoClient {
         if (clientGame == null) {
             return;
         }
-        if (minecraft.getDebugOverlay().showDebugScreen() && !BingoClient.CONFIG.showBoardOnF3Screen()) {
+
+        boolean debugOverlayVisible = minecraft.debugEntries.isOverlayVisible() && (!minecraft.options.hideGui || minecraft.screen != null);
+        if (debugOverlayVisible && !BingoClient.CONFIG.showBoardOnF3Screen()) {
             return;
         }
+
         if (minecraft.screen instanceof BoardScreen) {
             return;
         }
@@ -186,7 +192,7 @@ public class BingoClient {
 
             int totalScore = 0;
             for (final BingoBoard.Teams state : clientGame.states()) {
-                if (state.any()) {
+                if (state.count() == 1) {
                     totalScore++;
                     teams[state.getFirstIndex()].score++;
                 }
@@ -281,20 +287,18 @@ public class BingoClient {
             final boolean isGoalCompleted = state.and(clientTeam);
             final int slotX = slotPos.x() * 18 + 8;
             final int slotY = slotPos.y() * 18 + 18;
+            int incompleteColor = Objects.requireNonNullElse(goal.specialType().incompleteColor, 0);
 
-            final Integer color = switch (clientGame.renderMode()) {
-                case FANCY -> isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor;
-                case ALL_TEAMS -> {
-                    if (!state.any()) {
-                        yield null;
-                    }
-                    final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
-                    final Integer maybeColor = clientGame.teams()[team.getFirstIndex()].getColor().getColor();
-                    yield maybeColor != null ? maybeColor : 0x55ff55;
-                }
+            final int[] colors = switch (clientGame.renderMode()) {
+                case FANCY -> new int[]{(isGoalCompleted ? 0x55ff55 : incompleteColor)};
+                case ALL_TEAMS -> state.stream().map((team) -> clientGame.teams()[team].getColor().getColor()).toArray();
             };
-            if (color != null) {
-                graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
+            for (int i = 0; i < colors.length; ++i) {
+                int color = colors[i];
+                int start = 16 * i / colors.length;
+                int end = 16 * (i + 1) / colors.length;
+                int base = (colors.length == 1) ? 0xA0000000 : 0x50000000;
+                graphics.fill(slotX + start, slotY, slotX + end, slotY + 16, base | color);
             }
 
             Integer manualHighlight = clientGame.manualHighlights()[goalIndex];

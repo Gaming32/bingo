@@ -17,7 +17,6 @@ import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -75,7 +74,6 @@ public enum StairwayToHeavenCondition implements LootItemCondition {
         }
     }
 
-    @NotNull
     @Override
     public Set<ContextKey<?>> getReferencedContextParams() {
         return Set.of(LootContextParams.THIS_ENTITY);

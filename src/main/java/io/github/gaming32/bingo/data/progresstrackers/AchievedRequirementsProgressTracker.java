@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.data.progresstrackers;
 import com.mojang.serialization.MapCodec;
 import io.github.gaming32.bingo.game.ActiveGoal;
 import io.github.gaming32.bingo.game.BingoGame;
-import io.github.gaming32.bingo.mixin.common.AdvancementProgressAccessor;
+import io.github.gaming32.bingo.mixin.AdvancementProgressAccessor;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.server.level.ServerPlayer;
 

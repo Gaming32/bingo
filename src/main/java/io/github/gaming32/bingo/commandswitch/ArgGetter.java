@@ -8,9 +8,10 @@ import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import org.jspecify.annotations.Nullable;
 
 @FunctionalInterface
-public interface ArgGetter<T> {
+public interface ArgGetter<T extends @Nullable Object> {
     T get(CommandContext<CommandSourceStack> context, String arg) throws CommandSyntaxException;
 
     static <R> ArgGetter<Holder.Reference<R>> forResource(

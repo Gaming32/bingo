@@ -18,7 +18,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.util.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
@@ -29,8 +28,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import org.apache.commons.lang3.text.WordUtils;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ import java.util.NavigableSet;
 import java.util.OptionalInt;
 import java.util.Queue;
 import java.util.Set;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 import java.util.stream.IntStream;
 
 public class BingoBoard {
@@ -107,9 +107,10 @@ public class BingoBoard {
         int difficulty,
         int teamCount,
         RandomSource rand,
-        Predicate<GoalHolder> isAllowedGoal,
+        BiPredicate<GoalHolder, Boolean> isAllowedGoal,
         Collection<GoalHolder> requiredGoals,
         HolderSet<BingoTag> excludedTags,
+        boolean allowNeverGoalsInLockout,
         boolean allowsClientRequired,
         HolderLookup.Provider registries
     ) {
@@ -124,6 +125,7 @@ public class BingoBoard {
             isAllowedGoal,
             requiredGoals,
             excludedTags,
+            allowNeverGoalsInLockout,
             allowsClientRequired
         );
         for (int i = 0; i < goalCount; i++) {
@@ -149,9 +151,10 @@ public class BingoBoard {
         int size,
         int difficulty,
         RandomSource rand,
-        Predicate<GoalHolder> isAllowedGoal,
+        BiPredicate<GoalHolder, Boolean> isAllowedGoal,
         Collection<GoalHolder> requiredGoals,
         HolderSet<BingoTag> excludedTags,
+        boolean allowNeverGoalsInLockout,
         boolean allowsClientRequired
     ) {
         final Queue<GoalHolder> requiredGoalQueue = new ArrayDeque<>(requiredGoals);
@@ -211,7 +214,7 @@ public class BingoBoard {
 
                 final GoalHolder goalCandidate = possibleGoals.get(rand.nextInt(possibleGoals.size()));
 
-                if (!isAllowedGoal.test(goalCandidate)) {
+                if (!isAllowedGoal.test(goalCandidate, allowNeverGoalsInLockout)) {
                     continue;
                 }
 

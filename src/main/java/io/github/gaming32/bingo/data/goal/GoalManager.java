@@ -11,8 +11,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +46,6 @@ public class GoalManager extends SimpleJsonResourceReloadListener<BingoGoal> {
         return goalsByDifficulty.getOrDefault(difficulty, List.of());
     }
 
-    @NotNull
     @Override
     public String getName() {
         return ID.toString();

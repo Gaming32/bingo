@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.network;
 
+import io.github.gaming32.bingo.platform.BingoNetworking;
 import io.github.gaming32.bingo.util.Identifiers;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,16 +15,16 @@ public interface AbstractCustomPayload extends CustomPacketPayload {
 
     @ApiStatus.NonExtendable
     default void sendToServer() {
-        BingoNetworking.instance().sendToServer(this);
+        BingoNetworking.sendToServer(this);
     }
 
     @ApiStatus.NonExtendable
     default void sendTo(ServerPlayer player) {
-        BingoNetworking.instance().sendTo(player, this);
+        BingoNetworking.sendTo(player, this);
     }
 
     @ApiStatus.NonExtendable
     default void sendTo(Iterable<ServerPlayer> players) {
-        BingoNetworking.instance().sendTo(players, this);
+        BingoNetworking.sendTo(players, this);
     }
 }

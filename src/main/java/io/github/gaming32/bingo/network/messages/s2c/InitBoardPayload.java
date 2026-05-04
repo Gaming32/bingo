@@ -6,14 +6,13 @@ import io.github.gaming32.bingo.game.BingoGame;
 import io.github.gaming32.bingo.game.BoardShape;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
-import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
+import io.github.gaming32.bingo.platform.BingoNetworking;
 import io.github.gaming32.bingo.util.BingoStreamCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.scores.PlayerTeam;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -60,7 +59,6 @@ public record InitBoardPayload(
         );
     }
 
-    @NotNull
     @Override
     public Type<InitBoardPayload> type() {
         return TYPE;

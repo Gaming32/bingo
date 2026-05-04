@@ -2,12 +2,11 @@ package io.github.gaming32.bingo.network.messages.s2c;
 
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
-import io.github.gaming32.bingo.network.BingoNetworking;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
+import io.github.gaming32.bingo.platform.BingoNetworking;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.NotNull;
 
 public record UpdateStatePayload(int index, BingoBoard.Teams newState) implements AbstractCustomPayload {
     public static final Type<UpdateStatePayload> TYPE = AbstractCustomPayload.type("update_state");
@@ -17,7 +16,6 @@ public record UpdateStatePayload(int index, BingoBoard.Teams newState) implement
         UpdateStatePayload::new
     );
 
-    @NotNull
     @Override
     public Type<UpdateStatePayload> type() {
         return TYPE;

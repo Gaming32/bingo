@@ -12,7 +12,6 @@ import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +23,6 @@ public class TotalCountInventoryChangeTrigger extends SimpleProgressibleCriterio
         InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.TOTAL_COUNT_INVENTORY_CHANGED.get().trigger(player, inventory));
     }
 
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
