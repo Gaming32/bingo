@@ -30,11 +30,6 @@
     ],
     "modmenu": [
       "io.github.gaming32.bingo.client.ModMenuCompat"
-    ],
-    "fabric-gametest": [
-    ],
-    "fabric-client-gametest": [
-      "io.github.gaming32.bingo.gametest.BingoClientGameTest"
     ]
   },
   "mixins": [

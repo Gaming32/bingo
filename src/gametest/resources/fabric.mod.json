@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "bingo-test",
+  "version": "${version}",
+
+  "name": "Bingo-Test",
+  "description": "Tests for a mod for playing bingo!",
+  "authors": [
+    "Gaming32",
+    "Earthcomputer"
+  ],
+  "contact": {},
+
+  "license": "MIT",
+  "icon": "icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "fabric-gametest": [
+    ],
+    "fabric-client-gametest": [
+      "io.github.gaming32.bingo.gametest.BingoClientGameTest"
+    ]
+  }
+}

@@ -51,7 +51,7 @@ fabricApi {
         client = true
     }
     configureTests {
-        modId = "bingo"
+        modId = "bingo-test"
         enableClientGameTests = true
         createSourceSet = true
     }
