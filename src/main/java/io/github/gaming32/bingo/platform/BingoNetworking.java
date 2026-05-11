@@ -28,7 +28,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public final class BingoNetworking {
-    public static final int PROTOCOL_VERSION = 12;
+    public static final int PROTOCOL_VERSION = 13;
 
     public static void onRegister(Consumer<Registrar> handler) {
         handler.accept(new Registrar());

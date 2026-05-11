@@ -19,6 +19,7 @@ public record ClientGame(
     BingoGameMode.RenderMode renderMode,
     @Nullable GoalProgress[] progress,
     @Nullable Integer[] manualHighlights,
-    MutableInt manualHighlightModCount
+    MutableInt manualHighlightModCount,
+    long scheduledEndTime
 ) {
 }
