@@ -320,6 +320,8 @@
   "bingo.key.manual_highlight": "Manual Highlight",
   "bingo.sixteen_bang": "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, and %s!",
   "bingo.unclaimed": "Unclaimed",
+  "bingo.remaining_time": "Remaining time",
+  "bingo.remaining_time_with_value": "Remaining time: %s",
   "bingo.three": "%s, %s, and %s",
   "bingo.four": "%s, %s, %s, and %s",
   "bingo.spawner": "%s %s",

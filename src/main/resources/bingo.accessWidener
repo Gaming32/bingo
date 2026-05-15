@@ -9,3 +9,7 @@ accessible field net/minecraft/world/inventory/GrindstoneMenu repairSlots Lnet/m
 accessible method net/minecraft/world/level/storage/LevelResource <init> (Ljava/lang/String;)V
 accessible field net/minecraft/client/Minecraft blockModelResolver Lnet/minecraft/client/renderer/block/BlockModelResolver;
 accessible field net/minecraft/client/gui/GuiGraphicsExtractor guiRenderState Lnet/minecraft/client/renderer/state/gui/GuiRenderState;
+
+# client gametest (TODO: maybe split this out)
+accessible class net/minecraft/client/gui/screens/inventory/MerchantScreen$TradeOfferButton
+accessible field net/minecraft/world/entity/projectile/FishingHook nibble I
