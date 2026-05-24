@@ -270,6 +270,8 @@
   "bingo.finished": "Team %s has finished in %s place!",
   "bingo.finished.single": "%s has finished in %s place!",
   "bingo.finished.tie": "%s have finished in joint %s place!",
+  "bingo.rating_changed.increase": "Your Bingo Rating has increased from %s to %s (+%s).",
+  "bingo.rating_changed.decrease": "Your Bingo Rating has decreased from %s to %s (-%s).",
   "bingo.forfeited": "Team %s has forfeited!",
   "bingo.forfeited.single": "%s has forfeited!",
   "bingo.goal_obtained": "%s got the goal %s for your team.",
@@ -293,6 +295,7 @@
   "bingo.balance.duplicate_teams": "Duplicate teams in teams list (%s)",
   "bingo.balance.mismatched_player_count": "Command required exactly %s players to be online, but %s players are online.",
   "bingo.balance.success": "Balanced %s players across %s teams with %s%% quality.",
+
   "bingo.formatting.black": "Black",
   "bingo.formatting.dark_blue": "Dark Blue",
   "bingo.formatting.dark_green": "Dark Green",
@@ -377,7 +380,5 @@
   "bingo.ordinal.14": "fourteenth",
   "bingo.ordinal.15": "fifteenth",
   "bingo.ordinal.16": "sixteenth",
-  "bingo.ordinal.generic": "%sth",
-  "bingo.rating_changed.increase": "Your Bingo Rating has increased from %s to %s (+%s).",
-  "bingo.rating_changed.decrease": "Your Bingo Rating has decreased from %s to %s (-%s)."
+  "bingo.ordinal.generic": "%sth"
 }
