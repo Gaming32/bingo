@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.util;
 
+import com.google.common.collect.Comparators;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
@@ -15,6 +16,8 @@ import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.Hash;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +28,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import net.minecraft.SharedConstants;
 import net.minecraft.commands.arguments.ResourceOrTagKeyArgument;
 import net.minecraft.core.Holder;
@@ -319,26 +324,40 @@ public class BingoUtil {
         throw (T) t;
     }
 
-    public static <I, L> void forEachGroup(Set<I> items, Map<L, Integer> groups, Consumer<List<Map.Entry<L, Set<I>>>> handler) {
-        forEachGroupInner(items, List.copyOf(groups.entrySet()), 0, handler);
+    public static <I> void forEachGroup(List<I> items, Collection<Integer> sizes, Consumer<List<List<I>>> handler) {
+        final var sizesList = new ArrayList<>(sizes);
+        sizesList.sort(null);
+        final var indices = IntStream.range(0, items.size()).boxed().collect(Collectors.toSet());
+        forEachGroupInner(indices, items, sizesList, 0, List.of(), handler);
     }
 
-    private static <I, L> void forEachGroupInner(
-        Set<I> remaining,
-        List<Map.Entry<L, Integer>> groups,
+    private static <I> void forEachGroupInner(
+        Set<Integer> remaining,
+        List<I> items,
+        List<Integer> sizes,
         int depth,
-        Consumer<List<Map.Entry<L, Set<I>>>> handler
+        List<Integer> prev,
+        Consumer<List<List<I>>> handler
     ) {
-        if (depth == groups.size()) {
+        if (depth == sizes.size()) {
             handler.accept(new ArrayList<>());
             return;
         }
-        final var group = groups.get(depth);
-        for (final var chosen : Sets.combinations(remaining, group.getValue())) {
+
+        final int size = sizes.get(depth);
+        final var sameAsPrev = depth > 0 && sizes.get(depth - 1) == size;
+
+        for (final var chosen : Sets.combinations(remaining, size)) {
+            final var chosenList = new ArrayList<>(chosen);
+            chosenList.sort(null);
+            if (sameAsPrev && Comparators.lexicographical(Comparator.<Integer>naturalOrder()).compare(chosenList, prev) <= 0) {
+                continue;
+            }
+
             final var rest = Sets.difference(remaining, chosen).immutableCopy();
-            forEachGroupInner(rest, groups, depth + 1, (extra) -> {
-                extra.addFirst(Map.entry(group.getKey(), chosen));
-                handler.accept(extra);
+            forEachGroupInner(rest, items, sizes, depth + 1, chosenList, results -> {
+                results.addFirst(chosenList.stream().map(items::get).toList());
+                handler.accept(results);
             });
         }
     }

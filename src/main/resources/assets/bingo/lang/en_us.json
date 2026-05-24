@@ -294,7 +294,7 @@
   "bingo.no_teams": "No teams exist. Use \"/bingo teams create\" to create some teams first.",
   "bingo.balance.duplicate_teams": "Duplicate teams in teams list (%s)",
   "bingo.balance.mismatched_player_count": "Command required exactly %s players to be online, but %s players are online.",
-  "bingo.balance.success": "Balanced %s players across %s teams with %s%% quality.",
+  "bingo.balance.success": "Balanced %s players across %s teams with %s%% matchup quality.",
 
   "bingo.formatting.black": "Black",
   "bingo.formatting.dark_blue": "Dark Blue",
