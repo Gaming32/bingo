@@ -25,10 +25,6 @@ public final class BingoRatingEngine {
     private BingoRatingEngine() {
     }
 
-    public static String formatBingoRating(double bingoRating) {
-        return Long.toString((long) bingoRating);
-    }
-
     public static double bingoRating(MatchMakingRating rating) {
         return ordinalToBingoRating(ordinal(rating));
     }

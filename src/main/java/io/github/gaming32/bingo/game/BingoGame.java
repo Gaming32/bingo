@@ -92,6 +92,7 @@ public class BingoGame {
     private final BingoGameMode gameMode;
     private final boolean requireClient;
     private final boolean continueAfterWin;
+    private final boolean rated;
     private final int autoForfeitTicks;
     private final PlayerTeam[] teams;
     private long scheduledEndTime;
@@ -111,7 +112,6 @@ public class BingoGame {
     private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams nerfedTeams = BingoBoard.Teams.NONE;
-    private boolean rated = true; // TODO: --unrated?
 
     @SuppressWarnings("unchecked")
     public BingoGame(
@@ -119,6 +119,7 @@ public class BingoGame {
         BingoGameMode gameMode,
         boolean requireClient,
         boolean continueAfterWin,
+        boolean rated,
         long scheduledEndTime,
         int autoForfeitTicks,
         PlayerTeam... teams
@@ -127,6 +128,7 @@ public class BingoGame {
         this.gameMode = gameMode;
         this.requireClient = requireClient;
         this.continueAfterWin = continueAfterWin;
+        this.rated = rated;
         this.scheduledEndTime = scheduledEndTime;
         this.autoForfeitTicks = autoForfeitTicks;
         this.teams = teams;
@@ -296,6 +298,9 @@ public class BingoGame {
                 }
             }
         }
+        if (remainingTeams.any()) {
+            ranks.add(remainingTeams);
+        }
         Collections.reverse(forfeitedTeams); // Forfeited teams get a higher ranking if they forfeited later
         ranks.addAll(forfeitedTeams);
 
@@ -329,7 +334,7 @@ public class BingoGame {
         playerList.broadcastSystemMessage(message, false);
 
         // Don't rate when there's only one team, as that just makes everyone's sigma go up
-        if (rated && ranks.size() > 1) {
+        if (rated && (ranks.size() > 1 || winningTeams.count() != 1)) {
             applyRatingChanges(playerList);
         }
 
@@ -373,21 +378,20 @@ public class BingoGame {
             );
             final var oldBingoRating = BingoRatingEngine.bingoRating(oldRating);
             final var newBingoRating = BingoRatingEngine.bingoRating(newRating);
-            final var formattedOldRating = BingoRatingEngine.formatBingoRating(oldBingoRating);
-            final var formattedNewRating = BingoRatingEngine.formatBingoRating(newBingoRating);
             Bingo.LOGGER.info(
                 "Player {} has changed their rank {} -> {}",
                 player != null ? player.getPlainTextName() : adjustment.playerId().toString(),
-                formattedOldRating,
-                formattedNewRating
+                (int) oldBingoRating,
+                (int) newBingoRating
             );
             if (player != null) {
-                player.sendSystemMessage(Component.translatable(
+                player.sendSystemMessage(Bingo.translatable(
                     newBingoRating >= oldBingoRating
                         ? "bingo.rating_changed.increase"
                         : "bingo.rating_changed.decrease",
-                    formattedOldRating,
-                    formattedNewRating
+                    (int) oldBingoRating,
+                    (int) newBingoRating,
+                    Math.abs((int) newBingoRating - (int) oldBingoRating)
                 ));
             }
         }
@@ -951,6 +955,7 @@ public class BingoGame {
         BingoGameMode gameMode,
         boolean requireClient,
         boolean continueAfterWin,
+        boolean rated,
         long scheduledEndTime,
         int autoForfeitTicks,
         List<String> teamNames,
@@ -961,8 +966,7 @@ public class BingoGame {
         List<BingoBoard.Teams> forfeitedTeams,
         BingoBoard.Teams winningTeams,
         BingoBoard.Teams finishedTeams,
-        BingoBoard.Teams nerfedTeams,
-        boolean rated
+        BingoBoard.Teams nerfedTeams
     ) {
         public static final Codec<PersistenceData> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
@@ -970,6 +974,7 @@ public class BingoGame {
                 BingoGameMode.PERSISTENCE_CODEC.fieldOf("game_mode").forGetter(PersistenceData::gameMode),
                 Codec.BOOL.fieldOf("require_client").forGetter(PersistenceData::requireClient),
                 Codec.BOOL.optionalFieldOf("continue_after_win", false).forGetter(PersistenceData::continueAfterWin),
+                Codec.BOOL.optionalFieldOf("rated", false).forGetter(PersistenceData::rated),
                 ExtraCodecs.NON_NEGATIVE_LONG.optionalFieldOf("scheduled_end_time", 0L).forGetter(PersistenceData::scheduledEndTime),
                 ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("auto_forfeit_ticks", DEFAULT_AUTO_FORFEIT_TICKS).forGetter(PersistenceData::autoForfeitTicks),
                 Codec.STRING.listOf().fieldOf("team_names").forGetter(PersistenceData::teamNames),
@@ -983,8 +988,7 @@ public class BingoGame {
                 BingoBoard.Teams.CODEC.listOf().optionalFieldOf("forfeited_teams", List.of()).forGetter(PersistenceData::forfeitedTeams),
                 BingoBoard.Teams.CODEC.optionalFieldOf("winning_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::winningTeams),
                 BingoBoard.Teams.CODEC.optionalFieldOf("finished_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::finishedTeams),
-                BingoBoard.Teams.CODEC.optionalFieldOf("nerfed_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::nerfedTeams),
-                Codec.BOOL.optionalFieldOf("rated", false).forGetter(PersistenceData::rated)
+                BingoBoard.Teams.CODEC.optionalFieldOf("nerfed_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::nerfedTeams)
             ).apply(instance, PersistenceData::new)
         );
 
@@ -996,7 +1000,7 @@ public class BingoGame {
                     throw new IllegalStateException("Team '" + teamNames.get(i) + "' no longer exists");
                 }
             }
-            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, scheduledEndTime, autoForfeitTicks, teams);
+            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, rated, scheduledEndTime, autoForfeitTicks, teams);
 
             for (final var entry : playersData.advancementProgress.entrySet()) {
                 final Map<ActiveGoal, AdvancementProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
@@ -1044,8 +1048,6 @@ public class BingoGame {
             game.winningTeams = winningTeams;
             game.finishedTeams = finishedTeams;
 
-            game.rated = rated;
-
             return game;
         }
 
@@ -1073,7 +1075,7 @@ public class BingoGame {
             }
 
             return new PersistenceData(
-                game.board, game.gameMode, game.requireClient, game.continueAfterWin,
+                game.board, game.gameMode, game.requireClient, game.continueAfterWin, game.rated,
                 game.scheduledEndTime, game.autoForfeitTicks,
                 Arrays.stream(game.teams).map(PlayerTeam::getName).toList(),
                 new PlayersData(
@@ -1089,8 +1091,7 @@ public class BingoGame {
                 game.forfeitedTeams,
                 game.winningTeams,
                 game.finishedTeams,
-                game.nerfedTeams,
-                game.rated
+                game.nerfedTeams
             );
         }
 
