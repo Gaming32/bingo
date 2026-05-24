@@ -3,6 +3,7 @@ package io.github.gaming32.bingo.util;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Either;
@@ -13,6 +14,17 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.Hash;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 import net.minecraft.SharedConstants;
 import net.minecraft.commands.arguments.ResourceOrTagKeyArgument;
 import net.minecraft.core.Holder;
@@ -38,17 +50,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
 
 public class BingoUtil {
     private static final Hash.Strategy<Holder<?>> HOLDER_STRATEGY = new Hash.Strategy<>() {
@@ -316,5 +317,29 @@ public class BingoUtil {
     @SuppressWarnings("unchecked")
     public static <T extends Throwable> T sneakyThrow(Throwable t) throws T {
         throw (T) t;
+    }
+
+    public static <I, L> void forEachGroup(Set<I> items, Map<L, Integer> groups, Consumer<List<Map.Entry<L, Set<I>>>> handler) {
+        forEachGroupInner(items, List.copyOf(groups.entrySet()), 0, handler);
+    }
+
+    private static <I, L> void forEachGroupInner(
+        Set<I> remaining,
+        List<Map.Entry<L, Integer>> groups,
+        int depth,
+        Consumer<List<Map.Entry<L, Set<I>>>> handler
+    ) {
+        if (depth == groups.size()) {
+            handler.accept(new ArrayList<>());
+            return;
+        }
+        final var group = groups.get(depth);
+        for (final var chosen : Sets.combinations(remaining, group.getValue())) {
+            final var rest = Sets.difference(remaining, chosen).immutableCopy();
+            forEachGroupInner(rest, groups, depth + 1, (extra) -> {
+                extra.addFirst(Map.entry(group.getKey(), chosen));
+                handler.accept(extra);
+            });
+        }
     }
 }

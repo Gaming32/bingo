@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.rating;
 
 import com.pocketcombats.openskill.Adjudicator;
+import com.pocketcombats.openskill.QualityEvaluator;
 import com.pocketcombats.openskill.RatingModelConfig;
 import com.pocketcombats.openskill.aggregate.DefaultTeamRatingAggregator;
 import com.pocketcombats.openskill.aggregate.TeamRatingAggregator;
@@ -20,6 +21,7 @@ public final class BingoRatingEngine {
 
     public static final Adjudicator<UUID> ADJUDICATOR = new Adjudicator<>(CONFIG, MODEL);
     public static final TeamRatingAggregator AGGREGATOR = new DefaultTeamRatingAggregator(CONFIG);
+    public static final QualityEvaluator QUALITY_EVALUATOR = new QualityEvaluator(CONFIG);
     public static final MatchMakingRating DEFAULT_RATING = new SimpleMatchMakingRating(25.0, 25.0 / 3.0);
 
     private BingoRatingEngine() {
