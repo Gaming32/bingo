@@ -14,6 +14,7 @@ mod-publish-plugin = "1.0.0"
 modmenu = "18.0.0-alpha.8"
 neoforge = "26.1.2.31-beta"
 nightconfig = "3.8.2"
+openskill = "1.1"
 
 [libraries]
 fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
@@ -26,6 +27,7 @@ minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft-exact" }
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 nightconfig-core = { module = "com.electronwill.night-config:core", version.ref = "nightconfig" }
 nightconfig-toml = { module = "com.electronwill.night-config:toml", version.ref = "nightconfig" }
+openskill = { module = "com.pocketcombats:openskill", version.ref = "openskill" }
 
 [bundles]
 nightconfig = ["nightconfig-core", "nightconfig-toml"]

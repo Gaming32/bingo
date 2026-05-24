@@ -374,5 +374,7 @@
   "bingo.ordinal.14": "fourteenth",
   "bingo.ordinal.15": "fifteenth",
   "bingo.ordinal.16": "sixteenth",
-  "bingo.ordinal.generic": "%sth"
+  "bingo.ordinal.generic": "%sth",
+  "bingo.rating_changed.increase": "Your Bingo Rating has increased from %s to %s.",
+  "bingo.rating_changed.decrease": "Your Bingo Rating has decreased from %s to %s."
 }
