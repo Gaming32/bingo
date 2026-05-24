@@ -37,6 +37,16 @@ import io.github.gaming32.bingo.rating.BingoRatingEngine;
 import io.github.gaming32.bingo.rating.BingoRatings;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.Vec2i;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -74,17 +84,6 @@ import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.mutable.MutableObject;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static net.minecraft.commands.Commands.*;
 
@@ -139,7 +138,7 @@ public class BingoCommand {
         new Dynamic2CommandExceptionType((expected, actual) -> Bingo.translatableEscape("bingo.balance.mismatched_player_count", expected, actual));
 
     private static final SuggestionProvider<CommandSourceStack> ACTIVE_GOAL_SUGGESTOR = (context, builder) -> {
-        final var game = ((MinecraftServerExt)context.getSource().getServer()).bingo$getGame();
+        final var game = ((MinecraftServerExt) context.getSource().getServer()).bingo$getGame();
         if (game == null) {
             return builder.buildFuture();
         }
@@ -207,9 +206,9 @@ public class BingoCommand {
             )
             .then(literal("stop")
                 .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)
-                    && source.getServer() != null && ((MinecraftServerExt)source.getServer()).bingo$getGame() != null)
+                        && source.getServer() != null && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .executes(ctx -> {
-                    final var game = ((MinecraftServerExt)ctx.getSource().getServer()).bingo$getGame();
+                    final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
                     if (game == null) {
                         throw NO_GAME_RUNNING.create();
                     }
@@ -222,18 +221,18 @@ public class BingoCommand {
                 .executes(BingoCommand::resetGame)
             )
             .then(literal("forfeit")
-                .requires(source -> source.getServer() != null && ((MinecraftServerExt)source.getServer()).bingo$getGame() != null)
+                .requires(source -> source.getServer() != null && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .executes(ctx -> forfeit(ctx.getSource()))
                 .then(argument("team", TeamArgument.team())
                     .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)
-                        && source.getServer() != null && ((MinecraftServerExt)source.getServer()).bingo$getGame() != null)
+                            && source.getServer() != null && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                     .executes(ctx -> forfeit(ctx.getSource(), TeamArgument.getTeam(ctx, "team")))
                 )
             )
             .then(literal("board")
-                .requires(source -> source.getServer() != null && ((MinecraftServerExt)source.getServer()).bingo$getGame() != null)
+                .requires(source -> source.getServer() != null && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .executes(ctx -> {
-                    final var game = ((MinecraftServerExt)ctx.getSource().getServer()).bingo$getGame();
+                    final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
                     if (game == null) {
                         throw NO_GAME_RUNNING.create();
                     }
@@ -285,7 +284,7 @@ public class BingoCommand {
                 })
                 .then(literal("copy")
                     .executes(ctx -> {
-                        final var game = ((MinecraftServerExt)ctx.getSource().getServer()).bingo$getGame();
+                        final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
                         if (game == null) {
                             throw NO_GAME_RUNNING.create();
                         }
@@ -302,7 +301,7 @@ public class BingoCommand {
                 .then(literal("difficulties")
                     .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                     .executes(ctx -> {
-                        final var game = ((MinecraftServerExt)ctx.getSource().getServer()).bingo$getGame();
+                        final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
                         if (game == null) {
                             throw NO_GAME_RUNNING.create();
                         }
@@ -327,7 +326,7 @@ public class BingoCommand {
             )
             .then(literal("goals")
                 .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)
-                    && source.getServer() != null && ((MinecraftServerExt)source.getServer()).bingo$getGame() != null)
+                        && source.getServer() != null && ((MinecraftServerExt) source.getServer()).bingo$getGame() != null)
                 .then(argument("players", EntityArgument.players())
                     .then(literal("award")
                         .then(argument("goal", IdentifierArgument.id())
@@ -410,7 +409,7 @@ public class BingoCommand {
                 .then(literal("set")
                     .then(argument("time-limit", TimeArgument.time(-1))
                         .executes(ctx -> {
-                            final var game = ((MinecraftServerExt)ctx.getSource().getServer()).bingo$getGame();
+                            final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
                             if (game == null) {
                                 throw NO_GAME_RUNNING.create();
                             }
@@ -501,7 +500,7 @@ public class BingoCommand {
         final MinecraftServer server = context.getSource().getServer();
         final var playerList = server.getPlayerList();
 
-        final var existingGame = ((MinecraftServerExt)server).bingo$getGame();
+        final var existingGame = ((MinecraftServerExt) server).bingo$getGame();
         if (existingGame != null) {
             existingGame.endGame(playerList);
         }
@@ -522,7 +521,7 @@ public class BingoCommand {
         final boolean continueAfterWin = CONTINUE_AFTER_WIN.get(context);
         final boolean includeInactiveTeams = INCLUDE_INACTIVE_TEAMS.get(context);
         final boolean rated = RATED.get(context);
-        final int timeLimit = TIME_LIMIT.get(context);
+        final int timeLimit  = TIME_LIMIT.get(context);
         final int autoForfeitTicks = AUTO_FORFEIT_TIME.get(context);
 
         final Set<PlayerTeam> teams = LinkedHashSet.newLinkedHashSet(teamCount);
@@ -531,10 +530,10 @@ public class BingoCommand {
             final PlayerTeam team = TeamArgument.getTeam(context, argName);
             boolean teamActive =
                 includeInactiveTeams ||
-                    playerList.getPlayers()
-                        .stream()
-                        .map(Player::getScoreboardName)
-                        .anyMatch(team.getPlayers()::contains);
+                playerList.getPlayers()
+                    .stream()
+                    .map(Player::getScoreboardName)
+                    .anyMatch(team.getPlayers()::contains);
             if (teamActive && !teams.add(team)) {
                 throw DUPLICATE_TEAMS.create(team);
             }
@@ -582,7 +581,7 @@ public class BingoCommand {
             }
         }
 
-        ((MinecraftServerExt)server).bingo$setGame(game);
+        ((MinecraftServerExt) server).bingo$setGame(game);
         Bingo.updateCommandTree(playerList);
         new ArrayList<>(playerList.getPlayers()).forEach(game::addPlayer);
         playerList.broadcastSystemMessage(
@@ -594,7 +593,7 @@ public class BingoCommand {
 
     private static int resetGame(CommandContext<CommandSourceStack> context) {
         final var server = context.getSource().getServer();
-        final var game = ((MinecraftServerExt)server).bingo$getGame();
+        final var game = ((MinecraftServerExt) server).bingo$getGame();
         if (game != null) {
             game.endGame(server.getPlayerList());
         }
@@ -604,7 +603,7 @@ public class BingoCommand {
     }
 
     private static int forfeit(CommandSourceStack source) throws CommandSyntaxException {
-        final var game = ((MinecraftServerExt)source.getServer()).bingo$getGame();
+        final var game = ((MinecraftServerExt) source.getServer()).bingo$getGame();
         if (game == null) {
             throw NO_GAME_RUNNING.create();
         }
@@ -622,7 +621,7 @@ public class BingoCommand {
     }
 
     private static int forfeit(CommandSourceStack source, PlayerTeam team) throws CommandSyntaxException {
-        final var game = ((MinecraftServerExt)source.getServer()).bingo$getGame();
+        final var game = ((MinecraftServerExt) source.getServer()).bingo$getGame();
         if (game == null) {
             throw NO_GAME_RUNNING.create();
         }
@@ -643,7 +642,7 @@ public class BingoCommand {
         TriFunction<BingoGame, ServerPlayer, ActiveGoal, Boolean> action,
         @Translatable String resultKey
     ) throws CommandSyntaxException {
-        final var game = ((MinecraftServerExt)context.getSource().getServer()).bingo$getGame();
+        final var game = ((MinecraftServerExt) context.getSource().getServer()).bingo$getGame();
         if (game == null) {
             throw NO_GAME_RUNNING.create();
         }
