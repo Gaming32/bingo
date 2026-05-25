@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -70,6 +71,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.Permissions;
+import net.minecraft.server.players.NameAndId;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -449,6 +451,50 @@ public class BingoCommand {
                     )
                 )
             )
+            .then(literal("rate")
+                .executes(context -> ratePlayers(context, List.of(context.getSource().getPlayerOrException())))
+                .then(argument("player", EntityArgument.players())
+                    .requires(hasPermission(LEVEL_MODERATORS))
+                    .executes(context -> ratePlayers(context, EntityArgument.getPlayers(context, "player")))
+                )
+            )
+            .then(literal("leaderboard")
+                .executes(context -> {
+                    final var server = context.getSource().getServer();
+                    final var ratings = server
+                        .getDataStorage()
+                        .computeIfAbsent(BingoRatings.TYPE);
+                    final var playerList = server.getPlayerList();
+                    final var nameIdCache = server.services().nameToIdCache();
+
+                    final var topPlayers = BingoUtil.findTopElements(
+                        ratings.getRatings().entrySet(),
+                        Comparator.comparing(entry -> BingoRatingEngine.bingoRating(entry.getValue())),
+                        10
+                    );
+                    final var result = Component.translatable("bingo.leaderboard.header", topPlayers.size());
+                    int rank = 1;
+                    for (final var entry : topPlayers) {
+                        final var playerEntity = playerList.getPlayer(entry.getKey());
+                        result.append("\n");
+                        result.append(Component.translatable(
+                            "bingo.leaderboard.player",
+                            rank,
+                            playerEntity != null
+                                ? playerEntity.getDisplayName()
+                                : Component.literal(
+                                    nameIdCache.get(entry.getKey())
+                                    .map(NameAndId::name)
+                                    .orElseGet(entry.getKey()::toString)
+                                ),
+                            (int) BingoRatingEngine.bingoRating(entry.getValue())
+                        ));
+                        rank++;
+                    }
+                    context.getSource().sendSuccess(() -> result, false);
+                    return 0;
+                })
+            )
         );
 
         {
@@ -725,7 +771,7 @@ public class BingoCommand {
                     )
                 )
                 .toList();
-            final var matchupCount = (double)fullMesh(createdTeams.size());
+            final var matchupCount = (double) BingoUtil.fullMesh(createdTeams.size());
             var qualitySum = 0.0;
             for (int i = 0; i < createdTeams.size() - 1; i++) {
                 for (int j = i + 1; j < createdTeams.size(); j++) {
@@ -780,11 +826,17 @@ public class BingoCommand {
         return 0;
     }
 
-    public static int fullMesh(int n) {
-        if ((n & 1) == 0) {
-            return n / 2 * (n - 1);
-        } else {
-            return (n - 1) / 2 * n;
+    private static int ratePlayers(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) {
+        final var ratings = context.getSource()
+            .getServer()
+            .getDataStorage()
+            .computeIfAbsent(BingoRatings.TYPE);
+        var summedRating = 0;
+        for (final var player : players) {
+            final var rating = (int) BingoRatingEngine.bingoRating(ratings.getRating(player.getUUID()));
+            context.getSource().sendSuccess(() -> Bingo.translatable("bingo.rate", player.getDisplayName(), rating), false);
+            summedRating += rating;
         }
+        return summedRating;
     }
 }
