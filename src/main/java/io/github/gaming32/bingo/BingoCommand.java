@@ -1,9 +1,7 @@
 package io.github.gaming32.bingo;
 
 import com.demonwav.mcdev.annotations.Translatable;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Comparators;
-import com.google.common.collect.Multimaps;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -43,7 +41,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -135,8 +132,8 @@ public class BingoCommand {
     private static final SimpleCommandExceptionType NOT_NERFED =
         new SimpleCommandExceptionType(Bingo.translatable("bingo.not_nerfed"));
 
-    private static final DynamicCommandExceptionType DUPLICATE_BALANCE_TEAMS =
-        new DynamicCommandExceptionType(team -> Bingo.translatableEscape("bingo.balance.duplicate_teams", ((PlayerTeam)team).getFormattedDisplayName()));
+    private static final Dynamic2CommandExceptionType NOT_ENOUGH_TEAMS =
+        new Dynamic2CommandExceptionType((required, found) -> Bingo.translatableEscape("bingo.balance.not_enough_teams", required, found));
     private static final Dynamic2CommandExceptionType MISMATCHED_PLAYER_COUNT =
         new Dynamic2CommandExceptionType((expected, actual) -> Bingo.translatableEscape("bingo.balance.mismatched_player_count", expected, actual));
 
@@ -532,13 +529,11 @@ public class BingoCommand {
             var currentCommand = bingoCommand.getChild("teams").getChild("balance").getChild("players");
             for (int i = 1; i <= 32; i++) {
                 final var teamCount = i;
-                final var subTree = argument("team" + i, TeamArgument.team())
-                    .then(argument("team-size-" + i, IntegerArgumentType.integer(1))
-                        .executes(context -> balanceTeams(context, teamCount))
-                    )
+                final var subCommand = argument("team-size-" + i, IntegerArgumentType.integer(1))
+                    .executes(context -> balanceTeams(context, teamCount))
                     .build();
-                currentCommand.addChild(subTree);
-                currentCommand = subTree.getChild("team-size-" + i);
+                currentCommand.addChild(subCommand);
+                currentCommand = subCommand;
             }
         }
     }
@@ -743,25 +738,29 @@ public class BingoCommand {
     private static int balanceTeams(CommandContext<CommandSourceStack> context, int teamCount) throws CommandSyntaxException {
         final var server = context.getSource().getServer();
         final var players = EntityArgument.getPlayers(context, "players");
+        final var scoreboard = server.getScoreboard();
 
-        final var teams = LinkedHashMap.<PlayerTeam, Integer>newLinkedHashMap(teamCount);
+        final var teams = new ArrayList<Integer>(teamCount);
         var totalPlayers = 0;
         for (int i = 1; i <= teamCount; i++) {
-            final var team = TeamArgument.getTeam(context, "team" + i);
             final var teamSize = IntegerArgumentType.getInteger(context, "team-size-" + i);
             totalPlayers += teamSize;
-            if (teams.put(team, teamSize) != null) {
-                throw DUPLICATE_BALANCE_TEAMS.create(team);
-            }
+            teams.add(teamSize);
         }
         if (totalPlayers != players.size()) {
             throw MISMATCHED_PLAYER_COUNT.create(totalPlayers, players.size());
         }
 
+        final var scoreBoardTeams = new ArrayList<>(scoreboard.getPlayerTeams());
+        if (teams.size() > scoreBoardTeams.size()) {
+            throw NOT_ENOUGH_TEAMS.create(teams.size(), scoreBoardTeams.size());
+        }
+        Collections.shuffle(scoreBoardTeams);
+
         final var ratings = server.getDataStorage().computeIfAbsent(BingoRatings.TYPE);
 
         final var bestChoice = new AtomicReference<>(Map.entry(List.<List<ServerPlayer>>of(), Double.NEGATIVE_INFINITY));
-        BingoUtil.forEachGroupParallel(List.copyOf(players), teams.values(), possibility -> {
+        BingoUtil.forEachGroupParallel(List.copyOf(players), teams, possibility -> {
             final var createdTeams = possibility.stream()
                 .map(t -> t.stream().map(p -> ratings.getRating(p.getUUID())).toList())
                 .toList();
@@ -782,13 +781,8 @@ public class BingoCommand {
                 .collect(Collectors.joining("\n"))
         );
 
-        final var teamsMapBack = teams.entrySet()
-            .stream()
-            .collect(Multimaps.toMultimap(Map.Entry::getValue, Map.Entry::getKey, ArrayListMultimap::create));
-
-        final var scoreboard = server.getScoreboard();
         for (final var foundTeam : bestChoice.get().getKey()) {
-            final var scoreboardTeam = teamsMapBack.get(foundTeam.size()).removeLast();
+            final var scoreboardTeam = scoreBoardTeams.removeLast();
             for (final var player : foundTeam) {
                 scoreboard.addPlayerToTeam(player.getScoreboardName(), scoreboardTeam);
             }

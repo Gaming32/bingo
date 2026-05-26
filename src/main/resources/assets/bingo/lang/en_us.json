@@ -292,7 +292,7 @@
   "bingo.team_already_exists": "The team %s already exists.",
   "bingo.added_to_teams": "Added %s player(s) to %s team(s).",
   "bingo.no_teams": "No teams exist. Use \"/bingo teams create\" to create some teams first.",
-  "bingo.balance.duplicate_teams": "Duplicate teams in teams list (%s)",
+  "bingo.balance.not_enough_teams": "Not enough created teams. You asked to balance %s teams, but only %s teams exist on the server.",
   "bingo.balance.mismatched_player_count": "Command required exactly %s players to be online, but %s players are online.",
   "bingo.balance.success": "Balanced %s players across %s teams with %s%% matchup quality.",
   "bingo.rate": "Player %s has a rating of %s",
