@@ -289,12 +289,12 @@ public class BingoGame {
         if (!winningTeams.any()) {
             winningTeams = getWinner(true);
             if (winningTeams.any()) {
-                ranks.addFirst(winningTeams);
+                ranks.add(winningTeams);
             } else {
                 winningTeams = remainingTeams;
                 remainingTeams = BingoBoard.Teams.NONE;
                 if (winningTeams.any()) {
-                    ranks.addFirst(winningTeams);
+                    ranks.add(winningTeams);
                 }
             }
         }
@@ -880,7 +880,7 @@ public class BingoGame {
         }
         remainingTeams = remainingTeams.andNot(newFinishers);
 
-        ranks.addFirst(newFinishers);
+        ranks.add(newFinishers);
 
         if (continueAfterWin) {
             notifyFinishedTeam(playerList, newFinishers, place);
