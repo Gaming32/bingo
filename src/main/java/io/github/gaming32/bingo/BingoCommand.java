@@ -762,32 +762,12 @@ public class BingoCommand {
         final MutableObject<Map.Entry<List<List<ServerPlayer>>, Double>> bestChoice = new MutableObject<>();
         BingoUtil.forEachGroup(List.copyOf(players), teams.values(), possibility -> {
             final var createdTeams = possibility.stream()
-                .map(possibleTeam ->
-                    BingoRatingEngine.AGGREGATOR.computeTeamRating(
-                        possibleTeam
-                            .stream()
-                            .map(player -> ratings.getRating(player.getUUID()))
-                            .toList()
-                    )
-                )
+                .map(t -> t.stream().map(p -> ratings.getRating(p.getUUID())).toList())
                 .toList();
-            final var matchupCount = (double) BingoUtil.fullMesh(createdTeams.size());
-            var qualitySum = 0.0;
-            for (int i = 0; i < createdTeams.size() - 1; i++) {
-                for (int j = i + 1; j < createdTeams.size(); j++) {
-                    var teamA = createdTeams.get(i);
-                    var teamB = createdTeams.get(j);
-                    if (teamB.mu() > teamA.mu()) {
-                        final var tmp = teamB;
-                        teamB = teamA;
-                        teamA = tmp;
-                    }
-                    qualitySum += BingoRatingEngine.QUALITY_EVALUATOR.evaluateQuality(teamA, teamB) / matchupCount;
-                }
-            }
-            if (bestChoice.get() == null || qualitySum > bestChoice.get().getValue()) {
-                Bingo.LOGGER.info("Found new best score: {}", qualitySum);
-                bestChoice.setValue(Map.entry(possibility, qualitySum));
+            final var drawChance = BingoRatingEngine.predictDraw(createdTeams);
+            if (bestChoice.get() == null || drawChance > bestChoice.get().getValue()) {
+                Bingo.LOGGER.info("Found new best score: {}", drawChance);
+                bestChoice.setValue(Map.entry(possibility, drawChance));
             }
         });
 
