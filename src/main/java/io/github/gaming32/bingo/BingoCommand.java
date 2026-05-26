@@ -2,6 +2,7 @@ package io.github.gaming32.bingo;
 
 import com.demonwav.mcdev.annotations.Translatable;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Comparators;
 import com.google.common.collect.Multimaps;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
@@ -47,6 +48,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
@@ -85,7 +87,6 @@ import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.function.TriFunction;
-import org.apache.commons.lang3.mutable.MutableObject;
 
 import static net.minecraft.commands.Commands.*;
 
@@ -759,16 +760,16 @@ public class BingoCommand {
 
         final var ratings = server.getDataStorage().computeIfAbsent(BingoRatings.TYPE);
 
-        final MutableObject<Map.Entry<List<List<ServerPlayer>>, Double>> bestChoice = new MutableObject<>();
-        BingoUtil.forEachGroup(List.copyOf(players), teams.values(), possibility -> {
+        final var bestChoice = new AtomicReference<>(Map.entry(List.<List<ServerPlayer>>of(), Double.NEGATIVE_INFINITY));
+        BingoUtil.forEachGroupParallel(List.copyOf(players), teams.values(), possibility -> {
             final var createdTeams = possibility.stream()
                 .map(t -> t.stream().map(p -> ratings.getRating(p.getUUID())).toList())
                 .toList();
             final var drawChance = BingoRatingEngine.predictDraw(createdTeams);
-            if (bestChoice.get() == null || drawChance > bestChoice.get().getValue()) {
-                Bingo.LOGGER.info("Found new best score: {}", drawChance);
-                bestChoice.setValue(Map.entry(possibility, drawChance));
-            }
+            bestChoice.getAndAccumulate(
+                Map.entry(possibility, drawChance),
+                (a, b) -> Comparators.max(a, b, Comparator.comparingDouble(Map.Entry::getValue))
+            );
         });
 
         Bingo.LOGGER.info("Best score found: {}", bestChoice.get().getValue());

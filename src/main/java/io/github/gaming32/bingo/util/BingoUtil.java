@@ -326,14 +326,14 @@ public class BingoUtil {
         throw (T) t;
     }
 
-    public static <I> void forEachGroup(List<I> items, Collection<Integer> sizes, Consumer<List<List<I>>> handler) {
+    public static <I> void forEachGroupParallel(List<I> items, Collection<Integer> sizes, Consumer<List<List<I>>> handler) {
         final var sizesList = new ArrayList<>(sizes);
         sizesList.sort(null);
         final var indices = IntStream.range(0, items.size()).boxed().collect(Collectors.toSet());
-        forEachGroupInner(indices, items, sizesList, 0, List.of(), handler);
+        forEachGroupParallelInner(indices, items, sizesList, 0, List.of(), handler);
     }
 
-    private static <I> void forEachGroupInner(
+    private static <I> void forEachGroupParallelInner(
         Set<Integer> remaining,
         List<I> items,
         List<Integer> sizes,
@@ -349,19 +349,19 @@ public class BingoUtil {
         final int size = sizes.get(depth);
         final var sameAsPrev = depth > 0 && sizes.get(depth - 1) == size;
 
-        for (final var chosen : Sets.combinations(remaining, size)) {
+        Sets.combinations(remaining, size).parallelStream().forEach(chosen -> {
             final var chosenList = new ArrayList<>(chosen);
             chosenList.sort(null);
             if (sameAsPrev && Comparators.lexicographical(Comparator.<Integer>naturalOrder()).compare(chosenList, prev) <= 0) {
-                continue;
+                return;
             }
 
             final var rest = Sets.difference(remaining, chosen).immutableCopy();
-            forEachGroupInner(rest, items, sizes, depth + 1, chosenList, results -> {
+            forEachGroupParallelInner(rest, items, sizes, depth + 1, chosenList, results -> {
                 results.addFirst(chosenList.stream().map(items::get).toList());
                 handler.accept(results);
             });
-        }
+        });
     }
 
     public static int fullMesh(int n) {
