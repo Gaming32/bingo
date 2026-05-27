@@ -475,12 +475,12 @@ public class BingoCommand {
                         .map(entry -> ObjectDoubleImmutablePair.of(entry.getKey(), BingoRatingEngine.bingoRating(entry.getValue())))
                         .collect(Comparators.greatest(topPlayerCount, Comparator.comparingDouble(ObjectDoublePair::valueDouble)));
 
-                    final var result = Component.translatable("bingo.leaderboard.header", topPlayers.size());
+                    final var result = Bingo.translatable("bingo.leaderboard.header", topPlayers.size());
                     int rank = 1;
                     for (final var entry : topPlayers) {
                         final var playerEntity = playerList.getPlayer(entry.left());
                         result.append("\n");
-                        result.append(Component.translatable(
+                        result.append(Bingo.translatable(
                             "bingo.leaderboard.player",
                             rank,
                             playerEntity != null
