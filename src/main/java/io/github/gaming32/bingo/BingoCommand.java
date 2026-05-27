@@ -36,6 +36,8 @@ import io.github.gaming32.bingo.rating.BingoRatingEngine;
 import io.github.gaming32.bingo.rating.BingoRatings;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.Vec2i;
+import it.unimi.dsi.fastutil.objects.ObjectDoubleImmutablePair;
+import it.unimi.dsi.fastutil.objects.ObjectDoublePair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -465,15 +467,18 @@ public class BingoCommand {
                     final var playerList = server.getPlayerList();
                     final var nameIdCache = server.services().nameToIdCache();
 
-                    final var topPlayers = BingoUtil.findTopElements(
-                        ratings.getRatings().entrySet(),
-                        Comparator.comparing(entry -> BingoRatingEngine.bingoRating(entry.getValue())),
-                        10
-                    );
+                    final var topPlayerCount = 10;
+                    final var topPlayers = ratings
+                        .getRatings()
+                        .entrySet()
+                        .stream()
+                        .map(entry -> ObjectDoubleImmutablePair.of(entry.getKey(), BingoRatingEngine.bingoRating(entry.getValue())))
+                        .collect(Comparators.greatest(topPlayerCount, Comparator.comparingDouble(ObjectDoublePair::valueDouble)));
+
                     final var result = Component.translatable("bingo.leaderboard.header", topPlayers.size());
                     int rank = 1;
                     for (final var entry : topPlayers) {
-                        final var playerEntity = playerList.getPlayer(entry.getKey());
+                        final var playerEntity = playerList.getPlayer(entry.left());
                         result.append("\n");
                         result.append(Component.translatable(
                             "bingo.leaderboard.player",
@@ -481,14 +486,15 @@ public class BingoCommand {
                             playerEntity != null
                                 ? playerEntity.getDisplayName()
                                 : Component.literal(
-                                    nameIdCache.get(entry.getKey())
-                                    .map(NameAndId::name)
-                                    .orElseGet(entry.getKey()::toString)
+                                    nameIdCache.get(entry.left())
+                                        .map(NameAndId::name)
+                                        .orElseGet(entry.left()::toString)
                                 ),
-                            (int) BingoRatingEngine.bingoRating(entry.getValue())
+                            (int) entry.rightDouble()
                         ));
                         rank++;
                     }
+
                     context.getSource().sendSuccess(() -> result, false);
                     return 0;
                 })

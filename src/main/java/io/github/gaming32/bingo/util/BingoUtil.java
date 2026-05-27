@@ -17,14 +17,12 @@ import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.Hash;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -370,29 +368,5 @@ public class BingoUtil {
         } else {
             return (n - 1) / 2 * n;
         }
-    }
-
-    public static <T> List<T> findTopElements(Iterable<T> source, Comparator<? super T> comparator, int count) {
-        if (count < 1) {
-            throw new IllegalArgumentException("Cannot findTopElements() with count < 1");
-        }
-
-        final var queue = new PriorityQueue<T>(count, comparator);
-        for (final var value : source) {
-            if (queue.size() < count) {
-                queue.add(value);
-            } else if (comparator.compare(value, queue.peek()) > 0) {
-                queue.poll();
-                queue.offer(value);
-            }
-        }
-
-        final var result = new ArrayList<T>(queue.size());
-        T value;
-        while ((value = queue.poll()) != null) {
-            result.add(value);
-        }
-        Collections.reverse(result);
-        return result;
     }
 }
