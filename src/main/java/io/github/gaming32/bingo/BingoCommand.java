@@ -36,6 +36,7 @@ import io.github.gaming32.bingo.rating.BingoRatingEngine;
 import io.github.gaming32.bingo.rating.BingoRatings;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.Vec2i;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectDoubleImmutablePair;
 import it.unimi.dsi.fastutil.objects.ObjectDoublePair;
 import java.util.ArrayList;
@@ -45,7 +46,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -746,7 +746,7 @@ public class BingoCommand {
         final var players = EntityArgument.getPlayers(context, "players");
         final var scoreboard = server.getScoreboard();
 
-        final var teams = new ArrayList<Integer>(teamCount);
+        final var teams = new IntArrayList(teamCount);
         var totalPlayers = 0;
         for (int i = 1; i <= teamCount; i++) {
             final var teamSize = IntegerArgumentType.getInteger(context, "team-size-" + i);
@@ -765,29 +765,29 @@ public class BingoCommand {
 
         final var ratings = server.getDataStorage().computeIfAbsent(BingoRatings.TYPE);
 
-        final var bestChoice = new AtomicReference<>(Map.entry(List.<List<ServerPlayer>>of(), Double.NEGATIVE_INFINITY));
+        final var bestChoice = new AtomicReference<>(ObjectDoublePair.of(List.<List<ServerPlayer>>of(), Double.NEGATIVE_INFINITY));
         BingoUtil.forEachGroupParallel(List.copyOf(players), teams, possibility -> {
             final var createdTeams = possibility.stream()
                 .map(t -> t.stream().map(p -> ratings.getRating(p.getUUID())).toList())
                 .toList();
             final var drawChance = BingoRatingEngine.predictDraw(createdTeams);
             bestChoice.getAndAccumulate(
-                Map.entry(possibility, drawChance),
-                (a, b) -> Comparators.max(a, b, Comparator.comparingDouble(Map.Entry::getValue))
+                ObjectDoublePair.of(possibility, drawChance),
+                (a, b) -> Comparators.max(a, b, Comparator.comparingDouble(ObjectDoublePair::valueDouble))
             );
         });
 
-        Bingo.LOGGER.info("Best score found: {}", bestChoice.get().getValue());
+        Bingo.LOGGER.info("Best score found: {}", bestChoice.get().valueDouble());
         Bingo.LOGGER.info(
             "Teams:\n{}",
             bestChoice.get()
-                .getKey()
+                .key()
                 .stream()
                 .map(team -> " - " + team.stream().map(ServerPlayer::getPlainTextName).collect(Collectors.joining(", ", "[", "]")))
                 .collect(Collectors.joining("\n"))
         );
 
-        for (final var foundTeam : bestChoice.get().getKey()) {
+        for (final var foundTeam : bestChoice.get().key()) {
             final var scoreboardTeam = scoreBoardTeams.removeLast();
             for (final var player : foundTeam) {
                 scoreboard.addPlayerToTeam(player.getScoreboardName(), scoreboardTeam);
@@ -799,7 +799,7 @@ public class BingoCommand {
                 "bingo.balance.success",
                 players.size(),
                 teams.size(),
-                Math.round(bestChoice.get().getValue() * 100.0)
+                Math.round(bestChoice.get().valueDouble() * 100.0)
             ),
             true
         );

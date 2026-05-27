@@ -1,6 +1,5 @@
 package io.github.gaming32.bingo.util;
 
-import com.google.common.collect.Comparators;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
@@ -15,9 +14,13 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
+import it.unimi.dsi.fastutil.ints.IntCollection;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +31,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import net.minecraft.SharedConstants;
 import net.minecraft.commands.arguments.ResourceOrTagKeyArgument;
@@ -324,39 +326,40 @@ public class BingoUtil {
         throw (T) t;
     }
 
-    public static <I> void forEachGroupParallel(List<I> items, Collection<Integer> sizes, Consumer<List<List<I>>> handler) {
-        final var sizesList = new ArrayList<>(sizes);
-        sizesList.sort(null);
-        final var indices = IntStream.range(0, items.size()).boxed().collect(Collectors.toSet());
-        forEachGroupParallelInner(indices, items, sizesList, 0, List.of(), handler);
+    public static <I> void forEachGroupParallel(List<I> items, IntCollection sizes, Consumer<List<List<I>>> handler) {
+        final var indices = new IntArraySet(IntStream.range(0, items.size()).toArray());
+        final var sizesList = new IntArrayList(sizes);
+        sizesList.unstableSort(null);
+        forEachGroupParallelInner(indices, items, sizesList, 0, IntList.of(), handler);
     }
 
     private static <I> void forEachGroupParallelInner(
-        Set<Integer> remaining,
+        IntSet remaining,
         List<I> items,
-        List<Integer> sizes,
+        IntList sizes,
         int depth,
-        List<Integer> prev,
+        IntList prev,
         Consumer<List<List<I>>> handler
     ) {
         if (depth == sizes.size()) {
-            handler.accept(new ArrayList<>());
+            handler.accept(new ArrayList<>(depth));
             return;
         }
 
-        final int size = sizes.get(depth);
-        final var sameAsPrev = depth > 0 && sizes.get(depth - 1) == size;
+        final int size = sizes.getInt(depth);
+        final var sameAsPrev = depth > 0 && sizes.getInt(depth - 1) == size;
 
         Sets.combinations(remaining, size).parallelStream().forEach(chosen -> {
-            final var chosenList = new ArrayList<>(chosen);
-            chosenList.sort(null);
-            if (sameAsPrev && Comparators.lexicographical(Comparator.<Integer>naturalOrder()).compare(chosenList, prev) <= 0) {
+            final var chosenList = new IntArrayList(chosen);
+            chosenList.unstableSort(null);
+            if (sameAsPrev && chosenList.compareTo(prev) <= 0) {
                 return;
             }
 
-            final var rest = Sets.difference(remaining, chosen).immutableCopy();
+            final var rest = new IntOpenHashSet(remaining);
+            rest.removeAll(chosenList);
             forEachGroupParallelInner(rest, items, sizes, depth + 1, chosenList, results -> {
-                results.addFirst(chosenList.stream().map(items::get).toList());
+                results.add(chosenList.intStream().mapToObj(items::get).toList());
                 handler.accept(results);
             });
         });
