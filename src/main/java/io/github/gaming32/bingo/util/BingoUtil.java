@@ -151,12 +151,8 @@ public class BingoUtil {
         }
     }
 
-    public static MutableComponent ordinal(int n) {
-        if (n >= 1 && n <= 16) {
-            return Bingo.translatable("bingo.ordinal." + n);
-        } else {
-            return Bingo.translatable("bingo.ordinal.generic", n);
-        }
+    public static MutableComponent placement(int n) {
+        return Bingo.translatable("bingo.placement." + n);
     }
 
     public static MutableComponent ensureHasFallback(MutableComponent component) {

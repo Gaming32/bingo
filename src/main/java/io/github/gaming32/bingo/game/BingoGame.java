@@ -780,8 +780,8 @@ public class BingoGame {
                     return name;
                 }
             ).map(
-                playerName -> Bingo.translatable("bingo.finished.single", playerName, BingoUtil.ordinal(place)),
-                teamName -> Bingo.translatable("bingo.finished", teamName, BingoUtil.ordinal(place))
+                playerName -> Bingo.translatable("bingo.finished.single", playerName, BingoUtil.placement(place)),
+                teamName -> Bingo.translatable("bingo.finished", teamName, BingoUtil.placement(place))
             );
         } else {
             Component teamList = ComponentUtils.wrapInSquareBrackets(ComponentUtils.formatList(newFinishers.stream().mapToObj(teamIndex -> {
@@ -792,7 +792,7 @@ public class BingoGame {
                 }
                 return name;
             }).toList(), Function.identity()));
-            message = Bingo.translatable("bingo.finished.tie", teamList, BingoUtil.ordinal(place));
+            message = Bingo.translatable("bingo.finished.tie", teamList, BingoUtil.placement(place));
         }
 
         if (remainingTeams.count() > 1) {
