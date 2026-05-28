@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.IntStream;
@@ -52,6 +53,7 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -363,6 +365,40 @@ public class BingoUtil {
                 handler.accept(results);
             });
         });
+    }
+
+    // https://stackoverflow.com/a/39199937/8840278
+    public static <I> void forEachGroupParallel(List<I> items, Consumer<List<List<I>>> handler) {
+        IntStream.rangeClosed(1, items.size())
+            .parallel()
+            .forEach(k -> forEachGroupParallelInner(items.size(), k, items, List.of(), 0, handler));
+    }
+
+    private static <I> void forEachGroupParallelInner(int n, int k, List<I> items, List<List<I>> groups, int depth, Consumer<List<List<I>>> handler) {
+        if (depth >= n) {
+            handler.accept(groups);
+            return;
+        }
+
+        final IntConsumer handleGroup = groupIndex -> {
+            final var newGroups = new ArrayList<>(groups);
+            if (groupIndex < groups.size()) {
+                newGroups.set(groupIndex, Util.copyAndAdd(groups.get(groupIndex), items.get(depth)));
+            } else {
+                newGroups.add(List.of(items.get(depth)));
+            }
+            forEachGroupParallelInner(n, k, items, newGroups, depth + 1, handler);
+        };
+
+        final var editGroups = n - depth > k - groups.size();
+        final var makeNewGroup = groups.size() < k;
+        if (editGroups && makeNewGroup) {
+            IntStream.rangeClosed(0, groups.size()).parallel().forEach(handleGroup);
+        } else if (editGroups) {
+            IntStream.range(0, groups.size()).parallel().forEach(handleGroup);
+        } else {
+            handleGroup.accept(groups.size());
+        }
     }
 
     public static int fullMesh(int n) {

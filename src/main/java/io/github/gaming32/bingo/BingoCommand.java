@@ -48,6 +48,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
@@ -134,6 +135,8 @@ public class BingoCommand {
     private static final SimpleCommandExceptionType NOT_NERFED =
         new SimpleCommandExceptionType(Bingo.translatable("bingo.not_nerfed"));
 
+    private static final Dynamic2CommandExceptionType TOO_MANY_PLAYERS =
+        new Dynamic2CommandExceptionType((safe, provided) -> Bingo.translatableEscape("bingo.balance.too_many_players", safe, provided));
     private static final Dynamic2CommandExceptionType NOT_ENOUGH_TEAMS =
         new Dynamic2CommandExceptionType((required, found) -> Bingo.translatableEscape("bingo.balance.not_enough_teams", required, found));
     private static final Dynamic2CommandExceptionType MISMATCHED_PLAYER_COUNT =
@@ -403,7 +406,19 @@ public class BingoCommand {
                     )
                 )
                 .then(literal("balance")
-                    .then(argument("players", EntityArgument.players()))
+                    .executes(context -> balanceTeams(
+                        context,
+                        context.getSource()
+                            .getServer()
+                            .getPlayerList()
+                            .getPlayers()
+                            .stream()
+                            .filter(p -> !p.isSpectator())
+                            .toList()
+                    ))
+                    .then(argument("players", EntityArgument.players())
+                        .executes(context -> balanceTeams(context, EntityArgument.getPlayers(context, "players")))
+                    )
                 )
             )
             .then(literal("time-limit")
@@ -741,10 +756,37 @@ public class BingoCommand {
         return players.size();
     }
 
+    private static int balanceTeams(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) throws CommandSyntaxException {
+        final var maxPlayerCount = 14;
+        if (players.size() > maxPlayerCount) {
+            throw TOO_MANY_PLAYERS.create(maxPlayerCount, players.size());
+        }
+
+        if (players.isEmpty()) {
+            throw EntityArgument.NO_PLAYERS_FOUND.create();
+        }
+
+        final var scoreboardTeams = context.getSource().getServer().getScoreboard().getPlayerTeams();
+        if (scoreboardTeams.size() < (players.size() > 1 ? 2 : 1)) {
+            throw NOT_ENOUGH_TEAMS.create(players.size(), scoreboardTeams.size());
+        }
+
+        return basicBalanceTeams(
+            context,
+            players,
+            scoreboardTeams,
+            players.size() > 1
+                ? scoreComputer -> BingoUtil.forEachGroupParallel(List.copyOf(players), teams -> {
+                    if (teams.size() < 2) return;
+                    if (teams.size() > scoreboardTeams.size()) return;
+                    scoreComputer.accept(teams);
+                })
+                : scoreComputer -> scoreComputer.accept(List.of(List.copyOf(players)))
+        );
+    }
+
     private static int balanceTeams(CommandContext<CommandSourceStack> context, int teamCount) throws CommandSyntaxException {
-        final var server = context.getSource().getServer();
         final var players = EntityArgument.getPlayers(context, "players");
-        final var scoreboard = server.getScoreboard();
 
         final var teams = new IntArrayList(teamCount);
         var totalPlayers = 0;
@@ -757,16 +799,32 @@ public class BingoCommand {
             throw MISMATCHED_PLAYER_COUNT.create(totalPlayers, players.size());
         }
 
-        final var scoreBoardTeams = new ArrayList<>(scoreboard.getPlayerTeams());
-        if (teams.size() > scoreBoardTeams.size()) {
-            throw NOT_ENOUGH_TEAMS.create(teams.size(), scoreBoardTeams.size());
+        final var scoreboardTeams = context.getSource().getServer().getScoreboard().getPlayerTeams();
+        if (teams.size() > scoreboardTeams.size()) {
+            throw NOT_ENOUGH_TEAMS.create(teams.size(), scoreboardTeams.size());
         }
-        Collections.shuffle(scoreBoardTeams);
+
+        return basicBalanceTeams(
+            context,
+            players,
+            scoreboardTeams,
+            scoreComputer -> BingoUtil.forEachGroupParallel(List.copyOf(players), teams, scoreComputer)
+        );
+    }
+
+    private static int basicBalanceTeams(
+        CommandContext<CommandSourceStack> context,
+        Collection<ServerPlayer> players,
+        Collection<PlayerTeam> teams,
+        Consumer<Consumer<List<List<ServerPlayer>>>> teamLister
+    ) {
+        final var server = context.getSource().getServer();
+        final var scoreboard = server.getScoreboard();
 
         final var ratings = server.getDataStorage().computeIfAbsent(BingoRatings.TYPE);
 
         final var bestChoice = new AtomicReference<>(ObjectDoublePair.of(List.<List<ServerPlayer>>of(), Double.NEGATIVE_INFINITY));
-        BingoUtil.forEachGroupParallel(List.copyOf(players), teams, possibility -> {
+        teamLister.accept(possibility -> {
             final var createdTeams = possibility.stream()
                 .map(t -> t.stream().map(p -> ratings.getRating(p.getUUID())).toList())
                 .toList();
@@ -787,8 +845,10 @@ public class BingoCommand {
                 .collect(Collectors.joining("\n"))
         );
 
+        final var scoreboardTeams = new ArrayList<>(teams);
+        Collections.shuffle(scoreboardTeams);
         for (final var foundTeam : bestChoice.get().key()) {
-            final var scoreboardTeam = scoreBoardTeams.removeLast();
+            final var scoreboardTeam = scoreboardTeams.removeLast();
             for (final var player : foundTeam) {
                 scoreboard.addPlayerToTeam(player.getScoreboardName(), scoreboardTeam);
             }
@@ -798,7 +858,7 @@ public class BingoCommand {
             () -> Bingo.translatable(
                 "bingo.balance.success",
                 players.size(),
-                teams.size(),
+                bestChoice.get().key().size(),
                 Math.round(bestChoice.get().valueDouble() * 100.0)
             ),
             true
