@@ -31,7 +31,7 @@ repositories {
     }
 }
 
-val convertClassTweaker by tasks.registering(ConvertClassTweakerTask::class) {
+val convertClassTweaker = tasks.register<ConvertClassTweakerTask>("convertClassTweaker") {
     description = "Converts the class tweaker to an access transformer etc"
     classTweakerFile.set(file("src/main/resources/bingo.accessWidener"))
     accessTransformerFile.set(layout.buildDirectory.file("classTweaker/accesstransformer.cfg"))
@@ -97,7 +97,7 @@ val processResourcesValues = mapOf(
     "max_minecraft_version" to libs.versions.minecraft.max.get(),
 )
 
-val generateModMetadata by tasks.registering(ProcessResources::class) {
+val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
     inputs.properties(processResourcesValues)
     expand(processResourcesValues)
     from("src/main/templates")

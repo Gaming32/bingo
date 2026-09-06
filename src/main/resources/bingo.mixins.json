@@ -61,7 +61,6 @@
     "client.CameraAccessor",
     "client.MixinGui",
     "client.MixinHud",
-    "client.MixinMinecraft",
     "client.MixinRootSpectatorMenuCategory",
     "client.MixinRowHelper"
   ],

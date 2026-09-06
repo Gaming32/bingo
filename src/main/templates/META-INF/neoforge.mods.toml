@@ -9,7 +9,7 @@ version="${version}"
 displayName="Bingo"
 displayURL="https://github.com/Gaming32/bingo"
 updateJSONURL="https://api.modrinth.com/updates/bingo-mod/forge_updates.json?neoforge=only"
-logoFile="icon.png"
+iconFile="icon.png"
 
 description='''
 A mod for playing bingo! Works best if on both client and server, but also has compat for Vanilla clients.

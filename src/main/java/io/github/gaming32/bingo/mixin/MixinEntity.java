@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import io.github.gaming32.bingo.ext.ItemEntityExt;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.core.BlockPos;
@@ -67,10 +68,10 @@ public abstract class MixinEntity {
         BingoTriggers.ENTITY_KILLED_PLAYER.get().trigger((ServerPlayer) victim, (Entity)(Object)this, killingBlow);
     }
 
-    @Inject(method = "restituteMovementAfterCollisions", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/gameevent/GameEvent;BOUNCE:Lnet/minecraft/core/Holder$Reference;", opcode = Opcodes.GETSTATIC))
-    private void onBounce(CallbackInfo ci) {
+    @Inject(method = "restituteMovementAfterCollisions(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;ZZLnet/minecraft/world/phys/Vec3;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/gameevent/GameEvent;BOUNCE:Lnet/minecraft/core/Holder$Reference;", opcode = Opcodes.GETSTATIC))
+    private void onBounce(CallbackInfo ci, @Local(argsOnly = true, name = "effectPos") BlockPos effectPos) {
         if ((Object) this instanceof ServerPlayer player) {
-            BingoTriggers.BOUNCE_ON_BLOCK.get().trigger(player, this.getOnPosLegacy());
+            BingoTriggers.BOUNCE_ON_BLOCK.get().trigger(player, effectPos);
         }
     }
 }
