@@ -34,10 +34,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionProgress;
-import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
@@ -45,6 +44,7 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -266,8 +266,8 @@ public class BingoGame {
                 message = BingoUtil.mapEither(
                     BingoUtil.getDisplayName(playerTeam, playerList),
                     name -> {
-                        if (playerTeam.getColor() != ChatFormatting.RESET) {
-                            return name.copy().withStyle(playerTeam.getColor());
+                        if (playerTeam.getColor().isPresent()) {
+                            return name.copy().withColor(playerTeam.getColor().get().textColor());
                         }
                         return name;
                     }
@@ -341,8 +341,8 @@ public class BingoGame {
         Component message = BingoUtil.mapEither(
             BingoUtil.getDisplayName(playerTeam, playerList),
             name -> {
-                if (playerTeam.getColor() != ChatFormatting.RESET) {
-                    return name.copy().withStyle(playerTeam.getColor());
+                if (playerTeam.getColor().isPresent()) {
+                    return name.copy().withColor(playerTeam.getColor().get().textColor());
                 }
                 return name;
             }
@@ -382,20 +382,16 @@ public class BingoGame {
         }
     }
 
-    private <T extends CriterionTriggerInstance> CriterionTrigger.Listener<T> createListener(
-        Criterion<T> criterion, String criterionId, ActiveGoal goal
-    ) {
-        return new CriterionTrigger.Listener<>(
-            criterion.triggerInstance(),
-            new AdvancementHolder(BingoBoard.generateVanillaId(board.getIndex(goal)), null),
-            criterionId
-        );
-    }
-
     private <T extends CriterionTriggerInstance> void addListener(
         Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
     ) {
-        criterion.trigger().addPlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
+        ((PlayerAdvancementsAccessor) player.getAdvancements()).callAddListener(
+            criterion,
+            new PlayerAdvancements.TriggerInstanceKey(
+                new AdvancementHolder(BingoBoard.generateVanillaId(board.getIndex(goal)), null),
+                criterionId
+            )
+        );
         if (criterion.trigger() instanceof ProgressibleTrigger<T> progressibleTrigger) {
             progressibleTrigger.addProgressListener(
                 player.getAdvancements(),
@@ -407,7 +403,13 @@ public class BingoGame {
     private <T extends CriterionTriggerInstance> void removeListener(
         Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
     ) {
-        criterion.trigger().removePlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
+        ((PlayerAdvancementsAccessor) player.getAdvancements()).callRemoveListener(
+            criterion.trigger(),
+            new PlayerAdvancements.TriggerInstanceKey(
+                new AdvancementHolder(BingoBoard.generateVanillaId(board.getIndex(goal)), null),
+                criterionId
+            )
+        );
         if (criterion.trigger() instanceof ProgressibleTrigger<T> progressibleTrigger) {
             progressibleTrigger.removeProgressListener(
                 player.getAdvancements(),
@@ -684,8 +686,8 @@ public class BingoGame {
             if (gameMode.isLockout()) {
                 Component teamComponent = BingoUtil.getDisplayName(playerTeam, playerList)
                     .map(Function.identity(), Function.identity());
-                if (playerTeam.getColor() != ChatFormatting.RESET) {
-                    teamComponent = teamComponent.copy().withStyle(playerTeam.getColor());
+                if (playerTeam.getColor().isPresent()) {
+                    teamComponent = teamComponent.copy().withColor(playerTeam.getColor().get().textColor());
                 }
                 final Component lockoutMessage = Bingo.translatable(
                     "bingo.goal_lost.lockout",
@@ -774,25 +776,25 @@ public class BingoGame {
             message = BingoUtil.mapEither(
                 BingoUtil.getDisplayName(playerTeam, playerList),
                 name -> {
-                    if (playerTeam.getColor() != ChatFormatting.RESET) {
-                        return name.copy().withStyle(playerTeam.getColor());
+                    if (playerTeam.getColor().isPresent()) {
+                        return name.copy().withColor(playerTeam.getColor().get().textColor());
                     }
                     return name;
                 }
             ).map(
-                playerName -> Bingo.translatable("bingo.finished.single", playerName, BingoUtil.ordinal(place)),
-                teamName -> Bingo.translatable("bingo.finished", teamName, BingoUtil.ordinal(place))
+                playerName -> Bingo.translatable("bingo.finished.single", playerName, BingoUtil.placement(place)),
+                teamName -> Bingo.translatable("bingo.finished", teamName, BingoUtil.placement(place))
             );
         } else {
             Component teamList = ComponentUtils.wrapInSquareBrackets(ComponentUtils.formatList(newFinishers.stream().mapToObj(teamIndex -> {
                 final PlayerTeam team = getTeam(BingoBoard.Teams.fromOne(teamIndex));
                 final Component name = Either.unwrap(BingoUtil.getDisplayName(team, playerList));
-                if (team.getColor() != ChatFormatting.RESET) {
-                    return name.copy().withStyle(team.getColor());
+                if (team.getColor().isPresent()) {
+                    return name.copy().withColor(team.getColor().get().textColor());
                 }
                 return name;
             }).toList(), Function.identity()));
-            message = Bingo.translatable("bingo.finished.tie", teamList, BingoUtil.ordinal(place));
+            message = Bingo.translatable("bingo.finished.tie", teamList, BingoUtil.placement(place));
         }
 
         if (remainingTeams.count() > 1) {

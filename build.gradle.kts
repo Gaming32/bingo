@@ -7,11 +7,7 @@ plugins {
     alias(libs.plugins.mod.publish.plugin)
 }
 
-operator fun Project.get(key: String) = properties[key] as? String ?: throw IllegalArgumentException("Missing property $key")
-
-base.archivesName = rootProject["archives_base_name"]
-group = rootProject["maven_group"]
-version = rootProject["mod_version"]
+base.archivesName.set(providers.gradleProperty("archives_base_name"))
 
 sourceSets {
     main {

@@ -1,14 +1,14 @@
 package io.github.gaming32.bingo.subpredicates;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import io.github.gaming32.bingo.game.BingoGame;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.advancements.criterion.EntitySubPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.advancements.criterion.PlayerPredicate;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.predicates.entity.EntitySubPredicate;
+import net.minecraft.advancements.predicates.entity.PlayerPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +24,7 @@ import java.util.List;
 public record BingoPlayerPredicate(
     List<PlayerPredicate.StatMatcher<?>> relativeStats
 ) implements EntitySubPredicate {
-    public static final MapCodec<BingoPlayerPredicate> CODEC = RecordCodecBuilder.mapCodec(instance ->
+    public static final Codec<BingoPlayerPredicate> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             PlayerPredicate.StatMatcher.CODEC.listOf().optionalFieldOf("relative_stats", List.of())
                 .forGetter(BingoPlayerPredicate::relativeStats)
@@ -50,11 +50,6 @@ public record BingoPlayerPredicate(
             }
         }
         return true;
-    }
-
-    @Override
-    public MapCodec<? extends EntitySubPredicate> codec() {
-        return CODEC;
     }
 
     public static class Builder {

@@ -22,7 +22,7 @@ public class MixinEnchantmentMenu {
         method = "lambda$clickMenuButton$0",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/advancements/criterion/EnchantedItemTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/ItemStack;I)V",
+            target = "Lnet/minecraft/advancements/triggers/EnchantedItemTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/ItemStack;I)V",
             shift = At.Shift.AFTER
         )
     )

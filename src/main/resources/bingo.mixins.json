@@ -6,7 +6,6 @@
   "mixins": [
     "AdvancementProgressAccessor",
     "BaseFireBlockAccessor",
-    "BounceOnBlockMixin",
     "MixinBasePressurePlateBlock",
     "MixinBeaconBlockEntity",
     "MixinBedBlock",
@@ -20,7 +19,6 @@
     "MixinCommandSourceStack",
     "MixinConduitBlockEntity",
     "MixinCriterionTrigger",
-    "MixinCriterionTrigger_Listener",
     "MixinCrossbowAttack",
     "MixinDoorBlock",
     "MixinEnchantmentMenu",
@@ -61,8 +59,9 @@
   ],
   "client": [
     "client.CameraAccessor",
-    "client.MixinGameRenderer",
     "client.MixinGui",
+    "client.MixinHud",
+    "client.MixinMinecraft",
     "client.MixinRootSpectatorMenuCategory",
     "client.MixinRowHelper"
   ],

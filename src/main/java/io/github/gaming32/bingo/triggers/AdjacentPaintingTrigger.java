@@ -6,11 +6,11 @@ import io.github.gaming32.bingo.subpredicates.PaintingPredicate;
 import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.decoration.painting.Painting;
@@ -119,7 +119,7 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
 
         public Builder placedPainting(PaintingPredicate placedPainting) {
             return placedPainting(EntityPredicate.Builder.entity()
-                .subPredicate(placedPainting)
+                .put(PaintingPredicate.CODEC, placedPainting)
                 .build()
             );
         }
@@ -135,7 +135,7 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
 
         public Builder adjacentPaintings(PaintingPredicate adjacentPaintings) {
             return adjacentPaintings(EntityPredicate.Builder.entity()
-                .subPredicate(adjacentPaintings)
+                .put(PaintingPredicate.CODEC, adjacentPaintings)
                 .build()
             );
         }

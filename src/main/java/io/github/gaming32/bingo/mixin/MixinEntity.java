@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.mixin;
 
 import io.github.gaming32.bingo.ext.ItemEntityExt;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,6 +26,9 @@ public abstract class MixinEntity {
     @Shadow public abstract Vec3 position();
 
     @Shadow public abstract boolean hasPose(Pose pose);
+
+    @Shadow
+    public abstract BlockPos getOnPosLegacy();
 
     @Unique
     @Nullable
@@ -54,11 +59,18 @@ public abstract class MixinEntity {
         method = "awardKillScore",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/advancements/criterion/KilledTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;)V",
+            target = "Lnet/minecraft/advancements/triggers/KilledTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;)V",
             shift = At.Shift.AFTER
         )
     )
     private void customTrigger(Entity victim, DamageSource killingBlow, CallbackInfo ci) {
         BingoTriggers.ENTITY_KILLED_PLAYER.get().trigger((ServerPlayer) victim, (Entity)(Object)this, killingBlow);
+    }
+
+    @Inject(method = "restituteMovementAfterCollisions", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/gameevent/GameEvent;BOUNCE:Lnet/minecraft/core/Holder$Reference;", opcode = Opcodes.GETSTATIC))
+    private void onBounce(CallbackInfo ci) {
+        if ((Object) this instanceof ServerPlayer player) {
+            BingoTriggers.BOUNCE_ON_BLOCK.get().trigger(player, this.getOnPosLegacy());
+        }
     }
 }

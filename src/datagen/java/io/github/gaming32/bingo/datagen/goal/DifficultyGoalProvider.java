@@ -29,12 +29,12 @@ import io.github.gaming32.bingo.util.BlockPattern;
 import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.criterion.BlockPredicate;
-import net.minecraft.advancements.criterion.EnchantmentPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.criterion.LocationPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.predicates.BlockPredicate;
+import net.minecraft.advancements.predicates.EnchantmentPredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.predicates.LocationPredicate;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
@@ -280,7 +280,7 @@ public abstract class DifficultyGoalProvider {
                 .name(Component.translatable("bingo.goal.bed_row", minCount))
                 .antisynergy("bed_color")
                 .infrequency(4)
-                .icon(new ItemStackTemplate(Items.MAGENTA_BED, minCount))
+                .icon(new ItemStackTemplate(Items.BED.magenta(), minCount))
                 .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
         }
         return BingoGoal.builder(id)
@@ -289,7 +289,7 @@ public abstract class DifficultyGoalProvider {
             .name(Component.translatable("bingo.goal.bed_row", 0), subber -> subber.sub("with.0", "count"))
             .antisynergy("bed_color")
             .infrequency(4)
-            .icon(Items.MAGENTA_BED, subber -> subber.sub("item.count", "count"))
+            .icon(Items.BED.magenta(), subber -> subber.sub("item.count", "count"))
             .tags(BingoTags.BUILD, BingoTags.COLOR, BingoTags.OVERWORLD);
     }
 

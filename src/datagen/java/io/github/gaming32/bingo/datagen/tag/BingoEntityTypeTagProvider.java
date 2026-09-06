@@ -10,6 +10,7 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.MobCategory;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.objectweb.asm.Opcodes;
@@ -38,22 +39,22 @@ public class BingoEntityTypeTagProvider extends FabricTagsProvider.EntityTypeTag
 
         final var cannotBeAgeLocked = BingoDataGenUtil.loadVanillaTag(EntityTypeTags.CANNOT_BE_AGE_LOCKED, registries);
 
-        final var canBeAgeLockedBuilder = valueLookupBuilder(BingoEntityTypeTags.CAN_BE_AGE_LOCKED);
-        final var passiveBuilder = valueLookupBuilder(BingoEntityTypeTags.PASSIVE);
-        final var hostileBuilder = valueLookupBuilder(BingoEntityTypeTags.HOSTILE);
+        final var canBeAgeLockedBuilder = builder(BingoEntityTypeTags.CAN_BE_AGE_LOCKED);
+        final var passiveBuilder = builder(BingoEntityTypeTags.PASSIVE);
+        final var hostileBuilder = builder(BingoEntityTypeTags.HOSTILE);
 
         MutableBoolean anyAgeLockable = new MutableBoolean();
 
         entityTypes.listElements().forEach(type -> {
             if (isPassive(type.value())) {
-                passiveBuilder.add(type.value());
+                passiveBuilder.add(type.key());
             } else if (!type.value().getCategory().isFriendly()) {
-                hostileBuilder.add(type.value());
+                hostileBuilder.add(type.key());
             }
 
             Class<? extends Entity> entityClass = BingoDataGenUtil.getEntityTypeClass(type.value());
             if (entityClass != null && canBeAgeLocked(entityClass) && !cannotBeAgeLocked.contains(type)) {
-                canBeAgeLockedBuilder.add(type.value());
+                canBeAgeLockedBuilder.add(type.key());
                 anyAgeLockable.setValue(true);
             }
         });
@@ -64,7 +65,7 @@ public class BingoEntityTypeTagProvider extends FabricTagsProvider.EntityTypeTag
     }
 
     public static boolean isPassive(EntityType<?> entityType) {
-        if (entityType == EntityType.VILLAGER) {
+        if (entityType == EntityTypes.VILLAGER) {
             return true;
         }
         return entityType.getCategory() != MobCategory.MISC && entityType.getCategory().isFriendly();

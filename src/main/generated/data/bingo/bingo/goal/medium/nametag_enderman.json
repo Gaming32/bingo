@@ -7,7 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:enderman"
+              "minecraft:entity_type": "minecraft:enderman"
             }
           }
         ],
@@ -27,7 +27,12 @@
     }
   },
   "name": {
-    "translate": "bingo.goal.nametag_enderman"
+    "translate": "bingo.goal.nametag_enderman",
+    "with": [
+      {
+        "translate": "entity.minecraft.enderman"
+      }
+    ]
   },
   "requirements": [
     [

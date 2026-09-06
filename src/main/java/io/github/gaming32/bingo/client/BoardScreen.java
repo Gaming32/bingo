@@ -8,6 +8,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.scores.PlayerTeam;
 
 public class BoardScreen extends Screen {
@@ -45,12 +46,12 @@ public class BoardScreen extends Screen {
         assert minecraft != null;
         if (minecraft.player != null && minecraft.player.isSpectator()) {
             final PlayerTeam team = BingoClient.clientGame.teams()[BingoClient.clientTeam.getFirstIndex()];
-            final Integer color = team.getColor().getColor();
+            final int color = team.getColor().isPresent() ? ARGB.color(0xff, team.getColor().get().rgb()) : CommonColors.WHITE;
             graphics.centeredText(
                 font,
                 BingoClient.getDisplayName(team),
                 width / 2, (int)pos.y() + BingoClient.getBoardHeight() + BingoClient.BOARD_OFFSET,
-                color != null ? ARGB.color(0xFF, color) : 0xFFFFFFFF
+                color
             );
         }
     }
@@ -81,7 +82,7 @@ public class BoardScreen extends Screen {
     public void tick() {
         if (minecraft == null) return;
         if (BingoClient.clientGame == null) {
-            minecraft.setScreen(null);
+            minecraft.gui.setScreen(null);
         } else {
             updateButtonVisibility();
         }
