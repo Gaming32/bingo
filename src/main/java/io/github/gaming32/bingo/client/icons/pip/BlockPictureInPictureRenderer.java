@@ -1,7 +1,6 @@
 package io.github.gaming32.bingo.client.icons.pip;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -54,7 +53,6 @@ public class BlockPictureInPictureRenderer extends PictureInPictureRenderer<Bloc
         FeatureRenderDispatcher featureRenderDispatcher = Minecraft.getInstance().gameRenderer.featureRenderDispatcher();
         state.modelRenderState().submit(pose, collector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
         featureRenderDispatcher.renderAllFeatures((SubmitNodeStorage) collector);
-        // RenderSystem.popPipelineModifier(); TODO: this is a neoforge thing, what does it do?
 
         lastBlockState = state.block();
     }
