@@ -24,7 +24,7 @@
                 "condition": "minecraft:entity_properties",
                 "entity": "this",
                 "predicate": {
-                  "equipment": {
+                  "minecraft:equipment": {
                     "mainhand": {
                       "items": "minecraft:compass"
                     }
@@ -35,7 +35,7 @@
                 "condition": "minecraft:entity_properties",
                 "entity": "this",
                 "predicate": {
-                  "equipment": {
+                  "minecraft:equipment": {
                     "offhand": {
                       "items": "minecraft:compass"
                     }

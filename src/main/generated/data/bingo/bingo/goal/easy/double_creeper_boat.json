@@ -7,7 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "#minecraft:boat"
+              "minecraft:entity_type": "#minecraft:boat"
             }
           },
           {
@@ -18,7 +18,7 @@
                   "condition": "minecraft:entity_properties",
                   "entity": "this",
                   "predicate": {
-                    "type": "minecraft:creeper"
+                    "minecraft:entity_type": "minecraft:creeper"
                   }
                 }
               ],
@@ -27,7 +27,7 @@
                   "condition": "minecraft:entity_properties",
                   "entity": "this",
                   "predicate": {
-                    "type": "minecraft:creeper"
+                    "minecraft:entity_type": "minecraft:creeper"
                   }
                 }
               ]

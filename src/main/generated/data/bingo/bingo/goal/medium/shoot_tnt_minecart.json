@@ -7,7 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:tnt_minecart"
+              "minecraft:entity_type": "minecraft:tnt_minecart"
             }
           }
         ]

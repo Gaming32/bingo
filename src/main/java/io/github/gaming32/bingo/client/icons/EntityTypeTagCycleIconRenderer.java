@@ -37,6 +37,7 @@ public class EntityTypeTagCycleIconRenderer implements AbstractCycleIconRenderer
         if (entity == null) {
             return;
         }
+        entity.setId(1);
         EntityIconRenderer.renderEntity(entity, graphics, x, y);
     }
 

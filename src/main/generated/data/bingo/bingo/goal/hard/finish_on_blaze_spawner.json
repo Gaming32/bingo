@@ -7,7 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "stepping_on": {
+              "minecraft:stepping_on": {
                 "block": {
                   "blocks": "minecraft:spawner",
                   "nbt": "{SpawnData:{entity:{id:\"minecraft:blaze\"}}}"

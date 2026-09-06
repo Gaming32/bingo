@@ -7,8 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type_specific": {
-                "type": "bingo:item",
+              "bingo:type_specific/item": {
                 "item": {
                   "items": "minecraft:crafting_table"
                 }

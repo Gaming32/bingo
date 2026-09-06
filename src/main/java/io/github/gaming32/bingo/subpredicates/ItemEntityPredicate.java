@@ -1,12 +1,12 @@
 package io.github.gaming32.bingo.subpredicates;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.ext.ItemEntityExt;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.EntitySubPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.predicates.entity.EntitySubPredicate;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -20,7 +20,7 @@ public record ItemEntityPredicate(
     MinMaxBounds.Ints age,
     Optional<EntityPredicate> droppedBy
 ) implements EntitySubPredicate {
-    public static final MapCodec<ItemEntityPredicate> CODEC = RecordCodecBuilder.mapCodec(instance ->
+    public static final Codec<ItemEntityPredicate> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             ItemPredicate.CODEC.optionalFieldOf("item").forGetter(ItemEntityPredicate::item),
             MinMaxBounds.Ints.CODEC.optionalFieldOf("age", MinMaxBounds.Ints.ANY).forGetter(ItemEntityPredicate::age),
@@ -51,10 +51,5 @@ public record ItemEntityPredicate(
             return false;
         }
         return true;
-    }
-
-    @Override
-    public MapCodec<ItemEntityPredicate> codec() {
-        return CODEC;
     }
 }

@@ -24,6 +24,7 @@ public class BingoFeatureTagProvider extends FabricTagsProvider<ConfiguredFeatur
         super(output, Registries.CONFIGURED_FEATURE, registriesFuture);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void addTags(HolderLookup.Provider arg) {
         builder(BingoFeatureTags.TREES).add(getTreeFeatures());

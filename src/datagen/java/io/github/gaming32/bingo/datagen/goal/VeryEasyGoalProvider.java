@@ -16,18 +16,18 @@ import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
 import io.github.gaming32.bingo.triggers.TryUseItemTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.criterion.BlockPredicate;
-import net.minecraft.advancements.criterion.BredAnimalsTrigger;
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.ItemDurabilityTrigger;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.criterion.LocationPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.advancements.criterion.PlayerTrigger;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
+import net.minecraft.advancements.predicates.BlockPredicate;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.predicates.LocationPredicate;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.predicates.StatePropertiesPredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.triggers.BredAnimalsTrigger;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
+import net.minecraft.advancements.triggers.ItemDurabilityTrigger;
+import net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.triggers.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.ByteTag;
@@ -148,10 +148,10 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(SNOWBALL, items, Items.SNOWBALL, 8, 16)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(DIFFERENT_SLABS, ItemTags.SLABS, "bingo.goal.different_slabs", 2, 4)
+        addGoal(obtainSomeItemsFromTag(DIFFERENT_SLABS, BingoItemTags.SLABS, "bingo.goal.different_slabs", 2, 4)
             .antisynergy("slabs")
             .infrequency(2));
-        addGoal(obtainSomeItemsFromTag(DIFFERENT_STAIRS, ItemTags.STAIRS, "bingo.goal.different_stairs", 2, 4)
+        addGoal(obtainSomeItemsFromTag(DIFFERENT_STAIRS, BingoItemTags.STAIRS, "bingo.goal.different_stairs", 2, 4)
             .antisynergy("stairs")
             .infrequency(2));
         addGoal(obtainItemGoal(DIAMOND, items, Items.DIAMOND));
@@ -176,7 +176,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .criterion("sleep", PlayerTrigger.TriggerInstance.sleptInBed())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("sleep_in_bed")
-            .icon(Items.RED_BED)
+            .icon(Items.BED.red())
             .reactant("sleep"));
         addGoal(obtainItemGoal(CHARCOAL, items, Items.CHARCOAL)
             .reactant("use_furnace")
@@ -244,7 +244,8 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(BingoGoal.builder(NEVER_PICKUP_CRAFTING_TABLES)
             .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUp(
-                EntityPredicate.Builder.entity().subPredicate(
+                EntityPredicate.Builder.entity().put(
+                    ItemEntityPredicate.CODEC,
                     ItemEntityPredicate.item(ItemPredicate.Builder.item().of(items, Items.CRAFTING_TABLE).build())
                 ).build()
             ))
@@ -290,7 +291,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("bounce_on_bed")
-            .icon(Items.WHITE_BED)
+            .icon(Items.BED.white())
         );
         addGoal(BingoGoal.builder(HANG_PAINTING)
             .criterion("hang", AdjacentPaintingTrigger.builder().count(MinMaxBounds.Ints.atLeast(1)).build())

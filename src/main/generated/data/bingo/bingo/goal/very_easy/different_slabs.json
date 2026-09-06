@@ -17,7 +17,7 @@
           "bingo_type": "bingo:sub",
           "key": "count"
         },
-        "tag": "minecraft:slabs"
+        "tag": "bingo:slabs"
       },
       "trigger": "bingo:has_some_items_from_tag"
     }
@@ -29,7 +29,7 @@
       "bingo_type": "bingo:sub",
       "key": "count"
     },
-    "tag": "minecraft:slabs"
+    "tag": "bingo:slabs"
   },
   "infrequency": 2,
   "name": {

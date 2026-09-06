@@ -2,11 +2,11 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.LocationPredicate;
-import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.LocationPredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +20,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ public class LeashedEntityTrigger extends SimpleCriterionTrigger<LeashedEntityTr
         final LootContext mobContext = EntityPredicate.createContext(player, mob);
         final LootContext knotContext = EntityPredicate.createContext(player, knot);
         final LootParams fenceParams = new LootParams.Builder(level)
-            .withParameter(LootContextParams.ORIGIN, fencePos.getCenter())
+            .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(fencePos))
             .withParameter(LootContextParams.THIS_ENTITY, player)
             .withParameter(LootContextParams.BLOCK_STATE, level.getBlockState(fencePos))
             .withParameter(LootContextParams.TOOL, tool)

@@ -7,7 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:armadillo"
+              "minecraft:entity_type": "minecraft:armadillo"
             }
           }
         ],
@@ -23,10 +23,10 @@
     "type": "bingo:indicator",
     "base": {
       "type": "bingo:entity",
-      "entity": "minecraft:wolf",
+      "entity": "minecraft:armadillo",
       "item": {
         "count": 1,
-        "id": "minecraft:wolf_spawn_egg"
+        "id": "minecraft:armadillo_spawn_egg"
       }
     },
     "indicator": {
@@ -38,7 +38,12 @@
     }
   },
   "name": {
-    "translate": "bingo.goal.equip_wolf_armor"
+    "translate": "bingo.goal.equip_wolf_armor",
+    "with": [
+      {
+        "translate": "entity.minecraft.armadillo"
+      }
+    ]
   },
   "requirements": [
     [

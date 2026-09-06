@@ -9,7 +9,7 @@
               "condition": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
-                "type": "minecraft:player"
+                "minecraft:entity_type": "minecraft:player"
               }
             }
           },
@@ -17,7 +17,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "equipment": {
+              "minecraft:equipment": {
                 "chest": {
                   "items": "minecraft:iron_chestplate"
                 },

@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.mixin;
 
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Ravager;
@@ -21,7 +22,7 @@ public class MixinRavager {
             opcode = Opcodes.PUTFIELD
         )
     )
-    private void stunnedRavager(LivingEntity defender, CallbackInfo ci) {
+    private void stunnedRavager(LivingEntity defender, DamageSource source, float damage, CallbackInfo ci) {
         if (defender instanceof ServerPlayer player) {
             BingoTriggers.STUN_RAVAGER.get().trigger(player, (Entity)(Object)this);
         }

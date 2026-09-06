@@ -1,25 +1,25 @@
 [versions]
 checkstyle = "13.4.1"
-fabric-api = "0.145.4+26.1.2"
-fabric-loader = "0.19.1"
-fabric-loom = "1.16-SNAPSHOT"
-jei = "29.5.0.27"
+fabric-api = "0.159.0+26.2"
+fabric-loader = "0.19.5"
+fabric-loom = "1.17-SNAPSHOT"
+jei = "30.31.0.206"
 junit = "5.14.0"
 mcdev-annotations = "2.1.0"
-minecraft-exact = "26.1.2"
-minecraft-max = "26.2"
-minecraft-min = "26.1"
-mod-dev-gradle = "2.0.141"
-mod-publish-plugin = "1.0.0"
-modmenu = "18.0.0-alpha.8"
-neoforge = "26.1.2.31-beta"
+minecraft-exact = "26.2"
+minecraft-max = "26.3"
+minecraft-min = "26.2"
+mod-dev-gradle = "2.0.146"
+mod-publish-plugin = "2.2.0"
+modmenu = "20.0.1"
+neoforge = "26.2.0.79"
 nightconfig = "3.8.2"
 
 [libraries]
 fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
 fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
 fabric-loader-junit = { module = "net.fabricmc:fabric-loader-junit", version.ref = "fabric-loader" }
-jei = { module = "mezz.jei:jei-26.1.2-common-api", version.ref = "jei" }
+jei = { module = "mezz.jei:jei-26.2-common-api", version.ref = "jei" }
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 mcdev-annotations = { module = "com.demonwav.mcdev:annotations", version.ref = "mcdev-annotations" }
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft-exact" }

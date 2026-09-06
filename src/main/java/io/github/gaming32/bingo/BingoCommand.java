@@ -36,11 +36,11 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.ColorArgument;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.commands.arguments.TeamArgument;
+import net.minecraft.commands.arguments.TeamColorArgument;
 import net.minecraft.commands.arguments.TimeArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -65,6 +65,7 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.TeamColor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.function.TriFunction;
 
@@ -74,6 +75,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static net.minecraft.commands.Commands.*;
@@ -330,19 +332,19 @@ public class BingoCommand {
             .then(literal("teams")
                 .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                 .then(literal("create")
-                    .then(argument("color", ColorArgument.color())
+                    .then(argument("color", TeamColorArgument.teamColor())
                         .suggests((context, builder) -> {
                             final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
                             return SharedSuggestionProvider.suggest(
-                                ChatFormatting.getNames(true, false)
-                                    .stream()
+                                Arrays.stream(TeamColor.values())
+                                    .map(TeamColor::getSerializedName)
                                     .filter(n -> scoreboard.getPlayerTeam(n) == null),
                                 builder
                             );
                         })
                         .executes(context -> {
-                            final ChatFormatting color = ColorArgument.getColor(context, "color");
-                            final String name = color.getName();
+                            final TeamColor color = TeamColorArgument.getTeamColor(context, "color");
+                            final String name = color.getSerializedName();
 
                             final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
                             final PlayerTeam existing = scoreboard.getPlayerTeam(name);
@@ -351,7 +353,7 @@ public class BingoCommand {
                             }
 
                             final PlayerTeam team = scoreboard.addPlayerTeam(name);
-                            team.setColor(color);
+                            team.setColor(Optional.of(color));
                             team.setDisplayName(Bingo.translatable("bingo.formatting." + name));
 
                             context.getSource().sendSuccess(

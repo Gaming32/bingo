@@ -26,18 +26,18 @@ import io.github.gaming32.bingo.triggers.PowerConduitTrigger;
 import io.github.gaming32.bingo.triggers.ZombifyPigTrigger;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.DamagePredicate;
-import net.minecraft.advancements.criterion.DataComponentMatchers;
-import net.minecraft.advancements.criterion.DistancePredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.KilledTrigger;
-import net.minecraft.advancements.criterion.LocationPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.advancements.criterion.PlayerTrigger;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.DamagePredicate;
+import net.minecraft.advancements.predicates.DataComponentMatchers;
+import net.minecraft.advancements.predicates.DistancePredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.predicates.LocationPredicate;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
+import net.minecraft.advancements.triggers.InventoryChangeTrigger;
+import net.minecraft.advancements.triggers.KilledTrigger;
+import net.minecraft.advancements.triggers.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentExactPredicate;
 import net.minecraft.core.component.DataComponents;
@@ -47,7 +47,7 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
@@ -164,7 +164,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name("sleep_in_mansion")
-            .icon(Items.BROWN_BED));
+            .icon(Items.BED.brown()));
         addGoal(obtainItemGoal(MYCELIUM, items, Items.MYCELIUM, 10, 32)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
         addGoal(BingoGoal.builder(CORAL_BLOCKS)
@@ -218,7 +218,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(SHULKER_IN_OVERWORLD)
             .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
                 EntityPredicate.Builder.entity()
-                    .of(entityTypes, EntityType.SHULKER)
+                    .of(entityTypes, EntityTypes.SHULKER)
                     .located(LocationPredicate.Builder.inDimension(Level.OVERWORLD))
             ))
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.END, BingoTags.OVERWORLD)
@@ -243,7 +243,7 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
             // Currently untested. They have a 1/175,000 or a 1/2,100,000 chance to drop one on a tick.
             .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
                 ItemPredicate.Builder.item().of(items, Items.SLIME_BALL).build(),
-                EntityPredicate.Builder.entity().of(entityTypes, EntityType.PANDA).build()
+                EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.PANDA).build()
             ))
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
             .name("panda_slime_ball")
@@ -308,15 +308,15 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(BingoGoal.builder(KILL_ENDERMAN_WITH_ENDERMITES)
             .criterion("kill", EntityDieNearPlayerTrigger.builder()
                 .entity(ContextAwarePredicate.create(
-                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(entityTypes, EntityType.ENDERMAN)).build(),
-                    HasOnlyBeenDamagedByCondition.builder().entityType(EntityType.ENDERMITE).build()
+                    LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.ENDERMAN)).build(),
+                    HasOnlyBeenDamagedByCondition.builder().entityType(EntityTypes.ENDERMITE).build()
                 ))
-                .killingBlow(DamagePredicate.Builder.damageInstance().sourceEntity(EntityPredicate.Builder.entity().of(entityTypes, EntityType.ENDERMITE).build()).build())
+                .killingBlow(DamagePredicate.Builder.damageInstance().sourceEntity(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.ENDERMITE).build()).build())
                 .build()
             )
             .name("kill_enderman_with_endermites")
             .tooltip("kill_enderman_with_endermites")
-            .icon(EntityIcon.ofSpawnEgg(EntityType.ENDERMITE))
+            .icon(EntityIcon.ofSpawnEgg(EntityTypes.ENDERMITE))
             .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.END));
         addGoal(BingoGoal.builder(BEACON_REGEN)
             .criterion("effect", BeaconEffectTrigger.TriggerInstance.effectApplied(MobEffects.REGENERATION))

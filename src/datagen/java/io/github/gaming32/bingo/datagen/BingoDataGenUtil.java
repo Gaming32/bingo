@@ -24,6 +24,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -122,7 +123,7 @@ public final class BingoDataGenUtil {
         Map<EntityType<?>, Class<? extends Entity>> result = new HashMap<>();
 
         final int staticFinal = Modifier.STATIC | Modifier.FINAL;
-        for (Field field : EntityType.class.getFields()) {
+        for (Field field : EntityTypes.class.getFields()) {
             if ((field.getModifiers() & staticFinal) != staticFinal) {
                 continue;
             }
