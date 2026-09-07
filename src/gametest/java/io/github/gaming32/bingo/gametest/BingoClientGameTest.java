@@ -184,10 +184,8 @@ public class BingoClientGameTest implements FabricClientGameTest {
             singleplayerContext.getConnection().waitForClientboundPackets();
             context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
             singleplayerContext.getServer().runCommand("execute as @e[type=cow] at @s run tp @s ~-2 ~ ~");
-            context.waitTicks(EntityTypes.COW.updateInterval()); // to send packets for the entity teleport
-
             singleplayerContext.getServer().runCommand("summon cow 0 " + PLAYER_Y + " 1");
-            singleplayerContext.getConnection().waitForClientboundPackets();
+            singleplayerContext.getConnection().waitForClientboundEntityUpdates(EntityTypes.COW);
             context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
 
             singleplayerContext.getServer().waitFor(_ -> Iterables.size(singleplayerContext.getConnection().getServerLevel().getAllEntities()) > 3);
