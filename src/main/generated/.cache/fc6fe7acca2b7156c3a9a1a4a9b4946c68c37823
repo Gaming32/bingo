@@ -251,6 +251,7 @@ d5e29c547c90636bee408cd6ab80dd9c43203910 data/bingo/bingo/goal/hard/stairway_to_
 ea3085923b6ebfbf8551788e2ca953bd3c51dd75 data/bingo/bingo/goal/hard/tame_mule.json
 ef15d086dfe027d7607c39a5b19503d08a991fe8 data/bingo/bingo/goal/hard/tame_parrot.json
 d8a7b4f4e70dde84cf6c93874497386f8415c3b3 data/bingo/bingo/goal/hard/terracotta.json
+3d22b05efca3c9778bf308e8c556f4014175fc5e data/bingo/bingo/goal/hard/tnt_sulfur_cube.json
 45227cc49d7f48a79dce793fd7fa57cdf838e5ee data/bingo/bingo/goal/hard/turtle_helmet.json
 093d09fb6cfaeee082f0c9c3d07f0f328f1c8de0 data/bingo/bingo/goal/hard/use_lodestone.json
 bed4dc4a1d70e39497f439b205e9e01162ff1a81 data/bingo/bingo/goal/hard/villager_in_end.json
@@ -271,6 +272,7 @@ c0db490ee12462ebe03377a72734efe1fb68bcdd data/bingo/bingo/goal/medium/blue_shiel
 ab75b54b9d4898ebda99f1b54682daec7bc855a4 data/bingo/bingo/goal/medium/break_diamond_sword.json
 7a7aefd5dae2432d11004c78ab2d5df2e7fcb39c data/bingo/bingo/goal/medium/breed_mobs.json
 57e6f9691cd4009c3dd6731ab12d261a47a34b8d data/bingo/bingo/goal/medium/brown_wool.json
+91a3102d8831454b33e59ab2397d7a16846b055b data/bingo/bingo/goal/medium/cinnabar.json
 0ac84148f5c23160f9f7859cedc208a948b1f6cb data/bingo/bingo/goal/medium/concrete.json
 a0421d809de0e4f579ef23822f39375ce9992147 data/bingo/bingo/goal/medium/create_copper_golem.json
 64ddd3e92917cc41c291eda3445bea9c0aefe624 data/bingo/bingo/goal/medium/create_iron_golem.json
@@ -322,6 +324,7 @@ d2b0d6a8dd9714a472882be430c222fe5e9dfa96 data/bingo/bingo/goal/medium/iron_block
 88e3cbf1309e38abfe0fcd10f9a4b9d5c319b528 data/bingo/bingo/goal/medium/kill_self_with_arrow.json
 f8a72f8f292431ae14a79d218fbee128bab202fa data/bingo/bingo/goal/medium/kill_with_crystal.json
 3d89fa541171469d187a87186d3181d868e31717 data/bingo/bingo/goal/medium/lapis_block.json
+711463fd6beeecc182a39fe4e719dd7bef51f8e9 data/bingo/bingo/goal/medium/launched_by_geyser.json
 cf85e69c0e8d1b00cdb20c0aa2aadead361fe6b6 data/bingo/bingo/goal/medium/lead_on_rabbit.json
 49b3fa3391a6b64abfb82e1c29ceb7f000357205 data/bingo/bingo/goal/medium/leaping_potion.json
 f2cd13e2d62d35dfeedbedb0f35c34f1f3354d32 data/bingo/bingo/goal/medium/leash_dolphin_to_fence.json
@@ -366,6 +369,7 @@ b7ff54e7c4c35f9e8394be7610aa7671b42b0ecc data/bingo/bingo/goal/medium/strength_p
 9a0c96151d5ee62e3c828cdb71d2602500bc3b2e data/bingo/bingo/goal/medium/stripped_crimson_stem.json
 fc7d5c0e45f18662428d7ef442dd44b0ef76c141 data/bingo/bingo/goal/medium/stripped_warped_hyphae.json
 07109e5a14193d03cfbb34a56bde4ea162474314 data/bingo/bingo/goal/medium/stripped_warped_stem.json
+ed59456987f7c36e681e52a140f51564e1c91777 data/bingo/bingo/goal/medium/sulfur.json
 afd0a24994e4088268c2165c633c76a90edcbe68 data/bingo/bingo/goal/medium/swap_hotbar_with_shelf.json
 09e4baf21ce747d07f8429c3598274e9476d283f data/bingo/bingo/goal/medium/swiftness_potion.json
 d651cceb11461cc5550069934e0814835a27df66 data/bingo/bingo/goal/medium/tame_cat.json

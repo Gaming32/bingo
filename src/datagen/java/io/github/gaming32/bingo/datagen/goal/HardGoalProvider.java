@@ -24,6 +24,7 @@ import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
 import io.github.gaming32.bingo.triggers.KillItemTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
 import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
 import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
@@ -39,6 +40,7 @@ import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.advancements.predicates.TagPredicate;
 import net.minecraft.advancements.predicates.entity.EntityEquipmentPredicate;
+import net.minecraft.advancements.predicates.entity.EntityFlagsPredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.BredAnimalsTrigger;
 import net.minecraft.advancements.triggers.ConsumeItemTrigger;
@@ -60,6 +62,7 @@ import net.minecraft.core.component.predicates.DataComponentPredicates;
 import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.core.component.predicates.JukeboxPlayablePredicate;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.Stats;
@@ -85,6 +88,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyC
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -692,5 +696,41 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainSomeItemsFromTag(NAUTILUS_ARMOR, BingoItemTags.NAUTILUS_ARMOR, "bingo.goal.some_nautilus_armor", 2, 3)
             .tags(BingoTags.OVERWORLD, BingoTags.OCEAN)
             .antisynergy("nautilus_armor"));
+
+        addGoal(BingoGoal.builder(TNT_SULFUR_CUBE)
+            .criterion(
+                "pick_up_dropped_tnt",
+                PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByEntity(
+                    Optional.empty(),
+                    Optional.of(ItemPredicate.Builder.item().of(items, ItemTags.SULFUR_CUBE_ARCHETYPE_EXPLOSIVE).build()),
+                    Optional.of(
+                        EntityPredicate.wrap(
+                            EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.SULFUR_CUBE).flags(EntityFlagsPredicate.Builder.flags().setIsBaby(false))
+                        )
+                    )
+                )
+            )
+            .criterion(
+                "give_tnt_directly",
+                PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                    Optional.empty(),
+                    ItemPredicate.Builder.item().of(items, ItemTags.SULFUR_CUBE_ARCHETYPE_EXPLOSIVE),
+                    Optional.of(
+                        EntityPredicate.wrap(
+                            EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.SULFUR_CUBE).flags(EntityFlagsPredicate.Builder.flags().setIsBaby(false))
+                        )
+                    )
+                )
+            )
+            .requirements(AdvancementRequirements.Strategy.OR)
+            .name("tnt_sulfur_cube")
+            .tags(BingoTags.OVERWORLD, BingoTags.ACTION, BingoTags.RARE_BIOME)
+            .icon(EntityIcon.ofSpawnEgg(
+                EntityTypes.SULFUR_CUBE, BingoUtil.compound(Map.of(
+                    "equipment", BingoUtil.compound(Map.of(
+                        "body", ItemStackTemplate.CODEC.encodeStart(NbtOps.INSTANCE, new ItemStackTemplate(Items.TNT)).getOrThrow()
+                    ))
+                ))
+            )));
     }
 }

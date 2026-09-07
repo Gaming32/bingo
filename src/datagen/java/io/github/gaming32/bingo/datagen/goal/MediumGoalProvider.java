@@ -40,6 +40,7 @@ import io.github.gaming32.bingo.triggers.GrowFeatureTrigger;
 import io.github.gaming32.bingo.triggers.IntentionalGameDesignTrigger;
 import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
 import io.github.gaming32.bingo.triggers.KillSelfTrigger;
+import io.github.gaming32.bingo.triggers.LaunchedByGeyserTrigger;
 import io.github.gaming32.bingo.triggers.LeashedEntityTrigger;
 import io.github.gaming32.bingo.triggers.PulledByLeashTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
@@ -943,6 +944,18 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 IndicatorIcon.infer(new EntityTypeTagCycleIcon(BingoEntityTypeTags.HOSTILE, 2), ItemTags.SPEARS),
                 subber -> subber.sub("base.count", "count")
             ));
+
+        addGoal(obtainItemGoal(CINNABAR, items, Items.CINNABAR, 16, 32)
+            .infrequency(2)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(SULFUR, items, Items.SULFUR, 16, 32)
+            .infrequency(2)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
+        addGoal(BingoGoal.builder(LAUNCHED_BY_GEYSER)
+            .criterion("launched", LaunchedByGeyserTrigger.builder().build())
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .name("launched_by_geyser")
+            .icon(Items.POTENT_SULFUR));
     }
 
     @SafeVarargs
