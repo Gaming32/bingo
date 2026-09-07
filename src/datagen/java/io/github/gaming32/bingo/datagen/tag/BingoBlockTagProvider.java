@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.references.BlockItemIds;
 import net.minecraft.world.level.block.BaseTorchBlock;
-import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -17,42 +17,33 @@ public class BingoBlockTagProvider extends FabricTagsProvider.BlockTagsProvider 
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        valueLookupBuilder(BingoBlockTags.COPPER_BLOCKS).add(
-            Blocks.COPPER_BLOCK,
-            Blocks.EXPOSED_COPPER,
-            Blocks.WEATHERED_COPPER,
-            Blocks.OXIDIZED_COPPER
-        ).add(
-            Blocks.WAXED_COPPER_BLOCK,
-            Blocks.WAXED_EXPOSED_COPPER,
-            Blocks.WAXED_WEATHERED_COPPER,
-            Blocks.WAXED_OXIDIZED_COPPER
+        var copperBlocks = builder(BingoBlockTags.COPPER_BLOCKS);
+        BlockItemIds.COPPER_BLOCK.forEach(copperBlocks::add);
+
+        builder(BingoBlockTags.BASIC_MINERAL_BLOCKS).add(
+            BlockItemIds.IRON_BLOCK.block(),
+            BlockItemIds.GOLD_BLOCK.block(),
+            BlockItemIds.DIAMOND_BLOCK.block()
         );
 
-        valueLookupBuilder(BingoBlockTags.BASIC_MINERAL_BLOCKS).add(
-            Blocks.IRON_BLOCK,
-            Blocks.GOLD_BLOCK,
-            Blocks.DIAMOND_BLOCK
+        builder(BingoBlockTags.ALL_MINERAL_BLOCKS).add(
+            BlockItemIds.COAL_BLOCK.block(),
+            BlockItemIds.COPPER_BLOCK.weathering().unaffected().block(),
+            BlockItemIds.IRON_BLOCK.block(),
+            BlockItemIds.GOLD_BLOCK.block(),
+            BlockItemIds.DIAMOND_BLOCK.block(),
+            BlockItemIds.REDSTONE_BLOCK.block(),
+            BlockItemIds.LAPIS_BLOCK.block(),
+            BlockItemIds.EMERALD_BLOCK.block(),
+            BlockItemIds.QUARTZ_BLOCK.block(),
+            BlockItemIds.NETHERITE_BLOCK.block()
         );
 
-        valueLookupBuilder(BingoBlockTags.ALL_MINERAL_BLOCKS).add(
-            Blocks.COAL_BLOCK,
-            Blocks.COPPER_BLOCK,
-            Blocks.IRON_BLOCK,
-            Blocks.GOLD_BLOCK,
-            Blocks.DIAMOND_BLOCK,
-            Blocks.REDSTONE_BLOCK,
-            Blocks.LAPIS_BLOCK,
-            Blocks.EMERALD_BLOCK,
-            Blocks.QUARTZ_BLOCK,
-            Blocks.NETHERITE_BLOCK
-        );
-
-        var torches = valueLookupBuilder(BingoBlockTags.TORCHES);
+        var torches = builder(BingoBlockTags.TORCHES);
 
         arg.lookupOrThrow(Registries.BLOCK).listElements().forEach(block -> {
             if (block.value() instanceof BaseTorchBlock) {
-                torches.add(block.value());
+                torches.add(block.key());
             }
         });
     }

@@ -88,6 +88,7 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
                 ValueInput input = TagValueInput.create(collector, level.registryAccess(), icon.data());
                 entity.load(input);
             }
+            entity.setId(1);
         }
         return entity;
     }

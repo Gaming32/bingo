@@ -1,0 +1,4 @@
+// 26.2	-999999999-01-01T00:00:00	Bingo/Tags for minecraft:entity_type
+5e8fe5d477d410ec1b3bb80156a8c2b66abdb172 data/bingo/tags/entity_type/can_be_age_locked.json
+afa16109dc0c7497635d16a3b9eca10c6a2e44dc data/bingo/tags/entity_type/hostile.json
+64b9f9546269505ddf13676c3679007a17ff2681 data/bingo/tags/entity_type/passive.json

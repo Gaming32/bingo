@@ -11,7 +11,7 @@ import io.github.gaming32.bingo.data.progresstrackers.EmptyProgressTracker;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTracker;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.RegistryAccess;

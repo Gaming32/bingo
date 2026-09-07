@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.advancements.criterion.DistancePredicate;
+import net.minecraft.advancements.predicates.DistancePredicate;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;

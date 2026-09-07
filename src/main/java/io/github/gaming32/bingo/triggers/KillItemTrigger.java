@@ -3,12 +3,12 @@ package io.github.gaming32.bingo.triggers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.DamagePredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.DamagePredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -90,7 +90,7 @@ public class KillItemTrigger extends SimpleCriterionTrigger<KillItemTrigger.Trig
 
         public Builder item(ItemPredicate item) {
             return item(EntityPredicate.Builder.entity()
-                .subPredicate(ItemEntityPredicate.droppedBy(Optional.ofNullable(item), Optional.empty()))
+                .put(ItemEntityPredicate.CODEC, ItemEntityPredicate.droppedBy(Optional.ofNullable(item), Optional.empty()))
                 .build()
             );
         }

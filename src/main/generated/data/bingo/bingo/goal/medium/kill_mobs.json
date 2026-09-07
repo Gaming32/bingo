@@ -557,6 +557,14 @@
         },
         {
           "type": "bingo:entity",
+          "entity": "minecraft:sulfur_cube",
+          "item": {
+            "count": 1,
+            "id": "minecraft:sulfur_cube_spawn_egg"
+          }
+        },
+        {
+          "type": "bingo:entity",
           "entity": "minecraft:tadpole",
           "item": {
             "count": 1,

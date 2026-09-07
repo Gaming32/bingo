@@ -32,7 +32,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.painting.Painting;
 import net.minecraft.world.entity.decoration.painting.PaintingVariant;
@@ -56,7 +56,7 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.gamerules.GameRules;
@@ -192,7 +192,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
             waitClientbound(context, singleplayerContext);
             context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
             singleplayerContext.getServer().runCommand("execute as @e[type=cow] at @s run tp @s ~-2 ~ ~");
-            context.waitTicks(EntityType.COW.updateInterval()); // to send packets for the entity teleport
+            context.waitTicks(EntityTypes.COW.updateInterval()); // to send packets for the entity teleport
 
             singleplayerContext.getServer().runCommand("summon cow 0 " + PLAYER_Y + " 1");
             waitClientbound(context, singleplayerContext);
@@ -233,7 +233,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
         testGoal(context, singleplayerContext, GoalIds.VeryEasy.DYE_SIGN, () -> {
             singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 1 oak_sign");
             singleplayerContext.getServer().runOnServer(server -> {
-                SignBlockEntity sign = server.overworld().getBlockEntity(new BlockPos(0, PLAYER_Y, 1), BlockEntityType.SIGN).orElseThrow();
+                SignBlockEntity sign = server.overworld().getBlockEntity(new BlockPos(0, PLAYER_Y, 1), BlockEntityTypes.SIGN).orElseThrow();
                 sign.updateText(text -> text.setMessage(1, Component.literal("Hello")), true);
             });
             singleplayerContext.getServer().runCommand("give @a red_dye");
@@ -558,7 +558,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
             singleplayerContext.getServer().runCommand("ride @e[type=creeper,sort=nearest,limit=1] mount @e[type=oak_boat,limit=1]");
             singleplayerContext.getServer().runCommand("give @a diamond_sword");
             singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 20 45");
-            context.waitTicks(Math.max(EntityType.OAK_BOAT.updateInterval(), EntityType.CREEPER.updateInterval()));
+            context.waitTicks(Math.max(EntityTypes.OAK_BOAT.updateInterval(), EntityTypes.CREEPER.updateInterval()));
             waitClientbound(context, singleplayerContext);
             context.waitTicks(10);
             context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
@@ -600,7 +600,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
             });
             waitClientbound(context, singleplayerContext);
             context.runOnClient(client -> {
-                var button = (MerchantScreen.TradeOfferButton) Screens.getWidgets(Objects.requireNonNull(client.screen))
+                var button = (MerchantScreen.TradeOfferButton) Screens.getWidgets(Objects.requireNonNull(client.gui.screen()))
                     .stream()
                     .filter(widget -> widget instanceof MerchantScreen.TradeOfferButton)
                     .findFirst()
@@ -692,7 +692,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
             for (int i = 0; i < 8; i++) {
                 singleplayerContext.getServer().runCommand("summon chicken 0 " + PLAYER_Y + " 2");
             }
-            waitFor(context, singleplayerContext.getServer(), server -> server.overworld().getEntities(EntityType.CHICKEN, new AABB(0, PLAYER_Y, 2, 1, PLAYER_Y + 2, 3), _ -> true).isEmpty());
+            waitFor(context, singleplayerContext.getServer(), server -> server.overworld().getEntities(EntityTypes.CHICKEN, new AABB(0, PLAYER_Y, 2, 1, PLAYER_Y + 2, 3), _ -> true).isEmpty());
         });
     }
 
@@ -710,7 +710,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
             context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
             waitServerbound(context);
             singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 2 lava");
-            waitFor(context, singleplayerContext.getServer(), server -> server.overworld().getEntities(EntityType.COW, new AABB(0, PLAYER_Y, 2, 1, PLAYER_Y + 2, 3), _ -> true).isEmpty());
+            waitFor(context, singleplayerContext.getServer(), server -> server.overworld().getEntities(EntityTypes.COW, new AABB(0, PLAYER_Y, 2, 1, PLAYER_Y + 2, 3), _ -> true).isEmpty());
         });
     }
 
@@ -812,6 +812,19 @@ public class BingoClientGameTest implements FabricClientGameTest {
         });
     }
 
+    // TODO: test medium, hard, and very goals
+
+    @TestGoal
+    private static void testLaunchedByGeyser(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Medium.LAUNCHED_BY_GEYSER, () -> {
+            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s 0 " + (PLAYER_Y + 3) + " 0");
+            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 0 lava");
+            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 0 potent_sulfur[potent_sulfur_state=continuous]");
+            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 2) + " 0 water");
+            context.waitTicks(20);
+        });
+    }
+
     private static void testGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Identifier goalId, Runnable testRunner) {
         testGoal(context, singleplayerContext, goalId, true, testRunner);
     }
@@ -873,12 +886,13 @@ public class BingoClientGameTest implements FabricClientGameTest {
         context.runOnClient(client -> Objects.requireNonNull(client.player).setDeltaMovement(Vec3.ZERO));
         singleplayerContext.getServer().runCommand("execute in " + dimensionName + " run tp @a " + dimension.spawnPos.getX() + " " + dimension.spawnPos.getY() + " " + dimension.spawnPos.getZ() + " 0 0");
         waitClientbound(context, singleplayerContext);
-        singleplayerContext.getClientLevel().waitForChunksDownload();
+        singleplayerContext.getConnection().waitForChunksDownload();
         singleplayerContext.getServer().runCommand("clear @a");
         singleplayerContext.getServer().runCommand("execute in " + dimensionName + " run fill " + (dimension.spawnPos.getX() - 16) + " " + dimension.spawnPos.getY() + " " + (dimension.spawnPos.getZ() - 16) + " " + (dimension.spawnPos.getX() + 16) + " " + (dimension.spawnPos.getY() + 16) + " " + (dimension.spawnPos.getZ() + 16) + " air");
         singleplayerContext.getServer().runOnServer(server -> {
             for (Entity entity : Objects.requireNonNull(server.getLevel(dimension.key)).getAllEntities()) {
-                if (!(entity instanceof Player)) {
+                // idk why entity can be null here, but it can
+                if (entity != null && !(entity instanceof Player)) {
                     entity.remove(Entity.RemovalReason.DISCARDED);
                 }
             }
@@ -891,9 +905,9 @@ public class BingoClientGameTest implements FabricClientGameTest {
 
         if (testFailed) {
             failedTests.add(testName);
-            context.runOnClient(client -> client.gui.getChat().addClientSystemMessage(Component.literal("Test failed: " + testName).withStyle(ChatFormatting.RED)));
+            context.runOnClient(client -> client.gui.hud.getChat().addClientSystemMessage(Component.literal("Test failed: " + testName).withStyle(ChatFormatting.RED)));
         } else {
-            context.runOnClient(client -> client.gui.getChat().addClientSystemMessage(Component.literal("Test passed: " + testName).withStyle(ChatFormatting.GREEN)));
+            context.runOnClient(client -> client.gui.hud.getChat().addClientSystemMessage(Component.literal("Test passed: " + testName).withStyle(ChatFormatting.GREEN)));
         }
     }
 

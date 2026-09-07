@@ -50,7 +50,7 @@ public class BingoConfigScreen extends Screen {
         }
 
         rowHelper.addChild(
-            Button.builder(CommonComponents.GUI_DONE, button -> minecraft.setScreen(parent)).width(200).build(),
+            Button.builder(CommonComponents.GUI_DONE, button -> minecraft.gui.setScreen(parent)).width(200).build(),
             2, rowHelper.newCellSettings().paddingTop(2)
         );
         rowHelper.addChild(

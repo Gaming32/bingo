@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.mixin;
 
 import io.github.gaming32.bingo.ext.CriterionTriggerExt;
-import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.triggers.CriterionTrigger;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(CriterionTrigger.class)

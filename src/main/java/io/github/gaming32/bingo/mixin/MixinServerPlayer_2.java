@@ -21,7 +21,7 @@ public class MixinServerPlayer_2 {
         method = "slotChanged",
         at = @At(
             value = "FIELD",
-            target = "Lnet/minecraft/advancements/CriteriaTriggers;INVENTORY_CHANGED:Lnet/minecraft/advancements/criterion/InventoryChangeTrigger;",
+            target = "Lnet/minecraft/advancements/triggers/CriteriaTriggers;INVENTORY_CHANGED:Lnet/minecraft/advancements/triggers/InventoryChangeTrigger;",
             opcode = Opcodes.GETSTATIC
         )
     )

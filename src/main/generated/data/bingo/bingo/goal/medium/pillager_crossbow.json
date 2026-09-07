@@ -7,10 +7,9 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type_specific": {
-                "type": "bingo:item",
+              "bingo:type_specific/item": {
                 "dropped_by": {
-                  "type": "minecraft:pillager"
+                  "minecraft:entity_type": "minecraft:pillager"
                 },
                 "item": {
                   "items": "minecraft:crossbow"

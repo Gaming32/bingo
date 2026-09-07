@@ -47,6 +47,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.TeamColor;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -93,7 +94,7 @@ public class BingoClient {
                 .conflictContext(KeyMappingBuilder.ConflictContext.IN_GAME)
                 .register(minecraft -> {
                     if (clientGame != null) {
-                        minecraft.setScreen(new BoardScreen());
+                        minecraft.gui.setScreen(new BoardScreen());
                     }
                 });
             manualHighlightKeyMapping = builder
@@ -165,17 +166,17 @@ public class BingoClient {
             return;
         }
 
-        boolean debugOverlayVisible = minecraft.debugEntries.isOverlayVisible() && (!minecraft.options.hideGui || minecraft.screen != null);
+        boolean debugOverlayVisible = minecraft.debugEntries.isOverlayVisible() && (!minecraft.gui.hud.isHidden() || minecraft.gui.screen() != null);
         if (debugOverlayVisible && !BingoClient.CONFIG.showBoardOnF3Screen()) {
             return;
         }
 
-        if (minecraft.screen instanceof BoardScreen) {
+        if (minecraft.gui.screen() instanceof BoardScreen) {
             return;
         }
 
         final PositionAndScale pos = getBoardPosition();
-        renderBingo(graphics, minecraft.screen instanceof ChatScreen, pos);
+        renderBingo(graphics, minecraft.gui.screen() instanceof ChatScreen, pos);
 
         final Font font = minecraft.font;
         final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
@@ -235,10 +236,10 @@ public class BingoClient {
                 final PlayerTeam team = clientGame.teams()[teamValue.team.getFirstIndex()];
                 final MutableComponent leftText = getDisplayName(team).copy();
                 final MutableComponent rightText = Component.literal(" - " + teamValue.score);
-                if (team.getColor() != ChatFormatting.RESET) {
-                    leftText.withStyle(team.getColor());
-                    rightText.withStyle(team.getColor());
-                }
+                team.getColor().ifPresent(color -> {
+                    leftText.withColor(color.textColor());
+                    rightText.withColor(color.textColor());
+                });
                 graphics.text(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
                 graphics.text(font, rightText, scoreX, scoreY, 0xffffffff);
                 scoreY += shift;
@@ -316,8 +317,7 @@ public class BingoClient {
                         yield null;
                     }
                     final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
-                    final Integer maybeColor = clientGame.teams()[team.getFirstIndex()].getColor().getColor();
-                    yield maybeColor != null ? maybeColor : 0x55ff55;
+                    yield clientGame.teams()[team.getFirstIndex()].getColor().map(TeamColor::rgb).orElse(0x55ff55);
                 }
             };
             if (color != null) {

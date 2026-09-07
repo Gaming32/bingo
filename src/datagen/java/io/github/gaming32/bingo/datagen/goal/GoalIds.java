@@ -243,6 +243,7 @@ public final class GoalIds {
         public static final Identifier BREAK_DIAMOND_SWORD = id("break_diamond_sword");
         public static final Identifier BREED_MOBS = id("breed_mobs");
         public static final Identifier BROWN_WOOL = id("brown_wool");
+        public static final Identifier CINNABAR = id("cinnabar");
         public static final Identifier CONCRETE = id("concrete");
         public static final Identifier CREATE_COPPER_GOLEM = id("create_copper_golem");
         public static final Identifier CREATE_IRON_GOLEM = id("create_iron_golem");
@@ -288,6 +289,7 @@ public final class GoalIds {
         public static final Identifier KILL_SELF_WITH_ARROW = id("kill_self_with_arrow");
         public static final Identifier KILL_WITH_CRYSTAL = id("kill_with_crystal");
         public static final Identifier LAPIS_BLOCK = id("lapis_block");
+        public static final Identifier LAUNCHED_BY_GEYSER = id("launched_by_geyser");
         public static final Identifier LEAD_ON_RABBIT = id("lead_on_rabbit");
         public static final Identifier LEASH_DOLPHIN_TO_FENCE = id("leash_dolphin_to_fence");
         public static final Identifier LEVELS = id("levels");
@@ -322,6 +324,7 @@ public final class GoalIds {
         public static final Identifier SPEAR_MOBS = id("spear_mobs");
         public static final Identifier SPECTRAL_ARROW = id("spectral_arrow");
         public static final Identifier SPIDER_EYE = id("spider_eye");
+        public static final Identifier SULFUR = id("sulfur");
         public static final Identifier SWAP_HOTBAR_WITH_SHELF = id("swap_hotbar_with_shelf");
         public static final Identifier TAME_CAT = id("tame_cat");
         public static final Identifier TAME_WOLF = id("tame_wolf");
@@ -415,6 +418,7 @@ public final class GoalIds {
         public static final Identifier TAME_MULE = id("tame_mule");
         public static final Identifier TAME_PARROT = id("tame_parrot");
         public static final Identifier TERRACOTTA = id("terracotta");
+        public static final Identifier TNT_SULFUR_CUBE = id("tnt_sulfur_cube");
         public static final Identifier TURTLE_HELMET = id("turtle_helmet");
         public static final Identifier USE_LODESTONE = id("use_lodestone");
         public static final Identifier VILLAGER_IN_END = id("villager_in_end");

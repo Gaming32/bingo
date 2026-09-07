@@ -3,7 +3,7 @@ package io.github.gaming32.bingo.conditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.CustomEnumCodec;
-import net.minecraft.advancements.criterion.TagPredicate;
+import net.minecraft.advancements.predicates.TagPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.context.ContextKey;

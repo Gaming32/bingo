@@ -7,7 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:mule"
+              "minecraft:entity_type": "minecraft:mule"
             }
           }
         ]

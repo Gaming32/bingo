@@ -24,6 +24,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -40,6 +41,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +124,7 @@ public final class BingoDataGenUtil {
         Map<EntityType<?>, Class<? extends Entity>> result = new HashMap<>();
 
         final int staticFinal = Modifier.STATIC | Modifier.FINAL;
-        for (Field field : EntityType.class.getFields()) {
+        for (Field field : EntityTypes.class.getFields()) {
             if ((field.getModifiers() & staticFinal) != staticFinal) {
                 continue;
             }
@@ -189,6 +191,7 @@ public final class BingoDataGenUtil {
             });
         }
 
+        recipesByItem.values().forEach(Collections::sort);
         return recipesByItem;
     }
 

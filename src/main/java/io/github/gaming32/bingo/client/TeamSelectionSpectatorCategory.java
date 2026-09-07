@@ -140,8 +140,8 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
 
         @Override
         public void extractIcon(GuiGraphicsExtractor graphics, float brightness, float alpha) {
-            final Integer color = playerTeam.getColor().getColor();
-            if (color != null) {
+            playerTeam.getColor().ifPresent(teamColor -> {
+                int color = teamColor.rgb();
                 final float red = (color >> 16 & 0xff) / 255f;
                 final float green = (color >> 8 & 0xff) / 255f;
                 final float blue = (color & 0xff) / 255f;
@@ -149,7 +149,7 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
                     1, 1, 15, 15,
                     ARGB.colorFromFloat(alpha, red * brightness, green * brightness, blue * brightness)
                 );
-            }
+            });
 
             if (iconSkin != null) {
                 PlayerFaceExtractor.extractRenderState(graphics, iconSkin, 2, 2, 12, ARGB.white(alpha));
