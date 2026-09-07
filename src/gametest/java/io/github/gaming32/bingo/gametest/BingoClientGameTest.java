@@ -812,6 +812,19 @@ public class BingoClientGameTest implements FabricClientGameTest {
         });
     }
 
+    // TODO: test medium, hard, and very goals
+
+    @TestGoal
+    private static void testLaunchedByGeyser(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Medium.LAUNCHED_BY_GEYSER, () -> {
+            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s 0 " + (PLAYER_Y + 3) + " 0");
+            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 0 lava");
+            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 0 potent_sulfur[potent_sulfur_state=continuous]");
+            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 2) + " 0 water");
+            context.waitTicks(20);
+        });
+    }
+
     private static void testGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Identifier goalId, Runnable testRunner) {
         testGoal(context, singleplayerContext, goalId, true, testRunner);
     }

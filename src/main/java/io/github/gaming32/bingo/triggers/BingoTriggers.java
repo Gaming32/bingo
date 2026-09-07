@@ -50,6 +50,7 @@ public class BingoTriggers {
     public static final RegistryValue<ItemPickedUpTrigger> ITEM_PICKED_UP = register("item_picked_up", ItemPickedUpTrigger::new);
     public static final RegistryValue<KillItemTrigger> KILL_ITEM = register("kill_item", KillItemTrigger::new);
     public static final RegistryValue<KillSelfTrigger> KILL_SELF = register("kill_self", KillSelfTrigger::new);
+    public static final RegistryValue<LaunchedByGeyserTrigger> LAUNCHED_BY_GEYSER = register("launched_by_geyser", LaunchedByGeyserTrigger::new);
     public static final RegistryValue<LeashedEntityTrigger> LEASHED_ENTITY = register("leash_entity", LeashedEntityTrigger::new);
     public static final RegistryValue<MineralPillarTrigger> MINERAL_PILLAR = register("mineral_pillar", MineralPillarTrigger::new);
     public static final RegistryValue<EntityTrigger> MOB_BROKE_CROSSBOW = register("mob_broke_crossbow", EntityTrigger::new);

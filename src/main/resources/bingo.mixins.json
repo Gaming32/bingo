@@ -39,6 +39,7 @@
     "MixinOcelot",
     "MixinPig",
     "MixinPlayerAdvancements",
+    "MixinPotentSulfurBlockEntity",
     "MixinRangedCrossbowAttackGoal",
     "MixinRavager",
     "MixinRespawnAnchorBlock",
