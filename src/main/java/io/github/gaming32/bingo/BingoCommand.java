@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo;
 
 import com.demonwav.mcdev.annotations.Translatable;
+import com.google.common.collect.Comparators;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -8,6 +9,7 @@ import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.exceptions.Dynamic3CommandExceptionType;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -30,7 +32,24 @@ import io.github.gaming32.bingo.game.BoardShape;
 import io.github.gaming32.bingo.game.InvalidGoalException;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
+import io.github.gaming32.bingo.rating.BingoRatingEngine;
+import io.github.gaming32.bingo.rating.BingoRatings;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.Vec2i;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectDoubleImmutablePair;
+import it.unimi.dsi.fastutil.objects.ObjectDoublePair;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -54,6 +73,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.Permissions;
+import net.minecraft.server.players.NameAndId;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -69,14 +89,7 @@ import net.minecraft.world.scores.TeamColor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.function.TriFunction;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static net.minecraft.commands.Commands.*;
 
@@ -125,6 +138,13 @@ public class BingoCommand {
     private static final SimpleCommandExceptionType NOT_NERFED =
         new SimpleCommandExceptionType(Bingo.translatable("bingo.not_nerfed"));
 
+    private static final Dynamic2CommandExceptionType TOO_MANY_PLAYERS =
+        new Dynamic2CommandExceptionType((safe, provided) -> Bingo.translatableEscape("bingo.balance.too_many_players", safe, provided));
+    private static final Dynamic2CommandExceptionType NOT_ENOUGH_TEAMS =
+        new Dynamic2CommandExceptionType((required, found) -> Bingo.translatableEscape("bingo.balance.not_enough_teams", required, found));
+    private static final Dynamic2CommandExceptionType MISMATCHED_PLAYER_COUNT =
+        new Dynamic2CommandExceptionType((expected, actual) -> Bingo.translatableEscape("bingo.balance.mismatched_player_count", expected, actual));
+
     private static final SuggestionProvider<CommandSourceStack> ACTIVE_GOAL_SUGGESTOR = (context, builder) -> {
         final var game = ((MinecraftServerExt) context.getSource().getServer()).bingo$getGame();
         if (game == null) {
@@ -138,6 +158,7 @@ public class BingoCommand {
     private static final CommandSwitch<Boolean> REQUIRE_CLIENT = CommandSwitch.storeTrue("--require-client");
     private static final CommandSwitch<Boolean> CONTINUE_AFTER_WIN = CommandSwitch.storeTrue("--continue-after-win");
     private static final CommandSwitch<Boolean> INCLUDE_INACTIVE_TEAMS = CommandSwitch.storeTrue("--include-inactive-teams");
+    private static final CommandSwitch<Boolean> RATED = CommandSwitch.storeFalse("--unrated");
 
     private static final CommandSwitch<String> SHAPE = CommandSwitch
         .argument("--shape", StringArgumentType.word())
@@ -387,6 +408,21 @@ public class BingoCommand {
                         )
                     )
                 )
+                .then(literal("balance")
+                    .executes(context -> balanceTeams(
+                        context,
+                        context.getSource()
+                            .getServer()
+                            .getPlayerList()
+                            .getPlayers()
+                            .stream()
+                            .filter(p -> !p.isSpectator())
+                            .toList()
+                    ))
+                    .then(argument("players", EntityArgument.players())
+                        .executes(context -> balanceTeams(context, EntityArgument.getPlayers(context, "players")))
+                    )
+                )
             )
             .then(literal("time-limit")
                 .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
@@ -433,6 +469,54 @@ public class BingoCommand {
                     )
                 )
             )
+            .then(literal("rate")
+                .executes(context -> ratePlayers(context, List.of(context.getSource().getPlayerOrException())))
+                .then(argument("player", EntityArgument.players())
+                    .requires(hasPermission(LEVEL_MODERATORS))
+                    .executes(context -> ratePlayers(context, EntityArgument.getPlayers(context, "player")))
+                )
+            )
+            .then(literal("leaderboard")
+                .executes(context -> {
+                    final var server = context.getSource().getServer();
+                    final var ratings = server
+                        .getDataStorage()
+                        .computeIfAbsent(BingoRatings.TYPE);
+                    final var playerList = server.getPlayerList();
+                    final var nameIdCache = server.services().nameToIdCache();
+
+                    final var topPlayerCount = 10;
+                    final var topPlayers = ratings
+                        .getRatings()
+                        .entrySet()
+                        .stream()
+                        .map(entry -> ObjectDoubleImmutablePair.of(entry.getKey(), BingoRatingEngine.bingoRating(entry.getValue())))
+                        .collect(Comparators.greatest(topPlayerCount, Comparator.comparingDouble(ObjectDoublePair::valueDouble)));
+
+                    final var result = Bingo.translatable("bingo.leaderboard.header", topPlayers.size());
+                    int rank = 1;
+                    for (final var entry : topPlayers) {
+                        final var playerEntity = playerList.getPlayer(entry.left());
+                        result.append("\n");
+                        result.append(Bingo.translatable(
+                            "bingo.leaderboard.player",
+                            rank,
+                            playerEntity != null
+                                ? playerEntity.getDisplayName()
+                                : Component.literal(
+                                    nameIdCache.get(entry.left())
+                                        .map(NameAndId::name)
+                                        .orElseGet(entry.left()::toString)
+                                ),
+                            (int) entry.rightDouble()
+                        ));
+                        rank++;
+                    }
+
+                    context.getSource().sendSuccess(() -> result, false);
+                    return 0;
+                })
+            )
         );
 
         {
@@ -441,6 +525,7 @@ public class BingoCommand {
             REQUIRE_CLIENT.addTo(startCommand);
             CONTINUE_AFTER_WIN.addTo(startCommand);
             INCLUDE_INACTIVE_TEAMS.addTo(startCommand);
+            RATED.addTo(startCommand);
 
             SHAPE.addTo(startCommand);
             SIZE.addTo(startCommand);
@@ -458,6 +543,18 @@ public class BingoCommand {
                 final var teamCount = i;
                 final CommandNode<CommandSourceStack> subCommand = argument("team" + i, TeamArgument.team())
                     .executes(context -> startGame(context, teamCount))
+                    .build();
+                currentCommand.addChild(subCommand);
+                currentCommand = subCommand;
+            }
+        }
+
+        {
+            var currentCommand = bingoCommand.getChild("teams").getChild("balance").getChild("players");
+            for (int i = 1; i <= 32; i++) {
+                final var teamCount = i;
+                final var subCommand = argument("team-size-" + i, IntegerArgumentType.integer(1))
+                    .executes(context -> balanceTeams(context, teamCount))
                     .build();
                 currentCommand.addChild(subCommand);
                 currentCommand = subCommand;
@@ -489,6 +586,7 @@ public class BingoCommand {
         final boolean requireClient = REQUIRE_CLIENT.get(context);
         final boolean continueAfterWin = CONTINUE_AFTER_WIN.get(context);
         final boolean includeInactiveTeams = INCLUDE_INACTIVE_TEAMS.get(context);
+        final boolean rated = RATED.get(context);
         final int timeLimit  = TIME_LIMIT.get(context);
         final int autoForfeitTicks = AUTO_FORFEIT_TIME.get(context);
 
@@ -541,7 +639,7 @@ public class BingoCommand {
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
         final long scheduledEndTime = timeLimit > 0 ? context.getSource().getServer().overworld().getGameTime() + timeLimit : 0;
-        final var game = new BingoGame(board, gamemode, requireClient, continueAfterWin, scheduledEndTime, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
+        final var game = new BingoGame(board, gamemode, requireClient, continueAfterWin, rated, scheduledEndTime, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
             if (Bingo.CONFIG.getNerfedPlayers().contains(player.getUUID())) {
@@ -659,5 +757,130 @@ public class BingoCommand {
             true
         );
         return players.size();
+    }
+
+    private static int balanceTeams(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) throws CommandSyntaxException {
+        final var maxPlayerCount = 14;
+        if (players.size() > maxPlayerCount) {
+            throw TOO_MANY_PLAYERS.create(maxPlayerCount, players.size());
+        }
+
+        if (players.isEmpty()) {
+            throw EntityArgument.NO_PLAYERS_FOUND.create();
+        }
+
+        final var scoreboardTeams = context.getSource().getServer().getScoreboard().getPlayerTeams();
+        if (scoreboardTeams.size() < (players.size() > 1 ? 2 : 1)) {
+            throw NOT_ENOUGH_TEAMS.create(players.size(), scoreboardTeams.size());
+        }
+
+        return basicBalanceTeams(
+            context,
+            players,
+            scoreboardTeams,
+            players.size() > 1
+                ? scoreComputer -> BingoUtil.forEachGroupParallel(List.copyOf(players), teams -> {
+                    if (teams.size() < 2) return;
+                    if (teams.size() > scoreboardTeams.size()) return;
+                    scoreComputer.accept(teams);
+                })
+                : scoreComputer -> scoreComputer.accept(List.of(List.copyOf(players)))
+        );
+    }
+
+    private static int balanceTeams(CommandContext<CommandSourceStack> context, int teamCount) throws CommandSyntaxException {
+        final var players = EntityArgument.getPlayers(context, "players");
+
+        final var teams = new IntArrayList(teamCount);
+        var totalPlayers = 0;
+        for (int i = 1; i <= teamCount; i++) {
+            final var teamSize = IntegerArgumentType.getInteger(context, "team-size-" + i);
+            totalPlayers += teamSize;
+            teams.add(teamSize);
+        }
+        if (totalPlayers != players.size()) {
+            throw MISMATCHED_PLAYER_COUNT.create(totalPlayers, players.size());
+        }
+
+        final var scoreboardTeams = context.getSource().getServer().getScoreboard().getPlayerTeams();
+        if (teams.size() > scoreboardTeams.size()) {
+            throw NOT_ENOUGH_TEAMS.create(teams.size(), scoreboardTeams.size());
+        }
+
+        return basicBalanceTeams(
+            context,
+            players,
+            scoreboardTeams,
+            scoreComputer -> BingoUtil.forEachGroupParallel(List.copyOf(players), teams, scoreComputer)
+        );
+    }
+
+    private static int basicBalanceTeams(
+        CommandContext<CommandSourceStack> context,
+        Collection<ServerPlayer> players,
+        Collection<PlayerTeam> teams,
+        Consumer<Consumer<List<List<ServerPlayer>>>> teamLister
+    ) {
+        final var server = context.getSource().getServer();
+        final var scoreboard = server.getScoreboard();
+
+        final var ratings = server.getDataStorage().computeIfAbsent(BingoRatings.TYPE);
+
+        final var bestChoice = new AtomicReference<>(ObjectDoublePair.of(List.<List<ServerPlayer>>of(), Double.NEGATIVE_INFINITY));
+        teamLister.accept(possibility -> {
+            final var createdTeams = possibility.stream()
+                .map(t -> t.stream().map(p -> ratings.getRating(p.getUUID())).toList())
+                .toList();
+            final var drawChance = BingoRatingEngine.predictDraw(createdTeams);
+            bestChoice.getAndAccumulate(
+                ObjectDoublePair.of(possibility, drawChance),
+                (a, b) -> Comparators.max(a, b, Comparator.comparingDouble(ObjectDoublePair::valueDouble))
+            );
+        });
+
+        Bingo.LOGGER.info("Best score found: {}", bestChoice.get().valueDouble());
+        Bingo.LOGGER.info(
+            "Teams:\n{}",
+            bestChoice.get()
+                .key()
+                .stream()
+                .map(team -> " - " + team.stream().map(ServerPlayer::getPlainTextName).collect(Collectors.joining(", ", "[", "]")))
+                .collect(Collectors.joining("\n"))
+        );
+
+        final var scoreboardTeams = new ArrayList<>(teams);
+        Collections.shuffle(scoreboardTeams);
+        for (final var foundTeam : bestChoice.get().key()) {
+            final var scoreboardTeam = scoreboardTeams.removeLast();
+            for (final var player : foundTeam) {
+                scoreboard.addPlayerToTeam(player.getScoreboardName(), scoreboardTeam);
+            }
+        }
+
+        context.getSource().sendSuccess(
+            () -> Bingo.translatable(
+                "bingo.balance.success",
+                players.size(),
+                bestChoice.get().key().size(),
+                Math.round(bestChoice.get().valueDouble() * 100.0)
+            ),
+            true
+        );
+
+        return 0;
+    }
+
+    private static int ratePlayers(CommandContext<CommandSourceStack> context, Collection<ServerPlayer> players) {
+        final var ratings = context.getSource()
+            .getServer()
+            .getDataStorage()
+            .computeIfAbsent(BingoRatings.TYPE);
+        var summedRating = 0;
+        for (final var player : players) {
+            final var rating = (int) BingoRatingEngine.bingoRating(ratings.getRating(player.getUUID()));
+            context.getSource().sendSuccess(() -> Bingo.translatable("bingo.rate", player.getDisplayName(), rating), false);
+            summedRating += rating;
+        }
+        return summedRating;
     }
 }
