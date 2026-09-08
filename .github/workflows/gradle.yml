@@ -25,7 +25,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --stacktrace --warning-mode=fail --no-daemon
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jars
           path: build/libs
