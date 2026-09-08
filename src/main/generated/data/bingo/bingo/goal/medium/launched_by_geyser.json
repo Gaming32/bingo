@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "launched": {
+      "trigger": "bingo:launched_by_geyser"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:potent_sulfur"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.launched_by_geyser"
+  },
+  "requirements": [
+    [
+      "launched"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}

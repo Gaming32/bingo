@@ -2,10 +2,10 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -16,13 +16,11 @@ import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
 public class GrowBeeNestTreeTrigger extends SimpleCriterionTrigger<GrowBeeNestTreeTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -30,7 +28,7 @@ public class GrowBeeNestTreeTrigger extends SimpleCriterionTrigger<GrowBeeNestTr
 
     public void trigger(ServerPlayer player, BlockPos nestPos, BlockState nestState, ItemStack tool) {
         final LootParams nestParams = new LootParams.Builder(player.level())
-            .withParameter(LootContextParams.ORIGIN, nestPos.getCenter())
+            .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(nestPos))
             .withParameter(LootContextParams.THIS_ENTITY, player)
             .withParameter(LootContextParams.BLOCK_STATE, nestState)
             .withParameter(LootContextParams.TOOL, tool)
@@ -61,7 +59,7 @@ public class GrowBeeNestTreeTrigger extends SimpleCriterionTrigger<GrowBeeNestTr
         }
 
         @Override
-        public void validate(@NonNull ValidationContextSource validator) {
+        public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
             nest.ifPresent(p -> Validatable.validate(validator.context(LootContextParamSets.ADVANCEMENT_LOCATION), "nest", nest));
         }

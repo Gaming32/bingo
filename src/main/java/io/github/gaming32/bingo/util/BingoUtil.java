@@ -13,6 +13,7 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import io.github.gaming32.bingo.Bingo;
 import it.unimi.dsi.fastutil.Hash;
+import net.minecraft.SharedConstants;
 import net.minecraft.commands.arguments.ResourceOrTagKeyArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -37,7 +38,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -143,7 +143,7 @@ public class BingoUtil {
         return codec.parse(dynamic).getOrThrow(IllegalArgumentException::new);
     }
 
-    public static <T extends Enum<T>> T valueOf(String name, @NotNull T defaultValue) {
+    public static <T extends Enum<T>> T valueOf(String name, T defaultValue) {
         try {
             return Enum.valueOf(defaultValue.getDeclaringClass(), name);
         } catch (IllegalArgumentException e) {
@@ -151,12 +151,8 @@ public class BingoUtil {
         }
     }
 
-    public static MutableComponent ordinal(int n) {
-        if (n >= 1 && n <= 16) {
-            return Bingo.translatable("bingo.ordinal." + n);
-        } else {
-            return Bingo.translatable("bingo.ordinal.generic", n);
-        }
+    public static MutableComponent placement(int n) {
+        return Bingo.translatable("bingo.placement." + n);
     }
 
     public static MutableComponent ensureHasFallback(MutableComponent component) {
@@ -221,6 +217,21 @@ public class BingoUtil {
             }
         }
         return Either.right(team.getDisplayName());
+    }
+
+    public static String formatRemainingTime(long remainingTimeTicks) {
+        if (remainingTimeTicks < 0)
+            remainingTimeTicks = 0;
+        int hours = (int) (remainingTimeTicks / SharedConstants.TICKS_PER_MINUTE / 60);
+        int minutes = (int) (remainingTimeTicks / SharedConstants.TICKS_PER_MINUTE % 60);
+        int seconds = (int) (remainingTimeTicks / SharedConstants.TICKS_PER_SECOND % 60);
+        StringBuilder sb = new StringBuilder();
+        if (hours > 0) {
+            sb.append(hours);
+            sb.append(":");
+        }
+        sb.append(String.format("%02d:%02d", minutes, seconds));
+        return sb.toString();
     }
 
     public static <T, R> Either<R, R> mapEither(Either<? extends T, ? extends T> either, Function<? super T, ? extends R> mapper) {
@@ -296,5 +307,10 @@ public class BingoUtil {
             }
         }
         return builder;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Throwable> T sneakyThrow(Throwable t) throws T {
+        throw (T) t;
     }
 }

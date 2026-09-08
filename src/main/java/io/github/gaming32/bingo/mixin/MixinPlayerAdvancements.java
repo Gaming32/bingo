@@ -1,0 +1,50 @@
+package io.github.gaming32.bingo.mixin;
+
+import io.github.gaming32.bingo.ext.MinecraftServerExt;
+import io.github.gaming32.bingo.game.ActiveGoal;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerAdvancements;
+import net.minecraft.server.level.ServerPlayer;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(PlayerAdvancements.class)
+public class MixinPlayerAdvancements {
+    @Shadow private boolean isFirstPacket;
+
+    @Shadow
+    private ServerPlayer player;
+
+    @Inject(
+        method = "flushDirty",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;send(Lnet/minecraft/network/protocol/Packet;)V",
+            shift = At.Shift.AFTER
+        )
+    )
+    private void syncBingoAdvancements(ServerPlayer player, boolean showAdvancements, CallbackInfo ci) {
+        if (!isFirstPacket) return;
+        MinecraftServer server = player.level().getServer();
+        final var game = ((MinecraftServerExt) server).bingo$getGame();
+        if (game != null) {
+            game.syncAdvancementsTo(player);
+        }
+    }
+
+    @Inject(method = "award", at = @At("HEAD"), cancellable = true)
+    private void listenForGoalCompletion(AdvancementHolder advancement, String criterion, CallbackInfoReturnable<Boolean> cir) {
+        MinecraftServer server = player.level().getServer();
+        final var game = ((MinecraftServerExt) server).bingo$getGame();
+        if (game == null) return;
+        final ActiveGoal goal = game.getBoard().byVanillaId(advancement.id());
+        if (goal == null) return;
+        boolean result = game.award(player, goal, criterion);
+        cir.setReturnValue(result);
+    }
+}

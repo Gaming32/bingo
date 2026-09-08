@@ -25,6 +25,8 @@ public final class BingoItemTags {
     public static final TagKey<Item> MEAT = create("meat");
     public static final TagKey<Item> NAUTILUS_ARMOR = create("nautilus_armor");
     public static final TagKey<Item> NOT_MEAT = create("not_meat");
+    public static final TagKey<Item> SLABS = create("slabs");
+    public static final TagKey<Item> STAIRS = create("stairs");
     public static final TagKey<Item> TORCHES = create("torches");
     public static final TagKey<Item> TRIM_TEMPLATES = create("trim_templates");
 

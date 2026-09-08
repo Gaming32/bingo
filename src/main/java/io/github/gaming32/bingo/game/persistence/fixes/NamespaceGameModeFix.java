@@ -5,7 +5,7 @@ import com.mojang.datafixers.TypeRewriteRule;
 import com.mojang.datafixers.schemas.Schema;
 import io.github.gaming32.bingo.game.persistence.PersistenceTypes;
 
-import static com.mojang.datafixers.DSL.remainderFinder;
+import static com.mojang.datafixers.DSL.*;
 
 public class NamespaceGameModeFix extends DataFix {
     public NamespaceGameModeFix(Schema outputSchema) {

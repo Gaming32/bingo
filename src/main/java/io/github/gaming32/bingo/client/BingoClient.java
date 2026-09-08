@@ -16,12 +16,15 @@ import io.github.gaming32.bingo.game.GoalProgress;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
 import io.github.gaming32.bingo.network.ClientPayloadHandler;
 import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
+import io.github.gaming32.bingo.platform.BingoClientPlatform;
 import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.event.ClientEvents;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.Identifiers;
 import io.github.gaming32.bingo.util.Vec2i;
 import net.minecraft.ChatFormatting;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -44,6 +47,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.TeamColor;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -67,11 +71,13 @@ public class BingoClient {
     public static ClientGame clientGame;
 
     public static final BingoClientConfig CONFIG = new BingoClientConfig(
-        BingoPlatform.platform.getConfigDir().resolve("bingo-client.toml")
+        BingoPlatform.getConfigDir().resolve("bingo-client.toml")
     );
     private static RecipeViewerPlugin recipeViewerPlugin;
 
     public static void init() {
+        BingoClientPlatform.registerEvents();
+
         CONFIG.load();
         CONFIG.save();
 
@@ -79,7 +85,7 @@ public class BingoClient {
 
         DefaultIconRenderers.setup();
 
-        BingoPlatform.platform.registerKeyMappings(builder -> {
+        BingoPlatform.registerKeyMappings(builder -> {
             KeyMapping.Category category = builder.registerCategory(Identifiers.bingo("category"));
             builder
                 .name("bingo.key.board")
@@ -88,7 +94,7 @@ public class BingoClient {
                 .conflictContext(KeyMappingBuilder.ConflictContext.IN_GAME)
                 .register(minecraft -> {
                     if (clientGame != null) {
-                        minecraft.setScreen(new BoardScreen());
+                        minecraft.gui.setScreen(new BoardScreen());
                     }
                 });
             manualHighlightKeyMapping = builder
@@ -101,8 +107,8 @@ public class BingoClient {
                 .mapping();
         });
 
-        BingoPlatform.platform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
-        BingoPlatform.platform.registerPictureInPictureRenderers(registrar ->
+        BingoPlatform.registerClientTooltips(registrar -> registrar.register(IconTooltip.class, ClientIconTooltip::new));
+        BingoPlatform.registerPictureInPictureRenderers(registrar ->
             registrar.register(BlockPictureInPictureRenderState.class, BlockPictureInPictureRenderer::new)
         );
 
@@ -159,15 +165,46 @@ public class BingoClient {
         if (clientGame == null) {
             return;
         }
-        if (minecraft.getDebugOverlay().showDebugScreen() && !BingoClient.CONFIG.showBoardOnF3Screen()) {
+
+        boolean debugOverlayVisible = minecraft.debugEntries.isOverlayVisible() && (!minecraft.gui.hud.isHidden() || minecraft.gui.screen() != null);
+        if (debugOverlayVisible && !BingoClient.CONFIG.showBoardOnF3Screen()) {
             return;
         }
-        if (minecraft.screen instanceof BoardScreen) {
+
+        if (minecraft.gui.screen() instanceof BoardScreen) {
             return;
         }
 
         final PositionAndScale pos = getBoardPosition();
-        renderBingo(graphics, minecraft.screen instanceof ChatScreen, pos);
+        renderBingo(graphics, minecraft.gui.screen() instanceof ChatScreen, pos);
+
+        final Font font = minecraft.font;
+        final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
+        int scoreY;
+        if (CONFIG.getBoardCorner().isOnBottom) {
+            scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
+        } else {
+            scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
+        }
+        final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
+
+        if (clientGame.scheduledEndTime() > 0) {
+            long serverTime = 0;
+            if (minecraft.level instanceof ClientLevel clientLevel) {
+                serverTime = clientLevel.getGameTime();
+            }
+            long remainingTimeTicks = clientGame.scheduledEndTime() - serverTime;
+            String formatedRemainingTime = " - " + BingoUtil.formatRemainingTime(remainingTimeTicks);
+            int color = 0xffffffff;
+            if (remainingTimeTicks < 30 * SharedConstants.TICKS_PER_MINUTE)
+                color = 0xffffaf00;
+            if (remainingTimeTicks < 5 * SharedConstants.TICKS_PER_MINUTE)
+                color = 0xffff0000;
+            final MutableComponent remainingTimeLabel = Component.translatable("bingo.remaining_time");
+            graphics.text(font, remainingTimeLabel, scoreX - font.width(remainingTimeLabel), scoreY, color);
+            graphics.text(font, Component.literal(formatedRemainingTime), scoreX, scoreY, color);
+            scoreY += shift;
+        }
 
         if (CONFIG.isShowScoreCounter() && clientGame.renderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
             class TeamValue {
@@ -194,24 +231,15 @@ public class BingoClient {
 
             Arrays.sort(teams, Comparator.comparing(v -> -v.score)); // Sort in reverse
 
-            final Font font = minecraft.font;
-            final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
-            int scoreY;
-            if (CONFIG.getBoardCorner().isOnBottom) {
-                scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
-            } else {
-                scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
-            }
-            final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
             for (final TeamValue teamValue : teams) {
                 if (teamValue.score == 0) break;
                 final PlayerTeam team = clientGame.teams()[teamValue.team.getFirstIndex()];
                 final MutableComponent leftText = getDisplayName(team).copy();
                 final MutableComponent rightText = Component.literal(" - " + teamValue.score);
-                if (team.getColor() != ChatFormatting.RESET) {
-                    leftText.withStyle(team.getColor());
-                    rightText.withStyle(team.getColor());
-                }
+                team.getColor().ifPresent(color -> {
+                    leftText.withColor(color.textColor());
+                    rightText.withColor(color.textColor());
+                });
                 graphics.text(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
                 graphics.text(font, rightText, scoreX, scoreY, 0xffffffff);
                 scoreY += shift;
@@ -289,8 +317,7 @@ public class BingoClient {
                         yield null;
                     }
                     final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
-                    final Integer maybeColor = clientGame.teams()[team.getFirstIndex()].getColor().getColor();
-                    yield maybeColor != null ? maybeColor : 0x55ff55;
+                    yield clientGame.teams()[team.getFirstIndex()].getColor().map(TeamColor::rgb).orElse(0x55ff55);
                 }
             };
             if (color != null) {

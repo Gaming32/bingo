@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.ext;
 
 import io.github.gaming32.bingo.game.BingoGame;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface MinecraftServerExt {
     @Nullable

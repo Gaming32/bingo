@@ -8,7 +8,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -223,7 +222,6 @@ public enum BoardShape implements StringRepresentable {
     }
 
     @Override
-    @NotNull
     public final String getSerializedName() {
         return name;
     }

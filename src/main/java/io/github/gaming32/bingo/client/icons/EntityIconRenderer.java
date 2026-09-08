@@ -15,10 +15,10 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.Map;
@@ -88,6 +88,7 @@ public class EntityIconRenderer implements IconRenderer<EntityIcon> {
                 ValueInput input = TagValueInput.create(collector, level.registryAccess(), icon.data());
                 entity.load(input);
             }
+            entity.setId(1);
         }
         return entity;
     }

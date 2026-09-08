@@ -2,10 +2,9 @@ package io.github.gaming32.bingo.platform.registrar;
 
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
-import net.minecraft.client.renderer.MultiBufferSource;
 
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface PictureInPictureRendererRegistrar {
-    <S extends PictureInPictureRenderState> void register(Class<S> stateClass, Function<MultiBufferSource.BufferSource, PictureInPictureRenderer<S>> factory);
+    <S extends PictureInPictureRenderState> void register(Class<S> stateClass, Supplier<PictureInPictureRenderer<S>> factory);
 }

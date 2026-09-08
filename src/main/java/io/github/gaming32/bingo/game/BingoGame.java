@@ -8,12 +8,13 @@ import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import io.github.gaming32.bingo.ext.ServerPlayerExt;
 import io.github.gaming32.bingo.game.mode.BingoGameMode;
-import io.github.gaming32.bingo.mixin.common.PlayerAdvancementsAccessor;
+import io.github.gaming32.bingo.mixin.PlayerAdvancementsAccessor;
 import io.github.gaming32.bingo.network.VanillaNetworking;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.RemoveBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateEndTimePayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import io.github.gaming32.bingo.triggers.progress.ProgressibleTrigger;
@@ -33,10 +34,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.CriterionProgress;
-import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
@@ -44,18 +44,22 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerAdvancements;
+import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stat;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,23 +84,27 @@ public class BingoGame {
     private final boolean continueAfterWin;
     private final int autoForfeitTicks;
     private final PlayerTeam[] teams;
+    private long scheduledEndTime;
 
+    private final RandomSource random = RandomSource.create();
     private final Map<UUID, Map<ActiveGoal, AdvancementProgress>> advancementProgress = new HashMap<>();
     private final Map<UUID, Map<ActiveGoal, GoalProgress>> goalProgress = new HashMap<>();
     private final Map<UUID, Object2IntOpenHashMap<ActiveGoal>> goalAchievedCount = new HashMap<>();
     private final Map<UUID, List<ActiveGoal>> queuedGoals = new HashMap<>();
     private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
+    private final ServerBossEvent vanillaRemainingTime = new ServerBossEvent(Mth.createInsecureUUID(this.random), Bingo.translatable("bingo.remaining_time"), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS);
     private final OptionalLong[] lastActiveTimes;
     private BingoBoard.Teams remainingTeams;
     private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams nerfedTeams = BingoBoard.Teams.NONE;
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean continueAfterWin, int autoForfeitTicks, PlayerTeam... teams) {
+    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean continueAfterWin, long scheduledEndTime, int autoForfeitTicks, PlayerTeam... teams) {
         this.board = board;
         this.gameMode = gameMode;
         this.requireClient = requireClient;
         this.continueAfterWin = continueAfterWin;
+        this.scheduledEndTime = scheduledEndTime;
         this.autoForfeitTicks = autoForfeitTicks;
         this.teams = teams;
         this.lastActiveTimes = new OptionalLong[teams.length];
@@ -141,7 +149,7 @@ public class BingoGame {
         final BingoBoard.Teams team = getTeam(player);
         new SyncTeamPayload(team).sendTo(player);
 
-        InitBoardPayload.create(this, team, obfuscateTeam(team, player)).sendTo(player);
+        InitBoardPayload.create(this, team, obfuscateTeam(team, player), this.scheduledEndTime).sendTo(player);
         if (!((PlayerAdvancementsAccessor)player.getAdvancements()).getIsFirstPacket()) {
             syncAdvancementsTo(player);
         }
@@ -154,6 +162,10 @@ public class BingoGame {
                     new UpdateProgressPayload(goalIndex, progress.progress(), progress.maxProgress()).sendTo(player);
                 }
             });
+        }
+
+        if (scheduledEndTime > 0 && !Bingo.isInstalledOnClient(player)) {
+            vanillaRemainingTime.addPlayer(player);
         }
     }
 
@@ -170,6 +182,39 @@ public class BingoGame {
 
     public void removePlayer(ServerPlayer player) {
         unregisterListeners(player, true);
+        vanillaRemainingTime.removePlayer(player);
+    }
+
+    public void setScheduledEndTime(MinecraftServer server, long scheduledEndTime) {
+        this.scheduledEndTime = scheduledEndTime;
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            if (Bingo.isInstalledOnClient(player)) {
+                new UpdateEndTimePayload(scheduledEndTime).sendTo(player);
+            } else {
+                vanillaRemainingTime.addPlayer(player);
+            }
+        }
+        updateVanillaRemainingTime(server);
+    }
+
+    public void updateVanillaRemainingTime(MinecraftServer server) {
+        if (vanillaRemainingTime.getPlayers().isEmpty()) {
+            return;
+        }
+        long remainingTimeTicks = scheduledEndTime - server.overworld().getGameTime();
+        String formatedRemainingTime = BingoUtil.formatRemainingTime(remainingTimeTicks);
+        if (remainingTimeTicks <= 0) {
+            vanillaRemainingTime.removeAllPlayers();
+            return;
+        }
+        BossEvent.BossBarColor color = BossEvent.BossBarColor.WHITE;
+        if (remainingTimeTicks < 5 * SharedConstants.TICKS_PER_MINUTE) {
+            color = BossEvent.BossBarColor.RED;
+        } else if (remainingTimeTicks < 30 * SharedConstants.TICKS_PER_MINUTE) {
+            color = BossEvent.BossBarColor.PURPLE;
+        }
+        vanillaRemainingTime.setName(Bingo.translatable("bingo.remaining_time_with_value", formatedRemainingTime));
+        vanillaRemainingTime.setColor(color);
     }
 
     public BingoBoard.Teams[] obfuscateTeam(BingoBoard.Teams playerTeam, Player player) {
@@ -221,8 +266,8 @@ public class BingoGame {
                 message = BingoUtil.mapEither(
                     BingoUtil.getDisplayName(playerTeam, playerList),
                     name -> {
-                        if (playerTeam.getColor() != ChatFormatting.RESET) {
-                            return name.copy().withStyle(playerTeam.getColor());
+                        if (playerTeam.getColor().isPresent()) {
+                            return name.copy().withColor(playerTeam.getColor().get().textColor());
                         }
                         return name;
                     }
@@ -244,6 +289,9 @@ public class BingoGame {
 
         ((MinecraftServerExt) playerList.getServer()).bingo$setGame(null);
         new ResyncStatesPayload(board.getStates()).sendTo(playerList.getPlayers());
+        if (scheduledEndTime > 0) {
+            setScheduledEndTime(playerList.getServer(), 0);
+        }
         Bingo.updateCommandTree(playerList);
     }
 
@@ -273,6 +321,14 @@ public class BingoGame {
                 }
             }
         }
+
+        if (scheduledEndTime > 0 && server.getTickCount() % SharedConstants.TICKS_PER_SECOND == 0) {
+            if (server.overworld().getGameTime() > scheduledEndTime) {
+                endGame(server.getPlayerList());
+            } else {
+                updateVanillaRemainingTime(server);
+            }
+        }
     }
 
     public boolean forfeit(PlayerList playerList, BingoBoard.Teams team) {
@@ -285,8 +341,8 @@ public class BingoGame {
         Component message = BingoUtil.mapEither(
             BingoUtil.getDisplayName(playerTeam, playerList),
             name -> {
-                if (playerTeam.getColor() != ChatFormatting.RESET) {
-                    return name.copy().withStyle(playerTeam.getColor());
+                if (playerTeam.getColor().isPresent()) {
+                    return name.copy().withColor(playerTeam.getColor().get().textColor());
                 }
                 return name;
             }
@@ -326,20 +382,16 @@ public class BingoGame {
         }
     }
 
-    private <T extends CriterionTriggerInstance> CriterionTrigger.Listener<T> createListener(
-        Criterion<T> criterion, String criterionId, ActiveGoal goal
-    ) {
-        return new CriterionTrigger.Listener<>(
-            criterion.triggerInstance(),
-            new AdvancementHolder(BingoBoard.generateVanillaId(board.getIndex(goal)), null),
-            criterionId
-        );
-    }
-
     private <T extends CriterionTriggerInstance> void addListener(
         Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
     ) {
-        criterion.trigger().addPlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
+        ((PlayerAdvancementsAccessor) player.getAdvancements()).callAddListener(
+            criterion,
+            new PlayerAdvancements.TriggerInstanceKey(
+                new AdvancementHolder(BingoBoard.generateVanillaId(board.getIndex(goal)), null),
+                criterionId
+            )
+        );
         if (criterion.trigger() instanceof ProgressibleTrigger<T> progressibleTrigger) {
             progressibleTrigger.addProgressListener(
                 player.getAdvancements(),
@@ -351,7 +403,13 @@ public class BingoGame {
     private <T extends CriterionTriggerInstance> void removeListener(
         Criterion<T> criterion, String criterionId, ServerPlayer player, ActiveGoal goal
     ) {
-        criterion.trigger().removePlayerListener(player.getAdvancements(), createListener(criterion, criterionId, goal));
+        ((PlayerAdvancementsAccessor) player.getAdvancements()).callRemoveListener(
+            criterion.trigger(),
+            new PlayerAdvancements.TriggerInstanceKey(
+                new AdvancementHolder(BingoBoard.generateVanillaId(board.getIndex(goal)), null),
+                criterionId
+            )
+        );
         if (criterion.trigger() instanceof ProgressibleTrigger<T> progressibleTrigger) {
             progressibleTrigger.removeProgressListener(
                 player.getAdvancements(),
@@ -628,8 +686,8 @@ public class BingoGame {
             if (gameMode.isLockout()) {
                 Component teamComponent = BingoUtil.getDisplayName(playerTeam, playerList)
                     .map(Function.identity(), Function.identity());
-                if (playerTeam.getColor() != ChatFormatting.RESET) {
-                    teamComponent = teamComponent.copy().withStyle(playerTeam.getColor());
+                if (playerTeam.getColor().isPresent()) {
+                    teamComponent = teamComponent.copy().withColor(playerTeam.getColor().get().textColor());
                 }
                 final Component lockoutMessage = Bingo.translatable(
                     "bingo.goal_lost.lockout",
@@ -655,7 +713,6 @@ public class BingoGame {
         }
     }
 
-    @NotNull
     public BingoBoard.Teams getTeam(ServerPlayer player) {
         for (int i = 0; i < teams.length; i++) {
             if (player.isAlliedTo(teams[i])) {
@@ -719,25 +776,25 @@ public class BingoGame {
             message = BingoUtil.mapEither(
                 BingoUtil.getDisplayName(playerTeam, playerList),
                 name -> {
-                    if (playerTeam.getColor() != ChatFormatting.RESET) {
-                        return name.copy().withStyle(playerTeam.getColor());
+                    if (playerTeam.getColor().isPresent()) {
+                        return name.copy().withColor(playerTeam.getColor().get().textColor());
                     }
                     return name;
                 }
             ).map(
-                playerName -> Bingo.translatable("bingo.finished.single", playerName, BingoUtil.ordinal(place)),
-                teamName -> Bingo.translatable("bingo.finished", teamName, BingoUtil.ordinal(place))
+                playerName -> Bingo.translatable("bingo.finished.single", playerName, BingoUtil.placement(place)),
+                teamName -> Bingo.translatable("bingo.finished", teamName, BingoUtil.placement(place))
             );
         } else {
             Component teamList = ComponentUtils.wrapInSquareBrackets(ComponentUtils.formatList(newFinishers.stream().mapToObj(teamIndex -> {
                 final PlayerTeam team = getTeam(BingoBoard.Teams.fromOne(teamIndex));
                 final Component name = Either.unwrap(BingoUtil.getDisplayName(team, playerList));
-                if (team.getColor() != ChatFormatting.RESET) {
-                    return name.copy().withStyle(team.getColor());
+                if (team.getColor().isPresent()) {
+                    return name.copy().withColor(team.getColor().get().textColor());
                 }
                 return name;
             }).toList(), Function.identity()));
-            message = Bingo.translatable("bingo.finished.tie", teamList, BingoUtil.ordinal(place));
+            message = Bingo.translatable("bingo.finished.tie", teamList, BingoUtil.placement(place));
         }
 
         if (remainingTeams.count() > 1) {
@@ -776,6 +833,7 @@ public class BingoGame {
         BingoGameMode gameMode,
         boolean requireClient,
         boolean continueAfterWin,
+        long scheduledEndTime,
         int autoForfeitTicks,
         List<String> teamNames,
         Map<UUID, Int2ObjectMap<AdvancementProgress>> advancementProgress,
@@ -805,6 +863,7 @@ public class BingoGame {
                 BingoGameMode.PERSISTENCE_CODEC.fieldOf("game_mode").forGetter(PersistenceData::gameMode),
                 Codec.BOOL.fieldOf("require_client").forGetter(PersistenceData::requireClient),
                 Codec.BOOL.optionalFieldOf("continue_after_win", false).forGetter(PersistenceData::continueAfterWin),
+                ExtraCodecs.NON_NEGATIVE_LONG.optionalFieldOf("scheduled_end_time", 0L).forGetter(PersistenceData::scheduledEndTime),
                 ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("auto_forfeit_ticks", DEFAULT_AUTO_FORFEIT_TICKS).forGetter(PersistenceData::autoForfeitTicks),
                 Codec.STRING.listOf().fieldOf("team_names").forGetter(PersistenceData::teamNames),
                 ADVANCEMENT_PROGRESS_CODEC.fieldOf("advancement_progress").forGetter(PersistenceData::advancementProgress),
@@ -827,7 +886,7 @@ public class BingoGame {
                     throw new IllegalStateException("Team '" + teamNames.get(i) + "' no longer exists");
                 }
             }
-            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, autoForfeitTicks, teams);
+            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, scheduledEndTime, autoForfeitTicks, teams);
 
             for (final var entry : advancementProgress.entrySet()) {
                 final Map<ActiveGoal, AdvancementProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
@@ -897,7 +956,8 @@ public class BingoGame {
             }
 
             return new PersistenceData(
-                game.board, game.gameMode, game.requireClient, game.continueAfterWin, game.autoForfeitTicks,
+                game.board, game.gameMode, game.requireClient, game.continueAfterWin,
+                game.scheduledEndTime, game.autoForfeitTicks,
                 Arrays.stream(game.teams).map(PlayerTeam::getName).toList(),
                 createMap(game, game.advancementProgress),
                 createMap(game, game.goalProgress),

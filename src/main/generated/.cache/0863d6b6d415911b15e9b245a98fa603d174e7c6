@@ -1,0 +1,21 @@
+// 26.2	-999999999-01-01T00:00:00	Bingo/Tags for minecraft:item
+b6112420422099eed7aaae79f801a0250bf8764a data/bingo/tags/item/all_mineral_blocks.json
+b8fb8aac34ee76a18519bf8341cc6965f6fc775f data/bingo/tags/item/banner_patterns.json
+50d93d5dff6f31f99f861c2df7c4e2dc1ec86e4b data/bingo/tags/item/basic_mineral_blocks.json
+bf422a19b538605dd3d307390e56e43387133e1b data/bingo/tags/item/bonemealable.json
+d6a27a1a6be3907d52f7b5ed5ac19ec77b587bd1 data/bingo/tags/item/climbable.json
+59d7bacb31963489e6364a4bd4cf6d3087ed84df data/bingo/tags/item/copper_in_name.json
+a8e3cdd07707862c9287a13bbcb1ad927c21bde8 data/bingo/tags/item/dead_coral_blocks.json
+bc6a562ad0563028ee6e0a6d9884219ee13ff302 data/bingo/tags/item/diamond_in_name.json
+63f8820ed177040a8cc5f9600db796b0fc07cd21 data/bingo/tags/item/fish_buckets.json
+ab36b8c55d7cb885ce44a310ee21a30c119831a7 data/bingo/tags/item/fishing_junk.json
+b1e97af6d210dfc0950aa6a0803a77ea3db00910 data/bingo/tags/item/fishing_treasure.json
+660608e41848ddf303d5b4fc6cc92cabad43d5af data/bingo/tags/item/gold_in_name.json
+1d06a2ee122e3edcd98600fe98e131c26392d4bf data/bingo/tags/item/living_coral_blocks.json
+76ff0180f4ac33ecd2e129331abfc90bb84adad2 data/bingo/tags/item/meat.json
+c536d45217eef60a8f6fc79aad90044c76b856d1 data/bingo/tags/item/nautilus_armor.json
+86894fcb39eb59a6350754e0397f720fe8f95ba6 data/bingo/tags/item/not_meat.json
+4e611a01e99f35396926f995be00fdae0cf7117f data/bingo/tags/item/slabs.json
+2bc0d22f55984d67fd56fbea7e539b50e0bdbfdf data/bingo/tags/item/stairs.json
+bd9b9ad5a273fbcf4fc5f7867a82b488afdb3e06 data/bingo/tags/item/torches.json
+3d04b6a728cd0032981b253212c9037e5d66cc22 data/bingo/tags/item/trim_templates.json

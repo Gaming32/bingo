@@ -14,7 +14,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "distance": {
+              "minecraft:distance": {
                 "absolute": {
                   "max": 16
                 }

@@ -1,14 +1,13 @@
 package io.github.gaming32.bingo.client.icons;
 
 import io.github.gaming32.bingo.data.icons.GoalIcon;
-import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.util.Util;
 import net.minecraft.world.flag.FeatureElement;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.Optional;

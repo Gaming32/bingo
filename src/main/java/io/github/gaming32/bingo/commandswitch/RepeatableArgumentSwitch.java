@@ -4,11 +4,12 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
 import net.minecraft.commands.CommandSourceStack;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.BiFunction;
 
-record RepeatableArgumentSwitch<A, T, C>(
+record RepeatableArgumentSwitch<A, T extends @Nullable Object, C>(
     ArgumentSwitch<A, T> inner,
     BiFunction<CommandContext<CommandSourceStack>, Collection<T>, C> collectionFunction
 ) implements CommandSwitch<C> {

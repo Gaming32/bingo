@@ -3,10 +3,8 @@ package io.github.gaming32.bingo.game.mode;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.game.BingoBoard;
-import org.jetbrains.annotations.NotNull;
 
 public class BlackoutGameMode implements BingoGameMode {
-    @NotNull
     @Override
     public BingoBoard.Teams getWinners(BingoBoard board, int teamCount, BingoBoard.Teams nerfedTeams, boolean tryHarder) {
         BingoBoard.Teams result = BingoBoard.Teams.NONE;

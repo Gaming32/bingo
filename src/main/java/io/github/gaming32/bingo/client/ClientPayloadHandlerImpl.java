@@ -9,6 +9,7 @@ import io.github.gaming32.bingo.network.messages.both.ManualHighlightPayload;
 import io.github.gaming32.bingo.network.messages.s2c.InitBoardPayload;
 import io.github.gaming32.bingo.network.messages.s2c.ResyncStatesPayload;
 import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
+import io.github.gaming32.bingo.network.messages.s2c.UpdateEndTimePayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -48,7 +49,8 @@ public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
             payload.renderMode(),
             new GoalProgress[goalCount],
             Arrays.stream(payload.manualHighlights()).mapToObj(i -> i == 0 ? null : i - 1).toArray(Integer[]::new),
-            new MutableInt(payload.manualHighlightModCount())
+            new MutableInt(payload.manualHighlightModCount()),
+            payload.scheduledEndTime()
         );
     }
 
@@ -87,6 +89,24 @@ public class ClientPayloadHandlerImpl implements ClientPayloadHandler {
             return;
         }
         BingoClient.clientGame.states()[index] = payload.newState();
+    }
+
+    @Override
+    public void handleUpdateEndTime(UpdateEndTimePayload payload) {
+        if (!checkGamePresent(payload)) return;
+        BingoClient.clientGame = new ClientGame(
+            BingoClient.clientGame.shape(),
+            BingoClient.clientGame.size(),
+            BingoClient.clientGame.states(),
+            BingoClient.clientGame.goals(),
+            BingoClient.clientGame.teams(),
+            BingoClient.clientGame.nerfedTeams(),
+            BingoClient.clientGame.renderMode(),
+            BingoClient.clientGame.progress(),
+            BingoClient.clientGame.manualHighlights(),
+            BingoClient.clientGame.manualHighlightModCount(),
+            payload.endTime()
+        );
     }
 
     @Override

@@ -5,7 +5,6 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 @JeiPlugin
 public class BingoJeiPlugin implements IModPlugin {
@@ -23,7 +22,6 @@ public class BingoJeiPlugin implements IModPlugin {
         return instance;
     }
 
-    @NotNull
     @Override
     public Identifier getPluginUid() {
         return Identifiers.bingo("jei_plugin");

@@ -1,11 +1,15 @@
 accessWidener v2 official
 
-accessible class net/minecraft/advancements/criterion/PlayerPredicate$StatMatcher
+accessible class net/minecraft/advancements/predicates/entity/PlayerPredicate$StatMatcher
 accessible field net/minecraft/client/KeyMapping key Lcom/mojang/blaze3d/platform/InputConstants$Key;
 accessible method net/minecraft/client/gui/GuiGraphicsExtractor setTooltipForNextFrameInternal (Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V
 accessible method net/minecraft/commands/arguments/ResourceKeyArgument resolveKey (Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;Lnet/minecraft/resources/ResourceKey;Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;)Lnet/minecraft/core/Holder$Reference;
 accessible method net/minecraft/world/level/storage/loot/parameters/LootContextParamSets register (Ljava/lang/String;Ljava/util/function/Consumer;)Lnet/minecraft/util/context/ContextKeySet;
 accessible field net/minecraft/world/inventory/GrindstoneMenu repairSlots Lnet/minecraft/world/Container;
 accessible method net/minecraft/world/level/storage/LevelResource <init> (Ljava/lang/String;)V
-accessible field net/minecraft/client/Minecraft blockModelResolver Lnet/minecraft/client/renderer/block/BlockModelResolver;
 accessible field net/minecraft/client/gui/GuiGraphicsExtractor guiRenderState Lnet/minecraft/client/renderer/state/gui/GuiRenderState;
+accessible field net/minecraft/client/renderer/blockentity/BlockEntityRenderDispatcher blockModelResolver Lnet/minecraft/client/renderer/block/BlockModelResolver;
+
+# client gametest (TODO: maybe split this out)
+accessible class net/minecraft/client/gui/screens/inventory/MerchantScreen$TradeOfferButton
+accessible field net/minecraft/world/entity/projectile/FishingHook nibble I

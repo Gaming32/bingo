@@ -1,16 +1,15 @@
 package io.github.gaming32.bingo.triggers;
 
-import io.github.gaming32.bingo.platform.BingoPlatform;
 import io.github.gaming32.bingo.platform.registry.DeferredRegister;
 import io.github.gaming32.bingo.platform.registry.RegistryValue;
 import io.github.gaming32.bingo.util.Identifiers;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.DistancePredicate;
-import net.minecraft.advancements.criterion.DistanceTrigger;
-import net.minecraft.advancements.criterion.ItemUsedOnLocationTrigger;
-import net.minecraft.advancements.criterion.PlayerTrigger;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.DistancePredicate;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.CriterionTrigger;
+import net.minecraft.advancements.triggers.DistanceTrigger;
+import net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.triggers.PlayerTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
@@ -19,7 +18,7 @@ import java.util.function.Supplier;
 
 public class BingoTriggers {
     private static final DeferredRegister<CriterionTrigger<?>> REGISTER =
-        BingoPlatform.platform.createDeferredRegister(BuiltInRegistries.TRIGGER_TYPES);
+        DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES);
 
     public static final RegistryValue<AdjacentPaintingTrigger> ADJACENT_PAINTING = register("adjacent_painting", AdjacentPaintingTrigger::new);
     public static final RegistryValue<ArrowPressTrigger> ARROW_PRESS = register("arrow_press", ArrowPressTrigger::new);
@@ -51,6 +50,7 @@ public class BingoTriggers {
     public static final RegistryValue<ItemPickedUpTrigger> ITEM_PICKED_UP = register("item_picked_up", ItemPickedUpTrigger::new);
     public static final RegistryValue<KillItemTrigger> KILL_ITEM = register("kill_item", KillItemTrigger::new);
     public static final RegistryValue<KillSelfTrigger> KILL_SELF = register("kill_self", KillSelfTrigger::new);
+    public static final RegistryValue<LaunchedByGeyserTrigger> LAUNCHED_BY_GEYSER = register("launched_by_geyser", LaunchedByGeyserTrigger::new);
     public static final RegistryValue<LeashedEntityTrigger> LEASHED_ENTITY = register("leash_entity", LeashedEntityTrigger::new);
     public static final RegistryValue<MineralPillarTrigger> MINERAL_PILLAR = register("mineral_pillar", MineralPillarTrigger::new);
     public static final RegistryValue<EntityTrigger> MOB_BROKE_CROSSBOW = register("mob_broke_crossbow", EntityTrigger::new);

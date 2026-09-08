@@ -3,7 +3,6 @@ package io.github.gaming32.bingo.client.config;
 import io.github.gaming32.bingo.client.BingoClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
@@ -69,7 +68,6 @@ public enum BoardCorner {
 
     public abstract float getY(float guiHeight, float scale);
 
-    @NotNull
     public Component getDescription() {
         return Component.translatable("bingo.board_corner." + name().toLowerCase(Locale.ROOT));
     }

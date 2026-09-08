@@ -19,8 +19,7 @@ import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,13 +49,11 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
             .toList();
     }
 
-    @NotNull
     @Override
     public List<SpectatorMenuItem> getItems() {
         return items;
     }
 
-    @NotNull
     @Override
     public Component getPrompt() {
         return CATEGORY_PROMPT;
@@ -67,7 +64,6 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
         menu.selectCategory(this);
     }
 
-    @NotNull
     @Override
     public Component getName() {
         return CATEGORY_NAME;
@@ -137,7 +133,6 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
             BingoClient.clientTeam = teamState;
         }
 
-        @NotNull
         @Override
         public Component getName() {
             return displayName;
@@ -145,8 +140,8 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
 
         @Override
         public void extractIcon(GuiGraphicsExtractor graphics, float brightness, float alpha) {
-            final Integer color = playerTeam.getColor().getColor();
-            if (color != null) {
+            playerTeam.getColor().ifPresent(teamColor -> {
+                int color = teamColor.rgb();
                 final float red = (color >> 16 & 0xff) / 255f;
                 final float green = (color >> 8 & 0xff) / 255f;
                 final float blue = (color & 0xff) / 255f;
@@ -154,7 +149,7 @@ public class TeamSelectionSpectatorCategory implements SpectatorMenuCategory, Sp
                     1, 1, 15, 15,
                     ARGB.colorFromFloat(alpha, red * brightness, green * brightness, blue * brightness)
                 );
-            }
+            });
 
             if (iconSkin != null) {
                 PlayerFaceExtractor.extractRenderState(graphics, iconSkin, 2, 2, 12, ARGB.white(alpha));

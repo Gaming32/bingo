@@ -7,7 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:parrot"
+              "minecraft:entity_type": "minecraft:parrot"
             }
           }
         ],

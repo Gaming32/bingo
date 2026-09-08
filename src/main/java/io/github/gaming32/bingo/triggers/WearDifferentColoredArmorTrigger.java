@@ -6,10 +6,10 @@ import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
@@ -17,7 +17,6 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.component.DyedItemColor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -26,7 +25,6 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
         InventoryChangedCallback.HANDLERS.add((player, inventory) -> BingoTriggers.WEAR_DIFFERENT_COLORED_ARMOR.get().trigger(player, inventory));
     }
 
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;

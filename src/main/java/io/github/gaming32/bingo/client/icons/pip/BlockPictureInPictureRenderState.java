@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record BlockPictureInPictureRenderState(
     BlockModelRenderState modelRenderState,
@@ -29,7 +29,7 @@ public record BlockPictureInPictureRenderState(
         @Nullable ScreenRectangle scissorArea
     ) {
         BlockModelRenderState modelRenderState = new BlockModelRenderState();
-        Minecraft.getInstance().blockModelResolver.update(modelRenderState, block, BlockDisplayContext.create());
+        Minecraft.getInstance().getBlockEntityRenderDispatcher().blockModelResolver.update(modelRenderState, block, BlockDisplayContext.create());
         return new BlockPictureInPictureRenderState(modelRenderState, block, x0, x1, y0, y1, scale, scissorArea, PictureInPictureRenderState.getBounds(x0, y0, x1, y1, scissorArea));
     }
 }

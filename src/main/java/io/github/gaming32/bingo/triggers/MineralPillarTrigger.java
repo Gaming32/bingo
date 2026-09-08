@@ -3,10 +3,10 @@ package io.github.gaming32.bingo.triggers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.data.tags.bingo.BingoBlockTags;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.criterion.ContextAwarePredicate;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
+import net.minecraft.advancements.predicates.ContextAwarePredicate;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,14 +17,12 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTrigger.TriggerInstance> {
-    @NotNull
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -104,7 +102,7 @@ public class MineralPillarTrigger extends SimpleCriterionTrigger<MineralPillarTr
         private BlockState getState(BlockGetter level, BlockPos pos) {
             final BlockState result = level.getBlockState(pos);
             if (result.is(BingoBlockTags.COPPER_BLOCKS)) {
-                return Blocks.COPPER_BLOCK.defaultBlockState();
+                return Blocks.COPPER_BLOCK.weathering().unaffected().defaultBlockState();
             }
             return result;
         }

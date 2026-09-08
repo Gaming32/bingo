@@ -7,7 +7,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "minecraft:enderman"
+              "minecraft:entity_type": "minecraft:enderman"
             }
           },
           {
@@ -17,7 +17,7 @@
         ],
         "killing_blow": {
           "source_entity": {
-            "type": "minecraft:endermite"
+            "minecraft:entity_type": "minecraft:endermite"
           }
         }
       },

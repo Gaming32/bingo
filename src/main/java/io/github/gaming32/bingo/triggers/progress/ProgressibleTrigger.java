@@ -1,7 +1,7 @@
 package io.github.gaming32.bingo.triggers.progress;
 
-import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.server.PlayerAdvancements;
 
 public interface ProgressibleTrigger<T extends CriterionTriggerInstance> extends CriterionTrigger<T> {

@@ -1,19 +1,17 @@
 package io.github.gaming32.bingo.network.messages.configuration;
 
 import io.github.gaming32.bingo.network.AbstractCustomPayload;
-import io.github.gaming32.bingo.network.BingoNetworking;
+import io.github.gaming32.bingo.platform.BingoNetworking;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import org.jetbrains.annotations.NotNull;
 
 public record ProtocolVersionPayload(int protocolVersion) implements CustomPacketPayload {
     public static final Type<ProtocolVersionPayload> TYPE = AbstractCustomPayload.type("version");
     public static final StreamCodec<ByteBuf, ProtocolVersionPayload> CODEC = ByteBufCodecs.VAR_INT.map(ProtocolVersionPayload::new, ProtocolVersionPayload::protocolVersion);
 
-    @NotNull
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
@@ -24,7 +22,7 @@ public record ProtocolVersionPayload(int protocolVersion) implements CustomPacke
     }
 
     public void handleServerbound(BingoNetworking.Context context) {
-        BingoNetworking.instance().finishTask(context, ProtocolVersionConfigurationTask.TYPE);
+        BingoNetworking.finishTask(context, ProtocolVersionConfigurationTask.TYPE);
 
         if (protocolVersion != BingoNetworking.PROTOCOL_VERSION) {
             if (protocolVersion < BingoNetworking.PROTOCOL_VERSION) {

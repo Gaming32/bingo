@@ -36,11 +36,11 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.ColorArgument;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.commands.arguments.TeamArgument;
+import net.minecraft.commands.arguments.TeamColorArgument;
 import net.minecraft.commands.arguments.TimeArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -48,8 +48,8 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerPlayer;
@@ -65,9 +65,9 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.TeamColor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.function.TriFunction;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,10 +75,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-import static net.minecraft.commands.Commands.argument;
-import static net.minecraft.commands.Commands.literal;
+import static net.minecraft.commands.Commands.*;
 
 public class BingoCommand {
     private static final SimpleCommandExceptionType NO_GAME_RUNNING =
@@ -149,6 +149,10 @@ public class BingoCommand {
     private static final CommandSwitch<Long> SEED = CommandSwitch
         .argument("--seed", LongArgumentType.longArg())
         .build(RandomSupport::generateUniqueSeed);
+    private static final CommandSwitch<Integer> TIME_LIMIT = CommandSwitch
+        .argument("--time-limit", TimeArgument.time(-1))
+        .getter(IntegerArgumentType::getInteger)
+        .build(-1);
     private static final CommandSwitch<Integer> AUTO_FORFEIT_TIME = CommandSwitch
         .argument("--auto-forfeit-time", TimeArgument.time(0))
         .getter(IntegerArgumentType::getInteger)
@@ -258,7 +262,6 @@ public class BingoCommand {
                             return menu;
                         }
 
-                        @NotNull
                         @Override
                         public Component getDisplayName() {
                             return Bingo.translatable("bingo.board.title");
@@ -329,19 +332,19 @@ public class BingoCommand {
             .then(literal("teams")
                 .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
                 .then(literal("create")
-                    .then(argument("color", ColorArgument.color())
+                    .then(argument("color", TeamColorArgument.teamColor())
                         .suggests((context, builder) -> {
                             final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
                             return SharedSuggestionProvider.suggest(
-                                ChatFormatting.getNames(true, false)
-                                    .stream()
+                                Arrays.stream(TeamColor.values())
+                                    .map(TeamColor::getSerializedName)
                                     .filter(n -> scoreboard.getPlayerTeam(n) == null),
                                 builder
                             );
                         })
                         .executes(context -> {
-                            final ChatFormatting color = ColorArgument.getColor(context, "color");
-                            final String name = color.getName();
+                            final TeamColor color = TeamColorArgument.getTeamColor(context, "color");
+                            final String name = color.getSerializedName();
 
                             final ServerScoreboard scoreboard = context.getSource().getServer().getScoreboard();
                             final PlayerTeam existing = scoreboard.getPlayerTeam(name);
@@ -350,7 +353,7 @@ public class BingoCommand {
                             }
 
                             final PlayerTeam team = scoreboard.addPlayerTeam(name);
-                            team.setColor(color);
+                            team.setColor(Optional.of(color));
                             team.setDisplayName(Bingo.translatable("bingo.formatting." + name));
 
                             context.getSource().sendSuccess(
@@ -382,6 +385,23 @@ public class BingoCommand {
                                 IntegerArgumentType.getInteger(context, "groups")
                             ))
                         )
+                    )
+                )
+            )
+            .then(literal("time-limit")
+                .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
+                .then(literal("set")
+                    .then(argument("time-limit", TimeArgument.time(-1))
+                        .executes(ctx -> {
+                            final var game = ((MinecraftServerExt) ctx.getSource().getServer()).bingo$getGame();
+                            if (game == null) {
+                                throw NO_GAME_RUNNING.create();
+                            }
+                            int timeLimit = IntegerArgumentType.getInteger(ctx, "time-limit");
+                            final long scheduledEndTime = timeLimit > 0 ? ctx.getSource().getServer().overworld().getGameTime() + timeLimit : 0;
+                            game.setScheduledEndTime(ctx.getSource().getServer(), scheduledEndTime);
+                            return 1;
+                        })
                     )
                 )
             )
@@ -425,6 +445,7 @@ public class BingoCommand {
             SHAPE.addTo(startCommand);
             SIZE.addTo(startCommand);
             SEED.addTo(startCommand);
+            TIME_LIMIT.addTo(startCommand);
             AUTO_FORFEIT_TIME.addTo(startCommand);
             DIFFICULTY.addTo(startCommand);
             GAMEMODE.addTo(startCommand);
@@ -468,6 +489,7 @@ public class BingoCommand {
         final boolean requireClient = REQUIRE_CLIENT.get(context);
         final boolean continueAfterWin = CONTINUE_AFTER_WIN.get(context);
         final boolean includeInactiveTeams = INCLUDE_INACTIVE_TEAMS.get(context);
+        final int timeLimit  = TIME_LIMIT.get(context);
         final int autoForfeitTicks = AUTO_FORFEIT_TIME.get(context);
 
         final Set<PlayerTeam> teams = LinkedHashSet.newLinkedHashSet(teamCount);
@@ -500,7 +522,7 @@ public class BingoCommand {
             board = BingoBoard.generate(
                 shape,
                 size,
-                difficulty.value().number(),
+                difficulty.value(),
                 teams.size(),
                 RandomSource.create(seed),
                 gamemode::isGoalAllowed,
@@ -518,7 +540,8 @@ public class BingoCommand {
         }
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
-        final var game = new BingoGame(board, gamemode, requireClient, continueAfterWin, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
+        final long scheduledEndTime = timeLimit > 0 ? context.getSource().getServer().overworld().getGameTime() + timeLimit : 0;
+        final var game = new BingoGame(board, gamemode, requireClient, continueAfterWin, scheduledEndTime, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
             if (Bingo.CONFIG.getNerfedPlayers().contains(player.getUUID())) {

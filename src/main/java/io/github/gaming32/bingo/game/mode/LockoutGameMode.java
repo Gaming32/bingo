@@ -7,9 +7,8 @@ import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
-import net.minecraft.ChatFormatting;
 import net.minecraft.world.scores.PlayerTeam;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.scores.TeamColor;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,12 +29,12 @@ public class LockoutGameMode implements BingoGameMode {
             return TOO_FEW_TEAMS.create();
         }
 
-        final Set<ChatFormatting> uniqueColors = EnumSet.noneOf(ChatFormatting.class);
+        final Set<TeamColor> uniqueColors = EnumSet.noneOf(TeamColor.class);
         for (final PlayerTeam team : config.teams()) {
-            if (team.getColor().getColor() == null) {
+            if (team.getColor().isEmpty()) {
                 return TEAM_MISSING_COLOR.create();
             }
-            uniqueColors.add(team.getColor());
+            uniqueColors.add(team.getColor().get());
         }
         if (uniqueColors.size() < config.teams().size()) {
             return DUPLICATE_TEAM_COLOR.create();
@@ -44,7 +43,6 @@ public class LockoutGameMode implements BingoGameMode {
         return null;
     }
 
-    @NotNull
     @Override
     public BingoBoard.Teams getWinners(BingoBoard board, int teamCount, BingoBoard.Teams nerfedTeams, boolean tryHarder) {
         class TeamValue {

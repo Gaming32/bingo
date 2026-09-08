@@ -1,9 +1,9 @@
 package io.github.gaming32.bingo.subpredicates;
 
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.criterion.EntitySubPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.predicates.entity.EntitySubPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
@@ -15,9 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.painting.Painting;
 import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -27,7 +25,7 @@ public record PaintingPredicate(
     MinMaxBounds.Ints area,
     Optional<HolderSet<PaintingVariant>> variant
 ) implements EntitySubPredicate {
-    public static final MapCodec<PaintingPredicate> CODEC = RecordCodecBuilder.mapCodec(
+    public static final Codec<PaintingPredicate> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             MinMaxBounds.Ints.CODEC.optionalFieldOf("width", MinMaxBounds.Ints.ANY).forGetter(PaintingPredicate::width),
             MinMaxBounds.Ints.CODEC.optionalFieldOf("height", MinMaxBounds.Ints.ANY).forGetter(PaintingPredicate::height),
@@ -38,14 +36,8 @@ public record PaintingPredicate(
         ).apply(instance, PaintingPredicate::new)
     );
 
-    @NotNull
     @Override
-    public MapCodec<? extends EntitySubPredicate> codec() {
-        return CODEC;
-    }
-
-    @Override
-    public boolean matches(@NonNull Entity entity, @NonNull ServerLevel level, @Nullable Vec3 position) {
+    public boolean matches(Entity entity, ServerLevel level, @Nullable Vec3 position) {
         if (!(entity instanceof Painting painting)) {
             return false;
         }
