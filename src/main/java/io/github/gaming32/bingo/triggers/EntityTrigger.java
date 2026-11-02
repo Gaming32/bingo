@@ -2,15 +2,16 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -26,13 +27,13 @@ public class EntityTrigger extends SimpleCriterionTrigger<EntityTrigger.TriggerI
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> entity
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> entity
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("entity").forGetter(TriggerInstance::entity)
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("entity").forGetter(TriggerInstance::entity)
             ).apply(instance, TriggerInstance::new)
         );
 
@@ -47,13 +48,13 @@ public class EntityTrigger extends SimpleCriterionTrigger<EntityTrigger.TriggerI
         }
 
         public boolean matches(LootContext mob) {
-            return this.entity.isEmpty() || this.entity.get().matches(mob);
+            return this.entity.isEmpty() || this.entity.get().value().test(mob);
         }
 
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "entity", entity);
+            Validatable.validateHolder(validator.entityContext(), "entity", entity);
         }
     }
 }

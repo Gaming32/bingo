@@ -4,13 +4,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import com.mojang.logging.LogUtils;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.EmptyTagLookupWrapper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
@@ -28,7 +32,10 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.predicates.AllOfCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,23 +52,26 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public final class BingoDataGenUtil {
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final Map<EntityType<?>, Class<? extends Entity>> ENTITY_TYPE_TO_CLASS = createEntityTypeToClassMap();
     private static final Map<Item, List<Identifier>> RECIPES_BY_ITEM = createRecipesByItemMap();
 
     private BingoDataGenUtil() {
     }
 
-    public static <T> HolderSet.Direct<T> loadVanillaTag(TagKey<T> tag, HolderLookup.Provider registries) {
-        return HolderSet.direct(loadVanillaTagInternal(tag, registries));
+    public static <T> HolderSet.Direct<T> loadVanillaTag(TagKey<T> tag, DatagenRegistryLookup context) {
+        return HolderSet.direct(loadVanillaTagInternal(tag, context));
     }
 
-    private static <T> List<Holder<T>> loadVanillaTagInternal(TagKey<T> tag, HolderLookup.Provider registries) {
-        final var registry = registries.lookupOrThrow(tag.registry());
+    private static <T> List<Holder<T>> loadVanillaTagInternal(TagKey<T> tag, DatagenRegistryLookup context) {
+        final var registry = context.lookup(tag.registry());
         final IoSupplier<InputStream> resource = Minecraft.getInstance()
             .getVanillaPackResources()
+            .fullResources()
             .getResource(
                 PackType.SERVER_DATA, tag.location().withPath(
                     Registries.tagsDirPath(tag.registry()) + '/' + tag.location().getPath() + ".json"
@@ -77,8 +87,8 @@ public final class BingoDataGenUtil {
             throw new UncheckedIOException(e);
         }
 
-        final TagFile file = TagFile.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json)
-            .getOrThrow(JsonParseException::new);
+        RegistryOps<JsonElement> ops = createRegistryOps(JsonOps.INSTANCE, context);
+        final TagFile file = TagFile.CODEC.parse(ops, json).getOrThrow(JsonParseException::new);
         final var lookup = new TagEntry.Lookup<Holder<T>>() {
             @Nullable
             @Override
@@ -86,10 +96,9 @@ public final class BingoDataGenUtil {
                 return registry.get(ResourceKey.create(tag.registry(), elementLocation)).orElse(null);
             }
 
-            @Nullable
             @Override
             public Collection<Holder<T>> tag(Identifier tagLocation) {
-                return loadVanillaTagInternal(TagKey.create(tag.registry(), tagLocation), registries);
+                return loadVanillaTagInternal(TagKey.create(tag.registry(), tagLocation), context);
             }
         };
         return file.entries()
@@ -99,9 +108,10 @@ public final class BingoDataGenUtil {
             .toList();
     }
 
-    public static LootTable loadVanillaLootTable(ResourceKey<LootTable> lootTable, HolderLookup.Provider registries) {
+    public static LootTable loadVanillaLootTable(ResourceKey<LootTable> lootTable, DatagenRegistryLookup context) {
         final IoSupplier<InputStream> resource = Minecraft.getInstance()
             .getVanillaPackResources()
+            .fullResources()
             .getResource(
                 PackType.SERVER_DATA, lootTable.identifier().withPath(path -> "loot_table/" + path + ".json")
             );
@@ -116,7 +126,7 @@ public final class BingoDataGenUtil {
             throw new UncheckedIOException(e);
         }
 
-        final DynamicOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registries);
+        final DynamicOps<JsonElement> ops = createRegistryOps(JsonOps.INSTANCE, context);
         return LootTable.DIRECT_CODEC.parse(ops, json).getOrThrow(JsonParseException::new);
     }
 
@@ -165,9 +175,9 @@ public final class BingoDataGenUtil {
         Map<Item, List<Identifier>> recipesByItem = new HashMap<>();
 
         VanillaPackResources packResources = Minecraft.getInstance().getVanillaPackResources();
-        Set<String> namespaces = packResources.getNamespaces(PackType.SERVER_DATA);
+        Set<String> namespaces = packResources.fullResources().getNamespaces(PackType.SERVER_DATA);
         for (String namespace : namespaces) {
-            packResources.listResources(PackType.SERVER_DATA, namespace, "recipe", (recipeId, resource) -> {
+            packResources.fullResources().listResources(PackType.SERVER_DATA, namespace, "recipe", (recipeId, resource) -> {
                 final JsonElement json;
                 try (Reader input = new InputStreamReader(resource.get())) {
                     json = JsonParser.parseReader(input);
@@ -209,5 +219,90 @@ public final class BingoDataGenUtil {
 
     public static List<Identifier> getRecipesForItem(Item item) {
         return RECIPES_BY_ITEM.getOrDefault(item, List.of());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> List<ResourceKey<T>> getResourceKeysFromClass(Class<?> containingClass, ResourceKey<? extends Registry<? extends T>> registryKey) {
+        List<ResourceKey<T>> result = new ArrayList<>();
+
+        for (Field field : containingClass.getFields()) {
+            if (!Modifier.isPublic(field.getModifiers()) || !Modifier.isStatic(field.getModifiers()) || !Modifier.isFinal(field.getModifiers())) {
+                continue;
+            }
+            if (field.getType() != ResourceKey.class) {
+                continue;
+            }
+            ResourceKey<?> resourceKey;
+            try {
+                resourceKey = (ResourceKey<?>) field.get(null);
+            } catch (ReflectiveOperationException e) {
+                LOGGER.error("Error getting field '{}'", field.getName(), e);
+                continue;
+            }
+            if (!resourceKey.isFor(registryKey)) {
+                continue;
+            }
+            result.add((ResourceKey<T>) resourceKey);
+        }
+
+        return result;
+    }
+
+    public static <T> Holder.Reference<T> fakeElement(HolderGetter<T> registry, ResourceKey<T> recipeKey) {
+        return Holder.Reference.createStandAlone(
+            registry instanceof EmptyTagLookupWrapper<T>(var parent) ? parent : registry,
+            recipeKey
+        );
+    }
+
+    public static <T> HolderGetter<T> fakeLookup(ResourceKey<? extends Registry<? extends T>> registryKey) {
+        record FakeLookup<T>(ResourceKey<? extends Registry<? extends T>> registryKey) implements HolderGetter<T> {
+            @Override
+            public Optional<Holder.Reference<T>> get(ResourceKey<T> id) {
+                throw new UnsupportedOperationException("Cannot get element out of fake lookup");
+            }
+
+            @Override
+            public Optional<HolderSet.Named<T>> get(TagKey<T> id) {
+                throw new UnsupportedOperationException("Cannot get tag out of fake lookup");
+            }
+
+            @Override
+            public boolean canSerialize(HolderOwner<T> owner) {
+                return equals(owner);
+            }
+        }
+        return new FakeLookup<>(registryKey);
+    }
+
+    public static Holder<LootItemCondition> allOf(LootItemCondition.Builder... conditions) {
+        return Holder.direct(AllOfCondition.allOf(conditions).build());
+    }
+
+    public static Holder<LootItemCondition> allOf(LootItemCondition... conditions) {
+        return Holder.direct(AllOfCondition.allOf(HolderSet.direct(Holder::direct, conditions)));
+    }
+
+    @SafeVarargs
+    public static Holder<LootItemCondition> allOf(Holder<LootItemCondition>... conditions) {
+        return Holder.direct(AllOfCondition.allOf(HolderSet.direct(conditions)));
+    }
+
+    public static <T> RegistryOps<T> createRegistryOps(DynamicOps<T> parent, DatagenRegistryLookup context) {
+        return RegistryOps.create(parent, new RegistryOps.RegistryInfoLookup() {
+            @Override
+            public <R> Optional<HolderGetter<R>> lookup(ResourceKey<? extends Registry<? extends R>> registryKey) {
+                try {
+                    return Optional.of(context.lookup(registryKey));
+                } catch (Exception _) {
+                    return Optional.of(fakeLookup(registryKey));
+                }
+            }
+        });
+    }
+
+    @FunctionalInterface
+    public interface DatagenRegistryLookup {
+        <T> HolderGetter<T> lookup(ResourceKey<? extends Registry<? extends T>> registryKey);
     }
 }

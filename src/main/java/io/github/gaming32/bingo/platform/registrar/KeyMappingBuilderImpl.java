@@ -23,7 +23,7 @@ public abstract class KeyMappingBuilderImpl implements KeyMappingBuilder {
 
     private void reset() {
         name = null;
-        keyType = InputConstants.Type.KEYSYM;
+        keyType = InputConstants.Type.KEYBOARD;
         keyCode = -1;
         category = null;
         conflictContext = ConflictContext.UNIVERSAL;

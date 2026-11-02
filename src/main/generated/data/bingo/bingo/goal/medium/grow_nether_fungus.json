@@ -6,7 +6,7 @@
         "tags": [
           {
             "expected": true,
-            "id": "bingo:huge_fungi"
+            "id": "#bingo:huge_fungi"
           }
         ]
       },

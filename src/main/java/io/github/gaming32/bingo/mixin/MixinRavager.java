@@ -22,7 +22,7 @@ public class MixinRavager {
             opcode = Opcodes.PUTFIELD
         )
     )
-    private void stunnedRavager(LivingEntity defender, DamageSource source, float damage, CallbackInfo ci) {
+    private void stunnedRavager(LivingEntity defender, DamageSource source, float damage, boolean fullyBlocked, CallbackInfo ci) {
         if (defender instanceof ServerPlayer player) {
             BingoTriggers.STUN_RAVAGER.get().trigger(player, (Entity)(Object)this);
         }

@@ -12,6 +12,7 @@ import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
 import io.github.gaming32.bingo.platform.registrar.PictureInPictureRendererRegistrar;
 import io.github.gaming32.bingo.util.Identifiers;
+import io.github.gaming32.bingo.util.KeyMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -28,12 +29,16 @@ import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerLoginNetworking;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.api.resource.v1.DataResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.DataResourceStore;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -41,22 +46,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ConfigurationTask;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.level.Level;
 
-import java.lang.ref.WeakReference;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class BingoPlatform {
     public static final Identifier PROTOCOL_VERSION_PACKET = Identifiers.bingo("protocol_version");
+    private static final DataResourceStore.Key<KeyMap> BINGO_DATA_STORE_KEY = new DataResourceStore.Key<>();
 
     private BingoPlatform() {
     }
@@ -113,23 +118,23 @@ public final class BingoPlatform {
 
     public static void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
         final var helper = ResourceLoader.get(PackType.SERVER_DATA);
-        handler.accept((id, listener, dependencies) -> {
-            helper.registerReloadListener(id, new PreparableReloadListener() {
-                private WeakReference<HolderLookup.Provider> currentLookup;
-                private PreparableReloadListener delegate;
-
-                @Override
-                public CompletableFuture<Void> reload(SharedState sharedState, Executor executor, PreparationBarrier preparationBarrier, Executor executor2) {
-                    HolderLookup.Provider lookup = sharedState.get(ResourceLoader.REGISTRY_LOOKUP_KEY);
-                    if (currentLookup == null || lookup != currentLookup.get()) {
-                        currentLookup = new WeakReference<>(lookup);
-                        delegate = listener.apply(lookup);
-                    }
-
-                    return delegate.reload(sharedState, executor, preparationBarrier, executor2);
-                }
+        handler.accept((id, listener) -> {
+            helper.registerReloadListener(id, (sharedState, taskExecutor, preparationBarrier, reloadExecutor) -> {
+                HolderLookup.Provider registries = sharedState.get(ResourceLoader.REGISTRY_LOOKUP_KEY);
+                DataResourceStore.Mutable resourceStore = sharedState.get(DataResourceLoader.DATA_RESOURCE_STORE_KEY);
+                return CompletableFuture.supplyAsync(() -> {
+                        KeyMap dataStore = new KeyMap();
+                        listener.run(registries, dataStore);
+                        return dataStore;
+                    }, taskExecutor)
+                    .thenCompose(preparationBarrier::wait)
+                    .thenAcceptAsync(dataStore -> resourceStore.put(BINGO_DATA_STORE_KEY, dataStore), reloadExecutor);
             });
         });
+    }
+
+    public static KeyMap getDataStore(MinecraftServer server) {
+        return server.getOrThrow(BINGO_DATA_STORE_KEY);
     }
 
     public static void registerDatapackRegistries(Consumer<DatapackRegistryRegistrar> handler) {
@@ -143,7 +148,16 @@ public final class BingoPlatform {
             public <T> void synced(ResourceKey<Registry<T>> registryKey, Codec<T> codec, Codec<T> networkCodec) {
                 DynamicRegistries.registerSynced(registryKey, codec, networkCodec);
             }
+
+            @Override
+            public <T> void reloadable(ResourceKey<Registry<T>> registryKey, Codec<T> codec) {
+                DynamicRegistries.registerReloadable(registryKey, codec);
+            }
         });
+    }
+
+    public static boolean isFlammable(Level level, BlockPos pos) {
+        return FlammableBlockRegistry.getDefaultInstance().get(level.getBlockState(pos).getBlock()).getIgniteOdds() > 0;
     }
 
     public static void registerEvents() {

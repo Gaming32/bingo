@@ -23,12 +23,12 @@ public record DistanceFromSpawnCondition(Optional<DistancePredicate> distance) i
 
     @Override
     public boolean test(LootContext lootContext) {
-        final Vec3 origin = lootContext.getParameter(LootContextParams.ORIGIN);
+        final Vec3 origin = lootContext.getOptional(LootContextParams.ORIGIN);
         final Vec3 spawnVec = Vec3.atCenterOf(lootContext.getLevel().getRespawnData().pos());
-        return distance.isEmpty() || distance.get().matches(
+        return distance.isEmpty() || (origin != null && distance.get().matches(
             origin.x, origin.y, origin.z,
             spawnVec.x, spawnVec.y, spawnVec.z
-        );
+        ));
     }
 
     @Override

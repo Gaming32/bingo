@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.context.ContextKey;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -28,7 +29,11 @@ public record ToolIsEnchantedCondition(boolean nonCurse) implements LootItemCond
 
     @Override
     public boolean test(LootContext lootContext) {
-        ItemStack tool = BingoUtil.toItemStack(lootContext.getParameter(LootContextParams.TOOL));
+        ItemInstance toolInstance = lootContext.getOptional(LootContextParams.TOOL);
+        if (toolInstance == null) {
+            return false;
+        }
+        ItemStack tool = BingoUtil.toItemStack(toolInstance);
         if (!tool.isEnchanted()) {
             return false;
         }

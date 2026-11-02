@@ -8,7 +8,7 @@
         "tags": [
           {
             "expected": true,
-            "id": "bingo:trees"
+            "id": "#bingo:trees"
           }
         ]
       },

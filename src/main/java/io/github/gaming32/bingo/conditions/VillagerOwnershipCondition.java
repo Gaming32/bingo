@@ -13,6 +13,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 import java.util.Set;
@@ -32,9 +33,13 @@ public record VillagerOwnershipCondition(PoiManager.Occupancy occupancy, Optiona
 
     @Override
     public boolean test(LootContext lootContext) {
+        Vec3 origin = lootContext.getOptional(LootContextParams.ORIGIN);
+        if (origin == null) {
+            return false;
+        }
         return lootContext.getLevel().getPoiManager().getInChunk(
             type -> tag.isEmpty() || tag.get().matches(type),
-            ChunkPos.containing(BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN))),
+            ChunkPos.containing(BlockPos.containing(origin)),
             occupancy
         ).anyMatch(r -> true);
     }

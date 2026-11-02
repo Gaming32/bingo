@@ -39,10 +39,17 @@
     "minecraft:dark_oak_leaf_litter",
     "minecraft:birch_leaf_litter",
     "minecraft:fancy_oak_leaf_litter",
+    "minecraft:red_poplar",
+    "minecraft:orange_poplar",
+    "minecraft:yellow_poplar",
+    "minecraft:red_poplar_leaf_litter",
+    "minecraft:orange_poplar_leaf_litter",
+    "minecraft:yellow_poplar_leaf_litter",
     "minecraft:fallen_oak_tree",
     "minecraft:fallen_jungle_tree",
     "minecraft:fallen_spruce_tree",
     "minecraft:fallen_birch_tree",
-    "minecraft:fallen_super_birch_tree"
+    "minecraft:fallen_super_birch_tree",
+    "minecraft:fallen_poplar_tree"
   ]
 }

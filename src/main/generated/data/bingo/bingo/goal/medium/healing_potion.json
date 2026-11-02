@@ -7,7 +7,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:healing"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:healing"
+              }
             }
           }
         ]
@@ -20,7 +22,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:strong_healing"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:strong_healing"
+              }
             }
           }
         ]

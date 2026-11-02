@@ -2,54 +2,57 @@
   "criteria": {
     "build": {
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:any_of",
-            "terms": [
-              {
-                "block": "minecraft:glass",
-                "condition": "minecraft:block_state_property"
-              },
-              {
-                "block": "minecraft:lava",
-                "condition": "minecraft:block_state_property"
-              }
-            ]
-          },
-          {
-            "aisles": [
-              [
-                "###",
-                "###",
-                "###"
-              ],
-              [
-                "###",
-                "#+#",
-                "###"
-              ],
-              [
-                "###",
-                "###",
-                "###"
-              ]
-            ],
-            "condition": "bingo:block_pattern",
-            "rotations": "none",
-            "where": {
-              "#": {
-                "block": {
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:any_of",
+              "terms": [
+                {
+                  "type": "minecraft:match_block",
                   "blocks": "minecraft:glass"
-                }
-              },
-              "+": {
-                "block": {
+                },
+                {
+                  "type": "minecraft:match_block",
                   "blocks": "minecraft:lava"
+                }
+              ]
+            },
+            {
+              "type": "bingo:block_pattern",
+              "aisles": [
+                [
+                  "###",
+                  "###",
+                  "###"
+                ],
+                [
+                  "###",
+                  "#+#",
+                  "###"
+                ],
+                [
+                  "###",
+                  "###",
+                  "###"
+                ]
+              ],
+              "rotations": "none",
+              "where": {
+                "#": {
+                  "block": {
+                    "blocks": "minecraft:glass"
+                  }
+                },
+                "+": {
+                  "block": {
+                    "blocks": "minecraft:lava"
+                  }
                 }
               }
             }
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:placed_block"
     }

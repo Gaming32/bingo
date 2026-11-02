@@ -5,7 +5,7 @@
         "tags": [
           {
             "expected": true,
-            "id": "bingo:huge_mushrooms"
+            "id": "#bingo:huge_mushrooms"
           }
         ]
       },
@@ -15,17 +15,7 @@
   "difficulty": "bingo:easy",
   "icon": {
     "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:red_mushroom_block",
-      "Properties": {
-        "down": "true",
-        "east": "true",
-        "north": "true",
-        "south": "true",
-        "up": "true",
-        "west": "true"
-      }
-    },
+    "block": "minecraft:red_mushroom_block",
     "item": {
       "count": 1,
       "id": "minecraft:red_mushroom_block"

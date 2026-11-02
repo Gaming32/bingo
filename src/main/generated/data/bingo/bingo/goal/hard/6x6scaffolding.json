@@ -2,33 +2,36 @@
   "criteria": {
     "obtain": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:scaffolding",
-            "condition": "minecraft:block_state_property"
-          },
-          {
-            "aisles": [
-              [
-                "########",
-                "#      #",
-                "#      #",
-                "#      #",
-                "#      #",
-                "#      #",
-                "#      #"
-              ]
-            ],
-            "condition": "bingo:block_pattern",
-            "where": {
-              "#": {
-                "block": {
-                  "blocks": "minecraft:scaffolding"
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:match_block",
+              "blocks": "minecraft:scaffolding"
+            },
+            {
+              "type": "bingo:block_pattern",
+              "aisles": [
+                [
+                  "########",
+                  "#      #",
+                  "#      #",
+                  "#      #",
+                  "#      #",
+                  "#      #",
+                  "#      #"
+                ]
+              ],
+              "where": {
+                "#": {
+                  "block": {
+                    "blocks": "minecraft:scaffolding"
+                  }
                 }
               }
             }
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:placed_block"
     }

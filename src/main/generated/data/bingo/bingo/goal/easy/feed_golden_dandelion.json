@@ -2,18 +2,16 @@
   "criteria": {
     "feed": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "#bingo:can_be_age_locked",
-              "minecraft:flags": {
-                "is_baby": true
-              }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "#bingo:can_be_age_locked",
+            "minecraft:flags": {
+              "is_baby": true
             }
           }
-        ],
+        },
         "item": {
           "items": "minecraft:golden_dandelion"
         }

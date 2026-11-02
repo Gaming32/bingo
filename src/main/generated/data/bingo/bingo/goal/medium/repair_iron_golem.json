@@ -2,15 +2,13 @@
   "criteria": {
     "repair": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:iron_golem"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:iron_golem"
           }
-        ],
+        },
         "item": {
           "items": "minecraft:iron_ingot"
         }

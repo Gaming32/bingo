@@ -2,20 +2,18 @@
   "criteria": {
     "spawner": {
       "conditions": {
-        "player": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:stepping_on": {
-                "block": {
-                  "blocks": "minecraft:spawner",
-                  "nbt": "{SpawnData:{entity:{id:\"minecraft:blaze\"}}}"
-                }
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:stepping_on": {
+              "block": {
+                "blocks": "minecraft:spawner",
+                "nbt": "{SpawnData:{entity:{id:\"minecraft:blaze\"}}}"
               }
             }
           }
-        ]
+        }
       },
       "trigger": "minecraft:location"
     }
@@ -23,9 +21,7 @@
   "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:spawner"
-    },
+    "block": "minecraft:spawner",
     "item": {
       "count": 1,
       "id": "minecraft:spawner"

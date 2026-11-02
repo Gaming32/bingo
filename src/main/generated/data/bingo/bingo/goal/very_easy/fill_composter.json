@@ -2,15 +2,13 @@
   "criteria": {
     "fill": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:composter",
-            "condition": "minecraft:block_state_property",
-            "properties": {
-              "level": "7"
-            }
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:composter",
+          "state": {
+            "level": "7"
           }
-        ]
+        }
       },
       "trigger": "minecraft:item_used_on_block"
     }
@@ -19,8 +17,8 @@
   "icon": {
     "type": "bingo:block",
     "block": {
-      "Name": "minecraft:composter",
-      "Properties": {
+      "id": "minecraft:composter",
+      "properties": {
         "level": "8"
       }
     },

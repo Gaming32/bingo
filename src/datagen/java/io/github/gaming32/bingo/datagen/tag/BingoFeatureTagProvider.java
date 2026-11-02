@@ -1,27 +1,22 @@
 package io.github.gaming32.bingo.datagen.tag;
 
-import com.mojang.logging.LogUtils;
 import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
+import io.github.gaming32.bingo.datagen.BingoDataGenUtil;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import org.slf4j.Logger;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class BingoFeatureTagProvider extends FabricTagsProvider<ConfiguredFeature<?, ?>> {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
+public class BingoFeatureTagProvider extends FabricTagsProvider<Feature> {
     public BingoFeatureTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
-        super(output, Registries.CONFIGURED_FEATURE, registriesFuture);
+        super(output, Registries.FEATURE, registriesFuture);
     }
 
     @SuppressWarnings("unchecked")
@@ -47,33 +42,14 @@ public class BingoFeatureTagProvider extends FabricTagsProvider<ConfiguredFeatur
     }
 
     @SuppressWarnings("unchecked")
-    private static ResourceKey<ConfiguredFeature<?, ?>>[] getTreeFeatures() {
-        List<ResourceKey<ConfiguredFeature<?, ?>>> result = new ArrayList<>();
-
-        for (Field field : TreeFeatures.class.getFields()) {
-            if (!Modifier.isPublic(field.getModifiers()) || !Modifier.isStatic(field.getModifiers()) || !Modifier.isFinal(field.getModifiers())) {
-                continue;
-            }
-            if (field.getType() != ResourceKey.class) {
-                continue;
-            }
-            ResourceKey<?> resourceKey;
-            try {
-                resourceKey = (ResourceKey<?>) field.get(null);
-            } catch (ReflectiveOperationException e) {
-                LOGGER.error("Error getting field '{}'", field.getName(), e);
-                continue;
-            }
-            if (!resourceKey.isFor(Registries.CONFIGURED_FEATURE)) {
-                continue;
-            }
-            ResourceKey<ConfiguredFeature<?, ?>> featureKey = (ResourceKey<ConfiguredFeature<?,?>>) resourceKey;
+    private static ResourceKey<Feature>[] getTreeFeatures() {
+        List<ResourceKey<Feature>> result = new ArrayList<>();
+        for (ResourceKey<Feature> featureKey : BingoDataGenUtil.getResourceKeysFromClass(TreeFeatures.class, Registries.FEATURE)) {
             String path = featureKey.identifier().getPath();
             if (!path.contains("fungus") && !path.contains("mushroom")) {
                 result.add(featureKey);
             }
         }
-
         return result.toArray(ResourceKey[]::new);
     }
 }

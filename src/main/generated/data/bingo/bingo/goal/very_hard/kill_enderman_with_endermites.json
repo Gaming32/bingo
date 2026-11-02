@@ -2,19 +2,22 @@
   "criteria": {
     "kill": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:enderman"
+        "entity": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "minecraft:entity_type": "minecraft:enderman"
+              }
+            },
+            {
+              "type": "bingo:has_only_been_damaged_by",
+              "entity_type": "minecraft:endermite"
             }
-          },
-          {
-            "condition": "bingo:has_only_been_damaged_by",
-            "entity_type": "minecraft:endermite"
-          }
-        ],
+          ]
+        },
         "killing_blow": {
           "source_entity": {
             "minecraft:entity_type": "minecraft:endermite"

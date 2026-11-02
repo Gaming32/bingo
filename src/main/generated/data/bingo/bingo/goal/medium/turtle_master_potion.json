@@ -7,7 +7,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:turtle_master"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:turtle_master"
+              }
             }
           }
         ]
@@ -20,7 +22,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:long_turtle_master"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:long_turtle_master"
+              }
             }
           }
         ]
@@ -33,7 +37,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:strong_turtle_master"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:strong_turtle_master"
+              }
             }
           }
         ]

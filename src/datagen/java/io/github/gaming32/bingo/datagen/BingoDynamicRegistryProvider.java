@@ -16,6 +16,7 @@ public class BingoDynamicRegistryProvider extends FabricDynamicRegistryProvider 
     protected void configure(HolderLookup.Provider registries, Entries entries) {
         entries.addAll(registries.lookupOrThrow(BingoRegistries.TAG));
         entries.addAll(registries.lookupOrThrow(BingoRegistries.DIFFICULTY));
+        entries.addAll(registries.lookupOrThrow(BingoRegistries.GOAL));
     }
 
     @Override

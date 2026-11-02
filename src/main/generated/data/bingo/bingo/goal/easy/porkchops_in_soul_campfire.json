@@ -2,23 +2,26 @@
   "criteria": {
     "place": {
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:location_check",
-            "predicate": {
-              "block": {
-                "blocks": "minecraft:soul_campfire",
-                "nbt": "{Items:[{Slot:0b,id:\"minecraft:porkchop\"},{Slot:1b,id:\"minecraft:porkchop\"},{Slot:2b,id:\"minecraft:porkchop\"},{Slot:3b,id:\"minecraft:porkchop\"}]}"
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:location_check",
+              "predicate": {
+                "block": {
+                  "blocks": "minecraft:soul_campfire",
+                  "nbt": "{Items:[{Slot:0b,id:\"minecraft:porkchop\"},{Slot:1b,id:\"minecraft:porkchop\"},{Slot:2b,id:\"minecraft:porkchop\"},{Slot:3b,id:\"minecraft:porkchop\"}]}"
+                }
+              }
+            },
+            {
+              "type": "minecraft:match_tool",
+              "predicate": {
+                "items": "minecraft:porkchop"
               }
             }
-          },
-          {
-            "condition": "minecraft:match_tool",
-            "predicate": {
-              "items": "minecraft:porkchop"
-            }
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:item_used_on_block"
     }

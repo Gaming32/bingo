@@ -2,19 +2,17 @@
   "criteria": {
     "pickup": {
       "conditions": {
-        "item_entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "bingo:type_specific/item": {
-                "item": {
-                  "items": "minecraft:crafting_table"
-                }
+        "item_entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "bingo:type_specific/item": {
+              "item": {
+                "items": "minecraft:crafting_table"
               }
             }
           }
-        ]
+        }
       },
       "trigger": "bingo:item_picked_up"
     }

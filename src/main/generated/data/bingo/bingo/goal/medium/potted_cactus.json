@@ -2,12 +2,10 @@
   "criteria": {
     "pot": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:potted_cactus",
-            "condition": "minecraft:block_state_property"
-          }
-        ]
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:potted_cactus"
+        }
       },
       "trigger": "minecraft:item_used_on_block"
     }
@@ -15,9 +13,7 @@
   "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:potted_cactus"
-    },
+    "block": "minecraft:potted_cactus",
     "item": {
       "count": 1,
       "id": "minecraft:cactus"

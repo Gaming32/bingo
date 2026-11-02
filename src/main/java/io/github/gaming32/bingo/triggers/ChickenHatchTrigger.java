@@ -2,16 +2,17 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEgg;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -31,20 +32,20 @@ public class ChickenHatchTrigger extends SimpleCriterionTrigger<ChickenHatchTrig
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> projectile,
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> projectile,
         MinMaxBounds.Ints numChickens
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("projectile").forGetter(TriggerInstance::projectile),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("projectile").forGetter(TriggerInstance::projectile),
                 MinMaxBounds.Ints.CODEC.optionalFieldOf("num_chickens", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::numChickens)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(LootContext projectileContext, int numChickens) {
-            if (this.projectile.isPresent() && !this.projectile.get().matches(projectileContext)) {
+            if (this.projectile.isPresent() && !this.projectile.get().value().test(projectileContext)) {
                 return false;
             }
             return this.numChickens.matches(numChickens);
@@ -53,19 +54,19 @@ public class ChickenHatchTrigger extends SimpleCriterionTrigger<ChickenHatchTrig
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "projectile", projectile);
+            Validatable.validateHolder(validator.entityContext(), "projectile", projectile);
         }
     }
 
     public static class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> projectile = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> projectile = Optional.empty();
         private MinMaxBounds.Ints numChickens = MinMaxBounds.Ints.ANY;
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.of(player);
             return this;
         }
@@ -74,7 +75,7 @@ public class ChickenHatchTrigger extends SimpleCriterionTrigger<ChickenHatchTrig
             return projectile(EntityPredicate.wrap(projectile));
         }
 
-        public Builder projectile(ContextAwarePredicate projectile) {
+        public Builder projectile(Holder<LootItemCondition> projectile) {
             this.projectile = Optional.of(projectile);
             return this;
         }

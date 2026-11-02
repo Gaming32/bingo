@@ -2,16 +2,17 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.pig.Pig;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -32,25 +33,25 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> pig,
-        Optional<ContextAwarePredicate> zombifiedPiglin,
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> pig,
+        Optional<Holder<LootItemCondition>> zombifiedPiglin,
         Optional<Boolean> direct
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("pig").forGetter(TriggerInstance::pig),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("zombified_piglin").forGetter(TriggerInstance::zombifiedPiglin),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("pig").forGetter(TriggerInstance::pig),
+                LootItemCondition.CODEC.optionalFieldOf("zombified_piglin").forGetter(TriggerInstance::zombifiedPiglin),
                 Codec.BOOL.optionalFieldOf("direct").forGetter(TriggerInstance::direct)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(LootContext pig, LootContext zombifiedPiglin, boolean direct) {
-            if (this.pig.isPresent() && !this.pig.get().matches(pig)) {
+            if (this.pig.isPresent() && !this.pig.get().value().test(pig)) {
                 return false;
             }
-            if (this.zombifiedPiglin.isPresent() && !this.zombifiedPiglin.get().matches(zombifiedPiglin)) {
+            if (this.zombifiedPiglin.isPresent() && !this.zombifiedPiglin.get().value().test(zombifiedPiglin)) {
                 return false;
             }
             if (this.direct.isPresent() && direct != this.direct.get()) {
@@ -62,21 +63,21 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "pig", pig);
-            Validatable.validate(validator.entityContext(), "zombified_piglin", zombifiedPiglin);
+            Validatable.validateHolder(validator.entityContext(), "pig", pig);
+            Validatable.validateHolder(validator.entityContext(), "zombified_piglin", zombifiedPiglin);
         }
     }
 
     public static class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> pig = Optional.empty();
-        private Optional<ContextAwarePredicate> zombifiedPiglin = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> pig = Optional.empty();
+        private Optional<Holder<LootItemCondition>> zombifiedPiglin = Optional.empty();
         private Optional<Boolean> direct = Optional.empty();
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate predicate) {
+        public Builder player(Holder<LootItemCondition> predicate) {
             this.player = Optional.ofNullable(predicate);
             return this;
         }
@@ -85,7 +86,7 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
             return player(EntityPredicate.wrap(predicate));
         }
 
-        public Builder pig(ContextAwarePredicate predicate) {
+        public Builder pig(Holder<LootItemCondition> predicate) {
             this.pig = Optional.ofNullable(predicate);
             return this;
         }
@@ -94,7 +95,7 @@ public class ZombifyPigTrigger extends SimpleCriterionTrigger<ZombifyPigTrigger.
             return pig(EntityPredicate.wrap(predicate));
         }
 
-        public Builder zombifiedPiglin(ContextAwarePredicate predicate) {
+        public Builder zombifiedPiglin(Holder<LootItemCondition> predicate) {
             this.zombifiedPiglin = Optional.ofNullable(predicate);
             return this;
         }

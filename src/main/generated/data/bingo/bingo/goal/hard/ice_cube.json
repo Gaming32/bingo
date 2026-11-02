@@ -28,65 +28,68 @@
   "criteria": {
     "cube": {
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:location_check",
-            "predicate": {
-              "block": {
-                "blocks": "#minecraft:ice"
-              }
-            }
-          },
-          {
-            "aisles": {
-              "bingo_type": "bingo:compound",
-              "element_type": "array",
-              "factors": [
-                {
-                  "type": "bingo:wrap",
-                  "value": [
-                    {
-                      "bingo_type": "bingo:compound",
-                      "element_type": "array",
-                      "factors": [
-                        {
-                          "type": "bingo:wrap",
-                          "value": [
-                            {
-                              "bingo_type": "bingo:compound",
-                              "element_type": "string",
-                              "factors": [
-                                {
-                                  "type": "bingo:wrap",
-                                  "value": "#"
-                                },
-                                "width"
-                              ],
-                              "operator": "mul"
-                            }
-                          ]
-                        },
-                        "height"
-                      ],
-                      "operator": "mul"
-                    }
-                  ]
-                },
-                "depth"
-              ],
-              "operator": "mul"
-            },
-            "condition": "bingo:block_pattern",
-            "rotations": "all",
-            "where": {
-              "#": {
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:location_check",
+              "predicate": {
                 "block": {
                   "blocks": "#minecraft:ice"
                 }
               }
+            },
+            {
+              "type": "bingo:block_pattern",
+              "aisles": {
+                "bingo_type": "bingo:compound",
+                "element_type": "array",
+                "factors": [
+                  {
+                    "type": "bingo:wrap",
+                    "value": [
+                      {
+                        "bingo_type": "bingo:compound",
+                        "element_type": "array",
+                        "factors": [
+                          {
+                            "type": "bingo:wrap",
+                            "value": [
+                              {
+                                "bingo_type": "bingo:compound",
+                                "element_type": "string",
+                                "factors": [
+                                  {
+                                    "type": "bingo:wrap",
+                                    "value": "#"
+                                  },
+                                  "width"
+                                ],
+                                "operator": "mul"
+                              }
+                            ]
+                          },
+                          "height"
+                        ],
+                        "operator": "mul"
+                      }
+                    ]
+                  },
+                  "depth"
+                ],
+                "operator": "mul"
+              },
+              "rotations": "all",
+              "where": {
+                "#": {
+                  "block": {
+                    "blocks": "#minecraft:ice"
+                  }
+                }
+              }
             }
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:placed_block"
     }

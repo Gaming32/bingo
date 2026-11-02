@@ -2,16 +2,14 @@
   "criteria": {
     "destroy": {
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:location_check",
-            "predicate": {
-              "block": {
-                "blocks": "minecraft:spawner"
-              }
+        "location": {
+          "type": "minecraft:location_check",
+          "predicate": {
+            "block": {
+              "blocks": "minecraft:spawner"
             }
           }
-        ]
+        }
       },
       "trigger": "bingo:break_block"
     }
@@ -19,9 +17,7 @@
   "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:spawner"
-    },
+    "block": "minecraft:spawner",
     "item": {
       "count": 1,
       "id": "minecraft:spawner"

@@ -5,10 +5,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.TagPredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -46,13 +47,13 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
+        Optional<Holder<LootItemCondition>> player,
         int requiredCount,
         Optional<TagPredicate<Item>> tag
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 ExtraCodecs.POSITIVE_INT.fieldOf("required_count").forGetter(TriggerInstance::requiredCount),
                 TagPredicate.codec(Registries.ITEM).optionalFieldOf("tag").forGetter(TriggerInstance::tag)
             ).apply(instance, TriggerInstance::new)
@@ -90,7 +91,7 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
         @Nullable
         private Integer requiredCount = null;
         private Optional<TagPredicate<Item>> tag = Optional.empty();
@@ -98,7 +99,7 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }
@@ -108,8 +109,8 @@ public class HasSomeFoodItemsTrigger extends SimpleProgressibleCriterionTrigger<
             return this;
         }
 
-        public Builder tag(TagKey<Item> tag) {
-            return tag(TagPredicate.is(tag));
+        public Builder tag(HolderGetter<Item> items, TagKey<Item> tag) {
+            return tag(TagPredicate.is(items, tag));
         }
 
         public Builder tag(TagPredicate<Item> tag) {

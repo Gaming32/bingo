@@ -25,7 +25,7 @@ public record HasAnyEffectCondition(LootContext.EntityTarget entityTarget) imple
 
     @Override
     public boolean test(LootContext lootContext) {
-        return lootContext.getParameter(entityTarget.contextParam()) instanceof LivingEntity livingEntity
+        return lootContext.getOptional(entityTarget.contextParam()) instanceof LivingEntity livingEntity
             && !livingEntity.getActiveEffectsMap().isEmpty();
     }
 }

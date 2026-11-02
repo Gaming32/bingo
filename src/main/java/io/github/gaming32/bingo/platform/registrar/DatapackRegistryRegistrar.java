@@ -12,4 +12,6 @@ public interface DatapackRegistryRegistrar {
     }
 
     <T> void synced(ResourceKey<Registry<T>> registryKey, Codec<T> codec, Codec<T> networkCodec);
+
+    <T> void reloadable(ResourceKey<Registry<T>> registryKey, Codec<T> codec);
 }

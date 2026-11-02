@@ -3,13 +3,13 @@ package io.github.gaming32.bingo.triggers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.predicates.BlockPredicate;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderSet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
@@ -22,6 +22,7 @@ import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.AllOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.phys.Vec3;
@@ -52,50 +53,51 @@ public class BreakBlockTrigger extends SimpleCriterionTrigger<BreakBlockTrigger.
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> location
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> location
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                ContextAwarePredicate.CODEC.optionalFieldOf("location").forGetter(TriggerInstance::location)
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("location").forGetter(TriggerInstance::location)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(LootContext location) {
-            return this.location.isEmpty() || this.location.get().matches(location);
+            return this.location.isEmpty() || this.location.get().value().test(location);
         }
 
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            location.ifPresent(p -> Validatable.validate(validator.context(LootContextParamSets.ADVANCEMENT_LOCATION), "location", p));
+            location.ifPresent(p -> Validatable.validateHolder(validator.context(LootContextParamSets.ADVANCEMENT_LOCATION), "location", p));
         }
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> location = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> location = Optional.empty();
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }
 
-        public Builder location(ContextAwarePredicate location) {
+        public Builder location(Holder<LootItemCondition> location) {
             this.location = Optional.ofNullable(location);
             return this;
         }
 
-        public Builder location(LootItemCondition... conditions) {
-            return location(ContextAwarePredicate.create(conditions));
+        @SafeVarargs
+        public final Builder location(Holder<LootItemCondition>... conditions) {
+            return location(Holder.direct(AllOfCondition.allOf(HolderSet.direct(conditions))));
         }
 
         public Builder location(LocationPredicate location) {
-            return location(new LocationCheck(Optional.ofNullable(location), BlockPos.ZERO));
+            return location(Holder.direct(new LocationCheck(Optional.ofNullable(location), BlockPos.ZERO)));
         }
 
         public Builder block(BlockPredicate.Builder block) {

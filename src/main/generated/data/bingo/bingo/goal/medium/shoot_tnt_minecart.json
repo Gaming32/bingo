@@ -2,15 +2,13 @@
   "criteria": {
     "explode": {
       "conditions": {
-        "source": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:tnt_minecart"
-            }
+        "source": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:tnt_minecart"
           }
-        ]
+        }
       },
       "trigger": "bingo:explosion"
     }

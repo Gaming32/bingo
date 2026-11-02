@@ -5,12 +5,10 @@
         "item": {
           "items": "minecraft:milk_bucket"
         },
-        "player": [
-          {
-            "condition": "bingo:has_any_effect",
-            "entity": "this"
-          }
-        ]
+        "player": {
+          "type": "bingo:has_any_effect",
+          "entity": "this"
+        }
       },
       "trigger": "minecraft:consume_item"
     }

@@ -6,8 +6,6 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.cuboid.ItemTransform;
 import net.minecraft.util.LightCoordsUtil;
@@ -50,9 +48,7 @@ public class BlockPictureInPictureRenderer extends PictureInPictureRenderer<Bloc
         pose.last().normal().rotate(LIGHT_FIX_ROT);
         pose.translate(-.5, -.5, -.5);
 
-        FeatureRenderDispatcher featureRenderDispatcher = Minecraft.getInstance().gameRenderer.featureRenderDispatcher();
         state.modelRenderState().submit(pose, collector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
-        featureRenderDispatcher.renderAllFeatures((SubmitNodeStorage) collector);
 
         lastBlockState = state.block();
     }

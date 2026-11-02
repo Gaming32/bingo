@@ -2,15 +2,13 @@
   "criteria": {
     "tame": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:parrot"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:parrot"
           }
-        ]
+        }
       },
       "trigger": "minecraft:tame_animal"
     }

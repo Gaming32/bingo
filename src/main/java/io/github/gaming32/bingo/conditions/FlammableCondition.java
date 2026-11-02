@@ -1,13 +1,13 @@
 package io.github.gaming32.bingo.conditions;
 
 import com.mojang.serialization.MapCodec;
-import io.github.gaming32.bingo.mixin.BaseFireBlockAccessor;
+import io.github.gaming32.bingo.platform.BingoPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.context.ContextKey;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
@@ -28,7 +28,7 @@ public enum FlammableCondition implements LootItemCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
-        final BlockPos pos = BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN));
-        return ((BaseFireBlockAccessor)Blocks.FIRE).callCanBurn(lootContext.getLevel().getBlockState(pos));
+        Vec3 origin = lootContext.getOptional(LootContextParams.ORIGIN);
+        return origin != null && BingoPlatform.isFlammable(lootContext.getLevel(), BlockPos.containing(origin));
     }
 }

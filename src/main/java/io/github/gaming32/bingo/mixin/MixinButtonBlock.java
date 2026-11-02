@@ -18,7 +18,7 @@ public class MixinButtonBlock {
         method = "checkPressed",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"
+            target = "Lnet/minecraft/world/level/Level;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"
         )
     )
     private void arrowPressTrigger(BlockState state, Level level, BlockPos pos, CallbackInfo ci, @Local(name = "firstArrow") AbstractArrow firstArrow) {

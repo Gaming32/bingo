@@ -16,8 +16,8 @@ import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.SharedConstants;
 import net.minecraft.commands.arguments.ResourceOrTagKeyArgument;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.TypedDataComponent;
@@ -44,8 +44,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
@@ -238,6 +238,16 @@ public class BingoUtil {
         return either.mapBoth(mapper, mapper);
     }
 
+    public static <L, R> void ifBoth(Either<L, R> either, Consumer<? super L> ifLeft, Consumer<? super R> ifRight) {
+        either.map(l -> {
+            ifLeft.accept(l);
+            return null;
+        }, r -> {
+            ifRight.accept(r);
+            return null;
+        });
+    }
+
     public static boolean collidesWithProjectedBox(Vec3 entityOrigin, Vec3 boxNormal, double boxWidth) {
         // Distance from origin to the closest point on the boxNormal line
         final double pointDistance = entityOrigin.dot(boxNormal) / boxNormal.lengthSqr();
@@ -265,7 +275,7 @@ public class BingoUtil {
             : squareRadius / sin;
     }
 
-    public static <T> HolderSet<T> toHolderSet(Registry<T> registry, ResourceOrTagKeyArgument.Result<T> result) {
+    public static <T> HolderSet<T> toHolderSet(HolderGetter<T> registry, ResourceOrTagKeyArgument.Result<T> result) {
         return result.unwrap().map(
             resource -> HolderSet.direct(registry.getOrThrow(resource)),
             registry::getOrThrow
@@ -299,12 +309,12 @@ public class BingoUtil {
 
     public static DataComponentPatch.Builder builderFrom(DataComponentPatch patch) {
         DataComponentPatch.Builder builder = DataComponentPatch.builder();
-        for (Map.Entry<DataComponentType<?>, Optional<?>> entry : patch.entrySet()) {
-            if (entry.getValue().isPresent()) {
-                builder.set(TypedDataComponent.createUnchecked(entry.getKey(), entry.getValue().get()));
-            } else {
-                builder.remove(entry.getKey());
-            }
+        DataComponentPatch.SplitResult split = patch.split();
+        for (TypedDataComponent<?> addedComponent : split.added()) {
+            builder.set(addedComponent);
+        }
+        for (DataComponentType<?> removedComponent : split.removed()) {
+            builder.remove(removedComponent);
         }
         return builder;
     }

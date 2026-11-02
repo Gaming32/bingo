@@ -2,15 +2,13 @@
   "criteria": {
     "use": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:rabbit"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:rabbit"
           }
-        ],
+        },
         "item": {
           "items": "minecraft:lead"
         }

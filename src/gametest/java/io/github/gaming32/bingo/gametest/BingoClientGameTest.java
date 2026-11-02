@@ -54,13 +54,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 
 import java.lang.annotation.ElementType;
@@ -222,7 +222,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
             singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 1 oak_sign");
             singleplayerContext.getServer().runOnServer(server -> {
                 SignBlockEntity sign = singleplayerContext.getConnection().getServerLevel().getBlockEntity(new BlockPos(0, PLAYER_Y, 1), BlockEntityTypes.SIGN).orElseThrow();
-                sign.updateText(text -> text.setMessage(1, Component.literal("Hello")), true);
+                sign.updateText(text -> text.asMutable().setLine(1, Component.literal("Hello")).asImmutable(), SignTextSlot.FRONT);
             });
             singleplayerContext.getServer().runCommand("give @a red_dye");
             singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 45");
@@ -588,7 +588,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
                     .filter(widget -> widget instanceof MerchantScreen.TradeOfferButton)
                     .findFirst()
                     .orElseThrow();
-                button.onPress(new MouseButtonInfo(GLFW.GLFW_KEY_UNKNOWN, 0));
+                button.onPress(new MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0));
                 AbstractContainerMenu menu = Objects.requireNonNull(client.player).containerMenu;
                 Slot resultSlot = menu.slots.stream().filter(slot -> slot instanceof MerchantResultSlot).findFirst().orElseThrow();
                 Objects.requireNonNull(client.gameMode).handleContainerInput(menu.containerId, resultSlot.index, InputConstants.MOUSE_BUTTON_LEFT, ContainerInput.QUICK_MOVE, client.player);

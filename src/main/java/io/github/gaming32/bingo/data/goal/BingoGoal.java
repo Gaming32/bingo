@@ -24,13 +24,13 @@ import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ExtraCodecs;
@@ -54,7 +54,7 @@ public class BingoGoal {
             AdvancementRequirements.CODEC.optionalFieldOf("requirements").forGetter(g -> Optional.of(g.requirements)),
             ProgressTracker.CODEC.optionalFieldOf("progress", EmptyProgressTracker.INSTANCE).forGetter(BingoGoal::getProgress),
             ParsedOrSub.optionalCodec(ExtraCodecs.POSITIVE_INT, "required_count", 1).forGetter(BingoGoal::getRequiredCount),
-            RegistryCodecs.homogeneousList(BingoRegistries.TAG).optionalFieldOf("tags", HolderSet.empty()).forGetter(BingoGoal::getTags),
+            RegistryCodecs.holderSet(BingoRegistries.TAG).optionalFieldOf("tags", HolderSet.empty()).forGetter(BingoGoal::getTags),
             ParsedOrSub.codec(ComponentSerialization.CODEC).fieldOf("name").forGetter(BingoGoal::getName),
             ParsedOrSub.codec(ComponentSerialization.CODEC).optionalFieldOf("tooltip").forGetter(BingoGoal::getTooltip),
             Identifier.CODEC.optionalFieldOf("tooltip_icon").forGetter(BingoGoal::getTooltipIcon),
@@ -66,7 +66,8 @@ public class BingoGoal {
             RegistryFixedCodec.create(BingoRegistries.DIFFICULTY).fieldOf("difficulty").forGetter(BingoGoal::getDifficulty),
             RegistryOps.retrieveGetter(Registries.TRIGGER_TYPE)
         ).apply(instance, BingoGoal::new)
-    ).validate(BingoGoal::validate);
+    );
+        //.validate(BingoGoal::validate); TODO fix this
 
     private final Map<String, BingoSub> subs;
     private final Map<String, ParsedOrSub<Criterion<?>>> criteria;
@@ -84,7 +85,6 @@ public class BingoGoal {
     private final Set<String> reactant;
     private final Holder<BingoDifficulty> difficulty;
 
-    private final BingoTag.SpecialType specialType;
     private final boolean requiredOnClient;
 
     public BingoGoal(
@@ -121,15 +121,6 @@ public class BingoGoal {
         this.reactant = ImmutableSet.copyOf(reactant);
         this.difficulty = difficulty;
 
-        BingoTag.SpecialType specialType = BingoTag.SpecialType.NONE;
-        for (final var tag : tags) {
-            if (tag.value().specialType() != BingoTag.SpecialType.NONE) {
-                specialType = tag.value().specialType();
-                break;
-            }
-        }
-        this.specialType = specialType;
-
         boolean requiresClient = false;
         final var triggerCodec = ResourceKey.codec(Registries.TRIGGER_TYPE);
         for (final var criterion : criteria.values()) {
@@ -151,6 +142,8 @@ public class BingoGoal {
 
     public DataResult<BingoGoal> validate() {
         var result = DataResult.success(this);
+
+        BingoTag.SpecialType specialType = getSpecialType();
 
         final var availableSubs = LinkedHashSet.<String>newLinkedHashSet(subs.size());
         var substitutionContext = SubstitutionContext.createValidationContext(availableSubs);
@@ -259,7 +252,11 @@ public class BingoGoal {
     }
 
     public BingoTag.SpecialType getSpecialType() {
-        return specialType;
+        return tags.stream()
+            .map(tag -> tag.value().specialType())
+            .filter(specialType -> specialType != BingoTag.SpecialType.NONE)
+            .findFirst()
+            .orElse(BingoTag.SpecialType.NONE);
     }
 
     public boolean isRequiredOnClient() {
@@ -296,9 +293,5 @@ public class BingoGoal {
 
     public int buildRequiredCount(SubstitutionContext context) {
         return requiredCount.substituteOrThrow(context);
-    }
-
-    public static GoalBuilder builder(Identifier id) {
-        return new GoalBuilder(id);
     }
 }

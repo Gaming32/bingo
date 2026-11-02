@@ -12,9 +12,7 @@
   "difficulty": "bingo:very_hard",
   "icon": {
     "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:beacon"
-    },
+    "block": "minecraft:beacon",
     "item": {
       "count": 1,
       "id": "minecraft:beacon"

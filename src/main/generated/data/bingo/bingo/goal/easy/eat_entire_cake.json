@@ -2,96 +2,82 @@
   "criteria": {
     "level_0": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:cake",
-            "condition": "minecraft:block_state_property",
-            "properties": {
-              "bites": "1"
-            }
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:cake",
+          "state": {
+            "bites": "1"
           }
-        ]
+        }
       },
       "trigger": "minecraft:default_block_use"
     },
     "level_1": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:cake",
-            "condition": "minecraft:block_state_property",
-            "properties": {
-              "bites": "2"
-            }
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:cake",
+          "state": {
+            "bites": "2"
           }
-        ]
+        }
       },
       "trigger": "minecraft:default_block_use"
     },
     "level_2": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:cake",
-            "condition": "minecraft:block_state_property",
-            "properties": {
-              "bites": "3"
-            }
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:cake",
+          "state": {
+            "bites": "3"
           }
-        ]
+        }
       },
       "trigger": "minecraft:default_block_use"
     },
     "level_3": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:cake",
-            "condition": "minecraft:block_state_property",
-            "properties": {
-              "bites": "4"
-            }
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:cake",
+          "state": {
+            "bites": "4"
           }
-        ]
+        }
       },
       "trigger": "minecraft:default_block_use"
     },
     "level_4": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:cake",
-            "condition": "minecraft:block_state_property",
-            "properties": {
-              "bites": "5"
-            }
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:cake",
+          "state": {
+            "bites": "5"
           }
-        ]
+        }
       },
       "trigger": "minecraft:default_block_use"
     },
     "level_5": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:cake",
-            "condition": "minecraft:block_state_property",
-            "properties": {
-              "bites": "6"
-            }
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:cake",
+          "state": {
+            "bites": "6"
           }
-        ]
+        }
       },
       "trigger": "minecraft:default_block_use"
     },
     "level_6": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:air",
-            "condition": "minecraft:block_state_property"
-          }
-        ]
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:air"
+        }
       },
       "trigger": "minecraft:default_block_use"
     }

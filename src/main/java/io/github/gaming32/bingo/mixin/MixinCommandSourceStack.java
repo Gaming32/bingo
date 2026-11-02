@@ -5,23 +5,14 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import io.github.gaming32.bingo.commandswitch.CommandSwitch;
-import io.github.gaming32.bingo.data.BingoRegistries;
-import io.github.gaming32.bingo.data.goal.GoalManager;
 import io.github.gaming32.bingo.ext.CommandSourceStackExt;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.minecraft.commands.CommandResultCallback;
 import net.minecraft.commands.CommandSigningContext;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.permissions.PermissionSet;
@@ -37,14 +28,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 @Mixin(CommandSourceStack.class)
 public class MixinCommandSourceStack implements CommandSourceStackExt {
@@ -53,8 +41,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
     @Shadow @Final private Vec2 rotation;
     @Shadow @Final private ServerLevel level;
     @Shadow @Final private PermissionSet permissions;
-    @Shadow @Final private String textName;
-    @Shadow @Final private Component displayName;
+    @Shadow @Final private CommandSourceStack.NamesProvider namesProvider;
     @Shadow @Final private MinecraftServer server;
     @Shadow @Final private @Nullable Entity entity;
     @Shadow @Final private boolean silent;
@@ -80,8 +67,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
         Vec2 rotation,
         ServerLevel level,
         PermissionSet permissions,
-        String textName,
-        Component displayName,
+        CommandSourceStack.NamesProvider namesProvider,
         MinecraftServer server,
         @Nullable Entity entity,
         boolean silent,
@@ -142,8 +128,7 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
             rotation,
             level,
             permissions,
-            textName,
-            displayName,
+            namesProvider,
             server,
             entity,
             silent,
@@ -154,7 +139,6 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
         ));
     }
 
-    @SuppressWarnings("MixinAnnotationTarget")
     @ModifyExpressionValue(
         method = "*",
         at = @At(
@@ -170,22 +154,5 @@ public class MixinCommandSourceStack implements CommandSourceStackExt {
         ext.bingo$arguments = bingo$arguments;
         ext.bingo$repeatableArguments = bingo$repeatableArguments;
         return newStack;
-    }
-
-    @Inject(
-        method = "suggestRegistryElements",
-        at = @At("HEAD"),
-        cancellable = true
-    )
-    private void suggestBingoGoals(
-        ResourceKey<? extends Registry<?>> key,
-        SharedSuggestionProvider.ElementSuggestionType elements,
-        SuggestionsBuilder builder,
-        CommandContext<?> context,
-        CallbackInfoReturnable<CompletableFuture<Suggestions>> cir
-    ) {
-        if (key == BingoRegistries.GOAL) {
-            cir.setReturnValue(SharedSuggestionProvider.suggestResource(GoalManager.getGoalIds(), builder));
-        }
     }
 }

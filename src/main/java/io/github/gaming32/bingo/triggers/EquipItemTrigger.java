@@ -4,14 +4,14 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.BingoCodecs;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,14 +34,14 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
+        Optional<Holder<LootItemCondition>> player,
         Optional<ItemPredicate> oldItem,
         Optional<ItemPredicate> newItem,
         Set<EquipmentSlot> slots
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 ItemPredicate.CODEC.optionalFieldOf("old_item").forGetter(TriggerInstance::oldItem),
                 ItemPredicate.CODEC.optionalFieldOf("new_item").forGetter(TriggerInstance::newItem),
                 BingoCodecs.enumSetOf(EquipmentSlot.CODEC).optionalFieldOf(
@@ -65,7 +65,7 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
         private Optional<ItemPredicate> oldItem = Optional.empty();
         private Optional<ItemPredicate> newItem = Optional.empty();
         private final Set<EquipmentSlot> slots = EnumSet.allOf(EquipmentSlot.class);
@@ -73,7 +73,7 @@ public class EquipItemTrigger extends SimpleCriterionTrigger<EquipItemTrigger.Tr
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }
