@@ -424,7 +424,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
                 EGG,
                 items,
                 new ItemTagCycleIcon(ItemTags.EGGS, 3),
-                ItemPredicate.Builder.item().of(items, ItemTags.EGGS).withCount(MinMaxBounds.Ints.exactly(3))
+                ItemPredicate.Builder.item().of(items, ItemTags.EGGS).withCount(MinMaxBounds.Ints.atLeast(3))
             )
                 .name(Component.translatable("bingo.count", 3, Component.translatable(Items.EGG.getDescriptionId())))
                 .tooltip("egg")

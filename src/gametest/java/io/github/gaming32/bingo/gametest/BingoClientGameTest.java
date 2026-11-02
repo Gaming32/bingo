@@ -26,6 +26,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
@@ -808,6 +809,13 @@ public class BingoClientGameTest implements FabricClientGameTest {
         });
     }
 
+    @TestGoal
+    private static void testFireCharge(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Medium.FIRE_CHARGE, () -> {
+            singleplayerContext.getServer().runCommand("give @a fire_charge 64");
+        });
+    }
+
     private static void testGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Identifier goalId, Runnable testRunner) {
         testGoal(context, singleplayerContext, goalId, true, testRunner);
     }
@@ -903,6 +911,8 @@ public class BingoClientGameTest implements FabricClientGameTest {
 
     @Override
     public void runTest(ClientGameTestContext context) {
+        context.runOnClient(client -> client.options.getSoundSourceOptionInstance(SoundSource.MASTER).set(0.0));
+
         Consumer<WorldCreationUiState> settingsAdjustor = settings -> settings.getGameRules().set(GameRules.RANDOM_TICK_SPEED, 0, null);
         try (TestSingleplayerContext singleplayerContext = context.worldBuilder().adjustSettings(settingsAdjustor).create()) {
             singleplayerContext.getServer().runCommand("bingo teams create red");

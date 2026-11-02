@@ -68,7 +68,7 @@ faeb8502b396021a28013faea4b12e3e95c3d11e data/bingo/bingo/goal/easy/drink_sus_st
 430f57b82a4ffa3a41f9fd5e14d626af6eec58a6 data/bingo/bingo/goal/easy/drown_zombie.json
 0a0d308709074404374ddb1700f71a29e7f4fbd8 data/bingo/bingo/goal/easy/eat_entire_cake.json
 60fb60bbb0d4476b7482f9c689b26f9d94f7dd94 data/bingo/bingo/goal/easy/edible_items.json
-dd9058295842b75a4aa51ab35b08b33ebbdd929a data/bingo/bingo/goal/easy/egg.json
+6917c3ddbb69731aac89292cf04b85925dcd9b69 data/bingo/bingo/goal/easy/egg.json
 9c180509b26974f5f71812545b564cf7288c0629 data/bingo/bingo/goal/easy/emerald.json
 e18c7b5fdfcca484f5fb2e6da93da8a2af69d976 data/bingo/bingo/goal/easy/ender_pearl.json
 f44d7c72b92caf7bc6def6d7a2bcf27ce78f89c5 data/bingo/bingo/goal/easy/feather.json
@@ -98,7 +98,7 @@ a93326f9fa281e6938b6b2a76c8d19c6d5df3767 data/bingo/bingo/goal/easy/grow_huge_mu
 7a934ace1409b634ae84849f8f3b80ffe44a27f4 data/bingo/bingo/goal/easy/hatch_chicken.json
 e8adc2ad6b4e17693750494b9a7ba0d1d0cfd1da data/bingo/bingo/goal/easy/hay_block.json
 ebfb2c7b98fe4e75e2ca06a3b8ff7f65a5c5041a data/bingo/bingo/goal/easy/honey_bottle.json
-8863d5ac085920b8f0dbb4975e209d309b1172ef data/bingo/bingo/goal/easy/honeycomb.json
+0d032e7de15d3e3360c6745643b54301714810bd data/bingo/bingo/goal/easy/honeycomb.json
 9763a8892eb0cbb297d8995a0cfd4da2b2890bfb data/bingo/bingo/goal/easy/ink_sac.json
 c31574d4b2635a1c97b27ac729f99c549a5e124d data/bingo/bingo/goal/easy/iron_block.json
 92590662f2639a91ac52b8e600c03be655dee1df data/bingo/bingo/goal/easy/iron_chain.json
@@ -208,7 +208,7 @@ af19b2dd4ff8178c47c52fd19f16572246f008e9 data/bingo/bingo/goal/hard/diamond_bloc
 aadb6d591ccf77b63bf96061b70b6a8a4e27ebbf data/bingo/bingo/goal/hard/dragon_egg.json
 9f74bb8ae106c1a454878ea197fc08348daa28a6 data/bingo/bingo/goal/hard/enchant_5_items.json
 20af38ff3ace351faa472201d836247ddecdf3fa data/bingo/bingo/goal/hard/enchanted_golden_apple.json
-2ad7711ab994dcab6ca4586ddfc784185126e825 data/bingo/bingo/goal/hard/ender_eye.json
+d68d53d255c804fd24f67d002192f9aa41d66174 data/bingo/bingo/goal/hard/ender_eye.json
 4a3869eed9248926e00a92d8cd983f3e49d42967 data/bingo/bingo/goal/hard/feed_panda_cake.json
 4d1658489d59dc5f8eb2ad73ac9d9f10f77a996a data/bingo/bingo/goal/hard/finish_on_blaze_spawner.json
 82e7e46c6c6eeedea5ccf326ac299be9901ff7b4 data/bingo/bingo/goal/hard/food.json
@@ -301,7 +301,7 @@ eea0fbcd44d5cc8711fe90cd419cff4810543a6e data/bingo/bingo/goal/medium/enchant_it
 d9795e6fd82c9dcc7bb3733907ad56554c37add9 data/bingo/bingo/goal/medium/equip_wolf_armor.json
 69a8acf02c7b4c581424555c522c18b7823d5f5b data/bingo/bingo/goal/medium/finish_by_free_falling.json
 0f81247e30739d0ed774c505b7267daffc243c09 data/bingo/bingo/goal/medium/finish_on_top.json
-9ac5236530416bfd9c6d8c49148496bb345a11fa data/bingo/bingo/goal/medium/fire_charge.json
+0eedf03806f02b049b8ace0ab7a94684434079ef data/bingo/bingo/goal/medium/fire_charge.json
 cc18c2b152b898860632eda1692258a2bca2803d data/bingo/bingo/goal/medium/fire_resistance_potion.json
 162ea0f3f33bdb42547e04a5801c320cf0ee7907 data/bingo/bingo/goal/medium/firework_star.json
 6f3144db57060e0750e2a2cb3e27375a0599c53b data/bingo/bingo/goal/medium/full_gold_armor.json
@@ -319,7 +319,7 @@ c0b30d5f58b63991452530ea89b9dc874ade9c2d data/bingo/bingo/goal/medium/gunpowder.
 1d15366f2bc4b4db9d759faead9700eecdea69d7 data/bingo/bingo/goal/medium/healing_potion.json
 2545878064918be3b0d7ad8b60be6b98e37c7cdd data/bingo/bingo/goal/medium/heart_of_the_sea.json
 a54dc971c3dd54b59fa9fd7f91bac2bcafccf5e3 data/bingo/bingo/goal/medium/honey_block.json
-1cdc1baaa78bae8caba5d5f170365dd4edd5daf0 data/bingo/bingo/goal/medium/honeycomb_block.json
+2f2e382e6ba782cfb65e3111c6b76e53683be702 data/bingo/bingo/goal/medium/honeycomb_block.json
 360f925157f73cbbad2434f5a06975713ae3c71e data/bingo/bingo/goal/medium/ink_sac.json
 d2b0d6a8dd9714a472882be430c222fe5e9dfa96 data/bingo/bingo/goal/medium/iron_block.json
 7ecc63a47d4bf00f5b213f0b80520132c66e89a3 data/bingo/bingo/goal/medium/item_frame.json
@@ -496,7 +496,7 @@ f7733d1d7705f36a0687d3428c7b0408948aaa8c data/bingo/bingo/goal/very_hard/full_po
 5f47109d61a754d199a1abbb862b7a73f268bc3e data/bingo/bingo/goal/very_hard/kill_enderman_with_endermites.json
 8131b7857a5c87b73cb890255f9e31c5c531a514 data/bingo/bingo/goal/very_hard/levels.json
 eeebce9b6b330b4ffa6658f1632313915b9303cb data/bingo/bingo/goal/very_hard/mycelium.json
-296c93aeb6c7a629884706537e6010706a7c0074 data/bingo/bingo/goal/very_hard/netherite_block.json
+573e968c9bba4930c517a445ac0d35f3a1f3f39f data/bingo/bingo/goal/very_hard/netherite_block.json
 7f3663fd8a1141e2c0f08ca36e5188948ff8f079 data/bingo/bingo/goal/very_hard/ores.json
 2179915209625ccdff65b6fbabd09d9d10287242 data/bingo/bingo/goal/very_hard/panda_slime_ball.json
 aa00f65bc67baa11346da62b2367a5a74a4a6f76 data/bingo/bingo/goal/very_hard/party_parrots.json
