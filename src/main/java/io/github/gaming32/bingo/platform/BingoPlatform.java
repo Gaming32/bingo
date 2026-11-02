@@ -49,12 +49,15 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ConfigurationTask;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.level.Level;
 
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -62,6 +65,7 @@ import java.util.function.Supplier;
 public final class BingoPlatform {
     public static final Identifier PROTOCOL_VERSION_PACKET = Identifiers.bingo("protocol_version");
     private static final DataResourceStore.Key<KeyMap> BINGO_DATA_STORE_KEY = new DataResourceStore.Key<>();
+    private static final PreparableReloadListener.StateKey<KeyMap> BINGO_DATA_STORE_STATE_KEY = new PreparableReloadListener.StateKey<>();
 
     private BingoPlatform() {
     }
@@ -118,17 +122,32 @@ public final class BingoPlatform {
 
     public static void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
         final var helper = ResourceLoader.get(PackType.SERVER_DATA);
+        // Creates the shared data store before any listener reloads, then publishes it in the apply phase
+        helper.registerReloadListener(Identifiers.bingo("data_store"), new PreparableReloadListener() {
+            @Override
+            public void prepareSharedState(SharedState sharedState) {
+                sharedState.set(BINGO_DATA_STORE_STATE_KEY, new KeyMap());
+            }
+
+            @Override
+            public CompletableFuture<Void> reload(SharedState sharedState, Executor taskExecutor, PreparationBarrier preparationBarrier, Executor reloadExecutor) {
+                final KeyMap dataStore = sharedState.get(BINGO_DATA_STORE_STATE_KEY);
+                final DataResourceStore.Mutable resourceStore = sharedState.get(DataResourceLoader.DATA_RESOURCE_STORE_KEY);
+                return preparationBarrier.wait(Unit.INSTANCE)
+                    .thenRunAsync(() -> resourceStore.put(BINGO_DATA_STORE_KEY, dataStore), reloadExecutor);
+            }
+        });
         handler.accept((id, listener) -> {
             helper.registerReloadListener(id, (sharedState, taskExecutor, preparationBarrier, reloadExecutor) -> {
                 HolderLookup.Provider registries = sharedState.get(ResourceLoader.REGISTRY_LOOKUP_KEY);
-                DataResourceStore.Mutable resourceStore = sharedState.get(DataResourceLoader.DATA_RESOURCE_STORE_KEY);
+                KeyMap sharedDataStore = sharedState.get(BINGO_DATA_STORE_STATE_KEY);
                 return CompletableFuture.supplyAsync(() -> {
                         KeyMap dataStore = new KeyMap();
                         listener.run(registries, dataStore);
                         return dataStore;
                     }, taskExecutor)
                     .thenCompose(preparationBarrier::wait)
-                    .thenAcceptAsync(dataStore -> resourceStore.put(BINGO_DATA_STORE_KEY, dataStore), reloadExecutor);
+                    .thenAcceptAsync(sharedDataStore::putAll, reloadExecutor);
             });
         });
     }
