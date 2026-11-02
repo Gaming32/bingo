@@ -10,6 +10,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +23,7 @@ public class MixinBoneMealItem {
         remap = false,
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/level/block/BonemealableBlock;performBonemeal(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V"
+            target = "Lnet/minecraft/world/level/block/BonemealableBlock;performBonemeal(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/BonemealSource;)V"
         )
     )
     private static void wrapApplyBoneMeal(
@@ -31,6 +32,7 @@ public class MixinBoneMealItem {
         RandomSource random,
         BlockPos pos,
         BlockState state,
+        BonemealSource source,
         Operation<Void> operation,
         @Local(argsOnly = true) ItemStack itemStack,
         @Local(argsOnly = true) Player player
@@ -39,7 +41,7 @@ public class MixinBoneMealItem {
             var _ = GlobalVars.CURRENT_PLAYER.push(player);
             var _ = GlobalVars.CURRENT_ITEM.push(itemStack)
         ) {
-            operation.call(instance, level, random, pos, state);
+            operation.call(instance, level, random, pos, state, source);
         }
     }
 }

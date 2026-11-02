@@ -9,15 +9,24 @@ import io.github.gaming32.bingo.platform.registrar.DatapackRegistryRegistrar;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilder;
 import io.github.gaming32.bingo.platform.registrar.KeyMappingBuilderImpl;
 import io.github.gaming32.bingo.platform.registrar.PictureInPictureRendererRegistrar;
+import io.github.gaming32.bingo.util.Identifiers;
+import io.github.gaming32.bingo.util.KeyMap;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ConfigurationTask;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.util.Unit;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -39,16 +48,21 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
-import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewDatapackRegistryEvent;
+import net.neoforged.neoforge.resource.ListenerKey;
 import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 public final class BingoPlatform {
+    private static final ListenerKey<DataStoreListener> DATA_STORE_KEY = ListenerKey.create(Identifiers.bingo("data_store"));
+
     @UnknownNullability
     private static IEventBus modEventBus;
 
@@ -125,28 +139,47 @@ public final class BingoPlatform {
     }
 
     public static void registerDataReloadListeners(Consumer<DataReloadListenerRegistrar> handler) {
-        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> handler.accept(
-            (id, listener, dependencies) -> {
-                event.addListener(id, listener.apply(event.getServerResources().getRegistryLookup()));
-                for (final var dependency : dependencies) {
-                    event.addDependency(dependency, id);
-                }
-            }
-        ));
+        NeoForge.EVENT_BUS.addListener((AddServerReloadListenersEvent event) -> {
+            final HolderLookup.Provider registries = event.getServerResources().getRegistryLookup();
+            final DataStoreListener dataStore = new DataStoreListener();
+            event.addRetainedListener(DATA_STORE_KEY, dataStore);
+            handler.accept((id, listener) -> event.addListener(id, (sharedState, taskExecutor, preparationBarrier, reloadExecutor) ->
+                CompletableFuture.supplyAsync(() -> {
+                        KeyMap data = new KeyMap();
+                        listener.run(registries, data);
+                        return data;
+                    }, taskExecutor)
+                    .thenCompose(preparationBarrier::wait)
+                    .thenAcceptAsync(dataStore.data::putAll, reloadExecutor)
+            ));
+        });
+    }
+
+    public static KeyMap getDataStore(MinecraftServer server) {
+        return server.getServerResources().managers().getListener(DATA_STORE_KEY).data;
     }
 
     public static void registerDatapackRegistries(Consumer<DatapackRegistryRegistrar> handler) {
-        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) -> handler.accept(new DatapackRegistryRegistrar() {
+        modEventBus.addListener((NewDatapackRegistryEvent event) -> handler.accept(new DatapackRegistryRegistrar() {
             @Override
             public <T> void unsynced(ResourceKey<Registry<T>> registryKey, Codec<T> codec) {
-                event.dataPackRegistry(registryKey, codec);
+                event.worldRegistry(registryKey, codec);
             }
 
             @Override
             public <T> void synced(ResourceKey<Registry<T>> registryKey, Codec<T> codec, @Nullable Codec<T> networkCodec) {
-                event.dataPackRegistry(registryKey, codec, networkCodec);
+                event.worldRegistry(registryKey, codec, networkCodec);
+            }
+
+            @Override
+            public <T> void reloadable(ResourceKey<Registry<T>> registryKey, Codec<T> codec) {
+                event.reloadableRegistry(registryKey, codec);
             }
         }));
+    }
+
+    public static boolean isFlammable(Level level, BlockPos pos) {
+        return level.getBlockState(pos).getFireSpreadSpeed(level, pos, Direction.UP) > 0;
     }
 
     public static void registerEvents() {
@@ -197,6 +230,18 @@ public final class BingoPlatform {
         Event.SERVER_TICK_END.setRegistrar(handler -> NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) ->
             handler.accept(event.getServer())
         ));
+    }
+
+    private static final class DataStoreListener implements PreparableReloadListener {
+        final KeyMap data = new KeyMap();
+
+        @Override
+        public CompletableFuture<Void> reload(
+            SharedState sharedState, Executor taskExecutor, PreparationBarrier preparationBarrier, Executor reloadExecutor
+        ) {
+            return preparationBarrier.wait(Unit.INSTANCE).thenRun(() -> {
+            });
+        }
     }
 
     private enum BingoConflictContext implements IKeyConflictContext {
