@@ -26,4 +26,8 @@ public final class KeyMap {
     public <T> void put(Key<T> key, T value) {
         map.put(key, value);
     }
+
+    public void putAll(KeyMap other) {
+        map.putAll(other.map);
+    }
 }
