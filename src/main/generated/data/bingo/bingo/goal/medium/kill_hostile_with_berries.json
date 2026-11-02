@@ -2,21 +2,19 @@
   "criteria": {
     "kill": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "#bingo:hostile"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "#bingo:hostile"
           }
-        ],
+        },
         "killing_blow": {
           "type": {
             "tags": [
               {
                 "expected": true,
-                "id": "bingo:berry_bush"
+                "id": "#bingo:berry_bush"
               }
             ]
           }

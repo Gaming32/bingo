@@ -3,18 +3,19 @@ package io.github.gaming32.bingo.triggers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.DamagePredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -36,20 +37,20 @@ public class KillItemTrigger extends SimpleCriterionTrigger<KillItemTrigger.Trig
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> item,
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> item,
         Optional<DamagePredicate> damage
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("item").forGetter(TriggerInstance::item),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("item").forGetter(TriggerInstance::item),
                 DamagePredicate.CODEC.optionalFieldOf("damage").forGetter(TriggerInstance::damage)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(ServerPlayer player, LootContext item, DamageSource source, float amount) {
-            if (this.item.isPresent() && !this.item.get().matches(item)) {
+            if (this.item.isPresent() && !this.item.get().value().test(item)) {
                 return false;
             }
             if (this.damage.isPresent() && !this.damage.get().matches(player, source, amount, amount, false)) {
@@ -61,24 +62,24 @@ public class KillItemTrigger extends SimpleCriterionTrigger<KillItemTrigger.Trig
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "item", item);
+            Validatable.validateHolder(validator.entityContext(), "item", item);
         }
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> item = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> item = Optional.empty();
         private Optional<DamagePredicate> damage = Optional.empty();
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }
 
-        public Builder item(ContextAwarePredicate item) {
+        public Builder item(Holder<LootItemCondition> item) {
             this.item = Optional.ofNullable(item);
             return this;
         }

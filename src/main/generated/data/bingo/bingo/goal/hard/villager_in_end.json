@@ -2,18 +2,16 @@
   "criteria": {
     "kill": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:villager",
-              "minecraft:location": {
-                "dimension": "minecraft:the_end"
-              }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:villager",
+            "minecraft:location": {
+              "dimension": "minecraft:the_end"
             }
           }
-        ]
+        }
       },
       "trigger": "minecraft:player_killed_entity"
     }
@@ -21,9 +19,7 @@
   "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:cauldron"
-    },
+    "block": "minecraft:cauldron",
     "item": {
       "count": 1,
       "id": "minecraft:cauldron"

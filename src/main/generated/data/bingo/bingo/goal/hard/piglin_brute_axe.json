@@ -2,15 +2,13 @@
   "criteria": {
     "give": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:piglin_brute"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:piglin_brute"
           }
-        ],
+        },
         "item": {
           "items": "#minecraft:axes",
           "predicates": {

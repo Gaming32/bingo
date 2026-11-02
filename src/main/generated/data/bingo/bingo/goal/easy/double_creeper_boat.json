@@ -2,38 +2,37 @@
   "criteria": {
     "break": {
       "conditions": {
-        "vehicle": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "#minecraft:boat"
-            }
-          },
-          {
-            "condition": "bingo:passengers",
-            "passengers": [
-              [
+        "vehicle": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "minecraft:entity_type": "#minecraft:boat"
+              }
+            },
+            {
+              "type": "bingo:passengers",
+              "passengers": [
                 {
-                  "condition": "minecraft:entity_properties",
+                  "type": "minecraft:entity_properties",
                   "entity": "this",
                   "predicate": {
                     "minecraft:entity_type": "minecraft:creeper"
                   }
-                }
-              ],
-              [
+                },
                 {
-                  "condition": "minecraft:entity_properties",
+                  "type": "minecraft:entity_properties",
                   "entity": "this",
                   "predicate": {
                     "minecraft:entity_type": "minecraft:creeper"
                   }
                 }
               ]
-            ]
-          }
-        ]
+            }
+          ]
+        }
       },
       "trigger": "bingo:destroy_vehicle"
     }

@@ -12,12 +12,7 @@
   "difficulty": "bingo:medium",
   "icon": {
     "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:respawn_anchor",
-      "Properties": {
-        "charges": "0"
-      }
-    },
+    "block": "minecraft:respawn_anchor",
     "item": {
       "count": 1,
       "id": "minecraft:respawn_anchor"

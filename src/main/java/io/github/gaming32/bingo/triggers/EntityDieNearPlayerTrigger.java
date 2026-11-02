@@ -2,18 +2,19 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.DamagePredicate;
 import net.minecraft.advancements.predicates.DistancePredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,22 +39,22 @@ public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDie
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> entity,
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> entity,
         Optional<DamagePredicate> killingBlow,
         Optional<DistancePredicate> distance
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("entity").forGetter(TriggerInstance::entity),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("entity").forGetter(TriggerInstance::entity),
                 DamagePredicate.CODEC.optionalFieldOf("killing_blow").forGetter(TriggerInstance::killingBlow),
                 DistancePredicate.CODEC.optionalFieldOf("distance").forGetter(TriggerInstance::distance)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(ServerPlayer player, LivingEntity entity, DamageSource source, float damageDealt, float damageTaken, boolean blocked) {
-            if (this.entity.isPresent() && !this.entity.get().matches(EntityPredicate.createContext(player, entity))) {
+            if (this.entity.isPresent() && !this.entity.get().value().test(EntityPredicate.createContext(player, entity))) {
                 return false;
             }
             if (this.killingBlow.isPresent() && !killingBlow.get().matches(player, source, damageDealt, damageTaken, blocked)) {
@@ -68,25 +69,25 @@ public class EntityDieNearPlayerTrigger extends SimpleCriterionTrigger<EntityDie
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "entity", entity);
+            Validatable.validateHolder(validator.entityContext(), "entity", entity);
         }
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> entity = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> entity = Optional.empty();
         private Optional<DamagePredicate> killingBlow = Optional.empty();
         private Optional<DistancePredicate> distance = Optional.empty();
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }
 
-        public Builder entity(ContextAwarePredicate entity) {
+        public Builder entity(Holder<LootItemCondition> entity) {
             this.entity = Optional.ofNullable(entity);
             return this;
         }

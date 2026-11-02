@@ -2,21 +2,24 @@
   "criteria": {
     "stairway": {
       "conditions": {
-        "player": [
-          {
-            "condition": "minecraft:location_check",
-            "predicate": {
-              "position": {
-                "y": {
-                  "min": 319
+        "player": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:location_check",
+              "predicate": {
+                "position": {
+                  "y": {
+                    "min": 319
+                  }
                 }
               }
+            },
+            {
+              "type": "bingo:stairway_to_heaven"
             }
-          },
-          {
-            "condition": "bingo:stairway_to_heaven"
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:location"
     }
@@ -24,15 +27,7 @@
   "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:cobblestone_stairs",
-      "Properties": {
-        "facing": "north",
-        "half": "bottom",
-        "shape": "straight",
-        "waterlogged": "false"
-      }
-    },
+    "block": "minecraft:cobblestone_stairs",
     "item": {
       "count": 1,
       "id": "minecraft:cobblestone_stairs"

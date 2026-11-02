@@ -3,33 +3,29 @@
   "criteria": {
     "paintings": {
       "conditions": {
-        "adjacent_paintings": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "bingo:type_specific/painting": {
-                "height": 4,
-                "width": 4
-              }
+        "adjacent_paintings": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "bingo:type_specific/painting": {
+              "height": 4,
+              "width": 4
             }
           }
-        ],
+        },
         "count": {
           "min": 3
         },
-        "placed_painting": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "bingo:type_specific/painting": {
-                "height": 4,
-                "width": 4
-              }
+        "placed_painting": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "bingo:type_specific/painting": {
+              "height": 4,
+              "width": 4
             }
           }
-        ]
+        }
       },
       "trigger": "bingo:adjacent_painting"
     }

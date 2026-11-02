@@ -17,7 +17,6 @@ import io.github.gaming32.bingo.triggers.TryUseItemTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.predicates.BlockPredicate;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
@@ -28,36 +27,35 @@ import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.advancements.triggers.ItemDurabilityTrigger;
 import net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.triggers.PlayerTrigger;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 
 import static io.github.gaming32.bingo.datagen.goal.GoalIds.VeryEasy.*;
 
 public class VeryEasyGoalProvider extends DifficultyGoalProvider {
-    public VeryEasyGoalProvider(BiConsumer<Identifier, BingoGoal> goalAdder, HolderLookup.Provider registries) {
-        super(BingoDifficulties.VERY_EASY, goalAdder, registries);
+    public VeryEasyGoalProvider(BootstrapContext<BingoGoal> context) {
+        super(BingoDifficulties.VERY_EASY, context);
     }
 
     @Override
     public void addGoals() {
-        final var items = registries.lookupOrThrow(Registries.ITEM);
-        final var blocks = registries.lookupOrThrow(Registries.BLOCK);
+        final var items = context.lookup(Registries.ITEM);
+        final var blocks = context.lookup(Registries.BLOCK);
 
         addGoal(obtainItemGoal(COBBLESTONE, items, Items.COBBLESTONE, 32, 64)
             .tags(BingoTags.OVERWORLD));
@@ -104,10 +102,10 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(IRON_BLOCK, items, Items.IRON_BLOCK)
             .infrequency(2));
-        addGoal(BingoGoal.builder(POPPIES_DANDELIONS)
+        addGoal(GoalBuilder.of(POPPIES_DANDELIONS)
             .sub("poppies_count", BingoSub.random(5, 25))
             .sub("dandelions_count", BingoSub.random(5, 25))
-            .criterion("flowers", TotalCountInventoryChangeTrigger.builder()
+            .criterion(context, "flowers", TotalCountInventoryChangeTrigger.builder()
                 .items(
                     ItemPredicate.Builder.item().of(items, Items.POPPY).withCount(MinMaxBounds.Ints.atLeast(0)).build(),
                     ItemPredicate.Builder.item().of(items, Items.DANDELION).withCount(MinMaxBounds.Ints.atLeast(0)).build()
@@ -123,7 +121,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                     Component.translatable("bingo.count", 0, Component.translatable(Items.POPPY.getDescriptionId())),
                     Component.translatable("bingo.count", 0, Component.translatable(Items.DANDELION.getDescriptionId()))),
                 subber -> subber.sub("with.0.with.0", "poppies_count").sub("with.1.with.0", "dandelions_count"))
-            .icon(new CycleIcon(
+            .icon(context, new CycleIcon(
                 ItemIcon.ofItem(Items.POPPY),
                 ItemIcon.ofItem(Items.DANDELION)
             ), subber -> subber.sub("icons.0.item.count", "poppies_count").sub("icons.1.item.count", "dandelions_count")));
@@ -134,7 +132,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(LEAVES, Items.OAK_LEAVES, ItemPredicate.Builder.item().of(items, ItemTags.LEAVES), 32, 64)
             .tags(BingoTags.OVERWORLD)
             .name(Component.translatable("bingo.goal.leaves", 0), subber -> subber.sub("with.0", "count"))
-            .icon(new ItemTagCycleIcon(ItemTags.LEAVES), subber -> subber.sub("+count", "count"))
+            .icon(context, new ItemTagCycleIcon(ItemTags.LEAVES), subber -> subber.sub("+count", "count"))
         );
         addGoal(blockCubeGoal(
             LEAF_CUBE,
@@ -172,11 +170,11 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(FEATHER, items, Items.FEATHER, 2, 10)
             .infrequency(2));
-        addGoal(BingoGoal.builder(SLEEP_IN_BED)
-            .criterion("sleep", PlayerTrigger.TriggerInstance.sleptInBed())
+        addGoal(GoalBuilder.of(SLEEP_IN_BED)
+            .criterion(context, "sleep", PlayerTrigger.TriggerInstance.sleptInBed())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("sleep_in_bed")
-            .icon(Items.BED.red())
+            .icon(context, Items.BED.red())
             .reactant("sleep"));
         addGoal(obtainItemGoal(CHARCOAL, items, Items.CHARCOAL)
             .reactant("use_furnace")
@@ -196,20 +194,20 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(obtainSomeEdibleItems(EDIBLE_ITEMS, 2, 3));
-        addGoal(BingoGoal.builder(BREED_MOB_PAIR)
-            .criterion("breed", BredAnimalsTrigger.TriggerInstance.bredAnimals())
+        addGoal(GoalBuilder.of(BREED_MOB_PAIR)
+            .criterion(context, "breed", BredAnimalsTrigger.TriggerInstance.bredAnimals())
             .name("breed_mob_pair")
             .tooltip("breed_mobs")
             .antisynergy("breed_animals")
             .infrequency(2)
             .tags(BingoTags.ACTION, BingoTags.STAT)
-            .icon(Items.WHEAT_SEEDS)
+            .icon(context, Items.WHEAT_SEEDS)
         );
         addGoal(crouchDistanceGoal(CROUCH_DISTANCE, 50, 100));
         {
             final List<CompoundTag> slots = IntStream.range(0, 4).mapToObj(slot -> BingoUtil.compound(Map.of("Slot", ByteTag.valueOf((byte) slot)))).toList();
-            addGoal(BingoGoal.builder(FILL_ALL_CAMPFIRE_SLOTS)
-                .criterion("place", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+            addGoal(GoalBuilder.of(FILL_ALL_CAMPFIRE_SLOTS)
+                .criterion(context, "place", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                     LocationPredicate.Builder.location().setBlock(
                         BlockPredicate.Builder.block()
                             .of(blocks, Blocks.CAMPFIRE)
@@ -221,29 +219,29 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
                     ItemPredicate.Builder.item()
                 ))
                 .name(Component.translatable("bingo.goal.fill_all_campfire_slots", Blocks.CAMPFIRE.getName()))
-                .icon(makeItemWithGlint(Items.CAMPFIRE))
+                .icon(context, makeItemWithGlint(Items.CAMPFIRE))
                 .tags(BingoTags.ACTION));
         }
-        addGoal(BingoGoal.builder(DYE_SIGN)
-            .criterion("dye", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+        addGoal(GoalBuilder.of(DYE_SIGN)
+            .criterion(context, "dye", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blocks, BlockTags.ALL_SIGNS)),
                 ItemPredicate.Builder.item().of(items, ConventionalItemTags.DYES)
             ))
             .name("dye_sign")
             .tags(BingoTags.ACTION)
-            .icon(Items.OAK_SIGN)
+            .icon(context, Items.OAK_SIGN)
         );
-        addGoal(BingoGoal.builder(EXTINGUISH_CAMPFIRE)
-            .criterion("extinguish", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+        addGoal(GoalBuilder.of(EXTINGUISH_CAMPFIRE)
+            .criterion(context, "extinguish", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blocks, Blocks.CAMPFIRE)),
                 ItemPredicate.Builder.item().of(items, ItemTags.SHOVELS)
             ))
             .name("extinguish_campfire")
             .tags(BingoTags.ACTION)
-            .icon(Items.CAMPFIRE)
+            .icon(context, Items.CAMPFIRE)
         );
-        addGoal(BingoGoal.builder(NEVER_PICKUP_CRAFTING_TABLES)
-            .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUp(
+        addGoal(GoalBuilder.of(NEVER_PICKUP_CRAFTING_TABLES)
+            .criterion(context, "pickup", ItemPickedUpTrigger.TriggerInstance.pickedUp(
                 EntityPredicate.Builder.entity().put(
                     ItemEntityPredicate.CODEC,
                     ItemEntityPredicate.item(ItemPredicate.Builder.item().of(items, Items.CRAFTING_TABLE).build())
@@ -251,7 +249,7 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.NEVER).name("never_pickup_crafting_tables")
             .tooltip("never_pickup_crafting_tables")
-            .icon(Items.CRAFTING_TABLE));
+            .icon(context, Items.CRAFTING_TABLE));
         addGoal(obtainSomeItemsFromTag(GOLD_IN_NAME, BingoItemTags.GOLD_IN_NAME, "bingo.goal.gold_in_name", 2, 4)
             .tooltip("gold_in_name")
             .antisynergy("gold_items"));
@@ -271,50 +269,51 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(PAPER, items, Items.PAPER, 2, 5)
             .infrequency(2)
             .tags(BingoTags.OVERWORLD));
-        addGoal(BingoGoal.builder(NEVER_FISH)
-            .criterion("use", TryUseItemTrigger.builder().item(ItemPredicate.Builder.item().of(items, Items.FISHING_ROD).build()).build())
+        addGoal(GoalBuilder.of(NEVER_FISH)
+            .criterion(context, "use", TryUseItemTrigger.builder().item(ItemPredicate.Builder.item().of(items, Items.FISHING_ROD).build()).build())
             .tags(BingoTags.NEVER, BingoTags.OVERWORLD)
             .name("never_fish").tooltip("never_fish")
-            .icon(Items.FISHING_ROD)
+            .icon(context, Items.FISHING_ROD)
             .catalyst("fishing"));
-        addGoal(BingoGoal.builder(BREAK_HOE)
-            .criterion("break", ItemDurabilityTrigger.TriggerInstance.changedDurability(
+        addGoal(GoalBuilder.of(BREAK_HOE)
+            .criterion(context, "break", ItemDurabilityTrigger.TriggerInstance.changedDurability(
                 Optional.of(ItemPredicate.Builder.item().of(items, ItemTags.HOES).build()),
                 MinMaxBounds.Ints.atMost(0)
             ))
             .tags(BingoTags.ACTION, BingoTags.STAT)
             .name("break_hoe")
-            .icon(Items.STONE_HOE));
-        addGoal(BingoGoal.builder(BOUNCE_ON_BED)
-            .criterion("bounce", BounceOnBlockTrigger.TriggerInstance.bounceOnBlock(
+            .icon(context, Items.STONE_HOE));
+        addGoal(GoalBuilder.of(BOUNCE_ON_BED)
+            .criterion(context, "bounce", BounceOnBlockTrigger.TriggerInstance.bounceOnBlock(
                 BlockPredicate.Builder.block().of(blocks, BlockTags.BEDS)
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("bounce_on_bed")
-            .icon(Items.BED.white())
+            .icon(context, Items.BED.white())
         );
-        addGoal(BingoGoal.builder(HANG_PAINTING)
-            .criterion("hang", AdjacentPaintingTrigger.builder().count(MinMaxBounds.Ints.atLeast(1)).build())
+        addGoal(GoalBuilder.of(HANG_PAINTING)
+            .criterion(context, "hang", AdjacentPaintingTrigger.builder().count(MinMaxBounds.Ints.atLeast(1)).build())
             .name("hang_painting")
-            .icon(Items.PAINTING)
+            .icon(context, Items.PAINTING)
             .antisynergy("painting")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
-        addGoal(BingoGoal.builder(FILL_COMPOSTER)
-            .criterion("fill", CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
+        addGoal(GoalBuilder.of(FILL_COMPOSTER)
+            .criterion(context, "fill", CriteriaTriggers.ITEM_USED_ON_BLOCK.createCriterion(
                 new ItemUsedOnLocationTrigger.TriggerInstance(
                     Optional.empty(),
                     Optional.of(
-                        ContextAwarePredicate.create(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.COMPOSTER)
-                            .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ComposterBlock.LEVEL, 7))
-                            .build()
-                        )
+                        Holder.direct(MatchBlock.blockMatches(
+                            blocks,
+                            Blocks.COMPOSTER,
+                            StatePropertiesPredicate.Builder.properties().hasProperty(ComposterBlock.LEVEL, 7)
+                        ).build())
                     )
                 )
             ))
             .name("fill_composter")
             .tooltip("fill_composter")
             .tags(BingoTags.ACTION)
-            .icon(Blocks.COMPOSTER.defaultBlockState().setValue(ComposterBlock.LEVEL, 8))
+            .icon(context, Blocks.COMPOSTER.defaultBlockState().setValue(ComposterBlock.LEVEL, 8))
         );
 
         for (String woodType : List.of("oak", "spruce", "birch", "dark_oak", "acacia", "cherry")) {

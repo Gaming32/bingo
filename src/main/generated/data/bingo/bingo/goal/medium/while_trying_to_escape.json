@@ -2,20 +2,23 @@
   "criteria": {
     "die": {
       "conditions": {
-        "source_entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this"
-          },
-          {
-            "condition": "minecraft:inverted",
-            "term": {
-              "condition": "minecraft:entity_properties",
-              "entity": "this",
-              "predicate": {}
+        "source_entity": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:entity_properties",
+              "entity": "this"
+            },
+            {
+              "type": "minecraft:inverted",
+              "term": {
+                "type": "minecraft:entity_properties",
+                "entity": "this",
+                "predicate": {}
+              }
             }
-          }
-        ]
+          ]
+        }
       },
       "trigger": "bingo:entity_killed_player"
     }

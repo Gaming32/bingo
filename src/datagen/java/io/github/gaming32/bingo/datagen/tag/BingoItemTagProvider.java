@@ -10,11 +10,13 @@ import io.github.gaming32.bingo.mixin.datagen.LootTableAccessor;
 import io.github.gaming32.bingo.mixin.datagen.MobBucketItemAccessor;
 import io.github.gaming32.bingo.mixin.datagen.NestedLootTableAccessor;
 import io.github.gaming32.bingo.mixin.datagen.TagEntryAccessor;
+import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentInitializers;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
@@ -96,7 +98,7 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
         final var items = registries.lookupOrThrow(Registries.ITEM);
 
         // Cannot copy() because that can't copy from Vanilla's block tags, only our block tags
-        BingoDataGenUtil.loadVanillaTag(BlockTags.CLIMBABLE, registries)
+        BingoDataGenUtil.loadVanillaTag(BlockTags.CLIMBABLE, registries::lookupOrThrow)
             .stream()
             .map(block -> items.get(ResourceKey.create(Registries.ITEM, block.unwrapKey().orElseThrow().identifier())))
             .filter(Optional::isPresent)
@@ -130,12 +132,12 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
             .map(trimTemplate -> trimTemplate.template().builtInRegistryHolder().key())
             .forEach(trimTemplatesBuilder::add);
 
-        final var vanillaMeat = BingoDataGenUtil.loadVanillaTag(ItemTags.MEAT, registries);
+        final var vanillaMeat = BingoDataGenUtil.loadVanillaTag(ItemTags.MEAT, registries::lookupOrThrow);
         final var vanillaVillagerPlantableSeeds = BingoDataGenUtil.loadVanillaTag(
             ItemTags.VILLAGER_PLANTABLE_SEEDS,
-            registries
+            registries::lookupOrThrow
         );
-        final var vanillaSaplings = BingoDataGenUtil.loadVanillaTag(ItemTags.SAPLINGS, registries);
+        final var vanillaSaplings = BingoDataGenUtil.loadVanillaTag(ItemTags.SAPLINGS, registries::lookupOrThrow);
 
         var goldInNameBuilder = builder(BingoItemTags.GOLD_IN_NAME);
         var copperInNameBuilder = builder(BingoItemTags.COPPER_IN_NAME);
@@ -219,7 +221,7 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
     }
 
     private static void addItemsFromLootTable(TagAppender<Item> tagAppender, ResourceKey<LootTable> lootTable, HolderLookup.Provider registries, Predicate<Item> filter) {
-        addItemsFromLootTable(tagAppender, BingoDataGenUtil.loadVanillaLootTable(lootTable, registries), registries, filter);
+        addItemsFromLootTable(tagAppender, BingoDataGenUtil.loadVanillaLootTable(lootTable, registries::lookupOrThrow), registries, filter);
     }
 
     private static void addItemsFromLootTable(TagAppender<Item> tagAppender, LootTable lootTable, HolderLookup.Provider registries, Predicate<Item> filter) {
@@ -243,13 +245,26 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
                     tagAppender.add(item.unwrapKey().orElseThrow());
                 }
             }
-            case TagEntry tagEntry -> tagAppender.forceAddTag(((TagEntryAccessor) tagEntry).getTag());
-            case NestedLootTable nestedTable -> {
-                LootTable nestedTableObj = ((NestedLootTableAccessor) nestedTable).getContents().map(
-                    lootTableKey -> BingoDataGenUtil.loadVanillaLootTable(lootTableKey, registries),
-                    Function.identity()
+            case TagEntry tagEntry -> {
+                HolderSet<Item> tag = ((TagEntryAccessor) tagEntry).getTag();
+                BingoUtil.ifBoth(
+                    tag.unwrap(),
+                    tagAppender::forceAddTag,
+                    entries -> {
+                        for (Holder<Item> entry : entries) {
+                            tagAppender.add(entry.unwrapKey().orElseThrow());
+                        }
+                    }
                 );
-                addItemsFromLootTable(tagAppender, nestedTableObj, registries, filter);
+            }
+            case NestedLootTable nestedTable -> {
+                for (Holder<LootTable> nestedTableHolder : ((NestedLootTableAccessor) nestedTable).getValue()) {
+                    LootTable nestedTableObj = nestedTableHolder.unwrap().map(
+                        key -> BingoDataGenUtil.loadVanillaLootTable(key, registries::lookupOrThrow),
+                        Function.identity()
+                    );
+                    addItemsFromLootTable(tagAppender, nestedTableObj, registries, filter);
+                }
             }
             case EmptyLootItem ignored -> {
             }

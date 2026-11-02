@@ -20,49 +20,52 @@
   "criteria": {
     "activate": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:nether_portal",
-            "condition": "minecraft:block_state_property"
-          },
-          {
-            "aisles": [
-              {
-                "bingo_type": "bingo:compound",
-                "element_type": "array",
-                "factors": [
-                  {
-                    "type": "bingo:wrap",
-                    "value": [
-                      {
-                        "bingo_type": "bingo:compound",
-                        "element_type": "string",
-                        "factors": [
-                          {
-                            "type": "bingo:wrap",
-                            "value": "P"
-                          },
-                          "width"
-                        ],
-                        "operator": "mul"
-                      }
-                    ]
-                  },
-                  "height"
-                ],
-                "operator": "mul"
-              }
-            ],
-            "condition": "bingo:block_pattern",
-            "where": {
-              "P": {
-                "block": {
-                  "blocks": "minecraft:nether_portal"
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:match_block",
+              "blocks": "minecraft:nether_portal"
+            },
+            {
+              "type": "bingo:block_pattern",
+              "aisles": [
+                {
+                  "bingo_type": "bingo:compound",
+                  "element_type": "array",
+                  "factors": [
+                    {
+                      "type": "bingo:wrap",
+                      "value": [
+                        {
+                          "bingo_type": "bingo:compound",
+                          "element_type": "string",
+                          "factors": [
+                            {
+                              "type": "bingo:wrap",
+                              "value": "P"
+                            },
+                            "width"
+                          ],
+                          "operator": "mul"
+                        }
+                      ]
+                    },
+                    "height"
+                  ],
+                  "operator": "mul"
+                }
+              ],
+              "where": {
+                "P": {
+                  "block": {
+                    "blocks": "minecraft:nether_portal"
+                  }
                 }
               }
             }
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:placed_block"
     }
@@ -73,12 +76,7 @@
     "icons": [
       {
         "type": "bingo:block",
-        "block": {
-          "Name": "minecraft:nether_portal",
-          "Properties": {
-            "axis": "x"
-          }
-        },
+        "block": "minecraft:nether_portal",
         "item": {
           "count": {
             "bingo_type": "bingo:compound",
@@ -93,9 +91,7 @@
       },
       {
         "type": "bingo:block",
-        "block": {
-          "Name": "minecraft:obsidian"
-        },
+        "block": "minecraft:obsidian",
         "item": {
           "count": {
             "bingo_type": "bingo:compound",

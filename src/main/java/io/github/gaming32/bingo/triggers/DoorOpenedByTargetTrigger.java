@@ -2,18 +2,19 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -39,16 +40,16 @@ public class DoorOpenedByTargetTrigger extends SimpleCriterionTrigger<DoorOpened
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> projectile,
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> projectile,
         Optional<LocationPredicate> targetBlock,
         MinMaxBounds.Ints targetBlockPower,
         Optional<LocationPredicate> door
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("projectile").forGetter(TriggerInstance::projectile),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("projectile").forGetter(TriggerInstance::projectile),
                 LocationPredicate.CODEC.optionalFieldOf("target_block").forGetter(TriggerInstance::targetBlock),
                 MinMaxBounds.Ints.CODEC.optionalFieldOf("target_block_power", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::targetBlockPower),
                 LocationPredicate.CODEC.optionalFieldOf("door").forGetter(TriggerInstance::door)
@@ -61,7 +62,7 @@ public class DoorOpenedByTargetTrigger extends SimpleCriterionTrigger<DoorOpened
             int targetBlockPower,
             BlockPos door
         ) {
-            if (this.projectile.isPresent() && !this.projectile.get().matches(projectile)) {
+            if (this.projectile.isPresent() && !this.projectile.get().value().test(projectile)) {
                 return false;
             }
             if (this.targetBlock.isPresent() && !this.targetBlock.get().matches(projectile.getLevel(), targetBlock.getX(), targetBlock.getY(), targetBlock.getZ())) {
@@ -79,13 +80,13 @@ public class DoorOpenedByTargetTrigger extends SimpleCriterionTrigger<DoorOpened
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "projectile", projectile);
+            Validatable.validateHolder(validator.entityContext(), "projectile", projectile);
         }
     }
 
     public static class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> projectile = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> projectile = Optional.empty();
         private Optional<LocationPredicate> targetBlock = Optional.empty();
         private MinMaxBounds.Ints targetBlockPower = MinMaxBounds.Ints.ANY;
         private Optional<LocationPredicate> door = Optional.empty();
@@ -93,12 +94,12 @@ public class DoorOpenedByTargetTrigger extends SimpleCriterionTrigger<DoorOpened
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.of(player);
             return this;
         }
 
-        public Builder projectile(ContextAwarePredicate projectile) {
+        public Builder projectile(Holder<LootItemCondition> projectile) {
             this.projectile = Optional.of(projectile);
             return this;
         }

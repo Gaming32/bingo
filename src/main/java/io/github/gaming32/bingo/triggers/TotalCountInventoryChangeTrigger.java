@@ -4,14 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,12 +38,12 @@ public class TotalCountInventoryChangeTrigger extends SimpleProgressibleCriterio
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
+        Optional<Holder<LootItemCondition>> player,
         List<ItemPredicate> items
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 ItemPredicate.CODEC.listOf().fieldOf("items").forGetter(TriggerInstance::items)
             ).apply(instance, TriggerInstance::new)
         );
@@ -114,13 +114,13 @@ public class TotalCountInventoryChangeTrigger extends SimpleProgressibleCriterio
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
         private final List<ItemPredicate> items = new ArrayList<>();
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }

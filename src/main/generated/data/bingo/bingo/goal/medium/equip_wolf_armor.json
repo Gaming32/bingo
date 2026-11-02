@@ -2,15 +2,13 @@
   "criteria": {
     "equip": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:armadillo"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:armadillo"
           }
-        ],
+        },
         "item": {
           "items": "minecraft:brush"
         }

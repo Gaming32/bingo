@@ -2,12 +2,12 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -26,14 +26,14 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
+        Optional<Holder<LootItemCondition>> player,
         MinMaxBounds.Ints levels,
         MinMaxBounds.Doubles progress,
         MinMaxBounds.Ints totalExperience
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 MinMaxBounds.Ints.CODEC.optionalFieldOf("levels", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::levels),
                 MinMaxBounds.Doubles.CODEC.optionalFieldOf("progress", MinMaxBounds.Doubles.ANY).forGetter(TriggerInstance::progress),
                 MinMaxBounds.Ints.CODEC.optionalFieldOf("total_experience", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::totalExperience)
@@ -55,7 +55,7 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
         private MinMaxBounds.Ints levels = MinMaxBounds.Ints.ANY;
         private MinMaxBounds.Doubles progress = MinMaxBounds.Doubles.ANY;
         private MinMaxBounds.Ints totalExperience = MinMaxBounds.Ints.ANY;
@@ -63,7 +63,7 @@ public class ExperienceChangeTrigger extends SimpleCriterionTrigger<ExperienceCh
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }

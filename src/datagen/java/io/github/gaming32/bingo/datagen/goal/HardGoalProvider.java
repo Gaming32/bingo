@@ -13,6 +13,7 @@ import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.bingo.BingoDamageTypeTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
+import io.github.gaming32.bingo.datagen.BingoDataGenUtil;
 import io.github.gaming32.bingo.triggers.BreakBlockTrigger;
 import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
 import io.github.gaming32.bingo.triggers.EnchantedItemTrigger;
@@ -30,7 +31,6 @@ import io.github.gaming32.bingo.util.Identifiers;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.predicates.BlockPredicate;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.DamagePredicate;
 import net.minecraft.advancements.predicates.DamageSourcePredicate;
 import net.minecraft.advancements.predicates.DataComponentMatchers;
@@ -57,14 +57,14 @@ import net.minecraft.advancements.triggers.TameAnimalTrigger;
 import net.minecraft.advancements.triggers.UsedTotemTrigger;
 import net.minecraft.advancements.triggers.UsingItemTrigger;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.predicates.DataComponentPredicates;
 import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.core.component.predicates.JukeboxPlayablePredicate;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
@@ -81,55 +81,57 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.AllOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 
 import static io.github.gaming32.bingo.datagen.goal.GoalIds.Hard.*;
 
 public class HardGoalProvider extends DifficultyGoalProvider {
-    public HardGoalProvider(BiConsumer<Identifier, BingoGoal> goalAdder, HolderLookup.Provider registries) {
-        super(BingoDifficulties.HARD, goalAdder, registries);
+    public HardGoalProvider(BootstrapContext<BingoGoal> context) {
+        super(BingoDifficulties.HARD, context);
     }
 
     @Override
     public void addGoals() {
-        final var bannerPatterns = registries.lookupOrThrow(Registries.BANNER_PATTERN);
-        final var enchantments = registries.lookupOrThrow(Registries.ENCHANTMENT);
-        final var items = registries.lookupOrThrow(Registries.ITEM);
-        final var entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
-        final var blocks = registries.lookupOrThrow(Registries.BLOCK);
+        final var bannerPatterns = context.lookup(Registries.BANNER_PATTERN);
+        final var enchantments = context.lookup(Registries.ENCHANTMENT);
+        final var items = context.lookup(Registries.ITEM);
+        final var entityTypes = context.lookup(Registries.ENTITY_TYPE);
+        final var blocks = context.lookup(Registries.BLOCK);
+        final var damageTypes = context.lookup(Registries.DAMAGE_TYPE);
+        final var features = context.lookup(Registries.FEATURE);
 
-        addGoal(BingoGoal.builder(LEVEL_10_ENCHANT)
-            .criterion("enchant", EnchantedItemTrigger.builder().requiredLevels(MinMaxBounds.Ints.atLeast(10)).build())
+        addGoal(GoalBuilder.of(LEVEL_10_ENCHANT)
+            .criterion(context, "enchant", EnchantedItemTrigger.builder().requiredLevels(MinMaxBounds.Ints.atLeast(10)).build())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("level_10_enchant")
-            .icon(new ItemStackTemplate(Items.ENCHANTING_TABLE, 10)));
-        addGoal(BingoGoal.builder(MILK_MOOSHROOM)
-            .criterion("obtain", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+            .icon(context, new ItemStackTemplate(Items.ENCHANTING_TABLE, 10)));
+        addGoal(GoalBuilder.of(MILK_MOOSHROOM)
+            .criterion(context, "obtain", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
                 ItemPredicate.Builder.item().of(items, Items.BUCKET),
                 Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.MOOSHROOM).build()))
             ))
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name("milk_mooshroom")
-            .icon(EntityIcon.ofSpawnEgg(EntityTypes.MOOSHROOM))
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.MOOSHROOM))
             .infrequency(2)
         );
-        addGoal(BingoGoal.builder(SHEAR_MOOSHROOM)
-            .criterion("obtain", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+        addGoal(GoalBuilder.of(SHEAR_MOOSHROOM)
+            .criterion(context, "obtain", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
                 ItemPredicate.Builder.item().of(items, Items.SHEARS),
                 Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.MOOSHROOM).build()))
             ))
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name("shear_mooshroom")
-            .icon(EntityIcon.ofSpawnEgg(EntityTypes.COW))
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.COW))
             .infrequency(2)
         );
         addGoal(obtainItemGoal(SEA_LANTERN, items, Items.SEA_LANTERN, 2, 5)
@@ -137,8 +139,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(SPONGE, items, Items.SPONGE)
             .tooltip("sponge")
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
-        addGoal(BingoGoal.builder(LISTEN_TO_MUSIC)
-            .criterion("obtain", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+        addGoal(GoalBuilder.of(LISTEN_TO_MUSIC)
+            .criterion(context, "obtain", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blocks, Blocks.JUKEBOX)),
                 ItemPredicate.Builder.item()
                     .withComponents(DataComponentMatchers.Builder.components()
@@ -148,25 +150,25 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.ITEM)
             .name("listen_to_music")
-            .icon(Items.JUKEBOX));
+            .icon(context, Items.JUKEBOX));
         addGoal(obtainSomeItemsFromTag(DIFFERENT_FLOWERS, ConventionalItemTags.FLOWERS, "bingo.goal.different_flowers", 11, 14)
             .antisynergy("flowers")
             .infrequency(3)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(DIAMOND_BLOCK, items, Items.DIAMOND_BLOCK, 2, 4)
             .infrequency(2));
-        addGoal(BingoGoal.builder(ZOMBIFIED_PIGLIN_SWORD)
-            .criterion("pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
+        addGoal(GoalBuilder.of(ZOMBIFIED_PIGLIN_SWORD)
+            .criterion(context, "pickup", ItemPickedUpTrigger.TriggerInstance.pickedUpFrom(
                 ItemPredicate.Builder.item().of(items, Items.GOLDEN_SWORD).build(),
                 EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.ZOMBIFIED_PIGLIN).build()
             ))
             .reactant("pacifist")
             .tags(BingoTags.ITEM, BingoTags.COMBAT, BingoTags.NETHER)
             .name("zombified_piglin_sword")
-            .icon(Items.GOLDEN_SWORD));
+            .icon(context, Items.GOLDEN_SWORD));
         // TODO: finish by launching fireworks of n different colors
-        addGoal(BingoGoal.builder(FINISH_ON_BLAZE_SPAWNER)
-            .criterion("spawner", PlayerTrigger.TriggerInstance.located(EntityPredicate.Builder.entity()
+        addGoal(GoalBuilder.of(FINISH_ON_BLAZE_SPAWNER)
+            .criterion(context, "spawner", PlayerTrigger.TriggerInstance.located(EntityPredicate.Builder.entity()
                 .steppingOn(LocationPredicate.Builder.location()
                     .setBlock(spawnerPredicate(blocks, entityTypes, EntityTypes.BLAZE))
                 )
@@ -180,7 +182,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     Blocks.SPAWNER.getName()
                 )
             ))
-            .icon(Blocks.SPAWNER)
+            .icon(context, Blocks.SPAWNER)
         );
         addGoal(obtainSomeItemsFromTag(WOOL, ItemTags.WOOL, "bingo.goal.wool", 12, 14)
             .antisynergy("wool_color")
@@ -201,42 +203,42 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .infrequency(4)
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(bedRowGoal(BED_ROW, 11, 14));
-        addGoal(BingoGoal.builder(POISON_PARROT)
-            .criterion("poison", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+        addGoal(GoalBuilder.of(POISON_PARROT)
+            .criterion(context, "poison", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
                 ItemPredicate.Builder.item().of(items, Items.COOKIE),
                 Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.PARROT).build()))
             ))
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name("poison_parrot")
-            .icon(Items.COOKIE)
+            .icon(context, Items.COOKIE)
             .infrequency(2)
             .reactant("pacifist"));
-        addGoal(BingoGoal.builder(TAME_PARROT)
-            .criterion("tame", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.PARROT)))
+        addGoal(GoalBuilder.of(TAME_PARROT)
+            .criterion(context, "tame", TameAnimalTrigger.TriggerInstance.tamedAnimal(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.PARROT)))
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name("tame_parrot")
-            .icon(EntityIcon.ofSpawnEgg(EntityTypes.PARROT))
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.PARROT))
             .infrequency(2)
         );
-        addGoal(BingoGoal.builder(ICE_ON_MAGMA)
-            .criterion("obtain", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
+        addGoal(GoalBuilder.of(ICE_ON_MAGMA)
+            .criterion(context, "obtain", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(AllOfCondition.allOf(
                 AnyOfCondition.anyOf(
-                    LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.ICE),
-                    LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.MAGMA_BLOCK)
+                    MatchBlock.blockMatches(blocks, Blocks.ICE),
+                    MatchBlock.blockMatches(blocks, Blocks.MAGMA_BLOCK)
                 ),
                 BlockPatternCondition.builder().aisle("i", "m")
                     .where('i', BlockPredicate.Builder.block().of(blocks, Blocks.ICE))
                     .where('m', BlockPredicate.Builder.block().of(blocks, Blocks.MAGMA_BLOCK))
-                    .rotations(BlockPattern.Rotations.NONE)))
+                    .rotations(BlockPattern.Rotations.NONE))))
             .tags(BingoTags.ITEM, BingoTags.BUILD, BingoTags.OVERWORLD)
             .name("ice_on_magma")
-            .icon(Items.BASALT));
+            .icon(context, Items.BASALT));
         addGoal(obtainLevelsGoal(LEVELS, 27, 37));
         addGoal(blockCubeGoal(ICE_CUBE, Items.ICE, BlockTags.ICE, Blocks.ICE.getName()));
-        addGoal(BingoGoal.builder(STAIRWAY_TO_HEAVEN)
-            .criterion("stairway", CriteriaTriggers.LOCATION.createCriterion(
+        addGoal(GoalBuilder.of(STAIRWAY_TO_HEAVEN)
+            .criterion(context, "stairway", CriteriaTriggers.LOCATION.createCriterion(
                 new PlayerTrigger.TriggerInstance(
-                    Optional.of(ContextAwarePredicate.create(
+                    Optional.of(BingoDataGenUtil.allOf(
                         LocationCheck.checkLocation(
                             LocationPredicate.Builder.location().setY(MinMaxBounds.Doubles.atLeast(319))
                         ).build(),
@@ -247,26 +249,26 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .name("stairway_to_heaven")
             .tooltip("stairway_to_heaven")
             .tags(BingoTags.BUILD, BingoTags.OVERWORLD, BingoTags.FINISH)
-            .icon(Blocks.COBBLESTONE_STAIRS)
+            .icon(context, Blocks.COBBLESTONE_STAIRS)
         );
-        addGoal(BingoGoal.builder(KILL_GHAST_IN_OVERWORLD)
-            .criterion("murder", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity()
+        addGoal(GoalBuilder.of(KILL_GHAST_IN_OVERWORLD)
+            .criterion(context, "murder", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity()
                 .of(entityTypes, EntityTypes.GHAST)
                 .located(LocationPredicate.Builder.inDimension(Level.OVERWORLD))
             ))
             .name("kill_ghast_in_overworld")
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD)
-            .icon(Items.GHAST_TEAR)
+            .icon(context, Items.GHAST_TEAR)
             .reactant("pacifist"));
         addGoal(obtainItemGoal(ENCHANTED_GOLDEN_APPLE, items, Items.ENCHANTED_GOLDEN_APPLE));
 
-        addGoal(BingoGoal.builder(NEVER_WEAR_ARMOR_OR_USE_SHIELDS)
-            .criterion("equip", EquipItemTrigger.builder()
+        addGoal(GoalBuilder.of(NEVER_WEAR_ARMOR_OR_USE_SHIELDS)
+            .criterion(context, "equip", EquipItemTrigger.builder()
                 .newItem(ItemPredicate.Builder.item().of(items, ConventionalItemTags.ARMORS).build())
                 .slots(EquipmentSlot.Type.HUMANOID_ARMOR)
                 .build()
             )
-            .criterion("use", CriteriaTriggers.USING_ITEM.createCriterion(
+            .criterion(context, "use", CriteriaTriggers.USING_ITEM.createCriterion(
                 new UsingItemTrigger.TriggerInstance(
                     Optional.empty(),
                     Optional.of(ItemPredicate.Builder.item().of(items, ConventionalItemTags.SHIELD_TOOLS).build())
@@ -276,19 +278,19 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NEVER)
             .name("never_wear_armor_or_use_shields")
             .tooltip("never_wear_armor_or_use_shields")
-            .icon(makeItemWithGlint(Items.SHIELD))
+            .icon(context, makeItemWithGlint(Items.SHIELD))
             .antisynergy("never_wear_armor")
             .catalyst("wear_armor")
         );
-        addGoal(BingoGoal.builder(FULL_IRON_MOB)
-            .criterion("kill", CriteriaTriggers.PLAYER_KILLED_ENTITY.createCriterion(
+        addGoal(GoalBuilder.of(FULL_IRON_MOB)
+            .criterion(context, "kill", CriteriaTriggers.PLAYER_KILLED_ENTITY.createCriterion(
                 new KilledTrigger.TriggerInstance(
                     Optional.empty(),
-                    Optional.of(ContextAwarePredicate.create(
+                    Optional.of(BingoDataGenUtil.allOf(
                         LootItemEntityPropertyCondition.hasProperties(
                             LootContext.EntityTarget.THIS,
                             EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.PLAYER).build()
-                        ).invert().build(),
+                        ).invert(),
                         LootItemEntityPropertyCondition.hasProperties(
                             LootContext.EntityTarget.THIS,
                             EntityPredicate.Builder.entity().equipment(EntityEquipmentPredicate.Builder.equipment()
@@ -298,7 +300,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                                 .feet(ItemPredicate.Builder.item().of(items, Items.IRON_BOOTS))
                                 .build()
                             )
-                        ).build()
+                        )
                     )),
                     Optional.empty()
                 )
@@ -306,59 +308,59 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.COMBAT)
             .reactant("pacifist")
             .name("full_iron_mob")
-            .icon(makeItemWithGlint(Items.IRON_SWORD))
+            .icon(context, makeItemWithGlint(Items.IRON_SWORD))
         );
-        addGoal(BingoGoal.builder(ENCHANT_5_ITEMS)
-            .criterion("enchant", RelativeStatsTrigger.builder()
+        addGoal(GoalBuilder.of(ENCHANT_5_ITEMS)
+            .criterion(context, "enchant", RelativeStatsTrigger.builder()
                 .stat(Stats.ENCHANT_ITEM, MinMaxBounds.Ints.atLeast(5))
                 .build()
             )
             .progress("enchant")
             .name("enchant_5_items")
-            .icon(makeItemWithGlint(new ItemStackTemplate(Items.STICK, 5)))
+            .icon(context, makeItemWithGlint(new ItemStackTemplate(Items.STICK, 5)))
             .antisynergy("enchant")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
         );
-        addGoal(BingoGoal.builder(NEVER_USE_BUCKETS)
-            .criterion("filled_bucket", CriteriaTriggers.FILLED_BUCKET.createCriterion(
+        addGoal(GoalBuilder.of(NEVER_USE_BUCKETS)
+            .criterion(context, "filled_bucket", CriteriaTriggers.FILLED_BUCKET.createCriterion(
                 new FilledBucketTrigger.TriggerInstance(Optional.empty(), Optional.empty())
             ))
-            .criterion("placed_block", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(MatchTool.toolMatches(ItemPredicate.Builder.item().of(items, ConventionalItemTags.BUCKETS))))
-            .criterion("use_on_entity", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(ItemPredicate.Builder.item().of(items, ConventionalItemTags.BUCKETS), Optional.empty()))
-            .criterion("consume", ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(items, ConventionalItemTags.BUCKETS)))
+            .criterion(context, "placed_block", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(MatchTool.toolMatches(ItemPredicate.Builder.item().of(items, ConventionalItemTags.BUCKETS))))
+            .criterion(context, "use_on_entity", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(ItemPredicate.Builder.item().of(items, ConventionalItemTags.BUCKETS), Optional.empty()))
+            .criterion(context, "consume", ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(items, ConventionalItemTags.BUCKETS)))
             .requirements(AdvancementRequirements.Strategy.OR)
             .tags(BingoTags.NEVER)
             .catalyst("use_buckets")
             .name("never_use_buckets")
-            .icon(Items.BUCKET));
+            .icon(context, Items.BUCKET));
         addGoal(obtainItemGoal(CONDUIT, items, Items.CONDUIT)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(obtainSomeItemsFromTag(DEAD_CORAL_BLOCKS, BingoItemTags.DEAD_CORAL_BLOCKS, "bingo.goal.dead_coral_blocks", 2, 5)
             .tags(BingoTags.OCEAN, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(SEA_PICKLE, items, Items.SEA_PICKLE, 16, 32)
             .tags(BingoTags.OCEAN, BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
-        addGoal(BingoGoal.builder(VOID_DEATH_TO_ENTITY)
-            .criterion("death", EntityKilledPlayerTrigger.builder()
+        addGoal(GoalBuilder.of(VOID_DEATH_TO_ENTITY)
+            .criterion(context, "death", EntityKilledPlayerTrigger.builder()
                 .source(DamageSourcePredicate.Builder.damageType()
-                    .tag(TagPredicate.is(BingoDamageTypeTags.VOID))
+                    .tag(TagPredicate.is(damageTypes, BingoDamageTypeTags.VOID))
                     .build()
                 )
                 .build()
             )
             .tags(BingoTags.ACTION)
             .name("void_death_to_entity")
-            .icon(Blocks.CONCRETE.black())
+            .icon(context, Blocks.CONCRETE.black())
         );
         addGoal(obtainItemGoal(COOKIE, items, Items.COOKIE)
             .tags(BingoTags.OVERWORLD));
-        addGoal(BingoGoal.builder(MEGA_JUNGLE_TREE)
-            .criterion("grow", GrowFeatureTrigger.builder()
-                .feature(BingoFeatureTags.MEGA_JUNGLE_TREES)
+        addGoal(GoalBuilder.of(MEGA_JUNGLE_TREE)
+            .criterion(context, "grow", GrowFeatureTrigger.builder()
+                .feature(features, BingoFeatureTags.MEGA_JUNGLE_TREES)
                 .build()
             )
             .tags(BingoTags.ACTION, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
             .name("mega_jungle_tree")
-            .icon(new ItemStackTemplate(Items.JUNGLE_SAPLING, 4))
+            .icon(context, new ItemStackTemplate(Items.JUNGLE_SAPLING, 4))
         );
         addGoal(obtainItemGoal(PRISMARINE_SHARD, items, Items.PRISMARINE_SHARD, 2, 10)
             .infrequency(2)
@@ -380,15 +382,15 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainSomeItemsFromTag(DIAMOND_IN_NAME, BingoItemTags.DIAMOND_IN_NAME, "bingo.goal.diamond_in_name", 5, 7)
             .antisynergy("diamond_items")
             .tooltip("diamond_in_name"));
-        addGoal(BingoGoal.builder(DESTROY_SPAWNER)
-            .criterion("destroy", BreakBlockTrigger.builder().block(blocks, Blocks.SPAWNER).build())
+        addGoal(GoalBuilder.of(DESTROY_SPAWNER)
+            .criterion(context, "destroy", BreakBlockTrigger.builder().block(blocks, Blocks.SPAWNER).build())
             .name("destroy_spawner")
-            .icon(Blocks.SPAWNER)
+            .icon(context, Blocks.SPAWNER)
             .tags(BingoTags.ACTION, BingoTags.COMBAT));
         addGoal(obtainItemGoal(POPPED_CHORUS_FRUIT, items, Items.POPPED_CHORUS_FRUIT, 32, 64)
             .tags(BingoTags.END));
-        addGoal(BingoGoal.builder(VILLAGER_IN_END)
-            .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(
+        addGoal(GoalBuilder.of(VILLAGER_IN_END)
+            .criterion(context, "kill", KilledTrigger.TriggerInstance.playerKilledEntity(
                 EntityPredicate.Builder.entity()
                     .of(entityTypes, EntityTypes.VILLAGER)
                     .located(LocationPredicate.Builder.inDimension(Level.END))
@@ -396,34 +398,34 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.ACTION, BingoTags.END, BingoTags.VILLAGE, BingoTags.COMBAT)
             .reactant("pacifist")
             .name(Component.translatable("bingo.goal.villager_in_end", EntityTypes.VILLAGER.getDescription()))
-            .icon(Blocks.CAULDRON)
+            .icon(context, Blocks.CAULDRON)
         );
         addGoal(obtainItemGoal(DRAGON_BREATH, items, Items.DRAGON_BREATH, 5, 16)
             .tags(BingoTags.COMBAT, BingoTags.END));
         addGoal(obtainItemGoal(DRAGON_EGG, items, Items.DRAGON_EGG)
             .tags(BingoTags.COMBAT, BingoTags.END));
-        addGoal(BingoGoal.builder(COMPLETE_FULL_SIZE_MAP)
-            .criterion("complete", CompleteMapTrigger.TriggerInstance.completeMap(
+        addGoal(GoalBuilder.of(COMPLETE_FULL_SIZE_MAP)
+            .criterion(context, "complete", CompleteMapTrigger.TriggerInstance.completeMap(
                 MinMaxBounds.Ints.atLeast(MapItemSavedData.MAX_SCALE)
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
             .name("complete_full_size_map")
-            .icon(Items.FILLED_MAP)
+            .icon(context, Items.FILLED_MAP)
             .antisynergy("complete_map"));
-        addGoal(BingoGoal.builder(DIE_TO_VILLAGER)
-            .criterion("die", EntityKilledPlayerTrigger.builder()
+        addGoal(GoalBuilder.of(DIE_TO_VILLAGER)
+            .criterion(context, "die", EntityKilledPlayerTrigger.builder()
                 .creditedEntity(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.VILLAGER).build())
                 .build()
             )
             .tags(BingoTags.VILLAGE, BingoTags.OVERWORLD, BingoTags.STAT, BingoTags.COMBAT)
             .name(Component.translatable("bingo.goal.die_to_villager", EntityTypes.VILLAGER.getDescription()))
             .tooltip("die_to_villager")
-            .icon(EntityIcon.ofSpawnEgg(EntityTypes.VILLAGER))
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.VILLAGER))
         );
-        addGoal(BingoGoal.builder(POP_TOTEM)
-            .criterion("totem", UsedTotemTrigger.TriggerInstance.usedTotem(items, Items.TOTEM_OF_UNDYING))
+        addGoal(GoalBuilder.of(POP_TOTEM)
+            .criterion(context, "totem", UsedTotemTrigger.TriggerInstance.usedTotem(items, Items.TOTEM_OF_UNDYING))
             .name("pop_totem")
-            .icon(Items.TOTEM_OF_UNDYING)
+            .icon(context, Items.TOTEM_OF_UNDYING)
             .tags(BingoTags.ITEM, BingoTags.OVERWORLD));
         addGoal(obtainAllItemsFromTag(ItemTags.SWORDS, "swords")
             .tags(BingoTags.NETHER)
@@ -433,31 +435,31 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER)
             .tooltip("all_somethings.tools")
         );
-        addGoal(BingoGoal.builder(PACIFIST)
-            .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity())
+        addGoal(GoalBuilder.of(PACIFIST)
+            .criterion(context, "kill", KilledTrigger.TriggerInstance.playerKilledEntity())
             .tags(BingoTags.NEVER, BingoTags.STAT)
             .name("pacifist")
             .tooltip("pacifist")
-            .icon(Items.DIAMOND_SWORD)
+            .icon(context, Items.DIAMOND_SWORD)
             .catalyst("pacifist"));
-        addGoal(BingoGoal.builder(SCAFFOLDING_TOWER)
-            .criterion("destroy", BreakBlockTrigger.builder()
+        addGoal(GoalBuilder.of(SCAFFOLDING_TOWER)
+            .criterion(context, "destroy", BreakBlockTrigger.builder()
                 .location(
-                    new LocationCheck(
+                    Holder.direct(new LocationCheck(
                         Optional.of(LocationPredicate.Builder.atYLocation(MinMaxBounds.Doubles.atMost(-58)).build()),
                         BlockPos.ZERO
-                    ),
-                    new PillarCondition(379, Optional.of(BlockPredicate.Builder.block().of(blocks, Blocks.SCAFFOLDING).build()))
+                    )),
+                    Holder.direct(new PillarCondition(379, Optional.of(BlockPredicate.Builder.block().of(blocks, Blocks.SCAFFOLDING).build())))
                 )
                 .build()
             )
             .tags(BingoTags.BUILD, BingoTags.OVERWORLD, BingoTags.FINISH)
             .name("scaffolding_tower")
             .tooltip("scaffolding_tower")
-            .icon(makeItemWithGlint(Blocks.SCAFFOLDING))
+            .icon(context, makeItemWithGlint(Blocks.SCAFFOLDING))
         );
-        addGoal(BingoGoal.builder(FEED_PANDA_CAKE)
-            .criterion("feed", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(
+        addGoal(GoalBuilder.of(FEED_PANDA_CAKE)
+            .criterion(context, "feed", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(
                 new PickedUpItemTrigger.TriggerInstance(
                     Optional.empty(),
                     Optional.of(ItemPredicate.Builder.item().of(items, Blocks.CAKE).build()),
@@ -469,18 +471,18 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 "bingo.goal.feed_panda_cake",
                 EntityTypes.PANDA.getDescription(), Blocks.CAKE.getName()
             ))
-            .icon(EntityIcon.ofSpawnEgg(EntityTypes.PANDA))
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.PANDA))
         );
-        addGoal(BingoGoal.builder(BREED_PANDAS)
-            .criterion("breed", BredAnimalsTrigger.TriggerInstance.bredAnimals(
+        addGoal(GoalBuilder.of(BREED_PANDAS)
+            .criterion(context, "breed", BredAnimalsTrigger.TriggerInstance.bredAnimals(
                 EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.PANDA)
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
             .name("breed_pandas")
-            .icon(Items.BAMBOO)
+            .icon(context, Items.BAMBOO)
         );
-        addGoal(BingoGoal.builder(DISARM_PILLAGER)
-            .criterion("break", EntityTrigger.TriggerInstance.brokeCrossbow(
+        addGoal(GoalBuilder.of(DISARM_PILLAGER)
+            .criterion(context, "break", EntityTrigger.TriggerInstance.brokeCrossbow(
                 EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.PILLAGER).build()
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT, BingoTags.RARE_BIOME)
@@ -488,26 +490,26 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 "bingo.goal.disarm_pillager",
                 EntityTypes.PILLAGER.getDescription()
             ))
-            .icon(Items.CROSSBOW)
+            .icon(context, Items.CROSSBOW)
         );
-        addGoal(BingoGoal.builder(STUN_RAVAGER)
-            .criterion("stun", EntityTrigger.TriggerInstance.stunnedRavager())
+        addGoal(GoalBuilder.of(STUN_RAVAGER)
+            .criterion(context, "stun", EntityTrigger.TriggerInstance.stunnedRavager())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT, BingoTags.VILLAGE)
             .name(Component.translatable(
                 "bingo.goal.stun_ravager",
                 EntityTypes.RAVAGER.getDescription()
             ))
-            .icon(EntityIcon.ofSpawnEgg(EntityTypes.RAVAGER))
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.RAVAGER))
         );
-        addGoal(BingoGoal.builder(HERO_OF_THE_VILLAGE)
-            .criterion("raid_won", PlayerTrigger.TriggerInstance.raidWon())
+        addGoal(GoalBuilder.of(HERO_OF_THE_VILLAGE)
+            .criterion(context, "raid_won", PlayerTrigger.TriggerInstance.raidWon())
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT, BingoTags.VILLAGE)
             .reactant("pacifist")
             .name(Component.translatable("advancements.adventure.hero_of_the_village.title"))
-            .icon(Raid.getOminousBannerTemplate(bannerPatterns))
+            .icon(context, Raid.getOminousBannerTemplate(bannerPatterns))
         );
-        addGoal(BingoGoal.builder(OCELOT_TRUST)
-            .criterion("trust", TameAnimalTrigger.TriggerInstance.tamedAnimal(
+        addGoal(GoalBuilder.of(OCELOT_TRUST)
+            .criterion(context, "trust", TameAnimalTrigger.TriggerInstance.tamedAnimal(
                 EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.OCELOT)
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
@@ -515,7 +517,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 "bingo.goal.ocelot_trust",
                 EntityTypes.OCELOT.getDescription()
             ))
-            .icon(Items.SALMON)
+            .icon(context, Items.SALMON)
         );
         addGoal(obtainItemGoal(ENDER_EYE, items, Items.ENDER_EYE, 12, 12)
             .reactant("pacifist")
@@ -528,8 +530,8 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.NETHER, BingoTags.COMBAT, BingoTags.RARE_BIOME));
         addGoal(obtainItemGoal(GILDED_BLACKSTONE, items, Items.GILDED_BLACKSTONE)
             .tags(BingoTags.NETHER, BingoTags.RARE_BIOME));
-        addGoal(BingoGoal.builder(USE_LODESTONE)
-            .criterion("use", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+        addGoal(GoalBuilder.of(USE_LODESTONE)
+            .criterion(context, "use", ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(
                     BlockPredicate.Builder.block().of(blocks, Blocks.LODESTONE)
                 ),
@@ -540,10 +542,10 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 "bingo.goal.use_lodestone",
                 Component.translatable(Items.COMPASS.getDescriptionId()), Blocks.LODESTONE.getName()
             ))
-            .icon(Blocks.LODESTONE)
+            .icon(context, Blocks.LODESTONE)
         );
-        addGoal(BingoGoal.builder(PIGLIN_BRUTE_AXE)
-            .criterion("give", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(
+        addGoal(GoalBuilder.of(PIGLIN_BRUTE_AXE)
+            .criterion(context, "give", CriteriaTriggers.THROWN_ITEM_PICKED_UP_BY_ENTITY.createCriterion(
                 new PickedUpItemTrigger.TriggerInstance(
                     Optional.empty(),
                     Optional.of(ItemPredicate.Builder.item()
@@ -562,11 +564,11 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.COMBAT)
             .name(Component.translatable("bingo.goal.piglin_brute_axe", EntityTypes.PIGLIN_BRUTE.getDescription()))
-            .icon(makeItemWithGlint(Items.GOLDEN_AXE))
+            .icon(context, makeItemWithGlint(Items.GOLDEN_AXE))
         );
-        addGoal(BingoGoal.builder(_6X6SCAFFOLDING)
-            .criterion("obtain", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(
-                LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.SCAFFOLDING),
+        addGoal(GoalBuilder.of(_6X6SCAFFOLDING)
+            .criterion(context, "obtain", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(AllOfCondition.allOf(
+                MatchBlock.blockMatches(blocks, Blocks.SCAFFOLDING),
                 BlockPatternCondition.builder().aisle(
                     "########",
                     "#      #",
@@ -575,12 +577,12 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     "#      #",
                     "#      #",
                     "#      #"
-                ).where('#', BlockPredicate.Builder.block().of(blocks, Blocks.SCAFFOLDING))))
+                ).where('#', BlockPredicate.Builder.block().of(blocks, Blocks.SCAFFOLDING)))))
             .tags(BingoTags.OVERWORLD, BingoTags.BUILD)
             .name("6x6scaffolding")
             .tooltip("6x6scaffolding")
             .tooltipIcon(Identifiers.bingo("textures/gui/tooltips/6x6scaffolding.png"))
-            .icon(Items.SCAFFOLDING));
+            .icon(context, Items.SCAFFOLDING));
         addGoal(obtainItemGoal(HONEY_BLOCK, items, Items.HONEY_BLOCK, 2, 5)
             .setAntisynergy("honey")
             .infrequency(2)
@@ -589,19 +591,19 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .setAntisynergy("honeycomb")
             .infrequency(2)
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
-        addGoal(BingoGoal.builder(KILL_WANDERING_TRADER)
-            .criterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.WANDERING_TRADER)))
+        addGoal(GoalBuilder.of(KILL_WANDERING_TRADER)
+            .criterion(context, "kill", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.WANDERING_TRADER)))
             .name("kill_wandering_trader")
-            .icon(EntityIcon.ofSpawnEgg(EntityTypes.WANDERING_TRADER))
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.WANDERING_TRADER))
             .reactant("pacifist")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.COMBAT));
-        addGoal(BingoGoal.builder(CURE_ZOMBIE_VILLAGER)
-            .criterion("cure", CuredZombieVillagerTrigger.TriggerInstance.curedZombieVillager())
+        addGoal(GoalBuilder.of(CURE_ZOMBIE_VILLAGER)
+            .criterion(context, "cure", CuredZombieVillagerTrigger.TriggerInstance.curedZombieVillager())
             .name("cure_zombie_villager")
-            .icon(Items.GOLDEN_APPLE)
+            .icon(context, Items.GOLDEN_APPLE)
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
-        addGoal(BingoGoal.builder(BURN_MENDING_BOOK)
-            .criterion("obtain", KillItemTrigger.builder()
+        addGoal(GoalBuilder.of(BURN_MENDING_BOOK)
+            .criterion(context, "obtain", KillItemTrigger.builder()
                 .item(ItemPredicate.Builder.item()
                     .of(items, Items.ENCHANTED_BOOK)
                     .withComponents(DataComponentMatchers.Builder.components()
@@ -615,26 +617,26 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     )
                     .build()
                 )
-                .damage(DamagePredicate.Builder.damageInstance().type(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(DamageTypeTags.IS_FIRE))).build())
+                .damage(DamagePredicate.Builder.damageInstance().type(DamageSourcePredicate.Builder.damageType().tag(TagPredicate.is(damageTypes, DamageTypeTags.IS_FIRE))).build())
                 .build()
             )
             .name("burn_mending_book")
-            .icon(Blocks.FIRE, Items.ENCHANTED_BOOK)
+            .icon(context, Blocks.FIRE, Items.ENCHANTED_BOOK)
             .tags(BingoTags.ACTION));
         // TODO: never smelt with furnaces
-        addGoal(BingoGoal.builder(HUGE_FUNGUS_IN_OVERWORLD)
-            .criterion("grow", GrowFeatureTrigger.builder()
-                .feature(BingoFeatureTags.HUGE_FUNGI)
+        addGoal(GoalBuilder.of(HUGE_FUNGUS_IN_OVERWORLD)
+            .criterion(context, "grow", GrowFeatureTrigger.builder()
+                .feature(features, BingoFeatureTags.HUGE_FUNGI)
                 .location(LocationPredicate.Builder.inDimension(Level.OVERWORLD).build())
                 .build()
             )
             .name("huge_fungus_in_overworld")
-            .icon(Items.WARPED_FUNGUS)
+            .icon(context, Items.WARPED_FUNGUS)
             .antisynergy("grow_fungus")
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.NETHER));
-        addGoal(BingoGoal.builder(DIRT_NETHERRACK_END_STONE)
+        addGoal(GoalBuilder.of(DIRT_NETHERRACK_END_STONE)
             .sub("count", BingoSub.random(32, 64))
-            .criterion("items", TotalCountInventoryChangeTrigger.builder()
+            .criterion(context, "items", TotalCountInventoryChangeTrigger.builder()
                 .items(
                     ItemPredicate.Builder.item().of(items, Blocks.DIRT).withCount(MinMaxBounds.Ints.atLeast(0)).build(),
                     ItemPredicate.Builder.item().of(items, Blocks.NETHERRACK).withCount(MinMaxBounds.Ints.atLeast(0)).build(),
@@ -652,22 +654,22 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 ),
                 subber -> subber.sub("with.0", "count")
             )
-            .icon(new CycleIcon(
+            .icon(context, new CycleIcon(
                 BlockIcon.ofBlock(Blocks.DIRT),
                 BlockIcon.ofBlock(Blocks.NETHERRACK),
                 BlockIcon.ofBlock(Blocks.END_STONE)
             ), subber -> subber.sub("icons.*.item.count", "count"))
         );
-        addGoal(BingoGoal.builder(TAME_MULE)
-            .criterion("obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(
+        addGoal(GoalBuilder.of(TAME_MULE)
+            .criterion(context, "obtain", TameAnimalTrigger.TriggerInstance.tamedAnimal(
                 EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.MULE)
             ))
             .name("tame_mule")
-            .icon(EntityIcon.ofSpawnEgg(EntityTypes.MULE))
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.MULE))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
         );
-        addGoal(BingoGoal.builder(CARROT_STICK_TO_ROD)
-            .criterion("break", ItemDurabilityTrigger.TriggerInstance.changedDurability(
+        addGoal(GoalBuilder.of(CARROT_STICK_TO_ROD)
+            .criterion(context, "break", ItemDurabilityTrigger.TriggerInstance.changedDurability(
                 Optional.of(ItemPredicate.Builder.item().of(items, Items.CARROT_ON_A_STICK).build()),
                 MinMaxBounds.Ints.atMost(0)
             ))
@@ -677,10 +679,10 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 Component.translatable(Items.CARROT_ON_A_STICK.getDescriptionId()),
                 Component.translatable(Items.FISHING_ROD.getDescriptionId())
             ))
-            .icon(Items.CARROT_ON_A_STICK));
+            .icon(context, Items.CARROT_ON_A_STICK));
         addGoal(obtainItemGoal(SKULL_BANNER_PATTERN, items, Items.SKULL_BANNER_PATTERN)
             .tags(BingoTags.NETHER, BingoTags.COMBAT, BingoTags.RARE_BIOME, BingoTags.OVERWORLD)
-            .icon(makeBannerWithPattern(Items.BANNER.white(), bannerPatterns.getOrThrow(BannerPatterns.SKULL), DyeColor.BLACK)));
+            .icon(context, makeBannerWithPattern(Items.BANNER.white(), bannerPatterns.getOrThrow(BannerPatterns.SKULL), DyeColor.BLACK)));
         addGoal(obtainItemGoal(TURTLE_HELMET, items, Items.TURTLE_HELMET)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(SNIFFER_EGG, items, Items.SNIFFER_EGG)
@@ -697,8 +699,9 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD, BingoTags.OCEAN)
             .antisynergy("nautilus_armor"));
 
-        addGoal(BingoGoal.builder(TNT_SULFUR_CUBE)
+        addGoal(GoalBuilder.of(TNT_SULFUR_CUBE)
             .criterion(
+                context,
                 "pick_up_dropped_tnt",
                 PickedUpItemTrigger.TriggerInstance.thrownItemPickedUpByEntity(
                     Optional.empty(),
@@ -711,6 +714,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                 )
             )
             .criterion(
+                context,
                 "give_tnt_directly",
                 PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
                     Optional.empty(),
@@ -725,7 +729,7 @@ public class HardGoalProvider extends DifficultyGoalProvider {
             .requirements(AdvancementRequirements.Strategy.OR)
             .name("tnt_sulfur_cube")
             .tags(BingoTags.OVERWORLD, BingoTags.ACTION, BingoTags.RARE_BIOME)
-            .icon(EntityIcon.ofSpawnEgg(
+            .icon(context, EntityIcon.ofSpawnEgg(
                 EntityTypes.SULFUR_CUBE, BingoUtil.compound(Map.of(
                     "equipment", BingoUtil.compound(Map.of(
                         "body", ItemStackTemplate.CODEC.encodeStart(NbtOps.INSTANCE, new ItemStackTemplate(Items.TNT)).getOrThrow()

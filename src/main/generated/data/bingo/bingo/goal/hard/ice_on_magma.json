@@ -2,43 +2,46 @@
   "criteria": {
     "obtain": {
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:any_of",
-            "terms": [
-              {
-                "block": "minecraft:ice",
-                "condition": "minecraft:block_state_property"
-              },
-              {
-                "block": "minecraft:magma_block",
-                "condition": "minecraft:block_state_property"
-              }
-            ]
-          },
-          {
-            "aisles": [
-              [
-                "i",
-                "m"
-              ]
-            ],
-            "condition": "bingo:block_pattern",
-            "rotations": "none",
-            "where": {
-              "i": {
-                "block": {
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:any_of",
+              "terms": [
+                {
+                  "type": "minecraft:match_block",
                   "blocks": "minecraft:ice"
-                }
-              },
-              "m": {
-                "block": {
+                },
+                {
+                  "type": "minecraft:match_block",
                   "blocks": "minecraft:magma_block"
+                }
+              ]
+            },
+            {
+              "type": "bingo:block_pattern",
+              "aisles": [
+                [
+                  "i",
+                  "m"
+                ]
+              ],
+              "rotations": "none",
+              "where": {
+                "i": {
+                  "block": {
+                    "blocks": "minecraft:ice"
+                  }
+                },
+                "m": {
+                  "block": {
+                    "blocks": "minecraft:magma_block"
+                  }
                 }
               }
             }
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:placed_block"
     }

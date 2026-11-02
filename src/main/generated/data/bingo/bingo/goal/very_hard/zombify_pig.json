@@ -9,19 +9,17 @@
     "nearby": {
       "conditions": {
         "direct": false,
-        "pig": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:distance": {
-                "absolute": {
-                  "max": 16
-                }
+        "pig": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:distance": {
+              "absolute": {
+                "max": 16
               }
             }
           }
-        ]
+        }
       },
       "trigger": "bingo:zombify_pig"
     }

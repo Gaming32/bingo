@@ -2,11 +2,11 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,6 +16,7 @@ import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
@@ -38,13 +39,13 @@ public class GrowBeeNestTreeTrigger extends SimpleCriterionTrigger<GrowBeeNestTr
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> nest
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> nest
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                ContextAwarePredicate.CODEC.optionalFieldOf("nest").forGetter(TriggerInstance::nest)
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("nest").forGetter(TriggerInstance::nest)
             ).apply(instance, TriggerInstance::new)
         );
 
@@ -55,13 +56,13 @@ public class GrowBeeNestTreeTrigger extends SimpleCriterionTrigger<GrowBeeNestTr
         }
 
         public boolean matches(LootContext nest) {
-            return this.nest.isEmpty() || this.nest.get().matches(nest);
+            return this.nest.isEmpty() || this.nest.get().value().test(nest);
         }
 
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            nest.ifPresent(p -> Validatable.validate(validator.context(LootContextParamSets.ADVANCEMENT_LOCATION), "nest", nest));
+            nest.ifPresent(p -> Validatable.validateHolder(validator.context(LootContextParamSets.ADVANCEMENT_LOCATION), "nest", nest));
         }
     }
 }

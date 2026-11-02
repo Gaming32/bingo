@@ -2,15 +2,13 @@
   "criteria": {
     "obtain": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:mooshroom"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:mooshroom"
           }
-        ],
+        },
         "item": {
           "items": "minecraft:bucket"
         }

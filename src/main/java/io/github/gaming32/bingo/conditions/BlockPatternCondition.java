@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.List;
@@ -91,8 +92,8 @@ public class BlockPatternCondition implements LootItemCondition {
     @Override
     public boolean test(LootContext lootContext) {
         ServerLevel level = lootContext.getLevel();
-        BlockPos origin = BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN));
-        return blockPattern.find(level, origin, rotations);
+        Vec3 origin = lootContext.getOptional(LootContextParams.ORIGIN);
+        return origin != null && blockPattern.find(level, BlockPos.containing(origin), rotations);
     }
 
     @Override

@@ -6,7 +6,7 @@
           "tags": [
             {
               "expected": true,
-              "id": "bingo:void"
+              "id": "#bingo:void"
             }
           ]
         }
@@ -17,9 +17,7 @@
   "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:black_concrete"
-    },
+    "block": "minecraft:black_concrete",
     "item": {
       "count": 1,
       "id": "minecraft:black_concrete"

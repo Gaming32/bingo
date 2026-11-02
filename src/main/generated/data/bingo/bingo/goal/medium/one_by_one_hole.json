@@ -2,19 +2,17 @@
   "criteria": {
     "hole": {
       "conditions": {
-        "player": [
-          {
-            "bottom": -59,
-            "condition": "bingo:one_by_one_hole",
+        "player": {
+          "type": "bingo:one_by_one_hole",
+          "bottom": -59,
+          "predicate": {
+            "type": "minecraft:not",
             "predicate": {
-              "type": "minecraft:not",
-              "predicate": {
-                "type": "minecraft:solid"
-              }
-            },
-            "top": 63
-          }
-        ]
+              "type": "minecraft:solid"
+            }
+          },
+          "top": 63
+        }
       },
       "trigger": "minecraft:location"
     }

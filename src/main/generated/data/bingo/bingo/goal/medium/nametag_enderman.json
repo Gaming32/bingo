@@ -2,15 +2,13 @@
   "criteria": {
     "nametag": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:enderman"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:enderman"
           }
-        ],
+        },
         "item": {
           "items": "minecraft:name_tag"
         }

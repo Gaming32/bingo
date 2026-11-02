@@ -7,6 +7,7 @@ import io.github.gaming32.bingo.conditions.BingoConditions;
 import io.github.gaming32.bingo.data.BingoDifficulty;
 import io.github.gaming32.bingo.data.BingoRegistries;
 import io.github.gaming32.bingo.data.BingoTag;
+import io.github.gaming32.bingo.data.goal.BingoGoal;
 import io.github.gaming32.bingo.data.goal.GoalManager;
 import io.github.gaming32.bingo.data.icons.GoalIconType;
 import io.github.gaming32.bingo.data.progresstrackers.ProgressTrackerType;
@@ -133,7 +134,7 @@ public class Bingo {
             LOGGER.info("Reading persisted Bingo game");
             try {
                 final var tag = NbtIo.readCompressed(path, NbtAccounter.unlimitedHeap());
-                ((MinecraftServerExt) instance).bingo$setGame(PersistenceManager.deserialize(instance.registryAccess(), tag, instance.getScoreboard()));
+                ((MinecraftServerExt) instance).bingo$setGame(PersistenceManager.deserialize(instance.reloadableRegistries().lookup(), tag, instance.getScoreboard()));
                 Files.deleteIfExists(path);
             } catch (Exception e) {
                 LOGGER.error("Failed to load persisted Bingo game", e);
@@ -146,7 +147,7 @@ public class Bingo {
             LOGGER.info("Storing persistent Bingo game");
             final Path path = instance.getWorldPath(PERSISTED_BINGO_GAME);
             try {
-                final var tag = PersistenceManager.serialize(instance.registryAccess(), game);
+                final var tag = PersistenceManager.serialize(instance.reloadableRegistries().lookup(), game);
                 NbtIo.writeCompressed(tag, path);
             } catch (Exception e) {
                 LOGGER.error("Failed to store persistent Bingo game", e);
@@ -168,13 +169,16 @@ public class Bingo {
     private static void registerDatapackRegistries() {
         BingoPlatform.registerDatapackRegistries(registrar -> {
             registrar.unsynced(BingoRegistries.TAG, BingoTag.CODEC);
-            registrar.unsynced(BingoRegistries.DIFFICULTY, BingoDifficulty.CODEC);
+            registrar.reloadable(BingoRegistries.DIFFICULTY, BingoDifficulty.CODEC);
+            registrar.reloadable(BingoRegistries.GOAL, BingoGoal.CODEC);
         });
     }
 
     private static void registerDataReloadListeners() {
         BingoPlatform.registerDataReloadListeners(registrar -> {
-            registrar.register(GoalManager.ID, GoalManager::new);
+            registrar.register(GoalManager.ID, (registries, dataStore) -> {
+                dataStore.put(GoalManager.KEY, new GoalManager(registries));
+            });
         });
     }
 

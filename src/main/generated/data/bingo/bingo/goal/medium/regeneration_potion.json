@@ -7,7 +7,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:regeneration"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:regeneration"
+              }
             }
           }
         ]
@@ -20,7 +22,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:long_regeneration"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:long_regeneration"
+              }
             }
           }
         ]
@@ -33,7 +37,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:strong_regeneration"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:strong_regeneration"
+              }
             }
           }
         ]

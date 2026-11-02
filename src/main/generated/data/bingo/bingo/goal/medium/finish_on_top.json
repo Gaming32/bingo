@@ -2,21 +2,19 @@
   "criteria": {
     "on_top": {
       "conditions": {
-        "player": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:location": {
-                "position": {
-                  "y": {
-                    "min": 319
-                  }
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "position": {
+                "y": {
+                  "min": 319
                 }
               }
             }
           }
-        ]
+        }
       },
       "trigger": "minecraft:location"
     }

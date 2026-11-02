@@ -6,9 +6,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import io.github.gaming32.bingo.util.BingoCodecs;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,6 +16,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -42,7 +42,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleProgressibleCriterionTrigg
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
+        Optional<Holder<LootItemCondition>> player,
         TagKey<Item> tag,
         int requiredCount
     ) implements SimpleInstance {
@@ -50,7 +50,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleProgressibleCriterionTrigg
         private static final Codec<Integer> REQUIRED_COUNT_CODEC = BingoCodecs.firstValid(ExtraCodecs.POSITIVE_INT, BingoCodecs.exactly(ALL));
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(TriggerInstance::tag),
                 REQUIRED_COUNT_CODEC.fieldOf("required_count").forGetter(TriggerInstance::requiredCount)
             ).apply(instance, TriggerInstance::new)
@@ -81,7 +81,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleProgressibleCriterionTrigg
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
         private TagKey<Item> tag;
         @Nullable
         private Integer requiredCount = null;
@@ -89,7 +89,7 @@ public class HasSomeItemsFromTagTrigger extends SimpleProgressibleCriterionTrigg
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }

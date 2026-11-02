@@ -170,7 +170,7 @@ public class BingoCommand {
         .<ResourceKey<BingoGoal>, GoalHolder>specialArgument("--require-goal", ResourceKeyArgument.key(BingoRegistries.GOAL))
         .getter((context, arg) -> {
             final var key = ResourceKeyArgument.getRegistryKey(context, arg, BingoRegistries.GOAL, INVALID_GOAL);
-            final var goal = GoalManager.getGoal(key.identifier());
+            final var goal = GoalManager.getInstance(context.getSource().getServer()).getGoal(key.identifier());
             if (goal == null) {
                 throw UNKNOWN_GOAL.create(key.identifier());
             }
@@ -473,7 +473,7 @@ public class BingoCommand {
         if (existingGame != null) {
             existingGame.endGame(playerList);
         }
-        final var registries = context.getSource().registryAccess();
+        final var registries = server.reloadableRegistries().lookup();
 
         final var difficulty = DIFFICULTY.get(context);
         final long seed = SEED.get(context);
@@ -520,6 +520,7 @@ public class BingoCommand {
         final BingoBoard board;
         try {
             board = BingoBoard.generate(
+                GoalManager.getInstance(server),
                 shape,
                 size,
                 difficulty.value().number(),

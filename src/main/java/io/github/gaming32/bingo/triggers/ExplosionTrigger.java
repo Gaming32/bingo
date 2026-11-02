@@ -3,13 +3,13 @@ package io.github.gaming32.bingo.triggers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.CustomEnumCodec;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.DamageSourcePredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Explosion;
@@ -17,6 +17,7 @@ import net.minecraft.world.level.ServerExplosion;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
@@ -39,8 +40,8 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> source,
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> source,
         Optional<LocationPredicate> location,
         MinMaxBounds.Doubles radius,
         Optional<DamageSourcePredicate> damageSource,
@@ -49,8 +50,8 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
         public static final CustomEnumCodec<Explosion.BlockInteraction> EXPLOSION_TYPE_PREDICATE = CustomEnumCodec.of(Explosion.BlockInteraction.class);
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("source").forGetter(TriggerInstance::source),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("source").forGetter(TriggerInstance::source),
                 LocationPredicate.CODEC.optionalFieldOf("location").forGetter(TriggerInstance::location),
                 MinMaxBounds.Doubles.CODEC.optionalFieldOf("radius", MinMaxBounds.Doubles.ANY).forGetter(TriggerInstance::radius),
                 DamageSourcePredicate.CODEC.optionalFieldOf("damage_source").forGetter(TriggerInstance::damageSource),
@@ -59,7 +60,7 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
         );
 
         public boolean matches(Optional<LootContext> source, ServerLevel level, Vec3 location, Explosion explosion) {
-            if (this.source.isPresent() && (source.isEmpty() || !this.source.get().matches(source.get()))) {
+            if (this.source.isPresent() && (source.isEmpty() || !this.source.get().value().test(source.get()))) {
                 return false;
             }
             if (this.location.isPresent() && !this.location.get().matches(level, location.x, location.y, location.z)) {
@@ -77,13 +78,13 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "source", source);
+            Validatable.validateHolder(validator.entityContext(), "source", source);
         }
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> source = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> source = Optional.empty();
         private Optional<LocationPredicate> location = Optional.empty();
         private MinMaxBounds.Doubles radius = MinMaxBounds.Doubles.ANY;
         private Optional<DamageSourcePredicate> damageSource = Optional.empty();
@@ -92,7 +93,7 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.of(player);
             return this;
         }
@@ -101,7 +102,7 @@ public class ExplosionTrigger extends SimpleCriterionTrigger<ExplosionTrigger.Tr
             return player(EntityPredicate.wrap(player));
         }
 
-        public Builder source(ContextAwarePredicate source) {
+        public Builder source(Holder<LootItemCondition> source) {
             this.source = Optional.of(source);
             return this;
         }

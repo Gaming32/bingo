@@ -7,21 +7,19 @@
             "min": 379
           }
         },
-        "player": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:location": {
-                "position": {
-                  "y": {
-                    "max": -59
-                  }
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "position": {
+                "y": {
+                  "max": -59
                 }
               }
             }
           }
-        ],
+        },
         "start_position": {
           "position": {
             "y": {

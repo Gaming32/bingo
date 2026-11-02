@@ -2,15 +2,13 @@
   "criteria": {
     "leash": {
       "conditions": {
-        "mob": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:dolphin"
-            }
+        "mob": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:dolphin"
           }
-        ]
+        }
       },
       "trigger": "bingo:leash_entity"
     }

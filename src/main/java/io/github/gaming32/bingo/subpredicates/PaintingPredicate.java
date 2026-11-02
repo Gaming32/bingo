@@ -6,8 +6,8 @@ import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.advancements.predicates.entity.EntitySubPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -30,7 +30,7 @@ public record PaintingPredicate(
             MinMaxBounds.Ints.CODEC.optionalFieldOf("width", MinMaxBounds.Ints.ANY).forGetter(PaintingPredicate::width),
             MinMaxBounds.Ints.CODEC.optionalFieldOf("height", MinMaxBounds.Ints.ANY).forGetter(PaintingPredicate::height),
             MinMaxBounds.Ints.CODEC.optionalFieldOf("area", MinMaxBounds.Ints.ANY).forGetter(PaintingPredicate::area),
-            RegistryCodecs.homogeneousList(Registries.PAINTING_VARIANT)
+            RegistryCodecs.holderSet(Registries.PAINTING_VARIANT)
                 .optionalFieldOf("variant")
                 .forGetter(PaintingPredicate::variant)
         ).apply(instance, PaintingPredicate::new)

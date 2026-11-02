@@ -6,7 +6,6 @@ import io.github.gaming32.bingo.subpredicates.PaintingPredicate;
 import io.github.gaming32.bingo.util.BingoUtil;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
@@ -17,6 +16,7 @@ import net.minecraft.world.entity.decoration.painting.Painting;
 import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -35,22 +35,22 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> placedPainting,
-        Optional<ContextAwarePredicate> adjacentPaintings,
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> placedPainting,
+        Optional<Holder<LootItemCondition>> adjacentPaintings,
         MinMaxBounds.Ints count
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("placed_painting").forGetter(TriggerInstance::placedPainting),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("adjacent_paintings").forGetter(TriggerInstance::adjacentPaintings),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("placed_painting").forGetter(TriggerInstance::placedPainting),
+                LootItemCondition.CODEC.optionalFieldOf("adjacent_paintings").forGetter(TriggerInstance::adjacentPaintings),
                 MinMaxBounds.Ints.CODEC.optionalFieldOf("count", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::count)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(ServerPlayer player, Painting painting) {
-            if (placedPainting.isPresent() && !placedPainting.get().matches(EntityPredicate.createContext(player, painting))) {
+            if (placedPainting.isPresent() && !placedPainting.get().value().test(EntityPredicate.createContext(player, painting))) {
                 return false;
             }
             ObjectSet<Holder<PaintingVariant>> seenVariants = new ObjectOpenCustomHashSet<>(BingoUtil.holderStrategy());
@@ -72,7 +72,7 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
                 if (
                     otherPainting != painting && (
                         adjacentPaintings.isEmpty() ||
-                        adjacentPaintings.get().matches(EntityPredicate.createContext(player, otherPainting))
+                        adjacentPaintings.get().value().test(EntityPredicate.createContext(player, otherPainting))
                     )
                 ) {
                     count += countAdjacentPaintings(player, otherPainting, seenVariants);
@@ -85,15 +85,15 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "placed_painting", placedPainting);
-            Validatable.validate(validator.entityContext(), "adjacent_paintings", adjacentPaintings);
+            Validatable.validateHolder(validator.entityContext(), "placed_painting", placedPainting);
+            Validatable.validateHolder(validator.entityContext(), "adjacent_paintings", adjacentPaintings);
         }
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> placedPainting = Optional.empty();
-        private Optional<ContextAwarePredicate> adjacentPaintings = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> placedPainting = Optional.empty();
+        private Optional<Holder<LootItemCondition>> adjacentPaintings = Optional.empty();
         private MinMaxBounds.Ints count = MinMaxBounds.Ints.ANY;
 
         private Builder() {
@@ -103,12 +103,12 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
             return player(EntityPredicate.wrap(player));
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.of(player);
             return this;
         }
 
-        public Builder placedPainting(ContextAwarePredicate placedPainting) {
+        public Builder placedPainting(Holder<LootItemCondition> placedPainting) {
             this.placedPainting = Optional.of(placedPainting);
             return this;
         }
@@ -124,7 +124,7 @@ public class AdjacentPaintingTrigger extends SimpleCriterionTrigger<AdjacentPain
             );
         }
 
-        public Builder adjacentPaintings(ContextAwarePredicate adjacentPaintings) {
+        public Builder adjacentPaintings(Holder<LootItemCondition> adjacentPaintings) {
             this.adjacentPaintings = Optional.of(adjacentPaintings);
             return this;
         }

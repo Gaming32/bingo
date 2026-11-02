@@ -51,9 +51,7 @@
     "icons": [
       {
         "type": "bingo:block",
-        "block": {
-          "Name": "minecraft:dirt"
-        },
+        "block": "minecraft:dirt",
         "item": {
           "count": {
             "bingo_type": "bingo:sub",
@@ -64,9 +62,7 @@
       },
       {
         "type": "bingo:block",
-        "block": {
-          "Name": "minecraft:netherrack"
-        },
+        "block": "minecraft:netherrack",
         "item": {
           "count": {
             "bingo_type": "bingo:sub",
@@ -77,9 +73,7 @@
       },
       {
         "type": "bingo:block",
-        "block": {
-          "Name": "minecraft:end_stone"
-        },
+        "block": "minecraft:end_stone",
         "item": {
           "count": {
             "bingo_type": "bingo:sub",

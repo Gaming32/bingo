@@ -7,7 +7,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:leaping"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:leaping"
+              }
             }
           }
         ]
@@ -20,7 +22,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:long_leaping"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:long_leaping"
+              }
             }
           }
         ]
@@ -33,7 +37,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:strong_leaping"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:strong_leaping"
+              }
             }
           }
         ]

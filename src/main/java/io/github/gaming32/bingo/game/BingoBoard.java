@@ -102,6 +102,7 @@ public class BingoBoard {
     }
 
     public static BingoBoard generate(
+        GoalManager goalManager,
         BoardShape shape,
         int size,
         int difficulty,
@@ -116,6 +117,7 @@ public class BingoBoard {
         final int goalCount = shape.getGoalCount(size);
         final BingoBoard board = new BingoBoard(shape, size, teamCount);
         final GoalHolder[] generatedSheet = generateGoals(
+            goalManager,
             registries.lookupOrThrow(BingoRegistries.DIFFICULTY),
             shape,
             size,
@@ -144,6 +146,7 @@ public class BingoBoard {
     }
 
     public static GoalHolder[] generateGoals(
+        GoalManager goalManager,
         HolderLookup<BingoDifficulty> difficultyLookup,
         BoardShape shape,
         int size,
@@ -186,7 +189,7 @@ public class BingoBoard {
                 throw new IllegalArgumentException("No goals with difficulty " + difficultyLayout[i] + " or easier");
             }
 
-            List<GoalHolder> possibleGoals = GoalManager.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
+            List<GoalHolder> possibleGoals = goalManager.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
 
             int failSafe = 0;
             GoalHolder goal;
@@ -205,7 +208,7 @@ public class BingoBoard {
                         throw new IllegalArgumentException("No valid board layout was found for the specified size and difficulty");
                     }
 
-                    possibleGoals = GoalManager.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
+                    possibleGoals = goalManager.getGoalsByDifficulty(difficultyLayout[i] = difficultiesToTry.next());
                     failSafe = 1;
                 }
 

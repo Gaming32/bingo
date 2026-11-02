@@ -3,17 +3,17 @@ package io.github.gaming32.bingo.triggers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.conditions.BingoContextKeySets;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 
 import java.util.Optional;
@@ -36,17 +36,17 @@ public class UseGrindstoneTrigger extends SimpleCriterionTrigger<UseGrindstoneTr
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
+        Optional<Holder<LootItemCondition>> player,
         Optional<LocationPredicate> location,
-        Optional<ContextAwarePredicate> firstItem,
-        Optional<ContextAwarePredicate> secondItem
+        Optional<Holder<LootItemCondition>> firstItem,
+        Optional<Holder<LootItemCondition>> secondItem
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 LocationPredicate.CODEC.optionalFieldOf("location").forGetter(TriggerInstance::location),
-                ContextAwarePredicate.CODEC.optionalFieldOf("first_item").forGetter(TriggerInstance::firstItem),
-                ContextAwarePredicate.CODEC.optionalFieldOf("second_item").forGetter(TriggerInstance::secondItem)
+                LootItemCondition.CODEC.optionalFieldOf("first_item").forGetter(TriggerInstance::firstItem),
+                LootItemCondition.CODEC.optionalFieldOf("second_item").forGetter(TriggerInstance::secondItem)
             ).apply(instance, TriggerInstance::new)
         );
 
@@ -54,10 +54,10 @@ public class UseGrindstoneTrigger extends SimpleCriterionTrigger<UseGrindstoneTr
             if (location.isPresent() && !location.get().matches(player.level(), x, y, z)) {
                 return false;
             }
-            if (this.firstItem.isPresent() && !this.firstItem.get().matches(BingoContextKeySets.wrapTool(player, firstItem))) {
+            if (this.firstItem.isPresent() && !this.firstItem.get().value().test(BingoContextKeySets.wrapTool(player, firstItem))) {
                 return false;
             }
-            if (this.secondItem.isPresent() && !this.secondItem.get().matches(BingoContextKeySets.wrapTool(player, secondItem))) {
+            if (this.secondItem.isPresent() && !this.secondItem.get().value().test(BingoContextKeySets.wrapTool(player, secondItem))) {
                 return false;
             }
             return true;
@@ -66,21 +66,21 @@ public class UseGrindstoneTrigger extends SimpleCriterionTrigger<UseGrindstoneTr
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            firstItem.ifPresent(p -> Validatable.validate(validator.context(BingoContextKeySets.TOOL_ONLY), "first_item", p));
-            secondItem.ifPresent(p -> Validatable.validate(validator.context(BingoContextKeySets.TOOL_ONLY), "second_item", p));
+            firstItem.ifPresent(p -> Validatable.validateHolder(validator.context(BingoContextKeySets.TOOL_ONLY), "first_item", p));
+            secondItem.ifPresent(p -> Validatable.validateHolder(validator.context(BingoContextKeySets.TOOL_ONLY), "second_item", p));
         }
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
         private Optional<LocationPredicate> location = Optional.empty();
-        private Optional<ContextAwarePredicate> firstItem = Optional.empty();
-        private Optional<ContextAwarePredicate> secondItem = Optional.empty();
+        private Optional<Holder<LootItemCondition>> firstItem = Optional.empty();
+        private Optional<Holder<LootItemCondition>> secondItem = Optional.empty();
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.of(player);
             return this;
         }
@@ -90,22 +90,22 @@ public class UseGrindstoneTrigger extends SimpleCriterionTrigger<UseGrindstoneTr
             return this;
         }
 
-        public Builder firstItem(ContextAwarePredicate firstItem) {
+        public Builder firstItem(Holder<LootItemCondition> firstItem) {
             this.firstItem = Optional.of(firstItem);
             return this;
         }
 
         public Builder firstItem(ItemPredicate firstItem) {
-            return firstItem(ContextAwarePredicate.create(new MatchTool(Optional.of(firstItem))));
+            return firstItem(Holder.direct(new MatchTool(Optional.of(firstItem))));
         }
 
-        public Builder secondItem(ContextAwarePredicate secondItem) {
+        public Builder secondItem(Holder<LootItemCondition> secondItem) {
             this.secondItem = Optional.of(secondItem);
             return this;
         }
 
         public Builder secondItem(ItemPredicate secondItem) {
-            return secondItem(ContextAwarePredicate.create(new MatchTool(Optional.of(secondItem))));
+            return secondItem(Holder.direct(new MatchTool(Optional.of(secondItem))));
         }
 
         public Criterion<TriggerInstance> build() {

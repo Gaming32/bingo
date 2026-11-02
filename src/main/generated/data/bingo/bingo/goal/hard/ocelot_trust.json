@@ -2,15 +2,13 @@
   "criteria": {
     "trust": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:ocelot"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:ocelot"
           }
-        ]
+        }
       },
       "trigger": "minecraft:tame_animal"
     }

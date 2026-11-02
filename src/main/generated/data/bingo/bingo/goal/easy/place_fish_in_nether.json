@@ -3,20 +3,23 @@
   "criteria": {
     "place": {
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:match_tool",
-            "predicate": {
-              "items": "#bingo:fish_buckets"
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:match_tool",
+              "predicate": {
+                "items": "#bingo:fish_buckets"
+              }
+            },
+            {
+              "type": "minecraft:location_check",
+              "predicate": {
+                "dimension": "minecraft:the_nether"
+              }
             }
-          },
-          {
-            "condition": "minecraft:location_check",
-            "predicate": {
-              "dimension": "minecraft:the_nether"
-            }
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:placed_block"
     }

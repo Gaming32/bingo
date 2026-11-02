@@ -2,15 +2,13 @@
   "criteria": {
     "fill": {
       "conditions": {
-        "location": [
-          {
-            "block": "minecraft:water_cauldron",
-            "condition": "minecraft:block_state_property",
-            "properties": {
-              "level": "3"
-            }
+        "location": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:water_cauldron",
+          "state": {
+            "level": "3"
           }
-        ]
+        }
       },
       "trigger": "minecraft:item_used_on_block"
     }
@@ -19,8 +17,8 @@
   "icon": {
     "type": "bingo:block",
     "block": {
-      "Name": "minecraft:water_cauldron",
-      "Properties": {
+      "id": "minecraft:water_cauldron",
+      "properties": {
         "level": "3"
       }
     },

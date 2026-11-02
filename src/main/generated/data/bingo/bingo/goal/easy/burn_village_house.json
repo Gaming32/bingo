@@ -2,21 +2,24 @@
   "criteria": {
     "burn": {
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:match_tool",
-            "predicate": {
-              "items": "#minecraft:creeper_igniters"
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:match_tool",
+              "predicate": {
+                "items": "#minecraft:creeper_igniters"
+              }
+            },
+            {
+              "type": "bingo:flammable"
+            },
+            {
+              "type": "bingo:in_structure",
+              "structure": "#minecraft:village"
             }
-          },
-          {
-            "condition": "bingo:flammable"
-          },
-          {
-            "condition": "bingo:in_structure",
-            "structure": "#minecraft:village"
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:item_used_on_block"
     }
@@ -27,17 +30,7 @@
     "icons": [
       {
         "type": "bingo:block",
-        "block": {
-          "Name": "minecraft:fire",
-          "Properties": {
-            "age": "0",
-            "east": "false",
-            "north": "false",
-            "south": "false",
-            "up": "false",
-            "west": "false"
-          }
-        },
+        "block": "minecraft:fire",
         "item": {
           "count": 1,
           "id": "minecraft:flint_and_steel"

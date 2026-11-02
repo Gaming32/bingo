@@ -2,15 +2,13 @@
   "criteria": {
     "obtain": {
       "conditions": {
-        "arrow": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "#minecraft:arrows"
-            }
+        "arrow": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "#minecraft:arrows"
           }
-        ],
+        },
         "button_or_plate": {
           "blocks": "#minecraft:buttons"
         }

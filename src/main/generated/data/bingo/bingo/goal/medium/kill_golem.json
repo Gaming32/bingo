@@ -2,15 +2,13 @@
   "criteria": {
     "kill": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:iron_golem"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:iron_golem"
           }
-        ]
+        }
       },
       "trigger": "minecraft:player_killed_entity"
     }

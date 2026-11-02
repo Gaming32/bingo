@@ -14,14 +14,12 @@
     },
     "placed_block": {
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:match_tool",
-            "predicate": {
-              "items": "#c:buckets"
-            }
+        "location": {
+          "type": "minecraft:match_tool",
+          "predicate": {
+            "items": "#c:buckets"
           }
-        ]
+        }
       },
       "trigger": "minecraft:placed_block"
     },
