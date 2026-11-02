@@ -83,6 +83,7 @@ import net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.triggers.PickedUpItemTrigger;
 import net.minecraft.advancements.triggers.PlayerInteractTrigger;
 import net.minecraft.advancements.triggers.PlayerTrigger;
+import net.minecraft.advancements.triggers.StartRidingTrigger;
 import net.minecraft.advancements.triggers.SummonedEntityTrigger;
 import net.minecraft.advancements.triggers.TameAnimalTrigger;
 import net.minecraft.advancements.triggers.TradeTrigger;
@@ -370,7 +371,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(VINE, items, Items.VINE, 10, 30)
             .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
-        addGoal(obtainSomeItemsFromTag(DIFFERENT_SLABS, BingoItemTags.SLABS, "bingo.goal.different_slabs", 5, 7)
+        addGoal(obtainSomeItemsFromTag(DIFFERENT_SLABS, BingoItemTags.SLABS, "bingo.goal.different_slabs", 5, 7, ItemTags.WOOL_SLABS, ItemTags.CONCRETE_SLABS)
             .antisynergy("slabs")
             .infrequency(2));
         addGoal(GoalBuilder.of(ALMOST_EVERY_SWORD)
@@ -414,7 +415,7 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
         );
         addGoal(obtainItemGoal(FERMENTED_SPIDER_EYE, items, Items.FERMENTED_SPIDER_EYE)
             .tags(BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(DIFFERENT_STAIRS, BingoItemTags.STAIRS, "bingo.goal.different_stairs", 5, 7)
+        addGoal(obtainSomeItemsFromTag(DIFFERENT_STAIRS, BingoItemTags.STAIRS, "bingo.goal.different_stairs", 5, 7, ItemTags.WOOL_STAIRS, ItemTags.CONCRETE_STAIRS)
             .antisynergy("stairs")
             .infrequency(2));
         addGoal(obtainItemGoal(ENDER_PEARL, items, Items.ENDER_PEARL, 2, 3)
@@ -998,6 +999,26 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
         // TODO: empty cauldron without buckets or bottles
+        addGoal(GoalBuilder.of(SIT_ON_CUSHION)
+            .criterion(context, "sit", StartRidingTrigger.TriggerInstance.playerStartsRiding(
+                EntityPredicate.Builder.entity().vehicle(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.CUSHION))
+            ))
+            .name(Component.translatable("bingo.goal.sit_on_cushion", EntityTypes.CUSHION.getDescription()))
+            .icon(context, Items.CUSHION.white())
+            .antisynergy("sit_on_cushion")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
+        addGoal(GoalBuilder.of(SLEEP_IN_STRAW_BED)
+            .criterion(context, "sleep", BingoTriggers.slept(
+                Holder.direct(LocationCheck.checkLocation(
+                    LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(blocks, Blocks.STRAW_BED))
+                ).build())
+            ))
+            .name(Component.translatable("bingo.goal.sleep_in_straw_bed", Blocks.STRAW_BED.getName()))
+            .icon(context, Items.STRAW_BED)
+            .reactant("sleep")
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD)
+        );
         addGoal(GoalBuilder.of(SLEEP_IN_VILLAGER_BED)
             .criterion(context, "sleep", BingoTriggers.slept(
                 Holder.direct(new VillagerOwnershipCondition(PoiManager.Occupancy.IS_OCCUPIED, Optional.empty()))

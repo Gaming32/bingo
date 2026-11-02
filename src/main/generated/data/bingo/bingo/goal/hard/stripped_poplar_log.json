@@ -1,0 +1,70 @@
+{
+  "antisynergy": "stripped_poplar_log",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 20,
+        "min_inclusive": 11
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "count": {
+              "min": {
+                "bingo_type": "bingo:sub",
+                "key": "count"
+              }
+            },
+            "items": "minecraft:stripped_poplar_log"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": "bingo:hard",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      "id": "minecraft:stripped_poplar_log"
+    }
+  },
+  "infrequency": 4,
+  "name": {
+    "translate": "bingo.count",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      {
+        "translate": "block.minecraft.stripped_poplar_log"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "reactant": "axe_use",
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:rare_biome",
+    "bingo:overworld"
+  ]
+}

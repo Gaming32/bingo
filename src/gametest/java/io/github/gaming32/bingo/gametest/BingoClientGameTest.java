@@ -816,6 +816,197 @@ public class BingoClientGameTest implements FabricClientGameTest {
         });
     }
 
+    @TestGoal
+    private static void testDifferentSlabs(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryEasy.DIFFERENT_SLABS, () -> {
+            for (String item : List.of("white_wool_slab", "oak_slab", "spruce_slab", "birch_slab")) {
+                singleplayerContext.getServer().runCommand("give @a " + item);
+            }
+        });
+    }
+
+    @TestGoal
+    private static void testDifferentSlabsGroupsCountOnce(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Easy.DIFFERENT_SLABS, false, () -> {
+            // Only counts as 4 different slabs, as all the wool ones count as 1, and all the concrete ones count as 1
+            for (String color : List.of("white", "red", "yellow", "blue")) {
+                singleplayerContext.getServer().runCommand("give @a " + color + "_wool_slab");
+                singleplayerContext.getServer().runCommand("give @a " + color + "_concrete_slab");
+            }
+            singleplayerContext.getServer().runCommand("give @a oak_slab");
+            singleplayerContext.getServer().runCommand("give @a spruce_slab");
+        });
+    }
+
+    @TestGoal
+    private static void testDifferentStairs(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryEasy.DIFFERENT_STAIRS, () -> {
+            for (String item : List.of("white_wool_stairs", "oak_stairs", "spruce_stairs", "birch_stairs")) {
+                singleplayerContext.getServer().runCommand("give @a " + item);
+            }
+        });
+    }
+
+    @TestGoal
+    private static void testDifferentStairsGroupsCountOnce(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Easy.DIFFERENT_STAIRS, false, () -> {
+            // Only counts as 4 different stairs, as all the wool ones count as 1, and all the concrete ones count as 1
+            for (String color : List.of("white", "red", "yellow", "blue")) {
+                singleplayerContext.getServer().runCommand("give @a " + color + "_wool_stairs");
+                singleplayerContext.getServer().runCommand("give @a " + color + "_concrete_stairs");
+            }
+            singleplayerContext.getServer().runCommand("give @a oak_stairs");
+            singleplayerContext.getServer().runCommand("give @a spruce_stairs");
+        });
+    }
+
+    @TestGoal
+    private static void testSitOnCushion(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Easy.SIT_ON_CUSHION, () -> {
+            singleplayerContext.getServer().runCommand("summon cushion 0.5 " + PLAYER_Y + " 1.5");
+            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 57");
+            singleplayerContext.getConnection().waitForClientboundPackets();
+            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+            singleplayerContext.getConnection().waitForServerboundPackets();
+        });
+    }
+
+    @TestGoal
+    private static void testSleepInStrawBed(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Easy.SLEEP_IN_STRAW_BED, () -> {
+            singleplayerContext.getServer().runCommand("time set night");
+            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 straw_bed[part=head]");
+            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 2 straw_bed[part=foot]");
+            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 15");
+            singleplayerContext.getConnection().waitForClientboundPackets();
+            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+            singleplayerContext.getConnection().waitForServerboundPackets();
+            singleplayerContext.getServer().runCommand("time set day");
+        });
+    }
+
+    @TestGoal
+    private static void testSleepInStrawBedNormalBed(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Easy.SLEEP_IN_STRAW_BED, false, () -> {
+            singleplayerContext.getServer().runCommand("time set night");
+            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 white_bed[part=head]");
+            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 2 white_bed[part=foot]");
+            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 15");
+            singleplayerContext.getConnection().waitForClientboundPackets();
+            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+            singleplayerContext.getConnection().waitForServerboundPackets();
+            singleplayerContext.getServer().runCommand("time set day");
+        });
+    }
+
+    @TestGoal
+    private static void testBounceOnShelfMushroom(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Medium.BOUNCE_ON_SHELF_MUSHROOM, () -> {
+            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 1 poplar_log");
+            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 0 shelf_mushroom[facing=north,age=1]");
+            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~3 ~");
+            singleplayerContext.getServer().waitFor(_ -> singleplayerContext.getConnection().getServerPlayer().getDeltaMovement().y > 0);
+        });
+    }
+
+    @TestGoal
+    private static void testKillHostileOnCushion(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Medium.KILL_HOSTILE_ON_CUSHION, () -> {
+            singleplayerContext.getServer().runCommand("summon cushion 0.5 " + PLAYER_Y + " 0.5");
+            singleplayerContext.getServer().runCommand("ride @p mount @e[type=cushion,limit=1]");
+            singleplayerContext.getServer().runCommand("summon zombie 0 " + PLAYER_Y + " 2");
+            singleplayerContext.getServer().runCommand("damage @e[type=zombie,limit=1] 1000 player_attack by @p");
+        });
+    }
+
+    @TestGoal
+    private static void testKillHostileNotOnCushion(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Medium.KILL_HOSTILE_ON_CUSHION, false, () -> {
+            singleplayerContext.getServer().runCommand("summon cushion 0.5 " + PLAYER_Y + " 1.5");
+            singleplayerContext.getServer().runCommand("summon zombie 0 " + PLAYER_Y + " 2");
+            singleplayerContext.getServer().runCommand("damage @e[type=zombie,limit=1] 1000 player_attack by @p");
+        });
+    }
+
+    @TestGoal
+    private static void testPoplarLeaves(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Medium.ALL_POPLAR_LEAVES, () -> {
+            singleplayerContext.getServer().runCommand("give @a red_poplar_leaves");
+            singleplayerContext.getServer().runCommand("give @a orange_poplar_leaves");
+            singleplayerContext.getServer().runCommand("give @a yellow_poplar_leaves");
+        });
+    }
+
+    @TestGoal
+    private static void testPoplarLeavesMissingColor(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Medium.ALL_POPLAR_LEAVES, false, () -> {
+            singleplayerContext.getServer().runCommand("give @a red_poplar_leaves 64");
+            singleplayerContext.getServer().runCommand("give @a orange_poplar_leaves 64");
+        });
+    }
+
+    @TestGoal
+    private static void testAbandonedCampMap(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Medium.ABANDONED_CAMP_MAP, () -> {
+            singleplayerContext.getServer().runCommand("give @a abandoned_camp_map");
+        });
+    }
+
+    @TestGoal
+    private static void testDifferentCushions(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Medium.DIFFERENT_CUSHIONS, () -> {
+            for (String color : List.of("white", "red", "yellow", "blue", "green")) {
+                singleplayerContext.getServer().runCommand("give @a " + color + "_cushion");
+            }
+        });
+    }
+
+    @TestGoal
+    private static void testPoplarLog(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.POPLAR_LOG, () -> {
+            singleplayerContext.getServer().runCommand("give @a poplar_log 32");
+        });
+    }
+
+    @TestGoal
+    private static void testPoplarWood(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.POPLAR_WOOD, () -> {
+            singleplayerContext.getServer().runCommand("give @a poplar_wood 20");
+        });
+    }
+
+    @TestGoal
+    private static void testStrippedPoplarLog(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.STRIPPED_POPLAR_LOG, () -> {
+            singleplayerContext.getServer().runCommand("give @a stripped_poplar_log 20");
+        });
+    }
+
+    @TestGoal
+    private static void testStrippedPoplarWood(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.STRIPPED_POPLAR_WOOD, () -> {
+            singleplayerContext.getServer().runCommand("give @a stripped_poplar_wood 20");
+        });
+    }
+
+    @TestGoal
+    private static void testDifferentExplorerMaps(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.DIFFERENT_EXPLORER_MAPS, () -> {
+            singleplayerContext.getServer().runCommand("give @a ocean_monument_map");
+            singleplayerContext.getServer().runCommand("give @a woodland_mansion_map");
+            singleplayerContext.getServer().runCommand("give @a abandoned_camp_map");
+        });
+    }
+
+    @TestGoal
+    private static void testDifferentExplorerMapsBlankMaps(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.DIFFERENT_EXPLORER_MAPS, false, () -> {
+            singleplayerContext.getServer().runCommand("give @a ocean_monument_map");
+            singleplayerContext.getServer().runCommand("give @a map");
+            singleplayerContext.getServer().runCommand("give @a filled_map");
+        });
+    }
+
     private static void testGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Identifier goalId, Runnable testRunner) {
         testGoal(context, singleplayerContext, goalId, true, testRunner);
     }

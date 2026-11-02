@@ -146,10 +146,10 @@ public class VeryEasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(SNOWBALL, items, Items.SNOWBALL, 8, 16)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
-        addGoal(obtainSomeItemsFromTag(DIFFERENT_SLABS, BingoItemTags.SLABS, "bingo.goal.different_slabs", 2, 4)
+        addGoal(obtainSomeItemsFromTag(DIFFERENT_SLABS, BingoItemTags.SLABS, "bingo.goal.different_slabs", 2, 4, ItemTags.WOOL_SLABS, ItemTags.CONCRETE_SLABS)
             .antisynergy("slabs")
             .infrequency(2));
-        addGoal(obtainSomeItemsFromTag(DIFFERENT_STAIRS, BingoItemTags.STAIRS, "bingo.goal.different_stairs", 2, 4)
+        addGoal(obtainSomeItemsFromTag(DIFFERENT_STAIRS, BingoItemTags.STAIRS, "bingo.goal.different_stairs", 2, 4, ItemTags.WOOL_STAIRS, ItemTags.CONCRETE_STAIRS)
             .antisynergy("stairs")
             .infrequency(2));
         addGoal(obtainItemGoal(DIAMOND, items, Items.DIAMOND));

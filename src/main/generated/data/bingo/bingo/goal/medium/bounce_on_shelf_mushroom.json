@@ -1,0 +1,40 @@
+{
+  "criteria": {
+    "bounce": {
+      "conditions": {
+        "block": {
+          "block": {
+            "blocks": "minecraft:shelf_mushroom"
+          }
+        }
+      },
+      "trigger": "bingo:bounce_on_block"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:shelf_mushroom"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.bounce_on_shelf_mushroom",
+    "with": [
+      {
+        "translate": "block.minecraft.shelf_mushroom"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "bounce"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ]
+}

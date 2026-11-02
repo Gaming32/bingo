@@ -853,6 +853,36 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(GRASS_BLOCK, items, Items.GRASS_BLOCK)
             .tooltip("grass_block")
             .tags(BingoTags.OVERWORLD));
+        addGoal(GoalBuilder.of(BOUNCE_ON_SHELF_MUSHROOM)
+            .criterion(context, "bounce", BounceOnBlockTrigger.TriggerInstance.bounceOnBlock(
+                BlockPredicate.Builder.block().of(blocks, Blocks.SHELF_MUSHROOM)
+            ))
+            .name(Component.translatable("bingo.goal.bounce_on_shelf_mushroom", Blocks.SHELF_MUSHROOM.getName()))
+            .icon(context, Items.SHELF_MUSHROOM)
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+        );
+        addGoal(GoalBuilder.of(KILL_HOSTILE_ON_CUSHION)
+            .criterion(context, "kill", CriteriaTriggers.PLAYER_KILLED_ENTITY.createCriterion(new KilledTrigger.TriggerInstance(
+                Optional.of(EntityPredicate.wrap(
+                    EntityPredicate.Builder.entity().vehicle(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.CUSHION))
+                )),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(entityTypes, BingoEntityTypeTags.HOSTILE))),
+                Optional.empty()
+            )))
+            .name(Component.translatable("bingo.goal.kill_hostile_on_cushion", EntityTypes.CUSHION.getDescription()))
+            .icon(context, IndicatorIcon.infer(BingoEntityTypeTags.HOSTILE, Items.CUSHION.white()))
+            .antisynergy("sit_on_cushion")
+            .reactant("pacifist")
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD)
+        );
+        addGoal(obtainAllItemsFromTag(BingoItemTags.POPLAR_LEAVES, "poplar_leaves")
+            .tags(BingoTags.OVERWORLD, BingoTags.RARE_BIOME));
+        addGoal(obtainItemGoal(ABANDONED_CAMP_MAP, items, Items.ABANDONED_CAMP_MAP)
+            .tags(BingoTags.OVERWORLD));
+        addGoal(obtainSomeItemsFromTag(DIFFERENT_CUSHIONS, ItemTags.CUSHIONS, "bingo.goal.different_cushions", 3, 5)
+            .antisynergy("cushion_color")
+            .infrequency(2)
+            .tags(BingoTags.COLOR, BingoTags.OVERWORLD));
         addGoal(GoalBuilder.of(BOUNCE_ON_SLIME)
             .criterion(context, "bounce", BounceOnBlockTrigger.TriggerInstance.bounceOnBlock(
                 BlockPredicate.Builder.block().of(blocks, Blocks.SLIME_BLOCK)

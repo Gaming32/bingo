@@ -157,7 +157,7 @@ public abstract class DifficultyGoalProvider {
     protected GoalBuilder obtainItemGoal(Identifier id, ItemLike icon, ItemPredicate.Builder item, int minCount, int maxCount) {
         if (minCount == maxCount) {
             return GoalBuilder.of(id)
-                .criterion(context, "obtain", TotalCountInventoryChangeTrigger.builder().items(item.withCount(MinMaxBounds.Ints.exactly(minCount)).build()).build())
+                .criterion(context, "obtain", TotalCountInventoryChangeTrigger.builder().items(item.withCount(MinMaxBounds.Ints.atLeast(minCount)).build()).build())
                 .progress("obtain")
                 .tags(BingoTags.ITEM)
                 .icon(context, new ItemStackTemplate(icon.asItem(), minCount));
@@ -174,13 +174,18 @@ public abstract class DifficultyGoalProvider {
             .icon(context, icon, subber -> subber.sub("item.count", "count"));
     }
 
-    protected GoalBuilder obtainSomeItemsFromTag(
+    @SafeVarargs
+    protected final GoalBuilder obtainSomeItemsFromTag(
         Identifier id, TagKey<Item> tag, @Translatable String translationKey,
-        int minCount, int maxCount
+        int minCount, int maxCount, TagKey<Item>... groups
     ) {
+        final var trigger = HasSomeItemsFromTagTrigger.builder().tag(tag);
+        for (final TagKey<Item> group : groups) {
+            trigger.group(group);
+        }
         if (minCount == maxCount) {
             return GoalBuilder.of(id)
-                .criterion(context, "obtain", HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(minCount).build())
+                .criterion(context, "obtain", trigger.requiredCount(minCount).build())
                 .progress("obtain")
                 .tags(BingoTags.ITEM)
                 .name(Component.translatable(translationKey, minCount))
@@ -191,7 +196,7 @@ public abstract class DifficultyGoalProvider {
             .criterion(
                 context,
                 "obtain",
-                HasSomeItemsFromTagTrigger.builder().tag(tag).requiredCount(1).build(),
+                trigger.requiredCount(1).build(),
                 subber -> subber.sub("conditions.required_count", "count")
             )
             .progress("obtain")

@@ -7,6 +7,7 @@ d6a27a1a6be3907d52f7b5ed5ac19ec77b587bd1 data/bingo/tags/item/climbable.json
 59d7bacb31963489e6364a4bd4cf6d3087ed84df data/bingo/tags/item/copper_in_name.json
 a8e3cdd07707862c9287a13bbcb1ad927c21bde8 data/bingo/tags/item/dead_coral_blocks.json
 bc6a562ad0563028ee6e0a6d9884219ee13ff302 data/bingo/tags/item/diamond_in_name.json
+615e3fcf38fa28dca61d54089984af1c8f35d783 data/bingo/tags/item/explorer_maps.json
 63f8820ed177040a8cc5f9600db796b0fc07cd21 data/bingo/tags/item/fish_buckets.json
 ab36b8c55d7cb885ce44a310ee21a30c119831a7 data/bingo/tags/item/fishing_junk.json
 b1e97af6d210dfc0950aa6a0803a77ea3db00910 data/bingo/tags/item/fishing_treasure.json
@@ -15,6 +16,7 @@ b1e97af6d210dfc0950aa6a0803a77ea3db00910 data/bingo/tags/item/fishing_treasure.j
 76ff0180f4ac33ecd2e129331abfc90bb84adad2 data/bingo/tags/item/meat.json
 c536d45217eef60a8f6fc79aad90044c76b856d1 data/bingo/tags/item/nautilus_armor.json
 86894fcb39eb59a6350754e0397f720fe8f95ba6 data/bingo/tags/item/not_meat.json
+72c44315c1e1e7aae7c24aa8a4f46383dfad3894 data/bingo/tags/item/poplar_leaves.json
 337ae94d0df20e6ae9cb137577d6abc1de64acf1 data/bingo/tags/item/slabs.json
 9ed5e63c19ce50145a7518261e61456966a39bfc data/bingo/tags/item/stairs.json
 bd9b9ad5a273fbcf4fc5f7867a82b488afdb3e06 data/bingo/tags/item/torches.json

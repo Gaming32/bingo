@@ -1,0 +1,43 @@
+{
+  "criteria": {
+    "sleep": {
+      "conditions": {
+        "location": {
+          "type": "minecraft:location_check",
+          "predicate": {
+            "block": {
+              "blocks": "minecraft:straw_bed"
+            }
+          }
+        }
+      },
+      "trigger": "bingo:slept"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:straw_bed"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.sleep_in_straw_bed",
+    "with": [
+      {
+        "translate": "block.minecraft.straw_bed"
+      }
+    ]
+  },
+  "reactant": "sleep",
+  "requirements": [
+    [
+      "sleep"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}
