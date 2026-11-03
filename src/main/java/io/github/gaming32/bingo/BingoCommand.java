@@ -137,6 +137,7 @@ public class BingoCommand {
 
     private static final CommandSwitch<Boolean> REQUIRE_CLIENT = CommandSwitch.storeTrue("--require-client");
     private static final CommandSwitch<Boolean> CONTINUE_AFTER_WIN = CommandSwitch.storeTrue("--continue-after-win");
+    private static final CommandSwitch<Boolean> ANNOUNCE_TO_OPPONENTS = CommandSwitch.storeTrue("--announce-to-opponents");
     private static final CommandSwitch<Boolean> INCLUDE_INACTIVE_TEAMS = CommandSwitch.storeTrue("--include-inactive-teams");
 
     private static final CommandSwitch<String> SHAPE = CommandSwitch
@@ -440,6 +441,7 @@ public class BingoCommand {
 
             REQUIRE_CLIENT.addTo(startCommand);
             CONTINUE_AFTER_WIN.addTo(startCommand);
+            ANNOUNCE_TO_OPPONENTS.addTo(startCommand);
             INCLUDE_INACTIVE_TEAMS.addTo(startCommand);
 
             SHAPE.addTo(startCommand);
@@ -488,6 +490,7 @@ public class BingoCommand {
         final var gamemode = GAMEMODE.get(context).value();
         final boolean requireClient = REQUIRE_CLIENT.get(context);
         final boolean continueAfterWin = CONTINUE_AFTER_WIN.get(context);
+        final boolean announceToOpponents = ANNOUNCE_TO_OPPONENTS.get(context);
         final boolean includeInactiveTeams = INCLUDE_INACTIVE_TEAMS.get(context);
         final int timeLimit  = TIME_LIMIT.get(context);
         final int autoForfeitTicks = AUTO_FORFEIT_TIME.get(context);
@@ -542,7 +545,7 @@ public class BingoCommand {
         Bingo.LOGGER.info("Generated board (seed {}):\n{}", seed, board);
 
         final long scheduledEndTime = timeLimit > 0 ? context.getSource().getServer().overworld().getGameTime() + timeLimit : 0;
-        final var game = new BingoGame(board, gamemode, requireClient, continueAfterWin, scheduledEndTime, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
+        final var game = new BingoGame(board, gamemode, requireClient, continueAfterWin, announceToOpponents, scheduledEndTime, autoForfeitTicks, teams.toArray(PlayerTeam[]::new));
 
         for (ServerPlayer player : context.getSource().getServer().getPlayerList().getPlayers()) {
             if (Bingo.CONFIG.getNerfedPlayers().contains(player.getUUID())) {

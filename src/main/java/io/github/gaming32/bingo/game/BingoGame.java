@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.game;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
@@ -82,6 +83,7 @@ public class BingoGame {
     private final BingoGameMode gameMode;
     private final boolean requireClient;
     private final boolean continueAfterWin;
+    private final boolean announceToOpponents;
     private final int autoForfeitTicks;
     private final PlayerTeam[] teams;
     private long scheduledEndTime;
@@ -99,11 +101,21 @@ public class BingoGame {
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams nerfedTeams = BingoBoard.Teams.NONE;
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean continueAfterWin, long scheduledEndTime, int autoForfeitTicks, PlayerTeam... teams) {
+    public BingoGame(
+        BingoBoard board,
+        BingoGameMode gameMode,
+        boolean requireClient,
+        boolean continueAfterWin,
+        boolean announceToOpponents,
+        long scheduledEndTime,
+        int autoForfeitTicks,
+        PlayerTeam... teams
+    ) {
         this.board = board;
         this.gameMode = gameMode;
         this.requireClient = requireClient;
         this.continueAfterWin = continueAfterWin;
+        this.announceToOpponents = announceToOpponents;
         this.scheduledEndTime = scheduledEndTime;
         this.autoForfeitTicks = autoForfeitTicks;
         this.teams = teams;
@@ -126,6 +138,10 @@ public class BingoGame {
 
     public boolean shouldContinueAfterWin() {
         return continueAfterWin;
+    }
+
+    public boolean shouldAnnounceToOpponents() {
+        return announceToOpponents;
     }
 
     /**
@@ -683,32 +699,40 @@ public class BingoGame {
         }
         if (showOtherTeam) {
             statePayload.sendTo(playerList.getPlayers());
-            if (gameMode.isLockout()) {
-                Component teamComponent = BingoUtil.getDisplayName(playerTeam, playerList)
-                    .map(Function.identity(), Function.identity());
-                if (playerTeam.getColor().isPresent()) {
-                    teamComponent = teamComponent.copy().withColor(playerTeam.getColor().get().textColor());
-                }
-                final Component lockoutMessage = Bingo.translatable(
-                    "bingo.goal_lost.lockout",
-                    teamComponent, goal.name().copy().withStyle(ChatFormatting.GOLD)
-                );
-                for (final ServerPlayer player : playerList.getPlayers()) {
-                    if (player.isAlliedTo(playerTeam)) continue;
-                    if (announceGoal) {
-                        player.connection.send(new ClientboundSoundEntityPacket(
-                            SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.MASTER,
-                            player, 0.5f, 1f, player.getRandom().nextLong()
-                        ));
-                        player.sendSystemMessage(lockoutMessage);
-                    }
-                }
-            }
         } else {
             for (final ServerPlayer player : playerList.getPlayers()) {
                 if (player.isSpectator()) {
                     statePayload.sendTo(player);
                 }
+            }
+        }
+        if (announceGoal && (gameMode.isLockout() || announceToOpponents)) {
+            Component teamComponent = BingoUtil.getDisplayName(playerTeam, playerList)
+                .map(Function.identity(), Function.identity());
+            if (playerTeam.getColor().isPresent()) {
+                teamComponent = teamComponent.copy().withColor(playerTeam.getColor().get().textColor());
+            }
+            final Component opponentMessage;
+            if (gameMode.isLockout()) {
+                opponentMessage = Bingo.translatable(
+                    "bingo.goal_lost.lockout",
+                    teamComponent, goal.name().copy().withStyle(ChatFormatting.GOLD)
+                );
+            } else {
+                opponentMessage = Bingo.translatable(
+                    isLoss ? "bingo.goal_lost.opponent" : "bingo.goal_obtained.opponent",
+                    teamComponent, goalName
+                );
+            }
+            for (final ServerPlayer player : playerList.getPlayers()) {
+                if (player.isAlliedTo(playerTeam)) continue;
+                if (gameMode.isLockout()) {
+                    player.connection.send(new ClientboundSoundEntityPacket(
+                        SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.MASTER,
+                        player, 0.5f, 1f, player.getRandom().nextLong()
+                    ));
+                }
+                player.sendSystemMessage(opponentMessage);
             }
         }
     }
@@ -831,8 +855,7 @@ public class BingoGame {
     public record PersistenceData(
         BingoBoard board,
         BingoGameMode gameMode,
-        boolean requireClient,
-        boolean continueAfterWin,
+        Flags flags,
         long scheduledEndTime,
         int autoForfeitTicks,
         List<String> teamNames,
@@ -861,8 +884,7 @@ public class BingoGame {
             instance -> instance.group(
                 BingoBoard.PERSISTENCE_CODEC.fieldOf("board").forGetter(PersistenceData::board),
                 BingoGameMode.PERSISTENCE_CODEC.fieldOf("game_mode").forGetter(PersistenceData::gameMode),
-                Codec.BOOL.fieldOf("require_client").forGetter(PersistenceData::requireClient),
-                Codec.BOOL.optionalFieldOf("continue_after_win", false).forGetter(PersistenceData::continueAfterWin),
+                Flags.MAP_CODEC.forGetter(PersistenceData::flags),
                 ExtraCodecs.NON_NEGATIVE_LONG.optionalFieldOf("scheduled_end_time", 0L).forGetter(PersistenceData::scheduledEndTime),
                 ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("auto_forfeit_ticks", DEFAULT_AUTO_FORFEIT_TICKS).forGetter(PersistenceData::autoForfeitTicks),
                 Codec.STRING.listOf().fieldOf("team_names").forGetter(PersistenceData::teamNames),
@@ -886,7 +908,10 @@ public class BingoGame {
                     throw new IllegalStateException("Team '" + teamNames.get(i) + "' no longer exists");
                 }
             }
-            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, scheduledEndTime, autoForfeitTicks, teams);
+            final BingoGame game = new BingoGame(
+                board, gameMode, flags.requireClient(), flags.continueAfterWin(), flags.announceToOpponents(),
+                scheduledEndTime, autoForfeitTicks, teams
+            );
 
             for (final var entry : advancementProgress.entrySet()) {
                 final Map<ActiveGoal, AdvancementProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
@@ -956,7 +981,8 @@ public class BingoGame {
             }
 
             return new PersistenceData(
-                game.board, game.gameMode, game.requireClient, game.continueAfterWin,
+                game.board, game.gameMode,
+                new Flags(game.requireClient, game.continueAfterWin, game.announceToOpponents),
                 game.scheduledEndTime, game.autoForfeitTicks,
                 Arrays.stream(game.teams).map(PlayerTeam::getName).toList(),
                 createMap(game, game.advancementProgress),
@@ -980,6 +1006,17 @@ public class BingoGame {
 
         private static int getGoal(BingoGame game, ActiveGoal goal) {
             return game.board.getIndex(goal);
+        }
+
+        // Split out of PersistenceData to stay within RecordCodecBuilder's field limit
+        public record Flags(boolean requireClient, boolean continueAfterWin, boolean announceToOpponents) {
+            public static final MapCodec<Flags> MAP_CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                    Codec.BOOL.fieldOf("require_client").forGetter(Flags::requireClient),
+                    Codec.BOOL.optionalFieldOf("continue_after_win", false).forGetter(Flags::continueAfterWin),
+                    Codec.BOOL.optionalFieldOf("announce_to_opponents", false).forGetter(Flags::announceToOpponents)
+                ).apply(instance, Flags::new)
+            );
         }
     }
 }
