@@ -12,6 +12,17 @@ public class BlockIconRenderer implements IconRenderer<BlockIcon> {
         Vector2f topLeft = graphics.pose().transformPosition(x, y, new Vector2f());
         Vector2f bottomRight = graphics.pose().transformPosition(x + 16, y + 16, new Vector2f());
 
+        // The scissor area must stay within the screen, or rendering will crash
+        final ScreenRectangle scissorArea = new ScreenRectangle(
+            (int) topLeft.x,
+            (int) topLeft.y,
+            (int) bottomRight.x - (int) topLeft.x,
+            (int) bottomRight.y - (int) topLeft.y
+        ).intersection(new ScreenRectangle(0, 0, graphics.guiWidth(), graphics.guiHeight()));
+        if (scissorArea == null) {
+            return;
+        }
+
         graphics.guiRenderState.addPicturesInPictureState(BlockPictureInPictureRenderState.create(
             icon.block(),
             (int) topLeft.x,
@@ -19,7 +30,7 @@ public class BlockIconRenderer implements IconRenderer<BlockIcon> {
             (int) topLeft.y,
             (int) bottomRight.y,
             1,
-            new ScreenRectangle((int) topLeft.x, (int) topLeft.y, 16, 16)
+            scissorArea
         ));
     }
 }

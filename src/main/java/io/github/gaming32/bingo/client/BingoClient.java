@@ -49,9 +49,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.TeamColor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 public class BingoClient {
@@ -178,15 +180,7 @@ public class BingoClient {
         final PositionAndScale pos = getBoardPosition();
         renderBingo(graphics, minecraft.gui.screen() instanceof ChatScreen, pos);
 
-        final Font font = minecraft.font;
-        final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
-        int scoreY;
-        if (CONFIG.getBoardCorner().isOnBottom) {
-            scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
-        } else {
-            scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
-        }
-        final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
+        final List<HudLine> lines = new ArrayList<>();
 
         if (clientGame.scheduledEndTime() > 0) {
             long serverTime = 0;
@@ -200,10 +194,7 @@ public class BingoClient {
                 color = 0xffffaf00;
             if (remainingTimeTicks < 5 * SharedConstants.TICKS_PER_MINUTE)
                 color = 0xffff0000;
-            final MutableComponent remainingTimeLabel = Component.translatable("bingo.remaining_time");
-            graphics.text(font, remainingTimeLabel, scoreX - font.width(remainingTimeLabel), scoreY, color);
-            graphics.text(font, Component.literal(formatedRemainingTime), scoreX, scoreY, color);
-            scoreY += shift;
+            lines.add(new HudLine(Component.translatable("bingo.remaining_time"), Component.literal(formatedRemainingTime), color));
         }
 
         if (CONFIG.isShowScoreCounter() && clientGame.renderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
@@ -240,16 +231,64 @@ public class BingoClient {
                     leftText.withColor(color.textColor());
                     rightText.withColor(color.textColor());
                 });
-                graphics.text(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
-                graphics.text(font, rightText, scoreX, scoreY, 0xffffffff);
-                scoreY += shift;
+                lines.add(new HudLine(leftText, rightText, 0xffffffff));
             }
 
-            final MutableComponent leftText = Component.translatable("bingo.unclaimed");
-            final MutableComponent rightText = Component.literal(" - " + (clientGame.states().length - totalScore));
-            graphics.text(font, leftText, scoreX - font.width(leftText), scoreY, 0xffffffff);
-            graphics.text(font, rightText, scoreX, scoreY, 0xffffffff);
+            lines.add(new HudLine(
+                Component.translatable("bingo.unclaimed"),
+                Component.literal(" - " + (clientGame.states().length - totalScore)),
+                0xffffffff
+            ));
         }
+
+        renderHudLines(minecraft, graphics, pos, lines);
+    }
+
+    private static void renderHudLines(Minecraft minecraft, GuiGraphicsExtractor graphics, PositionAndScale pos, List<HudLine> lines) {
+        if (lines.isEmpty()) {
+            return;
+        }
+
+        final Font font = minecraft.font;
+        final int screenWidth = graphics.guiWidth();
+        final int screenHeight = graphics.guiHeight();
+
+        int maxLeftWidth = 0;
+        int maxRightWidth = 0;
+        for (final HudLine line : lines) {
+            maxLeftWidth = Math.max(maxLeftWidth, font.width(line.left()));
+            maxRightWidth = Math.max(maxRightWidth, font.width(line.right()));
+        }
+
+        // Keep the lines centered under the board where possible, but shift them so they stay on screen.
+        // If they're too wide for the screen, prioritize keeping the start of the lines visible.
+        final int boardCenterX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
+        final int scoreX = Math.clamp(
+            boardCenterX,
+            BOARD_OFFSET + maxLeftWidth,
+            screenWidth - BOARD_OFFSET - maxRightWidth
+        );
+
+        final boolean onBottom = CONFIG.getBoardCorner().isOnBottom;
+        int scoreY;
+        if (onBottom) {
+            scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
+        } else {
+            scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
+        }
+        final int shift = onBottom ? -12 : 12;
+
+        for (final HudLine line : lines) {
+            if (scoreY < 0 || scoreY + font.lineHeight > screenHeight) {
+                break;
+            }
+            graphics.text(font, line.left(), scoreX - font.width(line.left()), scoreY, line.color());
+            graphics.text(font, line.right(), scoreX, scoreY, line.color());
+            scoreY += shift;
+        }
+    }
+
+    private record HudLine(Component left, Component right, int color) {
     }
 
     public static int getBoardWidth() {
