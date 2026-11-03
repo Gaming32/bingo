@@ -13,6 +13,10 @@
   "criteria": {
     "obtain": {
       "conditions": {
+        "groups": [
+          "minecraft:wool_stairs",
+          "minecraft:concrete_stairs"
+        ],
         "required_count": {
           "bingo_type": "bingo:sub",
           "key": "count"

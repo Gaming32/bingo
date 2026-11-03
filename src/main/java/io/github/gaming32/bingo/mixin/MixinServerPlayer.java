@@ -49,6 +49,11 @@ public abstract class MixinServerPlayer extends MixinEntity implements ServerPla
         BingoTriggers.ITEM_PICKED_UP.get().trigger((ServerPlayer)(Object)this, entity);
     }
 
+    @Inject(method = {"onEffectAdded", "onEffectUpdated", "onEffectsRemoved"}, at = @At("TAIL"))
+    private void statusEffectsTrigger(CallbackInfo ci) {
+        BingoTriggers.STATUS_EFFECTS.get().trigger((ServerPlayer)(Object)this);
+    }
+
     @Inject(method = "awardKillScore", at = @At("HEAD"))
     @SuppressWarnings("UnreachableCode")
     private void killSelfTrigger(Entity victim, DamageSource killingBlow, CallbackInfo ci) {

@@ -1,0 +1,1147 @@
+{
+  "antisynergy": "wolf_variants",
+  "criteria": {
+    "tame_minecraft_ashen": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:components": {
+              "minecraft:wolf/variant": "minecraft:ashen"
+            },
+            "minecraft:entity_type": "minecraft:wolf"
+          }
+        }
+      },
+      "trigger": "minecraft:tame_animal"
+    },
+    "tame_minecraft_black": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:components": {
+              "minecraft:wolf/variant": "minecraft:black"
+            },
+            "minecraft:entity_type": "minecraft:wolf"
+          }
+        }
+      },
+      "trigger": "minecraft:tame_animal"
+    },
+    "tame_minecraft_chestnut": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:components": {
+              "minecraft:wolf/variant": "minecraft:chestnut"
+            },
+            "minecraft:entity_type": "minecraft:wolf"
+          }
+        }
+      },
+      "trigger": "minecraft:tame_animal"
+    },
+    "tame_minecraft_pale": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:components": {
+              "minecraft:wolf/variant": "minecraft:pale"
+            },
+            "minecraft:entity_type": "minecraft:wolf"
+          }
+        }
+      },
+      "trigger": "minecraft:tame_animal"
+    },
+    "tame_minecraft_rusty": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:components": {
+              "minecraft:wolf/variant": "minecraft:rusty"
+            },
+            "minecraft:entity_type": "minecraft:wolf"
+          }
+        }
+      },
+      "trigger": "minecraft:tame_animal"
+    },
+    "tame_minecraft_snowy": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:components": {
+              "minecraft:wolf/variant": "minecraft:snowy"
+            },
+            "minecraft:entity_type": "minecraft:wolf"
+          }
+        }
+      },
+      "trigger": "minecraft:tame_animal"
+    },
+    "tame_minecraft_spotted": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:components": {
+              "minecraft:wolf/variant": "minecraft:spotted"
+            },
+            "minecraft:entity_type": "minecraft:wolf"
+          }
+        }
+      },
+      "trigger": "minecraft:tame_animal"
+    },
+    "tame_minecraft_striped": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:components": {
+              "minecraft:wolf/variant": "minecraft:striped"
+            },
+            "minecraft:entity_type": "minecraft:wolf"
+          }
+        }
+      },
+      "trigger": "minecraft:tame_animal"
+    },
+    "tame_minecraft_woods": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:components": {
+              "minecraft:wolf/variant": "minecraft:woods"
+            },
+            "minecraft:entity_type": "minecraft:wolf"
+          }
+        }
+      },
+      "trigger": "minecraft:tame_animal"
+    }
+  },
+  "difficulty": "bingo:very_hard",
+  "icon": {
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:ashen"
+        },
+        "entity": "minecraft:wolf",
+        "item": {
+          "count": 5,
+          "id": "minecraft:wolf_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:black"
+        },
+        "entity": "minecraft:wolf",
+        "item": {
+          "count": 5,
+          "id": "minecraft:wolf_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:chestnut"
+        },
+        "entity": "minecraft:wolf",
+        "item": {
+          "count": 5,
+          "id": "minecraft:wolf_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:pale"
+        },
+        "entity": "minecraft:wolf",
+        "item": {
+          "count": 5,
+          "id": "minecraft:wolf_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:rusty"
+        },
+        "entity": "minecraft:wolf",
+        "item": {
+          "count": 5,
+          "id": "minecraft:wolf_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:snowy"
+        },
+        "entity": "minecraft:wolf",
+        "item": {
+          "count": 5,
+          "id": "minecraft:wolf_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:spotted"
+        },
+        "entity": "minecraft:wolf",
+        "item": {
+          "count": 5,
+          "id": "minecraft:wolf_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:striped"
+        },
+        "entity": "minecraft:wolf",
+        "item": {
+          "count": 5,
+          "id": "minecraft:wolf_spawn_egg"
+        }
+      },
+      {
+        "type": "bingo:entity",
+        "data": {
+          "variant": "minecraft:woods"
+        },
+        "entity": "minecraft:wolf",
+        "item": {
+          "count": 5,
+          "id": "minecraft:wolf_spawn_egg"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.tame_wolf_variants",
+    "with": [
+      5
+    ]
+  },
+  "progress": {
+    "type": "bingo:achieved_criteria",
+    "required": 5
+  },
+  "requirements": [
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_snowy",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_rusty",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_black",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_pale",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_ashen",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_chestnut",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_pale",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_black",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_pale",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_chestnut",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped"
+    ],
+    [
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_pale",
+      "tame_minecraft_rusty",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_pale",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ],
+    [
+      "tame_minecraft_rusty",
+      "tame_minecraft_snowy",
+      "tame_minecraft_spotted",
+      "tame_minecraft_striped",
+      "tame_minecraft_woods"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.tame_wolf_variants.tooltip"
+  }
+}

@@ -8,6 +8,7 @@ import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
@@ -28,8 +29,8 @@ public record BlockCondition(BlockPredicate block) implements LootItemCondition 
 
     @Override
     public boolean test(LootContext lootContext) {
-        BlockPos pos = BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN));
-        return block.matches(lootContext.getLevel(), pos);
+        Vec3 origin = lootContext.getOptional(LootContextParams.ORIGIN);
+        return origin != null && block.matches(lootContext.getLevel(), BlockPos.containing(origin));
     }
 
     public static Builder builder(BlockPredicate block) {

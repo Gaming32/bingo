@@ -13,6 +13,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.ResourceKeyArgument;
 import net.minecraft.commands.arguments.ResourceOrTagKeyArgument;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -163,12 +164,11 @@ public sealed interface CommandSwitch<T extends @Nullable Object> permits Argume
             return new ArgumentSwitch<>(
                 name, argName,
                 ResourceKeyArgument.key(registryKey),
-                (context, arg) -> ResourceKeyArgument.resolveKey(context, arg, registry, exceptionType),
-                context -> context
-                    .getSource()
-                    .registryAccess()
-                    .lookupOrThrow(registryKey)
-                    .getOrThrow(defaultValue),
+                (context, arg) -> {
+                    final ResourceKey<T> key = ResourceKeyArgument.getRegistryKey(context, arg, registryKey, exceptionType);
+                    return lookup(context, registryKey).get(key).orElseThrow(() -> exceptionType.create(key.identifier()));
+                },
+                context -> lookup(context, registryKey).getOrThrow(defaultValue),
                 null
             );
         }
@@ -186,7 +186,7 @@ public sealed interface CommandSwitch<T extends @Nullable Object> permits Argume
                     context -> null, null
                 ),
                 (context, values) -> {
-                    final var registry = context.getSource().registryAccess().lookupOrThrow(registryKey);
+                    final var registry = lookup(context, registryKey);
                     return switch (values.size()) {
                         case 0 -> HolderSet.empty();
                         case 1 -> BingoUtil.toHolderSet(registry, values.iterator().next());
@@ -200,6 +200,13 @@ public sealed interface CommandSwitch<T extends @Nullable Object> permits Argume
                     };
                 }
             );
+        }
+
+        // Includes reloadable registries, unlike CommandSourceStack.registryAccess()
+        private static <T> HolderLookup.RegistryLookup<T> lookup(
+            CommandContext<CommandSourceStack> context, ResourceKey<? extends Registry<? extends T>> registryKey
+        ) {
+            return context.getSource().getServer().reloadableRegistries().lookup().lookupOrThrow(registryKey);
         }
     }
 }

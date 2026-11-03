@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.ext.LivingEntityExt;
 import net.minecraft.advancements.predicates.TagPredicate;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -47,7 +48,7 @@ public record HasOnlyBeenDamagedByCondition(
 
     @Override
     public boolean test(LootContext lootContext) {
-        Entity entity = lootContext.getParameter(LootContextParams.THIS_ENTITY);
+        Entity entity = lootContext.getOptional(LootContextParams.THIS_ENTITY);
         return entity instanceof LivingEntityExt living && living.bingo$hasOnlyBeenDamagedBy(damageEntry -> {
             if (this.entityType.isPresent() && !damageEntry.entityType().equals(this.entityType)) {
                 return false;
@@ -96,8 +97,8 @@ public record HasOnlyBeenDamagedByCondition(
             return this;
         }
 
-        public Builder entityTypeTag(TagKey<EntityType<?>> entityTypeTag) {
-            return entityTypeTag(TagPredicate.is(entityTypeTag));
+        public Builder entityTypeTag(HolderGetter<EntityType<?>> entityTypes, TagKey<EntityType<?>> entityTypeTag) {
+            return entityTypeTag(TagPredicate.is(entityTypes, entityTypeTag));
         }
 
         public Builder entityTypeTag(TagPredicate<EntityType<?>> entityTypeTag) {
@@ -110,8 +111,8 @@ public record HasOnlyBeenDamagedByCondition(
             return this;
         }
 
-        public Builder directEntityTypeTag(TagKey<EntityType<?>> directEntityTypeTag) {
-            return directEntityTypeTag(TagPredicate.is(directEntityTypeTag));
+        public Builder directEntityTypeTag(HolderGetter<EntityType<?>> entityTypes, TagKey<EntityType<?>> directEntityTypeTag) {
+            return directEntityTypeTag(TagPredicate.is(entityTypes, directEntityTypeTag));
         }
 
         public Builder directEntityTypeTag(TagPredicate<EntityType<?>> directEntityTypeTag) {
@@ -124,8 +125,8 @@ public record HasOnlyBeenDamagedByCondition(
             return this;
         }
 
-        public Builder damageTypeTag(TagKey<DamageType> damageTypeTag) {
-            return damageTypeTag(TagPredicate.is(damageTypeTag));
+        public Builder damageTypeTag(HolderGetter<DamageType> damageTypes, TagKey<DamageType> damageTypeTag) {
+            return damageTypeTag(TagPredicate.is(damageTypes, damageTypeTag));
         }
 
         public Builder damageTypeTag(TagPredicate<DamageType> damageTypeTag) {

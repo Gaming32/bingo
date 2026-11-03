@@ -40,7 +40,7 @@ public record WearingDifferentArmorCondition(
 
     @Override
     public boolean test(LootContext lootContext) {
-        final Entity entity = lootContext.getParameter(LootContextParams.THIS_ENTITY);
+        final Entity entity = lootContext.getOptional(LootContextParams.THIS_ENTITY);
         if (!(entity instanceof LivingEntity livingEntity)) {
             return false;
         }

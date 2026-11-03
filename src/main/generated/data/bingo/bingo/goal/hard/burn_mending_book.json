@@ -7,31 +7,29 @@
             "tags": [
               {
                 "expected": true,
-                "id": "minecraft:is_fire"
+                "id": "#minecraft:is_fire"
               }
             ]
           }
         },
-        "item": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "bingo:type_specific/item": {
-                "item": {
-                  "items": "minecraft:enchanted_book",
-                  "predicates": {
-                    "minecraft:stored_enchantments": [
-                      {
-                        "enchantments": "minecraft:mending"
-                      }
-                    ]
-                  }
+        "item": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "bingo:type_specific/item": {
+              "item": {
+                "items": "minecraft:enchanted_book",
+                "predicates": {
+                  "minecraft:stored_enchantments": [
+                    {
+                      "enchantments": "minecraft:mending"
+                    }
+                  ]
                 }
               }
             }
           }
-        ]
+        }
       },
       "trigger": "bingo:kill_item"
     }
@@ -39,17 +37,7 @@
   "difficulty": "bingo:hard",
   "icon": {
     "type": "bingo:block",
-    "block": {
-      "Name": "minecraft:fire",
-      "Properties": {
-        "age": "0",
-        "east": "false",
-        "north": "false",
-        "south": "false",
-        "up": "false",
-        "west": "false"
-      }
-    },
+    "block": "minecraft:fire",
     "item": {
       "count": 1,
       "id": "minecraft:enchanted_book"

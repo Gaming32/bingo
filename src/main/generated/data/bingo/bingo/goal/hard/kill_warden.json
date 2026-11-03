@@ -1,0 +1,44 @@
+{
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:warden"
+          }
+        }
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "difficulty": "bingo:hard",
+  "icon": {
+    "type": "bingo:entity",
+    "entity": "minecraft:warden",
+    "item": {
+      "count": 1,
+      "id": "minecraft:warden_spawn_egg"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.kill_warden",
+    "with": [
+      {
+        "translate": "entity.minecraft.warden"
+      }
+    ]
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:combat",
+    "bingo:overworld"
+  ]
+}

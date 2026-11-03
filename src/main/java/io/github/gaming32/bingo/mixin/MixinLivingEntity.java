@@ -10,6 +10,7 @@ import io.github.gaming32.bingo.triggers.BingoTriggers;
 import io.github.gaming32.bingo.util.DamageEntry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -92,10 +93,10 @@ public abstract class MixinLivingEntity extends Entity implements LivingEntityEx
     }
 
     @Inject(
-        method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
+        method = "drop",
         at = @At("RETURN")
     )
-    private void setDroppedBy(ItemStack itemStack, boolean randomly, boolean thrownFromHand, CallbackInfoReturnable<ItemEntity> cir) {
+    private void setDroppedBy(ItemStack itemStack, boolean thrownFromHand, Prediction prediction, CallbackInfoReturnable<ItemEntity> cir) {
         if (cir.getReturnValue() instanceof ItemEntityExt itemEntity) {
             itemEntity.bingo$setDroppedBy(this);
         }

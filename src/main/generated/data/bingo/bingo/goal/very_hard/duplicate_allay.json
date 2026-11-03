@@ -1,0 +1,31 @@
+{
+  "criteria": {
+    "duplicate": {
+      "trigger": "bingo:duplicate_allay"
+    }
+  },
+  "difficulty": "bingo:very_hard",
+  "icon": {
+    "type": "bingo:entity",
+    "entity": "minecraft:allay",
+    "item": {
+      "count": 2,
+      "id": "minecraft:allay_spawn_egg"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.duplicate_allay"
+  },
+  "requirements": [
+    [
+      "duplicate"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.duplicate_allay.tooltip"
+  }
+}

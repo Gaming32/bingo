@@ -2,21 +2,24 @@
   "criteria": {
     "place": {
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:location_check",
-            "predicate": {
-              "block": {
-                "blocks": "minecraft:campfire",
-                "nbt": "{Items:[{Slot:0b},{Slot:1b},{Slot:2b},{Slot:3b}]}"
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:location_check",
+              "predicate": {
+                "block": {
+                  "blocks": "minecraft:campfire",
+                  "nbt": "{Items:[{Slot:0b},{Slot:1b},{Slot:2b},{Slot:3b}]}"
+                }
               }
+            },
+            {
+              "type": "minecraft:match_tool",
+              "predicate": {}
             }
-          },
-          {
-            "condition": "minecraft:match_tool",
-            "predicate": {}
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:item_used_on_block"
     }

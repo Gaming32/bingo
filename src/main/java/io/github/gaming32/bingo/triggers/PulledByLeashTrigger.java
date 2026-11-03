@@ -4,11 +4,11 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.ext.LeashFenceKnotEntityExt;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.DistancePredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -56,31 +57,31 @@ public class PulledByLeashTrigger extends SimpleCriterionTrigger<PulledByLeashTr
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> mob,
-        Optional<ContextAwarePredicate> knot,
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> mob,
+        Optional<Holder<LootItemCondition>> knot,
         Optional<Boolean> knotRequired,
         Optional<DistancePredicate> force
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("mob").forGetter(TriggerInstance::mob),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("knot").forGetter(TriggerInstance::knot),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("mob").forGetter(TriggerInstance::mob),
+                LootItemCondition.CODEC.optionalFieldOf("knot").forGetter(TriggerInstance::knot),
                 Codec.BOOL.optionalFieldOf("knot_required").forGetter(TriggerInstance::knotRequired),
                 DistancePredicate.CODEC.optionalFieldOf("force").forGetter(TriggerInstance::force)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(LootContext mob, Optional<LootContext> leash, Vec3 force) {
-            if (this.mob.isPresent() && !this.mob.get().matches(mob)) {
+            if (this.mob.isPresent() && !this.mob.get().value().test(mob)) {
                 return false;
             }
             if (leash.isPresent()) {
                 if (knotRequired.isPresent() && !knotRequired.get()) {
                     return false;
                 }
-                if (this.knot.isPresent() && !this.knot.get().matches(leash.get())) {
+                if (this.knot.isPresent() && !this.knot.get().value().test(leash.get())) {
                     return false;
                 }
             } else if (knotRequired.isPresent() && knotRequired.get()) {
@@ -95,22 +96,22 @@ public class PulledByLeashTrigger extends SimpleCriterionTrigger<PulledByLeashTr
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "mob", mob);
-            Validatable.validate(validator.entityContext(), "knot", knot);
+            Validatable.validateHolder(validator.entityContext(), "mob", mob);
+            Validatable.validateHolder(validator.entityContext(), "knot", knot);
         }
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> mob = Optional.empty();
-        private Optional<ContextAwarePredicate> knot = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> mob = Optional.empty();
+        private Optional<Holder<LootItemCondition>> knot = Optional.empty();
         private Optional<Boolean> knotRequired = Optional.empty();
         private Optional<DistancePredicate> force = Optional.empty();
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.of(player);
             return this;
         }
@@ -119,7 +120,7 @@ public class PulledByLeashTrigger extends SimpleCriterionTrigger<PulledByLeashTr
             return player(EntityPredicate.wrap(player));
         }
 
-        public Builder mob(ContextAwarePredicate mob) {
+        public Builder mob(Holder<LootItemCondition> mob) {
             this.mob = Optional.of(mob);
             return this;
         }
@@ -128,7 +129,7 @@ public class PulledByLeashTrigger extends SimpleCriterionTrigger<PulledByLeashTr
             return mob(EntityPredicate.wrap(mob));
         }
 
-        public Builder knot(ContextAwarePredicate knot) {
+        public Builder knot(Holder<LootItemCondition> knot) {
             this.knot = Optional.of(knot);
             return this;
         }

@@ -9,6 +9,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public record InStructureCondition(TagKey<Structure> structure) implements LootI
 
     @Override
     public boolean test(LootContext lootContext) {
-        final BlockPos pos = BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN));
-        return lootContext.getLevel().structureManager().getStructureWithPieceAt(pos, structure).isValid();
+        Vec3 origin = lootContext.getOptional(LootContextParams.ORIGIN);
+        return origin != null && lootContext.getLevel().structureManager().getStructureWithPieceAt(BlockPos.containing(origin), structure).isValid();
     }
 }

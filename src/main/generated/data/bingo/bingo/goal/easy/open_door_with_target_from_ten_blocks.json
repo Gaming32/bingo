@@ -7,19 +7,17 @@
             "blocks": "#minecraft:doors"
           }
         },
-        "projectile": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:distance": {
-                "horizontal": {
-                  "min": 10
-                }
+        "projectile": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:distance": {
+              "horizontal": {
+                "min": 10
               }
             }
           }
-        ]
+        }
       },
       "trigger": "bingo:door_opened_by_target"
     }

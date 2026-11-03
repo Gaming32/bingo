@@ -2,13 +2,14 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.DistancePredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.AllOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.phys.Vec3;
@@ -50,25 +52,25 @@ public class ShootBellTrigger extends SimpleCriterionTrigger<ShootBellTrigger.Tr
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> bell,
-        Optional<ContextAwarePredicate> projectile,
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> bell,
+        Optional<Holder<LootItemCondition>> projectile,
         Optional<DistancePredicate> distance
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                ContextAwarePredicate.CODEC.optionalFieldOf("bell").forGetter(TriggerInstance::bell),
-                ContextAwarePredicate.CODEC.optionalFieldOf("projectile").forGetter(TriggerInstance::projectile),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("bell").forGetter(TriggerInstance::bell),
+                LootItemCondition.CODEC.optionalFieldOf("projectile").forGetter(TriggerInstance::projectile),
                 DistancePredicate.CODEC.optionalFieldOf("distance").forGetter(TriggerInstance::distance)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(ServerPlayer player, BlockPos bellLocation, LootContext bell, LootContext projectile) {
-            if (this.bell.isPresent() && !this.bell.get().matches(bell)) {
+            if (this.bell.isPresent() && !this.bell.get().value().test(bell)) {
                 return false;
             }
-            if (this.projectile.isPresent() && !this.projectile.get().matches(projectile)) {
+            if (this.projectile.isPresent() && !this.projectile.get().value().test(projectile)) {
                 return false;
             }
             if (this.distance.isPresent() && !this.distance.get().matches(player.getX(), player.getY(), player.getZ(), bellLocation.getX() + 0.5, bellLocation.getY() + 0.5, bellLocation.getZ() + 0.5)) {
@@ -80,39 +82,40 @@ public class ShootBellTrigger extends SimpleCriterionTrigger<ShootBellTrigger.Tr
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            bell.ifPresent(p -> Validatable.validate(validator.context(LootContextParamSets.ADVANCEMENT_LOCATION), "location", p));
-            projectile.ifPresent(p -> Validatable.validate(validator.context(LootContextParamSets.ADVANCEMENT_ENTITY), "projectile", p));
+            bell.ifPresent(p -> Validatable.validateHolder(validator.context(LootContextParamSets.ADVANCEMENT_LOCATION), "location", p));
+            projectile.ifPresent(p -> Validatable.validateHolder(validator.context(LootContextParamSets.ADVANCEMENT_ENTITY), "projectile", p));
         }
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> bell = Optional.empty();
-        private Optional<ContextAwarePredicate> projectile = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> bell = Optional.empty();
+        private Optional<Holder<LootItemCondition>> projectile = Optional.empty();
         private Optional<DistancePredicate> distance = Optional.empty();
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.of(player);
             return this;
         }
 
-        public Builder bell(ContextAwarePredicate bell) {
+        public Builder bell(Holder<LootItemCondition> bell) {
             this.bell = Optional.of(bell);
             return this;
         }
 
-        public Builder bell(LootItemCondition... conditions) {
-            return bell(ContextAwarePredicate.create(conditions));
+        @SafeVarargs
+        public final Builder bell(Holder<LootItemCondition>... conditions) {
+            return bell(Holder.direct(AllOfCondition.allOf(HolderSet.direct(conditions))));
         }
 
         public Builder bell(LocationPredicate bell) {
-            return bell(new LocationCheck(Optional.ofNullable(bell), BlockPos.ZERO));
+            return bell(Holder.direct(new LocationCheck(Optional.ofNullable(bell), BlockPos.ZERO)));
         }
 
-        public Builder projectile(ContextAwarePredicate projectile) {
+        public Builder projectile(Holder<LootItemCondition> projectile) {
             this.projectile = Optional.of(projectile);
             return this;
         }

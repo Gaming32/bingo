@@ -2,18 +2,16 @@
   "criteria": {
     "murder": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:ghast",
-              "minecraft:location": {
-                "dimension": "minecraft:overworld"
-              }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:ghast",
+            "minecraft:location": {
+              "dimension": "minecraft:overworld"
             }
           }
-        ]
+        }
       },
       "trigger": "minecraft:player_killed_entity"
     }

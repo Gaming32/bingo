@@ -32,7 +32,10 @@ public enum StairwayToHeavenCondition implements LootItemCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
-        final Entity thisEntity = lootContext.getParameter(LootContextParams.THIS_ENTITY);
+        final Entity thisEntity = lootContext.getOptional(LootContextParams.THIS_ENTITY);
+        if (thisEntity == null) {
+            return false;
+        }
         final BlockPos origin = thisEntity.getOnPos();
         if (!(thisEntity.level() instanceof ServerLevel level)) {
             return false;

@@ -2,15 +2,13 @@
   "criteria": {
     "use": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "#c:boats"
-            }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "#c:boats"
           }
-        ]
+        }
       },
       "trigger": "minecraft:player_interacted_with_entity"
     }

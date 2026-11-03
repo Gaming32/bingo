@@ -1,7 +1,23 @@
 {
   "criteria": {
     "drown": {
-      "trigger": "bingo:zombie_drowned"
+      "conditions": {
+        "converted_from": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:zombie"
+          }
+        },
+        "converted_to": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:drowned"
+          }
+        }
+      },
+      "trigger": "bingo:mob_converted"
     }
   },
   "difficulty": "bingo:easy",

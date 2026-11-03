@@ -1,0 +1,69 @@
+{
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 4,
+        "min_inclusive": 3
+      }
+    }
+  },
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "fired_from_weapon": {
+          "items": "minecraft:crossbow"
+        },
+        "unique_entity_types": {
+          "min": {
+            "bingo_type": "bingo:sub",
+            "key": "count"
+          }
+        }
+      },
+      "trigger": "minecraft:killed_by_arrow"
+    }
+  },
+  "difficulty": "bingo:hard",
+  "icon": {
+    "type": "bingo:indicator",
+    "base": {
+      "type": "bingo:entity_type_tag_cycle",
+      "count": {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      },
+      "tag": "bingo:hostile"
+    },
+    "indicator": {
+      "type": "bingo:item",
+      "item": {
+        "count": 1,
+        "id": "minecraft:crossbow"
+      }
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.crossbow_different_mobs",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      }
+    ]
+  },
+  "reactant": "pacifist",
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:combat"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.crossbow_different_mobs.tooltip"
+  }
+}

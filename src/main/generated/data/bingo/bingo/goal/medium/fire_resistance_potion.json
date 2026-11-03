@@ -7,7 +7,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:fire_resistance"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:fire_resistance"
+              }
             }
           }
         ]
@@ -20,7 +22,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:long_fire_resistance"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:long_fire_resistance"
+              }
             }
           }
         ]

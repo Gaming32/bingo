@@ -2,12 +2,12 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -26,13 +26,13 @@ public class EnchantedItemTrigger extends SimpleCriterionTrigger<EnchantedItemTr
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
+        Optional<Holder<LootItemCondition>> player,
         MinMaxBounds.Ints levelsSpent,
         MinMaxBounds.Ints requiredLevels
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 MinMaxBounds.Ints.CODEC.optionalFieldOf("levels_spent", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::levelsSpent),
                 MinMaxBounds.Ints.CODEC.optionalFieldOf("required_levels", MinMaxBounds.Ints.ANY).forGetter(TriggerInstance::requiredLevels)
             ).apply(instance, TriggerInstance::new)
@@ -50,14 +50,14 @@ public class EnchantedItemTrigger extends SimpleCriterionTrigger<EnchantedItemTr
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
         private MinMaxBounds.Ints levelsSpent = MinMaxBounds.Ints.ANY;
         private MinMaxBounds.Ints requiredLevels = MinMaxBounds.Ints.ANY;
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }

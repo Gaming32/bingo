@@ -37,7 +37,7 @@ public class BingoEntityTypeTagProvider extends FabricTagsProvider.EntityTypeTag
     protected void addTags(HolderLookup.Provider registries) {
         final var entityTypes = registries.lookupOrThrow(Registries.ENTITY_TYPE);
 
-        final var cannotBeAgeLocked = BingoDataGenUtil.loadVanillaTag(EntityTypeTags.CANNOT_BE_AGE_LOCKED, registries);
+        final var cannotBeAgeLocked = BingoDataGenUtil.loadVanillaTag(EntityTypeTags.CANNOT_BE_AGE_LOCKED, registries::lookupOrThrow);
 
         final var canBeAgeLockedBuilder = builder(BingoEntityTypeTags.CAN_BE_AGE_LOCKED);
         final var passiveBuilder = builder(BingoEntityTypeTags.PASSIVE);

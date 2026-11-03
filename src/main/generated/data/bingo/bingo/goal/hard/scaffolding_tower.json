@@ -2,25 +2,28 @@
   "criteria": {
     "destroy": {
       "conditions": {
-        "location": [
-          {
-            "condition": "minecraft:location_check",
-            "predicate": {
-              "position": {
-                "y": {
-                  "max": -58
+        "location": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:location_check",
+              "predicate": {
+                "position": {
+                  "y": {
+                    "max": -58
+                  }
                 }
               }
-            }
-          },
-          {
-            "block": {
-              "blocks": "minecraft:scaffolding"
             },
-            "condition": "bingo:pillar",
-            "min_height": 379
-          }
-        ]
+            {
+              "type": "bingo:pillar",
+              "block": {
+                "blocks": "minecraft:scaffolding"
+              },
+              "min_height": 379
+            }
+          ]
+        }
       },
       "trigger": "bingo:break_block"
     }

@@ -3,16 +3,17 @@ package io.github.gaming32.bingo.triggers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.subpredicates.ItemEntityPredicate;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -28,13 +29,13 @@ public class ItemPickedUpTrigger extends SimpleCriterionTrigger<ItemPickedUpTrig
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> itemEntity
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> itemEntity
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("item_entity").forGetter(TriggerInstance::itemEntity)
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("item_entity").forGetter(TriggerInstance::itemEntity)
             ).apply(instance, TriggerInstance::new)
         );
 
@@ -56,13 +57,13 @@ public class ItemPickedUpTrigger extends SimpleCriterionTrigger<ItemPickedUpTrig
         }
 
         public boolean matches(LootContext itemEntity) {
-            return this.itemEntity.isEmpty() || this.itemEntity.get().matches(itemEntity);
+            return this.itemEntity.isEmpty() || this.itemEntity.get().value().test(itemEntity);
         }
 
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "item_entity", itemEntity);
+            Validatable.validateHolder(validator.entityContext(), "item_entity", itemEntity);
         }
     }
 }

@@ -2,38 +2,41 @@
   "criteria": {
     "kill": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:inverted",
-            "term": {
-              "condition": "minecraft:entity_properties",
+        "entity": {
+          "type": "minecraft:all_of",
+          "terms": [
+            {
+              "type": "minecraft:inverted",
+              "term": {
+                "type": "minecraft:entity_properties",
+                "entity": "this",
+                "predicate": {
+                  "minecraft:entity_type": "minecraft:player"
+                }
+              }
+            },
+            {
+              "type": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
-                "minecraft:entity_type": "minecraft:player"
-              }
-            }
-          },
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:equipment": {
-                "chest": {
-                  "items": "minecraft:iron_chestplate"
-                },
-                "feet": {
-                  "items": "minecraft:iron_boots"
-                },
-                "head": {
-                  "items": "minecraft:iron_helmet"
-                },
-                "legs": {
-                  "items": "minecraft:iron_leggings"
+                "minecraft:equipment": {
+                  "chest": {
+                    "items": "minecraft:iron_chestplate"
+                  },
+                  "feet": {
+                    "items": "minecraft:iron_boots"
+                  },
+                  "head": {
+                    "items": "minecraft:iron_helmet"
+                  },
+                  "legs": {
+                    "items": "minecraft:iron_leggings"
+                  }
                 }
               }
             }
-          }
-        ]
+          ]
+        }
       },
       "trigger": "minecraft:player_killed_entity"
     }

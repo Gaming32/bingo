@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "count": 2,
+            "count": {
+              "min": 2
+            },
             "items": "minecraft:netherite_block"
           }
         ]

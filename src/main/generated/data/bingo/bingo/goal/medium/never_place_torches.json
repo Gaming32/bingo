@@ -2,14 +2,12 @@
   "criteria": {
     "place": {
       "conditions": {
-        "location": [
-          {
-            "block": {
-              "blocks": "#bingo:torches"
-            },
-            "condition": "bingo:block"
+        "location": {
+          "type": "bingo:block",
+          "block": {
+            "blocks": "#bingo:torches"
           }
-        ]
+        }
       },
       "trigger": "minecraft:placed_block"
     }

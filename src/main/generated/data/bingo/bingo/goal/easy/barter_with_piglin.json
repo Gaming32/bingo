@@ -2,18 +2,16 @@
   "criteria": {
     "barter": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:piglin",
-              "minecraft:flags": {
-                "is_baby": false
-              }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:piglin",
+            "minecraft:flags": {
+              "is_baby": false
             }
           }
-        ],
+        },
         "item": {
           "items": "minecraft:gold_ingot"
         }
@@ -22,18 +20,16 @@
     },
     "barter_directly": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:piglin",
-              "minecraft:flags": {
-                "is_baby": false
-              }
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:piglin",
+            "minecraft:flags": {
+              "is_baby": false
             }
           }
-        ],
+        },
         "item": {
           "items": "minecraft:gold_ingot"
         }

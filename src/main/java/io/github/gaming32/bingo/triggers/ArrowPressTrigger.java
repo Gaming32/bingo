@@ -3,17 +3,18 @@ package io.github.gaming32.bingo.triggers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.predicates.BlockPredicate;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContextSource;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -34,22 +35,22 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
-        Optional<ContextAwarePredicate> arrow,
+        Optional<Holder<LootItemCondition>> player,
+        Optional<Holder<LootItemCondition>> arrow,
         Optional<BlockPredicate> buttonOrPlate,
         Optional<LocationPredicate> location
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("arrow").forGetter(TriggerInstance::arrow),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("arrow").forGetter(TriggerInstance::arrow),
                 BlockPredicate.CODEC.optionalFieldOf("button_or_plate").forGetter(TriggerInstance::buttonOrPlate),
                 LocationPredicate.CODEC.optionalFieldOf("location").forGetter(TriggerInstance::location)
             ).apply(instance, TriggerInstance::new)
         );
 
         public boolean matches(LootContext arrow, BlockPos pos) {
-            if (this.arrow.isPresent() && !this.arrow.get().matches(arrow)) {
+            if (this.arrow.isPresent() && !this.arrow.get().value().test(arrow)) {
                 return false;
             }
             if (this.buttonOrPlate.isPresent() && !this.buttonOrPlate.get().matches(arrow.getLevel(), pos)) {
@@ -67,25 +68,25 @@ public class ArrowPressTrigger extends SimpleCriterionTrigger<ArrowPressTrigger.
         @Override
         public void validate(ValidationContextSource validator) {
             SimpleInstance.super.validate(validator);
-            Validatable.validate(validator.entityContext(), "arrow", arrow);
+            Validatable.validateHolder(validator.entityContext(), "arrow", arrow);
         }
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
-        private Optional<ContextAwarePredicate> arrow = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> arrow = Optional.empty();
         private Optional<BlockPredicate> buttonOrPlate = Optional.empty();
         private Optional<LocationPredicate> location = Optional.empty();
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }
 
-        public Builder arrow(ContextAwarePredicate arrow) {
+        public Builder arrow(Holder<LootItemCondition> arrow) {
             this.arrow = Optional.ofNullable(arrow);
             return this;
         }

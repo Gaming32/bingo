@@ -10,6 +10,7 @@ import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 import java.util.Set;
@@ -31,7 +32,11 @@ public record PillarCondition(int minHeight, Optional<BlockPredicate> block) imp
     @Override
     public boolean test(LootContext lootContext) {
         final ServerLevel level = lootContext.getLevel();
-        final BlockPos.MutableBlockPos pos = BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN)).mutable();
+        Vec3 origin = lootContext.getOptional(LootContextParams.ORIGIN);
+        if (origin == null) {
+            return false;
+        }
+        final BlockPos.MutableBlockPos pos = BlockPos.containing(origin).mutable();
         final BiPredicate<ServerLevel, BlockPos> predicate = block.isPresent()
             ? block.get()::matches
             : (l, b) -> !l.getBlockState(b).isAir();

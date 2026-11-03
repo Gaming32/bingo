@@ -17,6 +17,7 @@ import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.core.ClientAsset;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
@@ -55,11 +56,11 @@ public class VanillaNetworking {
     public static final String CRITERION = "criterion";
     public static final AdvancementRequirements REQUIREMENTS = AdvancementRequirements.allOf(List.of(CRITERION));
 
-    public static List<AdvancementHolder> generateAdvancements(
+    public static List<ClientboundUpdateAdvancementsPacket.PositionedAdvancement> generateAdvancements(
         RegistryAccess registries, BoardShape shape, int size, ActiveGoal[] goals
     ) {
-        final List<AdvancementHolder> result = new ArrayList<>(1 + goals.length);
-        result.add(ROOT_ADVANCEMENT);
+        final List<ClientboundUpdateAdvancementsPacket.PositionedAdvancement> result = new ArrayList<>(1 + goals.length);
+        result.add(new ClientboundUpdateAdvancementsPacket.PositionedAdvancement(ROOT_ADVANCEMENT, 0, 0));
         for (int i = 0; i < goals.length; i++) {
             final Vec2i pos = shape.getCoords(size, i);
             result.add(generateAdvancement(registries, i, goals[i], pos.x(), pos.y()));
@@ -67,7 +68,7 @@ public class VanillaNetworking {
         return result;
     }
 
-    public static AdvancementHolder generateAdvancement(
+    public static ClientboundUpdateAdvancementsPacket.PositionedAdvancement generateAdvancement(
         RegistryAccess registries, int index, ActiveGoal goal, int x, int y
     ) {
         final DisplayInfo displayInfo = new DisplayInfo(
@@ -80,17 +81,20 @@ public class VanillaNetworking {
             false,
             false
         );
-        displayInfo.setLocation(x + 0.5f, y);
-        return new AdvancementHolder(
-            BingoBoard.generateVanillaId(index),
-            new Advancement(
-                Optional.of(ROOT_ADVANCEMENT.id()),
-                Optional.of(displayInfo),
-                AdvancementRewards.EMPTY,
-                ImmutableMap.of(),
-                REQUIREMENTS,
-                false
-            )
+        return new ClientboundUpdateAdvancementsPacket.PositionedAdvancement(
+            new AdvancementHolder(
+                BingoBoard.generateVanillaId(index),
+                new Advancement(
+                    Optional.of(ROOT_ADVANCEMENT.id()),
+                    Optional.of(displayInfo),
+                    AdvancementRewards.EMPTY,
+                    ImmutableMap.of(),
+                    REQUIREMENTS,
+                    false
+                )
+            ),
+            x + 0.5f,
+            y
         );
     }
 

@@ -7,7 +7,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:harming"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:harming"
+              }
             }
           }
         ]
@@ -20,7 +22,9 @@
           {
             "items": "minecraft:potion",
             "predicates": {
-              "minecraft:potion_contents": "minecraft:strong_harming"
+              "minecraft:potion_contents": {
+                "potions": "minecraft:strong_harming"
+              }
             }
           }
         ]

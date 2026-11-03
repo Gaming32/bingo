@@ -172,7 +172,7 @@
   "bingo.goal.never_pickup_crafting_tables": "Не піднімати Верстаки",
   "bingo.goal.never_pickup_crafting_tables.tooltip": "Ніколи не ламати та не збирати Верстаки. Їх можна крафтити, розміщувати та використовувати, але не піднімати.",
   "bingo.goal.never_place_torches": "Не ставити Смолоскипи",
-  "bingo.goal.never_place_torches.tooltip": "Ніколи не ставити звичайні Смолоскипи, їх МОЖНА створювати, та крафтити за їх допомогою. Інші типи смолоскипів ДОЗВОЛЕНІ.",
+  "bingo.goal.never_place_torches.tooltip": "Ніколи не ставити смолоскипи будь-якого типу, але їх МОЖНА створювати, та крафтити за їх допомогою.",
   "bingo.goal.never_sleep": "Не Спати",
   "bingo.goal.never_use_boat": "Не використовувати Човен",
   "bingo.goal.never_use_buckets": "Не використовувати Відро",

@@ -20,7 +20,6 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-        pack.addProvider(BingoGoalProvider::new);
         pack.addProvider(BingoDynamicRegistryProvider::new);
 
         final BingoBlockTagProvider blockTagProvider = pack.addProvider(BingoBlockTagProvider::new);
@@ -37,7 +36,12 @@ public class BingoDataGenFabric implements DataGeneratorEntrypoint {
     @Override
     public void buildRegistry(RegistrySetBuilder registryBuilder) {
         registryBuilder.add(BingoRegistries.TAG, BingoTags::bootstrap);
+    }
+
+    @Override
+    public void buildReloadableRegistry(RegistrySetBuilder registryBuilder) {
         registryBuilder.add(BingoRegistries.DIFFICULTY, BingoDifficulties::bootstrap);
+        registryBuilder.add(BingoRegistries.GOAL, BingoGoalProvider::bootstrap);
     }
 
     @Override

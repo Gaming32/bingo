@@ -6,10 +6,9 @@ import io.github.gaming32.bingo.event.InventoryChangedCallback;
 import io.github.gaming32.bingo.triggers.progress.SimpleProgressibleCriterionTrigger;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
@@ -17,6 +16,7 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -40,14 +40,14 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
+        Optional<Holder<LootItemCondition>> player,
         boolean allowUncolored,
         int minCount,
         Optional<ItemPredicate> itemPredicate
     ) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 Codec.BOOL.optionalFieldOf("allow_uncolored", true).forGetter(TriggerInstance::allowUncolored),
                 ExtraCodecs.POSITIVE_INT.fieldOf("min_count").forGetter(TriggerInstance::minCount),
                 ItemPredicate.CODEC.optionalFieldOf("item_predicate").forGetter(TriggerInstance::itemPredicate)
@@ -78,7 +78,7 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
         private boolean allowUncolored = true;
         private final int minCount;
         private Optional<ItemPredicate> itemPredicate = Optional.empty();
@@ -87,7 +87,7 @@ public class WearDifferentColoredArmorTrigger extends SimpleProgressibleCriterio
             this.minCount = minCount;
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.of(player);
             return this;
         }

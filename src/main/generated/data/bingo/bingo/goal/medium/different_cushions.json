@@ -1,0 +1,58 @@
+{
+  "antisynergy": "cushion_color",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 5,
+        "min_inclusive": 3
+      }
+    }
+  },
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "required_count": {
+          "bingo_type": "bingo:sub",
+          "key": "count"
+        },
+        "tag": "minecraft:cushions"
+      },
+      "trigger": "bingo:has_some_items_from_tag"
+    }
+  },
+  "difficulty": "bingo:medium",
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "count": {
+      "bingo_type": "bingo:sub",
+      "key": "count"
+    },
+    "tag": "minecraft:cushions"
+  },
+  "infrequency": 2,
+  "name": {
+    "translate": "bingo.goal.different_cushions",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:color",
+    "bingo:overworld"
+  ]
+}

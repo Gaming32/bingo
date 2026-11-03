@@ -2,15 +2,13 @@
   "criteria": {
     "die": {
       "conditions": {
-        "credited_entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:villager"
-            }
+        "credited_entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:villager"
           }
-        ]
+        }
       },
       "trigger": "bingo:entity_killed_player"
     }

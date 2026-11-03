@@ -2,15 +2,13 @@
   "criteria": {
     "breed": {
       "conditions": {
-        "child": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "minecraft:entity_type": "minecraft:fox"
-            }
+        "child": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:fox"
           }
-        ]
+        }
       },
       "trigger": "minecraft:bred_animals"
     }

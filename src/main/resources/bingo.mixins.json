@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "AdvancementProgressAccessor",
-    "BaseFireBlockAccessor",
+    "MixinAbstractBedBlock",
+    "MixinAllay",
     "MixinBasePressurePlateBlock",
     "MixinBeaconBlockEntity",
     "MixinBedBlock",
@@ -34,6 +35,7 @@
     "MixinLootContextParamSets",
     "MixinMapItem",
     "MixinMinecraftServer",
+    "MixinMob",
     "MixinMushroomBlock",
     "MixinNetherFungusBlock",
     "MixinOcelot",
@@ -54,7 +56,6 @@
     "MixinTrapDoorBlock",
     "MixinTreeGrower",
     "MixinVehicleEntity",
-    "MixinZombie",
     "PlayerAdvancementsAccessor",
     "StatsCounterAccessor"
   ],

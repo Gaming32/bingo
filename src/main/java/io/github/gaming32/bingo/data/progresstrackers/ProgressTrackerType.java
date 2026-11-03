@@ -12,6 +12,7 @@ public interface ProgressTrackerType<P extends ProgressTracker> {
         .build();
 
     RegistryValue<ProgressTrackerType<EmptyProgressTracker>> EMPTY = register("empty", EmptyProgressTracker.CODEC);
+    RegistryValue<ProgressTrackerType<AchievedCriteriaProgressTracker>> ACHIEVED_CRITERIA = register("achieved_criteria", AchievedCriteriaProgressTracker.CODEC);
     RegistryValue<ProgressTrackerType<AchievedRequirementsProgressTracker>> ACHIEVED_REQUIREMENTS = register("achieved_requirements", AchievedRequirementsProgressTracker.CODEC);
     RegistryValue<ProgressTrackerType<CriterionProgressTracker>> CRITERION = register("criterion", CriterionProgressTracker.CODEC);
     RegistryValue<ProgressTrackerType<GoalAchievedCountProgressTracker>> GOAL_ACHIEVED_COUNT = register("goal_achieved_type", GoalAchievedCountProgressTracker.CODEC);

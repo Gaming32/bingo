@@ -1,5 +1,6 @@
 package io.github.gaming32.bingo.data.subs;
 
+import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -12,12 +13,14 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public record ParsedOrSub<T>(Dynamic<?> serialized, Either<DataResult<T>, Codec<T>> valueOrCodec) {
     public static <T> MapCodec<ParsedOrSub<T>> optionalCodec(Codec<T> valueCodec, String key, T defaultValue) {
-        final var parsedDefault = fromParsed(valueCodec, defaultValue);
+        // Lazy, as encoding the default may require registries that aren't populated yet
+        final Supplier<ParsedOrSub<T>> parsedDefault = Suppliers.memoize(() -> fromParsed(valueCodec, defaultValue));
         return codec(valueCodec).optionalFieldOf(key).xmap(
-            optional -> optional.orElse(parsedDefault),
+            optional -> optional.orElseGet(parsedDefault),
             value -> {
                 final var parsedValue = value.valueOrCodec.left().flatMap(DataResult::result);
                 return parsedValue.isPresent() && parsedValue.get().equals(defaultValue)

@@ -3,14 +3,14 @@ package io.github.gaming32.bingo.triggers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.gaming32.bingo.util.CustomEnumCodec;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -30,14 +30,14 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
     }
 
     public record TriggerInstance(
-        Optional<ContextAwarePredicate> player,
+        Optional<Holder<LootItemCondition>> player,
         Optional<ItemPredicate> item,
         Optional<InteractionHand> hand
     ) implements SimpleInstance {
         private static final CustomEnumCodec<InteractionHand> INTERACTION_HAND_CODEC = CustomEnumCodec.of(InteractionHand.class);
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 ItemPredicate.CODEC.optionalFieldOf("item").forGetter(TriggerInstance::item),
                 INTERACTION_HAND_CODEC.codec().optionalFieldOf("hand").forGetter(TriggerInstance::hand)
             ).apply(instance, TriggerInstance::new)
@@ -55,14 +55,14 @@ public class TryUseItemTrigger extends SimpleCriterionTrigger<TryUseItemTrigger.
     }
 
     public static final class Builder {
-        private Optional<ContextAwarePredicate> player = Optional.empty();
+        private Optional<Holder<LootItemCondition>> player = Optional.empty();
         private Optional<ItemPredicate> item = Optional.empty();
         private Optional<InteractionHand> hand = Optional.empty();
 
         private Builder() {
         }
 
-        public Builder player(ContextAwarePredicate player) {
+        public Builder player(Holder<LootItemCondition> player) {
             this.player = Optional.ofNullable(player);
             return this;
         }

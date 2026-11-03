@@ -1,0 +1,44 @@
+{
+  "antisynergy": "sit_on_cushion",
+  "criteria": {
+    "sit": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:vehicle": {
+              "minecraft:entity_type": "minecraft:cushion"
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:started_riding"
+    }
+  },
+  "difficulty": "bingo:easy",
+  "icon": {
+    "type": "bingo:item",
+    "item": {
+      "count": 1,
+      "id": "minecraft:white_cushion"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.sit_on_cushion",
+    "with": [
+      {
+        "translate": "entity.minecraft.cushion"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "sit"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:overworld"
+  ]
+}

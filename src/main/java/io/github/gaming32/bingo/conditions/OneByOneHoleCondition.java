@@ -10,6 +10,7 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
@@ -30,7 +31,11 @@ public record OneByOneHoleCondition(int bottom, int top, BlockPredicate predicat
     @Override
     public boolean test(LootContext lootContext) {
         final ServerLevel level = lootContext.getLevel();
-        final BlockPos.MutableBlockPos pos = BlockPos.containing(lootContext.getParameter(LootContextParams.ORIGIN)).mutable();
+        Vec3 origin = lootContext.getOptional(LootContextParams.ORIGIN);
+        if (origin == null) {
+            return false;
+        }
+        final BlockPos.MutableBlockPos pos = BlockPos.containing(origin).mutable();
         for (int y = bottom; y <= top; y++) {
             if (!predicate.test(level, pos.setY(y))) {
                 return false;

@@ -1,0 +1,77 @@
+{
+  "antisynergy": "status_effects",
+  "bingo_subs": {
+    "count": {
+      "type": "bingo:int",
+      "value": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 9,
+        "min_inclusive": 7
+      }
+    }
+  },
+  "criteria": {
+    "effects": {
+      "conditions": {
+        "min_count": {
+          "bingo_type": "bingo:sub",
+          "key": "count"
+        }
+      },
+      "trigger": "bingo:status_effects"
+    }
+  },
+  "difficulty": "bingo:hard",
+  "icon": {
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:effect",
+        "effect": "minecraft:speed"
+      },
+      {
+        "type": "bingo:effect",
+        "effect": "minecraft:strength"
+      },
+      {
+        "type": "bingo:effect",
+        "effect": "minecraft:fire_resistance"
+      },
+      {
+        "type": "bingo:effect",
+        "effect": "minecraft:night_vision"
+      },
+      {
+        "type": "bingo:effect",
+        "effect": "minecraft:regeneration"
+      },
+      {
+        "type": "bingo:effect",
+        "effect": "minecraft:poison"
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.status_effects",
+    "with": [
+      {
+        "bingo_type": "bingo:sub",
+        "key": "count"
+      }
+    ]
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "effects"
+  },
+  "requirements": [
+    [
+      "effects"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:overworld"
+  ]
+}
