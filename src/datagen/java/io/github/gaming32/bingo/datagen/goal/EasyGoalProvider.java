@@ -204,11 +204,14 @@ public class EasyGoalProvider extends DifficultyGoalProvider {
             .tags(BingoTags.OVERWORLD));
         addGoal(GoalBuilder.of(FISH_TREASURE_JUNK)
             .criterion(context, "treasure", FishingRodHookedTrigger.TriggerInstance.fishedItem(
-                Optional.empty(), Optional.empty(),
+                Optional.empty(),
+                // Hooking a dropped item entity also fires this trigger, so require the hook itself (an actual catch)
+                Optional.of(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.FISHING_BOBBER).build()),
                 Optional.of(ItemPredicate.Builder.item().of(items, BingoItemTags.FISHING_TREASURE).build())
             ))
             .criterion(context, "junk", FishingRodHookedTrigger.TriggerInstance.fishedItem(
-                Optional.empty(), Optional.empty(),
+                Optional.empty(),
+                Optional.of(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.FISHING_BOBBER).build()),
                 Optional.of(ItemPredicate.Builder.item().of(items, BingoItemTags.FISHING_JUNK).build())
             ))
             .tags(BingoTags.ACTION, BingoTags.OVERWORLD)

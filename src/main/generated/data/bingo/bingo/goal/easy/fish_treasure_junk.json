@@ -2,6 +2,13 @@
   "criteria": {
     "junk": {
       "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:fishing_bobber"
+          }
+        },
         "item": {
           "items": "#bingo:fishing_junk"
         }
@@ -10,6 +17,13 @@
     },
     "treasure": {
       "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:fishing_bobber"
+          }
+        },
         "item": {
           "items": "#bingo:fishing_treasure"
         }

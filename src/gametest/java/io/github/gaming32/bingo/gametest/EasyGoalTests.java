@@ -1,6 +1,7 @@
 package io.github.gaming32.bingo.gametest;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
 import io.github.gaming32.bingo.datagen.goal.GoalIds;
 import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -12,6 +13,8 @@ import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.clock.ClockTimeMarkers;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +22,7 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.painting.Painting;
 import net.minecraft.world.entity.decoration.painting.PaintingVariant;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
@@ -113,21 +117,35 @@ final class EasyGoalTests {
         testGoal(context, singleplayerContext, GoalIds.Easy.FISH_TREASURE_JUNK, () -> {
             // seed 16 gets a treasure and a junk item on the first two fishes
             resetRandomSequence(singleplayerContext, BuiltInLootTables.FISHING.identifier(), 16, false);
-            fill(singleplayerContext, new BlockPos(-10, PLAYER_Y, -10), new BlockPos(10, PLAYER_Y + 6, 10), Blocks.GLASS);
-            teleport(singleplayerContext, new BlockPos(0, PLAYER_Y + 7, -10));
-            fill(singleplayerContext, new BlockPos(-9, PLAYER_Y, -9), new BlockPos(9, PLAYER_Y + 6, 9), Blocks.WATER);
-            give(singleplayerContext, enchantedItem(singleplayerContext, Items.FISHING_ROD, Enchantments.LURE, 4));
-            singleplayerContext.getConnection().waitForClientboundPackets();
+            setUpFishingPool(singleplayerContext);
             for (int i = 0; i < 2; i++) {
-                context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-                singleplayerContext.getConnection().waitForServerboundPackets();
-                singleplayerContext.getServer().waitFor(_ -> {
-                    FishingHook hook = singleplayerContext.getConnection().getServerLevel().getEntities(EntityTypeTest.forClass(FishingHook.class), _ -> true).getFirst();
-                    return hook.nibble > 0;
-                }, 1000);
-                context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+                catchFish(context, singleplayerContext);
             }
             singleplayerContext.getConnection().waitForServerboundPackets();
+            context.waitTicks(10);
+        });
+    }
+
+    @TestGoal
+    private static void testFishTreasureAndJunkByHookingItems(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Easy.FISH_TREASURE_JUNK, false, () -> {
+            give(singleplayerContext, Items.FISHING_ROD);
+            singleplayerContext.getConnection().waitForClientboundPackets();
+            hookItemEntity(context, singleplayerContext, new ItemStack(Items.NAME_TAG));
+            hookItemEntity(context, singleplayerContext, new ItemStack(Items.BOWL));
+            context.waitTicks(10);
+        });
+    }
+
+    @TestGoal
+    private static void testFishJunkThenHookTreasureItem(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Easy.FISH_TREASURE_JUNK, false, () -> {
+            // seed 16 gets a junk item on the first fish
+            resetRandomSequence(singleplayerContext, BuiltInLootTables.FISHING.identifier(), 16, false);
+            setUpFishingPool(singleplayerContext);
+            catchFish(context, singleplayerContext);
+            singleplayerContext.getServer().waitFor(_ -> singleplayerContext.getConnection().getServerPlayer().getInventory().contains(stack -> stack.is(BingoItemTags.FISHING_JUNK)), 100);
+            hookItemEntity(context, singleplayerContext, new ItemStack(Items.NAME_TAG));
             context.waitTicks(10);
         });
     }
@@ -335,6 +353,48 @@ final class EasyGoalTests {
             give(singleplayerContext, makeShield(DyeColor.GREEN));
             give(singleplayerContext, makeShield(DyeColor.BLUE));
         });
+    }
+
+    // Surrounds a pool of water with glass and gives the player a fishing rod to fish in it
+    private static void setUpFishingPool(TestSingleplayerContext singleplayerContext) {
+        fill(singleplayerContext, new BlockPos(-10, PLAYER_Y, -10), new BlockPos(10, PLAYER_Y + 6, 10), Blocks.GLASS);
+        teleport(singleplayerContext, new BlockPos(0, PLAYER_Y + 7, -10));
+        fill(singleplayerContext, new BlockPos(-9, PLAYER_Y, -9), new BlockPos(9, PLAYER_Y + 6, 9), Blocks.WATER);
+        give(singleplayerContext, enchantedItem(singleplayerContext, Items.FISHING_ROD, Enchantments.LURE, 4));
+        singleplayerContext.getConnection().waitForClientboundPackets();
+    }
+
+    private static void catchFish(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        singleplayerContext.getConnection().waitForServerboundPackets();
+        singleplayerContext.getServer().waitFor(_ -> {
+            FishingHook hook = singleplayerContext.getConnection().getServerLevel().getEntities(EntityTypeTest.forClass(FishingHook.class), _ -> true).getFirst();
+            return hook.nibble > 0;
+        }, 1000);
+        context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+    }
+
+    // Floats an item entity in front of the player, then hooks it with the held fishing rod and reels it in
+    private static void hookItemEntity(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, ItemStack stack) {
+        ItemEntity itemEntity = singleplayerContext.getServer().computeOnServer(_ -> {
+            ServerLevel level = singleplayerContext.getConnection().getServerLevel();
+            ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
+            ItemEntity entity = new ItemEntity(level, player.getX(), player.getEyeY() - 0.2, player.getZ() + 1.5, stack, 0, 0, 0);
+            entity.setNoGravity(true);
+            entity.setNeverPickUp();
+            level.addFreshEntity(entity);
+            return entity;
+        });
+        singleplayerContext.getConnection().waitForClientboundPackets();
+        context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        singleplayerContext.getConnection().waitForServerboundPackets();
+        singleplayerContext.getServer().waitFor(_ -> {
+            List<? extends FishingHook> hooks = singleplayerContext.getConnection().getServerLevel().getEntities(EntityTypeTest.forClass(FishingHook.class), _ -> true);
+            return !hooks.isEmpty() && hooks.getFirst().getHookedIn() == itemEntity;
+        }, 20);
+        context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        singleplayerContext.getConnection().waitForServerboundPackets();
+        singleplayerContext.getServer().runOnServer(_ -> itemEntity.discard());
     }
 
     private static ItemStack makeShield(DyeColor color) {
