@@ -178,34 +178,6 @@ public class BingoClient {
         final PositionAndScale pos = getBoardPosition();
         renderBingo(graphics, minecraft.gui.screen() instanceof ChatScreen, pos);
 
-        final Font font = minecraft.font;
-        final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
-        int scoreY;
-        if (CONFIG.getBoardCorner().isOnBottom) {
-            scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
-        } else {
-            scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
-        }
-        final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
-
-        if (clientGame.scheduledEndTime() > 0) {
-            long serverTime = 0;
-            if (minecraft.level instanceof ClientLevel clientLevel) {
-                serverTime = clientLevel.getGameTime();
-            }
-            long remainingTimeTicks = clientGame.scheduledEndTime() - serverTime;
-            String formatedRemainingTime = " - " + BingoUtil.formatRemainingTime(remainingTimeTicks);
-            int color = 0xffffffff;
-            if (remainingTimeTicks < 30 * SharedConstants.TICKS_PER_MINUTE)
-                color = 0xffffaf00;
-            if (remainingTimeTicks < 5 * SharedConstants.TICKS_PER_MINUTE)
-                color = 0xffff0000;
-            final MutableComponent remainingTimeLabel = Component.translatable("bingo.remaining_time");
-            graphics.text(font, remainingTimeLabel, scoreX - font.width(remainingTimeLabel), scoreY, color);
-            graphics.text(font, Component.literal(formatedRemainingTime), scoreX, scoreY, color);
-            scoreY += shift;
-        }
-
         if (CONFIG.isShowScoreCounter() && clientGame.renderMode() == BingoGameMode.RenderMode.ALL_TEAMS) {
             class TeamValue {
                 final BingoBoard.Teams team;
@@ -223,7 +195,7 @@ public class BingoClient {
 
             int totalScore = 0;
             for (final BingoBoard.Teams state : clientGame.states()) {
-                if (state.any()) {
+                if (state.count() == 1) {
                     totalScore++;
                     teams[state.getFirstIndex()].score++;
                 }
@@ -231,6 +203,15 @@ public class BingoClient {
 
             Arrays.sort(teams, Comparator.comparing(v -> -v.score)); // Sort in reverse
 
+            final Font font = minecraft.font;
+            final int scoreX = (int)(pos.x() * pos.scale() + getBoardWidth() * pos.scale() / 2);
+            int scoreY;
+            if (CONFIG.getBoardCorner().isOnBottom) {
+                scoreY = (int)((pos.y() - BOARD_OFFSET) * pos.scale() - font.lineHeight);
+            } else {
+                scoreY = (int)(pos.y() * pos.scale() + (getBoardHeight() + BOARD_OFFSET) * pos.scale());
+            }
+            final int shift = CONFIG.getBoardCorner().isOnBottom ? -12 : 12;
             for (final TeamValue teamValue : teams) {
                 if (teamValue.score == 0) break;
                 final PlayerTeam team = clientGame.teams()[teamValue.team.getFirstIndex()];
@@ -309,19 +290,18 @@ public class BingoClient {
             final boolean isGoalCompleted = state.and(clientTeam);
             final int slotX = slotPos.x() * 18 + 8;
             final int slotY = slotPos.y() * 18 + 18;
+            int incompleteColor = Objects.requireNonNullElse(goal.specialType().incompleteColor, 0);
 
-            final Integer color = switch (clientGame.renderMode()) {
-                case FANCY -> isGoalCompleted ? Integer.valueOf(0x55ff55) : goal.specialType().incompleteColor;
-                case ALL_TEAMS -> {
-                    if (!state.any()) {
-                        yield null;
-                    }
-                    final BingoBoard.Teams team = isGoalCompleted ? clientTeam : state;
-                    yield clientGame.teams()[team.getFirstIndex()].getColor().map(TeamColor::rgb).orElse(0x55ff55);
-                }
+            final int[] colors = switch (clientGame.renderMode()) {
+                case FANCY -> new int[]{(isGoalCompleted ? 0x55ff55 : incompleteColor)};
+                case ALL_TEAMS -> state.stream().map((team) -> clientGame.teams()[team].getColor().map(TeamColor::rgb).orElse(0x55ff55)).toArray();
             };
-            if (color != null) {
-                graphics.fill(slotX, slotY, slotX + 16, slotY + 16, 0xA0000000 | color);
+            for (int i = 0; i < colors.length; ++i) {
+                int color = colors[i];
+                int start = 16 * i / colors.length;
+                int end = 16 * (i + 1) / colors.length;
+                int base = (colors.length == 1) ? 0xA0000000 : 0x50000000;
+                graphics.fill(slotX + start, slotY, slotX + end, slotY + 16, base | color);
             }
 
             Integer manualHighlight = clientGame.manualHighlights()[goalIndex];

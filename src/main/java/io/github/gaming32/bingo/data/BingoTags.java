@@ -12,6 +12,7 @@ public final class BingoTags {
     public static final ResourceKey<BingoTag> END = createKey("end");
     public static final ResourceKey<BingoTag> FINISH = createKey("finish");
     public static final ResourceKey<BingoTag> ITEM = createKey("item");
+    public static final ResourceKey<BingoTag> LOCKOUT_INFLICTABLE = createKey("lockout_inflictable");
     public static final ResourceKey<BingoTag> NETHER = createKey("nether");
     public static final ResourceKey<BingoTag> NEVER = createKey("never");
     public static final ResourceKey<BingoTag> OCEAN = createKey("ocean");
@@ -36,6 +37,7 @@ public final class BingoTags {
             .build()
         );
         context.register(ITEM, BingoTag.builder().difficultyMax(25, 25, 20, 20, 20).build());
+        context.register(LOCKOUT_INFLICTABLE, BingoTag.builder().markerTag().build());
         context.register(NETHER, BingoTag.builder().difficultyMax(0, 2, 5, 10, 15).build());
         context.register(NEVER, BingoTag.builder()
             .difficultyMax(3, 3, 3, 2, 1)
