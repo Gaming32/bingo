@@ -10,19 +10,24 @@ import io.github.gaming32.bingo.data.JsonSubber;
 import io.github.gaming32.bingo.data.goal.BingoGoal;
 import io.github.gaming32.bingo.data.goal.GoalHolder;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
+import io.github.gaming32.bingo.data.icons.EffectIcon;
+import io.github.gaming32.bingo.data.icons.EntityIcon;
 import io.github.gaming32.bingo.data.icons.GoalIcon;
 import io.github.gaming32.bingo.data.icons.ItemIcon;
 import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
+import io.github.gaming32.bingo.data.progresstrackers.AchievedCriteriaProgressTracker;
 import io.github.gaming32.bingo.data.progresstrackers.CriterionProgressTracker;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.subs.CompoundBingoSub;
 import io.github.gaming32.bingo.data.subs.SubBingoSub;
+import io.github.gaming32.bingo.datagen.BingoDataGenUtil;
 import io.github.gaming32.bingo.triggers.BedRowTrigger;
 import io.github.gaming32.bingo.triggers.ExperienceChangeTrigger;
 import io.github.gaming32.bingo.triggers.HasSomeFoodItemsTrigger;
 import io.github.gaming32.bingo.triggers.HasSomeItemsFromTagTrigger;
 import io.github.gaming32.bingo.triggers.MineralPillarTrigger;
 import io.github.gaming32.bingo.triggers.RelativeStatsTrigger;
+import io.github.gaming32.bingo.triggers.StatusEffectsTrigger;
 import io.github.gaming32.bingo.triggers.TotalCountInventoryChangeTrigger;
 import io.github.gaming32.bingo.util.BingoUtil;
 import io.github.gaming32.bingo.util.BlockPattern;
@@ -34,22 +39,30 @@ import net.minecraft.advancements.predicates.EnchantmentPredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.triggers.TameAnimalTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.component.DataComponentExactPredicate;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.predicates.EnchantmentsPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.BootstrapContextAccess;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.animal.wolf.WolfVariant;
+import net.minecraft.world.entity.animal.wolf.WolfVariants;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -64,6 +77,8 @@ import net.minecraft.world.level.storage.loot.predicates.AllOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -351,6 +366,86 @@ public abstract class DifficultyGoalProvider {
             )
             .tooltip("cube")
             .icon(context, icon);
+    }
+
+    protected GoalBuilder statusEffectsGoal(Identifier id, int minCount, int maxCount) {
+        return GoalBuilder.of(id)
+            .sub("count", BingoSub.random(minCount, maxCount))
+            .criterion(context, "effects", StatusEffectsTrigger.TriggerInstance.statusEffects(1), subber -> subber.sub("conditions.min_count", "count"))
+            .progress("effects")
+            .name(Component.translatable("bingo.goal.status_effects", 0), subber -> subber.sub("with.0", "count"))
+            .icon(context, new CycleIcon(
+                EffectIcon.of(MobEffects.SPEED),
+                EffectIcon.of(MobEffects.STRENGTH),
+                EffectIcon.of(MobEffects.FIRE_RESISTANCE),
+                EffectIcon.of(MobEffects.NIGHT_VISION),
+                EffectIcon.of(MobEffects.REGENERATION),
+                EffectIcon.of(MobEffects.POISON)
+            ))
+            .tags(BingoTags.ITEM, BingoTags.NETHER, BingoTags.OVERWORLD)
+            .antisynergy("status_effects");
+    }
+
+    protected GoalBuilder tameWolfVariantsGoal(Identifier id, int count) {
+        final var entityTypes = context.lookup(Registries.ENTITY_TYPE);
+        final var wolfVariants = context.lookup(Registries.WOLF_VARIANT);
+
+        final List<ResourceKey<WolfVariant>> variants = BingoDataGenUtil.<WolfVariant>getResourceKeysFromClass(WolfVariants.class, Registries.WOLF_VARIANT)
+            .stream()
+            .distinct() // WolfVariants.DEFAULT is a duplicate key
+            .sorted(Comparator.comparing(ResourceKey::identifier))
+            .toList();
+
+        final GoalBuilder builder = GoalBuilder.of(id);
+        final List<String> criteria = new ArrayList<>();
+        final List<GoalIcon> icons = new ArrayList<>();
+        for (final ResourceKey<WolfVariant> variant : variants) {
+            final Identifier location = variant.identifier();
+            final String criterion = "tame_" + location.getNamespace() + "_" + location.getPath();
+            builder.criterion(context, criterion, TameAnimalTrigger.TriggerInstance.tamedAnimal(
+                EntityPredicate.Builder.entity()
+                    .of(entityTypes, EntityTypes.WOLF)
+                    .components(DataComponentExactPredicate.builder()
+                        .expect(DataComponents.WOLF_VARIANT, wolfVariants.getOrThrow(variant))
+                        .build()
+                    )
+            ));
+            criteria.add(criterion);
+            final CompoundTag iconData = new CompoundTag();
+            iconData.putString("variant", location.toString());
+            icons.add(EntityIcon.ofSpawnEgg(EntityTypes.WOLF, iconData, count));
+        }
+
+        return builder
+            .requirements(atLeastCriteria(criteria, count))
+            .progress(new AchievedCriteriaProgressTracker(count))
+            .name(Component.translatable("bingo.goal.tame_wolf_variants", count))
+            .tooltip("tame_wolf_variants")
+            .icon(context, new CycleIcon(icons))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .antisynergy("wolf_variants");
+    }
+
+    // Requirements that are met when any `count` of the criteria are met. In conjunctive normal form, that's every
+    // group of `criteria.size() - count + 1` criteria, since a group only fails if it has none of the met criteria.
+    // TODO: a better way, this can create a horribly large number of combinations
+    protected static AdvancementRequirements atLeastCriteria(List<String> criteria, int count) {
+        final int groupSize = criteria.size() - count + 1;
+        final List<List<String>> groups = new ArrayList<>();
+        addCriteriaGroups(criteria, groupSize, 0, new ArrayList<>(), groups);
+        return new AdvancementRequirements(groups);
+    }
+
+    private static void addCriteriaGroups(List<String> criteria, int groupSize, int start, List<String> current, List<List<String>> groups) {
+        if (current.size() == groupSize) {
+            groups.add(List.copyOf(current));
+            return;
+        }
+        for (int i = start; i <= criteria.size() - (groupSize - current.size()); i++) {
+            current.add(criteria.get(i));
+            addCriteriaGroups(criteria, groupSize, i + 1, current, groups);
+            current.removeLast();
+        }
     }
 
     protected static ItemStackTemplate makeItemWithGlint(ItemLike item) {

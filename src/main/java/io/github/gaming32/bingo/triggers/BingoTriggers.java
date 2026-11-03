@@ -36,6 +36,7 @@ public class BingoTriggers {
     public static final RegistryValue<DifferentColoredShieldsTrigger> DIFFERENT_COLORED_SHIELDS = register("different_colored_shields", DifferentColoredShieldsTrigger::new);
     public static final RegistryValue<DifferentPotionsTrigger> DIFFERENT_POTIONS = register("different_potions", DifferentPotionsTrigger::new);
     public static final RegistryValue<DoorOpenedByTargetTrigger> DOOR_OPENED_BY_TARGET = register("door_opened_by_target", DoorOpenedByTargetTrigger::new);
+    public static final RegistryValue<EntityTrigger> DUPLICATE_ALLAY = register("duplicate_allay", EntityTrigger::new);
     public static final RegistryValue<EnchantedItemTrigger> ENCHANTED_ITEM = register("enchanted_item", EnchantedItemTrigger::new);
     public static final RegistryValue<EntityDieNearPlayerTrigger> ENTITY_DIE_NEAR_PLAYER = register("entity_die_near_player", EntityDieNearPlayerTrigger::new);
     public static final RegistryValue<EntityKilledPlayerTrigger> ENTITY_KILLED_PLAYER = register("entity_killed_player", EntityKilledPlayerTrigger::new);
@@ -63,6 +64,7 @@ public class BingoTriggers {
     public static final RegistryValue<RelativeStatsTrigger> RELATIVE_STATS = register("relative_stats", RelativeStatsTrigger::new);
     public static final RegistryValue<ShootBellTrigger> SHOOT_BELL = register("bell_ring", ShootBellTrigger::new);
     public static final RegistryValue<ItemUsedOnLocationTrigger> SLEPT = register("slept", ItemUsedOnLocationTrigger::new);
+    public static final RegistryValue<StatusEffectsTrigger> STATUS_EFFECTS = register("status_effects", StatusEffectsTrigger::new);
     public static final RegistryValue<EntityTrigger> STUN_RAVAGER = register("stun_ravager", EntityTrigger::new);
     public static final RegistryValue<TotalCountInventoryChangeTrigger> TOTAL_COUNT_INVENTORY_CHANGED = register("total_count_inventory_changed", TotalCountInventoryChangeTrigger::new);
     public static final RegistryValue<TryUseItemTrigger> TRY_USE_ITEM = register("try_use_item", TryUseItemTrigger::new);

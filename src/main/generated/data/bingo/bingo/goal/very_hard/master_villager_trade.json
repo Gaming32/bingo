@@ -1,0 +1,45 @@
+{
+  "criteria": {
+    "trade": {
+      "conditions": {
+        "villager": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "minecraft:villager",
+            "minecraft:nbt": "{VillagerData:{level:5}}"
+          }
+        }
+      },
+      "trigger": "minecraft:villager_trade"
+    }
+  },
+  "difficulty": "bingo:very_hard",
+  "icon": {
+    "type": "bingo:entity",
+    "data": {
+      "VillagerData": {
+        "level": 5,
+        "profession": "minecraft:librarian"
+      }
+    },
+    "entity": "minecraft:villager",
+    "item": {
+      "count": 1,
+      "id": "minecraft:villager_spawn_egg"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.master_villager_trade"
+  },
+  "requirements": [
+    [
+      "trade"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:village",
+    "bingo:overworld"
+  ]
+}

@@ -7,19 +7,27 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContex
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.clock.ClockTimeMarkers;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.wolf.WolfVariants;
 import net.minecraft.world.entity.monster.cubemob.SulfurCube;
+import net.minecraft.world.entity.monster.warden.Warden;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
@@ -32,6 +40,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -489,5 +498,110 @@ final class HardGoalTests {
             level.getBlockEntity(new BlockPos(0, PLAYER_Y, 0), BlockEntityTypes.MOB_SPAWNER).orElseThrow().setEntityId(type, level.getRandom());
         });
         context.waitTicks(30);
+    }
+
+    @TestGoal
+    private static void testStatusEffects(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.STATUS_EFFECTS, () -> {
+            for (Holder<MobEffect> effect : HARMLESS_EFFECTS.subList(0, getGoalNameIntArg(singleplayerContext, 0))) {
+                addEffect(singleplayerContext, effect, 0);
+            }
+        });
+    }
+
+    @TestGoal
+    private static void testStatusEffectsUpgraded(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        // Upgrading an effect doesn't make it count twice
+        testGoal(context, singleplayerContext, GoalIds.Hard.STATUS_EFFECTS, false, () -> {
+            for (Holder<MobEffect> effect : HARMLESS_EFFECTS.subList(0, getGoalNameIntArg(singleplayerContext, 0) - 1)) {
+                addEffect(singleplayerContext, effect, 0);
+            }
+            addEffect(singleplayerContext, HARMLESS_EFFECTS.getFirst(), 1);
+        });
+    }
+
+    @TestGoal
+    private static void testTameWolfVariants(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.TAME_WOLF_VARIANTS, () -> {
+            tameWolves(singleplayerContext, WOLF_VARIANTS.subList(0, getGoalNameIntArg(singleplayerContext, 0)));
+        });
+    }
+
+    @TestGoal
+    private static void testTameWolfVariantsRepeated(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.TAME_WOLF_VARIANTS, false, () -> {
+            tameWolves(singleplayerContext, List.of(WolfVariants.PALE, WolfVariants.WOODS, WolfVariants.WOODS, WolfVariants.WOODS, WolfVariants.PALE));
+        });
+    }
+
+    @TestGoal
+    private static void testRideStriderInOverworld(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.RIDE_STRIDER_IN_OVERWORLD, () -> {
+            mount(singleplayerContext, summon(singleplayerContext, EntityTypes.STRIDER, new BlockPos(0, PLAYER_Y, 2)));
+        });
+    }
+
+    @TestGoal(dimension = TestDimension.THE_NETHER)
+    private static void testRideStriderInNether(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.RIDE_STRIDER_IN_OVERWORLD, false, () -> {
+            mount(singleplayerContext, summon(singleplayerContext, EntityTypes.STRIDER, new BlockPos(0, 128, 2)));
+        });
+    }
+
+    @TestGoal
+    private static void testKillWarden(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.KILL_WARDEN, () -> {
+            Warden warden = summon(singleplayerContext, EntityTypes.WARDEN, new BlockPos(0, PLAYER_Y, 3));
+            singleplayerContext.getServer().runOnServer(_ -> warden.setHealth(1));
+            damageByPlayer(singleplayerContext, warden, 2);
+        });
+    }
+
+    @TestGoal
+    private static void testCrossbowDifferentMobs(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.CROSSBOW_DIFFERENT_MOBS, () -> {
+            int count = getGoalNameIntArg(singleplayerContext, 0);
+            shootMobsWithCrossbow(context, singleplayerContext, List.of(EntityTypes.ZOMBIE, EntityTypes.SKELETON, EntityTypes.HUSK, EntityTypes.STRAY).subList(0, count));
+        });
+    }
+
+    @TestGoal
+    private static void testCrossbowSameMobs(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.CROSSBOW_DIFFERENT_MOBS, false, () -> {
+            shootMobsWithCrossbow(context, singleplayerContext, List.of(EntityTypes.ZOMBIE, EntityTypes.ZOMBIE, EntityTypes.SKELETON, EntityTypes.SKELETON));
+        });
+    }
+
+    // Lines the mobs up in front of the player, and shoots them all with one arrow from a Piercing crossbow
+    private static void shootMobsWithCrossbow(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, List<? extends EntityType<? extends Mob>> types) {
+        // Undead mobs burn in daylight
+        setTime(singleplayerContext, ClockTimeMarkers.NIGHT);
+        List<Mob> mobs = new ArrayList<>();
+        for (int i = 0; i < types.size(); i++) {
+            Mob mob = summon(singleplayerContext, types.get(i), new BlockPos(0, PLAYER_Y, 3 + i * 2));
+            singleplayerContext.getServer().runOnServer(_ -> {
+                mob.setNoAi(true);
+                mob.setHealth(1);
+                // A baby zombie is too short to be hit
+                if (mob instanceof Zombie zombie) {
+                    zombie.setBaby(false);
+                }
+            });
+            mobs.add(mob);
+        }
+        ItemStack crossbow = enchantedItem(singleplayerContext, Items.CROSSBOW, Enchantments.PIERCING, 4);
+        crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(List.of(new ItemStack(Items.ARROW))));
+        give(singleplayerContext, crossbow);
+        singleplayerContext.getConnection().waitForClientboundPackets();
+        context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        singleplayerContext.getConnection().waitForServerboundPackets();
+        singleplayerContext.getServer().waitFor(_ -> mobs.stream().noneMatch(Mob::isAlive), 40);
+    }
+
+    @TestGoal
+    private static void testFroglight(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.Hard.FROGLIGHT, () -> {
+            give(singleplayerContext, Items.PEARLESCENT_FROGLIGHT);
+        });
     }
 }

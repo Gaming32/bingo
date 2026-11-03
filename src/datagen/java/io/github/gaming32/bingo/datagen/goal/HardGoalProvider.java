@@ -9,8 +9,12 @@ import io.github.gaming32.bingo.data.goal.BingoGoal;
 import io.github.gaming32.bingo.data.icons.BlockIcon;
 import io.github.gaming32.bingo.data.icons.CycleIcon;
 import io.github.gaming32.bingo.data.icons.EntityIcon;
+import io.github.gaming32.bingo.data.icons.EntityTypeTagCycleIcon;
+import io.github.gaming32.bingo.data.icons.IndicatorIcon;
+import io.github.gaming32.bingo.data.icons.ItemTagCycleIcon;
 import io.github.gaming32.bingo.data.subs.BingoSub;
 import io.github.gaming32.bingo.data.tags.bingo.BingoDamageTypeTags;
+import io.github.gaming32.bingo.data.tags.bingo.BingoEntityTypeTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoFeatureTags;
 import io.github.gaming32.bingo.data.tags.bingo.BingoItemTags;
 import io.github.gaming32.bingo.datagen.BingoDataGenUtil;
@@ -49,10 +53,12 @@ import net.minecraft.advancements.triggers.CuredZombieVillagerTrigger;
 import net.minecraft.advancements.triggers.FilledBucketTrigger;
 import net.minecraft.advancements.triggers.ItemDurabilityTrigger;
 import net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.triggers.KilledByArrowTrigger;
 import net.minecraft.advancements.triggers.KilledTrigger;
 import net.minecraft.advancements.triggers.PickedUpItemTrigger;
 import net.minecraft.advancements.triggers.PlayerInteractTrigger;
 import net.minecraft.advancements.triggers.PlayerTrigger;
+import net.minecraft.advancements.triggers.StartRidingTrigger;
 import net.minecraft.advancements.triggers.TameAnimalTrigger;
 import net.minecraft.advancements.triggers.UsedTotemTrigger;
 import net.minecraft.advancements.triggers.UsingItemTrigger;
@@ -753,5 +759,51 @@ public class HardGoalProvider extends DifficultyGoalProvider {
                     ))
                 ))
             )));
+        addGoal(statusEffectsGoal(STATUS_EFFECTS, 7, 9));
+        addGoal(tameWolfVariantsGoal(TAME_WOLF_VARIANTS, 3));
+        addGoal(GoalBuilder.of(RIDE_STRIDER_IN_OVERWORLD)
+            .criterion(context, "ride", StartRidingTrigger.TriggerInstance.playerStartsRiding(
+                EntityPredicate.Builder.entity()
+                    .vehicle(EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.STRIDER))
+                    .located(LocationPredicate.Builder.inDimension(Level.OVERWORLD))
+            ))
+            .name(Component.translatable("bingo.goal.ride_strider_in_overworld", EntityTypes.STRIDER.getDescription()))
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.STRIDER))
+            .tags(BingoTags.ACTION, BingoTags.NETHER, BingoTags.OVERWORLD));
+        addGoal(GoalBuilder.of(KILL_WARDEN)
+            .criterion(context, "kill", KilledTrigger.TriggerInstance.playerKilledEntity(
+                EntityPredicate.Builder.entity().of(entityTypes, EntityTypes.WARDEN)
+            ))
+            .name(Component.translatable("bingo.goal.kill_warden", EntityTypes.WARDEN.getDescription()))
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.WARDEN))
+            .tags(BingoTags.ACTION, BingoTags.COMBAT, BingoTags.OVERWORLD)
+            .reactant("pacifist"));
+        addGoal(GoalBuilder.of(CROSSBOW_DIFFERENT_MOBS)
+            .sub("count", BingoSub.random(3, 4))
+            .criterion(
+                context,
+                "kill",
+                KilledByArrowTrigger.TriggerInstance.crossbowKilled(items, MinMaxBounds.Ints.atLeast(1)),
+                subber -> subber.sub("conditions.unique_entity_types.min", "count")
+            )
+            .name(Component.translatable("bingo.goal.crossbow_different_mobs", 0), subber -> subber.sub("with.0", "count"))
+            .tooltip("crossbow_different_mobs")
+            .icon(
+                context,
+                IndicatorIcon.infer(new EntityTypeTagCycleIcon(BingoEntityTypeTags.HOSTILE, 3), Items.CROSSBOW),
+                subber -> subber.sub("base.count", "count")
+            )
+            .tags(BingoTags.ACTION, BingoTags.COMBAT)
+            .reactant("pacifist"));
+        addGoal(obtainItemGoal(
+                FROGLIGHT,
+                items,
+                new ItemTagCycleIcon(BingoItemTags.FROGLIGHTS),
+                ItemPredicate.Builder.item().of(items, BingoItemTags.FROGLIGHTS)
+            )
+            .name("froglight")
+            .tooltip("froglight")
+            .tags(BingoTags.NETHER, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .antisynergy("froglight"));
     }
 }

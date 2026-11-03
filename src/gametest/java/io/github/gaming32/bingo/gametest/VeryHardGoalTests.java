@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.gametest;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import io.github.gaming32.bingo.datagen.goal.GoalIds;
+import io.github.gaming32.bingo.game.GoalProgress;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.client.gui.screens.inventory.BeaconScreen;
@@ -9,12 +10,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.protocol.game.ServerboundSetBeaconPacket;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.clock.ClockTimeMarkers;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.entity.animal.parrot.Parrot;
 import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.entity.monster.Endermite;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.npc.villager.VillagerData;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.inventory.BeaconMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -23,6 +30,8 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ConduitBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
+import net.minecraft.world.phys.EntityHitResult;
 
 import java.util.List;
 import java.util.Objects;
@@ -193,5 +202,141 @@ final class VeryHardGoalTests {
                 Blocks.REDSTONE_BLOCK, Blocks.LAPIS_BLOCK, Blocks.EMERALD_BLOCK, Blocks.QUARTZ_BLOCK, Blocks.NETHERITE_BLOCK
             ));
         });
+    }
+
+    @TestGoal
+    private static void testStatusEffects(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.STATUS_EFFECTS, () -> {
+            for (Holder<MobEffect> effect : HARMLESS_EFFECTS.subList(0, getGoalNameIntArg(singleplayerContext, 0))) {
+                addEffect(singleplayerContext, effect, 0);
+            }
+        });
+    }
+
+    @TestGoal
+    private static void testStatusEffectsNotAtOnce(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.STATUS_EFFECTS, false, () -> {
+            int count = getGoalNameIntArg(singleplayerContext, 0);
+            for (Holder<MobEffect> effect : HARMLESS_EFFECTS.subList(0, count - 1)) {
+                addEffect(singleplayerContext, effect, 0);
+            }
+            singleplayerContext.getServer().runOnServer(_ -> singleplayerContext.getConnection().getServerPlayer().removeEffect(HARMLESS_EFFECTS.getFirst()));
+            addEffect(singleplayerContext, HARMLESS_EFFECTS.get(count - 1), 0);
+        });
+    }
+
+    @TestGoal
+    private static void testTameWolfVariants(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.TAME_WOLF_VARIANTS, () -> {
+            tameWolves(singleplayerContext, WOLF_VARIANTS.subList(0, getGoalNameIntArg(singleplayerContext, 0)));
+        });
+    }
+
+    @TestGoal
+    private static void testTameWolfVariantsTooFew(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.TAME_WOLF_VARIANTS, false, () -> {
+            int count = getGoalNameIntArg(singleplayerContext, 0);
+            tameWolves(singleplayerContext, WOLF_VARIANTS.subList(0, count - 1));
+            GoalProgress progress = getGoalProgress(singleplayerContext);
+            if (progress.progress() != count - 1 || progress.maxProgress() != count) {
+                throw new IllegalStateException("Unexpected progress " + progress);
+            }
+        });
+    }
+
+    @TestGoal
+    private static void testMasterVillagerTrade(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.MASTER_VILLAGER_TRADE, () -> {
+            tradeWithLeveledVillager(context, singleplayerContext, VillagerData.MAX_VILLAGER_LEVEL);
+        });
+    }
+
+    @TestGoal
+    private static void testMasterVillagerTradeExpert(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.MASTER_VILLAGER_TRADE, false, () -> {
+            tradeWithLeveledVillager(context, singleplayerContext, VillagerData.MAX_VILLAGER_LEVEL - 1);
+        });
+    }
+
+    private static void tradeWithLeveledVillager(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, int level) {
+        fill(singleplayerContext, new BlockPos(-1, PLAYER_Y, 1), new BlockPos(1, PLAYER_Y, 3), Blocks.OAK_FENCE);
+        fill(singleplayerContext, new BlockPos(-1, PLAYER_Y + 1, 3), new BlockPos(1, PLAYER_Y + 1, 3), Blocks.OAK_FENCE);
+        setBlock(singleplayerContext, new BlockPos(0, PLAYER_Y, 2), Blocks.AIR);
+        setBlock(singleplayerContext, new BlockPos(0, PLAYER_Y, 3), Blocks.FLETCHING_TABLE);
+        Villager villager = summon(singleplayerContext, EntityTypes.VILLAGER, new BlockPos(0, PLAYER_Y, 2));
+        singleplayerContext.getServer().runOnServer(server -> {
+            villager.setVillagerData(villager.getVillagerData().withProfession(server.registryAccess(), VillagerProfession.FLETCHER).withLevel(level));
+            villager.setVillagerXp(VillagerData.getMinXpPerLevel(level));
+        });
+        singleplayerContext.getConnection().waitForClientboundPackets();
+        tradeWithVillager(context, singleplayerContext);
+        if (singleplayerContext.getServer().computeOnServer(_ -> villager.getVillagerData().level()) < level) {
+            throw new IllegalStateException("Villager lost its level");
+        }
+    }
+
+    @TestGoal
+    private static void testAllFroglights(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.ALL_FROGLIGHTS, () -> {
+            give(singleplayerContext, Items.OCHRE_FROGLIGHT);
+            give(singleplayerContext, Items.VERDANT_FROGLIGHT);
+            give(singleplayerContext, Items.PEARLESCENT_FROGLIGHT);
+        });
+    }
+
+    @TestGoal
+    private static void testAllFroglightsMissingOne(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.ALL_FROGLIGHTS, false, () -> {
+            give(singleplayerContext, Items.OCHRE_FROGLIGHT, 64);
+            give(singleplayerContext, Items.VERDANT_FROGLIGHT, 64);
+        });
+    }
+
+    @TestGoal
+    private static void testTorchflowerAndPitcherPlant(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.TORCHFLOWER_AND_PITCHER_PLANT, () -> {
+            give(singleplayerContext, Items.TORCHFLOWER);
+            give(singleplayerContext, Items.PITCHER_PLANT);
+        });
+    }
+
+    @TestGoal
+    private static void testDuplicateAllay(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.DUPLICATE_ALLAY, () -> {
+            giveAmethystToAllay(context, singleplayerContext, true);
+            waitForGameEnd(singleplayerContext, 20);
+        });
+    }
+
+    @TestGoal
+    private static void testDuplicateAllayNotDancing(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        testGoal(context, singleplayerContext, GoalIds.VeryHard.DUPLICATE_ALLAY, false, () -> {
+            giveAmethystToAllay(context, singleplayerContext, false);
+            context.waitTicks(5);
+        });
+    }
+
+    private static void giveAmethystToAllay(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, boolean playMusic) {
+        // Keep the allay in a glass box, on top of the jukebox. It needs its AI to dance, so it can't be frozen
+        BlockPos jukeboxPos = new BlockPos(0, PLAYER_Y, 2);
+        fill(singleplayerContext, jukeboxPos.offset(-1, 0, -1), jukeboxPos.offset(1, 3, 1), Blocks.GLASS);
+        fill(singleplayerContext, jukeboxPos.above(), jukeboxPos.above(2), Blocks.AIR);
+        setBlock(singleplayerContext, jukeboxPos, Blocks.JUKEBOX);
+        Allay allay = summon(singleplayerContext, EntityTypes.ALLAY, jukeboxPos.above());
+        if (playMusic) {
+            singleplayerContext.getServer().runOnServer(_ ->
+                singleplayerContext.getConnection().getServerLevel().getBlockEntity(jukeboxPos, BlockEntityTypes.JUKEBOX).orElseThrow().setTheItem(new ItemStack(Items.MUSIC_DISC_CAT))
+            );
+            // The jukebox notifies nearby allays every 20 ticks
+            singleplayerContext.getServer().waitFor(_ -> allay.isDancing(), 40);
+        }
+        give(singleplayerContext, Items.AMETHYST_SHARD);
+        singleplayerContext.getConnection().waitForClientboundEntityUpdates(EntityTypes.ALLAY);
+        // The glass is in the way of the crosshair, so interact with the allay directly
+        context.runOnClient(client -> {
+            Allay clientAllay = (Allay) Objects.requireNonNull(Objects.requireNonNull(client.level).getEntity(allay.getId()));
+            Objects.requireNonNull(client.gameMode).interact(Objects.requireNonNull(client.player), clientAllay, new EntityHitResult(clientAllay), InteractionHand.MAIN_HAND);
+        });
+        singleplayerContext.getConnection().waitForServerboundPackets();
     }
 }

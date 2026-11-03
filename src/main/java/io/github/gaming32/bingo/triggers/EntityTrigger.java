@@ -43,6 +43,10 @@ public class EntityTrigger extends SimpleCriterionTrigger<EntityTrigger.TriggerI
             ));
         }
 
+        public static Criterion<TriggerInstance> duplicatedAllay() {
+            return BingoTriggers.DUPLICATE_ALLAY.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.empty()));
+        }
+
         public static Criterion<TriggerInstance> stunnedRavager() {
             return BingoTriggers.STUN_RAVAGER.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.empty()));
         }

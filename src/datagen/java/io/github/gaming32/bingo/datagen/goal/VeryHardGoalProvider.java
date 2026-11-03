@@ -19,11 +19,13 @@ import io.github.gaming32.bingo.triggers.BeaconEffectTrigger;
 import io.github.gaming32.bingo.triggers.CompleteMapTrigger;
 import io.github.gaming32.bingo.triggers.DifferentPotionsTrigger;
 import io.github.gaming32.bingo.triggers.EntityDieNearPlayerTrigger;
+import io.github.gaming32.bingo.triggers.EntityTrigger;
 import io.github.gaming32.bingo.triggers.ExperienceChangeTrigger;
 import io.github.gaming32.bingo.triggers.ItemPickedUpTrigger;
 import io.github.gaming32.bingo.triggers.PartyParrotsTrigger;
 import io.github.gaming32.bingo.triggers.PowerConduitTrigger;
 import io.github.gaming32.bingo.triggers.ZombifyPigTrigger;
+import io.github.gaming32.bingo.util.BingoUtil;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.predicates.DamagePredicate;
@@ -32,21 +34,27 @@ import net.minecraft.advancements.predicates.DistancePredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.predicates.LocationPredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.predicates.NbtPredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.advancements.triggers.KilledTrigger;
 import net.minecraft.advancements.triggers.PlayerTrigger;
+import net.minecraft.advancements.triggers.TradeTrigger;
 import net.minecraft.core.component.DataComponentExactPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Util;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.npc.villager.VillagerData;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Instruments;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -61,6 +69,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyC
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Optional;
 
 import static io.github.gaming32.bingo.datagen.goal.GoalIds.VeryHard.*;
@@ -335,6 +344,48 @@ public class VeryHardGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainAllItemsFromTag(BingoItemTags.NAUTILUS_ARMOR, "nautilus_armor")
             .tags(BingoTags.OVERWORLD, BingoTags.OCEAN)
             .antisynergy("nautilus_armor"));
+        addGoal(statusEffectsGoal(STATUS_EFFECTS, 11, 13));
+        addGoal(tameWolfVariantsGoal(TAME_WOLF_VARIANTS, 5));
+        addGoal(GoalBuilder.of(MASTER_VILLAGER_TRADE)
+            .criterion(context, "trade", CriteriaTriggers.TRADE.createCriterion(new TradeTrigger.TriggerInstance(
+                Optional.empty(),
+                Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity()
+                    .of(entityTypes, EntityTypes.VILLAGER)
+                    .nbt(new NbtPredicate(BingoUtil.compound(Map.of(
+                        "VillagerData", BingoUtil.compound(Map.of("level", IntTag.valueOf(VillagerData.MAX_VILLAGER_LEVEL)))
+                    ))))
+                    .build()
+                )),
+                Optional.empty()
+            )))
+            .name("master_villager_trade")
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.VILLAGER, BingoUtil.compound(Map.of(
+                "VillagerData", BingoUtil.compound(Map.of(
+                    "profession", StringTag.valueOf(VillagerProfession.LIBRARIAN.identifier().toString()),
+                    "level", IntTag.valueOf(VillagerData.MAX_VILLAGER_LEVEL)
+                ))
+            ))))
+            .tags(BingoTags.ACTION, BingoTags.VILLAGE, BingoTags.OVERWORLD));
+        addGoal(obtainAllItemsFromTag(BingoItemTags.FROGLIGHTS, "froglights")
+            .tooltip("all_froglights")
+            .tags(BingoTags.NETHER, BingoTags.OVERWORLD, BingoTags.RARE_BIOME)
+            .setAntisynergy("froglight"));
+        addGoal(GoalBuilder.of(TORCHFLOWER_AND_PITCHER_PLANT)
+            .criterion(context, "obtain", InventoryChangeTrigger.TriggerInstance.hasItems(Items.TORCHFLOWER, Items.PITCHER_PLANT))
+            .name(Component.translatable(
+                "bingo.goal.torchflower_and_pitcher_plant",
+                Blocks.TORCHFLOWER.getName(),
+                Blocks.PITCHER_PLANT.getName()
+            ))
+            .tooltip("torchflower_and_pitcher_plant")
+            .icon(context, new CycleIcon(ItemIcon.ofItem(Items.TORCHFLOWER), ItemIcon.ofItem(Items.PITCHER_PLANT)))
+            .tags(BingoTags.ITEM, BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(GoalBuilder.of(DUPLICATE_ALLAY)
+            .criterion(context, "duplicate", EntityTrigger.TriggerInstance.duplicatedAllay())
+            .name("duplicate_allay")
+            .tooltip("duplicate_allay")
+            .icon(context, EntityIcon.ofSpawnEgg(EntityTypes.ALLAY, 2))
+            .tags(BingoTags.ACTION, BingoTags.OVERWORLD));
     }
 
     @SuppressWarnings("deprecation")

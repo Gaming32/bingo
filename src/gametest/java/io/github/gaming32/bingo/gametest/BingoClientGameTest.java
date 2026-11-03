@@ -10,11 +10,15 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.Identifier;
@@ -28,19 +32,29 @@ import net.minecraft.world.clock.ClockTimeMarkers;
 import net.minecraft.world.clock.WorldClock;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.wolf.Wolf;
+import net.minecraft.world.entity.animal.wolf.WolfVariant;
+import net.minecraft.world.entity.animal.wolf.WolfVariants;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.MerchantMenu;
+import net.minecraft.world.inventory.MerchantResultSlot;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
@@ -159,6 +173,59 @@ public class BingoClientGameTest implements FabricClientGameTest {
         } finally {
             context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
         }
+    }
+
+    // Different effects that don't get in the way of the test
+    static final List<Holder<MobEffect>> HARMLESS_EFFECTS = List.of(
+        MobEffects.SPEED, MobEffects.SLOWNESS, MobEffects.HASTE, MobEffects.MINING_FATIGUE, MobEffects.STRENGTH,
+        MobEffects.JUMP_BOOST, MobEffects.REGENERATION, MobEffects.RESISTANCE, MobEffects.FIRE_RESISTANCE,
+        MobEffects.WATER_BREATHING, MobEffects.INVISIBILITY, MobEffects.NIGHT_VISION, MobEffects.WEAKNESS,
+        MobEffects.LUCK, MobEffects.SLOW_FALLING
+    );
+
+    static final List<ResourceKey<WolfVariant>> WOLF_VARIANTS = List.of(
+        WolfVariants.PALE, WolfVariants.SPOTTED, WolfVariants.SNOWY, WolfVariants.BLACK, WolfVariants.ASHEN,
+        WolfVariants.RUSTY, WolfVariants.WOODS, WolfVariants.CHESTNUT, WolfVariants.STRIPED
+    );
+
+    static void tameWolves(TestSingleplayerContext singleplayerContext, List<ResourceKey<WolfVariant>> variants) {
+        for (int i = 0; i < variants.size(); i++) {
+            Wolf wolf = summon(singleplayerContext, EntityTypes.WOLF, new BlockPos(i - variants.size() / 2, PLAYER_Y, 3));
+            ResourceKey<WolfVariant> variant = variants.get(i);
+            singleplayerContext.getServer().runOnServer(server -> {
+                wolf.setComponent(DataComponents.WOLF_VARIANT, server.registryAccess().getOrThrow(variant));
+                wolf.tame(singleplayerContext.getConnection().getServerPlayer());
+            });
+        }
+    }
+
+    // Trades with the villager the player is looking at, using its first offer
+    static void tradeWithVillager(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
+        context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        singleplayerContext.getConnection().waitForServerboundPackets();
+        singleplayerContext.getConnection().waitForClientboundPackets();
+        List<ItemStack> itemCosts = context.computeOnClient(client -> {
+            MerchantMenu menu = (MerchantMenu) Objects.requireNonNull(client.player).containerMenu;
+            MerchantOffer offer = menu.getOffers().getFirst();
+            ItemStack costB = offer.getCostB();
+            return costB.isEmpty() ? List.of(offer.getCostA()) : List.of(offer.getCostA(), costB);
+        });
+        for (ItemStack itemCost : itemCosts) {
+            give(singleplayerContext, itemCost);
+        }
+        singleplayerContext.getConnection().waitForClientboundPackets();
+        context.runOnClient(client -> {
+            var button = (MerchantScreen.TradeOfferButton) Screens.getWidgets(Objects.requireNonNull(client.gui.screen()))
+                .stream()
+                .filter(widget -> widget instanceof MerchantScreen.TradeOfferButton)
+                .findFirst()
+                .orElseThrow();
+            button.onPress(new MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0));
+            AbstractContainerMenu menu = Objects.requireNonNull(client.player).containerMenu;
+            Slot resultSlot = menu.slots.stream().filter(slot -> slot instanceof MerchantResultSlot).findFirst().orElseThrow();
+            Objects.requireNonNull(client.gameMode).handleContainerInput(menu.containerId, resultSlot.index, InputConstants.MOUSE_BUTTON_LEFT, ContainerInput.QUICK_MOVE, client.player);
+        });
+        singleplayerContext.getConnection().waitForServerboundPackets();
     }
 
     static void testGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Identifier goalId, Runnable testRunner) {

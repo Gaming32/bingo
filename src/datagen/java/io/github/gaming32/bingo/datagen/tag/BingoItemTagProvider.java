@@ -109,6 +109,12 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
         addItemsFromLootTable(tag(BingoItemTags.FISHING_TREASURE), BuiltInLootTables.FISHING_TREASURE, registries, item -> item != Items.FISHING_ROD && item != Items.BOOK);
         tag(BingoItemTags.FISHING_TREASURE).add(ItemIds.ENCHANTED_BOOK);
 
+        builder(BingoItemTags.FROGLIGHTS).add(
+            BlockItemIds.OCHRE_FROGLIGHT.item(),
+            BlockItemIds.VERDANT_FROGLIGHT.item(),
+            BlockItemIds.PEARLESCENT_FROGLIGHT.item()
+        );
+
         builder(BingoItemTags.LIVING_CORAL_BLOCKS).add(
             BlockItemIds.TUBE_CORAL_BLOCK.item(),
             BlockItemIds.BRAIN_CORAL_BLOCK.item(),

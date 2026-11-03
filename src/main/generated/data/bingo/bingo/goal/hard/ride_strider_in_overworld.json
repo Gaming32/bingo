@@ -1,0 +1,48 @@
+{
+  "criteria": {
+    "ride": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "dimension": "minecraft:overworld"
+            },
+            "minecraft:vehicle": {
+              "minecraft:entity_type": "minecraft:strider"
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:started_riding"
+    }
+  },
+  "difficulty": "bingo:hard",
+  "icon": {
+    "type": "bingo:entity",
+    "entity": "minecraft:strider",
+    "item": {
+      "count": 1,
+      "id": "minecraft:strider_spawn_egg"
+    }
+  },
+  "name": {
+    "translate": "bingo.goal.ride_strider_in_overworld",
+    "with": [
+      {
+        "translate": "entity.minecraft.strider"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "ride"
+    ]
+  ],
+  "tags": [
+    "bingo:action",
+    "bingo:nether",
+    "bingo:overworld"
+  ]
+}

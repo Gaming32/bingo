@@ -21,6 +21,7 @@ public final class BingoItemTags {
     public static final TagKey<Item> FISHING_JUNK = create("fishing_junk");
     public static final TagKey<Item> FISHING_TREASURE = create("fishing_treasure");
     public static final TagKey<Item> FISH_BUCKETS = create("fish_buckets");
+    public static final TagKey<Item> FROGLIGHTS = create("froglights");
     public static final TagKey<Item> GOLD_IN_NAME = create("gold_in_name");
     public static final TagKey<Item> LIVING_CORAL_BLOCKS = create("living_coral_blocks");
     public static final TagKey<Item> MEAT = create("meat");

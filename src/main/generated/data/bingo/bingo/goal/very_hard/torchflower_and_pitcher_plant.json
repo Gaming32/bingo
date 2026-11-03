@@ -1,0 +1,61 @@
+{
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:torchflower"
+          },
+          {
+            "items": "minecraft:pitcher_plant"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "difficulty": "bingo:very_hard",
+  "icon": {
+    "type": "bingo:cycle",
+    "icons": [
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:torchflower"
+        }
+      },
+      {
+        "type": "bingo:item",
+        "item": {
+          "count": 1,
+          "id": "minecraft:pitcher_plant"
+        }
+      }
+    ]
+  },
+  "name": {
+    "translate": "bingo.goal.torchflower_and_pitcher_plant",
+    "with": [
+      {
+        "translate": "block.minecraft.torchflower"
+      },
+      {
+        "translate": "block.minecraft.pitcher_plant"
+      }
+    ]
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:ocean",
+    "bingo:overworld"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.torchflower_and_pitcher_plant.tooltip"
+  }
+}

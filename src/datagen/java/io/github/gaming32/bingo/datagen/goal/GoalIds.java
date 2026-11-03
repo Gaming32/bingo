@@ -353,6 +353,12 @@ public final class GoalIds {
             return Identifiers.bingo(PREFIX + path);
         }
 
+        public static final Identifier CROSSBOW_DIFFERENT_MOBS = id("crossbow_different_mobs");
+        public static final Identifier FROGLIGHT = id("froglight");
+        public static final Identifier KILL_WARDEN = id("kill_warden");
+        public static final Identifier RIDE_STRIDER_IN_OVERWORLD = id("ride_strider_in_overworld");
+        public static final Identifier STATUS_EFFECTS = id("status_effects");
+        public static final Identifier TAME_WOLF_VARIANTS = id("tame_wolf_variants");
         public static final Identifier _6X6SCAFFOLDING = id("6x6scaffolding");
         public static final Identifier ARMOR_TRIMS = id("armor_trims");
         public static final Identifier BED_ROW = id("bed_row");
@@ -450,6 +456,7 @@ public final class GoalIds {
         }
 
         public static final Identifier ALL_DIAMOND_CRAFTABLES = id("all_diamond_craftables");
+        public static final Identifier ALL_FROGLIGHTS = id("all_froglights");
         public static final Identifier ALL_GOAT_HORNS = id("all_goat_horns");
         public static final Identifier ALL_MINERAL_BLOCKS = id("all_mineral_blocks");
         public static final Identifier ANY_HEAD = id("any_head");
@@ -461,10 +468,12 @@ public final class GoalIds {
         public static final Identifier CORAL_BLOCKS = id("coral_blocks");
         public static final Identifier DIAMOND_BLOCK = id("diamond_block");
         public static final Identifier DIFFERENT_POTIONS = id("different_potions");
+        public static final Identifier DUPLICATE_ALLAY = id("duplicate_allay");
         public static final Identifier FULL_NETHERITE_ARMOR_AND_TOOLS = id("full_netherite_armor_and_tools");
         public static final Identifier FULL_POWER_CONDUIT = id("full_power_conduit");
         public static final Identifier KILL_ENDERMAN_WITH_ENDERMITES = id("kill_enderman_with_endermites");
         public static final Identifier LEVELS = id("levels");
+        public static final Identifier MASTER_VILLAGER_TRADE = id("master_villager_trade");
         public static final Identifier MYCELIUM = id("mycelium");
         public static final Identifier NETHERITE_BLOCK = id("netherite_block");
         public static final Identifier ORES = id("ores");
@@ -472,7 +481,10 @@ public final class GoalIds {
         public static final Identifier PARTY_PARROTS = id("party_parrots");
         public static final Identifier SHULKER_IN_OVERWORLD = id("shulker_in_overworld");
         public static final Identifier SLEEP_IN_MANSION = id("sleep_in_mansion");
+        public static final Identifier STATUS_EFFECTS = id("status_effects");
+        public static final Identifier TAME_WOLF_VARIANTS = id("tame_wolf_variants");
         public static final Identifier TIPPED_ARROW = id("tipped_arrow");
+        public static final Identifier TORCHFLOWER_AND_PITCHER_PLANT = id("torchflower_and_pitcher_plant");
         public static final Identifier TRIDENT = id("trident");
         public static final Identifier WITHER_ROSE = id("wither_rose");
         public static final Identifier ZOMBIFY_PIG = id("zombify_pig");

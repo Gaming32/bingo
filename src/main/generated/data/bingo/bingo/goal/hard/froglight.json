@@ -1,0 +1,41 @@
+{
+  "antisynergy": "froglight",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#bingo:froglights"
+          }
+        ]
+      },
+      "trigger": "bingo:total_count_inventory_changed"
+    }
+  },
+  "difficulty": "bingo:hard",
+  "icon": {
+    "type": "bingo:item_tag_cycle",
+    "tag": "bingo:froglights"
+  },
+  "name": {
+    "translate": "bingo.goal.froglight"
+  },
+  "progress": {
+    "type": "bingo:criterion",
+    "criterion": "obtain"
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "tags": [
+    "bingo:item",
+    "bingo:nether",
+    "bingo:overworld",
+    "bingo:rare_biome"
+  ],
+  "tooltip": {
+    "translate": "bingo.goal.froglight.tooltip"
+  }
+}

@@ -6,10 +6,7 @@ import io.github.gaming32.bingo.datagen.goal.GoalIds;
 import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
-import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.gui.screens.inventory.MerchantScreen;
-import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -28,18 +25,12 @@ import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.vehicle.boat.Boat;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerInput;
-import net.minecraft.world.inventory.MerchantMenu;
-import net.minecraft.world.inventory.MerchantResultSlot;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -318,31 +309,7 @@ final class EasyGoalTests {
                     .profession()
                     .is(VillagerProfession.FLETCHER)
             );
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            List<ItemStack> itemCosts = context.computeOnClient(client -> {
-                MerchantMenu menu = (MerchantMenu) Objects.requireNonNull(client.player).containerMenu;
-                MerchantOffer offer = menu.getOffers().getFirst();
-                ItemStack costB = offer.getCostB();
-                return costB.isEmpty() ? List.of(offer.getCostA()) : List.of(offer.getCostA(), costB);
-            });
-            for (ItemStack itemCost : itemCosts) {
-                give(singleplayerContext, itemCost);
-            }
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.runOnClient(client -> {
-                var button = (MerchantScreen.TradeOfferButton) Screens.getWidgets(Objects.requireNonNull(client.gui.screen()))
-                    .stream()
-                    .filter(widget -> widget instanceof MerchantScreen.TradeOfferButton)
-                    .findFirst()
-                    .orElseThrow();
-                button.onPress(new MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0));
-                AbstractContainerMenu menu = Objects.requireNonNull(client.player).containerMenu;
-                Slot resultSlot = menu.slots.stream().filter(slot -> slot instanceof MerchantResultSlot).findFirst().orElseThrow();
-                Objects.requireNonNull(client.gameMode).handleContainerInput(menu.containerId, resultSlot.index, InputConstants.MOUSE_BUTTON_LEFT, ContainerInput.QUICK_MOVE, client.player);
-            });
-            singleplayerContext.getConnection().waitForServerboundPackets();
+            tradeWithVillager(context, singleplayerContext);
         });
     }
 
