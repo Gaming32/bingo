@@ -13,6 +13,10 @@
   "criteria": {
     "obtain": {
       "conditions": {
+        "groups": [
+          "minecraft:wool_slabs",
+          "minecraft:concrete_slabs"
+        ],
         "required_count": {
           "bingo_type": "bingo:sub",
           "key": "count"

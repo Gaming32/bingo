@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "count": 12,
+            "count": {
+              "min": 12
+            },
             "items": "minecraft:ender_eye"
           }
         ]

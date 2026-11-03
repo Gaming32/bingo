@@ -1,9 +1,7 @@
 package io.github.gaming32.bingo.gametest;
 
-import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.logging.LogUtils;
-import io.github.gaming32.bingo.datagen.goal.GoalIds;
 import io.github.gaming32.bingo.ext.MinecraftServerExt;
 import io.github.gaming32.bingo.game.BingoBoard;
 import io.github.gaming32.bingo.game.BingoGame;
@@ -12,53 +10,49 @@ import io.github.gaming32.bingo.util.BingoUtil;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
-import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.ChatFormatting;
-import net.minecraft.SharedConstants;
-import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
-import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.clock.ClockTimeMarker;
+import net.minecraft.world.clock.ClockTimeMarkers;
+import net.minecraft.world.clock.WorldClock;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.decoration.painting.Painting;
-import net.minecraft.world.entity.decoration.painting.PaintingVariant;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.zombie.Zombie;
-import net.minecraft.world.entity.npc.villager.Villager;
-import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.FishingHook;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerInput;
-import net.minecraft.world.inventory.MerchantMenu;
-import net.minecraft.world.inventory.MerchantResultSlot;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.DyedItemColor;
-import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityTypes;
-import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraft.world.level.block.entity.SignTextSlot;
-import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.gamerules.GameRules;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
+import net.minecraft.world.level.levelgen.flat.FlatLayerInfo;
+import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -73,746 +67,105 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
-// Player is at 0, 0, facing south (towards +Z)
 @SuppressWarnings("UnstableApiUsage")
 public class BingoClientGameTest implements FabricClientGameTest {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final int PLAYER_Y = -60;
+    // The superflat ground is above sea level, for goals that need to be below sea level
+    static final int PLAYER_Y = 65;
+    static final int GRASS_Y = PLAYER_Y - 1;
+    private static final int DIRT_DEPTH = 2;
+    static final int BEDROCK_Y = -64;
     private static final List<String> failedTests = new ArrayList<>();
+    private static final List<Class<?>> TEST_CLASSES = List.of(
+        VeryEasyGoalTests.class,
+        EasyGoalTests.class,
+        MediumGoalTests.class,
+        HardGoalTests.class,
+        VeryHardGoalTests.class
+    );
 
-    @TestGoal
-    private static void testSimpleItemGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.APPLE, () -> {
-            singleplayerContext.getServer().runCommand("give @a apple");
-        });
+    static void growHugeFungus(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, BlockPos fungusPos, float xRot) {
+        setBlock(singleplayerContext, fungusPos.below(), Blocks.CRIMSON_NYLIUM);
+        setBlock(singleplayerContext, fungusPos, Blocks.CRIMSON_FUNGUS);
+        give(singleplayerContext, Items.BONE_MEAL, 64);
+        rotate(singleplayerContext, 0, xRot);
+        singleplayerContext.getConnection().waitForClientboundPackets();
+        context.getInput().holdMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        try {
+            singleplayerContext.getServer().waitFor(_ -> singleplayerContext.getConnection().getServerLevel().getBlockState(fungusPos).is(Blocks.CRIMSON_STEM));
+        } finally {
+            context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        }
+        singleplayerContext.getConnection().waitForServerboundPackets();
     }
 
-    @TestGoal
-    private static void testMultipleSimpleItemGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.STICK, () -> {
-            singleplayerContext.getServer().runCommand("give @a stick 64");
-        });
+    static void wearArmorThenEquipBoots(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Item helmet, Item chestplate, Item leggings, Item boots) {
+        wearArmorThenEquipBoots(context, singleplayerContext, new ItemStack(helmet), new ItemStack(chestplate), new ItemStack(leggings), new ItemStack(boots));
     }
 
-    @TestGoal
-    private static void testPoppiesAndDandelionsGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.POPPIES_DANDELIONS, () -> {
-            singleplayerContext.getServer().runCommand("give @a poppy 25");
-            singleplayerContext.getServer().runCommand("give @a dandelion 25");
-        });
+    static void wearArmorThenEquipBoots(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots) {
+        equip(singleplayerContext, EquipmentSlot.HEAD, helmet);
+        equip(singleplayerContext, EquipmentSlot.CHEST, chestplate);
+        equip(singleplayerContext, EquipmentSlot.LEGS, leggings);
+        give(singleplayerContext, boots);
+        singleplayerContext.getConnection().waitForClientboundPackets();
+        context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        singleplayerContext.getConnection().waitForServerboundPackets();
     }
 
-    @TestGoal
-    private static void testPoppiesAndDandelionsOnlyPoppies(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.POPPIES_DANDELIONS, false, () -> {
-            singleplayerContext.getServer().runCommand("give @a poppy 25");
-        });
-    }
-
-    @TestGoal
-    private static void testSomeItemsFromTag(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.WOOL_COLORS, () -> {
-            singleplayerContext.getServer().runCommand("give @a white_wool");
-            singleplayerContext.getServer().runCommand("give @a red_wool");
-            singleplayerContext.getServer().runCommand("give @a yellow_wool");
-            singleplayerContext.getServer().runCommand("give @a blue_wool");
-        });
-    }
-
-    @TestGoal
-    private static void testLeafCube(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.LEAF_CUBE, () -> {
-            singleplayerContext.getServer().runCommand("fill 0 " + PLAYER_Y + " 1 3 " + (PLAYER_Y + 3) + " 4 oak_leaves[persistent=true]");
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 air");
-            singleplayerContext.getServer().runCommand("give @a oak_leaves");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testSleepInBed(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.SLEEP_IN_BED, () -> {
-            singleplayerContext.getServer().runCommand("time set night");
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 white_bed[part=head]");
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 2 white_bed[part=foot]");
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 15");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-            singleplayerContext.getServer().runCommand("time set day");
-        });
-    }
-
-    @TestGoal
-    private static void testSomeEdibleItems(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.EDIBLE_ITEMS, () -> {
-            singleplayerContext.getServer().runCommand("give @a porkchop");
-            singleplayerContext.getServer().runCommand("give @a beef");
-            singleplayerContext.getServer().runCommand("give @a mutton");
-        });
-    }
-
-    @TestGoal
-    private static void testSomeEdibleItemsMixCooked(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.EDIBLE_ITEMS, null, () -> {
-            singleplayerContext.getServer().runCommand("give @a porkchop");
-            singleplayerContext.getServer().runCommand("give @a cooked_porkchop");
-            if (getGoalProgress(singleplayerContext).progress() != 1) {
-                throw new IllegalStateException("Goal progress should be 1");
+    // Gives the items split between two separate stacks
+    static void giveSplitStacks(TestSingleplayerContext singleplayerContext, int count, Item... items) {
+        singleplayerContext.getServer().runOnServer(_ -> {
+            ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
+            Inventory inventory = player.getInventory();
+            for (Item item : items) {
+                inventory.setItem(inventory.getFreeSlot(), new ItemStack(item, count / 2));
+                inventory.setItem(inventory.getFreeSlot(), new ItemStack(item, count - count / 2));
             }
-            singleplayerContext.getServer().runCommand("give @a beef");
+            player.containerMenu.broadcastChanges();
         });
     }
 
-    @TestGoal
-    private static void testBreedMobPair(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.BREED_MOB_PAIR, () -> {
-            singleplayerContext.getServer().runCommand("give @a wheat 2");
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 15");
-
-            singleplayerContext.getServer().runCommand("summon cow 0 " + PLAYER_Y + " 1");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getServer().runCommand("execute as @e[type=cow] at @s run tp @s ~-2 ~ ~");
-            singleplayerContext.getServer().runCommand("summon cow 0 " + PLAYER_Y + " 1");
-            singleplayerContext.getConnection().waitForClientboundEntityUpdates(EntityTypes.COW);
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-
-            singleplayerContext.getServer().waitFor(_ -> Iterables.size(singleplayerContext.getConnection().getServerLevel().getAllEntities()) > 3);
-        });
+    // Places all but the last block directly, then the player places the last block on top
+    static void buildMineralPillar(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, List<Block> blocks) {
+        int height = blocks.size() - 1;
+        for (int i = 0; i < height; i++) {
+            setBlock(singleplayerContext, new BlockPos(0, PLAYER_Y + i, 1), blocks.get(i));
+        }
+        teleport(singleplayerContext, new BlockPos(0, PLAYER_Y + height, 0), 0, 60);
+        fill(singleplayerContext, new BlockPos(0, PLAYER_Y, 0), new BlockPos(0, PLAYER_Y + height - 1, 0), Blocks.GLASS);
+        give(singleplayerContext, blocks.getLast());
+        singleplayerContext.getConnection().waitForClientboundPackets();
+        context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        singleplayerContext.getConnection().waitForServerboundPackets();
+        if (!singleplayerContext.getServer().computeOnServer(_ -> singleplayerContext.getConnection().getServerLevel().getBlockState(new BlockPos(0, PLAYER_Y + height, 1)).is(blocks.getLast()))) {
+            throw new IllegalStateException("Top block was not placed");
+        }
     }
 
-    @TestGoal
-    private static void testCrouchDistance(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.CROUCH_DISTANCE, () -> {
-            Vec3 originalPos = singleplayerContext.getServer().computeOnServer(_ -> singleplayerContext.getConnection().getServerPlayer().position());
-            singleplayerContext.getServer().runCommand("effect give @a speed infinite 64");
-            context.getInput().holdKey(InputConstants.KEY_LSHIFT);
-            context.getInput().holdKey(InputConstants.KEY_W);
-            context.getInput().holdKey(InputConstants.KEY_D);
-            try {
-                int distanceNeeded = getGoalProgress(singleplayerContext).maxProgress() + 1;
-                final double CONSERVATIVE_SNEAKING_SPEED = 1.7 / SharedConstants.TICKS_PER_SECOND;
-                singleplayerContext.getServer().waitFor(
-                    _ -> singleplayerContext.getConnection().getServerPlayer().position().distanceToSqr(originalPos) > distanceNeeded * distanceNeeded,
-                    Mth.ceil(distanceNeeded / CONSERVATIVE_SNEAKING_SPEED)
-                );
-            } finally {
-                context.getInput().releaseKey(InputConstants.KEY_LSHIFT);
-                context.getInput().releaseKey(InputConstants.KEY_W);
-                context.getInput().releaseKey(InputConstants.KEY_D);
-                singleplayerContext.getServer().runCommand("effect clear @a");
-            }
-        });
+    static void eat(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Item food) {
+        singleplayerContext.getServer().runOnServer(_ -> singleplayerContext.getConnection().getServerPlayer().getFoodData().setFoodLevel(10));
+        give(singleplayerContext, food);
+        singleplayerContext.getConnection().waitForClientboundPackets();
+        context.getInput().holdMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        try {
+            singleplayerContext.getServer().waitFor(_ -> singleplayerContext.getConnection().getServerPlayer().getInventory().getSelectedItem().isEmpty(), 100);
+        } finally {
+            context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+        }
     }
 
-    @TestGoal
-    private static void testDyeSign(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.DYE_SIGN, () -> {
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 1 oak_sign");
-            singleplayerContext.getServer().runOnServer(server -> {
-                SignBlockEntity sign = singleplayerContext.getConnection().getServerLevel().getBlockEntity(new BlockPos(0, PLAYER_Y, 1), BlockEntityTypes.SIGN).orElseThrow();
-                sign.updateText(text -> text.asMutable().setLine(1, Component.literal("Hello")).asImmutable(), SignTextSlot.FRONT);
-            });
-            singleplayerContext.getServer().runCommand("give @a red_dye");
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 45");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testExtinguishCampfire(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.EXTINGUISH_CAMPFIRE, () -> {
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 1 campfire");
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 60");
-            singleplayerContext.getServer().runCommand("give @a stone_shovel");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testNeverPickUpCraftingTable(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testNeverGoal(context, singleplayerContext, GoalIds.VeryEasy.NEVER_PICKUP_CRAFTING_TABLES, () -> {
-            singleplayerContext.getServer().runOnServer(_ -> {
-                ServerLevel level = singleplayerContext.getConnection().getServerLevel();
-                ItemEntity item = new ItemEntity(level, 0.5, PLAYER_Y, 0.5, new ItemStack(Items.CRAFTING_TABLE));
-                level.addFreshEntity(item);
-            });
-            context.waitTick();
-        });
-    }
-
-    @TestGoal
-    private static void testNeverFish(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testNeverGoal(context, singleplayerContext, GoalIds.VeryEasy.NEVER_FISH, () -> {
-            singleplayerContext.getServer().runCommand("give @a fishing_rod");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testBreakHoe(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.BREAK_HOE, () -> {
-            singleplayerContext.getServer().runCommand("give @a wooden_hoe[damage=" + new ItemStack(Items.WOODEN_HOE).getMaxDamage() + "]");
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 dirt");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testBounceOnBed(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.BOUNCE_ON_BED, () -> {
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~1 ~");
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 0 white_bed[part=head]");
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 1 white_bed[part=foot]");
-            singleplayerContext.getServer().waitFor(_ -> singleplayerContext.getConnection().getServerPlayer().getDeltaMovement().y > 0);
-        });
-    }
-
-    @TestGoal
-    private static void testHangPainting(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.HANG_PAINTING, () -> {
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 dirt");
-            singleplayerContext.getServer().runCommand("give @a painting");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testFillComposter(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.VeryEasy.FILL_COMPOSTER, () -> {
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 composter");
-            singleplayerContext.getServer().runCommand("give @a pumpkin_pie 7");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            for (int i = 0; i < 7; i++) {
-                context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            }
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal(dimension = TestDimension.THE_NETHER)
-    private static void testGrowTreeInNether(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.GROW_TREE_IN_NETHER, () -> {
-            singleplayerContext.getServer().runCommand("execute in the_nether run setblock 0 128 1 dirt");
-            singleplayerContext.getServer().runCommand("execute in the_nether run setblock 0 129 1 oak_sapling");
-            singleplayerContext.getServer().runCommand("give @a bone_meal 64");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().holdMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            try {
-                singleplayerContext.getServer().waitFor(_ -> singleplayerContext.getConnection().getServerLevel().getBlockState(new BlockPos(0, 129, 1)).is(Blocks.OAK_LOG));
-            } finally {
-                context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            }
-        });
-    }
-
-    @TestGoal
-    private static void testShootButton(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.SHOOT_BUTTON, () -> {
-            singleplayerContext.getServer().runCommand("give @a bow");
-            singleplayerContext.getServer().runCommand("give @a arrow");
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 0 oak_button[face=floor]");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().holdMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            try {
-                context.waitTicks(10);
-                singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 90");
-                singleplayerContext.getConnection().waitForClientboundPackets();
-                context.waitTicks(10);
-            } finally {
-                context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            }
-            singleplayerContext.getConnection().waitForServerboundPackets();
-            context.waitTicks(10);
-        });
-    }
-
-    @TestGoal
-    private static void testEatEntireCake(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.EAT_ENTIRE_CAKE, () -> {
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ -30 15");
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 cake");
-            singleplayerContext.getServer().runCommand("effect give @a hunger infinite 64");
-            context.getInput().holdMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            try {
-                singleplayerContext.getServer().waitFor(
-                    _ -> singleplayerContext.getConnection().getServerLevel().getBlockState(new BlockPos(0, PLAYER_Y + 1, 1)).isAir(),
-                    15 * SharedConstants.TICKS_PER_SECOND
-                );
-            } finally {
-                context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-                singleplayerContext.getServer().runCommand("effect clear @a");
-            }
-        });
-    }
-
-    @TestGoal
-    private static void testFishTreasureAndJunk(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.FISH_TREASURE_JUNK, () -> {
-            // seed 16 gets a treasure and a junk item on the first two fishes
-            singleplayerContext.getServer().runCommand("random reset " + BuiltInLootTables.FISHING.identifier() + " 16 false");
-            singleplayerContext.getServer().runCommand("fill -10 " + PLAYER_Y + " -10 10 " + (PLAYER_Y + 6) + " 10 glass");
-            singleplayerContext.getServer().runCommand("tp @a 0 " + (PLAYER_Y + 7) + " -10");
-            singleplayerContext.getServer().runCommand("fill -9 " + PLAYER_Y + " -9 9 " + (PLAYER_Y + 6) + " 9 water");
-            singleplayerContext.getServer().runCommand("give @a fishing_rod[enchantments={lure:4}]");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            for (int i = 0; i < 2; i++) {
-                context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-                singleplayerContext.getConnection().waitForServerboundPackets();
-                singleplayerContext.getServer().waitFor(_ -> {
-                    FishingHook hook = singleplayerContext.getConnection().getServerLevel().getEntities(EntityTypeTest.forClass(FishingHook.class), _ -> true).getFirst();
-                    return hook.nibble > 0;
-                }, 1000);
-                context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            }
-            singleplayerContext.getConnection().waitForServerboundPackets();
-            context.waitTicks(10);
-        });
-    }
-
-    @TestGoal
-    private static void testNeverWearChestplates(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testNeverGoal(context, singleplayerContext, GoalIds.Easy.NEVER_WEAR_CHESTPLATES, () -> {
-            singleplayerContext.getServer().runCommand("give @a iron_chestplate");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testNeverUseShields(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testNeverGoal(context, singleplayerContext, GoalIds.Easy.NEVER_USE_SHIELDS, () -> {
-            singleplayerContext.getServer().runCommand("give @a shield");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void test3x3x3GlassCube(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy._3X3X3_GLASS_CUBE, () -> {
-            singleplayerContext.getServer().runCommand("fill 0 " + PLAYER_Y + " 1 2 " + (PLAYER_Y + 2) + " 3 glass");
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 air");
-            singleplayerContext.getServer().runCommand("setblock 1 " + (PLAYER_Y + 1) + " 2 lava");
-            singleplayerContext.getServer().runCommand("give @a glass");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testCreateSnowGolem(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.CREATE_SNOW_GOLEM, () -> {
-            singleplayerContext.getServer().runCommand("fill 0 " + PLAYER_Y + " 1 0 " + (PLAYER_Y + 1) + " 1 snow_block");
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 0 stone");
-            singleplayerContext.getServer().runCommand("give @a carved_pumpkin");
-            singleplayerContext.getServer().runCommand("tp @a 0 " + (PLAYER_Y + 1) + " 0 0 30");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testFullIronArmor(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.FULL_IRON_ARMOR, () -> {
-            singleplayerContext.getServer().runCommand("give @a iron_helmet");
-            singleplayerContext.getServer().runCommand("give @a iron_chestplate");
-            singleplayerContext.getServer().runCommand("give @a iron_leggings");
-            singleplayerContext.getServer().runCommand("give @a iron_boots");
-        });
-    }
-
-    @TestGoal
-    private static void testFillWaterCauldron(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.FILL_WATER_CAULDRON, () -> {
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 cauldron");
-            singleplayerContext.getServer().runCommand("give @a water_bucket");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testCompleteMap(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.COMPLETE_MAP, () -> {
-            singleplayerContext.getServer().runCommand("give @a map");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-            for (int x = -1; x <= 1; x++) {
-                for (int z = -1; z <= 1; z++) {
-                    singleplayerContext.getServer().runCommand("tp @a " + (x * 128) + " " + PLAYER_Y + " " + (z * 128));
-                    context.waitTicks(16);
-                }
-            }
-        });
-    }
-
-    @TestGoal
-    private static void testCompleteMapNoFill(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.COMPLETE_MAP, false, () -> {
-            singleplayerContext.getServer().runCommand("give @a map");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal(dimension = TestDimension.THE_NETHER)
-    private static void testSleepInNether(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.SLEEP_IN_NETHER, () -> {
-            try {
-                singleplayerContext.getServer().runCommand("execute in the_nether run setblock 0 128 1 obsidian");
-                singleplayerContext.getServer().runCommand("execute in the_nether run setblock 0 128 2 white_bed[part=head]");
-                singleplayerContext.getServer().runCommand("execute in the_nether run setblock 0 128 3 white_bed[part=foot]");
-                singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 20");
-                singleplayerContext.getConnection().waitForClientboundPackets();
-                context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-                singleplayerContext.getConnection().waitForServerboundPackets();
-            } finally {
-                singleplayerContext.getServer().runOnServer(_ -> singleplayerContext.getConnection().getServerPlayer().setHealth(20));
-            }
-        });
-    }
-
-    @TestGoal
-    private static void test4x4Paintings(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy._4X4_PAINTINGS, () -> {
-            singleplayerContext.getServer().runCommand("fill -10 " + PLAYER_Y + " 1 1 " + (PLAYER_Y + 3) + " 1 dirt");
-            singleplayerContext.getServer().runCommand("give @a painting 3");
-            Set<Holder<PaintingVariant>> seenPaintingVariants = new HashSet<>();
-            for (int i = 0; i < 3; i++) {
-                singleplayerContext.getServer().runCommand("tp @a " + (i * -4) + " " + PLAYER_Y + " 0");
-                for (int j = 0; j < 64; j++) {
-                    singleplayerContext.getConnection().waitForClientboundPackets();
-                    context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-                    singleplayerContext.getConnection().waitForServerboundPackets();
-                    int i_f = i;
-                    boolean shouldContinue = singleplayerContext.getServer().computeOnServer(_ -> {
-                        Painting painting = singleplayerContext.getConnection().getServerLevel().getEntities(EntityTypeTest.forClass(Painting.class), new AABB(new BlockPos(i_f * -4, PLAYER_Y, 0)), _ -> true).getFirst();
-                        if (seenPaintingVariants.add(painting.getVariant())) {
-                            return true;
-                        }
-                        painting.remove(Entity.RemovalReason.DISCARDED);
-                        return false;
-                    });
-                    if (shouldContinue) {
-                        break;
-                    }
-                    singleplayerContext.getServer().runCommand("give @a painting");
-                }
-            }
-        });
-    }
-
-    @TestGoal
-    private static void testDoubleCreeperBoat(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.DOUBLE_CREEPER_BOAT, () -> {
-            singleplayerContext.getServer().runCommand("summon oak_boat 0 " + PLAYER_Y + " 2");
-            singleplayerContext.getServer().runCommand("summon creeper 0 " + PLAYER_Y + " 2");
-            singleplayerContext.getServer().runCommand("ride @e[type=creeper,limit=1] mount @e[type=oak_boat,limit=1]");
-            singleplayerContext.getServer().runCommand("summon creeper 0 " + PLAYER_Y + " 1");
-            singleplayerContext.getServer().runCommand("ride @e[type=creeper,sort=nearest,limit=1] mount @e[type=oak_boat,limit=1]");
-            singleplayerContext.getServer().runCommand("give @a diamond_sword");
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 20 45");
-            context.waitTicks(Math.max(EntityTypes.OAK_BOAT.updateInterval(), EntityTypes.CREEPER.updateInterval()));
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.waitTicks(10);
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testVillagerTrade(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.VILLAGER_TRADE, () -> {
-            singleplayerContext.getServer().runCommand("fill -1 " + PLAYER_Y + " 1 1 " + PLAYER_Y + " 3 oak_fence");
-            singleplayerContext.getServer().runCommand("fill -1 " + (PLAYER_Y + 1) + " 3 1 " + (PLAYER_Y + 1) + " 3 oak_fence");
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 2 air");
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 3 fletching_table");
-            singleplayerContext.getServer().runCommand("summon villager 0 " + PLAYER_Y + " 2");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.waitFor(client ->
-                Objects.requireNonNull(client.level)
-                    .getEntities(EntityTypeTest.forClass(Villager.class), new AABB(new BlockPos(0, PLAYER_Y, 2)), _ -> true)
-                    .getFirst()
-                    .getVillagerData()
-                    .profession()
-                    .is(VillagerProfession.FLETCHER)
-            );
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            List<ItemStack> itemCosts = context.computeOnClient(client -> {
-                MerchantMenu menu = (MerchantMenu) Objects.requireNonNull(client.player).containerMenu;
-                MerchantOffer offer = menu.getOffers().getFirst();
-                ItemStack costB = offer.getCostB();
-                return costB.isEmpty() ? List.of(offer.getCostA()) : List.of(offer.getCostA(), costB);
-            });
-            singleplayerContext.getServer().runOnServer(_ -> {
-                ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
-                for (ItemStack itemCost : itemCosts) {
-                    player.getInventory().add(itemCost.copy());
-                }
-            });
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.runOnClient(client -> {
-                var button = (MerchantScreen.TradeOfferButton) Screens.getWidgets(Objects.requireNonNull(client.gui.screen()))
-                    .stream()
-                    .filter(widget -> widget instanceof MerchantScreen.TradeOfferButton)
-                    .findFirst()
-                    .orElseThrow();
-                button.onPress(new MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0));
-                AbstractContainerMenu menu = Objects.requireNonNull(client.player).containerMenu;
-                Slot resultSlot = menu.slots.stream().filter(slot -> slot instanceof MerchantResultSlot).findFirst().orElseThrow();
-                Objects.requireNonNull(client.gameMode).handleContainerInput(menu.containerId, resultSlot.index, InputConstants.MOUSE_BUTTON_LEFT, ContainerInput.QUICK_MOVE, client.player);
-            });
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testDifferentColoredShields(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.DIFFERENT_COLORED_SHIELDS, () -> {
-            singleplayerContext.getServer().runOnServer(_ -> {
-                ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
-                player.getInventory().add(makeShield(DyeColor.RED));
-                player.getInventory().add(makeShield(DyeColor.GREEN));
-                player.getInventory().add(makeShield(DyeColor.BLUE));
-            });
-        });
-    }
-
-    private static ItemStack makeShield(DyeColor color) {
-        ItemStack shield = new ItemStack(Items.SHIELD);
-        shield.set(DataComponents.BASE_COLOR, color);
-        return shield;
-    }
-
-    @TestGoal
-    private static void testGrowHugeMushroom(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.GROW_HUGE_MUSHROOM, () -> {
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 1 mycelium");
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 1 brown_mushroom");
-            singleplayerContext.getServer().runCommand("give @a bone_meal 64");
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 20");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().holdMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            try {
-                singleplayerContext.getServer().waitFor(_ -> !singleplayerContext.getConnection().getServerLevel().getBlockState(new BlockPos(0, PLAYER_Y + 1, 1)).is(Blocks.BROWN_MUSHROOM));
-            } finally {
-                context.getInput().releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            }
-        });
-    }
-
-    @TestGoal
-    private static void testBedRow(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.BED_ROW, () -> {
-            for (int i = 0; i < 5; i++) {
-                DyeColor color = DyeColor.VALUES.get(i);
-                singleplayerContext.getServer().runCommand("setblock " + (i + 1) + " " + PLAYER_Y + " 1 " + color.getName() + "_bed[part=head]");
-                singleplayerContext.getServer().runCommand("setblock " + (i + 1) + " " + PLAYER_Y + " 2 " + color.getName() + "_bed[part=foot]");
-            }
-            singleplayerContext.getServer().runCommand("give @a " + DyeColor.VALUES.get(5).getName() + "_bed");
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 70");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testFinishAtSpawn(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.FINISH_AT_SPAWN, () -> {
-            singleplayerContext.getServer().runCommand("setworldspawn 1000 " + PLAYER_Y + " 0");
-            singleplayerContext.getServer().runCommand("give @a compass");
-            singleplayerContext.getServer().runCommand("tp @a 1000 " + PLAYER_Y + " 0");
-            context.waitTicks(20);
-        });
-    }
-
-    @TestGoal
-    private static void testFinishAtSpawnNoCompass(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.FINISH_AT_SPAWN, false, () -> {
-            singleplayerContext.getServer().runCommand("setworldspawn 1000 " + PLAYER_Y + " 0");
-            singleplayerContext.getServer().runCommand("tp @a 1000 " + PLAYER_Y + " 0");
-            context.waitTicks(20);
-        });
-    }
-
-    @TestGoal
-    private static void testKillPassiveMobsWithOnlyFire(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.KILL_PASSIVE_MOBS_WITH_ONLY_FIRE, () -> {
-            singleplayerContext.getServer().runCommand("fill -1 " + PLAYER_Y + " 1 1 " + PLAYER_Y + " 3 glass");
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 2 lava");
-            for (int i = 0; i < 8; i++) {
-                singleplayerContext.getServer().runCommand("summon chicken 0 " + PLAYER_Y + " 2");
-            }
-            singleplayerContext.getServer().waitFor(_ -> singleplayerContext.getConnection().getServerLevel().getEntities(EntityTypes.CHICKEN, new AABB(0, PLAYER_Y, 2, 1, PLAYER_Y + 2, 3), _ -> true).isEmpty());
-        });
-    }
-
-    @TestGoal
-    private static void testKillPassiveMobsWithOnlyFireFailed(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.KILL_PASSIVE_MOBS_WITH_ONLY_FIRE, false, () -> {
-            singleplayerContext.getServer().runCommand("fill -1 " + PLAYER_Y + " 1 1 " + (PLAYER_Y + 1) + " 3 glass");
-            singleplayerContext.getServer().runCommand("fill 0 " + PLAYER_Y + " 2 0 " + (PLAYER_Y + 1) + " 2 air");
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s 0 " + (PLAYER_Y + 2) + " 1 0 70");
-            int requiredAmount = singleplayerContext.getServer().computeOnServer(server -> Objects.requireNonNull(((MinecraftServerExt) server).bingo$getGame()).getBoard().getGoals()[0].requiredCount());
-            for (int i = 0; i < requiredAmount; i++) {
-                singleplayerContext.getServer().runCommand("summon cow 0 " + PLAYER_Y + " 2");
-            }
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 2 lava");
-            singleplayerContext.getServer().waitFor(_ -> singleplayerContext.getConnection().getServerLevel().getEntities(EntityTypes.COW, new AABB(0, PLAYER_Y, 2, 1, PLAYER_Y + 2, 3), _ -> true).isEmpty());
-        });
-    }
-
-    @TestGoal
-    private static void testWearDifferentColoredArmor(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.WEAR_DIFFERENT_COLORED_ARMOR, () -> {
-            singleplayerContext.getServer().runOnServer(_ -> {
-                ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
-                player.getInventory().setItem(EquipmentSlot.HEAD.getIndex(Inventory.INVENTORY_SIZE), makeColoredArmor(Items.LEATHER_HELMET, 0xff0000));
-                player.getInventory().setItem(EquipmentSlot.CHEST.getIndex(Inventory.INVENTORY_SIZE), makeColoredArmor(Items.LEATHER_CHESTPLATE, 0x00ff00));
-                player.getInventory().setItem(EquipmentSlot.LEGS.getIndex(Inventory.INVENTORY_SIZE), makeColoredArmor(Items.LEATHER_LEGGINGS, 0x0000ff));
-                player.getInventory().add(new ItemStack(Items.LEATHER_BOOTS));
-            });
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testWearDifferentColoredArmorNotWearing(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.WEAR_DIFFERENT_COLORED_ARMOR, false, () -> {
-            singleplayerContext.getServer().runOnServer(_ -> {
-                ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
-                player.getInventory().setItem(EquipmentSlot.HEAD.getIndex(Inventory.INVENTORY_SIZE), makeColoredArmor(Items.LEATHER_HELMET, 0xff0000));
-                player.getInventory().setItem(EquipmentSlot.CHEST.getIndex(Inventory.INVENTORY_SIZE), makeColoredArmor(Items.LEATHER_CHESTPLATE, 0x00ff00));
-                player.getInventory().setItem(EquipmentSlot.LEGS.getIndex(Inventory.INVENTORY_SIZE), makeColoredArmor(Items.LEATHER_LEGGINGS, 0x0000ff));
-                player.getInventory().add(new ItemStack(Items.LEATHER_BOOTS));
-            });
-        });
-    }
-
-    @TestGoal
-    private static void testWearDifferentColoredArmorSameColor(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.WEAR_DIFFERENT_COLORED_ARMOR, false, () -> {
-            singleplayerContext.getServer().runOnServer(_ -> {
-                ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
-                player.getInventory().setItem(EquipmentSlot.HEAD.getIndex(Inventory.INVENTORY_SIZE), makeColoredArmor(Items.LEATHER_HELMET, 0xff0000));
-                player.getInventory().setItem(EquipmentSlot.CHEST.getIndex(Inventory.INVENTORY_SIZE), makeColoredArmor(Items.LEATHER_CHESTPLATE, 0xff0000));
-                player.getInventory().setItem(EquipmentSlot.LEGS.getIndex(Inventory.INVENTORY_SIZE), makeColoredArmor(Items.LEATHER_LEGGINGS, 0xff0000));
-                player.getInventory().setItem(EquipmentSlot.FEET.getIndex(Inventory.INVENTORY_SIZE), makeColoredArmor(Items.LEATHER_BOOTS, 0xff0000));
-            });
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    private static ItemStack makeColoredArmor(Item item, int rgb) {
-        ItemStack armor = new ItemStack(item);
-        armor.set(DataComponents.DYED_COLOR, new DyedItemColor(rgb));
-        return armor;
-    }
-
-    @TestGoal
-    private static void testNeverUseBoat(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testNeverGoal( context, singleplayerContext, GoalIds.Easy.NEVER_USE_BOAT, () -> {
-            singleplayerContext.getServer().runCommand("summon oak_boat 0 " + PLAYER_Y + " 1");
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 45");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal(dimension = TestDimension.THE_NETHER)
-    private static void testPlaceFishInNether(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.PLACE_FISH_IN_NETHER, () -> {
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 90");
-            singleplayerContext.getServer().runCommand("give @a salmon_bucket");
-            singleplayerContext.getConnection().waitForClientboundPackets();
-            context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
-            singleplayerContext.getConnection().waitForServerboundPackets();
-        });
-    }
-
-    @TestGoal
-    private static void testDrownZombie(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Easy.DROWN_ZOMBIE, () -> {
-            singleplayerContext.getServer().runCommand("fill -1 " + PLAYER_Y + " 1 1 " + (PLAYER_Y + 1) + " 3 glass");
-            singleplayerContext.getServer().runCommand("fill 0 " + PLAYER_Y + " 2 0 " + (PLAYER_Y + 1) + " 2 water");
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s 0 " + (PLAYER_Y + 2) + " 1");
-            Zombie zombie = singleplayerContext.getServer().computeOnServer(server -> {
-                Zombie z = new Zombie(server.overworld());
-                z.snapTo(Vec3.atBottomCenterOf(new BlockPos(0, PLAYER_Y, 2)));
-                server.overworld().addFreshEntity(z);
-                return z;
-            });
-            singleplayerContext.getServer().waitFor(_ -> zombie.getTarget() != null);
-            singleplayerContext.getServer().runOnServer(_ -> zombie.setInWaterTime(599)); // elapse the timer till the conversion
-            context.waitTick(); // needs a tick to start converting
-            singleplayerContext.getServer().runOnServer(_ -> {
-                if (!zombie.isUnderWaterConverting()) {
-                    throw new IllegalStateException("Zombie is not under water converting");
-                }
-                zombie.setConversionTime(0); // set the conversion timer straight down to zero
-            });
-            context.waitTick(); // finish the conversion
-        });
-    }
-
-    // TODO: test medium, hard, and very goals
-
-    @TestGoal
-    private static void testLaunchedByGeyser(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
-        testGoal(context, singleplayerContext, GoalIds.Medium.LAUNCHED_BY_GEYSER, () -> {
-            singleplayerContext.getServer().runCommand("execute as @a at @s run tp @s 0 " + (PLAYER_Y + 3) + " 0");
-            singleplayerContext.getServer().runCommand("setblock 0 " + PLAYER_Y + " 0 lava");
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 1) + " 0 potent_sulfur[potent_sulfur_state=continuous]");
-            singleplayerContext.getServer().runCommand("setblock 0 " + (PLAYER_Y + 2) + " 0 water");
-            context.waitTicks(20);
-        });
-    }
-
-    private static void testGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Identifier goalId, Runnable testRunner) {
+    static void testGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Identifier goalId, Runnable testRunner) {
         testGoal(context, singleplayerContext, goalId, true, testRunner);
     }
 
-    private static void testGoal(
+    static void testGoal(
         ClientGameTestContext context,
         TestSingleplayerContext singleplayerContext,
         Identifier goalId,
@@ -833,13 +186,23 @@ public class BingoClientGameTest implements FabricClientGameTest {
 
         context.waitTick();
         if (expectGoalAchievement != null) {
-            testFailed |= singleplayerContext.getServer().computeOnServer(server -> (((MinecraftServerExt) server).bingo$getGame() == null) != expectGoalAchievement);
+            testFailed |= isGameOver(singleplayerContext) != expectGoalAchievement;
         }
 
         reportTestResult(context, goalId, testFailed);
     }
 
-    private static void testNeverGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Identifier goalId, Runnable testRunner) {
+    static void testNeverGoal(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Identifier goalId, Runnable testRunner) {
+        testNeverGoal(context, singleplayerContext, goalId, true, testRunner);
+    }
+
+    static void testNeverGoal(
+        ClientGameTestContext context,
+        TestSingleplayerContext singleplayerContext,
+        Identifier goalId,
+        boolean expectGoalFailure,
+        Runnable testRunner
+    ) {
         commonSetup(context, singleplayerContext);
         singleplayerContext.getServer().runCommand("bingo start --require-goal " + goalId + " --size 2 red");
         context.waitTick();
@@ -855,7 +218,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
         context.waitTick();
         testFailed |= singleplayerContext.getServer().computeOnServer(server -> {
             BingoGame game = Objects.requireNonNull(((MinecraftServerExt) server).bingo$getGame());
-            return Arrays.stream(game.getBoard().getStates()).anyMatch(BingoBoard.Teams::any);
+            return Arrays.stream(game.getBoard().getStates()).anyMatch(BingoBoard.Teams::any) == expectGoalFailure;
         });
 
         reportTestResult(context, goalId, testFailed);
@@ -864,23 +227,70 @@ public class BingoClientGameTest implements FabricClientGameTest {
     private static void commonSetup(ClientGameTestContext context, TestSingleplayerContext singleplayerContext) {
         TestGoal testAnnotation = getCallingTest().getAnnotation(TestGoal.class);
         TestDimension dimension = testAnnotation.dimension();
-        String dimensionName = dimension.name().toLowerCase(Locale.ROOT);
-
+        // The player is invulnerable after respawning (e.g. from a previous test) until the client has loaded
+        singleplayerContext.getServer().waitFor(_ -> singleplayerContext.getConnection().getServerPlayer().connection.hasClientLoaded());
         context.runOnClient(client -> Objects.requireNonNull(client.player).setDeltaMovement(Vec3.ZERO));
-        singleplayerContext.getServer().runCommand("execute in " + dimensionName + " run tp @a " + dimension.spawnPos.getX() + " " + dimension.spawnPos.getY() + " " + dimension.spawnPos.getZ() + " 0 0");
+        singleplayerContext.getServer().runOnServer(server -> {
+            ServerLevel level = Objects.requireNonNull(server.getLevel(dimension.key));
+            teleport(level, singleplayerContext.getConnection().getServerPlayer(), Vec3.atBottomCenterOf(dimension.spawnPos), 0, 0);
+        });
         singleplayerContext.getConnection().waitForClientboundPackets();
         singleplayerContext.getConnection().waitForChunksDownload();
-        singleplayerContext.getServer().runCommand("clear @a");
-        singleplayerContext.getServer().runCommand("execute in " + dimensionName + " run fill " + (dimension.spawnPos.getX() - 16) + " " + dimension.spawnPos.getY() + " " + (dimension.spawnPos.getZ() - 16) + " " + (dimension.spawnPos.getX() + 16) + " " + (dimension.spawnPos.getY() + 16) + " " + (dimension.spawnPos.getZ() + 16) + " air");
+        clearInventory(singleplayerContext);
         singleplayerContext.getServer().runOnServer(server -> {
-            for (Entity entity : Objects.requireNonNull(server.getLevel(dimension.key)).getAllEntities()) {
-                // idk why entity can be null here, but it can
-                if (entity != null && !(entity instanceof Player)) {
+            ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
+            if (player.containerMenu != player.inventoryMenu) {
+                player.closeContainer();
+            }
+            player.removeAllEffects();
+            player.setHealth(player.getMaxHealth());
+            player.getFoodData().setFoodLevel(20);
+            player.setAirSupply(player.getMaxAirSupply());
+            player.clearFire();
+            player.setExperienceLevels(0);
+
+            ServerLevel level = Objects.requireNonNull(server.getLevel(dimension.key));
+            fill(level, dimension.spawnPos.offset(-16, 0, -16), dimension.spawnPos.offset(16, 16, 16), Blocks.AIR.defaultBlockState());
+            if (dimension == TestDimension.OVERWORLD) {
+                // Restore the top of the superflat layers, in case a test modified them
+                restoreGround(level, new BlockPos(-16, PLAYER_Y - 8, -16), new BlockPos(16, GRASS_Y, 16));
+                level.dimensionType().defaultClock().ifPresent(clock -> server.clockManager().moveToTimeMarker(clock, ClockTimeMarkers.DAY));
+            }
+            // Copy the entities first, since removing them while iterating breaks the iterator
+            List<Entity> entities = new ArrayList<>();
+            level.getAllEntities().forEach(entities::add);
+            for (Entity entity : entities) {
+                if (!(entity instanceof Player)) {
                     entity.remove(Entity.RemovalReason.DISCARDED);
                 }
             }
         });
         singleplayerContext.getConnection().waitForClientboundPackets();
+    }
+
+    // Restores the superflat layers in the given area
+    static void restoreGround(ServerLevel level, BlockPos from, BlockPos to) {
+        int minY = Math.min(from.getY(), to.getY());
+        int maxY = Math.max(from.getY(), to.getY());
+        for (int y = minY; y <= maxY; y++) {
+            BlockState state;
+            if (y == BEDROCK_Y) {
+                state = Blocks.BEDROCK.defaultBlockState();
+            } else if (y < GRASS_Y - DIRT_DEPTH) {
+                state = Blocks.STONE.defaultBlockState();
+            } else if (y < GRASS_Y) {
+                state = Blocks.DIRT.defaultBlockState();
+            } else if (y == GRASS_Y) {
+                state = Blocks.GRASS_BLOCK.defaultBlockState();
+            } else {
+                state = Blocks.AIR.defaultBlockState();
+            }
+            fill(level, from.atY(y), to.atY(y), state);
+        }
+    }
+
+    static void restoreGround(TestSingleplayerContext singleplayerContext, BlockPos from, BlockPos to) {
+        singleplayerContext.getServer().runOnServer(_ -> restoreGround(singleplayerContext.getConnection().getServerLevel(), from, to));
     }
 
     private static void reportTestResult(ClientGameTestContext context, Identifier goalId, boolean testFailed) {
@@ -894,16 +304,249 @@ public class BingoClientGameTest implements FabricClientGameTest {
         }
     }
 
-    private static GoalProgress getGoalProgress(TestSingleplayerContext singleplayerContext) {
+    static GoalProgress getGoalProgress(TestSingleplayerContext singleplayerContext) {
         return singleplayerContext.getServer().computeOnServer(server -> {
             BingoGame game = Objects.requireNonNull(((MinecraftServerExt) server).bingo$getGame());
             return Objects.requireNonNull(game.getGoalProgress(singleplayerContext.getConnection().getServerPlayer(), game.getBoard().getGoals()[0]));
         });
     }
 
+    // Reads a number from the goal's displayed name, e.g. the width in "Activate a 4x5 Nether Portal"
+    static int getGoalNameIntArg(TestSingleplayerContext singleplayerContext, int index) {
+        Component name = singleplayerContext.getServer().computeOnServer(server ->
+            Objects.requireNonNull(((MinecraftServerExt) server).bingo$getGame()).getBoard().getGoals()[0].name()
+        );
+        Object arg = ((TranslatableContents) name.getContents()).getArgs()[index];
+        return arg instanceof Number number ? number.intValue() : Integer.parseInt(arg instanceof Component component ? component.getString() : arg.toString());
+    }
+
+    static boolean isGameOver(TestSingleplayerContext singleplayerContext) {
+        return singleplayerContext.getServer().computeOnServer(server -> ((MinecraftServerExt) server).bingo$getGame() == null);
+    }
+
+    static void waitForGameEnd(TestSingleplayerContext singleplayerContext, int timeout) {
+        singleplayerContext.getServer().waitFor(server -> ((MinecraftServerExt) server).bingo$getGame() == null, timeout);
+    }
+
+    static ItemStack enchantedItem(TestSingleplayerContext singleplayerContext, Item item, ResourceKey<Enchantment> enchantment, int level) {
+        return singleplayerContext.getServer().computeOnServer(server -> {
+            ItemStack stack = new ItemStack(item);
+            stack.enchant(server.registryAccess().getOrThrow(enchantment), level);
+            return stack;
+        });
+    }
+
+    static void setHealth(TestSingleplayerContext singleplayerContext, float health) {
+        singleplayerContext.getServer().runOnServer(_ -> singleplayerContext.getConnection().getServerPlayer().setHealth(health));
+    }
+
+    static void equip(TestSingleplayerContext singleplayerContext, EquipmentSlot slot, ItemStack stack) {
+        singleplayerContext.getServer().runOnServer(_ -> singleplayerContext.getConnection().getServerPlayer().setItemSlot(slot, stack));
+    }
+
+    static void dropItem(TestSingleplayerContext singleplayerContext, ItemStack stack, BlockPos pos) {
+        singleplayerContext.getServer().runOnServer(_ -> {
+            ServerLevel level = singleplayerContext.getConnection().getServerLevel();
+            Vec3 vec = Vec3.atBottomCenterOf(pos);
+            level.addFreshEntity(new ItemEntity(level, vec.x, vec.y, vec.z, stack));
+        });
+    }
+
+    // Waits for an item of the given type to be dropped, then moves the player to it to pick it up
+    static void pickUpDroppedItem(ClientGameTestContext context, TestSingleplayerContext singleplayerContext, Item item) {
+        singleplayerContext.getServer().waitFor(_ -> !singleplayerContext.getConnection().getServerLevel().getEntities(EntityTypes.ITEM, e -> e.getItem().is(item)).isEmpty(), 20);
+        singleplayerContext.getServer().runOnServer(_ -> {
+            ServerLevel level = singleplayerContext.getConnection().getServerLevel();
+            ItemEntity itemEntity = level.getEntities(EntityTypes.ITEM, e -> e.getItem().is(item)).getFirst();
+            teleport(level, singleplayerContext.getConnection().getServerPlayer(), itemEntity.position(), 0, 0);
+        });
+        singleplayerContext.getServer().waitFor(_ -> singleplayerContext.getConnection().getServerPlayer().getInventory().contains(stack -> stack.is(item)), 100);
+        context.waitTick();
+    }
+
+    static void give(TestSingleplayerContext singleplayerContext, ItemLike item) {
+        give(singleplayerContext, item, 1);
+    }
+
+    static void give(TestSingleplayerContext singleplayerContext, ItemLike item, int count) {
+        give(singleplayerContext, new ItemStack(item, count));
+    }
+
+    static void give(TestSingleplayerContext singleplayerContext, ItemStack stack) {
+        singleplayerContext.getServer().runOnServer(_ -> {
+            ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
+            int remaining = stack.getCount();
+            while (remaining > 0) {
+                int size = Math.min(stack.getMaxStackSize(), remaining);
+                remaining -= size;
+                ItemStack toAdd = stack.copyWithCount(size);
+                if (!player.getInventory().add(toAdd) || !toAdd.isEmpty()) {
+                    throw new IllegalStateException("Not enough inventory space to give " + stack);
+                }
+            }
+            player.containerMenu.broadcastChanges();
+        });
+    }
+
+    static void clearInventory(TestSingleplayerContext singleplayerContext) {
+        singleplayerContext.getServer().runOnServer(_ -> {
+            ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
+            player.getInventory().clearOrCountMatchingItems(_ -> true, false, -1, player.inventoryMenu.getCraftSlots());
+            player.containerMenu.broadcastChanges();
+            player.inventoryMenu.slotsChanged(player.getInventory());
+        });
+    }
+
+    static void setBlock(TestSingleplayerContext singleplayerContext, BlockPos pos, Block block) {
+        setBlock(singleplayerContext, pos, block.defaultBlockState());
+    }
+
+    static void setBlock(TestSingleplayerContext singleplayerContext, BlockPos pos, BlockState state) {
+        fill(singleplayerContext, pos, pos, state);
+    }
+
+    static void fill(TestSingleplayerContext singleplayerContext, BlockPos from, BlockPos to, Block block) {
+        fill(singleplayerContext, from, to, block.defaultBlockState());
+    }
+
+    static void fill(TestSingleplayerContext singleplayerContext, BlockPos from, BlockPos to, BlockState state) {
+        singleplayerContext.getServer().runOnServer(_ -> fill(singleplayerContext.getConnection().getServerLevel(), from, to, state));
+    }
+
+    // Same block update behavior as /fill and /setblock
+    static void fill(ServerLevel level, BlockPos from, BlockPos to, BlockState state) {
+        record UpdatedPosition(BlockPos pos, BlockState oldState) {
+        }
+
+        List<UpdatedPosition> updatedPositions = new ArrayList<>();
+        for (BlockPos pos : BlockPos.betweenClosed(from, to)) {
+            BlockState oldState = level.getBlockState(pos);
+            if (level.setBlock(pos, state, Block.UPDATE_CLIENTS | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS)) {
+                updatedPositions.add(new UpdatedPosition(pos.immutable(), oldState));
+            }
+        }
+        for (UpdatedPosition updatedPosition : updatedPositions) {
+            level.updateNeighboursOnBlockSet(updatedPosition.pos, updatedPosition.oldState);
+        }
+    }
+
+    static void placeBed(TestSingleplayerContext singleplayerContext, BlockPos headPos, Block bed) {
+        BlockState footState = bed.defaultBlockState();
+        Direction facing = footState.getValue(BedBlock.FACING);
+        setBlock(singleplayerContext, headPos, footState.setValue(BedBlock.PART, BedPart.HEAD));
+        setBlock(singleplayerContext, headPos.relative(facing.getOpposite()), footState);
+    }
+
+    static <T extends Entity> T summon(TestSingleplayerContext singleplayerContext, EntityType<T> type, BlockPos pos) {
+        return singleplayerContext.getServer().computeOnServer(_ -> {
+            ServerLevel level = singleplayerContext.getConnection().getServerLevel();
+            T entity = Objects.requireNonNull(type.create(level, EntitySpawnReason.COMMAND), () -> "Failed to create " + type);
+            entity.snapTo(Vec3.atBottomCenterOf(pos), entity.getYRot(), entity.getXRot());
+            if (entity instanceof Mob mob) {
+                mob.finalizeSpawn(level, level.getCurrentDifficultyAt(entity.blockPosition()), EntitySpawnReason.COMMAND, null);
+            }
+            if (!level.tryAddFreshEntityWithPassengers(entity)) {
+                throw new IllegalStateException("Failed to add " + entity + " to the level");
+            }
+            return entity;
+        });
+    }
+
+    static void ride(TestSingleplayerContext singleplayerContext, Entity passenger, Entity vehicle) {
+        singleplayerContext.getServer().runOnServer(_ -> {
+            if (!passenger.startRiding(vehicle, true, true)) {
+                throw new IllegalStateException("Failed to make " + passenger + " ride " + vehicle);
+            }
+        });
+    }
+
+    static void mount(TestSingleplayerContext singleplayerContext, Entity vehicle) {
+        ride(singleplayerContext, singleplayerContext.getServer().computeOnServer(_ -> singleplayerContext.getConnection().getServerPlayer()), vehicle);
+    }
+
+    static void damageByPlayer(TestSingleplayerContext singleplayerContext, Entity target, float amount) {
+        singleplayerContext.getServer().runOnServer(_ -> {
+            ServerLevel level = singleplayerContext.getConnection().getServerLevel();
+            target.hurtServer(level, level.damageSources().playerAttack(singleplayerContext.getConnection().getServerPlayer()), amount);
+        });
+    }
+
+    static void teleport(TestSingleplayerContext singleplayerContext, BlockPos pos) {
+        singleplayerContext.getServer().runOnServer(_ -> {
+            ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
+            teleport(player.level(), player, Vec3.atBottomCenterOf(pos), player.getYRot(), player.getXRot());
+        });
+    }
+
+    static void teleport(TestSingleplayerContext singleplayerContext, BlockPos pos, float yRot, float xRot) {
+        singleplayerContext.getServer().runOnServer(_ -> {
+            ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
+            teleport(player.level(), player, Vec3.atBottomCenterOf(pos), yRot, xRot);
+        });
+    }
+
+    static void teleport(TestSingleplayerContext singleplayerContext, Entity entity, BlockPos pos) {
+        singleplayerContext.getServer().runOnServer(_ -> teleport((ServerLevel) entity.level(), entity, Vec3.atBottomCenterOf(pos), entity.getYRot(), entity.getXRot()));
+    }
+
+    static void rotate(TestSingleplayerContext singleplayerContext, float yRot, float xRot) {
+        singleplayerContext.getServer().runOnServer(_ -> {
+            ServerPlayer player = singleplayerContext.getConnection().getServerPlayer();
+            teleport(player.level(), player, player.position(), yRot, xRot);
+        });
+    }
+
+    static void teleport(ServerLevel level, Entity entity, Vec3 pos, float yRot, float xRot) {
+        if (!entity.teleportTo(level, pos.x, pos.y, pos.z, Set.of(), Mth.wrapDegrees(yRot), Mth.wrapDegrees(xRot), true)) {
+            throw new IllegalStateException("Failed to teleport " + entity);
+        }
+    }
+
+    static void addEffect(TestSingleplayerContext singleplayerContext, Holder<MobEffect> effect, int amplifier) {
+        singleplayerContext.getServer().runOnServer(_ ->
+            singleplayerContext.getConnection().getServerPlayer().addEffect(new MobEffectInstance(effect, MobEffectInstance.INFINITE_DURATION, amplifier))
+        );
+    }
+
+    static void setTime(TestSingleplayerContext singleplayerContext, ResourceKey<ClockTimeMarker> timeMarker) {
+        singleplayerContext.getServer().runOnServer(server -> {
+            Holder<WorldClock> clock = singleplayerContext.getConnection().getServerLevel().dimensionType().defaultClock().orElseThrow();
+            server.clockManager().moveToTimeMarker(clock, timeMarker);
+        });
+    }
+
+    static void setWorldSpawn(TestSingleplayerContext singleplayerContext, BlockPos pos) {
+        singleplayerContext.getServer().runOnServer(_ -> {
+            ServerLevel level = singleplayerContext.getConnection().getServerLevel();
+            level.setRespawnData(LevelData.RespawnData.of(level.dimension(), pos, 0, 0));
+        });
+    }
+
+    static void resetRandomSequence(TestSingleplayerContext singleplayerContext, Identifier sequence, int salt, boolean includeWorldSeed) {
+        singleplayerContext.getServer().runOnServer(server ->
+            server.getRandomSequences().reset(sequence, singleplayerContext.getConnection().getServerLevel().getSeed(), salt, includeWorldSeed, true)
+        );
+    }
+
     @Override
     public void runTest(ClientGameTestContext context) {
-        Consumer<WorldCreationUiState> settingsAdjustor = settings -> settings.getGameRules().set(GameRules.RANDOM_TICK_SPEED, 0, null);
+        context.runOnClient(client -> client.options.getSoundSourceOptionInstance(SoundSource.MASTER).set(0.0));
+
+        Consumer<WorldCreationUiState> settingsAdjustor = settings -> {
+            settings.getGameRules().set(GameRules.RANDOM_TICK_SPEED, 0, null);
+            settings.getGameRules().set(GameRules.IMMEDIATE_RESPAWN, true, null);
+            settings.updateDimensions((registryAccess, dimensions) -> {
+                FlatLevelGeneratorSettings flatSettings = ((FlatLevelSource) dimensions.overworld()).settings();
+                List<FlatLayerInfo> layers = List.of(
+                    new FlatLayerInfo(1, Blocks.BEDROCK),
+                    new FlatLayerInfo(GRASS_Y - DIRT_DEPTH - BEDROCK_Y - 1, Blocks.STONE),
+                    new FlatLayerInfo(DIRT_DEPTH, Blocks.DIRT),
+                    new FlatLayerInfo(1, Blocks.GRASS_BLOCK)
+                );
+                FlatLevelGeneratorSettings newSettings = flatSettings.withBiomeAndLayers(layers, flatSettings.structureOverrides(), flatSettings.getBiome());
+                return dimensions.replaceOverworldGenerator(registryAccess, new FlatLevelSource(newSettings));
+            });
+        };
         try (TestSingleplayerContext singleplayerContext = context.worldBuilder().adjustSettings(settingsAdjustor).create()) {
             singleplayerContext.getServer().runCommand("bingo teams create red");
             singleplayerContext.getServer().runCommand("bingo teams randomize");
@@ -913,7 +556,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
             Map<TestDimension, List<Method>> testMethods = new EnumMap<>(TestDimension.class);
             boolean seenOnlyMe = false;
 
-            for (Method method : getClass().getDeclaredMethods()) {
+            for (Method method : TEST_CLASSES.stream().flatMap(clazz -> Arrays.stream(clazz.getDeclaredMethods())).toList()) {
                 if (method.isAnnotationPresent(TestGoal.class)) {
                     if (!Modifier.isStatic(method.getModifiers())) {
                         throw new IllegalStateException("Goal test methods must be static");
@@ -949,6 +592,7 @@ public class BingoClientGameTest implements FabricClientGameTest {
                         }
                     }
                     try {
+                        method.setAccessible(true);
                         method.invoke(null, args);
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
@@ -979,12 +623,12 @@ public class BingoClientGameTest implements FabricClientGameTest {
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
-    private @interface TestGoal {
+    @interface TestGoal {
         boolean onlyMe() default false;
         TestDimension dimension() default TestDimension.OVERWORLD;
     }
 
-    private enum TestDimension {
+    enum TestDimension {
         OVERWORLD(Level.OVERWORLD, 0, PLAYER_Y, 0),
         THE_NETHER(Level.NETHER, 0, 128, 0),
         THE_END(Level.END, 100, 50, 0);

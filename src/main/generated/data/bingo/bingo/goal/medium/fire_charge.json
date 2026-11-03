@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "count": 6,
+            "count": {
+              "min": 6
+            },
             "items": "minecraft:fire_charge"
           }
         ]

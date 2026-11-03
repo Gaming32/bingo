@@ -365,6 +365,23 @@ public class HardGoalProvider extends DifficultyGoalProvider {
         addGoal(obtainItemGoal(PRISMARINE_SHARD, items, Items.PRISMARINE_SHARD, 2, 10)
             .infrequency(2)
             .tags(BingoTags.OCEAN, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(POPLAR_LOG, items, Items.POPLAR_LOG, 16, 32)
+            .infrequency(4)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(POPLAR_WOOD, items, Items.POPLAR_WOOD, 11, 20)
+            .infrequency(4)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(STRIPPED_POPLAR_WOOD, items, Items.STRIPPED_POPLAR_WOOD, 11, 20)
+            .reactant("axe_use")
+            .infrequency(4)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
+        addGoal(obtainItemGoal(STRIPPED_POPLAR_LOG, items, Items.STRIPPED_POPLAR_LOG, 11, 20)
+            .reactant("axe_use")
+            .infrequency(4)
+            .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));
+        addGoal(obtainSomeItemsFromTag(DIFFERENT_EXPLORER_MAPS, BingoItemTags.EXPLORER_MAPS, "bingo.goal.different_explorer_maps", 2, 3)
+            .antisynergy("explorer_maps")
+            .tags(BingoTags.OVERWORLD));
         addGoal(obtainItemGoal(JUNGLE_LOG, items, Items.JUNGLE_LOG, 16, 32)
             .infrequency(4)
             .tags(BingoTags.RARE_BIOME, BingoTags.OVERWORLD));

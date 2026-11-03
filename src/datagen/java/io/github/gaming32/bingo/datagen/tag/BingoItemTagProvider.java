@@ -125,6 +125,12 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
             BlockItemIds.DEAD_TUBE_CORAL_BLOCK.item()
         );
 
+        builder(BingoItemTags.POPLAR_LEAVES).add(
+            BlockItemIds.RED_POPLAR_LEAVES.item(),
+            BlockItemIds.ORANGE_POPLAR_LEAVES.item(),
+            BlockItemIds.YELLOW_POPLAR_LEAVES.item()
+        );
+
         final var fishBucketsBuilder = builder(BingoItemTags.FISH_BUCKETS);
 
         final var trimTemplatesBuilder = builder(BingoItemTags.TRIM_TEMPLATES);
@@ -138,6 +144,7 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
             registries::lookupOrThrow
         );
         final var vanillaSaplings = BingoDataGenUtil.loadVanillaTag(ItemTags.SAPLINGS, registries::lookupOrThrow);
+        final var vanillaClonableMaps = BingoDataGenUtil.loadVanillaTag(ItemTags.CLONABLE_MAPS, registries::lookupOrThrow);
 
         var goldInNameBuilder = builder(BingoItemTags.GOLD_IN_NAME);
         var copperInNameBuilder = builder(BingoItemTags.COPPER_IN_NAME);
@@ -152,6 +159,7 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
             .forceAddTag(ItemTags.VILLAGER_PLANTABLE_SEEDS)
             .forceAddTag(ItemTags.SAPLINGS);
         var nautilusArmorBuilder = builder(BingoItemTags.NAUTILUS_ARMOR);
+        var explorerMapsBuilder = builder(BingoItemTags.EXPLORER_MAPS);
         Pattern goldPattern = Pattern.compile("\\bGold(?:en)?\\b");
         Pattern copperPattern = Pattern.compile("\\bCopper\\b");
         Pattern diamondPattern = Pattern.compile("\\bDiamond\\b");
@@ -159,6 +167,9 @@ public class BingoItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
             String id = item.key().identifier().getPath();
             if (id.endsWith("_nautilus_armor")) {
                 nautilusArmorBuilder.add(item.key());
+            }
+            if (vanillaClonableMaps.contains(item) && item.value() != Items.FILLED_MAP) {
+                explorerMapsBuilder.add(item.key());
             }
 
             String itemName = Component.translatable(item.value().getDescriptionId()).getString();

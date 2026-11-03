@@ -2,6 +2,7 @@ package io.github.gaming32.bingo.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.gaming32.bingo.conditions.BingoContextKeySets;
 import net.minecraft.advancements.predicates.DamageSourcePredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
@@ -29,8 +30,8 @@ public class EntityKilledPlayerTrigger extends SimpleCriterionTrigger<EntityKill
         DamageSource source
     ) {
         final LootContext creditedEntityContext = EntityPredicate.createContext(player, creditedEntity);
-        final LootContext directEntityContext = EntityPredicate.createContext(player, source.getDirectEntity());
-        final LootContext sourceEntityContext = EntityPredicate.createContext(player, source.getEntity());
+        final LootContext directEntityContext = BingoContextKeySets.wrapOptionalEntity(player, source.getDirectEntity());
+        final LootContext sourceEntityContext = BingoContextKeySets.wrapOptionalEntity(player, source.getEntity());
         trigger(player, instance -> instance.matches(player, creditedEntityContext, directEntityContext, sourceEntityContext, source));
     }
 

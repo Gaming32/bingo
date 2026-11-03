@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "count": 3,
+            "count": {
+              "min": 3
+            },
             "items": "minecraft:honeycomb_block"
           }
         ]
