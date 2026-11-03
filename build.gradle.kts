@@ -58,6 +58,7 @@ dependencies {
     libs.bundles.nightconfig.get().forEach {
         include(implementation(it)!!)
     }
+    include(implementation(libs.openskill.get())!!)
     implementation(libs.fabric.loader)
     implementation(libs.fabric.api)
     implementation(libs.modmenu) {

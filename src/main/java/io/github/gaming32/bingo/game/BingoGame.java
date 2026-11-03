@@ -1,8 +1,14 @@
 package io.github.gaming32.bingo.game;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.pocketcombats.openskill.data.SimpleMatchMakingRating;
+import com.pocketcombats.openskill.data.SimplePlayerResult;
+import com.pocketcombats.openskill.data.SimpleTeamResult;
+import com.pocketcombats.openskill.data.TeamResult;
 import io.github.gaming32.bingo.Bingo;
 import io.github.gaming32.bingo.data.BingoTag;
 import io.github.gaming32.bingo.ext.MinecraftServerExt;
@@ -17,6 +23,8 @@ import io.github.gaming32.bingo.network.messages.s2c.SyncTeamPayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateEndTimePayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateProgressPayload;
 import io.github.gaming32.bingo.network.messages.s2c.UpdateStatePayload;
+import io.github.gaming32.bingo.rating.BingoRatingEngine;
+import io.github.gaming32.bingo.rating.BingoRatings;
 import io.github.gaming32.bingo.triggers.progress.ProgressibleTrigger;
 import io.github.gaming32.bingo.util.BingoCodecs;
 import io.github.gaming32.bingo.util.BingoUtil;
@@ -30,6 +38,19 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.OptionalLong;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.advancements.AdvancementHolder;
@@ -61,17 +82,6 @@ import net.minecraft.world.scores.Scoreboard;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalLong;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Function;
-
 public class BingoGame {
     public static final Component REQUIRED_CLIENT_KICK = Component.literal(
         "This bingo game requires the Bingo mod to be installed on the client. Please install it before joining."
@@ -82,6 +92,7 @@ public class BingoGame {
     private final BingoGameMode gameMode;
     private final boolean requireClient;
     private final boolean continueAfterWin;
+    private final boolean rated;
     private final int autoForfeitTicks;
     private final PlayerTeam[] teams;
     private long scheduledEndTime;
@@ -94,21 +105,39 @@ public class BingoGame {
     private final Map<UUID, Object2IntMap<Stat<?>>> baseStats = new HashMap<>();
     private final ServerBossEvent vanillaRemainingTime = new ServerBossEvent(Mth.createInsecureUUID(this.random), Bingo.translatable("bingo.remaining_time"), BossEvent.BossBarColor.WHITE, BossEvent.BossBarOverlay.PROGRESS);
     private final OptionalLong[] lastActiveTimes;
+    private final Set<UUID>[] historicallyActiveMembers;
+    private final List<BingoBoard.Teams> ranks = new ArrayList<>();
+    private final List<BingoBoard.Teams> forfeitedTeams = new ArrayList<>();
     private BingoBoard.Teams remainingTeams;
     private BingoBoard.Teams winningTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams finishedTeams = BingoBoard.Teams.NONE;
     private BingoBoard.Teams nerfedTeams = BingoBoard.Teams.NONE;
 
-    public BingoGame(BingoBoard board, BingoGameMode gameMode, boolean requireClient, boolean continueAfterWin, long scheduledEndTime, int autoForfeitTicks, PlayerTeam... teams) {
+    @SuppressWarnings("unchecked")
+    public BingoGame(
+        BingoBoard board,
+        BingoGameMode gameMode,
+        boolean requireClient,
+        boolean continueAfterWin,
+        boolean rated,
+        long scheduledEndTime,
+        int autoForfeitTicks,
+        PlayerTeam... teams
+    ) {
         this.board = board;
         this.gameMode = gameMode;
         this.requireClient = requireClient;
         this.continueAfterWin = continueAfterWin;
+        this.rated = rated;
         this.scheduledEndTime = scheduledEndTime;
         this.autoForfeitTicks = autoForfeitTicks;
         this.teams = teams;
         this.lastActiveTimes = new OptionalLong[teams.length];
         Arrays.fill(this.lastActiveTimes, OptionalLong.empty());
+        this.historicallyActiveMembers = new Set[teams.length];
+        for (int i = 0; i < teams.length; i++) {
+            this.historicallyActiveMembers[i] = new HashSet<>();
+        }
         this.remainingTeams = BingoBoard.Teams.fromAll(teams.length);
     }
 
@@ -138,7 +167,7 @@ public class BingoGame {
         }
 
         RemoveBoardPayload.INSTANCE.sendTo(player);
-        if (((ServerPlayerExt)player).bingo$clearAdvancementsNeedClearing()) {
+        if (((ServerPlayerExt) player).bingo$clearAdvancementsNeedClearing()) {
             player.connection.send(new ClientboundUpdateAdvancementsPacket(
                 false, List.of(), Set.of(VanillaNetworking.ROOT_ADVANCEMENT.id()), Map.of(), false
             ));
@@ -150,7 +179,7 @@ public class BingoGame {
         new SyncTeamPayload(team).sendTo(player);
 
         InitBoardPayload.create(this, team, obfuscateTeam(team, player), this.scheduledEndTime).sendTo(player);
-        if (!((PlayerAdvancementsAccessor)player.getAdvancements()).getIsFirstPacket()) {
+        if (!((PlayerAdvancementsAccessor) player.getAdvancements()).getIsFirstPacket()) {
             syncAdvancementsTo(player);
         }
 
@@ -172,12 +201,17 @@ public class BingoGame {
     public void syncAdvancementsTo(ServerPlayer player) {
         player.connection.send(new ClientboundUpdateAdvancementsPacket(
             false,
-            VanillaNetworking.generateAdvancements(player.registryAccess(), board.getShape(), board.getSize(), board.getGoals()),
+            VanillaNetworking.generateAdvancements(
+                player.registryAccess(),
+                board.getShape(),
+                board.getSize(),
+                board.getGoals()
+            ),
             Set.of(),
             VanillaNetworking.generateProgressMap(board.getStates(), getTeam(player)),
             false
         ));
-        ((ServerPlayerExt)player).bingo$markAdvancementsNeedClearing();
+        ((ServerPlayerExt) player).bingo$markAdvancementsNeedClearing();
     }
 
     public void removePlayer(ServerPlayer player) {
@@ -254,10 +288,22 @@ public class BingoGame {
         final Component message;
         if (!winningTeams.any()) {
             winningTeams = getWinner(true);
+            if (winningTeams.any()) {
+                ranks.add(winningTeams);
+            } else {
+                winningTeams = remainingTeams;
+                remainingTeams = BingoBoard.Teams.NONE;
+                if (winningTeams.any()) {
+                    ranks.add(winningTeams);
+                }
+            }
         }
-        if (!winningTeams.any()) {
-            winningTeams = remainingTeams;
+        if (remainingTeams.any()) {
+            ranks.add(remainingTeams);
         }
+        Collections.reverse(forfeitedTeams); // Forfeited teams get a higher ranking if they forfeited later
+        ranks.addAll(forfeitedTeams);
+
         if (winningTeams.any()) {
             if (!winningTeams.one()) {
                 message = Bingo.translatable("bingo.ended.tie");
@@ -279,7 +325,7 @@ public class BingoGame {
             for (final ServerPlayer player : playerList.getPlayers()) {
                 player.connection.send(new ClientboundSoundEntityPacket(
                     Holder.direct(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE), SoundSource.MASTER,
-                    player,1f, 1f, player.getRandom().nextLong()
+                    player, 1f, 1f, player.getRandom().nextLong()
                 ));
             }
         } else {
@@ -287,12 +333,70 @@ public class BingoGame {
         }
         playerList.broadcastSystemMessage(message, false);
 
+        // Don't rate when there's only one team, as that just makes everyone's sigma go up
+        if (rated && (ranks.size() > 1 || winningTeams.count() != 1)) {
+            applyRatingChanges(playerList);
+        }
+
         ((MinecraftServerExt) playerList.getServer()).bingo$setGame(null);
         new ResyncStatesPayload(board.getStates()).sendTo(playerList.getPlayers());
         if (scheduledEndTime > 0) {
             setScheduledEndTime(playerList.getServer(), 0);
         }
         Bingo.updateCommandTree(playerList);
+    }
+
+    private void applyRatingChanges(PlayerList playerList) {
+        final var ratings = playerList.getServer().getDataStorage().computeIfAbsent(BingoRatings.TYPE);
+
+        final var teamResults = new ArrayList<TeamResult<UUID>>();
+        var rank = 1;
+        for (final var rankGroup : ranks) {
+            final var fRank = rank;
+            rankGroup.stream()
+                .forEach(teamIndex -> {
+                    final var playerResults = historicallyActiveMembers[teamIndex]
+                        .stream()
+                        .map(uuid -> {
+                            final var rating = ratings.getRating(uuid);
+                            return new SimplePlayerResult<>(uuid, rating.mu(), rating.sigma());
+                        })
+                        .toList();
+                    final var teamRating = BingoRatingEngine.AGGREGATOR.computeTeamRating(playerResults);
+                    teamResults.add(new SimpleTeamResult<>(teamRating.mu(), teamRating.sigma(), fRank, playerResults));
+                });
+            rank++;
+        }
+
+        final var adjustments = BingoRatingEngine.ADJUDICATOR.rate(teamResults);
+        for (final var adjustment : adjustments) {
+            final var player = playerList.getPlayer(adjustment.playerId());
+            final var newRating = new SimpleMatchMakingRating(adjustment.mu(), adjustment.sigma());
+            final var oldRating = Objects.requireNonNullElse(
+                ratings.getRatings().put(adjustment.playerId(), newRating),
+                BingoRatingEngine.DEFAULT_RATING
+            );
+            final var oldBingoRating = BingoRatingEngine.bingoRating(oldRating);
+            final var newBingoRating = BingoRatingEngine.bingoRating(newRating);
+            Bingo.LOGGER.info(
+                "Player {} has changed their rank {} -> {}",
+                player != null ? player.getPlainTextName() : adjustment.playerId().toString(),
+                (int) oldBingoRating,
+                (int) newBingoRating
+            );
+            if (player != null) {
+                player.sendSystemMessage(Bingo.translatable(
+                    newBingoRating >= oldBingoRating
+                        ? "bingo.rating_changed.increase"
+                        : "bingo.rating_changed.decrease",
+                    (int) oldBingoRating,
+                    (int) newBingoRating,
+                    Math.abs((int) newBingoRating - (int) oldBingoRating)
+                ));
+            }
+        }
+
+        ratings.setDirty();
     }
 
     public void tick(MinecraftServer server) {
@@ -304,20 +408,31 @@ public class BingoGame {
             }
         }
 
-        if (autoForfeitTicks > 0 && server.getTickCount() % 20 == 0) {
+        if (server.getTickCount() % 20 == 0) {
             long gameTime = server.overworld().getGameTime();
             for (int i = 0; i < teams.length; i++) {
                 BingoBoard.Teams team = BingoBoard.Teams.fromOne(i);
                 if (remainingTeams.and(team)) {
-                    boolean isTeamActive = teams[i].getPlayers().stream().anyMatch(playerName -> server.getPlayerList().getPlayerByName(playerName) != null);
-                    if (isTeamActive) {
-                        lastActiveTimes[i] = OptionalLong.of(gameTime);
-                    } else {
-                        OptionalLong lastActiveTime = lastActiveTimes[i];
-                        if (lastActiveTime.isPresent() && (gameTime - lastActiveTime.getAsLong()) >= autoForfeitTicks) {
-                            forfeit(server.getPlayerList(), team);
+                    if (autoForfeitTicks > 0) {
+                        boolean isTeamActive = teams[i].getPlayers().stream()
+                            .anyMatch(playerName -> server.getPlayerList().getPlayerByName(playerName) != null);
+                        if (isTeamActive) {
+                            lastActiveTimes[i] = OptionalLong.of(gameTime);
+                        } else {
+                            OptionalLong lastActiveTime = lastActiveTimes[i];
+                            if (lastActiveTime.isPresent()
+                                && (gameTime - lastActiveTime.getAsLong()) >= autoForfeitTicks) {
+                                forfeit(server.getPlayerList(), team);
+                            }
                         }
                     }
+                    teams[i]
+                        .getPlayers()
+                        .stream()
+                        .map(server.getPlayerList()::getPlayerByName)
+                        .filter(Objects::nonNull)
+                        .map(ServerPlayer::getUUID)
+                        .forEach(historicallyActiveMembers[i]::add);
                 }
             }
         }
@@ -336,6 +451,7 @@ public class BingoGame {
             return false;
         }
         remainingTeams = remainingTeams.andNot(team);
+        forfeitedTeams.add(team);
 
         PlayerTeam playerTeam = getTeam(team);
         Component message = BingoUtil.mapEither(
@@ -475,7 +591,8 @@ public class BingoGame {
             player.getUUID(), k -> HashMap.newHashMap(board.getGoals().length)
         );
         GoalProgress existingProgress = goalProgress.get(goal);
-        if (existingProgress != null && existingProgress.progress() == progress && existingProgress.maxProgress() == maxProgress) {
+        if (existingProgress != null && existingProgress.progress() == progress
+            && existingProgress.maxProgress() == maxProgress) {
             return;
         }
 
@@ -511,7 +628,8 @@ public class BingoGame {
             awarded = true;
         }
         if (!wasDone && progress.isDone()) {
-            int completedCount = goalAchievedCount.computeIfAbsent(player.getUUID(), k -> new Object2IntOpenHashMap<>()).addTo(goal, count) + count;
+            int completedCount = goalAchievedCount.computeIfAbsent(player.getUUID(), k -> new Object2IntOpenHashMap<>())
+                                     .addTo(goal, count) + count;
             if (completedCount > goal.requiredCount()) {
                 completedCount = goal.requiredCount();
             }
@@ -654,7 +772,10 @@ public class BingoGame {
         final BingoBoard.Teams boardState = board.getStates()[boardIndex];
         final boolean showOtherTeam = gameMode.getRenderMode() == BingoGameMode.RenderMode.ALL_TEAMS;
         final UpdateStatePayload statePayload = new UpdateStatePayload(boardIndex, boardState);
-        final UpdateStatePayload obfuscatedStatePayload = new UpdateStatePayload(boardIndex, obfuscateTeam(team, boardState));
+        final UpdateStatePayload obfuscatedStatePayload = new UpdateStatePayload(
+            boardIndex,
+            obfuscateTeam(team, boardState)
+        );
         final ClientboundUpdateAdvancementsPacket vanillaPacket = new ClientboundUpdateAdvancementsPacket(
             false,
             List.of(),
@@ -676,7 +797,7 @@ public class BingoGame {
                 player.connection.send(new ClientboundSoundEntityPacket(
                     isLoss ? SoundEvents.RESPAWN_ANCHOR_DEPLETE : SoundEvents.NOTE_BLOCK_CHIME, SoundSource.MASTER,
                     player,
-                    isLoss ? 1f: 0.5f, 1f, player.getRandom().nextLong()
+                    isLoss ? 1f : 0.5f, 1f, player.getRandom().nextLong()
                 ));
                 player.sendSystemMessage(message);
             }
@@ -760,6 +881,8 @@ public class BingoGame {
         }
         remainingTeams = remainingTeams.andNot(newFinishers);
 
+        ranks.add(newFinishers);
+
         if (continueAfterWin) {
             notifyFinishedTeam(playerList, newFinishers, place);
         }
@@ -801,7 +924,7 @@ public class BingoGame {
             for (final ServerPlayer player : playerList.getPlayers()) {
                 player.connection.send(new ClientboundSoundEntityPacket(
                     Holder.direct(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE), SoundSource.MASTER,
-                    player,1f, 1f, player.getRandom().nextLong()
+                    player, 1f, 1f, player.getRandom().nextLong()
                 ));
             }
         }
@@ -833,45 +956,37 @@ public class BingoGame {
         BingoGameMode gameMode,
         boolean requireClient,
         boolean continueAfterWin,
+        boolean rated,
         long scheduledEndTime,
         int autoForfeitTicks,
         List<String> teamNames,
-        Map<UUID, Int2ObjectMap<AdvancementProgress>> advancementProgress,
-        Map<UUID, Int2ObjectMap<GoalProgress>> goalProgress,
-        Map<UUID, Int2IntMap> goalAchievedCount,
-        Map<UUID, IntList> queuedGoals,
-        Map<UUID, Object2IntMap<Stat<?>>> baseStats,
+        PlayersData playersData,
         Optional<BingoBoard.Teams> playingTeams,
+        List<Set<UUID>> historicallyActiveMembers,
+        List<BingoBoard.Teams> ranks,
+        List<BingoBoard.Teams> forfeitedTeams,
         BingoBoard.Teams winningTeams,
         BingoBoard.Teams finishedTeams,
         BingoBoard.Teams nerfedTeams
     ) {
-        private static final Codec<Map<UUID, Int2ObjectMap<AdvancementProgress>>> ADVANCEMENT_PROGRESS_CODEC =
-            Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.int2ObjectMap(AdvancementProgress.CODEC));
-        private static final Codec<Map<UUID, Int2ObjectMap<GoalProgress>>> GOAL_PROGRESS_CODEC =
-            Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.int2ObjectMap(GoalProgress.PERSISTENCE_CODEC));
-        private static final Codec<Map<UUID, Int2IntMap>> GOAL_ACHIEVED_COUNT_CODEC =
-            Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.INT_2_INT_MAP);
-        private static final Codec<Map<UUID, IntList>> QUEUED_GOALS_CODEC =
-            Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.INT_LIST);
-        private static final Codec<Map<UUID, Object2IntMap<Stat<?>>>> BASE_STATS_CODEC =
-            Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.object2IntMap(StatCodecs.STRING_CODEC));
-
         public static final Codec<PersistenceData> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                 BingoBoard.PERSISTENCE_CODEC.fieldOf("board").forGetter(PersistenceData::board),
                 BingoGameMode.PERSISTENCE_CODEC.fieldOf("game_mode").forGetter(PersistenceData::gameMode),
                 Codec.BOOL.fieldOf("require_client").forGetter(PersistenceData::requireClient),
                 Codec.BOOL.optionalFieldOf("continue_after_win", false).forGetter(PersistenceData::continueAfterWin),
+                Codec.BOOL.optionalFieldOf("rated", false).forGetter(PersistenceData::rated),
                 ExtraCodecs.NON_NEGATIVE_LONG.optionalFieldOf("scheduled_end_time", 0L).forGetter(PersistenceData::scheduledEndTime),
                 ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("auto_forfeit_ticks", DEFAULT_AUTO_FORFEIT_TICKS).forGetter(PersistenceData::autoForfeitTicks),
                 Codec.STRING.listOf().fieldOf("team_names").forGetter(PersistenceData::teamNames),
-                ADVANCEMENT_PROGRESS_CODEC.fieldOf("advancement_progress").forGetter(PersistenceData::advancementProgress),
-                GOAL_PROGRESS_CODEC.fieldOf("goal_progress").forGetter(PersistenceData::goalProgress),
-                GOAL_ACHIEVED_COUNT_CODEC.fieldOf("goal_achieved_count").forGetter(PersistenceData::goalAchievedCount),
-                QUEUED_GOALS_CODEC.fieldOf("queued_goals").forGetter(PersistenceData::queuedGoals),
-                BASE_STATS_CODEC.fieldOf("base_stats").forGetter(PersistenceData::baseStats),
+                PlayersData.CODEC.forGetter(PersistenceData::playersData),
                 BingoBoard.Teams.CODEC.optionalFieldOf("playing_teams").forGetter(PersistenceData::playingTeams),
+                BingoCodecs.setOf(UUIDUtil.CODEC)
+                    .listOf()
+                    .optionalFieldOf("historically_active_members", List.of())
+                    .forGetter(PersistenceData::historicallyActiveMembers),
+                BingoBoard.Teams.CODEC.listOf().optionalFieldOf("ranks", List.of()).forGetter(PersistenceData::ranks),
+                BingoBoard.Teams.CODEC.listOf().optionalFieldOf("forfeited_teams", List.of()).forGetter(PersistenceData::forfeitedTeams),
                 BingoBoard.Teams.CODEC.optionalFieldOf("winning_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::winningTeams),
                 BingoBoard.Teams.CODEC.optionalFieldOf("finished_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::finishedTeams),
                 BingoBoard.Teams.CODEC.optionalFieldOf("nerfed_teams", BingoBoard.Teams.NONE).forGetter(PersistenceData::nerfedTeams)
@@ -886,9 +1001,9 @@ public class BingoGame {
                     throw new IllegalStateException("Team '" + teamNames.get(i) + "' no longer exists");
                 }
             }
-            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, scheduledEndTime, autoForfeitTicks, teams);
+            final BingoGame game = new BingoGame(board, gameMode, requireClient, continueAfterWin, rated, scheduledEndTime, autoForfeitTicks, teams);
 
-            for (final var entry : advancementProgress.entrySet()) {
+            for (final var entry : playersData.advancementProgress.entrySet()) {
                 final Map<ActiveGoal, AdvancementProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
                 for (final var subEntry : entry.getValue().int2ObjectEntrySet()) {
                     final ActiveGoal goal = getGoal(subEntry.getIntKey());
@@ -899,7 +1014,7 @@ public class BingoGame {
                 game.advancementProgress.put(entry.getKey(), subTarget);
             }
 
-            for (final var entry : goalProgress.entrySet()) {
+            for (final var entry : playersData.goalProgress.entrySet()) {
                 final Map<ActiveGoal, GoalProgress> subTarget = HashMap.newHashMap(entry.getValue().size());
                 for (final var subEntry : entry.getValue().int2ObjectEntrySet()) {
                     subTarget.put(getGoal(subEntry.getIntKey()), subEntry.getValue());
@@ -907,7 +1022,7 @@ public class BingoGame {
                 game.goalProgress.put(entry.getKey(), subTarget);
             }
 
-            for (final var entry : goalAchievedCount.entrySet()) {
+            for (final var entry : playersData.goalAchievedCount.entrySet()) {
                 final Object2IntOpenHashMap<ActiveGoal> subTarget = new Object2IntOpenHashMap<>(entry.getValue().size());
                 for (final var subEntry : entry.getValue().int2IntEntrySet()) {
                     subTarget.put(getGoal(subEntry.getIntKey()), subEntry.getIntValue());
@@ -915,7 +1030,7 @@ public class BingoGame {
                 game.goalAchievedCount.put(entry.getKey(), subTarget);
             }
 
-            for (final var entry : queuedGoals.entrySet()) {
+            for (final var entry : playersData.queuedGoals.entrySet()) {
                 final List<ActiveGoal> subTarget = new ArrayList<>(entry.getValue().size());
                 for (final int goal : entry.getValue()) {
                     subTarget.add(getGoal(goal));
@@ -923,9 +1038,14 @@ public class BingoGame {
                 game.queuedGoals.put(entry.getKey(), subTarget);
             }
 
-            game.baseStats.putAll(baseStats);
+            game.baseStats.putAll(playersData.baseStats);
 
             game.remainingTeams = playingTeams.orElseGet(() -> BingoBoard.Teams.fromAll(teams.length));
+            for (int i = 0; i < historicallyActiveMembers.size(); i++) {
+                game.historicallyActiveMembers[i].addAll(historicallyActiveMembers.get(i));
+            }
+            game.ranks.addAll(ranks);
+            game.forfeitedTeams.addAll(forfeitedTeams);
             game.winningTeams = winningTeams;
             game.finishedTeams = finishedTeams;
 
@@ -956,13 +1076,23 @@ public class BingoGame {
             }
 
             return new PersistenceData(
-                game.board, game.gameMode, game.requireClient, game.continueAfterWin,
+                game.board, game.gameMode, game.requireClient, game.continueAfterWin, game.rated,
                 game.scheduledEndTime, game.autoForfeitTicks,
                 Arrays.stream(game.teams).map(PlayerTeam::getName).toList(),
-                createMap(game, game.advancementProgress),
-                createMap(game, game.goalProgress),
-                goalAchievedCount, queuedGoals, game.baseStats,
-                Optional.of(game.remainingTeams), game.winningTeams, game.finishedTeams, game.nerfedTeams
+                new PlayersData(
+                    createMap(game, game.advancementProgress),
+                    createMap(game, game.goalProgress),
+                    goalAchievedCount,
+                    queuedGoals,
+                    game.baseStats
+                ),
+                Optional.of(game.remainingTeams),
+                ImmutableList.copyOf(game.historicallyActiveMembers),
+                game.ranks,
+                game.forfeitedTeams,
+                game.winningTeams,
+                game.finishedTeams,
+                game.nerfedTeams
             );
         }
 
@@ -980,6 +1110,35 @@ public class BingoGame {
 
         private static int getGoal(BingoGame game, ActiveGoal goal) {
             return game.board.getIndex(goal);
+        }
+
+        public record PlayersData(
+            Map<UUID, Int2ObjectMap<AdvancementProgress>> advancementProgress,
+            Map<UUID, Int2ObjectMap<GoalProgress>> goalProgress,
+            Map<UUID, Int2IntMap> goalAchievedCount,
+            Map<UUID, IntList> queuedGoals,
+            Map<UUID, Object2IntMap<Stat<?>>> baseStats
+        ) {
+            private static final Codec<Map<UUID, Int2ObjectMap<AdvancementProgress>>> ADVANCEMENT_PROGRESS_CODEC =
+                Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.int2ObjectMap(AdvancementProgress.CODEC));
+            private static final Codec<Map<UUID, Int2ObjectMap<GoalProgress>>> GOAL_PROGRESS_CODEC =
+                Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.int2ObjectMap(GoalProgress.PERSISTENCE_CODEC));
+            private static final Codec<Map<UUID, Int2IntMap>> GOAL_ACHIEVED_COUNT_CODEC =
+                Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.INT_2_INT_MAP);
+            private static final Codec<Map<UUID, IntList>> QUEUED_GOALS_CODEC =
+                Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.INT_LIST);
+            private static final Codec<Map<UUID, Object2IntMap<Stat<?>>>> BASE_STATS_CODEC =
+                Codec.unboundedMap(UUIDUtil.STRING_CODEC, BingoCodecs.object2IntMap(StatCodecs.STRING_CODEC));
+
+            public static final MapCodec<PlayersData> CODEC = RecordCodecBuilder.mapCodec(
+                i -> i.group(
+                    ADVANCEMENT_PROGRESS_CODEC.fieldOf("advancement_progress").forGetter(PlayersData::advancementProgress),
+                    GOAL_PROGRESS_CODEC.fieldOf("goal_progress").forGetter(PlayersData::goalProgress),
+                    GOAL_ACHIEVED_COUNT_CODEC.fieldOf("goal_achieved_count").forGetter(PlayersData::goalAchievedCount),
+                    QUEUED_GOALS_CODEC.fieldOf("queued_goals").forGetter(PlayersData::queuedGoals),
+                    BASE_STATS_CODEC.fieldOf("base_stats").forGetter(PlayersData::baseStats)
+                ).apply(i, PlayersData::new)
+            );
         }
     }
 }
