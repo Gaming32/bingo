@@ -162,7 +162,7 @@
   "bingo.goal.never_pickup_crafting_tables": "Никогда не поднимать Верстаки",
   "bingo.goal.never_pickup_crafting_tables.tooltip": "Никогда не ломайте и не поднимайте Верстаки. Вы можете делать, ставить, использовать, но не подбирать.",
   "bingo.goal.never_place_torches": "Никогда не ставьте Факела",
-  "bingo.goal.never_place_torches.tooltip": "Никогда не ставьте обычные Факела, вы МОЖЕТЕ использовать их в крафте. Другие типы Факелов разрешены.",
+  "bingo.goal.never_place_torches.tooltip": "Никогда не ставьте Факела любого типа, но вы МОЖЕТЕ использовать их в крафте.",
   "bingo.goal.never_sleep": "Никогда не спите",
   "bingo.goal.never_use_boat": "Никогда не используйте Лодку",
   "bingo.goal.never_use_buckets": "Никогда не используйте Вёдра",

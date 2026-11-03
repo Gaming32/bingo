@@ -43,20 +43,111 @@
                           "factors": [
                             {
                               "type": "bingo:wrap",
-                              "value": "P"
+                              "value": " "
                             },
-                            "width"
+                            {
+                              "type": "bingo:compound",
+                              "element_type": "string",
+                              "factors": [
+                                {
+                                  "type": "bingo:wrap",
+                                  "value": "O"
+                                },
+                                "width"
+                              ],
+                              "operator": "mul"
+                            },
+                            {
+                              "type": "bingo:wrap",
+                              "value": " "
+                            }
                           ],
-                          "operator": "mul"
+                          "operator": "sum"
                         }
                       ]
                     },
-                    "height"
+                    {
+                      "type": "bingo:compound",
+                      "element_type": "array",
+                      "factors": [
+                        {
+                          "type": "bingo:wrap",
+                          "value": [
+                            {
+                              "bingo_type": "bingo:compound",
+                              "element_type": "string",
+                              "factors": [
+                                {
+                                  "type": "bingo:wrap",
+                                  "value": "O"
+                                },
+                                {
+                                  "type": "bingo:compound",
+                                  "element_type": "string",
+                                  "factors": [
+                                    {
+                                      "type": "bingo:wrap",
+                                      "value": "P"
+                                    },
+                                    "width"
+                                  ],
+                                  "operator": "mul"
+                                },
+                                {
+                                  "type": "bingo:wrap",
+                                  "value": "O"
+                                }
+                              ],
+                              "operator": "sum"
+                            }
+                          ]
+                        },
+                        "height"
+                      ],
+                      "operator": "mul"
+                    },
+                    {
+                      "type": "bingo:wrap",
+                      "value": [
+                        {
+                          "bingo_type": "bingo:compound",
+                          "element_type": "string",
+                          "factors": [
+                            {
+                              "type": "bingo:wrap",
+                              "value": " "
+                            },
+                            {
+                              "type": "bingo:compound",
+                              "element_type": "string",
+                              "factors": [
+                                {
+                                  "type": "bingo:wrap",
+                                  "value": "O"
+                                },
+                                "width"
+                              ],
+                              "operator": "mul"
+                            },
+                            {
+                              "type": "bingo:wrap",
+                              "value": " "
+                            }
+                          ],
+                          "operator": "sum"
+                        }
+                      ]
+                    }
                   ],
-                  "operator": "mul"
+                  "operator": "sum"
                 }
               ],
               "where": {
+                "O": {
+                  "block": {
+                    "blocks": "minecraft:obsidian"
+                  }
+                },
                 "P": {
                   "block": {
                     "blocks": "minecraft:nether_portal"

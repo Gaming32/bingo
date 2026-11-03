@@ -182,7 +182,7 @@
   "bingo.goal.never_pickup_crafting_tables": "Never Pick up Crafting Tables",
   "bingo.goal.never_pickup_crafting_tables.tooltip": "Never break and pick up Crafting Tables. You can make, place, and use, but not collect.",
   "bingo.goal.never_place_torches": "Never place Torches",
-  "bingo.goal.never_place_torches.tooltip": "Never place normal Torches, you CAN craft with them. Other types of Torches are allowed.",
+  "bingo.goal.never_place_torches.tooltip": "Never place any type of Torch, but you CAN craft with them.",
   "bingo.goal.never_sleep": "Never Sleep",
   "bingo.goal.never_use_boat": "Never use a Boat",
   "bingo.goal.never_use_buckets": "Never use Buckets",

@@ -1,5 +1,7 @@
 package io.github.gaming32.bingo.mixin;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import io.github.gaming32.bingo.triggers.BingoTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,6 +20,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinEnchantmentMenu {
     @Shadow @Final public int[] costs;
 
+    // The costs get recalculated (to 0) before the vanilla trigger if the last of the lapis is used up, so capture it beforehand
+    @Inject(method = "lambda$clickMenuButton$0", at = @At("HEAD"))
+    private void captureCost(ItemStack itemStack, int buttonId, Player player, int enchantmentCost, ItemStack currency, Level level, BlockPos pos, CallbackInfo ci, @Share("levelsRequired") LocalIntRef levelsRequired) {
+        levelsRequired.set(costs[buttonId]);
+    }
+
     @Inject(
         method = "lambda$clickMenuButton$0",
         at = @At(
@@ -26,7 +34,7 @@ public class MixinEnchantmentMenu {
             shift = At.Shift.AFTER
         )
     )
-    private void customEnchantTrigger(ItemStack itemStack, int buttonId, Player player, int enchantmentCost, ItemStack currency, Level level, BlockPos pos, CallbackInfo ci) {
-        BingoTriggers.ENCHANTED_ITEM.get().trigger((ServerPlayer)player, enchantmentCost, costs[buttonId]);
+    private void customEnchantTrigger(ItemStack itemStack, int buttonId, Player player, int enchantmentCost, ItemStack currency, Level level, BlockPos pos, CallbackInfo ci, @Share("levelsRequired") LocalIntRef levelsRequired) {
+        BingoTriggers.ENCHANTED_ITEM.get().trigger((ServerPlayer)player, enchantmentCost, levelsRequired.get());
     }
 }

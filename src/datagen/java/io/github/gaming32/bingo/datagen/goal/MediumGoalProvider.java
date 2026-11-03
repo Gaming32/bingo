@@ -324,22 +324,49 @@ public class MediumGoalProvider extends DifficultyGoalProvider {
                 "activate",
                 ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(AllOfCondition.allOf(
                     MatchBlock.blockMatches(blocks, Blocks.NETHER_PORTAL),
-                    BlockPatternCondition.builder().aisle("P")
+                    // Include the frame in the pattern, so that larger portals don't match
+                    BlockPatternCondition.builder().aisle(" O ", "OPO", " O ")
                         .where('P', BlockPredicate.Builder.block().of(blocks, Blocks.NETHER_PORTAL))
+                        .where('O', BlockPredicate.Builder.block().of(blocks, Blocks.OBSIDIAN))
                 )),
-                subber -> subber.sub("conditions.location.terms.1.aisles.0", new CompoundBingoSub(
-                    CompoundBingoSub.ElementType.ARRAY,
-                    CompoundBingoSub.Operator.MUL,
-                    BingoSub.wrapInArray(
+                subber -> {
+                    final BingoSub topAndBottom = BingoSub.wrapInArray(new CompoundBingoSub(
+                        CompoundBingoSub.ElementType.STRING,
+                        CompoundBingoSub.Operator.SUM,
+                        BingoSub.literal(" "),
                         new CompoundBingoSub(
                             CompoundBingoSub.ElementType.STRING,
                             CompoundBingoSub.Operator.MUL,
-                            BingoSub.literal("P"),
+                            BingoSub.literal("O"),
                             new SubBingoSub("width")
-                        )
-                    ),
-                    new SubBingoSub("height")
-                ))
+                        ),
+                        BingoSub.literal(" ")
+                    ));
+                    final BingoSub middle = new CompoundBingoSub(
+                        CompoundBingoSub.ElementType.ARRAY,
+                        CompoundBingoSub.Operator.MUL,
+                        BingoSub.wrapInArray(new CompoundBingoSub(
+                            CompoundBingoSub.ElementType.STRING,
+                            CompoundBingoSub.Operator.SUM,
+                            BingoSub.literal("O"),
+                            new CompoundBingoSub(
+                                CompoundBingoSub.ElementType.STRING,
+                                CompoundBingoSub.Operator.MUL,
+                                BingoSub.literal("P"),
+                                new SubBingoSub("width")
+                            ),
+                            BingoSub.literal("O")
+                        )),
+                        new SubBingoSub("height")
+                    );
+                    subber.sub("conditions.location.terms.1.aisles.0", new CompoundBingoSub(
+                        CompoundBingoSub.ElementType.ARRAY,
+                        CompoundBingoSub.Operator.SUM,
+                        topAndBottom,
+                        middle,
+                        topAndBottom
+                    ));
+                }
             )
             .tags(BingoTags.ACTION, BingoTags.BUILD, BingoTags.NETHER)
             .name(
