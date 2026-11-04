@@ -45,5 +45,7 @@ jobs:
         with:
           java-version: 25
           distribution: zulu
+      - name: Install Mesa Vulkan drivers
+        run: sudo apt-get update && sudo apt-get install -y mesa-vulkan-drivers
       - name: Run client tests
         run: ./gradlew runClientGametest --stacktrace --warning-mode=fail --no-daemon
