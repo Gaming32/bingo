@@ -55,7 +55,7 @@ public class BlockPictureInPictureRenderer extends PictureInPictureRenderer<Bloc
 
     @Override
     protected boolean textureIsReadyToBlit(BlockPictureInPictureRenderState renderState) {
-        return lastBlockState == renderState.block();
+        return lastBlockState == renderState.block() && !renderState.animated();
     }
 
     @Override
